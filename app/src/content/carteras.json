@@ -1,0 +1,1970 @@
+{
+ "id": "carteras",
+ "titulo": "Carteras de cobro y pago",
+ "sesion": "",
+ "resumen": "Aprendes cómo se gestiona la cartera de efectos: defines plazos de pago, tipos de efecto y las condiciones de un tercero, registras una factura de compra que genera efectos de pago, das de alta bancos propios y cobras efectos de venta de forma individual y con una remesa al banco, viendo cada cambio de estado y su asiento.",
+ "circuito": [
+  "Plazo de pago y tipo de efecto",
+  "Condiciones del tercero",
+  "Factura y efectos en cartera",
+  "Banco propio",
+  "Cobro individual o remesa",
+  "Asiento contable"
+ ],
+ "navegacion": [
+  {
+   "id": "carteras-nav-cartera",
+   "titulo": "Qué es la cartera de efectos",
+   "paraQueSirve": "Entender qué es un efecto y por qué la tesorería trabaja sobre la cartera.",
+   "ruta": null,
+   "explicacion": [
+    "Cada factura que se contabiliza deja uno o varios vencimientos: lo que nos tienen que pagar (cartera de cobros) o lo que tenemos que pagar (cartera de pagos). Cada vencimiento es un «efecto» con su tipo (recibo, transferencia, cheque…), su fecha y su estado (pendiente, propuesto, ordenado, cobrado…).",
+    "Tesorería trabaja sobre la cartera: agrupa efectos en remesas para enviarlos al banco, los cobra o paga uno a uno y, en cada cambio de estado, el ERP genera el asiento contable correspondiente.",
+    "Los ejercicios siguen este orden: Ejercicio 1 (plazo de pago, tipo de efecto, condiciones del tercero y factura de compra que genera los efectos), Ejercicio 3 (bancos propios: una cuenta bancaria y una caja de efectivo) y Ejercicio 5 (circuito de cobros: artículo financiero, factura de venta, cobro individual de un efecto y cobro de varios efectos con una remesa)."
+   ],
+   "campos": [],
+   "pasos": [],
+   "avisos": []
+  },
+  {
+   "id": "carteras-nav-moverse",
+   "titulo": "Cómo moverte por el ERP",
+   "paraQueSirve": "Aprender a abrir pantallas, dar de alta registros y rellenar campos con autocompletar.",
+   "ruta": null,
+   "explicacion": [
+    "La ruta de la pantalla (/ctipopag, /cbancpro…) no se escribe en la barra de direcciones. Se usa el menú lateral (botón ☰ arriba a la izquierda, Finanzas › …) o el buscador superior «Buscar» (Cmd/Ctrl + K), escribiendo el nombre de la pantalla.",
+    "Las listas tienen un botón rojo arriba a la derecha («Añadir …» o «Nuevo») que abre el alta en una ventana; se guarda con «Guardar» abajo a la derecha. En las fichas, «Nuevo» ofrece «Nuevo registro» (en blanco) o «Nuevo como» (copia del registro que se está viendo).",
+    "Los campos con lista (tercero, cuenta, plazo…) son de autocompletar: se escribe el código, se espera a que salga la lista y se elige la fila. Si después no aparece la descripción debajo del campo, se sale del campo con Tab: muchos valores relacionados (dirección, plazo, cuenta) se rellenan al salir.",
+    "Las pestañas del registro están arriba, en horizontal, y los botones de acción (Validar, Contabilizar, Evolucionar estado…) en la barra superior. El desplegable (⌄) junto al título lleva a los documentos relacionados: asientos, cartera de efectos, registros fiscales.",
+    "Los campos obligatorios llevan un asterisco rojo en la etiqueta y sin ellos no deja guardar. Muchos campos tienen una longitud máxima: si te pasas, el campo se pone en rojo con «Demasiado largo» y el contador de caracteres (por ejemplo 4 / 3).",
+    "En los ejemplos, las iniciales del alumno se escriben {INI} (plazo {INI}1, tipo de efecto T{INI}, tercero T{INI} «Tercero Carteras», banco BBVA_{INI}…): sustitúyelas por tus iniciales."
+   ],
+   "campos": [],
+   "pasos": [],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "Si una lista sale vacía al pulsar la flecha de un campo, escribe un carácter para que cargue las opciones."
+    }
+   ]
+  }
+ ],
+ "ejercicios": [
+  {
+   "id": "carteras-1",
+   "numero": 1,
+   "titulo": "Plazo de pago, tipo de efecto y condiciones del tercero",
+   "objetivo": "Tendrás definido un plazo de pago a 120 días en tres vencimientos, un tipo de efecto de pago, un tercero que los usa y una factura de compra contabilizada con sus tres efectos en la cartera de pagos.",
+   "concepto": "Cada vencimiento de una factura es un efecto de la cartera. Para que la factura genere los efectos correctos hacen falta tres piezas: el plazo de pago (cuántos vencimientos y qué porcentaje cada uno), el tipo de efecto (instrumento: transferencia, recibo…) y las condiciones de pago o cobro del tercero, que unen ambas.\n\nEn este ejercicio defines un plazo a 120 días en tres vencimientos (40 % - 20 % - 40 %), un tipo de efecto de pago por transferencia y un tercero que los usa. Al registrar una factura de compra comprobarás que recupera esas condiciones y genera tres efectos en la cartera de pagos.",
+   "duracionMin": 60,
+   "secciones": [
+    {
+     "id": "carteras-1-plazo",
+     "titulo": "Plazo de pago {INI}1",
+     "paraQueSirve": "El plazo de pago dice en cuántos vencimientos se divide una factura, a cuántos días o meses vence cada uno y qué porcentaje del total va en cada vencimiento. Se asigna al tercero y desde ahí pasa a sus facturas; al contabilizarlas, el ERP crea un efecto por cada plazo.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Terceros",
+      "Condiciones administrativas",
+      "Plazos de pago"
+     ],
+     "explicacion": [
+      "Objeto ctipopag. La pantalla se llama «Plazos de pago» y el campo de las facturas y del tercero se llama «Plazo pago». Su estructura es: tipo de cálculo, unidad de tiempo y cuatro plazos, cada uno con su porcentaje."
+     ],
+     "campos": [
+      {
+       "campo": "Plazo pago *",
+       "significado": "Código del plazo. Es lo que se elige en el tercero y en las facturas.",
+       "ejemplo": "{INI}1"
+      },
+      {
+       "campo": "Descripción plazo *",
+       "significado": "Texto que se ve en las listas.",
+       "ejemplo": "3 plazos 40-20-40 en 120 dias {INI}"
+      },
+      {
+       "campo": "Unidad tiempo",
+       "significado": "Si los plazos se cuentan en días o en meses.",
+       "ejemplo": "Días"
+      },
+      {
+       "campo": "Tipo cálculo *",
+       "significado": "Variable: se indican los días de cada plazo. Fija: número de plazos y cadencia. No generar: contado, sin vencimientos.",
+       "ejemplo": "Variable"
+      },
+      {
+       "campo": "Primer / Segundo / Tercer / Cuarto plazo *",
+       "significado": "Días desde la fecha de factura hasta cada vencimiento. 0 = no se usa.",
+       "ejemplo": "40 / 80 / 120 / 0"
+      },
+      {
+       "campo": "% Plazo 1 a 4 *",
+       "significado": "Porcentaje del importe que vence en cada plazo. Si se dejan a 0, el importe se reparte a partes iguales.",
+       "ejemplo": "40 / 20 / 40 / 0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y mira la lista de plazos",
+       "detalle": "Salen plazos como 0, 30D, T2D, T3D… Puedes abrir T3D para ver cómo está hecho uno de tres plazos: 30, 60 y 90 días con los porcentajes a 0 (reparto a partes iguales).",
+       "imagen": "carteras-002.jpg"
+      },
+      {
+       "texto": "Desde la lista, pulsa «Añadir plazo»",
+       "detalle": "Hazlo desde la lista de plazos, no desde la ficha de uno: si estás en una ficha, vuelve a la lista (icono de lista o menú) y pulsa el botón allí."
+      },
+      {
+       "texto": "Escribe el Plazo pago {INI}1 y la descripción",
+       "detalle": "Descripción de ejemplo: «3 plazos 40-20-40 en 120 dias {INI}».",
+       "imagen": "carteras-003.jpg",
+       "hotspot": {
+        "x": 7.8,
+        "y": 22.8,
+        "w": 15,
+        "h": 5,
+        "etiqueta": "Plazo pago"
+       }
+      },
+      {
+       "texto": "Elige Tipo cálculo «Variable» y Unidad tiempo «Días»",
+       "imagen": "carteras-003.jpg",
+       "hotspot": {
+        "x": 35.8,
+        "y": 32.5,
+        "w": 28,
+        "h": 7.2,
+        "etiqueta": "Variable"
+       }
+      },
+      {
+       "texto": "Rellena los plazos 40, 80 y 120 con los porcentajes 40, 20 y 40; deja el cuarto a 0",
+       "detalle": "Los porcentajes 40 / 20 / 40 suman el 100 % del importe.",
+       "imagen": "carteras-003.jpg",
+       "hotspot": {
+        "x": 7.8,
+        "y": 52.5,
+        "w": 42,
+        "h": 7,
+        "etiqueta": "Primer plazo"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "detalle": "Sale «Éxito» y {INI}1 aparece en la lista de plazos.",
+       "imagen": "carteras-003.jpg",
+       "hotspot": {
+        "x": 82,
+        "y": 89.2,
+        "w": 10,
+        "h": 4.4,
+        "etiqueta": "Guardar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El botón «Añadir plazo» no responde si se pulsa desde la ficha de un plazo; hay que volver a la lista (icono de lista o menú) y pulsarlo allí."
+      }
+     ]
+    },
+    {
+     "id": "carteras-1-tipo-efecto",
+     "titulo": "Tipo de efecto T{INI} (transferencia de pago)",
+     "paraQueSirve": "El tipo de efecto es el instrumento con el que se cobra o se paga: recibo, transferencia, cheque, pagaré… Decide en qué estado nace el efecto, si hace falta una cuenta bancaria (del tercero o de la empresa), cómo cuenta para el riesgo del cliente y qué código fiscal se declara. Hay tipos de cobro y tipos de pago con el mismo código.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Efectos",
+      "Tipos"
+     ],
+     "explicacion": [
+      "Objeto ctipoefe. El estado inicial no se crea desde el tipo de efecto: se elige de la lista de estados existentes (PE Pendiente). Los estados están en Finanzas › Cobros y Pagos › Maestros › Efectos › Estados (cefecest)."
+     ],
+     "campos": [
+      {
+       "campo": "Clase *",
+       "significado": "Cobrar (cartera de cobros) o Pagar (cartera de pagos).",
+       "ejemplo": "Pagar"
+      },
+      {
+       "campo": "Tipo efecto *",
+       "significado": "Código del tipo. Máximo 3 caracteres.",
+       "ejemplo": "T{INI}"
+      },
+      {
+       "campo": "Descripción *",
+       "significado": "Nombre del tipo.",
+       "ejemplo": "Transferencia {INI}"
+      },
+      {
+       "campo": "Estado inicial",
+       "significado": "Estado en el que nace el efecto al contabilizar la factura.",
+       "ejemplo": "PE Pendiente"
+      },
+      {
+       "campo": "Domiciliación bancaria *",
+       "significado": "No requiere / Tercero (exige la cuenta bancaria del tercero) / Empresa (exige una cuenta de la empresa).",
+       "ejemplo": "No requiere"
+      },
+      {
+       "campo": "Días decalaje *",
+       "significado": "Días que se suman a la fecha de operación prevista para la tesorería.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Días post-pago *",
+       "significado": "Días tras el vencimiento que el efecto sigue contando en el riesgo.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Riesgo / Interés / Comisión impag. / Factura demora *",
+       "significado": "Control de riesgo comercial y cargos si el efecto queda impagado.",
+       "ejemplo": "Riesgo marcado, 0, 0, sin marcar"
+      },
+      {
+       "campo": "Fecha operación *",
+       "significado": "Fecha de referencia para la previsión de tesorería (emisión, vencimiento, remesa…).",
+       "ejemplo": "Emisión"
+      },
+      {
+       "campo": "UN/EDIFACT / Código Factura-E / Código fiscal *",
+       "significado": "Clasificación del medio de pago para factura electrónica y declaraciones.",
+       "ejemplo": "Credit transfer / Transferencia / Transferencia"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa «Añadir tipo efecto»",
+       "detalle": "La lista muestra clase, estado inicial (casi todos PE), días post-pago, domiciliación y fecha de operación de cada tipo.",
+       "imagen": "carteras-004.jpg",
+       "hotspot": {
+        "x": 78,
+        "y": 8.2,
+        "w": 9.5,
+        "h": 4.8,
+        "etiqueta": "Añadir tipo efecto"
+       }
+      },
+      {
+       "texto": "Elige Clase «Pagar», escribe el tipo T{INI} y la descripción, y elige Estado inicial PE",
+       "detalle": "Para el estado, escribe PE y elige la fila.",
+       "imagen": "carteras-005.jpg",
+       "hotspot": {
+        "x": 2.5,
+        "y": 22.5,
+        "w": 24.5,
+        "h": 5.5,
+        "etiqueta": "Clase"
+       }
+      },
+      {
+       "texto": "Deja Domiciliación bancaria en «No requiere»",
+       "detalle": "Así no hace falta la cuenta bancaria del proveedor para este ejercicio.",
+       "imagen": "carteras-005.jpg",
+       "hotspot": {
+        "x": 2.8,
+        "y": 40.5,
+        "w": 31.5,
+        "h": 6.5,
+        "etiqueta": "No requiere"
+       }
+      },
+      {
+       "texto": "En Clasificación elige UN/EDIFACT «Credit transfer», Código Factura-E «Transferencia» y Código fiscal «Transferencia»",
+       "detalle": "Los bloques Riesgo y Tesorería se dejan con los valores por defecto.",
+       "imagen": "carteras-006.jpg"
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "carteras-005.jpg",
+       "hotspot": {
+        "x": 87.5,
+        "y": 89.2,
+        "w": 10.5,
+        "h": 4.4,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el límite de longitud del código",
+       "detalle": "El código del tipo de efecto admite como máximo 3 caracteres; con más, el campo se pone en rojo.",
+       "imagen": "carteras-007.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Con un código de cuatro caracteres como TF{INI} el campo se pone en rojo con «Demasiado largo 4 / 3»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Usa un código de 3 caracteres, por ejemplo T{INI} (T de transferencia + tus iniciales)."
+      }
+     ]
+    },
+    {
+     "id": "carteras-1-tercero",
+     "titulo": "Tercero T{INI} y sus condiciones de pago y cobro",
+     "paraQueSirve": "El tercero es la ficha única de la empresa con la que trabajamos. Sus condiciones de pago (como proveedor) y de cobro (como cliente) dicen con qué tipo de efecto y con qué plazo se le paga o se le cobra; las facturas las copian a sus datos financieros. Para contabilizar hacen falta además sus relaciones contables (cuenta 400 de proveedor, 430 de cliente) y una dirección.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Terceros",
+      "Registro de terceros"
+     ],
+     "explicacion": [
+      "Objeto ctercero. Hay dos pestañas separadas, «Condiciones de pago» y «Condiciones de cobro». En la de cobro el estado del efecto es obligatorio; en la de pago se toma el estado inicial del tipo de efecto."
+     ],
+     "campos": [
+      {
+       "campo": "Tercero / Nombre / Nombre comercial *",
+       "significado": "Código y razón social.",
+       "ejemplo": "T{INI} / Tercero Carteras"
+      },
+      {
+       "campo": "País emisor / Tipo ID fiscal / Id. fiscal *",
+       "significado": "Identificación fiscal. Con «No censado» se admite 0.",
+       "ejemplo": "ES / No censado / 0"
+      },
+      {
+       "campo": "Categoría *",
+       "significado": "Tipo de tercero; trae serie y relación por defecto.",
+       "ejemplo": "002 Proveedores"
+      },
+      {
+       "campo": "Relaciones (pestaña) *",
+       "significado": "Papel contable y cuenta: Cliente CLI 43000.00000 y Proveedor PRO 40000.00000.",
+       "ejemplo": "CLI y PRO"
+      },
+      {
+       "campo": "Direcciones (pestaña) *",
+       "significado": "Dirección 0 de domicilio fiscal; el código postal rellena provincia y población.",
+       "ejemplo": "08001 Carrer de Pelai 2"
+      },
+      {
+       "campo": "Condiciones de pago › Tipo efecto / Plazo pago *",
+       "significado": "Cómo y cuándo se le paga como proveedor.",
+       "ejemplo": "T{INI} / {INI}1"
+      },
+      {
+       "campo": "Condiciones de cobro › Tipo efecto / Estado efecto / Plazo pago *",
+       "significado": "Cómo y cuándo se le cobra como cliente (se usa en el ejercicio 5).",
+       "ejemplo": "RC Recibo / PE / 30D"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la lista de terceros, pulsa «Añadir tercero» y rellena T{INI}, «Tercero Carteras», ES, No censado, 0 y categoría 002",
+       "detalle": "Después pulsa «Guardar». El aviso naranja «Cif already exists!» es solo informativo: otro tercero también tiene Id. fiscal 0.",
+       "imagen": "carteras-008.jpg",
+       "hotspot": {
+        "x": 2.8,
+        "y": 22.5,
+        "w": 34.5,
+        "h": 5.5,
+        "etiqueta": "Tercero"
+       }
+      },
+      {
+       "texto": "Abre la ficha (fila T{INI}) y, en la pestaña «Relaciones», añade Cliente / CLI / PGE 2008 / 43000.00000 y Proveedor / PRO / PGE 2008 / 40000.00000",
+       "detalle": "«Cuenta repetida» es un aviso informativo.",
+       "imagen": "carteras-009.jpg",
+       "hotspot": {
+        "x": 77.5,
+        "y": 45.7,
+        "w": 11,
+        "h": 4.8,
+        "etiqueta": "Añadir relación"
+       }
+      },
+      {
+       "texto": "En «Direcciones» añade la dirección 0 con el código postal 08001 y la calle",
+       "imagen": "carteras-009.jpg",
+       "hotspot": {
+        "x": 54,
+        "y": 16.3,
+        "w": 8.5,
+        "h": 4.3,
+        "etiqueta": "Direcciones"
+       }
+      },
+      {
+       "texto": "En «Condiciones de pago» pulsa «Añadir pago», elige Tipo efecto T{INI} y Plazo pago {INI}1 y guarda",
+       "detalle": "Es la condición que recuperarán las facturas de compra.",
+       "imagen": "carteras-010.jpg",
+       "hotspot": {
+        "x": 49.5,
+        "y": 40,
+        "w": 47.5,
+        "h": 8,
+        "etiqueta": "Plazo pago"
+       }
+      },
+      {
+       "texto": "En «Condiciones de cobro» pulsa «Añadir cobro», elige RC, estado PE y plazo 30D y guarda",
+       "detalle": "La captura muestra la pestaña Condiciones de pago con la línea ya guardada.",
+       "imagen": "carteras-011.jpg",
+       "hotspot": {
+        "x": 40,
+        "y": 16.3,
+        "w": 13.5,
+        "h": 4.3,
+        "etiqueta": "Condiciones de cobro"
+       }
+      },
+      {
+       "texto": "Pulsa «Validar» en la barra superior",
+       "detalle": "El tercero pasa de Provisional a Validado."
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "carteras-1-factura-compra",
+     "titulo": "Factura de compra financiera y sus efectos",
+     "paraQueSirve": "La factura de compra de Finanzas (sin albarán ni pedido) registra un gasto o servicio del proveedor. Al elegir el proveedor copia sus condiciones de pago; al contabilizarla genera el asiento (gasto e IVA contra la 400) y un efecto de pago por cada plazo, que quedan en la cartera esperando su pago.",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Compras",
+      "Fact. de compra"
+     ],
+     "explicacion": [
+      "Objeto ccomfach. Los efectos se ven en la propia factura (pestaña «Vencimientos») y, una vez contabilizada, en el asiento (pestaña «Carteras») y en Finanzas › Cobros y Pagos › Cobros y Pagos (cefectos). La factura no tiene pestaña «Apuntes»: el asiento se abre desde el desplegable del título."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura *",
+       "significado": "Tipología de factura de compra (serie, diario).",
+       "ejemplo": "FC Fact. compra"
+      },
+      {
+       "campo": "Empresa / Proyecto / Sección *",
+       "significado": "Unidad de negocio. Al elegir la empresa hay que volver a rellenar proyecto y sección.",
+       "ejemplo": "0 / 0 / 0"
+      },
+      {
+       "campo": "Proveedor / Tipo de dirección *",
+       "significado": "Tercero que factura; trae nombre, Id. fiscal y dirección.",
+       "ejemplo": "T{INI} / 0"
+      },
+      {
+       "campo": "Factura proveedor *",
+       "significado": "Número de la factura del proveedor.",
+       "ejemplo": "PROV-{INI}-001"
+      },
+      {
+       "campo": "Número factura",
+       "significado": "Lo pone la serie al guardar.",
+       "ejemplo": "FC026-000001"
+      },
+      {
+       "campo": "Datos financieros › Perceptor / Tipo efecto / Plazo pago *",
+       "significado": "Se copian de las condiciones de pago del tercero.",
+       "ejemplo": "T{INI} / T{INI} / {INI}1"
+      },
+      {
+       "campo": "Importe factura *",
+       "significado": "Total de control de la factura.",
+       "ejemplo": "121,00"
+      },
+      {
+       "campo": "Detalle › Artículo / Precio / Cuenta *",
+       "significado": "Línea de la factura; la cuenta sale del artículo.",
+       "ejemplo": "S Servicios / 100,00 / 60000.00000"
+      },
+      {
+       "campo": "Detalle › Centro coste / Cuenta explotación *",
+       "significado": "Analítica: obligatorios con cuentas de gasto.",
+       "ejemplo": "0 / 0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa «Nuevo documento»"
+      },
+      {
+       "texto": "Elige Tipo de factura FC y Empresa 0; vuelve a elegir Proyecto 0 y Sección 0",
+       "detalle": "Al cambiar la empresa, proyecto y sección se vacían y hay que rellenarlos de nuevo.",
+       "imagen": "carteras-012.jpg",
+       "hotspot": {
+        "x": 2.5,
+        "y": 22.5,
+        "w": 25.5,
+        "h": 5.5,
+        "etiqueta": "Tipo de factura"
+       }
+      },
+      {
+       "texto": "Elige el Proveedor T{INI} y escribe la Factura proveedor PROV-{INI}-001",
+       "detalle": "Al elegir el proveedor salen su nombre, Id. fiscal y dirección.",
+       "imagen": "carteras-012.jpg",
+       "hotspot": {
+        "x": 2.5,
+        "y": 48,
+        "w": 17.5,
+        "h": 5.5,
+        "etiqueta": "Proveedor"
+       }
+      },
+      {
+       "texto": "Abre la pestaña «Datos financieros»: comprueba que salen T{INI} y el plazo {INI}1 sin haberlos escrito",
+       "detalle": "Perceptor T{INI}, tipo efecto T{INI} y plazo {INI}1 se recuperan de las condiciones del tercero.",
+       "imagen": "carteras-013.jpg",
+       "hotspot": {
+        "x": 16,
+        "y": 40.3,
+        "w": 13.5,
+        "h": 5,
+        "etiqueta": "Datos financieros"
+       }
+      },
+      {
+       "texto": "Escribe el Importe factura 121 y pulsa «Guardar». Abre la factura (FC026-000001)",
+       "imagen": "carteras-012.jpg",
+       "hotspot": {
+        "x": 65.5,
+        "y": 63.5,
+        "w": 32,
+        "h": 6.5,
+        "etiqueta": "Importe factura"
+       }
+      },
+      {
+       "texto": "En la pestaña «Detalle» pulsa «Nuevo»: artículo S Servicios, precio 100, centro de coste 0 y cuenta de explotación 0. Guarda",
+       "detalle": "La cuenta 60000.00000 sale del artículo. Centro coste y Cuenta explotación son obligatorios en cuanto se informa una cuenta de gasto.",
+       "imagen": "carteras-014.jpg",
+       "hotspot": {
+        "x": 49.5,
+        "y": 57,
+        "w": 36,
+        "h": 6.5,
+        "etiqueta": "Cuenta explotación"
+       }
+      },
+      {
+       "texto": "Pulsa «Validar» y mira la pestaña «Vencimientos»: salen tres vencimientos",
+       "detalle": "48,40 + 24,20 + 48,40 = 121,00 (40 / 20 / 40 %) a 40, 80 y 120 días.",
+       "imagen": "carteras-015.jpg"
+      },
+      {
+       "texto": "Abre «Acciones › Contabilizar»",
+       "detalle": "Comprueba los efectos con el desplegable (⌄) del título › «Cartera de efectos» o en Cobros y Pagos."
+      },
+      {
+       "texto": "Fíjate en la cartera de efectos",
+       "detalle": "Los tres efectos de pago de T{INI} (filas 14 a 16) están en estado PE, con órdenes 1, 2 y 3.",
+       "imagen": "carteras-016.jpg"
+      },
+      {
+       "texto": "Fíjate en el asiento de la factura",
+       "detalle": "Asiento 10 (diario DC Compras): 3 líneas, debe 121,00 = haber 121,00.",
+       "imagen": "carteras-017.jpg"
+      },
+      {
+       "texto": "En el asiento, abre la pestaña «Carteras»",
+       "detalle": "Muestra los tres efectos generados al contabilizar.",
+       "imagen": "carteras-018.jpg",
+       "hotspot": {
+        "x": 30.8,
+        "y": 26,
+        "w": 7.5,
+        "h": 5,
+        "etiqueta": "Carteras"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Al guardar la línea con solo artículo y precio sale «Hay errores en los datos del formulario»: Centro coste y Cuenta explotación pasan a ser obligatorios en cuanto se informa una cuenta de gasto o de ingreso."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Elige Centro coste 0 y Cuenta explotación 0 (escribe 0 y elige la fila). Si la lista sale vacía al pulsar la flecha, escribe un carácter."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Si al escribir el precio sale 1,000000 en lugar de 100, el campo tenía el texto seleccionado a medias: selecciona todo (Cmd/Ctrl + A) y vuelve a escribirlo."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué porcentajes y días tiene el plazo de pago {INI}1?",
+     "opciones": [
+      "30/30/40 % a 30, 60 y 90 días",
+      "40/20/40 % a 40, 80 y 120 días",
+      "50/50 % a 30 y 60 días",
+      "40/40/20 % a 40, 80 y 120 días"
+     ],
+     "correcta": 1,
+     "explicacion": "El plazo {INI}1 es Variable con plazos 40, 80 y 120 días y porcentajes 40, 20 y 40."
+    },
+    {
+     "pregunta": "¿Cuántos caracteres admite como máximo el código del tipo de efecto?",
+     "opciones": [
+      "2",
+      "3",
+      "4",
+      "10"
+     ],
+     "correcta": 1,
+     "explicacion": "Con más de 3 caracteres el campo se pone en rojo con «Demasiado largo 4 / 3»."
+    },
+    {
+     "pregunta": "¿De dónde recupera la factura de compra el tipo de efecto y el plazo de pago?",
+     "opciones": [
+      "De la pestaña Detalle",
+      "Del artículo",
+      "De las condiciones de pago del tercero",
+      "Hay que escribirlos siempre a mano"
+     ],
+     "correcta": 2,
+     "explicacion": "Al elegir el proveedor, los datos financieros se copian de sus condiciones de pago."
+    },
+    {
+     "pregunta": "¿Qué importes tienen los tres efectos de la factura de 121,00?",
+     "opciones": [
+      "40,00 + 40,00 + 41,00",
+      "48,40 + 24,20 + 48,40",
+      "30,25 + 30,25 + 60,50",
+      "121,00 en un solo efecto"
+     ],
+     "correcta": 1,
+     "explicacion": "40 %, 20 % y 40 % de 121,00 dan 48,40, 24,20 y 48,40."
+    },
+    {
+     "pregunta": "Si al guardar la línea sale «Hay errores en los datos del formulario», ¿qué falta?",
+     "opciones": [
+      "La dirección del proveedor",
+      "El IBAN",
+      "Centro coste y Cuenta explotación",
+      "El número de factura"
+     ],
+     "correcta": 2,
+     "explicacion": "Con una cuenta de gasto o ingreso, centro de coste y cuenta de explotación son obligatorios (0 y 0 en el ejercicio)."
+    }
+   ],
+   "checklist": [
+    "Existe el plazo de pago {INI}1, tipo Variable, en Días, con plazos 40 / 80 / 120 y porcentajes 40 / 20 / 40.",
+    "Existe el tipo de efecto T{INI}, clase Pagar, estado inicial PE Pendiente y domiciliación «No requiere».",
+    "El código del tipo de efecto tiene 3 caracteres y se guarda sin error.",
+    "Existe el tercero T{INI} «Tercero Carteras» con categoría 002 Proveedores.",
+    "T{INI} tiene las relaciones Cliente CLI 43000.00000 y Proveedor PRO 40000.00000 y la dirección 0 (08001).",
+    "T{INI} tiene condición de pago T{INI} + {INI}1 y condición de cobro RC + PE + 30D.",
+    "El tercero T{INI} está en estado Validado.",
+    "La factura de compra FC026-000001 (proveedor T{INI}, PROV-{INI}-001, importe 121,00) recupera T{INI} y {INI}1 en Datos financieros.",
+    "La línea de la factura usa el artículo S Servicios, precio 100 y centro de coste y cuenta de explotación 0.",
+    "Tras Validar, la pestaña Vencimientos muestra tres vencimientos: 48,40 / 24,20 / 48,40.",
+    "Tras Contabilizar, la cartera tiene tres efectos de pago PE y el asiento 10 cuadra (debe 121,00 = haber 121,00)."
+   ],
+   "problemas": [
+    {
+     "problema": "El tipo de efecto con código de 4 caracteres (TF{INI}) se pone en rojo con «Demasiado largo 4 / 3».",
+     "solucion": "Usa un código de 3 caracteres, por ejemplo T{INI}."
+    },
+    {
+     "problema": "Al guardar la línea de la factura sale «Hay errores en los datos del formulario» porque Centro coste y Cuenta explotación son obligatorios con una cuenta de gasto o ingreso.",
+     "solucion": "Elige Centro coste 0 y Cuenta explotación 0 (escribe 0 y elige la fila). Si la lista sale vacía, escribe un carácter."
+    },
+    {
+     "problema": "Al escribir el precio sale 1,000000 en lugar de 100.",
+     "solucion": "Selecciona todo el campo (Cmd/Ctrl + A) y vuelve a escribirlo."
+    }
+   ]
+  },
+  {
+   "id": "carteras-3",
+   "numero": 3,
+   "titulo": "Bancos propios",
+   "objetivo": "Tendrás dada de alta una cuenta corriente (BBVA_{INI}) y una caja de efectivo (CAJA_{INI}) con su entidad financiera y agrupación de cuentas.",
+   "concepto": "Los bancos propios (cuentas financieras) son las cuentas de la empresa contra las que se cobran y pagan los efectos y las que llevan las remesas al banco. Cada una apunta a una cuenta contable de tesorería (572 para un banco, 570 para una caja) y a un tercero «entidad financiera» con su dirección, que hay que crear antes.\n\nEn este ejercicio defines la cuenta corriente BBVA_{INI} y la caja CAJA_{INI}. En un caso real el IBAN lo introduce la persona responsable; aquí el banco se deja vacío.",
+   "duracionMin": 35,
+   "secciones": [
+    {
+     "id": "carteras-3-entidad",
+     "titulo": "Tercero de la entidad financiera",
+     "paraQueSirve": "Cada banco propio está ligado a un tercero «entidad financiera» con su dirección, así que hay que crearlo antes que el banco.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Terceros",
+      "Registro de terceros"
+     ],
+     "explicacion": [
+      "Objeto ctercero."
+     ],
+     "campos": [
+      {
+       "campo": "Tercero / Nombre *",
+       "significado": "Código y nombre del banco.",
+       "ejemplo": "B{INI} / BBVA Carteras {INI}"
+      },
+      {
+       "campo": "País emisor / Tipo ID fiscal / Id. fiscal *",
+       "significado": "Identificación fiscal.",
+       "ejemplo": "ES / No censado / 0"
+      },
+      {
+       "campo": "Categoría *",
+       "significado": "Tipo de tercero: 008 Entidades Financieras.",
+       "ejemplo": "008"
+      },
+      {
+       "campo": "Dirección 0 *",
+       "significado": "Domicilio del banco; es obligatoria para usarlo en el banco propio.",
+       "ejemplo": "08001 Plaça de Catalunya 5"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Da de alta el tercero B{INI} con la categoría 008 Entidades Financieras"
+      },
+      {
+       "texto": "Añade la dirección 0 en la pestaña «Direcciones» y pulsa «Validar»"
+      },
+      {
+       "texto": "Fíjate en la lista de terceros",
+       "detalle": "Aparece B{INI} «BBVA Carteras {INI}» con categoría Entidades Financieras.",
+       "imagen": "carteras-019.jpg"
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "carteras-3-banco",
+     "titulo": "Banco propio BBVA_{INI}",
+     "paraQueSirve": "El banco propio (cuenta financiera) representa una cuenta de la empresa en un banco: a qué cuenta contable (572) van sus movimientos, qué tipos de remesa admite y con qué líneas financieras (contratos) trabaja. Es la cuenta que se elige al cobrar, pagar y remesar.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Auxiliares",
+      "Bancos propios"
+     ],
+     "explicacion": [
+      "Objeto cbancpro. Si se informa el banco hay que informar también el número de cuenta o IBAN, o ninguno de los dos. En el ejercicio no se escriben datos bancarios reales: el banco se deja vacío; en un caso real, la persona responsable introduce el IBAN de la empresa en esta pantalla.",
+      "La ficha del banco tiene las pestañas Banco, Condiciones bancarias, Operaciones por cuenta, Comisiones, Numeradores, Remesas por cuenta y Líneas financieras. Los numeradores están en la pestaña «Numeradores»."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa / Proyecto / Sección *",
+       "significado": "Unidad de negocio.",
+       "ejemplo": "0 / 0 / 0"
+      },
+      {
+       "campo": "Cuenta financiera *",
+       "significado": "Código de la cuenta. Máximo 10 caracteres.",
+       "ejemplo": "BBVA_{INI}"
+      },
+      {
+       "campo": "Desc. cuenta financiera *",
+       "significado": "Nombre de la cuenta.",
+       "ejemplo": "BBVA cuenta corriente {INI}"
+      },
+      {
+       "campo": "Moneda / Estado *",
+       "significado": "Divisa y estado.",
+       "ejemplo": "EUR / Abierto"
+      },
+      {
+       "campo": "Banco / Tipo de cuenta (IBAN, BBAN) / Núm. cuenta / IBAN",
+       "significado": "Datos bancarios. Si se informa el banco hay que informar también la cuenta.",
+       "ejemplo": "Vacíos en el ejercicio"
+      },
+      {
+       "campo": "Tipo de cuenta *",
+       "significado": "Cuenta corriente, de ahorro, de crédito, caja de efectivo…",
+       "ejemplo": "Cuenta corriente"
+      },
+      {
+       "campo": "Entidad financiera / Tipo de dirección *",
+       "significado": "Tercero del banco y su dirección.",
+       "ejemplo": "B{INI} / 0"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Cuenta contable de la tesorería.",
+       "ejemplo": "57200.00000"
+      },
+      {
+       "campo": "Preferencia / Fecha apertura / Formato extracto *",
+       "significado": "Datos de gestión; se dejan los valores por defecto.",
+       "ejemplo": "Sí / hoy / España AEB43"
+      },
+      {
+       "campo": "Agrupación cuentas *",
+       "significado": "Grupo de tesorería para los informes. Se crea con «+» si no existe.",
+       "ejemplo": "{INI} Bancos y cajas {INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa «Añadir bancos propios»"
+      },
+      {
+       "texto": "Rellena empresa, proyecto y sección 0, la cuenta financiera BBVA_{INI} y su descripción"
+      },
+      {
+       "texto": "Deja vacíos Banco, número de cuenta e IBAN",
+       "detalle": "Mira el PROBLEMA de abajo: informar solo el banco da error al guardar."
+      },
+      {
+       "texto": "Elige Entidad financiera B{INI}, Tipo de dirección 0 y Cuenta 57200.00000",
+       "detalle": "Para la cuenta escribe 5720 para filtrar.",
+       "imagen": "carteras-020.jpg",
+       "hotspot": {
+        "x": 2.5,
+        "y": 41,
+        "w": 33,
+        "h": 6,
+        "etiqueta": "Entidad financiera"
+       }
+      },
+      {
+       "texto": "En Agrupación cuentas pulsa «+» y crea el grupo: Tipo Cuenta, Grupo tesorería {INI}, Descripción «Bancos y cajas {INI}»",
+       "imagen": "carteras-020.jpg",
+       "hotspot": {
+        "x": 66.5,
+        "y": 73.5,
+        "w": 30.5,
+        "h": 6,
+        "etiqueta": "Agrupación cuentas"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "carteras-020.jpg",
+       "hotspot": {
+        "x": 87.5,
+        "y": 89.2,
+        "w": 10.5,
+        "h": 4.4,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el error al informar el banco sin número de cuenta",
+       "detalle": "Sale «Las siguientes restricciones de verificación fallaron: Entidad y cuenta bancaria, ambos nulos o no nulos».",
+       "imagen": "carteras-021.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si se elige el Banco (por ejemplo ES0057 BBVA) sin escribir el número de cuenta, al guardar sale «Las siguientes restricciones de verificación fallaron: Entidad y cuenta bancaria, ambos nulos o no nulos»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "O se informan los dos (banco y cuenta o IBAN) o ninguno. En este manual no se escriben datos bancarios reales: el banco se deja vacío."
+      }
+     ]
+    },
+    {
+     "id": "carteras-3-caja",
+     "titulo": "Caja de efectivo CAJA_{INI}",
+     "paraQueSirve": "La caja de efectivo es otra cuenta financiera, sin datos bancarios, para los cobros y pagos en metálico. Se da de alta en la misma pantalla.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Auxiliares",
+      "Bancos propios"
+     ],
+     "explicacion": [
+      "Objeto cbancpro."
+     ],
+     "campos": [
+      {
+       "campo": "Cuenta financiera *",
+       "significado": "Código de la caja (máximo 10 caracteres).",
+       "ejemplo": "CAJA_{INI}"
+      },
+      {
+       "campo": "Desc. cuenta financiera *",
+       "significado": "Nombre de la caja.",
+       "ejemplo": "Caja efectivo {INI}"
+      },
+      {
+       "campo": "Tipo de cuenta *",
+       "significado": "Tipo «Caja de efectivo».",
+       "ejemplo": "Caja de efectivo"
+      },
+      {
+       "campo": "Entidad financiera / Tipo de dirección *",
+       "significado": "Tercero y dirección asociados.",
+       "ejemplo": "B{INI} / 0"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Cuenta contable de caja.",
+       "ejemplo": "57000.00000 Caja, euros"
+      },
+      {
+       "campo": "Agrupación cuentas *",
+       "significado": "Mismo grupo que el banco.",
+       "ejemplo": "{INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Pulsa «Añadir bancos propios» y rellena empresa, proyecto, sección, CAJA_{INI} y la descripción"
+      },
+      {
+       "texto": "Elige Tipo de cuenta «Caja de efectivo», entidad B{INI}, dirección 0, cuenta 57000.00000 y agrupación {INI}",
+       "detalle": "La caja no lleva banco ni datos bancarios.",
+       "imagen": "carteras-022.jpg",
+       "hotspot": {
+        "x": 23.5,
+        "y": 24.3,
+        "w": 22,
+        "h": 6,
+        "etiqueta": "Tipo de cuenta"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "carteras-022.jpg",
+       "hotspot": {
+        "x": 87.5,
+        "y": 89.2,
+        "w": 10.5,
+        "h": 4.4,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en la lista de bancos propios",
+       "detalle": "Salen BBVA_{INI} (57200) y CAJA_{INI} (57000) en la agrupación {INI}.",
+       "imagen": "carteras-023.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Un código largo como BBVA_CAJA_{INI} da «Demasiado largo 12 / 10»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Usa un código de 10 caracteres como máximo, por ejemplo CAJA_{INI}."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué hay que crear antes que el banco propio?",
+     "opciones": [
+      "La remesa",
+      "El tercero entidad financiera con su dirección",
+      "El plazo de pago",
+      "La factura de venta"
+     ],
+     "correcta": 1,
+     "explicacion": "Cada banco propio está ligado a un tercero «entidad financiera» con su dirección."
+    },
+    {
+     "pregunta": "¿Qué categoría de tercero se usa para el banco?",
+     "opciones": [
+      "002 Proveedores",
+      "008 Entidades Financieras",
+      "001 Clientes",
+      "0"
+     ],
+     "correcta": 1,
+     "explicacion": "La categoría del tercero del banco es 008 Entidades Financieras."
+    },
+    {
+     "pregunta": "Si se informa el Banco pero no el número de cuenta, ¿qué ocurre al guardar?",
+     "opciones": [
+      "Se guarda sin más",
+      "Sale el error «Entidad y cuenta bancaria, ambos nulos o no nulos»",
+      "Se pone la cuenta 57200 sola",
+      "Se crea una caja"
+     ],
+     "correcta": 1,
+     "explicacion": "O se informan los dos (banco y cuenta o IBAN) o ninguno."
+    },
+    {
+     "pregunta": "¿Cuál es la cuenta contable de BBVA_{INI} y la de CAJA_{INI}?",
+     "opciones": [
+      "57000 y 57200",
+      "57200 y 57000",
+      "43000 y 40000",
+      "60000 y 70500"
+     ],
+     "correcta": 1,
+     "explicacion": "El banco usa 57200.00000 y la caja de efectivo 57000.00000."
+    },
+    {
+     "pregunta": "¿Cuántos caracteres admite como máximo el código de la cuenta financiera?",
+     "opciones": [
+      "3",
+      "6",
+      "10",
+      "12"
+     ],
+     "correcta": 2,
+     "explicacion": "Con BBVA_CAJA_{INI} sale «Demasiado largo 12 / 10»; el máximo son 10."
+    }
+   ],
+   "checklist": [
+    "Existe el tercero B{INI} «BBVA Carteras {INI}» con categoría 008 Entidades Financieras.",
+    "B{INI} tiene la dirección 0 (08001 Plaça de Catalunya 5) y está Validado.",
+    "Existe el banco propio BBVA_{INI}, tipo de cuenta Cuenta corriente, con cuenta contable 57200.00000.",
+    "BBVA_{INI} tiene Banco, número de cuenta e IBAN vacíos y se guarda sin error.",
+    "Existe la agrupación de cuentas {INI} «Bancos y cajas {INI}» y BBVA_{INI} la usa.",
+    "Existe la caja CAJA_{INI}, tipo Caja de efectivo, con cuenta 57000.00000 y agrupación {INI}.",
+    "El código CAJA_{INI} tiene como máximo 10 caracteres.",
+    "La lista de Bancos propios muestra BBVA_{INI} (57200) y CAJA_{INI} (57000) en la agrupación {INI}."
+   ],
+   "problemas": [
+    {
+     "problema": "Al guardar el banco con la entidad bancaria informada y sin número de cuenta sale «Entidad y cuenta bancaria, ambos nulos o no nulos».",
+     "solucion": "Informa los dos (banco y cuenta o IBAN) o ninguno. En el ejercicio, deja el banco vacío."
+    },
+    {
+     "problema": "El código BBVA_CAJA_{INI} da «Demasiado largo 12 / 10».",
+     "solucion": "Usa un código de 10 caracteres como máximo, por ejemplo CAJA_{INI}."
+    }
+   ]
+  },
+  {
+   "id": "carteras-5",
+   "numero": 5,
+   "titulo": "Circuito de cobros",
+   "objetivo": "Habrás cobrado un efecto de forma individual (de PE a CO) y otros dos juntos con una remesa enviada al banco BBVA_{INI}, con sus asientos.",
+   "concepto": "El cobro de una factura de venta sigue un ciclo de estados del efecto: nace Pendiente (PE) y termina Cobrado (CO). Se puede cobrar de uno en uno con una gestión sobre efectos (acción COBD Cobro directo) o agrupar varios efectos en una remesa que se presenta al banco y recorre PE › PR (propuesto) › OC (ordenado) › CO. En cada cambio de estado el ERP genera el asiento contable.\n\nEn este ejercicio montas el circuito completo: un artículo financiero, una factura de venta al tercero T{INI}, el cobro individual de su efecto y el cobro de varios efectos juntos mediante una remesa al banco BBVA_{INI}.",
+   "duracionMin": 75,
+   "secciones": [
+    {
+     "id": "carteras-5-estados",
+     "titulo": "Estados y acciones de los efectos",
+     "paraQueSirve": "El ciclo de vida de un efecto se define con dos maestros. Los estados (PE Pendiente, PR Propuesto, OC Ordenado, CO Cobrado, PA Pagado, DV Devuelto…) dicen si el efecto está liquidado o impagado. Las acciones son los pasos permitidos: cada una lleva el efecto a un estado final y genera su asiento con una plantilla contable. El circuito PE › CO de un cobro ya viene definido en la base; no hace falta crear estados nuevos.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Efectos",
+      "Estados"
+     ],
+     "explicacion": [
+      "Objetos cefecest (estados) y cefeacti (Maestros › Acciones › Relación de acciones). La Relación de acciones define el estado final, el asiento, la plantilla y si la acción es individual o de remesa. Para el ejercicio se usan las acciones existentes COBD y las de los tipos de remesa."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre Estados y fíjate en la lista",
+       "detalle": "PE Pendiente (liquidación pendiente), CO Cobrado y PA Pagado (liquidado), DV Devuelto (impagado)…",
+       "imagen": "carteras-024.jpg"
+      },
+      {
+       "texto": "Abre Maestros › Acciones › Relación de acciones y localiza COBD",
+       "detalle": "COBD Cobro directo (individual) lleva el efecto a CO con el asiento COBD; las acciones de remesa están marcadas como «Acción remesa».",
+       "imagen": "carteras-025.jpg",
+       "hotspot": {
+        "x": 17.8,
+        "y": 57.2,
+        "w": 27,
+        "h": 4.5,
+        "etiqueta": "COBD"
+       }
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "carteras-5-articulo",
+     "titulo": "Artículo financiero {INI}1",
+     "paraQueSirve": "Los artículos de Finanzas son los conceptos que se facturan sin pasar por gestión (servicios, alquileres, suplidos…). Deciden el tipo fiscal (IVA) y la cuenta de compras o ventas de la línea.",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Maestros",
+      "Artículos"
+     ],
+     "explicacion": [
+      "Objeto carticul. El tercero T{INI} ya tiene la relación de cliente CLI (43000) y la condición de cobro RC / PE / 30D creadas en la sección «Tercero T{INI} y sus condiciones de pago y cobro»."
+     ],
+     "campos": [
+      {
+       "campo": "Artículo / Descripción *",
+       "significado": "Código y nombre.",
+       "ejemplo": "{INI}1 / Servicios de asesoria {INI}"
+      },
+      {
+       "campo": "Unidad medida / Estado *",
+       "significado": "Unidad y estado.",
+       "ejemplo": "UN / Abierto"
+      },
+      {
+       "campo": "Tipo fiscal / Clave fiscal artículo *",
+       "significado": "Naturaleza para el IVA: bien, servicio, alquiler, suplido…",
+       "ejemplo": "Servicio / SOG"
+      },
+      {
+       "campo": "Precio / Precio de venta *",
+       "significado": "Precio variable con un precio propuesto.",
+       "ejemplo": "Variable / 200,00"
+      },
+      {
+       "campo": "Mnemotécnico de compras / ventas",
+       "significado": "Cuenta contable propuesta para compras y para ventas.",
+       "ejemplo": "62300 / 70500"
+      },
+      {
+       "campo": "% Descuento compras / ventas *",
+       "significado": "Descuento por defecto.",
+       "ejemplo": "0 / 0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa «Añadir artículo»"
+      },
+      {
+       "texto": "Rellena {INI}1, la descripción, Tipo fiscal «Servicio» y Clave fiscal SOG",
+       "imagen": "carteras-026.jpg",
+       "hotspot": {
+        "x": 2.8,
+        "y": 22.5,
+        "w": 18,
+        "h": 5.5,
+        "etiqueta": "Artículo"
+       }
+      },
+      {
+       "texto": "Escribe el precio de venta 200 y elige los mnemotécnicos 62300 y 70500",
+       "detalle": "62300 es el de compras y 70500 el de ventas.",
+       "imagen": "carteras-026.jpg",
+       "hotspot": {
+        "x": 62.5,
+        "y": 38,
+        "w": 34,
+        "h": 6,
+        "etiqueta": "Precio de venta"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "carteras-026.jpg",
+       "hotspot": {
+        "x": 87.5,
+        "y": 89.2,
+        "w": 10.5,
+        "h": 4.4,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en la condición de cobro de T{INI}",
+       "detalle": "Tipo de efecto RC Recibo, estado PE Pendiente y plazo 30 días: la factura de venta la copiará.",
+       "imagen": "carteras-027.jpg"
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "carteras-5-factura-venta",
+     "titulo": "Factura de venta y su efecto de cobro",
+     "paraQueSirve": "La factura de venta de Finanzas registra un ingreso al cliente. Copia del tercero la condición de cobro y, al contabilizarla, genera el asiento (430 contra ventas e IVA) y el efecto de cobro en estado PE.",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Ventas",
+      "Factura de venta"
+     ],
+     "explicacion": [
+      "Objeto cvenfach. El número definitivo de la factura (FVN026-000001) se asigna al contabilizar; mientras está provisional la ficha se titula «#1». Tras contabilizar, los botones pasan a ser «Descontabilizar», «Copiar» y «eFactura».",
+      "El ejercicio usa una factura normal porque lo que interesa es el ciclo del efecto en cartera; el anticipo se gestiona con su propio circuito."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura *",
+       "significado": "Tipología de factura de venta.",
+       "ejemplo": "FV Factura de ventas"
+      },
+      {
+       "campo": "Empresa / Proyecto / Sección *",
+       "significado": "Unidad de negocio.",
+       "ejemplo": "0 / 0 / 0"
+      },
+      {
+       "campo": "Cliente *",
+       "significado": "Tercero; al salir del campo con Tab copia nombre, dirección y datos financieros.",
+       "ejemplo": "T{INI}"
+      },
+      {
+       "campo": "Perceptor / Tipo efecto / Plazo pago / Cuenta *",
+       "significado": "Datos financieros copiados de la condición de cobro y de la relación CLI.",
+       "ejemplo": "T{INI} / RC / 30 días / 43000.00000"
+      },
+      {
+       "campo": "Detalle › Artículo / Precio *",
+       "significado": "Línea; el precio sale del artículo.",
+       "ejemplo": "{INI}1 / 200,00"
+      },
+      {
+       "campo": "Detalle › Cuenta / Centro coste / Cuenta explotación *",
+       "significado": "Cuenta de ventas y analítica (obligatorias).",
+       "ejemplo": "70500.00000 / 0 / 0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa «Nuevo documento»"
+      },
+      {
+       "texto": "Elige FV, empresa 0, proyecto 0 y sección 0"
+      },
+      {
+       "texto": "Escribe T{INI} en Cliente, elige la fila y pulsa Tab",
+       "detalle": "Se rellenan dirección, RC, 30 días y la cuenta 43000.00000. Si eliges el cliente con Intro y no sales del campo, esos datos se quedan vacíos.",
+       "imagen": "carteras-028.jpg",
+       "hotspot": {
+        "x": 2.8,
+        "y": 18.8,
+        "w": 20,
+        "h": 5,
+        "etiqueta": "Cliente"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar» y abre la factura (#1)"
+      },
+      {
+       "texto": "En «Detalle» pulsa «Nuevo»: artículo {INI}1, cuenta 70500.00000, centro de coste 0 y cuenta de explotación 0. Guarda",
+       "detalle": "La cuenta de la línea no se propone sola desde el mnemotécnico del artículo.",
+       "imagen": "carteras-029.jpg",
+       "hotspot": {
+        "x": 19.5,
+        "y": 66,
+        "w": 16.5,
+        "h": 5.5,
+        "etiqueta": "Cuenta"
+       }
+      },
+      {
+       "texto": "Fíjate en el error al guardar la línea sin analítica",
+       "detalle": "Con la cuenta 70500 son obligatorios el centro de coste y la cuenta de explotación.",
+       "imagen": "carteras-030.jpg"
+      },
+      {
+       "texto": "Pulsa «Validar» y después «Contabilizar»",
+       "detalle": "La factura toma el número FVN026-000001 y la banda «CONTABILIZADO»."
+      },
+      {
+       "texto": "Mira la pestaña «Vencimientos»: un efecto RC en estado PE de 242,00",
+       "detalle": "242,00 = 200,00 + 42,00 de IVA.",
+       "imagen": "carteras-031.jpg",
+       "hotspot": {
+        "x": 28,
+        "y": 15.2,
+        "w": 10,
+        "h": 5.2,
+        "etiqueta": "Vencimientos"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si se elige el cliente con Intro y no se sale del campo, Nombre tercero, Dirección, Tipo efecto y Plazo pago se quedan vacíos y el formulario no deja guardar."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Elige la fila del cliente y pulsa Tab (o haz clic en otro campo); en ese momento se cargan todos los datos del tercero."
+      },
+      {
+       "tipo": "problema",
+       "texto": "La cuenta de la línea no se propone sola desde el mnemotécnico del artículo y, al guardarla, Centro coste y Cuenta explotación salen en rojo como obligatorios."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Elige la cuenta 70500.00000 de la lista y rellena Centro coste 0 y Cuenta explotación 0."
+      }
+     ]
+    },
+    {
+     "id": "carteras-5-cobro-individual",
+     "titulo": "Cobro individual del efecto: gestión sobre efectos",
+     "paraQueSirve": "Cobrar un efecto suelto (el cliente paga por transferencia o en caja) se hace con una gestión: un documento que reúne uno o varios efectos, les aplica una acción (aquí COBD Cobro directo) contra una cuenta financiera y, al cerrarlo, cambia su estado a CO y genera el asiento de cobro.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Gestiones",
+      "Gestiones sobre efectos"
+     ],
+     "explicacion": [
+      "Objeto cefecges_pcs. Lo normal es agrupar los cobros y pagos en gestiones (o en remesas), que dejan rastro del proceso y del asiento generado. «Abrir» deshace una gestión cerrada."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa / Proyecto / Sección *",
+       "significado": "Unidad de negocio.",
+       "ejemplo": "0 / 0 / 0"
+      },
+      {
+       "campo": "Fecha proceso / Clase *",
+       "significado": "Fecha del cobro y cartera.",
+       "ejemplo": "Hoy / Cobrar"
+      },
+      {
+       "campo": "Acción *",
+       "significado": "Acción que se aplica a los efectos.",
+       "ejemplo": "COBD Cobro directo"
+      },
+      {
+       "campo": "Manual *",
+       "significado": "Gestión manual (los efectos se eligen a mano).",
+       "ejemplo": "Sí"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Banco o caja donde entra el dinero.",
+       "ejemplo": "BBVA_{INI}"
+      },
+      {
+       "campo": "Perceptor / Nombre *",
+       "significado": "Tercero que paga; el nombre se rellena solo.",
+       "ejemplo": "T{INI} / Tercero Carteras"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Fíjate en la ficha del efecto de cobro",
+       "detalle": "Efecto de T{INI}, cuenta 43000, tipo RC, estado PE, 242,00; tiene los botones Evolucionar estado y Retroceder. No cobres desde aquí: mira el PROBLEMA de abajo.",
+       "imagen": "carteras-032.jpg"
+      },
+      {
+       "texto": "Fíjate en el error de la acción desde la ficha del efecto",
+       "detalle": "Al elegir la acción desde «Evolucionar estado» sale «No such column 'emi_repres_nif'»: es un error de la base TUTORIAL.",
+       "imagen": "carteras-033.jpg"
+      },
+      {
+       "texto": "Abre la ruta y pulsa «Nuevo». Rellena empresa 0, clase Cobrar, acción COBD, cuenta financiera BBVA_{INI} y perceptor T{INI} (sal con Tab). Guarda",
+       "imagen": "carteras-034.jpg",
+       "hotspot": {
+        "x": 50.5,
+        "y": 31.8,
+        "w": 23.5,
+        "h": 5.2,
+        "etiqueta": "Acción"
+       }
+      },
+      {
+       "texto": "Abre la gestión (0-5) y baja a la pestaña «Selección de efectos»",
+       "detalle": "Salen todos los efectos de cobro pendientes."
+      },
+      {
+       "texto": "Marca solo el efecto de T{INI} (FVN026-000001, 242,00) y pulsa «Agregar efectos»",
+       "imagen": "carteras-035.jpg",
+       "hotspot": {
+        "x": 82.8,
+        "y": 76.8,
+        "w": 10.8,
+        "h": 4.6,
+        "etiqueta": "Agregar efectos"
+       }
+      },
+      {
+       "texto": "En «Efectos seleccionados» comprueba el efecto",
+       "detalle": "La cabecera suma 242,00."
+      },
+      {
+       "texto": "Pulsa «Cerrar» y confirma",
+       "detalle": "El efecto pasa a CO Cobrado. Con «Abrir» se deshace.",
+       "imagen": "carteras-036.jpg"
+      },
+      {
+       "texto": "Abre el asiento con el desplegable (⌄) del título › «Asientos contables»",
+       "detalle": "Asiento del cobro CA026-000001: 57200.00000 Bancos al debe y 43000.00000 Clientes al haber, 242,00.",
+       "imagen": "carteras-037.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Desde la ficha del efecto, el botón «Evolucionar estado» abre su diálogo pero al desplegar «Acción» (o escribir COBD) sale «Se ha producido un error … No such column 'emi_repres_nif'». Es un error de la base TUTORIAL en la lista de valores de esa pantalla."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Cobra el efecto con una «Gestión sobre efectos» (pasos de arriba), que hace lo mismo y además permite cobrar varios efectos a la vez."
+      }
+     ]
+    },
+    {
+     "id": "carteras-5-remesa-banco",
+     "titulo": "Preparar el banco: línea financiera y remesas por cuenta",
+     "paraQueSirve": "Una remesa agrupa varios efectos de cobro para presentarlos juntos al banco. Su tipo decide el circuito: al agregar los efectos pasan a PR (propuesto), al ordenarla a OC (ordenado) y al confirmar el cobro a CO, con el asiento del banco. Antes hay que preparar el banco: una línea financiera y los tipos de remesa que admite («Remesas por cuenta»).",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Auxiliares",
+      "Bancos propios",
+      "BBVA_{INI}",
+      "Líneas financieras / Remesas por cuenta"
+     ],
+     "explicacion": [
+      "Se trabaja desde las pestañas «Líneas financieras» y «Remesas por cuenta» de la ficha del banco BBVA_{INI}. Los tipos de remesa de efectos (cremesad) tienen cada uno su serie (RM), clase y acción inicial."
+     ],
+     "campos": [
+      {
+       "campo": "Línea financiera / Descripción *",
+       "significado": "Contrato del banco con el que se trabaja.",
+       "ejemplo": "{INI}1 / Remesas de cobro {INI}"
+      },
+      {
+       "campo": "Tipo de línea *",
+       "significado": "Clase de contrato. En TUTORIAL no hay ninguno: se crea con «+».",
+       "ejemplo": "{INI} Remesas cobro {INI}"
+      },
+      {
+       "campo": "Referencia financiera *",
+       "significado": "Referencia del contrato (no es un dato bancario).",
+       "ejemplo": "CONTRATO-{INI}-001"
+      },
+      {
+       "campo": "Fecha inicio / Fecha fin *",
+       "significado": "Vigencia del contrato.",
+       "ejemplo": "01-11-2026 / 31-12-2027"
+      },
+      {
+       "campo": "Cargo / Límite concedido / Límite operativo *",
+       "significado": "Tipo de operación y límites.",
+       "ejemplo": "Gestión cobros / 100.000 / 100.000"
+      },
+      {
+       "campo": "Remesas por cuenta › Remesa *",
+       "significado": "Tipo de remesa que admite la cuenta.",
+       "ejemplo": "CSCTS (y CSDDS)"
+      },
+      {
+       "campo": "Remesas por cuenta › Línea financiera / Límite",
+       "significado": "Línea asociada y límite de importe.",
+       "ejemplo": "{INI}1 / 100.000"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre BBVA_{INI} y la pestaña «Líneas financieras»; pulsa «Nuevo»"
+      },
+      {
+       "texto": "Escribe la línea {INI}1 y la descripción; en Tipo de línea pulsa «+» y crea {INI} «Remesas cobro {INI}»",
+       "imagen": "carteras-039.jpg",
+       "hotspot": {
+        "x": 59,
+        "y": 36.3,
+        "w": 18,
+        "h": 5.5,
+        "etiqueta": "Tipo de línea"
+       }
+      },
+      {
+       "texto": "Rellena referencia, fechas, cargo «Gestión cobros» y límites. Guarda",
+       "imagen": "carteras-039.jpg",
+       "hotspot": {
+        "x": 23.5,
+        "y": 60.8,
+        "w": 14,
+        "h": 5.2,
+        "etiqueta": "Cargo"
+       }
+      },
+      {
+       "texto": "En «Remesas por cuenta» pulsa «Nuevo», elige la remesa CSCTS (Cobro transferencias, sin Tesorería) y guarda",
+       "detalle": "Repite con CSDDS si quieres probar los recibos domiciliados.",
+       "imagen": "carteras-041.jpg",
+       "hotspot": {
+        "x": 55.5,
+        "y": 16,
+        "w": 14,
+        "h": 4.8,
+        "etiqueta": "Remesas por cuenta"
+       }
+      },
+      {
+       "texto": "Fíjate en los tipos de remesas de efectos",
+       "detalle": "Cada tipo tiene su serie (RM), clase y acción inicial.",
+       "imagen": "carteras-040.jpg"
+      },
+      {
+       "texto": "Fíjate en qué pasa si el banco no tiene remesas por cuenta",
+       "detalle": "Al crear la remesa, el Tipo remesa no ofrece valores («Datos no disponibles»).",
+       "imagen": "carteras-038.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "En la remesa nueva el Tipo remesa sale vacío porque la cuenta financiera no tiene definidas sus «Remesas por cuenta»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Añade en el banco los tipos de remesa que vaya a usar (pasos de arriba)."
+      }
+     ]
+    },
+    {
+     "id": "carteras-5-remesa",
+     "titulo": "Crear la remesa, agregar los efectos y cobrarla",
+     "paraQueSirve": "Una remesa agrupa varios efectos de cobro para presentarlos juntos al banco. Se crea, se le agregan efectos (pasan a PR), se ordena (OC) y se confirma el cobro (CO), generando el asiento del banco.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Remesas",
+      "Registro de remesas"
+     ],
+     "explicacion": [
+      "Objeto cremesas. «Evolucionar estado» recorre la secuencia proponer › ordenar › confirmar; «Retroceder» deshace el último paso. Los efectos se añaden desde la pestaña «Selección de efectos», no con un botón fijo.",
+      "En la base TUTORIAL la plantilla contable de la confirmación lleva la contrapartida a la 23000.00000; en una base bien parametrizada será la cuenta del cliente o de efectos en gestión de cobro (430 / 431).",
+      "«Copiar» en una factura de venta abre un diálogo con «Facturas» y «Cadencia mensual»: crea tantas facturas provisionales como se indique, una por mes. Abre una pestaña nueva con el resultado, así que puede parecer que no ha hecho nada: compruébalo en la lista de facturas."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa / Cuenta financiera *",
+       "significado": "Empresa y banco al que se presenta.",
+       "ejemplo": "0 / BBVA_{INI}"
+      },
+      {
+       "campo": "Fecha remesa / Fecha valor *",
+       "significado": "Fechas de la remesa.",
+       "ejemplo": "Hoy"
+      },
+      {
+       "campo": "Clase / Tipo remesa *",
+       "significado": "Cartera y tipo; el tipo solo ofrece los definidos en el banco.",
+       "ejemplo": "Cobrar / CSCTS"
+      },
+      {
+       "campo": "Justificante / Acción *",
+       "significado": "Se rellenan solos con el tipo: serie RM y acción inicial.",
+       "ejemplo": "RM026-000002 / RCSCTP"
+      },
+      {
+       "campo": "Importe máximo / Total remesa *",
+       "significado": "Límite y suma de los efectos agregados.",
+       "ejemplo": "1.000.000.000 / 242,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Crea otra factura de venta a T{INI} con «Nuevo › Nuevo como» desde la FVN026-000001, cambia el Plazo pago a T2D, añade la línea {INI}1 y contabilízala",
+       "detalle": "FVN026-000002 genera 2 efectos de 121,00.",
+       "imagen": "carteras-042.jpg",
+       "hotspot": {
+        "x": 54.2,
+        "y": 8.2,
+        "w": 9,
+        "h": 4.5,
+        "etiqueta": "Contabilizar"
+       }
+      },
+      {
+       "texto": "Abre el Registro de remesas y pulsa «Nuevo»: empresa 0, cuenta BBVA_{INI}, clase Cobrar, tipo CSCTS (sal con Tab). Guarda",
+       "detalle": "Al elegir el tipo se rellenan el justificante RM y la acción inicial.",
+       "imagen": "carteras-043.jpg",
+       "hotspot": {
+        "x": 50.5,
+        "y": 31.8,
+        "w": 23,
+        "h": 5.5,
+        "etiqueta": "Tipo remesa"
+       }
+      },
+      {
+       "texto": "Abre la remesa, pestaña «Selección de efectos», marca los dos efectos de FVN026-000002 y pulsa «Agregar efectos»",
+       "detalle": "Pasan a PR y el total es 242,00.",
+       "imagen": "carteras-044.jpg",
+       "hotspot": {
+        "x": 83,
+        "y": 63.8,
+        "w": 11,
+        "h": 4.5,
+        "etiqueta": "Agregar efectos"
+       }
+      },
+      {
+       "texto": "Fíjate en los efectos agregados",
+       "detalle": "Pasan de PE a PR Propuesto y el total de la remesa es 242,00.",
+       "imagen": "carteras-045.jpg"
+      },
+      {
+       "texto": "Pulsa «Evolucionar estado» y acepta «Remesa cobro transferencias, ordenar (s/Tes)»",
+       "detalle": "Los efectos pasan a OC y aparecen las pestañas Gestión remesas, Apuntes y Tesorería.",
+       "imagen": "carteras-046.jpg",
+       "hotspot": {
+        "x": 68.5,
+        "y": 8.2,
+        "w": 11.5,
+        "h": 4.6,
+        "etiqueta": "Evolucionar estado"
+       }
+      },
+      {
+       "texto": "Vuelve a pulsar «Evolucionar estado» y acepta «Remesa, confirmar pago por bancos (s/Tes)» con la fecha de contabilización",
+       "detalle": "Los efectos pasan a CO.",
+       "imagen": "carteras-047.jpg",
+       "hotspot": {
+        "x": 62,
+        "y": 74.5,
+        "w": 7.8,
+        "h": 4.5,
+        "etiqueta": "Aceptar"
+       }
+      },
+      {
+       "texto": "Fíjate en la remesa cobrada",
+       "detalle": "Los dos efectos están en CO; «Evolucionar estado» ya no está disponible.",
+       "imagen": "carteras-048.jpg"
+      },
+      {
+       "texto": "Mira la pestaña «Apuntes» de la remesa con el asiento del cobro",
+       "detalle": "Asiento con 57200.00000 Bancos al debe y una línea por efecto al haber.",
+       "imagen": "carteras-049.jpg",
+       "hotspot": {
+        "x": 20,
+        "y": 15.8,
+        "w": 7.5,
+        "h": 4.6,
+        "etiqueta": "Apuntes"
+       }
+      },
+      {
+       "texto": "Fíjate en el error al ordenar una remesa de recibos domiciliados",
+       "detalle": "Con el tipo CSDDS, al ordenar sale «Requiere la domiciliación bancaria del tercero!».",
+       "imagen": "carteras-050.jpg"
+      },
+      {
+       "texto": "Fíjate en que el tipo de la remesa no se puede cambiar una vez guardada",
+       "detalle": "Sale «No se permite cambiar el tipo de la remesa».",
+       "imagen": "carteras-051.jpg"
+      },
+      {
+       "texto": "Comprueba la lista de facturas de venta de T{INI}",
+       "detalle": "Aparecen las dos contabilizadas y las dos copias provisionales creadas con «Copiar».",
+       "imagen": "carteras-052.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Con el tipo CSDDS (Cobro débitos directos - domiciliaciones) los efectos se agregan, pero al ordenar la remesa sale «cefectos_upd: [FVN026-000002] Requiere la domiciliación bancaria del tercero!»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Un recibo domiciliado se carga en la cuenta del cliente, así que hace falta su IBAN en la pestaña «Datos bancarios» del tercero y la domiciliación en la factura (la introduce la persona responsable, no se escribe en este manual). Para el ejercicio se desagregan los efectos («Desagregar efectos») y se usa el tipo CSCTS, que no la exige."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Si se intenta cambiar el tipo de una remesa ya creada sale «cremesas_upd: No se permite cambiar el tipo de la remesa»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Crea una remesa nueva con el tipo correcto (la RM026-000001 se queda vacía)."
+      },
+      {
+       "tipo": "nota",
+       "texto": "En la base TUTORIAL la plantilla contable de la confirmación lleva la contrapartida a la 23000.00000; en una base bien parametrizada será la cuenta del cliente o de efectos en gestión de cobro (430 / 431)."
+      },
+      {
+       "tipo": "nota",
+       "texto": "«Copiar» en una factura de venta crea facturas provisionales, una por mes, y abre una pestaña nueva: compruébalo en la lista de facturas."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿En qué estado nace el efecto de cobro de la factura de venta?",
+     "opciones": [
+      "CO Cobrado",
+      "PE Pendiente",
+      "OC Ordenado",
+      "DV Devuelto"
+     ],
+     "correcta": 1,
+     "explicacion": "Al contabilizar, el efecto RC nace en estado PE."
+    },
+    {
+     "pregunta": "¿Qué acción se usa para cobrar un efecto individualmente?",
+     "opciones": [
+      "CEFE",
+      "CLECAP",
+      "COBD Cobro directo",
+      "CONB"
+     ],
+     "correcta": 2,
+     "explicacion": "La gestión sobre efectos aplica COBD Cobro directo y lleva el efecto a CO."
+    },
+    {
+     "pregunta": "¿Por qué estados pasa un efecto en una remesa de cobro?",
+     "opciones": [
+      "PE › CO directamente",
+      "PE › PR › OC › CO",
+      "PE › DV › CO",
+      "PR › PE › OC"
+     ],
+     "correcta": 1,
+     "explicacion": "Al agregarlos pasan a PR, al ordenar a OC y al confirmar el cobro a CO."
+    },
+    {
+     "pregunta": "¿Por qué el Tipo remesa sale vacío en una remesa nueva?",
+     "opciones": [
+      "Porque falta la factura",
+      "Porque la cuenta financiera no tiene definidas sus «Remesas por cuenta»",
+      "Porque el tercero no está validado",
+      "Porque la fecha es futura"
+     ],
+     "correcta": 1,
+     "explicacion": "Hay que añadir en el banco los tipos de remesa que vaya a usar."
+    },
+    {
+     "pregunta": "¿Cuál es el importe del efecto de la factura FVN026-000001?",
+     "opciones": [
+      "200,00",
+      "121,00",
+      "242,00",
+      "100,00"
+     ],
+     "correcta": 2,
+     "explicacion": "200,00 de base más 42,00 de IVA."
+    }
+   ],
+   "checklist": [
+    "Los estados (cefecest) y las acciones (cefeacti) existen: reconoces PE, PR, OC, CO y la acción COBD Cobro directo.",
+    "Existe el artículo {INI}1 (Servicios de asesoria {INI}), tipo fiscal Servicio, clave SOG, precio de venta 200 y mnemotécnicos 62300 / 70500.",
+    "La factura de venta FVN026-000001 a T{INI} está contabilizada y tiene un vencimiento RC / PE de 242,00.",
+    "La línea de la factura usa la cuenta 70500.00000 con centro de coste y cuenta de explotación 0.",
+    "La gestión sobre efectos (clase Cobrar, acción COBD, cuenta BBVA_{INI}, perceptor T{INI}) cobra el efecto de 242,00 y este pasa a CO.",
+    "El asiento del cobro CA026-000001 tiene 57200.00000 al debe y 43000.00000 al haber por 242,00.",
+    "BBVA_{INI} tiene la línea financiera {INI}1 (CONTRATO-{INI}-001, 01-11-2026 a 31-12-2027, 100.000) y la remesa por cuenta CSCTS.",
+    "La factura FVN026-000002 con plazo T2D genera 2 efectos de 121,00.",
+    "La remesa RM026-000002 (CSCTS) agrupa los dos efectos: PE › PR con total 242,00.",
+    "Tras «Evolucionar estado» dos veces, los efectos pasan a OC y luego a CO.",
+    "La pestaña Apuntes de la remesa muestra el asiento con 57200.00000 Bancos al debe y una línea por efecto al haber.",
+    "Entiendes por qué la remesa CSDDS falla al ordenar sin domiciliación bancaria."
+   ],
+   "problemas": [
+    {
+     "problema": "Si se elige el cliente con Intro y no se sale del campo, Nombre tercero, Dirección, Tipo efecto y Plazo pago se quedan vacíos y el formulario no deja guardar.",
+     "solucion": "Elige la fila del cliente y pulsa Tab (o haz clic en otro campo)."
+    },
+    {
+     "problema": "La cuenta de la línea de la factura no se propone sola y al guardarla Centro coste y Cuenta explotación salen en rojo.",
+     "solucion": "Elige la cuenta 70500.00000 de la lista y rellena Centro coste 0 y Cuenta explotación 0."
+    },
+    {
+     "problema": "Desde la ficha del efecto, «Evolucionar estado» da «No such column 'emi_repres_nif'» al elegir la acción (error de la base TUTORIAL).",
+     "solucion": "Cobra el efecto con una «Gestión sobre efectos»."
+    },
+    {
+     "problema": "En la remesa nueva el Tipo remesa sale vacío («Datos no disponibles»).",
+     "solucion": "Añade en el banco, pestaña «Remesas por cuenta», los tipos de remesa que vayas a usar (CSCTS, CSDDS)."
+    },
+    {
+     "problema": "Con el tipo CSDDS, al ordenar la remesa sale «Requiere la domiciliación bancaria del tercero!».",
+     "solucion": "Hace falta el IBAN del cliente en «Datos bancarios» y la domiciliación en la factura; para el ejercicio, desagrega los efectos y usa CSCTS."
+    },
+    {
+     "problema": "Al intentar cambiar el tipo de una remesa ya creada sale «No se permite cambiar el tipo de la remesa».",
+     "solucion": "Crea una remesa nueva con el tipo correcto."
+    }
+   ]
+  }
+ ],
+ "datosSimulador": {
+  "efectos": [
+   {
+    "documento": "PROV-{INI}-001",
+    "factura": "FC026-000001",
+    "clase": "Pagar",
+    "tercero": "T{INI} Tercero Carteras",
+    "tipoEfecto": "T{INI}",
+    "importe": 48.4,
+    "vencimiento": "22-12-2026",
+    "estado": "PE",
+    "orden": 1,
+    "idEfecto": 34
+   },
+   {
+    "documento": "PROV-{INI}-001",
+    "factura": "FC026-000001",
+    "clase": "Pagar",
+    "tercero": "T{INI} Tercero Carteras",
+    "tipoEfecto": "T{INI}",
+    "importe": 24.2,
+    "vencimiento": "01-02-2027",
+    "estado": "PE",
+    "orden": 2,
+    "idEfecto": 35
+   },
+   {
+    "documento": "PROV-{INI}-001",
+    "factura": "FC026-000001",
+    "clase": "Pagar",
+    "tercero": "T{INI} Tercero Carteras",
+    "tipoEfecto": "T{INI}",
+    "importe": 48.4,
+    "vencimiento": "12-03-2027",
+    "estado": "PE",
+    "orden": 3,
+    "idEfecto": 36
+   },
+   {
+    "documento": "FVN026-000001",
+    "factura": "FVN026-000001",
+    "clase": "Cobrar",
+    "tercero": "T{INI} Tercero Carteras",
+    "tipoEfecto": "RC",
+    "importe": 242.0,
+    "vencimiento": "14-12-2026",
+    "estado": "PE",
+    "orden": 1,
+    "estadoFinal": "CO",
+    "cobradoCon": "Gestión sobre efectos 0-5 (COBD)"
+   },
+   {
+    "documento": "FVN026-000002",
+    "factura": "FVN026-000002",
+    "clase": "Cobrar",
+    "tercero": "T{INI} Tercero Carteras",
+    "tipoEfecto": "RC",
+    "importe": 121.0,
+    "vencimiento": "14-12-2026",
+    "estado": "PE",
+    "orden": 1,
+    "estadoFinal": "CO",
+    "cobradoCon": "Remesa RM026-000002 (CSCTS)"
+   },
+   {
+    "documento": "FVN026-000002",
+    "factura": "FVN026-000002",
+    "clase": "Cobrar",
+    "tercero": "T{INI} Tercero Carteras",
+    "tipoEfecto": "RC",
+    "importe": 121.0,
+    "vencimiento": "11-01-2027",
+    "estado": "PE",
+    "orden": 2,
+    "estadoFinal": "CO",
+    "cobradoCon": "Remesa RM026-000002 (CSCTS)"
+   }
+  ],
+  "estados": [
+   {
+    "codigo": "PE",
+    "nombre": "Pendiente",
+    "orden": 1,
+    "ciclo": true,
+    "descripcion": "Estado en el que nace el efecto al contabilizar la factura (liquidación pendiente)."
+   },
+   {
+    "codigo": "PR",
+    "nombre": "Propuesto",
+    "orden": 2,
+    "ciclo": true,
+    "descripcion": "Los efectos agregados a una remesa pasan a PR."
+   },
+   {
+    "codigo": "OC",
+    "nombre": "Ordenado",
+    "orden": 3,
+    "ciclo": true,
+    "descripcion": "Al ordenar la remesa («Remesa cobro transferencias, ordenar (s/Tes)»)."
+   },
+   {
+    "codigo": "CO",
+    "nombre": "Cobrado",
+    "orden": 4,
+    "ciclo": true,
+    "descripcion": "Al cerrar la gestión (COBD) o confirmar el cobro de la remesa («Remesa, confirmar pago por bancos (s/Tes)»); liquidado."
+   },
+   {
+    "codigo": "PA",
+    "nombre": "Pagado",
+    "orden": null,
+    "ciclo": false,
+    "descripcion": "Estado liquidado de la cartera de pagos."
+   },
+   {
+    "codigo": "DV",
+    "nombre": "Devuelto",
+    "orden": null,
+    "ciclo": false,
+    "descripcion": "Estado impagado."
+   }
+  ],
+  "asientos": [
+   {
+    "titulo": "Asiento 10 · Factura de compra FC026-000001 (diario DC Compras)",
+    "lineas": [
+     {
+      "cuenta": "60000.00000",
+      "nombreCuenta": null,
+      "debe": 100.0,
+      "haber": null
+     },
+     {
+      "cuenta": null,
+      "nombreCuenta": null,
+      "debe": 21.0,
+      "haber": null
+     },
+     {
+      "cuenta": "40000.00000",
+      "nombreCuenta": null,
+      "debe": null,
+      "haber": 121.0
+     }
+    ]
+   },
+   {
+    "titulo": "Asiento CA026-000001 · Cobro individual del efecto FVN026-000001",
+    "lineas": [
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "debe": 242.0,
+      "haber": null
+     },
+     {
+      "cuenta": "43000.00000",
+      "nombreCuenta": "Clientes (euros)",
+      "debe": null,
+      "haber": 242.0
+     }
+    ]
+   },
+   {
+    "titulo": "Asiento de la remesa RM026-000002 (confirmación del cobro)",
+    "lineas": [
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "debe": 242.0,
+      "haber": null
+     },
+     {
+      "cuenta": "23000.00000",
+      "nombreCuenta": "Adaptación de terrenos y bienes naturales",
+      "debe": null,
+      "haber": 121.0
+     },
+     {
+      "cuenta": "23000.00000",
+      "nombreCuenta": "Adaptación de terrenos y bienes naturales",
+      "debe": null,
+      "haber": 121.0
+     }
+    ]
+   }
+  ]
+ }
+}

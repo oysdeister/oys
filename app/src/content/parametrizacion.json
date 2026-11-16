@@ -1,0 +1,1186 @@
+{
+ "id": "parametrizacion",
+ "titulo": "Parametrización de contabilidad",
+ "sesion": "",
+ "resumen": "Aprendes a montar la estructura contable de una empresa: dar de alta y modificar una cuenta de gastos del grupo 6, crear un grupo auxiliar con sus códigos y asignarlo a la cuenta, y definir la analítica con un proyecto y una sección. Todo ello en la base de pruebas TUTORIAL con códigos formados con tus iniciales.",
+ "circuito": [
+  "Cuenta contable",
+  "Grupo auxiliar",
+  "Código auxiliar",
+  "Proyecto",
+  "Sección"
+ ],
+ "navegacion": [
+  {
+   "id": "parametrizacion-nav",
+   "titulo": "Cómo moverte por el ERP",
+   "paraQueSirve": "Antes de contabilizar nada, la empresa define su estructura contable: el plan de cuentas, los auxiliares (un segundo nivel de detalle dentro de una cuenta, por ejemplo por empleado) y la analítica (proyectos y secciones). Aquí aprendes a llegar a cada pantalla y a manejar sus elementos comunes.",
+   "ruta": [
+    "Finanzas",
+    "Maestros"
+   ],
+   "explicacion": [
+    "Todo lo que se crea en estos ejercicios se usa después en los asientos, las facturas y los informes: una cuenta mal definida obliga a corregir asientos más tarde, así que conviene entender cada campo.",
+    "Se entra con el menú lateral (icono ☰ arriba a la izquierda): Finanzas › Maestros › … También puedes usar el buscador superior «Buscar» (Cmd/Ctrl + K) y escribir el nombre de la pantalla.",
+    "Unas pantallas se abren en modo lista (cuentas contables) y otras en modo ficha con el primer registro (grupos auxiliares, proyectos, secciones). Para crear un registro, pulsa el botón rojo «Añadir …» arriba a la derecha y elige «Nuevo» (formulario en blanco) o «Nuevo como» (copia del registro que estás viendo).",
+    "El alta se rellena en una ventana y se guarda con «Guardar» abajo a la derecha. Los cambios en una ficha ya existente se guardan con el icono del disquete de la barra superior. En los dos casos sale el aviso verde «Éxito».",
+    "Los campos con lista (plan contable, grupo auxiliar, sección…) son de autocompletar: escribes el código y eliges la fila. Debajo del campo aparece la descripción del valor elegido.",
+    "Los campos obligatorios llevan un asterisco rojo en la etiqueta. Si guardas sin ellos sale «Hay errores en los datos del formulario» y el campo que falta se marca en rojo.",
+    "En los ejemplos se usan códigos con tus iniciales ({INI}): cuenta «Gastos varios {INI}», grupo auxiliar {INI}EMP, proyecto {INI}1, sección {INI}ADM. Las capturas muestran las iniciales del autor del manual (EC); tú usa las tuyas."
+   ],
+   "campos": [],
+   "pasos": [
+    {
+     "texto": "Abre el menú lateral con el icono ☰ y navega por Finanzas › Maestros › … hasta la pantalla que necesites",
+     "detalle": "También puedes pulsar Cmd/Ctrl + K y escribir el nombre de la pantalla en el buscador «Buscar»."
+    },
+    {
+     "texto": "Para crear un registro, pulsa el botón rojo «Añadir …» y elige «Nuevo» o «Nuevo como»",
+     "detalle": "«Nuevo» abre un formulario en blanco; «Nuevo como» copia el registro que estás viendo."
+    },
+    {
+     "texto": "Guarda un alta con «Guardar» abajo a la derecha y un cambio en una ficha con el icono del disquete",
+     "detalle": "En ambos casos debe salir el aviso verde «Éxito»."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Las listas son editables en la propia rejilla: un clic sobre una celda (por ejemplo la descripción de otra cuenta) abre su edición en línea."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Para consultar, abre el registro con el enlace del código. Si has abierto una celda por error, pulsa Esc sin escribir nada y no se guarda ningún cambio."
+    }
+   ]
+  }
+ ],
+ "ejercicios": [
+  {
+   "id": "parametrizacion-1",
+   "numero": 1,
+   "titulo": "Dar de alta una cuenta del grupo 6 «Gastos varios»",
+   "objetivo": "Tendrás creada la cuenta 62999.00000 «Gastos varios {INI}» en el plan PGE 2008, de tipo Costes.",
+   "concepto": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia cuando se quiere ver por separado un tipo de gasto en el balance de sumas y saldos y en la cuenta de resultados. A partir de ese momento se puede usar en asientos, facturas de compra y plantillas contables.\n\nEn la base TUTORIAL hay dos planes contables: «PG Andorra 2012» y el español «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000). Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "parametrizacion-1-cuenta",
+     "titulo": "Alta de la cuenta 62999.00000",
+     "paraQueSirve": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia para ver por separado un tipo de gasto en el balance de sumas y saldos y en la cuenta de resultados, y poder usarla en asientos, facturas de compra y plantillas contables.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Cuentas contables (objeto ccuentas)"
+     ],
+     "explicacion": [
+      "Primero conviene mirar cómo están definidas las cuentas parecidas. Al abrir la pantalla se muestra un filtro: escribe 629* en «Cuenta» y pulsa «Ejecutar consulta».",
+      "En la base TUTORIAL hay dos planes contables: «PG Andorra 2012» y el español «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000).",
+      "Las cuentas 629 del plan PGE 2008 son todas de tipo Costes, Activar Ambos, Activa C, grupo Standard, 999 días y posición Debe. La nueva cuenta seguirá el mismo modelo.",
+      "En Plan contable se escribe el código del plan (ES), no su descripción. Al guardar sale «Éxito» y la cuenta aparece en la lista."
+     ],
+     "campos": [
+      {
+       "campo": "Plan contable *",
+       "significado": "Plan de cuentas al que pertenece la cuenta. Se escribe el código del plan (ES), no su descripción.",
+       "ejemplo": "ES (PGE 2008)"
+      },
+      {
+       "campo": "Posición *",
+       "significado": "Saldo habitual de la cuenta. Un gasto se carga en el Debe.",
+       "ejemplo": "Debe"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo las cuentas abiertas admiten apuntes. Una cuenta cerrada no se puede usar en asientos nuevos.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Código de la cuenta, con el formato del plan (5 dígitos, punto, 5 dígitos).",
+       "ejemplo": "62999.00000"
+      },
+      {
+       "campo": "Descripción cuenta *",
+       "significado": "Nombre que sale en los listados, el mayor y el balance.",
+       "ejemplo": "Gastos varios {INI}"
+      },
+      {
+       "campo": "Grupo *",
+       "significado": "Si es una cuenta de parte relacionada o vinculada (para la memoria). Lo normal es Standard.",
+       "ejemplo": "Standard"
+      },
+      {
+       "campo": "Grupo auxiliar",
+       "significado": "Grupo de códigos auxiliares que pedirá la cuenta al contabilizar. Se rellena en el ejercicio 4.",
+       "ejemplo": "(vacío por ahora)"
+      },
+      {
+       "campo": "Tipo *",
+       "significado": "Comportamiento de la cuenta: Normal, Terceros (clientes y proveedores), Entidades financieras (bancos), Costes (cuentas de gestión de los grupos 6 y 7) o Analítica (grupo 9). Una cuenta de gastos es de Costes.",
+       "ejemplo": "Costes"
+      },
+      {
+       "campo": "Activa",
+       "significado": "Qué auxiliares activa la cuenta al contabilizar: la ayuda del campo indica impuestos, cartera y costes; C = costes, como el resto de la 629.",
+       "ejemplo": "C"
+      },
+      {
+       "campo": "Activar",
+       "significado": "En qué lado del asiento se activan esos auxiliares: Debe, Haber o Ambos.",
+       "ejemplo": "Ambos"
+      },
+      {
+       "campo": "Días máximos *",
+       "significado": "Días sin movimiento a partir de los cuales la cuenta se considera inactiva. 999 = sin límite práctico.",
+       "ejemplo": "999"
+      },
+      {
+       "campo": "Periodificable *",
+       "significado": "Si los importes de la cuenta se pueden repartir entre varios periodos. Para gastos varios, No.",
+       "ejemplo": "No"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta, filtra por 629* y pulsa «Ejecutar consulta» para ver las cuentas parecidas",
+       "detalle": "Fíjate en que todas son Costes, Ambos, C, Standard, 999 y Debe.",
+       "imagen": "parametrizacion-002.jpg",
+       "hotspot": {
+        "x": 33.2,
+        "y": 9.0,
+        "w": 14.4,
+        "h": 3.4,
+        "etiqueta": "Cuenta Es igual a 629*"
+       }
+      },
+      {
+       "texto": "Pulsa el botón rojo «Añadir cuenta»",
+       "detalle": "Se abre la ventana «CUENTAS CONTABLES».",
+       "imagen": "parametrizacion-002.jpg",
+       "hotspot": {
+        "x": 80.8,
+        "y": 8.8,
+        "w": 9.0,
+        "h": 3.2,
+        "etiqueta": "Añadir cuenta"
+       }
+      },
+      {
+       "texto": "En Plan contable escribe ES y elige la fila «ES · PGE 2008» de la lista",
+       "detalle": "Debajo del campo debe aparecer «ES».",
+       "imagen": "parametrizacion-004.jpg",
+       "hotspot": {
+        "x": 2.8,
+        "y": 20.8,
+        "w": 26.5,
+        "h": 8.0,
+        "etiqueta": "Plan contable"
+       }
+      },
+      {
+       "texto": "Escribe la Cuenta 62999.00000 y la Descripción «Gastos varios {INI}». Deja Debe, Abierto y Standard"
+      },
+      {
+       "texto": "En Información general elige Tipo «Costes»",
+       "detalle": "Cada tipo del desplegable explica su uso: «Costes» es el de las cuentas de gestión de los grupos 6 y 7.",
+       "imagen": "parametrizacion-003.jpg",
+       "hotspot": {
+        "x": 3.0,
+        "y": 84.4,
+        "w": 31.0,
+        "h": 4.8,
+        "etiqueta": "Costes"
+       }
+      },
+      {
+       "texto": "Escribe C en Activa y elige «Ambos» en Activar. Deja 999 días",
+       "detalle": "La alta rellena queda con plan PGE 2008, cuenta 62999.00000, Costes, Activa C y Activar Ambos.",
+       "imagen": "parametrizacion-004.jpg",
+       "hotspot": {
+        "x": 34.1,
+        "y": 62.5,
+        "w": 31.0,
+        "h": 5.6,
+        "etiqueta": "Activa"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "detalle": "Sale «Éxito» y la cuenta aparece en la lista.",
+       "imagen": "parametrizacion-004.jpg",
+       "hotspot": {
+        "x": 87.9,
+        "y": 90.0,
+        "w": 9.0,
+        "h": 3.4,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: aviso «Éxito» y la cuenta 62999.00000 «Gastos varios {INI}» en la última fila de la lista",
+       "imagen": "parametrizacion-005.jpg"
+      },
+      {
+       "texto": "Fíjate en el error típico: con «PGE» escrito a mano el plan no es válido y el campo se marca «Error en la validación»",
+       "detalle": "Se evita escribiendo el código ES.",
+       "imagen": "parametrizacion-006.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las capturas muestran las iniciales EC del autor del manual; tú usa las tuyas ({INI})."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Si en Plan contable se escribe la descripción (PGE) en lugar del código, la lista no encuentra nada, el campo queda en rojo con «Error en la validación» y al escribir después la cuenta puede salir la ventana «Se ha producido un error · TypeError: Cannot read property 'split' of null», porque la pantalla no sabe qué formato de cuenta aplicar."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Cierra el aviso, borra el texto del plan, escribe ES y sal del campo (Tab) o elige la fila de la lista. Debajo del campo debe aparecer «ES» y el plan «PGE 2008»; entonces la cuenta se acepta."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué código de plan debes escribir en el campo Plan contable para usar el plan español?",
+     "opciones": [
+      "PGE",
+      "ES",
+      "PGE 2008",
+      "PG Andorra 2012"
+     ],
+     "correcta": 1,
+     "explicacion": "Se escribe el código del plan (ES), no su descripción; si escribes PGE el campo da «Error en la validación»."
+    },
+    {
+     "pregunta": "¿De qué tipo es una cuenta de gastos del grupo 6 en la base TUTORIAL?",
+     "opciones": [
+      "Normal",
+      "Terceros",
+      "Costes",
+      "Analítica"
+     ],
+     "correcta": 2,
+     "explicacion": "Costes es el tipo de las cuentas de gestión de los grupos 6 y 7; así piden proyecto y sección al contabilizar."
+    },
+    {
+     "pregunta": "¿Qué formato tienen los códigos de cuenta del plan PGE 2008 en la demo?",
+     "opciones": [
+      "4 + 6 dígitos",
+      "5 + 5 dígitos con punto, como 62999.00000",
+      "8 dígitos seguidos",
+      "3 dígitos"
+     ],
+     "correcta": 1,
+     "explicacion": "Las cuentas tienen 5 dígitos, un punto y otros 5 dígitos, por ejemplo 62900.00000."
+    },
+    {
+     "pregunta": "¿Qué posición lleva una cuenta de gastos?",
+     "opciones": [
+      "Haber",
+      "Debe",
+      "Ambos",
+      "Ninguna"
+     ],
+     "correcta": 1,
+     "explicacion": "Un gasto se carga en el Debe."
+    },
+    {
+     "pregunta": "¿Cómo compruebas que la cuenta se ha creado bien?",
+     "opciones": [
+      "Filtrando la lista por 629*: aparece al final con los mismos valores que el resto",
+      "Cerrando sesión",
+      "Mirando el balance de sumas y saldos",
+      "No se puede comprobar"
+     ],
+     "correcta": 0,
+     "explicacion": "Al filtrar por 629* la cuenta aparece al final con los mismos valores que el resto de la 629."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Cuentas contables › Cuentas contables (objeto ccuentas)",
+    "Filtras la lista por 629* y ves que las cuentas son Costes, Ambos, C, Standard, 999 y Debe",
+    "Pulsas «Añadir cuenta» y se abre la ventana «CUENTAS CONTABLES»",
+    "En Plan contable escribes ES y eliges «ES · PGE 2008»",
+    "Escribes la cuenta 62999.00000 y la descripción «Gastos varios {INI}»",
+    "Dejas Posición Debe, Estado Abierto y Grupo Standard",
+    "Eliges Tipo «Costes», escribes C en Activa y eliges «Ambos» en Activar",
+    "Dejas Días máximos en 999",
+    "Pulsas «Guardar» y sale el aviso «Éxito»",
+    "Filtras por 629* y la cuenta aparece al final de la lista con los mismos valores que el resto"
+   ],
+   "problemas": [
+    {
+     "problema": "Al escribir PGE en Plan contable el campo se marca «Error en la validación» y puede salir «TypeError: Cannot read property 'split' of null».",
+     "solucion": "Cierra el aviso, borra el texto, escribe ES y sal del campo (Tab) o elige la fila de la lista; debajo debe aparecer «ES» y el plan «PGE 2008»."
+    }
+   ]
+  },
+  {
+   "id": "parametrizacion-2",
+   "numero": 2,
+   "titulo": "Cambiar la descripción de la cuenta",
+   "objetivo": "La cuenta 62999.00000 se llamará «Gastos varios {INI} Administración».",
+   "concepto": "La descripción de una cuenta se puede cambiar en cualquier momento, incluso si ya tiene apuntes: es solo el texto que sale en los listados. Lo que no se cambia así es el código: para renumerar una cuenta con movimientos hay una pantalla específica, Finanzas › Maestros › Cuentas contables › Cambio código de cuenta.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "parametrizacion-2-descripcion",
+     "titulo": "Modificar la descripción",
+     "paraQueSirve": "La descripción es solo el texto que sale en listados, mayor y balance, y se puede cambiar siempre. El código de una cuenta con movimientos se renumera en otra pantalla: Finanzas › Maestros › Cuentas contables › Cambio código de cuenta.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Cuentas contables (objeto ccuentas)"
+     ],
+     "explicacion": [
+      "Se abre la ficha de la cuenta y se guarda con el disquete de la barra superior. Si la ficha se abre en una ventana flotante, también se puede ver en página completa (aparece el menú lateral con la ruta).",
+      "Mientras hay un cambio sin guardar, aparece una marca roja a la izquierda de la descripción."
+     ],
+     "campos": [
+      {
+       "campo": "Descripción cuenta *",
+       "significado": "Nombre que sale en los listados, el mayor y el balance.",
+       "ejemplo": "Gastos varios {INI} Administración"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Filtra la lista por la cuenta 62999.00000 y ábrela pulsando su código"
+      },
+      {
+       "texto": "Cambia la Descripción cuenta a «Gastos varios {INI} Administración»",
+       "detalle": "La marca roja a la izquierda de la descripción indica un cambio pendiente de guardar.",
+       "imagen": "parametrizacion-007.jpg",
+       "hotspot": {
+        "x": 31.0,
+        "y": 34.9,
+        "w": 42.5,
+        "h": 4.4,
+        "etiqueta": "Descripción cuenta"
+       }
+      },
+      {
+       "texto": "Pulsa el icono del disquete de la barra superior",
+       "detalle": "Sale «Éxito».",
+       "imagen": "parametrizacion-007.jpg",
+       "hotspot": {
+        "x": 85.2,
+        "y": 8.6,
+        "w": 2.5,
+        "h": 4.0,
+        "etiqueta": "Guardar (disquete)"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: aviso «Éxito» y la nueva descripción",
+       "imagen": "parametrizacion-008.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Para cambiar el código de una cuenta con movimientos usa la pantalla «Cambio código de cuenta»; la descripción se cambia directamente en la ficha."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Se puede cambiar la descripción de una cuenta que ya tiene apuntes?",
+     "opciones": [
+      "No, nunca",
+      "Sí, es solo el texto de los listados",
+      "Solo si está cerrada",
+      "Solo con permiso especial del plan"
+     ],
+     "correcta": 1,
+     "explicacion": "La descripción se puede cambiar en cualquier momento, incluso con apuntes."
+    },
+    {
+     "pregunta": "¿Cómo se guardan los cambios en una ficha existente?",
+     "opciones": [
+      "Con «Guardar» de la ventana de alta",
+      "Con el icono del disquete de la barra superior",
+      "Se guardan solos",
+      "Con Cmd/Ctrl + K"
+     ],
+     "correcta": 1,
+     "explicacion": "En las fichas ya existentes se guarda con el disquete de la barra superior."
+    },
+    {
+     "pregunta": "¿Qué indica la marca roja a la izquierda de la descripción?",
+     "opciones": [
+      "Un error de validación",
+      "Un cambio pendiente de guardar",
+      "Que la cuenta está cerrada",
+      "Que es obligatoria"
+     ],
+     "correcta": 1,
+     "explicacion": "La marca roja señala un cambio pendiente de guardar."
+    },
+    {
+     "pregunta": "¿Qué pantalla sirve para renumerar una cuenta con movimientos?",
+     "opciones": [
+      "Cuentas contables",
+      "Cambio código de cuenta",
+      "Grupos auxiliares",
+      "Planes contables"
+     ],
+     "correcta": 1,
+     "explicacion": "El código no se cambia en la ficha; hay una pantalla específica llamada Cambio código de cuenta."
+    }
+   ],
+   "checklist": [
+    "Filtras la lista por la cuenta 62999.00000",
+    "Abres la ficha pulsando el código de la cuenta",
+    "Cambias Descripción cuenta a «Gastos varios {INI} Administración»",
+    "Ves la marca roja de cambio pendiente a la izquierda de la descripción",
+    "Pulsas el disquete de la barra superior y sale «Éxito»",
+    "En la lista (filtro 629*) sale la nueva descripción"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-3",
+   "numero": 3,
+   "titulo": "Crear un grupo auxiliar «Empleados» con José Gómez",
+   "objetivo": "Tendrás el grupo auxiliar {INI}EMP «EMPLEADOS {INI}» con el código auxiliar {INI}0001 «José Gómez» abierto.",
+   "concepto": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Por ejemplo, con el grupo «Empleados» la misma cuenta de gastos puede llevar cada apunte asignado a un empleado concreto, y después sacar el saldo por empleado.\n\nPrimero se crea el grupo y sus códigos; después se asigna a las cuentas (ejercicio 4).",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "parametrizacion-3-grupo",
+     "titulo": "Crear el grupo",
+     "paraQueSirve": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Primero se crea el grupo; después sus códigos; por último se asigna a las cuentas.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Grupos auxiliares (objeto cctaauxh)"
+     ],
+     "explicacion": [
+      "Al abrir la pantalla se muestra la ficha del grupo existente TERCER «Terceros». Se crea el grupo nuevo con «Añadir grupos › Nuevo».",
+      "El código del grupo tiene un máximo de 6 caracteres. La descripción se guarda en mayúsculas."
+     ],
+     "campos": [
+      {
+       "campo": "Grupo auxiliar *",
+       "significado": "Código del grupo. Es lo que se elige después en la ficha de la cuenta. Máximo 6 caracteres.",
+       "ejemplo": "{INI}EMP"
+      },
+      {
+       "campo": "Descripción auxiliar *",
+       "significado": "Nombre del grupo (se guarda en mayúsculas).",
+       "ejemplo": "EMPLEADOS {INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta",
+       "detalle": "Se muestra la ficha del grupo existente TERCER «Terceros»."
+      },
+      {
+       "texto": "Pulsa «Añadir grupos › Nuevo»"
+      },
+      {
+       "texto": "Escribe {INI}EMP como Grupo auxiliar y «Empleados {INI}» como descripción",
+       "detalle": "La pantalla convierte la descripción a mayúsculas.",
+       "imagen": "parametrizacion-009.jpg",
+       "hotspot": {
+        "x": 27.5,
+        "y": 49.7,
+        "w": 22.5,
+        "h": 4.4,
+        "etiqueta": "Grupo auxiliar"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "parametrizacion-009.jpg",
+       "hotspot": {
+        "x": 63.1,
+        "y": 63.7,
+        "w": 9.2,
+        "h": 3.4,
+        "etiqueta": "Guardar"
+       }
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "parametrizacion-3-codigo",
+     "titulo": "Añadir el código auxiliar José Gómez",
+     "paraQueSirve": "Cada código auxiliar es un elemento del grupo (aquí, un empleado). Solo los códigos abiertos se pueden usar en los apuntes.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Grupos auxiliares (objeto cctaauxh)"
+     ],
+     "explicacion": [
+      "Grupo y códigos están en la misma ficha: arriba el grupo y debajo sus códigos auxiliares y las cuentas que lo usan.",
+      "El código auxiliar tiene un máximo de 14 caracteres."
+     ],
+     "campos": [
+      {
+       "campo": "Auxiliar *",
+       "significado": "Código del elemento dentro del grupo (aquí, el empleado). Máximo 14 caracteres.",
+       "ejemplo": "{INI}0001"
+      },
+      {
+       "campo": "Descripción auxiliar *",
+       "significado": "Nombre del elemento.",
+       "ejemplo": "José Gómez"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo los códigos abiertos se pueden usar en los apuntes.",
+       "ejemplo": "Abierto"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ficha del grupo {INI}EMP",
+       "detalle": "Puedes hacerlo desde la lista de grupos o con las flechas ‹ › de la barra superior.",
+       "imagen": "parametrizacion-010.jpg"
+      },
+      {
+       "texto": "En el bloque «Códigos auxiliares» pulsa «Añadir codigos»",
+       "detalle": "La ventana debe mostrar «EMPLEADOS {INI}» bajo el título.",
+       "imagen": "parametrizacion-010.jpg",
+       "hotspot": {
+        "x": 78.2,
+        "y": 40.1,
+        "w": 9.8,
+        "h": 3.4,
+        "etiqueta": "Añadir codigos"
+       }
+      },
+      {
+       "texto": "Escribe {INI}0001 y «José Gómez» y deja el Estado en Abierto",
+       "detalle": "Debajo del título de la ventana se ve el grupo al que se añade.",
+       "imagen": "parametrizacion-011.jpg",
+       "hotspot": {
+        "x": 27.5,
+        "y": 52.7,
+        "w": 15.0,
+        "h": 4.0,
+        "etiqueta": "Auxiliar"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "parametrizacion-011.jpg",
+       "hotspot": {
+        "x": 63.1,
+        "y": 63.7,
+        "w": 9.2,
+        "h": 3.4,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: el grupo {INI}EMP tiene el código {INI}0001 «José Gómez» abierto",
+       "imagen": "parametrizacion-012.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Justo después de guardar el grupo nuevo, la cabecera de la pantalla puede seguir mostrando «Terceros» y la ventana de «Añadir codigos» salir con «Terceros» bajo el título: el código se añadiría al grupo TERCER, que no es el tuyo."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Cancela esa ventana y vuelve a abrir la ficha del grupo {INI}EMP desde la lista. Antes de guardar un código, comprueba siempre que debajo del título de la ventana aparece el nombre de tu grupo."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve un grupo auxiliar?",
+     "opciones": [
+      "Para crear subcuentas",
+      "Para desglosar el saldo de una cuenta con una lista de códigos, sin una subcuenta por cada caso",
+      "Para cerrar cuentas",
+      "Para cambiar el plan contable"
+     ],
+     "correcta": 1,
+     "explicacion": "Permite, por ejemplo, sacar el saldo de una cuenta de gastos por empleado."
+    },
+    {
+     "pregunta": "¿Cuántos caracteres como máximo tiene el código de un grupo auxiliar?",
+     "opciones": [
+      "3",
+      "6",
+      "14",
+      "60"
+     ],
+     "correcta": 1,
+     "explicacion": "El grupo auxiliar admite un máximo de 6 caracteres; el código auxiliar, 14."
+    },
+    {
+     "pregunta": "¿Qué debes comprobar antes de guardar un código auxiliar?",
+     "opciones": [
+      "Que la cuenta está cerrada",
+      "Que debajo del título de la ventana aparece el nombre de tu grupo",
+      "Que el plan es PGE",
+      "Que el código está en minúsculas"
+     ],
+     "correcta": 1,
+     "explicacion": "Si aparece «Terceros» el código se añadiría al grupo TERCER."
+    },
+    {
+     "pregunta": "¿Qué estado debe tener el código para usarse en apuntes?",
+     "opciones": [
+      "Cerrado",
+      "Abierto",
+      "Pendiente",
+      "Bloqueado"
+     ],
+     "correcta": 1,
+     "explicacion": "Solo los códigos abiertos se pueden usar en los apuntes."
+    },
+    {
+     "pregunta": "¿Dónde están el grupo y sus códigos?",
+     "opciones": [
+      "En dos pantallas distintas",
+      "En la misma ficha: arriba el grupo y debajo sus códigos y las cuentas que lo usan",
+      "En el plan contable",
+      "En el buscador"
+     ],
+     "correcta": 1,
+     "explicacion": "La ficha del grupo recoge códigos auxiliares y listado de cuentas contables."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Cuentas contables › Grupos auxiliares (objeto cctaauxh)",
+    "Ves la ficha del grupo TERCER «Terceros»",
+    "Pulsas «Añadir grupos › Nuevo»",
+    "Escribes {INI}EMP y «Empleados {INI}» y guardas",
+    "La descripción se guarda en mayúsculas: EMPLEADOS {INI}",
+    "Abres la ficha del grupo {INI}EMP y pulsas «Añadir codigos»",
+    "Compruebas que bajo el título de la ventana pone «EMPLEADOS {INI}»",
+    "Escribes {INI}0001 y «José Gómez», dejas Abierto y guardas",
+    "La lista de grupos auxiliares muestra {INI}EMP y TERCER",
+    "La ficha de {INI}EMP muestra el código {INI}0001 «José Gómez»"
+   ],
+   "problemas": [
+    {
+     "problema": "La cabecera sigue mostrando «Terceros» tras guardar el grupo nuevo y la ventana de «Añadir codigos» muestra «Terceros» bajo el título.",
+     "solucion": "Cancela la ventana y reabre la ficha del grupo {INI}EMP desde la lista; comprueba que bajo el título aparece el nombre de tu grupo antes de guardar."
+    }
+   ]
+  },
+  {
+   "id": "parametrizacion-4",
+   "numero": 4,
+   "titulo": "Asignar el grupo auxiliar a la cuenta",
+   "objetivo": "La cuenta 62999.00000 tendrá asignado el grupo auxiliar {INI}EMP.",
+   "concepto": "Al asignar el grupo auxiliar a la cuenta, cada apunte que se haga en ella podrá llevar uno de los códigos del grupo ({INI}0001 José Gómez…). Así el mayor de la cuenta se puede consultar por empleado sin abrir una subcuenta para cada uno.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "parametrizacion-4-asignar",
+     "titulo": "Asignar el grupo a la cuenta",
+     "paraQueSirve": "Al asignar el grupo auxiliar a la cuenta, cada apunte podrá llevar uno de los códigos del grupo y el mayor se podrá consultar por empleado sin abrir una subcuenta para cada uno.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Cuentas contables (objeto ccuentas)"
+     ],
+     "explicacion": [
+      "La lista del campo Grupo auxiliar muestra los grupos creados en Grupos auxiliares.",
+      "Para comprobarlo se abre el grupo y se pulsa «Recargar» (↻) en el bloque «Listado de cuentas contables»."
+     ],
+     "campos": [
+      {
+       "campo": "Grupo auxiliar",
+       "significado": "Grupo de códigos que usará la cuenta. La lista muestra los grupos creados en Grupos auxiliares.",
+       "ejemplo": "{INI}EMP EMPLEADOS {INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ficha de la cuenta 62999.00000"
+      },
+      {
+       "texto": "En «Grupo auxiliar» abre la lista y elige {INI}EMP",
+       "detalle": "La lista muestra {INI}EMP «EMPLEADOS {INI}» y el grupo existente TERCER.",
+       "imagen": "parametrizacion-013.jpg",
+       "hotspot": {
+        "x": 55.2,
+        "y": 55.5,
+        "w": 25.4,
+        "h": 2.6,
+        "etiqueta": "ECEMP"
+       }
+      },
+      {
+       "texto": "Pulsa el disquete",
+       "detalle": "Sale «Éxito» y la cuenta queda guardada con el Grupo auxiliar {INI}EMP.",
+       "imagen": "parametrizacion-014.jpg",
+       "hotspot": {
+        "x": 85.2,
+        "y": 8.6,
+        "w": 2.5,
+        "h": 4.0,
+        "etiqueta": "Guardar (disquete)"
+       }
+      },
+      {
+       "texto": "Para comprobarlo, abre el grupo {INI}EMP y pulsa «Recargar» (↻) en el bloque «Listado de cuentas contables»",
+       "detalle": "Tras Recargar, el listado muestra la cuenta 62999.00000.",
+       "imagen": "parametrizacion-015.jpg",
+       "hotspot": {
+        "x": 91.4,
+        "y": 63.1,
+        "w": 3.0,
+        "h": 3.6,
+        "etiqueta": "Recargar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El bloque «Listado de cuentas contables» de la ficha del grupo no se actualiza solo; si acabas de asignar el grupo y sale «Sin datos», pulsa «Recargar»."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué permite el grupo auxiliar asignado a la cuenta?",
+     "opciones": [
+      "Que cada apunte lleve un código del grupo, p. ej. un empleado",
+      "Cambiar el código de la cuenta",
+      "Cerrar la cuenta",
+      "Cambiar el plan"
+     ],
+     "correcta": 0,
+     "explicacion": "Así el mayor se puede consultar por empleado sin una subcuenta para cada uno."
+    },
+    {
+     "pregunta": "¿Cómo se guarda el cambio en la ficha de la cuenta?",
+     "opciones": [
+      "Con el icono del disquete",
+      "Con «Guardar» de una ventana",
+      "Cerrando la pantalla",
+      "Con Esc"
+     ],
+     "correcta": 0,
+     "explicacion": "Los cambios en fichas existentes se guardan con el disquete."
+    },
+    {
+     "pregunta": "Si el «Listado de cuentas contables» del grupo sale «Sin datos» tras asignar el grupo, ¿qué haces?",
+     "opciones": [
+      "Vuelves a crear el grupo",
+      "Pulsas «Recargar» (↻)",
+      "Borras la cuenta",
+      "Cambias de plan"
+     ],
+     "correcta": 1,
+     "explicacion": "El bloque no se actualiza solo; hay que pulsar Recargar."
+    },
+    {
+     "pregunta": "¿Qué grupos auxiliares ofrece la lista del campo en la demo, además del tuyo?",
+     "opciones": [
+      "TERCER",
+      "ES",
+      "GENERAL",
+      "Ninguno"
+     ],
+     "correcta": 0,
+     "explicacion": "La lista muestra el tuyo y el grupo existente TERCER «Terceros»."
+    }
+   ],
+   "checklist": [
+    "Abres la ficha de la cuenta 62999.00000",
+    "Abres la lista de Grupo auxiliar y ves {INI}EMP «EMPLEADOS {INI}» y TERCER",
+    "Eliges {INI}EMP",
+    "Pulsas el disquete y sale «Éxito»",
+    "Abres el grupo {INI}EMP y pulsas «Recargar» en «Listado de cuentas contables»",
+    "El listado muestra ES · PGE 2008 · 62999.00000"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-5",
+   "numero": 5,
+   "titulo": "Crear un proyecto «División 1»",
+   "objetivo": "Tendrás el proyecto {INI}1 «División 1 {INI}» creado y abierto, con la sección 0 de momento.",
+   "concepto": "Proyectos y secciones son la analítica de la contabilidad: cada apunte de una cuenta de costes se asigna a un proyecto (por ejemplo una división o una obra) y a una sección (un departamento), y así se obtiene la cuenta de resultados por división o por departamento. El proyecto puede llevar una sección por defecto, que se propone al contabilizar.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "parametrizacion-5-proyecto",
+     "titulo": "Crear el proyecto con «Nuevo como»",
+     "paraQueSirve": "Cada apunte de una cuenta de costes se asigna a un proyecto y a una sección, para obtener la cuenta de resultados por división o por departamento. El proyecto puede llevar una sección por defecto, que se propone al contabilizar.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Auxiliares",
+      "Proyectos",
+      "Proyectos (objeto cproyect)"
+     ],
+     "explicacion": [
+      "«Nuevo como» crea un proyecto nuevo a partir de otro existente copiando sus valores; no modifica el proyecto de origen.",
+      "Al abrir la ruta se muestra la ficha del proyecto 0 «GENERAL», que sirve de modelo."
+     ],
+     "campos": [
+      {
+       "campo": "Proyecto *",
+       "significado": "Código del proyecto. Máximo 12 caracteres.",
+       "ejemplo": "{INI}1"
+      },
+      {
+       "campo": "Descripción proyecto *",
+       "significado": "Nombre del proyecto.",
+       "ejemplo": "División 1 {INI}"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo los proyectos abiertos se pueden usar en los apuntes.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Sección",
+       "significado": "Sección por defecto del proyecto. No es obligatoria; con «Nuevo como» se copia la del proyecto de origen.",
+       "ejemplo": "0 General (después {INI}ADM)"
+      },
+      {
+       "campo": "Empresa / Tercero / Dirección",
+       "significado": "Permiten limitar el proyecto a una empresa o vincularlo a un cliente. No hacen falta aquí.",
+       "ejemplo": "(vacío)"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta",
+       "detalle": "Se muestra la ficha del proyecto 0 «GENERAL».",
+       "imagen": "parametrizacion-016.jpg",
+       "hotspot": {
+        "x": 9.4,
+        "y": 77.0,
+        "w": 8.2,
+        "h": 2.8,
+        "etiqueta": "Proyectos"
+       }
+      },
+      {
+       "texto": "Pulsa «Añadir proyecto › Nuevo como» para partir del proyecto existente",
+       "imagen": "parametrizacion-016.jpg",
+       "hotspot": {
+        "x": 75.1,
+        "y": 8.8,
+        "w": 9.8,
+        "h": 3.2,
+        "etiqueta": "Añadir proyecto"
+       }
+      },
+      {
+       "texto": "Escribe {INI}1 y «División 1 {INI}»",
+       "detalle": "Se mantiene Abierto y la sección 0 «General» copiada.",
+       "imagen": "parametrizacion-017.jpg",
+       "hotspot": {
+        "x": 17.5,
+        "y": 39.7,
+        "w": 12.9,
+        "h": 3.8,
+        "etiqueta": "Proyecto"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "detalle": "Sale «Éxito».",
+       "imagen": "parametrizacion-017.jpg",
+       "hotspot": {
+        "x": 73.2,
+        "y": 73.9,
+        "w": 9.0,
+        "h": 3.6,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: la lista de proyectos muestra 0 GENERAL y el nuevo {INI}1 «División 1 {INI}», los dos con la sección 0",
+       "imagen": "parametrizacion-018.jpg"
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué hace «Nuevo como»?",
+     "opciones": [
+      "Abre un formulario en blanco",
+      "Crea un registro nuevo copiando los valores del que estás viendo, sin modificar el original",
+      "Borra el proyecto actual",
+      "Exporta el proyecto"
+     ],
+     "correcta": 1,
+     "explicacion": "No modifica el proyecto de origen: crea uno nuevo con sus valores."
+    },
+    {
+     "pregunta": "¿Cuál es el máximo de caracteres del código de proyecto?",
+     "opciones": [
+      "6",
+      "12",
+      "14",
+      "60"
+     ],
+     "correcta": 1,
+     "explicacion": "El código de proyecto admite un máximo de 12 caracteres."
+    },
+    {
+     "pregunta": "¿Qué es la analítica contable?",
+     "opciones": [
+      "Proyectos y secciones para saber a qué parte del negocio pertenece cada gasto o ingreso",
+      "Los impuestos",
+      "El plan de cuentas",
+      "Los bancos"
+     ],
+     "correcta": 0,
+     "explicacion": "Permite sacar la cuenta de resultados por división o departamento."
+    },
+    {
+     "pregunta": "¿Qué sección se copia al crear el proyecto con «Nuevo como» desde GENERAL?",
+     "opciones": [
+      "ECADM",
+      "0 General",
+      "Ninguna",
+      "Administración"
+     ],
+     "correcta": 1,
+     "explicacion": "Se copian estado y sección del proyecto GENERAL (0 General)."
+    },
+    {
+     "pregunta": "¿Es obligatoria la Sección del proyecto?",
+     "opciones": [
+      "Sí",
+      "No",
+      "Solo en proyectos cerrados",
+      "Solo con tercero"
+     ],
+     "correcta": 1,
+     "explicacion": "La sección por defecto no es obligatoria."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Auxiliares › Proyectos › Proyectos (objeto cproyect)",
+    "Ves la ficha del proyecto 0 «GENERAL»",
+    "Pulsas «Añadir proyecto › Nuevo como»",
+    "Compruebas que código y descripción salen en blanco y estado y sección copiados",
+    "Escribes {INI}1 y «División 1 {INI}»",
+    "Dejas Estado Abierto y sección 0 «General»",
+    "Pulsas «Guardar» y sale «Éxito»",
+    "La lista de proyectos muestra {INI}1"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-6",
+   "numero": 6,
+   "titulo": "Crear una sección «Administración»",
+   "objetivo": "Tendrás la sección {INI}ADM «Administración {INI}» creada y asignada como sección por defecto del proyecto {INI}1.",
+   "concepto": "La sección representa un departamento o centro de coste (Administración, Comercial, Taller…). Junto con el proyecto permite ver los gastos por departamento. Se crea una vez y se puede usar en cualquier proyecto; aquí además se asigna como sección por defecto del proyecto {INI}1.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "parametrizacion-6-seccion",
+     "titulo": "Crear la sección y asignarla al proyecto",
+     "paraQueSirve": "La sección representa un departamento o centro de coste. Junto con el proyecto permite ver los gastos por departamento. Se crea una vez y sirve para cualquier proyecto.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Auxiliares",
+      "Secciones",
+      "Secciones (objeto cseccion)"
+     ],
+     "explicacion": [
+      "La sección se puede crear desde su pantalla (Auxiliares › Secciones) o desde el propio proyecto, con el botón «+» de la lista del campo Sección.",
+      "El bloque «Secciones autorizadas» del proyecto sirve para limitar qué secciones se pueden combinar con él al contabilizar. Si se deja vacío, el proyecto admite cualquier sección."
+     ],
+     "campos": [
+      {
+       "campo": "Sección *",
+       "significado": "Código de la sección. Máximo 12 caracteres.",
+       "ejemplo": "{INI}ADM"
+      },
+      {
+       "campo": "Descripción sección *",
+       "significado": "Nombre de la sección.",
+       "ejemplo": "Administración {INI}"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo las secciones abiertas se pueden usar.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Referencia sección / Tercero / Dirección",
+       "significado": "Datos opcionales para enlazar la sección con un código externo o un tercero.",
+       "ejemplo": "(vacío)"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta",
+       "detalle": "Se muestra la ficha de la sección 0 «General»."
+      },
+      {
+       "texto": "Pulsa «Añadir sección › Nuevo»"
+      },
+      {
+       "texto": "Escribe {INI}ADM y «Administración {INI}»",
+       "detalle": "Deja el Estado en Abierto.",
+       "imagen": "parametrizacion-019.jpg",
+       "hotspot": {
+        "x": 26.1,
+        "y": 39.7,
+        "w": 11.6,
+        "h": 3.8,
+        "etiqueta": "Sección"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "parametrizacion-019.jpg",
+       "hotspot": {
+        "x": 64.5,
+        "y": 73.9,
+        "w": 9.2,
+        "h": 3.6,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Abre el proyecto {INI}1 (Proyectos › Proyectos, segundo registro)"
+      },
+      {
+       "texto": "En «Sección» borra el 0, escribe {INI} y elige {INI}ADM",
+       "detalle": "Debajo aparece «Administración {INI}». El botón «+» de esa lista permite crear una sección sin salir del proyecto.",
+       "imagen": "parametrizacion-020.jpg",
+       "hotspot": {
+        "x": 20.6,
+        "y": 42.5,
+        "w": 16.2,
+        "h": 3.2,
+        "etiqueta": "ECADM"
+       }
+      },
+      {
+       "texto": "Pulsa el disquete",
+       "detalle": "Sale «Éxito»: el proyecto {INI}1 «División 1 {INI}» queda con la sección {INI}ADM «Administración {INI}».",
+       "imagen": "parametrizacion-021.jpg",
+       "hotspot": {
+        "x": 85.2,
+        "y": 8.6,
+        "w": 2.5,
+        "h": 4.0,
+        "etiqueta": "Guardar (disquete)"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El bloque «Secciones autorizadas» del proyecto limita qué secciones se pueden combinar con él; vacío, admite cualquiera."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Datos creados en TUTORIAL en todo el tema: cuenta ES 62999.00000, grupo auxiliar {INI}EMP con {INI}0001, proyecto {INI}1 y sección {INI}ADM. No se ha modificado ningún registro existente."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué representa una sección?",
+     "opciones": [
+      "Un departamento o centro de coste",
+      "Un plan contable",
+      "Un tercero",
+      "Un banco"
+     ],
+     "correcta": 0,
+     "explicacion": "Junto con el proyecto permite ver los gastos por departamento."
+    },
+    {
+     "pregunta": "¿Cómo puedes crear una sección sin salir del proyecto?",
+     "opciones": [
+      "No se puede",
+      "Con el botón «+» de la lista del campo Sección",
+      "Con Cmd/Ctrl + K",
+      "Con «Nuevo como»"
+     ],
+     "correcta": 1,
+     "explicacion": "El «+» de la lista permite crearla sin salir del proyecto."
+    },
+    {
+     "pregunta": "Si «Secciones autorizadas» del proyecto está vacío, ¿qué pasa?",
+     "opciones": [
+      "No admite ninguna sección",
+      "Admite cualquier sección",
+      "Solo admite la 0",
+      "Da error"
+     ],
+     "correcta": 1,
+     "explicacion": "Vacío significa que el proyecto admite cualquier sección."
+    },
+    {
+     "pregunta": "¿Cuál es el máximo de caracteres del código de sección?",
+     "opciones": [
+      "6",
+      "12",
+      "14",
+      "60"
+     ],
+     "correcta": 1,
+     "explicacion": "El código de sección admite un máximo de 12 caracteres."
+    },
+    {
+     "pregunta": "¿Qué modificas en el proyecto para dejar la sección por defecto?",
+     "opciones": [
+      "El campo Sección",
+      "El campo Empresa",
+      "El Estado",
+      "La Dirección"
+     ],
+     "correcta": 0,
+     "explicacion": "En «Sección» sustituyes el 0 por tu sección."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Auxiliares › Secciones › Secciones (objeto cseccion)",
+    "Ves la ficha de la sección 0 «General»",
+    "Pulsas «Añadir sección › Nuevo»",
+    "Escribes {INI}ADM y «Administración {INI}», con Estado Abierto, y guardas",
+    "Abres el proyecto {INI}1",
+    "En Sección borras el 0, escribes {INI} y eliges {INI}ADM",
+    "Debajo del campo aparece «Administración {INI}»",
+    "Pulsas el disquete y sale «Éxito»",
+    "El proyecto {INI}1 muestra la sección {INI}ADM"
+   ],
+   "problemas": []
+  }
+ ],
+ "datosSimulador": {
+  "numerador": null,
+  "relaciones": null
+ }
+}

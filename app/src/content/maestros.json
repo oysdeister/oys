@@ -1,0 +1,2312 @@
+{
+  "id": "maestros",
+  "titulo": "Mantenimiento de tablas maestras",
+  "sesion": "Sesión 2",
+  "resumen": "Aprendes a dar de alta y mantener los datos básicos que usan todos los documentos del ERP: el tercero con su cuenta contable y su forma de cobro, artículos, almacenes, cuentas financieras y logísticas. Terminas registrando una entrada de stock y comprobándola en el Stock global y en el kardex.",
+  "circuito": [
+    "Tercero y su cuenta contable",
+    "Forma de cobro: efecto + plazo",
+    "Artículo, proveedor y almacén",
+    "Cuenta logística",
+    "Movimiento de stock",
+    "Stock global y kardex"
+  ],
+  "navegacion": [
+    {
+      "id": "maestros-nav-datos",
+      "titulo": "Qué son los datos básicos",
+      "paraQueSirve": "Los datos básicos (maestros) son las fichas que usan después todos los documentos: el tercero con su cuenta contable y su forma de pago, los artículos, los almacenes, las cuentas bancarias o de caja, los cambios de divisa… Si un maestro está mal, el error se arrastra a cada pedido, factura o asiento. Por eso se dan de alta una vez, con cuidado, y se validan.",
+      "ruta": null,
+      "explicacion": [
+        "En esta sesión trabajas sobre la base de formación TUTORIAL del ERP Deister Manager. Cada pantalla se hace de verdad: das de alta un registro propio, ves para qué sirve, dónde está en el menú, qué significa cada campo y qué pasos seguir.",
+        "Todos los datos que creas llevan tus iniciales como prefijo (tercero {INI}1, artículo financiero {INI}, artículo {INI}0001, almacén {INI}1…). En las tablas de campos, un asterisco rojo (*) indica que la pantalla marca el campo como obligatorio.",
+        "Tabla de referencia: cada maestro con su objeto en el ERP y la ruta donde lo encuentras."
+      ],
+      "campos": [
+        {
+          "campo": "ctercero (Contabilidad)",
+          "significado": "Registro de terceros, con sus pestañas Relaciones, Direcciones, Condiciones de cobro…",
+          "ejemplo": "Finanzas › Maestros › Terceros › Registro terceros"
+        },
+        {
+          "campo": "carticul",
+          "significado": "Artículos financieros (los que se usan en facturas sin stock).",
+          "ejemplo": "Finanzas › Facturación › Maestros › Artículos"
+        },
+        {
+          "campo": "ccambios",
+          "significado": "Cambios diarios de divisa.",
+          "ejemplo": "Finanzas › Maestros › Auxiliares › Monedas › Cambios diarios"
+        },
+        {
+          "campo": "ctipopag",
+          "significado": "Plazos de pago. La forma de cobro o pago completa (efecto + plazo) se asigna en el tercero.",
+          "ejemplo": "Finanzas › Maestros › Terceros › Condiciones administrativas › Plazos de pago"
+        },
+        {
+          "campo": "ctipoefe",
+          "significado": "Tipos de efectos de cartera.",
+          "ejemplo": "Finanzas › Cobros y Pagos › Maestros › Efectos › Tipos"
+        },
+        {
+          "campo": "ccuentas / ctertipo",
+          "significado": "Cuentas contables y «Perfil contable» (relaciones contables con terceros).",
+          "ejemplo": "Finanzas › Maestros › Cuentas contables / Terceros › Perfil contable"
+        },
+        {
+          "campo": "cbancpro",
+          "significado": "«Bancos propios»: cuentas financieras de bancos y cajas.",
+          "ejemplo": "Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios"
+        },
+        {
+          "campo": "ctiponac (municipio / CP)",
+          "significado": "Países y, dentro de cada país, Municipios y poblaciones (códigos postales).",
+          "ejemplo": "Finanzas › Maestros › Terceros › Localización"
+        },
+        {
+          "campo": "ctercero (Gestión)",
+          "significado": "El tercero como cliente o proveedor de gestión: Maestro de clientes / Maestro de proveedores.",
+          "ejemplo": "Gestión › Maestros › Terceros › Clientes / Proveedores"
+        },
+        {
+          "campo": "garticul / gartprov",
+          "significado": "Artículos logísticos y artículos por proveedor.",
+          "ejemplo": "Gestión › Maestros › Artículos"
+        },
+        {
+          "campo": "galmacen / galmctas",
+          "significado": "Almacenes logísticos y cuentas logísticas.",
+          "ejemplo": "Gestión › Logística › Maestros"
+        },
+        {
+          "campo": "galmstkg / garticul_evolstk",
+          "significado": "Stock global y Traza de movimientos por artículo (kardex).",
+          "ejemplo": "Gestión › Logística › Stocks"
+        },
+        {
+          "campo": "Detalle de movimientos de almacén de usuario",
+          "significado": "Movimientos internos (cabecera y líneas).",
+          "ejemplo": "Gestión › Logística › Movimientos internos › Movimientos"
+        }
+      ],
+      "pasos": [],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "Recuerda sustituir siempre el prefijo de ejemplo por tus iniciales ({INI}) al crear tus datos: así tus registros no se mezclan con los de otros compañeros."
+        }
+      ]
+    },
+    {
+      "id": "maestros-nav-moverse",
+      "titulo": "Cómo moverte por el ERP",
+      "paraQueSirve": "Antes de tocar ningún maestro conviene saber cómo se abre una pantalla, cómo se crea un registro y qué te avisa cuando falta un dato.",
+      "ruta": null,
+      "explicacion": [
+        "Cada pantalla abre en modo lista, en ficha o en modo consulta (QBE: un formulario de filtros con el botón «Ejecutar consulta»).",
+        "Los campos con lista se rellenan escribiendo el código y eligiendo la fila; si no se despliega, pulsa flecha abajo.",
+        "Las fichas tienen pestañas (Relaciones, Direcciones, Líneas…) y los botones de acción (Validar, Cerrar…) en la barra superior.",
+        "Los campos obligatorios llevan asterisco rojo. Si falta alguno, al guardar sale «Hay errores en los datos del formulario» y el campo se marca en rojo con «Este campo es obligatorio»."
+      ],
+      "campos": [],
+      "pasos": [
+        {
+          "texto": "Abre el menú lateral con el icono de la esquina superior izquierda, o usa el buscador «Buscar» (Cmd/Ctrl + K).",
+          "detalle": "Cada pieza de una ruta de menú es un nivel del menú lateral; también puedes abrir la pantalla escribiendo su nombre en el buscador superior."
+        },
+        {
+          "texto": "Para crear un registro, pulsa el botón rojo «Añadir …» o «Nuevo» arriba a la derecha.",
+          "detalle": "Se abre una ventana: rellénala y pulsa «Guardar»."
+        },
+        {
+          "texto": "Rellena los campos con lista escribiendo el código y eligiendo la fila.",
+          "detalle": "Si la lista no se despliega, pulsa flecha abajo."
+        },
+        {
+          "texto": "Usa las pestañas de la ficha y los botones de la barra superior (Validar, Cerrar…)."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "Las listas largas muestran solo la primera página (unas 25 filas). Si un registro nuevo no aparece, no es que no se haya guardado: usa «Filtros» (por ejemplo, Descripción = RODAMIENTO*) para encontrarlo."
+        }
+      ]
+    }
+  ],
+  "ejercicios": [
+    {
+      "id": "maestros-1",
+      "numero": 1,
+      "titulo": "Mantenimiento de datos básicos de Contabilidad (ICON)",
+      "objetivo": "Tener dado de alta el circuito contable de un tercero: el tercero, su cuenta contable propia y su relación contable, su forma de cobro, un artículo financiero, un cambio de divisa, una caja y un código postal.",
+      "concepto": "Los maestros de Contabilidad son las fichas de las que beben todas las facturas, efectos y asientos. Aquí se da de alta el circuito contable de un tercero: el tercero, su cuenta contable propia y su relación contable, su forma de cobro (tipo de efecto + plazo), un artículo financiero, un cambio de divisa, una caja y un código postal.\n\nSi uno de estos maestros está mal o incompleto, el error se arrastra a cada documento que lo use. Por eso se crean con cuidado, se comprueban y el tercero se valida antes de usarlo.",
+      "duracionMin": 90,
+      "secciones": [
+        {
+          "id": "maestros-1-terceros",
+          "titulo": "Terceros (ctercero)",
+          "paraQueSirve": "El tercero es la ficha única de cualquier persona o empresa con la que se trabaja: cliente, proveedor, acreedor, banco… Guarda los datos fiscales (NIF, país), las direcciones y la relación contable (qué cuenta 430/400 usa). Después, en Gestión, el mismo tercero se da de alta como cliente o proveedor. Mientras está «Provisional» no se puede usar en documentos.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Registro terceros"
+          ],
+          "explicacion": [
+            "Objeto ctercero. La relación contable y las direcciones son pestañas de la ficha del tercero, no pantallas aparte."
+          ],
+          "campos": [
+            {
+              "campo": "Tercero",
+              "significado": "Código del tercero.",
+              "ejemplo": "{INI}1"
+            },
+            {
+              "campo": "Nombre *",
+              "significado": "Razón social.",
+              "ejemplo": "Tercero Maestros {INI}"
+            },
+            {
+              "campo": "Nombre comercial",
+              "significado": "Nombre con el que se le conoce; se propone en las direcciones.",
+              "ejemplo": "Maestros {INI}"
+            },
+            {
+              "campo": "País emisor *",
+              "significado": "País del documento fiscal.",
+              "ejemplo": "ES España"
+            },
+            {
+              "campo": "Tipo ID fiscal *",
+              "significado": "Clase de identificación: NIF-Empresa, NIF-Persona, pasaporte, NIF operador UE…",
+              "ejemplo": "NIF-Empresa"
+            },
+            {
+              "campo": "Id. fiscal *",
+              "significado": "NIF/CIF. Se valida el formato.",
+              "ejemplo": "B12345674 (de prueba)"
+            },
+            {
+              "campo": "Estado / Estado cobros / Estado pagos *",
+              "significado": "Provisional hasta validar; cobros y pagos abiertos.",
+              "ejemplo": "Provisional / Abierto / Abierto"
+            },
+            {
+              "campo": "Categoría *",
+              "significado": "Tipo de tercero. Propone la relación contable (CLI) y la cuenta (43000).",
+              "ejemplo": "001 Clientes"
+            },
+            {
+              "campo": "Clave fiscal tercero *",
+              "significado": "Régimen de IVA.",
+              "ejemplo": "RGEN Régimen general"
+            },
+            {
+              "campo": "Prioridad de pago / Idioma / Empresas / Compensación *",
+              "significado": "Se proponen por defecto.",
+              "ejemplo": "0 / es / ALL / No"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Añadir tercero»."
+            },
+            {
+              "texto": "Rellena Tercero, Nombre, Nombre comercial, País ES, Tipo ID fiscal NIF-Empresa e Id. fiscal.",
+              "detalle": "Los obligatorios son País emisor, Nombre, Tipo ID fiscal, Id. fiscal y Categoría.",
+              "imagen": "maestros-002.jpg",
+              "hotspot": {
+                "x": 2,
+                "y": 21,
+                "w": 37,
+                "h": 6.5,
+                "etiqueta": "Tercero"
+              }
+            },
+            {
+              "texto": "En Más datos elige la Categoría 001 Clientes (escribe 001 y elige la fila).",
+              "detalle": "La categoría propone la relación contable CLI y la cuenta 43000."
+            },
+            {
+              "texto": "Pulsa «Guardar». Abre la ficha (enlace «Ver registro» o el número de fila)."
+            },
+            {
+              "texto": "En la ficha guardada, abre la pestaña Relaciones.",
+              "detalle": "Fíjate en las pestañas Relaciones, Datos bancarios, Condiciones de pago/cobro, Direcciones… y en el botón «Validar».",
+              "imagen": "maestros-003.jpg",
+              "hotspot": {
+                "x": 6.5,
+                "y": 15.5,
+                "w": 9,
+                "h": 5,
+                "etiqueta": "Relaciones"
+              }
+            },
+            {
+              "texto": "En Relaciones pulsa «Añadir relación»: tipo Cliente, relación CLI, plan ES y cuenta. Guarda.",
+              "detalle": "Tipo Cliente, relación CLI, plan PGE 2008 (ES) y cuenta. El Plan contable es obligatorio.",
+              "imagen": "maestros-004.jpg",
+              "hotspot": {
+                "x": 49.5,
+                "y": 43.5,
+                "w": 25,
+                "h": 5.5,
+                "etiqueta": "Cuenta"
+              }
+            },
+            {
+              "texto": "En la pestaña Direcciones pulsa «Añadir dirección»."
+            },
+            {
+              "texto": "Escribe el código postal 08001 (rellena provincia y población) y la dirección. Guarda.",
+              "detalle": "Es la dirección 0 «domicilio fiscal»: al elegir el CP 08001 se rellenan solos la provincia 08 y la población.",
+              "imagen": "maestros-005.jpg",
+              "hotspot": {
+                "x": 19.5,
+                "y": 41.5,
+                "w": 30,
+                "h": 6,
+                "etiqueta": "Código Postal"
+              }
+            },
+            {
+              "texto": "Pulsa «Validar»: el estado pasa a Validado.",
+              "detalle": "Fíjate en que aparecen los botones Cerrar y Activar.",
+              "imagen": "maestros-006.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "En la fila editable de la pestaña Relaciones no se ve el Plan contable y al guardarlo se queda en rojo."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Usa el botón «Añadir relación», que abre la ventana con todos los campos."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Cualquier cambio posterior en las pestañas del tercero (relaciones, condiciones de cobro…) lo devuelve a «Provisional». Hay que volver a pulsar «Validar» (ver 1.6)."
+            }
+          ]
+        },
+        {
+          "id": "maestros-1-articulos-fin",
+          "titulo": "Artículos financieros (carticul)",
+          "paraQueSirve": "El artículo financiero es el concepto que se usa en las facturas que no mueven stock (servicios, alquileres, suplidos). Lleva el tipo fiscal y las cuentas de compras y ventas: al contabilizar la factura, el importe va a esas cuentas.",
+          "ruta": [
+            "Finanzas",
+            "Facturación",
+            "Maestros",
+            "Artículos"
+          ],
+          "explicacion": [
+            "Objeto carticul. Las cuentas se eligen por «mnemotécnico» (cuenta de 5 dígitos) en lugar de la cuenta completa."
+          ],
+          "campos": [
+            {
+              "campo": "Artículo *",
+              "significado": "Código.",
+              "ejemplo": "{INI}"
+            },
+            {
+              "campo": "Descripción artículo *",
+              "significado": "Texto que sale en la factura.",
+              "ejemplo": "Servicios de formacion {INI}"
+            },
+            {
+              "campo": "Unidad medida / Estado *",
+              "significado": "Se proponen.",
+              "ejemplo": "UN / Abierto"
+            },
+            {
+              "campo": "Tipo fiscal *",
+              "significado": "Naturaleza para el IVA: Bien, Servicio, Inversión, Alquiler, Suplido…",
+              "ejemplo": "Servicio"
+            },
+            {
+              "campo": "Clave fiscal artículo *",
+              "significado": "Tipo de IVA que se aplica.",
+              "ejemplo": "SOG Servicios a tipo general"
+            },
+            {
+              "campo": "Precio / Tipo descripción *",
+              "significado": "Si el precio y la descripción son fijos o variables en la factura.",
+              "ejemplo": "Variable / Variable"
+            },
+            {
+              "campo": "Mnemotécnico de compras",
+              "significado": "Cuenta de gasto al comprar.",
+              "ejemplo": "62300 Servicios de profesionales independientes"
+            },
+            {
+              "campo": "Mnemotécnico de ventas",
+              "significado": "Cuenta de ingreso al vender.",
+              "ejemplo": "70500 Prestaciones de servicios"
+            },
+            {
+              "campo": "% Descuento compras / ventas *",
+              "significado": "Descuento por defecto.",
+              "ejemplo": "0,00"
+            },
+            {
+              "campo": "Datos contables *",
+              "significado": "Qué datos contables se pueden cambiar en la línea de factura.",
+              "ejemplo": "Todo"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Añadir artículo».",
+              "detalle": "Verás los artículos financieros existentes (Alquiler, Bienes, Inversión, Servicios, Suplido).",
+              "imagen": "maestros-007.jpg",
+              "hotspot": {
+                "x": 79.5,
+                "y": 7.5,
+                "w": 11.5,
+                "h": 5,
+                "etiqueta": "Añadir artículo"
+              }
+            },
+            {
+              "texto": "Rellena código, descripción, Tipo fiscal Servicio y Clave fiscal SOG."
+            },
+            {
+              "texto": "Elige los mnemotécnicos 62300 (compras) y 70500 (ventas).",
+              "detalle": "Deja los datos contables en «Todo».",
+              "imagen": "maestros-008.jpg",
+              "hotspot": {
+                "x": 50,
+                "y": 36.5,
+                "w": 40,
+                "h": 6,
+                "etiqueta": "Mnemotécnico de ventas"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar»."
+            },
+            {
+              "texto": "Fíjate en que el artículo {INI} aparece en la lista con sus mnemotécnicos.",
+              "imagen": "maestros-009.jpg"
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "maestros-1-cambios",
+          "titulo": "Cambios de divisas (ccambios)",
+          "paraQueSirve": "Cuando se compra o vende en otra moneda, el ERP convierte los importes a euros con el cambio del día. Si no hay cambio para esa fecha y divisa, el documento no se puede contabilizar. El cambio se introduce a mano o se importa.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Auxiliares",
+            "Monedas",
+            "Cambios diarios"
+          ],
+          "explicacion": [
+            "Objeto ccambios."
+          ],
+          "campos": [
+            {
+              "campo": "Fecha *",
+              "significado": "Día del cambio.",
+              "ejemplo": "12-11-2026"
+            },
+            {
+              "campo": "Base *",
+              "significado": "Unidades de la moneda origen.",
+              "ejemplo": "1,000000"
+            },
+            {
+              "campo": "Moneda origen *",
+              "significado": "Divisa que se convierte.",
+              "ejemplo": "USD US Dollar"
+            },
+            {
+              "campo": "Cambio spot *",
+              "significado": "Equivalencia en la divisa destino.",
+              "ejemplo": "0,920000"
+            },
+            {
+              "campo": "Divisa *",
+              "significado": "Divisa destino (la de la empresa).",
+              "ejemplo": "EUR"
+            },
+            {
+              "campo": "Compra",
+              "significado": "Cambio de compra, si se distingue.",
+              "ejemplo": "0,910000"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Añadir cambio divisa»."
+            },
+            {
+              "texto": "Elige la moneda USD y escribe el cambio spot y el de compra.",
+              "detalle": "Resultado: 1 USD = 0,92 EUR (compra 0,91) con fecha 12-11-2026.",
+              "imagen": "maestros-010.jpg",
+              "hotspot": {
+                "x": 50,
+                "y": 43.5,
+                "w": 13.5,
+                "h": 5,
+                "etiqueta": "Cambio spot"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar»."
+            },
+            {
+              "texto": "Fíjate en que el cambio queda en la lista con usuario y fecha de creación.",
+              "imagen": "maestros-011.jpg"
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "maestros-1-plazos",
+          "titulo": "Formas de pago: plazos de pago (ctipopag)",
+          "paraQueSirve": "El plazo de pago dice en cuántos vencimientos se divide una factura y a cuántos días o meses vence cada uno. Al contabilizar la factura, el ERP crea un efecto en la cartera por cada vencimiento.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Condiciones administrativas",
+            "Plazos de pago"
+          ],
+          "explicacion": [
+            "Objeto ctipopag. Los plazos de pago solo guardan los vencimientos. El tipo de efecto (recibo, transferencia…) se combina con el plazo en la pestaña «Condiciones de cobro/pago» del tercero (ver 2.1)."
+          ],
+          "campos": [
+            {
+              "campo": "Plazo pago *",
+              "significado": "Código.",
+              "ejemplo": "{INI}1"
+            },
+            {
+              "campo": "Descripción plazo *",
+              "significado": "Texto descriptivo.",
+              "ejemplo": "2 Vtos. 30 y 60 dias {INI}"
+            },
+            {
+              "campo": "Unidad tiempo",
+              "significado": "Si los plazos se cuentan en días o meses.",
+              "ejemplo": "Días"
+            },
+            {
+              "campo": "Tipo cálculo *",
+              "significado": "Fija (algoritmo de nº de plazos y cadencia), Variable (días de cada columna) o No generar (contado).",
+              "ejemplo": "Variable"
+            },
+            {
+              "campo": "Primer / Segundo plazo *",
+              "significado": "Días hasta cada vencimiento.",
+              "ejemplo": "30 / 60"
+            },
+            {
+              "campo": "% Plazo 1 / % Plazo 2 *",
+              "significado": "Porcentaje del total en cada vencimiento.",
+              "ejemplo": "50 / 50"
+            },
+            {
+              "campo": "Tercer / Cuarto plazo y sus % *",
+              "significado": "Obligatorios aunque no se usen.",
+              "ejemplo": "0"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Añadir plazo»."
+            },
+            {
+              "texto": "Escribe código y descripción, elige Tipo cálculo «Variable» y Unidad tiempo «Días».",
+              "imagen": "maestros-012.jpg",
+              "hotspot": {
+                "x": 36,
+                "y": 32.5,
+                "w": 27,
+                "h": 7.5,
+                "etiqueta": "Variable"
+              }
+            },
+            {
+              "texto": "Rellena 30 días / 50 % y 60 días / 50 %, y pon 0 en los plazos 3 y 4.",
+              "detalle": "Si dejas vacíos los plazos 3 y 4, al guardar sale el error de la captura: se marcan «Este campo es obligatorio».",
+              "imagen": "maestros-013.jpg",
+              "hotspot": {
+                "x": 8.5,
+                "y": 69,
+                "w": 41.5,
+                "h": 5,
+                "etiqueta": "Tercer plazo"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar»."
+            },
+            {
+              "texto": "Fíjate en que el plazo {INI}1 aparece en la lista de plazos de pago.",
+              "imagen": "maestros-014.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Al guardar con solo dos vencimientos sale «Hay errores en los datos del formulario»: Tercer plazo, Cuarto plazo y sus porcentajes son obligatorios."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Escribe 0 en los plazos y porcentajes que no se usan."
+            }
+          ]
+        },
+        {
+          "id": "maestros-1-tipos-efecto",
+          "titulo": "Tipos de efectos (ctipoefe)",
+          "paraQueSirve": "El tipo de efecto es el medio de cobro o pago de cada vencimiento: recibo domiciliado, transferencia, pagaré, confirming… Decide si hace falta la cuenta bancaria del tercero, con qué fecha entra en la previsión de tesorería y si cuenta para el riesgo del cliente.",
+          "ruta": [
+            "Finanzas",
+            "Cobros y Pagos",
+            "Maestros",
+            "Efectos",
+            "Tipos"
+          ],
+          "explicacion": [
+            "Objeto ctipoefe."
+          ],
+          "campos": [
+            {
+              "campo": "Clase *",
+              "significado": "Cartera de cobros o de pagos.",
+              "ejemplo": "Cobrar"
+            },
+            {
+              "campo": "Tipo efecto *",
+              "significado": "Código (2 caracteres).",
+              "ejemplo": "{INI}"
+            },
+            {
+              "campo": "Descripción *",
+              "significado": "Nombre.",
+              "ejemplo": "Recibo domiciliado {INI}"
+            },
+            {
+              "campo": "Estado inicial",
+              "significado": "Estado con el que nace el efecto.",
+              "ejemplo": "PE Pendiente"
+            },
+            {
+              "campo": "Domiciliación bancaria *",
+              "significado": "No requiere / Tercero (pide la cuenta del cliente) / Empresa.",
+              "ejemplo": "Tercero"
+            },
+            {
+              "campo": "Días decalaje *",
+              "significado": "Días que se suman a la fecha prevista de operación.",
+              "ejemplo": "2"
+            },
+            {
+              "campo": "Días post-pago *",
+              "significado": "Días tras el vencimiento hasta liberar el riesgo.",
+              "ejemplo": "4"
+            },
+            {
+              "campo": "Interés / Riesgo / Factura demora *",
+              "significado": "Interés de demora, control de riesgo y refacturación de intereses.",
+              "ejemplo": "0 / Sí / No"
+            },
+            {
+              "campo": "Fecha operación *",
+              "significado": "Fecha que usa la tesorería: emisión, vencimiento, ponderada…",
+              "ejemplo": "Vencimiento"
+            },
+            {
+              "campo": "UN/EDIFACT y Código fiscal *",
+              "significado": "Códigos estándar del medio de pago para facturae y Hacienda.",
+              "ejemplo": "Domiciliación bancaria"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Añadir tipo efecto».",
+              "detalle": "Verás los tipos de efectos de la base: clase, estado inicial, días, riesgo, domiciliación y fecha de operación.",
+              "imagen": "maestros-015.jpg",
+              "hotspot": {
+                "x": 77.5,
+                "y": 7.5,
+                "w": 12.5,
+                "h": 5,
+                "etiqueta": "Añadir tipo efecto"
+              }
+            },
+            {
+              "texto": "Clase Cobrar, código {INI}, descripción y estado inicial PE."
+            },
+            {
+              "texto": "Domiciliación «Tercero», días decalaje 2 y post-pago 4.",
+              "detalle": "Domiciliación «Tercero» requiere la cuenta bancaria de la contraparte; el riesgo queda marcado.",
+              "imagen": "maestros-016.jpg",
+              "hotspot": {
+                "x": 33.5,
+                "y": 41,
+                "w": 32,
+                "h": 6.5,
+                "etiqueta": "Tercero"
+              }
+            },
+            {
+              "texto": "En Tesorería elige Fecha operación «Vencimiento» y en Clasificación el código fiscal «Domiciliación bancaria».",
+              "imagen": "maestros-017.jpg",
+              "hotspot": {
+                "x": 49.5,
+                "y": 24.5,
+                "w": 47,
+                "h": 6.5,
+                "etiqueta": "Vencimiento"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar»."
+            },
+            {
+              "texto": "Fíjate en que el tipo {INI} «Recibo domiciliado {INI}» aparece en la lista.",
+              "imagen": "maestros-018.jpg"
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "maestros-1-cuentas-perfil",
+          "titulo": "Cuentas contables y perfil contable del tercero (ccuentas / ctertipo)",
+          "paraQueSirve": "Cada cliente debería tener su subcuenta 430 propia para ver su saldo en el mayor. Se crea la cuenta en el plan contable y luego se asigna al tercero en su perfil contable (relación CLI). Las facturas del cliente se contabilizarán en esa subcuenta.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cuentas contables",
+            "Cuentas contables"
+          ],
+          "explicacion": [
+            "Objeto ccuentas. El perfil contable (ctertipo) se presenta como «Relaciones contables con terceros»: una fila por tercero, tipo y relación."
+          ],
+          "campos": [
+            {
+              "campo": "Plan contable *",
+              "significado": "Plan de cuentas.",
+              "ejemplo": "PGE 2008 (ES)"
+            },
+            {
+              "campo": "Cuenta *",
+              "significado": "Subcuenta completa (5 + 5 dígitos).",
+              "ejemplo": "43000.00901"
+            },
+            {
+              "campo": "Descripción cuenta *",
+              "significado": "Nombre.",
+              "ejemplo": "Tercero Maestros {INI}"
+            },
+            {
+              "campo": "Posición / Estado / Grupo *",
+              "significado": "Saldo natural, estado y grupo de partes vinculadas.",
+              "ejemplo": "Debe / Abierto / Standard"
+            },
+            {
+              "campo": "Tipo *",
+              "significado": "Normal, Terceros, Entidades financieras, Costes, Analítica.",
+              "ejemplo": "Terceros"
+            },
+            {
+              "campo": "Activa",
+              "significado": "Auxiliares que activa la cuenta (I impuestos, E efectos/cartera, V…).",
+              "ejemplo": "IEV"
+            },
+            {
+              "campo": "Activar",
+              "significado": "Posición en la que se activan los procesos.",
+              "ejemplo": "Ambos"
+            },
+            {
+              "campo": "Días máximos / Periodificable *",
+              "significado": "Inactividad máxima y periodificación.",
+              "ejemplo": "999 / No"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta: sale en modo consulta. Escribe 43000* en Cuenta.",
+              "detalle": "Cuentas contables abre en modo consulta con los filtros de búsqueda.",
+              "imagen": "maestros-019.jpg",
+              "hotspot": {
+                "x": 39,
+                "y": 30,
+                "w": 20,
+                "h": 6.5,
+                "etiqueta": "Cuenta"
+              }
+            },
+            {
+              "texto": "Pulsa «Ejecutar consulta» para ver las 430 existentes.",
+              "detalle": "Todas son de tipo Terceros con Activa IEV.",
+              "imagen": "maestros-020.jpg"
+            },
+            {
+              "texto": "Pulsa «Añadir cuenta», rellena plan, cuenta 43000.00901, descripción, tipo Terceros, Activa IEV y Activar Ambos. Guarda.",
+              "imagen": "maestros-021.jpg",
+              "hotspot": {
+                "x": 64.5,
+                "y": 32.5,
+                "w": 32.5,
+                "h": 5.5,
+                "etiqueta": "Activar"
+              }
+            },
+            {
+              "texto": "Fíjate en que la nueva cuenta aparece en la lista.",
+              "imagen": "maestros-022.jpg"
+            },
+            {
+              "texto": "Abre Finanzas › Maestros › Terceros › Perfil contable (ctertipo) y la relación CLI de {INI}1.",
+              "detalle": "La relación apunta a la cuenta genérica 43000.00000 y sale el aviso de cuenta compartida.",
+              "imagen": "maestros-023.jpg",
+              "hotspot": {
+                "x": 57,
+                "y": 34.5,
+                "w": 26.5,
+                "h": 5.5,
+                "etiqueta": "Cuenta"
+              }
+            },
+            {
+              "texto": "Cambia la Cuenta a 43000.00901 (borra y reescribe el último dígito para que salga la lista) y guarda con el disquete.",
+              "detalle": "Tras el cambio, la relación CLI de {INI}1 apunta a 43000.00901 y el aviso desaparece.",
+              "imagen": "maestros-024.jpg",
+              "hotspot": {
+                "x": 57,
+                "y": 24,
+                "w": 26.5,
+                "h": 5.5,
+                "etiqueta": "Cuenta"
+              }
+            },
+            {
+              "texto": "Vuelve a la ficha del tercero {INI}1 y pulsa «Validar», porque ha vuelto a Provisional.",
+              "detalle": "Verás el tercero de nuevo en Provisional, con el botón «Validar» activo.",
+              "imagen": "maestros-025.jpg",
+              "hotspot": {
+                "x": 58.5,
+                "y": 8,
+                "w": 8,
+                "h": 5,
+                "etiqueta": "Validar"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Al abrir la relación de {INI}1 con 43000.00000 sale el aviso «Cuenta contable en operación. Esta cuenta ya está asociada a otro tercero.» Es la señal de que conviene darle una subcuenta propia."
+            },
+            {
+              "tipo": "problema",
+              "texto": "Después de cambiar la relación contable, el tercero {INI}1 vuelve a estado «Provisional» y no se podría usar en documentos."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Abre la ficha del tercero y pulsa «Validar». Pasa lo mismo con cualquier cambio en sus pestañas."
+            }
+          ]
+        },
+        {
+          "id": "maestros-1-bancos-cajas",
+          "titulo": "Cuentas financieras: bancos y cajas (cbancpro)",
+          "paraQueSirve": "Las cuentas financieras («Bancos propios») son los bancos y cajas de la empresa: por ellas pasan los cobros y pagos, se remesan los recibos y se concilian los extractos. Cada una tiene su cuenta contable 572 (banco) o 570 (caja). Aquí se da de alta una caja, que no necesita datos bancarios.",
+          "ruta": [
+            "Finanzas",
+            "Cobros y Pagos",
+            "Maestros",
+            "Auxiliares",
+            "Bancos propios"
+          ],
+          "explicacion": [
+            "Objeto cbancpro; también se abre desde Tesorería › Maestros. Bancos y cajas comparten pantalla; lo que los distingue es el «Tipo de cuenta»."
+          ],
+          "campos": [
+            {
+              "campo": "Empresa / Proyecto / Sección *",
+              "significado": "Unidad a la que pertenece la cuenta.",
+              "ejemplo": "0 Deister Software / 0 GENERAL / 0"
+            },
+            {
+              "campo": "Cuenta financiera *",
+              "significado": "Código (máx. 10).",
+              "ejemplo": "{INI}CAJA"
+            },
+            {
+              "campo": "Desc. cuenta financiera *",
+              "significado": "Nombre.",
+              "ejemplo": "Caja Maestros {INI}"
+            },
+            {
+              "campo": "Moneda / Estado *",
+              "significado": "Divisa y estado.",
+              "ejemplo": "EUR / Abierto"
+            },
+            {
+              "campo": "Tipo de cuenta *",
+              "significado": "Cuenta corriente, ahorro, crédito, factoring, caja de efectivo…",
+              "ejemplo": "Caja de efectivo"
+            },
+            {
+              "campo": "Banco, IBAN, BIC",
+              "significado": "Solo para bancos. En una caja se dejan vacíos.",
+              "ejemplo": "(vacío)"
+            },
+            {
+              "campo": "Entidad financiera / Tipo de dirección *",
+              "significado": "Tercero titular y su dirección. En una caja, la propia empresa.",
+              "ejemplo": "0 / 0"
+            },
+            {
+              "campo": "Cuenta *",
+              "significado": "Cuenta contable donde se apuntan los movimientos.",
+              "ejemplo": "57000.00000 Caja, euros"
+            },
+            {
+              "campo": "Preferencia / Fecha apertura / Formato extracto *",
+              "significado": "Se proponen.",
+              "ejemplo": "Sí / hoy / AEB43"
+            },
+            {
+              "campo": "Agrupación cuentas *",
+              "significado": "Grupo de tesorería al que pertenece (maestro de agrupaciones).",
+              "ejemplo": "{INI} Cajas Maestros {INI}"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Añadir bancos propios»."
+            },
+            {
+              "texto": "Elige empresa 0, proyecto 0, sección 0; código {INI}CAJA y descripción."
+            },
+            {
+              "texto": "Tipo de cuenta «Caja de efectivo» (escribe «caja» en el buscador del desplegable)."
+            },
+            {
+              "texto": "Entidad financiera 0 y Tipo de dirección 0; Cuenta 57000.00000.",
+              "detalle": "«Descripción banco» no se escribe: se rellena al elegir el Banco. Para una caja se deja vacía."
+            },
+            {
+              "texto": "Intenta elegir la Agrupación cuentas {INI}: si la lista sale vacía («Datos no disponibles»), crea antes la agrupación.",
+              "detalle": "La lista sale vacía aunque el campo es obligatorio. Si escribes a mano CA, sale «Error en la validación».",
+              "imagen": "maestros-026.jpg",
+              "hotspot": {
+                "x": 66,
+                "y": 40.5,
+                "w": 31,
+                "h": 5.5,
+                "etiqueta": "Agrupación cuentas"
+              }
+            },
+            {
+              "texto": "Abre Finanzas › Tesorería › Maestros › Agrupaciones (tagrupac) y pulsa «Añadir grupo».",
+              "detalle": "La causa es que el maestro «Grupos de cuentas, flujos y operaciones financieras» (tagrupac) está vacío en TUTORIAL.",
+              "imagen": "maestros-027.jpg",
+              "hotspot": {
+                "x": 80.5,
+                "y": 7.5,
+                "w": 10,
+                "h": 5,
+                "etiqueta": "Añadir grupo"
+              }
+            },
+            {
+              "texto": "Crea la agrupación: Tipo «Cuenta», grupo tesorería {INI}, descripción «Cajas Maestros {INI}». Guarda.",
+              "imagen": "maestros-028.jpg",
+              "hotspot": {
+                "x": 27,
+                "y": 48.5,
+                "w": 15.5,
+                "h": 6,
+                "etiqueta": "Tipo"
+              }
+            },
+            {
+              "texto": "Vuelve a la caja, elige Agrupación cuentas {INI} y pulsa «Guardar».",
+              "detalle": "Caja {INI}CAJA: entidad 0, cuenta 57000.00000, formato AEB43 y agrupación {INI}.",
+              "imagen": "maestros-029.jpg",
+              "hotspot": {
+                "x": 66,
+                "y": 73.5,
+                "w": 31,
+                "h": 5.5,
+                "etiqueta": "Agrupación cuentas"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "«Agrupación cuentas» es obligatoria y la lista sale vacía («Datos no disponibles»). Si se escribe a mano CA, la que tienen las cuentas existentes, sale «Error en la validación»."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Crea antes una agrupación en Finanzas › Tesorería › Maestros › Agrupaciones (tagrupac): Tipo «Cuenta», grupo tesorería {INI}, descripción «Cajas Maestros {INI}». Después ya se puede elegir en la cuenta financiera."
+            },
+            {
+              "tipo": "nota",
+              "texto": "«Descripción banco» no se escribe: se rellena al elegir el Banco. Para una caja se deja vacía. No introduzcas nunca IBAN reales en la base de formación."
+            }
+          ]
+        },
+        {
+          "id": "maestros-1-municipios",
+          "titulo": "Municipios y códigos postales (ctiponac / cmunicip)",
+          "paraQueSirve": "El código postal rellena solo la provincia y la población en las direcciones de terceros, almacenes y empresas, y asegura que se escriban igual. España viene cargada; se da de alta un CP nuevo cuando falta (urbanizaciones, CP recientes, otros países).",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Localización",
+            "Países"
+          ],
+          "explicacion": [
+            "Ruta completa: Finanzas › Maestros › Terceros › Localización › Países (ctiponac) › pestaña Municipios y poblaciones."
+          ],
+          "campos": [
+            {
+              "campo": "País *",
+              "significado": "Se toma del país abierto.",
+              "ejemplo": "ESP España"
+            },
+            {
+              "campo": "Región / Distrito",
+              "significado": "Opcionales.",
+              "ejemplo": "(vacío)"
+            },
+            {
+              "campo": "Provincia *",
+              "significado": "Provincia del municipio.",
+              "ejemplo": "08 Barcelona"
+            },
+            {
+              "campo": "Población *",
+              "significado": "Nombre del municipio o población.",
+              "ejemplo": "Poblacion Maestros {INI}"
+            },
+            {
+              "campo": "Código Postal *",
+              "significado": "CP.",
+              "ejemplo": "08{INI}1 (de prueba)"
+            },
+            {
+              "campo": "Id. municipio",
+              "significado": "Lo asigna el sistema.",
+              "ejemplo": "56557"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Países: sale en modo consulta. Filtra País = Espa* y ejecuta: se abre la ficha de España."
+            },
+            {
+              "texto": "Abre la pestaña «Municipios y poblaciones» y pulsa «Añadir municipio».",
+              "detalle": "La ficha del país muestra datos fiscales y SEPA, y las pestañas Regiones, Provincias, Distritos y Municipios y poblaciones.",
+              "imagen": "maestros-030.jpg",
+              "hotspot": {
+                "x": 26.5,
+                "y": 15.5,
+                "w": 17,
+                "h": 5,
+                "etiqueta": "Municipios y poblaciones"
+              }
+            },
+            {
+              "texto": "Elige provincia 08, escribe la población y el código postal. Pulsa «Guardar».",
+              "imagen": "maestros-031.jpg",
+              "hotspot": {
+                "x": 71,
+                "y": 57,
+                "w": 12,
+                "h": 5.5,
+                "etiqueta": "Código Postal"
+              }
+            },
+            {
+              "texto": "Fíjate en que el municipio [08{INI}1] queda guardado con un Id. municipio asignado automáticamente.",
+              "imagen": "maestros-032.jpg"
+            },
+            {
+              "texto": "Compruébalo en Localización › Municipios y Poblaciones filtrando por el CP.",
+              "detalle": "Esta pantalla (cmunicip) sirve para consultar, pero no tiene botón «Añadir».",
+              "imagen": "maestros-033.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Si se abre directamente «Municipios y Poblaciones» (cmunicip) no hay botón de alta, y en el desplegable de CP de una dirección tampoco aparece el «+» para crear uno."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "El alta se hace desde la ficha del país, pestaña «Municipios y poblaciones», botón «Añadir municipio». Después el CP ya se puede elegir en cualquier dirección (como el 08001 del apartado 1.1)."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué ocurre con un tercero mientras está en estado «Provisional»?",
+          "opciones": [
+            "No se puede usar en documentos",
+            "Se puede usar solo en compras",
+            "Se borra a final del día",
+            "Se usa con la cuenta 570"
+          ],
+          "correcta": 0,
+          "explicacion": "Mientras está «Provisional» el tercero no se puede usar en documentos; hay que pulsar «Validar»."
+        },
+        {
+          "pregunta": "Después de cambiar la relación contable de un tercero, ¿qué hay que hacer?",
+          "opciones": [
+            "Nada, sigue validado",
+            "Volver a pulsar «Validar» en la ficha del tercero",
+            "Crear un tercero nuevo",
+            "Cerrar el tercero"
+          ],
+          "correcta": 1,
+          "explicacion": "Cualquier cambio en las pestañas del tercero lo devuelve a «Provisional» y hay que volver a validarlo."
+        },
+        {
+          "pregunta": "Al guardar un plazo de pago con solo dos vencimientos sale «Hay errores en los datos del formulario». ¿Cómo se resuelve?",
+          "opciones": [
+            "Cambiando el Tipo cálculo a Fija",
+            "Escribiendo 0 en los plazos y porcentajes 3 y 4 que no se usan",
+            "Borrando el plazo 2",
+            "Poniendo la Unidad tiempo en Meses"
+          ],
+          "correcta": 1,
+          "explicacion": "Tercer plazo, Cuarto plazo y sus porcentajes son obligatorios aunque no se usen: se escribe 0."
+        },
+        {
+          "pregunta": "¿Qué cuenta contable lleva una caja en Bancos propios?",
+          "opciones": [
+            "43000.00901",
+            "57000.00000 (Caja, euros)",
+            "62300",
+            "70500"
+          ],
+          "correcta": 1,
+          "explicacion": "Las cajas usan la cuenta 570 (en el ejemplo, 57000.00000 Caja, euros); los bancos, la 572."
+        },
+        {
+          "pregunta": "¿Dónde se da de alta un código postal nuevo?",
+          "opciones": [
+            "En Municipios y Poblaciones (cmunicip) abierto directamente",
+            "En el desplegable de CP de una dirección",
+            "En la ficha del país, pestaña «Municipios y poblaciones», con «Añadir municipio»",
+            "En el Maestro de clientes"
+          ],
+          "correcta": 2,
+          "explicacion": "cmunicip abierto directamente no tiene botón de alta; el alta se hace desde la ficha del país."
+        }
+      ],
+      "checklist": [
+        "El tercero {INI}1 (Tercero Maestros {INI}) está creado con país ES, NIF-Empresa e Id. fiscal B12345674 y categoría 001 Clientes.",
+        "La pestaña Relaciones del tercero tiene una relación Cliente / CLI con plan PGE 2008 (ES).",
+        "La pestaña Direcciones tiene la dirección 0 con CP 08001, provincia 08 y población Barcelona.",
+        "El tercero {INI}1 sale en estado «Validado» tras pulsar «Validar».",
+        "El artículo financiero {INI} (Servicio, SOG, mnemotécnicos 62300 / 70500) aparece en la lista de artículos.",
+        "El cambio USD › EUR del 12-11-2026 (spot 0,92 y compra 0,91) está en Cambios diarios.",
+        "El plazo de pago {INI}1 reparte 50 % a 30 días y 50 % a 60 días, con 0 en los plazos 3 y 4.",
+        "El tipo de efecto {INI} «Recibo domiciliado {INI}» (domiciliación Tercero, decalaje 2, post-pago 4, fecha operación Vencimiento) está en la lista de tipos.",
+        "La cuenta 43000.00901 «Tercero Maestros {INI}» existe, de tipo Terceros con Activa IEV.",
+        "En Perfil contable, la relación CLI de {INI}1 muestra 43000.00901 y no sale el aviso de cuenta compartida.",
+        "La caja {INI}CAJA aparece en Bancos propios con cuenta 57000.00000 y la agrupación {INI}.",
+        "El municipio 08{INI}1 «Poblacion Maestros {INI}» se encuentra filtrando por CP en Municipios y Poblaciones."
+      ],
+      "problemas": [
+        {
+          "problema": "En la fila editable de la pestaña Relaciones del tercero no se ve el Plan contable y al guardarlo se queda en rojo.",
+          "solucion": "Usa el botón «Añadir relación», que abre la ventana con todos los campos."
+        },
+        {
+          "problema": "Al guardar el plazo de pago con solo dos vencimientos sale «Hay errores en los datos del formulario» (Tercer plazo, Cuarto plazo y sus porcentajes son obligatorios).",
+          "solucion": "Escribe 0 en los plazos y porcentajes que no se usan."
+        },
+        {
+          "problema": "Después de cambiar la relación contable, el tercero {INI}1 vuelve a estado «Provisional».",
+          "solucion": "Abre la ficha del tercero y pulsa «Validar». Pasa lo mismo con cualquier cambio en sus pestañas."
+        },
+        {
+          "problema": "«Agrupación cuentas» es obligatoria en la cuenta financiera y la lista sale vacía («Datos no disponibles»); si se escribe CA a mano sale «Error en la validación».",
+          "solucion": "Crea antes una agrupación en Finanzas › Tesorería › Maestros › Agrupaciones (tagrupac): Tipo «Cuenta», grupo tesorería {INI}, descripción «Cajas Maestros {INI}»."
+        },
+        {
+          "problema": "En Municipios y Poblaciones (cmunicip) abierto directamente no hay botón de alta, y en el desplegable de CP de una dirección no aparece el «+».",
+          "solucion": "Haz el alta desde la ficha del país, pestaña «Municipios y poblaciones», botón «Añadir municipio»."
+        }
+      ]
+    },
+    {
+      "id": "maestros-2",
+      "numero": 2,
+      "titulo": "Mantenimiento de datos básicos de Gestión (IGES)",
+      "objetivo": "Tener completa la parte logística: el tercero como cliente, un artículo con stock asignado a su proveedor, un almacén y una cuenta logística.",
+      "concepto": "Para comprar, almacenar y vender no basta con los maestros contables: el tercero se da de alta también como cliente (o proveedor) en Gestión, y aparecen los maestros logísticos: el artículo con control de stock, su proveedor habitual, el almacén donde se guarda y las cuentas logísticas en las que se reparte el stock.\n\nEstos datos los heredan después pedidos, albaranes y movimientos de stock. Si el almacén no tiene delegación y departamento o el artículo no tiene familia, los movimientos darán error.",
+      "duracionMin": 60,
+      "secciones": [
+        {
+          "id": "maestros-2-cliente",
+          "titulo": "El tercero en Gestión: cliente (gcliente) y condiciones de cobro",
+          "paraQueSirve": "Para vender, el tercero se da de alta como cliente en Gestión. La ficha de cliente guarda las condiciones comerciales (comercial, tipo, divisa, facturación). La forma de cobro se asigna en la ficha del tercero, pestaña «Condiciones de cobro», uniendo un tipo de efecto y un plazo: es lo que se propondrá en pedidos y facturas.",
+          "ruta": [
+            "Gestión",
+            "Maestros",
+            "Terceros",
+            "Clientes",
+            "Registro"
+          ],
+          "explicacion": [
+            "Objeto gcliente. El cliente y el proveedor no son pestañas del tercero: son pantallas propias (Maestro de clientes / Maestro de proveedores)."
+          ],
+          "campos": [
+            {
+              "campo": "Cliente *",
+              "significado": "Tercero que se da de alta como cliente.",
+              "ejemplo": "{INI}1 Tercero Maestros {INI}"
+            },
+            {
+              "campo": "Fecha alta / Estado *",
+              "significado": "Se proponen.",
+              "ejemplo": "hoy / Provisional"
+            },
+            {
+              "campo": "Comercial *",
+              "significado": "Tercero responsable comercial.",
+              "ejemplo": "{INI}1"
+            },
+            {
+              "campo": "Agrupación empresas *",
+              "significado": "Empresas que pueden venderle.",
+              "ejemplo": "ALL"
+            },
+            {
+              "campo": "Tipo cliente *",
+              "significado": "Clasificación.",
+              "ejemplo": "0 GENERAL"
+            },
+            {
+              "campo": "Facturación *",
+              "significado": "Tercero y dirección de facturación, agrupación de albaranes, modalidad y método. Se proponen.",
+              "ejemplo": "{INI}1 / 0 / Mensual / 1 Albarán-1 Factura"
+            },
+            {
+              "campo": "Cobros *",
+              "significado": "Tercero y dirección de cobro. Se proponen.",
+              "ejemplo": "{INI}1 / 0"
+            },
+            {
+              "campo": "Divisa (Datos financieros) *",
+              "significado": "Moneda de facturación.",
+              "ejemplo": "EUR"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Nuevo»."
+            },
+            {
+              "texto": "Elige el cliente {INI}1, el comercial {INI}1 y el tipo 0 GENERAL.",
+              "detalle": "La pestaña Facturación viene con los valores propuestos.",
+              "imagen": "maestros-034.jpg",
+              "hotspot": {
+                "x": 13.5,
+                "y": 22.5,
+                "w": 30.5,
+                "h": 5,
+                "etiqueta": "Cliente"
+              }
+            },
+            {
+              "texto": "Revisa las pestañas Facturación y Cobros (vienen propuestas) e informa la Divisa EUR. Guarda.",
+              "detalle": "Fíjate en que {INI}1 aparece en el Maestro de clientes con divisa EUR.",
+              "imagen": "maestros-035.jpg"
+            },
+            {
+              "texto": "Abre la ficha del tercero {INI}1 › pestaña «Condiciones de cobro» › «Añadir cobro».",
+              "imagen": "maestros-036.jpg",
+              "hotspot": {
+                "x": 79,
+                "y": 35.5,
+                "w": 9.5,
+                "h": 4.5,
+                "etiqueta": "Añadir cobro"
+              }
+            },
+            {
+              "texto": "Tipo efecto {INI}, estado PE y plazo de pago {INI}1. Guarda y vuelve a «Validar» el tercero.",
+              "detalle": "Quedan las condiciones de cobro: efecto {INI}, estado PE y plazo «2 Vtos. 30 y 60 dias {INI}»."
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "maestros-2-articulos-log",
+          "titulo": "Artículos logísticos (garticul)",
+          "paraQueSirve": "El artículo logístico es el producto que se compra, se almacena y se vende con control de stock. Su familia decide la clave fiscal, la naturaleza y la reposición; su unidad base es en la que se lleva el stock.",
+          "ruta": [
+            "Gestión",
+            "Maestros",
+            "Artículos",
+            "Registro"
+          ],
+          "explicacion": [
+            "Objeto garticul."
+          ],
+          "campos": [
+            {
+              "campo": "Artículo *",
+              "significado": "Código.",
+              "ejemplo": "{INI}0001"
+            },
+            {
+              "campo": "Descripción artículo",
+              "significado": "Se guarda en mayúsculas.",
+              "ejemplo": "RODAMIENTO MAESTROS {INI}"
+            },
+            {
+              "campo": "Unidad base *",
+              "significado": "Unidad de stock.",
+              "ejemplo": "UNIDAD (UNI)"
+            },
+            {
+              "campo": "Agrupación empresas *",
+              "significado": "Empresas que lo usan.",
+              "ejemplo": "ALL"
+            },
+            {
+              "campo": "Tipo *",
+              "significado": "Clasificación del artículo.",
+              "ejemplo": "ARTICULOS"
+            },
+            {
+              "campo": "Familia *",
+              "significado": "Agrupación comercial; propone clave fiscal y naturaleza.",
+              "ejemplo": "01.01.001352 Serie 6.0xx…"
+            },
+            {
+              "campo": "Clave fiscal / Naturaleza *",
+              "significado": "IVA y tipo de bien. Se heredan de la familia.",
+              "ejemplo": "BOG / Bien"
+            },
+            {
+              "campo": "Stock / Diferencias albaranes / Tipo descripción *",
+              "significado": "Se proponen.",
+              "ejemplo": "Sí / No / Fija"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Nuevo».",
+              "detalle": "Verás el Maestro de artículos con unidad base, familia, tipo contable y tipo de cada artículo.",
+              "imagen": "maestros-037.jpg",
+              "hotspot": {
+                "x": 83.5,
+                "y": 7.5,
+                "w": 7.5,
+                "h": 5,
+                "etiqueta": "Nuevo"
+              }
+            },
+            {
+              "texto": "Escribe código y descripción; elige unidad UNIDAD y tipo ARTICULOS."
+            },
+            {
+              "texto": "En Familia escribe el código 01.01.001352 y sal con Tab.",
+              "detalle": "El desplegable de Familia no muestra opciones al escribir: teclea el código exacto y sal con Tab."
+            },
+            {
+              "texto": "Comprueba que se han rellenado clave fiscal BOG y naturaleza Bien. Guarda.",
+              "detalle": "La familia propone clave fiscal BOG y naturaleza Bien.",
+              "imagen": "maestros-038.jpg",
+              "hotspot": {
+                "x": 13,
+                "y": 53.5,
+                "w": 36,
+                "h": 7,
+                "etiqueta": "Clave fiscal"
+              }
+            },
+            {
+              "texto": "Busca el artículo con Filtros.",
+              "detalle": "Tras guardar, {INI}0001 no sale en la primera página de la lista: se encuentra con Filtros › Descripción.",
+              "imagen": "maestros-039.jpg",
+              "hotspot": {
+                "x": 34,
+                "y": 7.5,
+                "w": 25,
+                "h": 5,
+                "etiqueta": "Descripción artículo"
+              }
+            },
+            {
+              "texto": "Abre la ficha y pulsa «Validar».",
+              "detalle": "La ficha de {INI}0001 queda activa; el menú Operación ofrece Copiar y Cambiar unidad base.",
+              "imagen": "maestros-040.jpg",
+              "hotspot": {
+                "x": 73.5,
+                "y": 7.5,
+                "w": 7,
+                "h": 5,
+                "etiqueta": "Validar"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "El desplegable de Familia no muestra ninguna opción al escribir ni al pulsar flecha abajo."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Teclea el código exacto de la familia y sal con Tab. Los códigos se consultan en Gestión › Maestros › Artículos › Auxiliares › Familias (gartfami)."
+            }
+          ]
+        },
+        {
+          "id": "maestros-2-art-proveedor",
+          "titulo": "Artículos por proveedor (gartprov)",
+          "paraQueSirve": "Relaciona un artículo con los proveedores que lo sirven: referencia y descripción del proveedor, prioridad y condiciones de compra. El proveedor «asignado» con mejor prioridad es el que se propone al generar pedidos de compra.",
+          "ruta": [
+            "Gestión",
+            "Maestros",
+            "Terceros",
+            "Proveedores",
+            "Registro"
+          ],
+          "explicacion": [
+            "También hay una consulta en Gestión › Maestros › Artículos › Proveedores. La pantalla gartprov abierta sola es de consulta: el alta se hace desde la ficha del proveedor, pestaña Artículos por proveedor."
+          ],
+          "campos": [
+            {
+              "campo": "Artículo *",
+              "significado": "Artículo que sirve el proveedor.",
+              "ejemplo": "{INI}0001"
+            },
+            {
+              "campo": "Asignado / Prioridad *",
+              "significado": "Si es proveedor habitual y su orden.",
+              "ejemplo": "Sí / 1"
+            },
+            {
+              "campo": "Estado / % reparto *",
+              "significado": "Se proponen.",
+              "ejemplo": "Activo / 0,00"
+            },
+            {
+              "campo": "Referencia y Descripción proveedor",
+              "significado": "Cómo lo llama el proveedor; sale en el pedido de compra.",
+              "ejemplo": "REF-{INI}-6000"
+            },
+            {
+              "campo": "Proveedor / Dirección *",
+              "significado": "Proveedor (el de la ficha) y su dirección.",
+              "ejemplo": "00001 PROVEEDOR / 0"
+            },
+            {
+              "campo": "Condiciones de compra *",
+              "significado": "Unidad de compra, cantidades mínima, económica y múltiplo.",
+              "ejemplo": "(por defecto)"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Fíjate en que Artículos por proveedores, abierto directamente, solo permite consultar.",
+              "detalle": "No tiene botón de alta: por eso el alta se hace desde la ficha del proveedor.",
+              "imagen": "maestros-041.jpg"
+            },
+            {
+              "texto": "Abre el proveedor en Gestión › Maestros › Terceros › Proveedores › Registro (aquí, 00001 PROVEEDOR)."
+            },
+            {
+              "texto": "Ve a la pestaña «Artículos por proveedor» y pulsa «Nuevo».",
+              "detalle": "La pestaña muestra ya dos artículos del proveedor, el nuevo con REF-{INI}-6000.",
+              "imagen": "maestros-043.jpg",
+              "hotspot": {
+                "x": 81.5,
+                "y": 76.5,
+                "w": 6.5,
+                "h": 5,
+                "etiqueta": "Nuevo"
+              }
+            },
+            {
+              "texto": "Elige {INI}0001, marca Asignado, prioridad 1, referencia y descripción del proveedor, y dirección 0.",
+              "imagen": "maestros-042.jpg",
+              "hotspot": {
+                "x": 50,
+                "y": 34,
+                "w": 9.5,
+                "h": 4.5,
+                "etiqueta": "Asignado"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar»."
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "maestros-2-almacenes",
+          "titulo": "Almacenes logísticos (galmacen)",
+          "paraQueSirve": "El almacén es el lugar físico donde se guarda el stock. Define cómo se valora (FIFO, precio medio), si admite stock negativo y a qué delegación y departamento pertenece, datos que heredan los movimientos de stock.",
+          "ruta": [
+            "Gestión",
+            "Logística",
+            "Maestros",
+            "Almacenes",
+            "Almacenes logísticos"
+          ],
+          "explicacion": [
+            "Objeto galmacen."
+          ],
+          "campos": [
+            {
+              "campo": "Almacén / Descripción *",
+              "significado": "Código y nombre.",
+              "ejemplo": "{INI}1 / Almacen Maestros {INI}"
+            },
+            {
+              "campo": "Recinto / Empresa / Agrupación *",
+              "significado": "Recinto físico, empresa y agrupación.",
+              "ejemplo": "0 RECINTO CENTRAL / 0 / ALL"
+            },
+            {
+              "campo": "Tercero asociado / Tipo dirección *",
+              "significado": "Dirección del almacén; rellena país, CP y población.",
+              "ejemplo": "0 / 0"
+            },
+            {
+              "campo": "Delegación / Departamento",
+              "significado": "Unidad de negocio del almacén. No sale con asterisco, pero los movimientos la exigen.",
+              "ejemplo": "0 CENTRAL / C COMPRAS"
+            },
+            {
+              "campo": "Tipo valoración *",
+              "significado": "Cómo se calcula el coste del stock.",
+              "ejemplo": "FIFO"
+            },
+            {
+              "campo": "Fecha última valoración *",
+              "significado": "Fecha desde la que se valora.",
+              "ejemplo": "01-01-2026"
+            },
+            {
+              "campo": "Stock negativo / Rupturas stock *",
+              "significado": "Si se permite vender sin stock y qué hacer con las roturas.",
+              "ejemplo": "No / Ninguno"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Nuevo».",
+              "detalle": "Verás los almacenes existentes: tipo de valoración FIFO o Medio y política de rupturas de stock.",
+              "imagen": "maestros-044.jpg",
+              "hotspot": {
+                "x": 83.5,
+                "y": 7.5,
+                "w": 7.5,
+                "h": 5,
+                "etiqueta": "Nuevo"
+              }
+            },
+            {
+              "texto": "Rellena código, descripción, recinto, empresa y agrupación; tercero 0 y dirección 0.",
+              "detalle": "La dirección del tercero 0 rellena país, CP y población; la valoración queda en FIFO.",
+              "imagen": "maestros-045.jpg",
+              "hotspot": {
+                "x": 13.5,
+                "y": 14.5,
+                "w": 18,
+                "h": 5,
+                "etiqueta": "Tercero asociado"
+              }
+            },
+            {
+              "texto": "En Información general elige Delegación CENTRAL y Departamento COMPRAS.",
+              "imagen": "maestros-046.jpg",
+              "hotspot": {
+                "x": 48.5,
+                "y": 66,
+                "w": 47,
+                "h": 13,
+                "etiqueta": "Delegación"
+              }
+            },
+            {
+              "texto": "En Valoración deja FIFO y escribe la fecha de última valoración. Guarda y pulsa «Validar»."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Si el almacén no tiene delegación y departamento, al grabar un movimiento interno sale «Delegación y departamento no informados para el almacén» (ver 3.1). Rellénalos ya en el alta."
+            }
+          ]
+        },
+        {
+          "id": "maestros-2-cuentas-log",
+          "titulo": "Cuentas logísticas (galmctas)",
+          "paraQueSirve": "Dentro de un almacén el stock se reparte en cuentas logísticas: disponible (DISP), calidad (CALI), cuarentena, tránsito o fuera de inventario (NSAL). Cada movimiento pasa stock de una cuenta a otra; los indicadores dicen qué cuentas se valoran, contabilizan, reservan o planifican.",
+          "ruta": [
+            "Gestión",
+            "Logística",
+            "Maestros",
+            "Cuentas logísticas",
+            "Registro"
+          ],
+          "explicacion": [
+            "Objeto galmctas."
+          ],
+          "campos": [
+            {
+              "campo": "Cuenta / Descripción *",
+              "significado": "Código y nombre.",
+              "ejemplo": "{INI}1 / Stock reservado Maestros {INI}"
+            },
+            {
+              "campo": "Contabilizar / Valoración",
+              "significado": "Si el stock de la cuenta se contabiliza y se valora.",
+              "ejemplo": "Sí / Sí"
+            },
+            {
+              "campo": "Adjudicación / Planificar / Calidad",
+              "significado": "Si cuenta para reservas, planificación y control de calidad.",
+              "ejemplo": "Sí / Sí / No"
+            },
+            {
+              "campo": "Saldo *",
+              "significado": "Sí, No (no lleva saldo, como NSAL) o Negativos (permite saldo negativo).",
+              "ejemplo": "Sí"
+            },
+            {
+              "campo": "Rupturas stock *",
+              "significado": "Tratamiento de roturas.",
+              "ejemplo": "Ninguno"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta y pulsa «Nuevo».",
+              "detalle": "Verás las cuentas logísticas de la base: CALI, CUA, DISP, NSAL y TRAN con sus indicadores.",
+              "imagen": "maestros-047.jpg",
+              "hotspot": {
+                "x": 83.5,
+                "y": 7.5,
+                "w": 7.5,
+                "h": 5,
+                "etiqueta": "Nuevo"
+              }
+            },
+            {
+              "texto": "Escribe código y descripción y marca los indicadores.",
+              "detalle": "Alta de la cuenta {INI}1 con contabilizar, valoración, adjudicación y planificar.",
+              "imagen": "maestros-048.jpg",
+              "hotspot": {
+                "x": 6.5,
+                "y": 39.5,
+                "w": 86,
+                "h": 26,
+                "etiqueta": "Indicativos"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar».",
+              "detalle": "Fíjate en que la cuenta {INI}1 aparece en la lista.",
+              "imagen": "maestros-049.jpg"
+            }
+          ],
+          "avisos": []
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Dónde se asigna la forma de cobro (tipo de efecto + plazo) de un tercero?",
+          "opciones": [
+            "En la ficha del cliente, pestaña Facturación",
+            "En la ficha del tercero, pestaña «Condiciones de cobro»",
+            "En el Maestro de artículos",
+            "En el almacén"
+          ],
+          "correcta": 1,
+          "explicacion": "La forma de cobro se asigna en la ficha del tercero, pestaña «Condiciones de cobro», uniendo un tipo de efecto y un plazo."
+        },
+        {
+          "pregunta": "El desplegable de Familia del artículo no muestra opciones. ¿Qué haces?",
+          "opciones": [
+            "Esperas a que cargue",
+            "Tecleas el código exacto de la familia y sales con Tab",
+            "Dejas la familia vacía",
+            "Creas una familia nueva en el artículo"
+          ],
+          "correcta": 1,
+          "explicacion": "Se teclea el código exacto y se sale con Tab; los códigos se consultan en Familias (gartfami)."
+        },
+        {
+          "pregunta": "¿Desde dónde se da de alta un artículo por proveedor (gartprov)?",
+          "opciones": [
+            "Desde la pantalla Artículos por proveedores abierta sola",
+            "Desde la ficha del proveedor, pestaña Artículos por proveedor",
+            "Desde el Maestro de clientes",
+            "Desde Stock global"
+          ],
+          "correcta": 1,
+          "explicacion": "La pantalla gartprov abierta sola es de consulta; el alta se hace desde la ficha del proveedor."
+        },
+        {
+          "pregunta": "¿Qué deben tener informado el almacén para poder grabar movimientos internos?",
+          "opciones": [
+            "Solo el código",
+            "Delegación y departamento",
+            "El IBAN",
+            "Una cuenta 572"
+          ],
+          "correcta": 1,
+          "explicacion": "El movimiento toma delegación y departamento del almacén; si faltan sale «Delegación y departamento no informados para el almacén»."
+        },
+        {
+          "pregunta": "¿Qué cuenta logística del ejemplo representa el stock fuera de inventario y no lleva saldo?",
+          "opciones": [
+            "DISP",
+            "CALI",
+            "NSAL",
+            "TRAN"
+          ],
+          "correcta": 2,
+          "explicacion": "NSAL es «fuera de inventario» y su indicador Saldo es No."
+        }
+      ],
+      "checklist": [
+        "{INI}1 aparece en el Maestro de clientes con divisa EUR, comercial {INI}1 y tipo GENERAL.",
+        "La pestaña Condiciones de cobro del tercero {INI}1 muestra tipo efecto {INI}, estado PE y plazo «2 Vtos. 30 y 60 dias {INI}».",
+        "El tercero {INI}1 vuelve a estar «Validado» tras añadir las condiciones de cobro.",
+        "El artículo {INI}0001 (RODAMIENTO MAESTROS {INI}, unidad UNIDAD, tipo ARTICULOS) se encuentra con Filtros en el Maestro de artículos.",
+        "La familia 01.01.001352 ha propuesto clave fiscal BOG y naturaleza Bien en {INI}0001.",
+        "La ficha de {INI}0001 está validada (Estado Activo).",
+        "La pestaña Artículos por proveedor del proveedor 00001 muestra {INI}0001 con Asignado, prioridad 1 y referencia REF-{INI}-6000.",
+        "El almacén {INI}1 (Almacen Maestros {INI}) tiene valoración FIFO, delegación CENTRAL y departamento COMPRAS.",
+        "{INI}1 aparece en la lista de Almacenes y está validado.",
+        "La cuenta logística {INI}1 (Stock reservado Maestros {INI}) aparece en Cuentas logísticas con Saldo Sí y Rupturas Ninguno."
+      ],
+      "problemas": [
+        {
+          "problema": "El desplegable de Familia del artículo no muestra ninguna opción al escribir ni al pulsar flecha abajo.",
+          "solucion": "Teclea el código exacto de la familia y sal con Tab. Los códigos se consultan en Gestión › Maestros › Artículos › Auxiliares › Familias (gartfami)."
+        },
+        {
+          "problema": "Tras guardar, el artículo {INI}0001 no sale en la primera página de la lista.",
+          "solucion": "No es que no se haya guardado: las listas muestran solo unas 25 filas. Búscalo con Filtros › Descripción (por ejemplo RODAMIENTO*)."
+        },
+        {
+          "problema": "Artículos por proveedores abierto directamente no tiene botón de alta.",
+          "solucion": "Haz el alta desde la ficha del proveedor, pestaña Artículos por proveedor, con «Nuevo»."
+        },
+        {
+          "problema": "Un almacén sin delegación ni departamento hará fallar los movimientos internos («Delegación y departamento no informados para el almacén»).",
+          "solucion": "Informa Delegación CENTRAL y Departamento COMPRAS en la ficha del almacén al darlo de alta, guarda y valida."
+        }
+      ]
+    },
+    {
+      "id": "maestros-3",
+      "numero": 3,
+      "titulo": "Consultas e informes de stock",
+      "objetivo": "Haber registrado una entrada inicial de 10 unidades de {INI}0001 en el almacén {INI}1 y haberla comprobado en el Stock global y en el kardex.",
+      "concepto": "Una vez creados artículo y almacén, el stock se alimenta con movimientos. Aquí se registra una entrada inicial de 10 unidades mediante un movimiento interno y se comprueba con las dos consultas básicas: el Stock global («¿cuánto tengo y dónde?») y el kardex (el historial de movimientos de un artículo).\n\nSi las dos consultas coinciden en las 10 unidades, los maestros (artículo, almacén y cuentas logísticas) están bien configurados.",
+      "duracionMin": 45,
+      "secciones": [
+        {
+          "id": "maestros-3-movimientos",
+          "titulo": "Movimientos de almacén de usuario (geanmovh)",
+          "paraQueSirve": "Los movimientos internos son entradas, salidas o traspasos de stock que no vienen de una compra o una venta: inventario inicial, regularizaciones, paso a calidad, cambio de ubicación. Su tipología fija de qué cuenta logística sale el stock y a cuál entra. Al validar el movimiento se actualiza el stock.",
+          "ruta": [
+            "Gestión",
+            "Logística",
+            "Movimientos internos",
+            "Movimientos"
+          ],
+          "explicacion": [
+            "Objeto geanmovh. Las tipologías de movimiento están en Gestión › Logística › Maestros › Documentos › Movimientos EAN. Para que las consultas de este ejercicio tengan datos se registra antes una entrada inicial de 10 unidades de {INI}0001 en el almacén {INI}1."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo movimiento *",
+              "significado": "Tipología: cuentas origen y destino y serie.",
+              "ejemplo": "RIDP Recuento inicial en disponible (NSAL › DISP)"
+            },
+            {
+              "campo": "Empresa / Almacén origen *",
+              "significado": "Dónde se mueve el stock.",
+              "ejemplo": "0 / {INI}1"
+            },
+            {
+              "campo": "Fecha movimiento / recepción *",
+              "significado": "Fechas del movimiento.",
+              "ejemplo": "12-11-2026"
+            },
+            {
+              "campo": "Movimiento",
+              "significado": "Número. Debería darlo la serie; en TUTORIAL hay que teclearlo.",
+              "ejemplo": "{INI}000001"
+            },
+            {
+              "campo": "Referencia",
+              "significado": "Texto libre (máx. 20).",
+              "ejemplo": "Inventario inicial"
+            },
+            {
+              "campo": "Delegación / Departamento *",
+              "significado": "Se toman del almacén.",
+              "ejemplo": "CENTRAL / COMPRAS"
+            },
+            {
+              "campo": "Cuenta origen / destino *",
+              "significado": "Se toman de la tipología.",
+              "ejemplo": "NSAL / DISP"
+            },
+            {
+              "campo": "Línea: Artículo, VL, Lote, Cantidad, Unidad *",
+              "significado": "Qué se mueve y cuánto.",
+              "ejemplo": "{INI}0001, 0, 0, 10, UNIDAD"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Fíjate en la tipología RIDP en las Tipologías de movimiento.",
+              "detalle": "RIDP pasa stock de NSAL (fuera de inventario) a DISP (disponible).",
+              "imagen": "maestros-050.jpg",
+              "hotspot": {
+                "x": 8.5,
+                "y": 41,
+                "w": 33,
+                "h": 4.5,
+                "etiqueta": "RIDP"
+              }
+            },
+            {
+              "texto": "Abre la ruta y pulsa «Nuevo». Elige el tipo RIDP y el almacén {INI}1."
+            },
+            {
+              "texto": "Si guardas la cabecera sin número, fíjate en el error de serie.",
+              "detalle": "Sale «gsernumh_getserie: Sin máscara. Tab.[geanmovh] Cod.[MOV]»: la serie MOV no tiene configurada la numeración para movimientos internos en la base TUTORIAL.",
+              "imagen": "maestros-051.jpg"
+            },
+            {
+              "texto": "Escribe el número de movimiento {INI}000001 y una referencia corta. Guarda.",
+              "detalle": "Al no dar la serie el número, lo tecleas tú en el campo «Movimiento»."
+            },
+            {
+              "texto": "Si ahora sale un error de delegación y departamento, completa el almacén y repite el movimiento.",
+              "detalle": "Sale «Delegación y departamento no informados para el almacén [{INI}1]»: el movimiento los toma del almacén y no se pueden escribir aquí. Informa Delegación CENTRAL y Departamento COMPRAS en la ficha del almacén, guarda y valida (ver 2.4).",
+              "imagen": "maestros-052.jpg"
+            },
+            {
+              "texto": "Comprueba la cabecera correcta.",
+              "detalle": "RIDP, almacén {INI}1, número {INI}000001, delegación y departamento del almacén, NSAL › DISP.",
+              "imagen": "maestros-053.jpg",
+              "hotspot": {
+                "x": 50,
+                "y": 39.5,
+                "w": 12,
+                "h": 5,
+                "etiqueta": "Movimiento"
+              }
+            },
+            {
+              "texto": "Abre la ficha, pestaña «Líneas de movimiento» › «Nuevo»: artículo {INI}0001."
+            },
+            {
+              "texto": "Si al elegir el artículo sale un aviso técnico, ciérralo.",
+              "detalle": "Sale «ELResolver no manejó el tipo: null con propiedad de 'null'» y la cantidad se queda en 0. Cierra el aviso, vuelve a escribir la cantidad y guarda la línea con normalidad.",
+              "imagen": "maestros-054.jpg"
+            },
+            {
+              "texto": "Escribe la cantidad 10 y guarda la línea.",
+              "detalle": "Línea: {INI}0001, lote 0, cuentas NSAL › DISP, 10 unidades.",
+              "imagen": "maestros-055.jpg",
+              "hotspot": {
+                "x": 17,
+                "y": 75.5,
+                "w": 16,
+                "h": 5,
+                "etiqueta": "Cantidad"
+              }
+            },
+            {
+              "texto": "Pulsa «Validar»: el movimiento queda validado y el stock se actualiza.",
+              "detalle": "Aparece el botón «Pasar a provisional».",
+              "imagen": "maestros-056.jpg"
+            },
+            {
+              "texto": "Fíjate en el detalle de movimientos (Líneas de movimientos internos).",
+              "detalle": "Aparece la línea de {INI}0001 por 10 unidades.",
+              "imagen": "maestros-057.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Al guardar la cabecera sin número sale «gsernumh_getserie: Sin máscara. Tab.[geanmovh] Cod.[MOV]». La serie MOV no tiene configurada la numeración para movimientos internos en la base TUTORIAL."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Escribe tú el número en el campo «Movimiento» ({INI}000001). En una instalación real, pide que configuren la máscara de la serie MOV."
+            },
+            {
+              "tipo": "problema",
+              "texto": "Después sale «Delegación y departamento no informados para el almacén [{INI}1]». El movimiento los toma del almacén y no se pueden escribir aquí."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "En la ficha del almacén {INI}1 informa Delegación CENTRAL y Departamento COMPRAS, guarda y valida (ver 2.4). Repite el movimiento."
+            },
+            {
+              "tipo": "problema",
+              "texto": "Al elegir el artículo en la línea sale el aviso técnico «ELResolver no manejó el tipo: null con propiedad de 'null'» y la cantidad se queda en 0."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Cierra el aviso, vuelve a escribir la cantidad y guarda la línea con normalidad."
+            }
+          ]
+        },
+        {
+          "id": "maestros-3-stock-global",
+          "titulo": "Stock global (galmstkg)",
+          "paraQueSirve": "Listado de existencias: stock actual por almacén, cuenta logística, artículo y variable logística, con disponible, adjudicado (reservado), entradas y salidas previstas. Es la consulta de «¿cuánto tengo y dónde?».",
+          "ruta": [
+            "Gestión",
+            "Logística",
+            "Stocks",
+            "Cuentas",
+            "Stock global"
+          ],
+          "explicacion": [
+            "Objeto galmstkg."
+          ],
+          "campos": [],
+          "pasos": [
+            {
+              "texto": "Abre la ruta: se muestra el stock de todos los almacenes."
+            },
+            {
+              "texto": "Pulsa «Filtros» › Almacén, marca {INI}1 y pulsa Intro.",
+              "detalle": "Stock global filtrado por el almacén {INI}1: 10 unidades disponibles de RODAMIENTO MAESTROS {INI}.",
+              "imagen": "maestros-058.jpg",
+              "hotspot": {
+                "x": 21,
+                "y": 7.5,
+                "w": 18,
+                "h": 5,
+                "etiqueta": "Almacén"
+              }
+            },
+            {
+              "texto": "Lee la fila: cuenta DISP, artículo {INI}0001, stock 10 y disponible 10."
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "maestros-3-kardex",
+          "titulo": "Traza de movimientos por artículo, kardex (garticul_evolstk)",
+          "paraQueSirve": "El kardex lista, para un artículo, todos sus movimientos de stock en un periodo, con entradas, salidas y saldo acumulado, agrupados por tipo de documento. Sirve para explicar por qué el stock es el que es.",
+          "ruta": [
+            "Gestión",
+            "Logística",
+            "Stocks",
+            "Ubicaciones",
+            "Traza de movimientos por artículo-ubicación"
+          ],
+          "explicacion": [
+            "Objeto garticul_evolstk."
+          ],
+          "campos": [
+            {
+              "campo": "Empresa, Departamento, Cuenta, Depósito, VL, Unidad, Lote… *",
+              "significado": "Filtros; % significa «todos».",
+              "ejemplo": "%"
+            },
+            {
+              "campo": "Almacén *",
+              "significado": "Almacén a consultar.",
+              "ejemplo": "{INI}1"
+            },
+            {
+              "campo": "Artículo *",
+              "significado": "Artículo a consultar.",
+              "ejemplo": "{INI}0001"
+            },
+            {
+              "campo": "Fecha inicial / Fecha fin *",
+              "significado": "Periodo.",
+              "ejemplo": "01-11-2026 / 12-11-2026"
+            },
+            {
+              "campo": "Contabilizar / Periodo completo *",
+              "significado": "Qué movimientos incluir.",
+              "ejemplo": "Todas / Sí"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ruta: es una pantalla de variables."
+            },
+            {
+              "texto": "Cambia Almacén a {INI}1 y Artículo a {INI}0001; deja el resto en %. Revisa las fechas.",
+              "detalle": "Variables del kardex: almacén {INI}1, artículo {INI}0001 y periodo del 1 al 12 de noviembre.",
+              "imagen": "maestros-059.jpg",
+              "hotspot": {
+                "x": 60,
+                "y": 46,
+                "w": 20,
+                "h": 12.5,
+                "etiqueta": "Almacén y Artículo"
+              }
+            },
+            {
+              "texto": "Pulsa «Ejecutar consulta».",
+              "detalle": "Resultado: un movimiento RIDP «Recuento inicial en disponible», documento {INI}000001.",
+              "imagen": "maestros-060.jpg"
+            },
+            {
+              "texto": "Desplázate a la derecha para ver entradas, salidas y saldo.",
+              "detalle": "Columnas finales: NSAL › DISP, entradas 10, salidas 0, saldo 10.",
+              "imagen": "maestros-061.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Precio y coste salen vacíos porque el recuento inicial se hizo sin valorar. Una entrada por compra traería el coste."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué hace la tipología RIDP?",
+          "opciones": [
+            "Pasa stock de DISP a NSAL",
+            "Pasa stock de NSAL (fuera de inventario) a DISP (disponible)",
+            "Pasa stock a calidad",
+            "Cambia la ubicación"
+          ],
+          "correcta": 1,
+          "explicacion": "RIDP es «Recuento inicial en disponible»: NSAL › DISP."
+        },
+        {
+          "pregunta": "Al guardar el movimiento sin número sale «gsernumh_getserie: Sin máscara. Tab.[geanmovh] Cod.[MOV]». ¿Qué significa?",
+          "opciones": [
+            "Que el artículo no existe",
+            "Que la serie MOV no tiene configurada la numeración para movimientos internos",
+            "Que el almacén está cerrado",
+            "Que falta la divisa"
+          ],
+          "correcta": 1,
+          "explicacion": "La serie MOV no tiene máscara en TUTORIAL; se teclea el número a mano y en una instalación real se configura la máscara."
+        },
+        {
+          "pregunta": "El movimiento dice «Delegación y departamento no informados para el almacén». ¿Dónde se corrige?",
+          "opciones": [
+            "En la cabecera del movimiento",
+            "En la línea del movimiento",
+            "En la ficha del almacén",
+            "En el artículo"
+          ],
+          "correcta": 2,
+          "explicacion": "El movimiento los toma del almacén y no se pueden escribir en el movimiento."
+        },
+        {
+          "pregunta": "¿Qué consulta responde a «¿cuánto tengo y dónde?»?",
+          "opciones": [
+            "Kardex",
+            "Stock global",
+            "Tipologías de movimiento",
+            "Cuentas logísticas"
+          ],
+          "correcta": 1,
+          "explicacion": "El Stock global lista existencias por almacén, cuenta, artículo y variable logística."
+        },
+        {
+          "pregunta": "¿Qué ves en el kardex de un artículo?",
+          "opciones": [
+            "Solo el stock actual",
+            "Todos sus movimientos de stock en un periodo, con entradas, salidas y saldo acumulado",
+            "Solo las compras",
+            "Las direcciones del almacén"
+          ],
+          "correcta": 1,
+          "explicacion": "El kardex explica por qué el stock es el que es."
+        }
+      ],
+      "checklist": [
+        "El movimiento interno {INI}000001 (tipo RIDP, almacén {INI}1, referencia Inventario inicial) existe con delegación CENTRAL y departamento COMPRAS.",
+        "La línea del movimiento tiene {INI}0001, lote 0, cuentas NSAL › DISP y cantidad 10.",
+        "El movimiento está validado y muestra el botón «Pasar a provisional».",
+        "En Líneas de movimientos internos aparece la línea de {INI}0001 por 10 unidades.",
+        "En Stock global, filtrando Almacén = {INI}1, sale la cuenta DISP con stock 10 y disponible 10 de {INI}0001.",
+        "En el kardex (almacén {INI}1, artículo {INI}0001, del 01-11-2026 al 12-11-2026) aparece un movimiento RIDP con documento {INI}000001.",
+        "El kardex muestra NSAL › DISP, entradas 10, salidas 0 y saldo 10.",
+        "Stock global y kardex coinciden en 10 unidades."
+      ],
+      "problemas": [
+        {
+          "problema": "Al guardar la cabecera del movimiento sin número sale «gsernumh_getserie: Sin máscara. Tab.[geanmovh] Cod.[MOV]».",
+          "solucion": "Escribe tú el número en el campo «Movimiento» ({INI}000001). En una instalación real, pide que configuren la máscara de la serie MOV."
+        },
+        {
+          "problema": "Sale «Delegación y departamento no informados para el almacén [{INI}1]».",
+          "solucion": "En la ficha del almacén {INI}1 informa Delegación CENTRAL y Departamento COMPRAS, guarda y valida (ver 2.4). Repite el movimiento."
+        },
+        {
+          "problema": "Al elegir el artículo en la línea sale el aviso técnico «ELResolver no manejó el tipo: null con propiedad de 'null'» y la cantidad se queda en 0.",
+          "solucion": "Cierra el aviso, vuelve a escribir la cantidad y guarda la línea con normalidad."
+        },
+        {
+          "problema": "En el kardex, precio y coste salen vacíos.",
+          "solucion": "Es normal: el recuento inicial se hizo sin valorar. Una entrada por compra traería el coste."
+        }
+      ]
+    }
+  ],
+  "datosSimulador": {
+    "numerador": {
+      "funcion": "gsernumh_getserie",
+      "tabla": "geanmovh",
+      "serie": "MOV",
+      "mascara": null,
+      "componentes": null,
+      "ejemploMascara": null,
+      "ejemploNumeroResultante": null,
+      "mensajeError": "gsernumh_getserie: Sin máscara. Tab.[geanmovh] Cod.[MOV]",
+      "numeroManual": "{INI}000001",
+      "nota": "El manual no describe los componentes de la máscara (prefijos, año, dígitos…). Solo indica que la serie MOV no tiene configurada la numeración para movimientos internos (geanmovh) en la base TUTORIAL; por eso el número se teclea a mano ({INI}000001) y, en una instalación real, hay que pedir que configuren la máscara de la serie MOV."
+    },
+    "maestros": [
+      {
+        "nombre": "Terceros (ctercero)",
+        "paraQueSirve": "Ficha única de cualquier persona o empresa: datos fiscales, direcciones y relación contable. Provisional hasta validar.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Terceros",
+          "Registro terceros"
+        ],
+        "codigoEjemplo": "{INI}1"
+      },
+      {
+        "nombre": "Artículos financieros (carticul)",
+        "paraQueSirve": "Conceptos de facturas que no mueven stock (servicios, alquileres, suplidos), con tipo fiscal y cuentas de compras y ventas.",
+        "ruta": [
+          "Finanzas",
+          "Facturación",
+          "Maestros",
+          "Artículos"
+        ],
+        "codigoEjemplo": "{INI}"
+      },
+      {
+        "nombre": "Cambios de divisas (ccambios)",
+        "paraQueSirve": "Cambio diario para convertir importes de otras monedas a euros.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Auxiliares",
+          "Monedas",
+          "Cambios diarios"
+        ],
+        "codigoEjemplo": "USD › EUR 0,92 del 12-11-2026"
+      },
+      {
+        "nombre": "Plazos de pago (ctipopag)",
+        "paraQueSirve": "Número de vencimientos de una factura y a cuántos días o meses vence cada uno.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Terceros",
+          "Condiciones administrativas",
+          "Plazos de pago"
+        ],
+        "codigoEjemplo": "{INI}1"
+      },
+      {
+        "nombre": "Tipos de efectos (ctipoefe)",
+        "paraQueSirve": "Medio de cobro o pago de cada vencimiento: domiciliación, riesgo, fecha de operación.",
+        "ruta": [
+          "Finanzas",
+          "Cobros y Pagos",
+          "Maestros",
+          "Efectos",
+          "Tipos"
+        ],
+        "codigoEjemplo": "{INI}"
+      },
+      {
+        "nombre": "Cuentas contables (ccuentas)",
+        "paraQueSirve": "Subcuentas del plan contable, p. ej. una 430 propia por cliente.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Cuentas contables",
+          "Cuentas contables"
+        ],
+        "codigoEjemplo": "43000.00901"
+      },
+      {
+        "nombre": "Perfil contable (ctertipo)",
+        "paraQueSirve": "Relaciones contables con terceros: una fila por tercero, tipo y relación (CLI).",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Terceros",
+          "Perfil contable"
+        ],
+        "codigoEjemplo": "CLI › 43000.00901"
+      },
+      {
+        "nombre": "Bancos propios (cbancpro)",
+        "paraQueSirve": "Cuentas financieras de bancos y cajas, con cuenta contable 572 o 570.",
+        "ruta": [
+          "Finanzas",
+          "Cobros y Pagos",
+          "Maestros",
+          "Auxiliares",
+          "Bancos propios"
+        ],
+        "codigoEjemplo": "{INI}CAJA"
+      },
+      {
+        "nombre": "Agrupaciones de tesorería (tagrupac)",
+        "paraQueSirve": "Grupos de cuentas, flujos y operaciones financieras; la agrupación es obligatoria en la cuenta financiera.",
+        "ruta": [
+          "Finanzas",
+          "Tesorería",
+          "Maestros",
+          "Agrupaciones"
+        ],
+        "codigoEjemplo": "{INI}"
+      },
+      {
+        "nombre": "Países y municipios (ctiponac / cmunicip)",
+        "paraQueSirve": "Códigos postales que rellenan provincia y población en las direcciones.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Terceros",
+          "Localización",
+          "Países"
+        ],
+        "codigoEjemplo": "08{INI}1"
+      },
+      {
+        "nombre": "Clientes (gcliente)",
+        "paraQueSirve": "El tercero como cliente de Gestión: comercial, tipo, divisa y condiciones de facturación.",
+        "ruta": [
+          "Gestión",
+          "Maestros",
+          "Terceros",
+          "Clientes",
+          "Registro"
+        ],
+        "codigoEjemplo": "{INI}1"
+      },
+      {
+        "nombre": "Artículos logísticos (garticul)",
+        "paraQueSirve": "Producto que se compra, almacena y vende con control de stock; la familia propone clave fiscal y naturaleza.",
+        "ruta": [
+          "Gestión",
+          "Maestros",
+          "Artículos",
+          "Registro"
+        ],
+        "codigoEjemplo": "{INI}0001"
+      },
+      {
+        "nombre": "Artículos por proveedor (gartprov)",
+        "paraQueSirve": "Relaciona un artículo con sus proveedores: referencia, prioridad y condiciones de compra.",
+        "ruta": [
+          "Gestión",
+          "Maestros",
+          "Terceros",
+          "Proveedores",
+          "Registro"
+        ],
+        "codigoEjemplo": "{INI}0001 en el proveedor 00001"
+      },
+      {
+        "nombre": "Almacenes logísticos (galmacen)",
+        "paraQueSirve": "Lugar físico del stock: valoración (FIFO, medio), stock negativo, delegación y departamento.",
+        "ruta": [
+          "Gestión",
+          "Logística",
+          "Maestros",
+          "Almacenes",
+          "Almacenes logísticos"
+        ],
+        "codigoEjemplo": "{INI}1"
+      },
+      {
+        "nombre": "Cuentas logísticas (galmctas)",
+        "paraQueSirve": "Reparto del stock del almacén (DISP, CALI, CUA, TRAN, NSAL) con indicadores de valoración, contabilización, reserva y planificación.",
+        "ruta": [
+          "Gestión",
+          "Logística",
+          "Maestros",
+          "Cuentas logísticas",
+          "Registro"
+        ],
+        "codigoEjemplo": "{INI}1"
+      },
+      {
+        "nombre": "Movimientos internos (geanmovh)",
+        "paraQueSirve": "Entradas, salidas o traspasos de stock que no vienen de compra ni venta; la tipología fija cuentas origen y destino.",
+        "ruta": [
+          "Gestión",
+          "Logística",
+          "Movimientos internos",
+          "Movimientos"
+        ],
+        "codigoEjemplo": "{INI}000001 (tipo RIDP)"
+      },
+      {
+        "nombre": "Stock global (galmstkg)",
+        "paraQueSirve": "Existencias actuales por almacén, cuenta, artículo y variable logística.",
+        "ruta": [
+          "Gestión",
+          "Logística",
+          "Stocks",
+          "Cuentas",
+          "Stock global"
+        ],
+        "codigoEjemplo": "{INI}1 · {INI}0001 · 10 uds"
+      },
+      {
+        "nombre": "Traza de movimientos por artículo (garticul_evolstk)",
+        "paraQueSirve": "Kardex: movimientos de un artículo en un periodo con entradas, salidas y saldo.",
+        "ruta": [
+          "Gestión",
+          "Logística",
+          "Stocks",
+          "Ubicaciones",
+          "Traza de movimientos por artículo-ubicación"
+        ],
+        "codigoEjemplo": "{INI}1 · {INI}0001"
+      }
+    ]
+  }
+}

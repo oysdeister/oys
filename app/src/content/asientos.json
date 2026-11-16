@@ -1,0 +1,2460 @@
+{
+ "id": "asientos",
+ "titulo": "Entrada de asientos",
+ "sesion": "",
+ "resumen": "Aprendes a registrar asientos manuales en Contabilidad: crear el diario y el numerador de justificantes, escribir la cabecera y las líneas, comprobar el cuadre, contabilizar y consultar el resultado en listados, mayor y saldos. También duplicas asientos y corriges importes mientras están provisionales.",
+ "circuito": [
+  "Diario y numerador",
+  "Cabecera del asiento",
+  "Líneas de apuntes",
+  "Cuadre",
+  "Contabilizar",
+  "Consultas: mayor y saldos"
+ ],
+ "navegacion": [
+  {
+   "id": "asientos-nav",
+   "titulo": "Cómo moverte por el ERP",
+   "paraQueSirve": "Te enseña a llegar a cada pantalla y a manejar listas, formularios y botones.",
+   "ruta": [
+    "Finanzas",
+    "Contabilidad General",
+    "Diario contable",
+    "Asientos"
+   ],
+   "explicacion": [
+    "Las rutas no se escriben en la barra de direcciones (/capuntes, /cempresa…). Se usa el menú (Finanzas › Contabilidad General › …) o el buscador superior «Buscar» (Cmd/Ctrl + K), escribiendo el nombre o el código del objeto.",
+    "En las listas, el botón rojo «Nuevo» abre el formulario en una ventana que se guarda con «Guardar» abajo a la derecha. Las listas pequeñas (diarios, ejercicios…) tienen además una fila en blanco al final para dar de alta en línea con el icono ⊕.",
+    "Los campos con lista (empresa, diario, cuenta…) son de autocompletar: se escribe el código y se elige la fila. El «+» que aparece al pie de la lista permite crear el registro sin salir de la pantalla.",
+    "Los botones de acción (Finalizar, Copiar asiento, Recalcular cuadre…) están en la barra superior de la ficha, y las pestañas del registro (Asiento, Líneas de apuntes, Impuestos…) arriba, en horizontal.",
+    "Un asiento es la unidad del libro diario: un conjunto de apuntes (líneas) en el que la suma del Debe es igual a la suma del Haber. Casi todos los asientos los genera el ERP solo al contabilizar facturas, cobros o pagos; los asientos manuales se usan para lo que no viene de ningún documento: ajustes, regularizaciones, periodificaciones, asientos de apertura o correcciones.",
+    "Un asiento nace «Provisional», se puede modificar mientras está así y, al finalizarlo, pasa a «Contabilizado»: sus importes entran en el mayor y en los saldos de cada cuenta.",
+    "Se trabaja en la empresa 0 «Deister Software», con las cuentas del plan PGE 2008 que ya existen en TUTORIAL (62900, 62902, 62903 y 57200). Los ejemplos usan el prefijo EA (diario EA, numerador de justificantes EA, documentos EA-DOC-001…)."
+   ],
+   "campos": [],
+   "pasos": [
+    {
+     "texto": "Abre el menú Finanzas › Contabilidad General › Diario contable › Asientos.",
+     "detalle": "Aparece el objeto «Asientos» y, debajo, los procesos Contabilización, Descontabilización y Copia masiva. No hay entrada de borradores: el asiento se crea directamente en «Asientos».",
+     "imagen": "asientos-002.jpg",
+     "hotspot": {
+      "x": 20.5,
+      "y": 14.2,
+      "w": 17.9,
+      "h": 9.8,
+      "etiqueta": "Asientos"
+     }
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "Los campos marcados con asterisco rojo (*) son obligatorios: sin ellos no deja guardar."
+    }
+   ]
+  }
+ ],
+ "ejercicios": [
+  {
+   "id": "asientos-1",
+   "numero": 1,
+   "titulo": "Acceder a los asientos",
+   "objetivo": "Tendrás creado el diario EA y sabrás abrir la pantalla de asientos.",
+   "concepto": "Antes de escribir un asiento hay que saber dónde se registra y en qué diario. El diario agrupa los asientos por su origen (compras, ventas, tesorería, general…) y sirve para listar o numerar por separado.\n\nPara los ejercicios se crea un diario propio, EA, y así los asientos de práctica no se mezclan con los de otros usuarios de la base.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-1-diario",
+     "titulo": "Crear el diario EA",
+     "paraQueSirve": "El diario es el libro donde se anota cada asiento. Con uno propio (EA) tus asientos de práctica quedan separados de los de otros usuarios.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Diarios"
+     ],
+     "explicacion": [
+      "La pantalla es el objeto cdiarios. Muestra la lista de diarios existentes (DA Cierre y apertura, DC Compras, DD Distribución costes, DG General, DV Ventas…).",
+      "Las listas pequeñas tienen una fila en blanco al final para dar de alta en línea con el icono ⊕. También se puede crear el diario desde el propio campo Diario del asiento, con el «+» que aparece al pie de la lista de ese campo."
+     ],
+     "campos": [
+      {
+       "campo": "Diario *",
+       "significado": "Código del libro diario. Es lo que se elige en la cabecera de cada asiento.",
+       "ejemplo": "EA"
+      },
+      {
+       "campo": "Descripción diario *",
+       "significado": "Nombre que aparece debajo del código en los formularios.",
+       "ejemplo": "Entrada de asientos EA"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta Finanzas › Contabilidad General › Diario contable › Diarios (objeto cdiarios).",
+       "detalle": "Se ve la lista de diarios existentes (DA cierre, DC compras, DG general, DV ventas…)."
+      },
+      {
+       "texto": "En la fila en blanco del final escribe EA y la descripción «Entrada de asientos EA»."
+      },
+      {
+       "texto": "Pulsa el icono ⊕ de la fila.",
+       "detalle": "Sale el aviso verde «Éxito» y el diario EA aparece en la lista.",
+       "imagen": "asientos-003.jpg",
+       "hotspot": {
+        "x": 3.5,
+        "y": 55.0,
+        "w": 3.5,
+        "h": 4.0,
+        "etiqueta": "⊕"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El campo Diario del asiento también permite crear el diario con el «+» del pie de su lista, sin salir de la pantalla."
+      }
+     ]
+    },
+    {
+     "id": "asientos-1-pantalla",
+     "titulo": "Abrir la pantalla de asientos",
+     "paraQueSirve": "Es la pantalla donde se registran y consultan los asientos de todas las empresas.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "El objeto se llama casientos. La lista muestra los asientos de todas las empresas, con su fecha, número, justificante, diario, ejercicio, periodo y totales.",
+      "Debajo del objeto «Asientos» están los procesos Contabilización, Descontabilización y Copia masiva."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la ruta Finanzas › Contabilidad General › Diario contable › Asientos › Asientos (objeto casientos).",
+       "detalle": "Se muestra la lista de asientos con fecha, número, justificante, diario, ejercicio, periodo y totales."
+      },
+      {
+       "texto": "Pulsa «Nuevo» para empezar un asiento.",
+       "detalle": "Es lo que haces en el ejercicio siguiente."
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve el diario de un asiento?",
+     "opciones": [
+      "Para agrupar los asientos por su origen y poder listarlos o numerarlos por separado",
+      "Para calcular el IVA del asiento",
+      "Para elegir la moneda del asiento",
+      "Para fijar el ejercicio contable"
+     ],
+     "correcta": 0,
+     "explicacion": "El diario agrupa los asientos por su origen (compras, ventas, tesorería, general…)."
+    },
+    {
+     "pregunta": "¿Por qué se crea un diario propio EA para los ejercicios?",
+     "opciones": [
+      "Porque es obligatorio para contabilizar",
+      "Para que los asientos de práctica no se mezclen con los de otros usuarios de la base",
+      "Porque el diario DG no existe",
+      "Para que el asiento cuadre solo"
+     ],
+     "correcta": 1,
+     "explicacion": "El diario propio separa tus asientos de práctica de los de otros usuarios."
+    },
+    {
+     "pregunta": "¿Cómo se da de alta una fila nueva en la lista de diarios?",
+     "opciones": [
+      "Con el botón Finalizar",
+      "Con el proceso Contabilización",
+      "Escribiendo en la fila en blanco del final y pulsando el icono ⊕",
+      "Copiando un asiento"
+     ],
+     "correcta": 2,
+     "explicacion": "En la fila en blanco del final se escribe el código y la descripción y se pulsa ⊕; sale el aviso «Éxito»."
+    },
+    {
+     "pregunta": "¿Cuál es el objeto de la pantalla de asientos?",
+     "opciones": [
+      "cdiarios",
+      "casientos",
+      "capuntes",
+      "csaldos"
+     ],
+     "correcta": 1,
+     "explicacion": "Los asientos se abren con el objeto casientos; cdiarios es la lista de diarios."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Contabilidad General › Diario contable › Diarios (cdiarios).",
+    "En la fila en blanco escribes el diario EA.",
+    "Escribes la descripción «Entrada de asientos EA».",
+    "Pulsas ⊕ y ves el aviso «Éxito».",
+    "EA aparece en la lista de diarios.",
+    "EA aparece en el desplegable Diario del asiento.",
+    "Abres la pantalla Asientos (casientos) y ves la lista de asientos."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-2",
+   "numero": 2,
+   "titulo": "Introducir un asiento de dos líneas",
+   "objetivo": "Tendrás un asiento provisional de la empresa 0, diario EA, con dos líneas cuadradas (62902 al Debe y 57200 al Haber por 1.000,00).",
+   "concepto": "El asiento tiene dos partes: la cabecera (empresa, fecha, diario, justificante) y las líneas de apuntes (cuenta, Debe o Haber). Se guarda primero la cabecera y después se añaden las líneas desde la pestaña «Líneas de apuntes».\n\nEjemplo del ejercicio: un gasto diverso de 1.000 € pagado por banco, con 62902 al Debe y 57200 al Haber. Un asiento nace «Provisional» y se puede modificar mientras está así.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "asientos-2-cabecera",
+     "titulo": "Cabecera del asiento",
+     "paraQueSirve": "La cabecera recoge los datos comunes del asiento: empresa, diario, fecha, justificante y documento. Las líneas los heredan.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "En la lista de asientos se pulsa «Nuevo» y se rellena la cabecera. Al guardar, el asiento aparece en la lista con su número (6, automático) y estado Provisional.",
+      "La ficha guardada muestra la banda naranja PROVISIONAL y los botones Recalcular cuadre, Reordenar líneas, Finalizar y Copiar asiento."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa *",
+       "significado": "Sociedad en la que se registra el asiento. Decide el plan contable y los ejercicios disponibles.",
+       "ejemplo": "0 (Deister Software)"
+      },
+      {
+       "campo": "Asiento",
+       "significado": "Número del asiento dentro del ejercicio. Lo pone el ERP al guardar.",
+       "ejemplo": "6 (automático)"
+      },
+      {
+       "campo": "Diario",
+       "significado": "Libro diario del asiento. Por defecto propone DG General.",
+       "ejemplo": "EA"
+      },
+      {
+       "campo": "Sistema",
+       "significado": "Sistema contable. En TUTORIAL solo existe A General.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "Fecha *",
+       "significado": "Fecha contable. De ella salen el ejercicio y el periodo.",
+       "ejemplo": "12-11-2026"
+      },
+      {
+       "campo": "Ejercicio / Período",
+       "significado": "Se calculan solos a partir de la fecha.",
+       "ejemplo": "2026 / 11"
+      },
+      {
+       "campo": "Justificante",
+       "significado": "Numerador de justificantes: al guardar genera el número correlativo del asiento.",
+       "ejemplo": "EA (Asientos manuales EA)"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Referencia libre del documento que justifica el asiento. Se copia a todas las líneas.",
+       "ejemplo": "EA-DOC-001"
+      },
+      {
+       "campo": "Notas",
+       "significado": "Texto libre del asiento. Se propone como descripción de las líneas.",
+       "ejemplo": "EA Ejercicio 2 entrada de asientos"
+      },
+      {
+       "campo": "Moneda / Cambio / Cálculo *",
+       "significado": "Divisa del asiento y tipo de cambio. En euros, cambio 1.",
+       "ejemplo": "EUR / 1,000000 / Dividir"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Provisional al crearlo; Contabilizado al finalizarlo.",
+       "ejemplo": "Provisional"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En la lista de asientos pulsa «Nuevo»."
+      },
+      {
+       "texto": "Elige la Empresa 0 y cambia el Diario a EA. Deja la fecha de hoy."
+      },
+      {
+       "texto": "En Justificante elige el numerador EA.",
+       "detalle": "Si no existe, créalo con el «+» de la lista (ver la sección siguiente)."
+      },
+      {
+       "texto": "Escribe el Documento EA-DOC-001 y unas Notas.",
+       "detalle": "Por ejemplo «EA Ejercicio 2 entrada de asientos»."
+      },
+      {
+       "texto": "Pulsa «Guardar».",
+       "detalle": "El asiento aparece en la lista con su número (6) y estado Provisional. Fíjate en la banda naranja PROVISIONAL de la ficha.",
+       "imagen": "asientos-004.jpg",
+       "hotspot": {
+        "x": 88.0,
+        "y": 85.0,
+        "w": 9.1,
+        "h": 3.4,
+        "etiqueta": "Guardar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La cabecera se guarda una sola vez: empresa, proyecto, sección, diario, justificante y documento se escriben aquí y las líneas los heredan. La línea nueva propone además el importe que falta para cuadrar."
+      }
+     ]
+    },
+    {
+     "id": "asientos-2-numerador",
+     "titulo": "Numerador de justificantes EA",
+     "paraQueSirve": "El numerador fabrica el código del justificante (por ejemplo EA26-000001) cada vez que se guarda un asiento que lo usa. Así cada asiento manual tiene un número correlativo propio, que es el que se cita en auditorías y en el extracto.",
+     "ruta": [
+      "Campo Justificante del asiento",
+      "«+»",
+      "Numeradores de justificantes contables (cjusnumh)"
+     ],
+     "explicacion": [
+      "Se puede abrir desde el campo Justificante del asiento con el «+», o desde el buscador escribiendo «Numeradores de justificantes contables» (objeto cjusnumh).",
+      "Rotura y Numerador no son valores sino máscaras de formato: #e es la empresa, #yy el año, #d el diario y #n el contador. El resto del texto se copia tal cual. Con Rotura #e#yy hay un contador por empresa y año; con Numerador EA#yy-#n y Justificación 6 sale EA26-000001.",
+      "El «Detalle serializador» del numerador guarda el último número de cada rotura."
+     ],
+     "campos": [
+      {
+       "campo": "Tabla origen *",
+       "significado": "Documentos que numera.",
+       "ejemplo": "Asientos contables"
+      },
+      {
+       "campo": "Código de numerador *",
+       "significado": "Código que se elige en el campo Justificante.",
+       "ejemplo": "EA"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Nombre visible.",
+       "ejemplo": "Asientos manuales EA"
+      },
+      {
+       "campo": "Rotura *",
+       "significado": "MÁSCARA que decide cuándo vuelve a empezar el contador: #e empresa, #yy año, #d diario.",
+       "ejemplo": "#e#yy (un contador por empresa y año)"
+      },
+      {
+       "campo": "Numerador *",
+       "significado": "MÁSCARA del justificante. #n es el contador; el resto se copia tal cual.",
+       "ejemplo": "EA#yy-#n (EA26-000001)"
+      },
+      {
+       "campo": "Justificación",
+       "significado": "Número de dígitos del contador (rellena con ceros).",
+       "ejemplo": "6"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Desde el campo Justificante del asiento, pulsa el «+» al pie de la lista para crear el numerador.",
+       "detalle": "Se abre la ventana «Numeradores de justificantes contables»."
+      },
+      {
+       "texto": "Rellena Tabla origen «Asientos contables», Código de numerador EA y Descripción «Asientos manuales EA».",
+       "detalle": "En esta primera alta se escribieron por error valores literales en Rotura (26) y Numerador (0). Fíjate en cómo queda la ventana con esos valores.",
+       "imagen": "asientos-006.jpg",
+       "hotspot": {
+        "x": 62.2,
+        "y": 41.2,
+        "w": 11.5,
+        "h": 7.0,
+        "etiqueta": "Rotura"
+       }
+      },
+      {
+       "texto": "Fíjate en la lista de numeradores: los existentes usan máscaras como #e#yy#d y #d#e#s#yy-#n con justificación 6, y el EA tiene los literales 26 y 0.",
+       "detalle": "Eso explica que el justificante salga «0».",
+       "imagen": "asientos-007.jpg",
+       "hotspot": {
+        "x": 9.1,
+        "y": 22.4,
+        "w": 55.9,
+        "h": 3.6,
+        "etiqueta": "EA"
+       }
+      },
+      {
+       "texto": "Abre el numerador EA en cjusnumh y pon Rotura #e#yy, Numerador EA#yy-#n y Justificación 6."
+      },
+      {
+       "texto": "Guarda con el disquete.",
+       "detalle": "Sale «Éxito»; el detalle serializador guarda el último número de cada rotura.",
+       "imagen": "asientos-008.jpg",
+       "hotspot": {
+        "x": 85.2,
+        "y": 8.6,
+        "w": 2.2,
+        "h": 3.6,
+        "etiqueta": "Guardar (disquete)"
+       }
+      },
+      {
+       "texto": "Guarda un asiento de prueba con el numerador corregido y fíjate en su justificante.",
+       "detalle": "El asiento 11 (EA-DOC-005) recibe el justificante EA26-000001.",
+       "imagen": "asientos-009.jpg",
+       "hotspot": {
+        "x": 29.0,
+        "y": 19.2,
+        "w": 8.5,
+        "h": 3.2,
+        "etiqueta": "EA26-000001"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Con Rotura «26» y Numerador «0» el asiento se guarda sin error, pero su justificante sale «0» en todos los asientos. Rotura y Numerador no son valores sino máscaras: un texto sin #n nunca muestra el contador (el contador sí avanza: se ve en «Detalle serializador», último número 2)."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Abre el numerador EA en cjusnumh y pon Rotura #e#yy, Numerador EA#yy-#n y Justificación 6; guarda con el disquete. Los asientos nuevos reciben justificantes EA26-000001, EA26-000002… (los ya guardados conservan el «0»)."
+      }
+     ]
+    },
+    {
+     "id": "asientos-2-lineas",
+     "titulo": "Líneas de apuntes",
+     "paraQueSirve": "Cada línea es un apunte a una cuenta: importe al Debe o al Haber, con proyecto, sección y dimensiones para el análisis de costes. Las líneas heredan de la cabecera el documento y la descripción, así que solo hay que poner la cuenta y el importe.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "Las líneas no se repiten datos de cabecera: se escriben una vez en la cabecera y la línea nueva propone además el importe que descuadra. Al escribir un importe en Debe, el Haber queda bloqueado a 0 y al revés.",
+      "El ejemplo del ejercicio: gasto diverso de 1.000 € pagado por banco, 62902 al Debe y 57200 al Haber."
+     ],
+     "campos": [
+      {
+       "campo": "Orden *",
+       "significado": "Número de línea dentro del asiento. Lo propone el ERP.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Proyecto *",
+       "significado": "Unidad de negocio de la línea. En TUTORIAL solo existe el 0 GENERAL.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Sección *",
+       "significado": "Sección o centro de la línea. Se rellena sola al elegir el proyecto.",
+       "ejemplo": "0 General"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Heredado de la cabecera.",
+       "ejemplo": "EA-DOC-001"
+      },
+      {
+       "campo": "Auditado *",
+       "significado": "Marca de revisión del apunte.",
+       "ejemplo": "No"
+      },
+      {
+       "campo": "Plan contable *",
+       "significado": "Plan de cuentas de la empresa.",
+       "ejemplo": "PGE 2008 (ES)"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Cuenta contable del apunte. Debajo se ve su descripción.",
+       "ejemplo": "62902.00000 Gastos diversos"
+      },
+      {
+       "campo": "Debe divisa / Haber divisa *",
+       "significado": "Importe del apunte. Al escribir uno, el otro queda bloqueado a 0.",
+       "ejemplo": "1.000,00 / 0,00"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Concepto del apunte. Se propone el texto de Notas.",
+       "ejemplo": "EA Ejercicio 2 entrada de asientos"
+      },
+      {
+       "campo": "Dimensión 1 / Dimensión 2 *",
+       "significado": "Dimensiones analíticas.",
+       "ejemplo": "0 / 0"
+      },
+      {
+       "campo": "Cantidad 1 / Cantidad 2 *",
+       "significado": "Cantidades estadísticas opcionales.",
+       "ejemplo": "0,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En la ficha del asiento abre la pestaña «Líneas de apuntes» y pulsa «Nuevo».",
+       "imagen": "asientos-005.jpg",
+       "hotspot": {
+        "x": 7.2,
+        "y": 16.2,
+        "w": 11.5,
+        "h": 3.6,
+        "etiqueta": "Líneas de apuntes"
+       }
+      },
+      {
+       "texto": "Escribe el Proyecto 0 y elige la fila.",
+       "detalle": "La Sección pasa a 0."
+      },
+      {
+       "texto": "Escribe la cuenta 62902 y elige 62902.00000.",
+       "imagen": "asientos-010.jpg",
+       "hotspot": {
+        "x": 12.1,
+        "y": 42.8,
+        "w": 18.1,
+        "h": 4.2,
+        "etiqueta": "Cuenta"
+       }
+      },
+      {
+       "texto": "Pon 1000 en Debe divisa y pulsa «Guardar»."
+      },
+      {
+       "texto": "Fíjate en la parte inferior de la línea: Dimensión 1 y Dimensión 2 a 0 (obligatorias) y los datos de control.",
+       "imagen": "asientos-011.jpg",
+       "hotspot": {
+        "x": 49.6,
+        "y": 54.8,
+        "w": 23.5,
+        "h": 4.8,
+        "etiqueta": "Dimensión 1"
+       }
+      },
+      {
+       "texto": "Pulsa otra vez «Nuevo».",
+       "detalle": "La línea 2 ya trae Haber 1.000,00 (el importe que falta para cuadrar)."
+      },
+      {
+       "texto": "Pon Proyecto 0 y la cuenta 57200.00000 Bancos y pulsa «Guardar».",
+       "detalle": "Solo falta la cuenta: el Haber ya viene propuesto.",
+       "imagen": "asientos-012.jpg",
+       "hotspot": {
+        "x": 12.1,
+        "y": 42.8,
+        "w": 18.1,
+        "h": 4.2,
+        "etiqueta": "Cuenta"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Resultado: asiento 6 de la empresa 0, diario EA, documento EA-DOC-001, Provisional, con 62902.00000 Debe 1.000,00 y 57200.00000 Haber 1.000,00. Compruébalo en la lista de asientos: el 6 sale con diario EA y Debe = Haber = 1.000,00."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué contiene la cabecera de un asiento?",
+     "opciones": [
+      "Las cuentas y los importes",
+      "Empresa, fecha, diario y justificante, entre otros datos",
+      "Solo el estado Contabilizado",
+      "Únicamente las dimensiones analíticas"
+     ],
+     "correcta": 1,
+     "explicacion": "La cabecera recoge empresa, fecha, diario, justificante, documento y notas; las líneas llevan cuentas e importes."
+    },
+    {
+     "pregunta": "¿Qué son Rotura y Numerador en el numerador de justificantes?",
+     "opciones": [
+      "Importes literales",
+      "Máscaras de formato (#e, #yy, #d, #n…)",
+      "Códigos de cuenta",
+      "Fechas"
+     ],
+     "correcta": 1,
+     "explicacion": "Son máscaras: un texto sin #n nunca muestra el contador."
+    },
+    {
+     "pregunta": "¿Qué justificante genera la máscara EA#yy-#n con Justificación 6 en 2026?",
+     "opciones": [
+      "EA26-000001",
+      "EA-26-1",
+      "0",
+      "26-EA"
+     ],
+     "correcta": 0,
+     "explicacion": "Con #yy el año, #n el contador y 6 dígitos sale EA26-000001."
+    },
+    {
+     "pregunta": "¿Qué propone el ERP al pulsar «Nuevo» para la línea 2?",
+     "opciones": [
+      "Un Debe de 1.000,00",
+      "El Haber que falta para cuadrar (1.000,00)",
+      "Una cuenta al azar",
+      "Nada"
+     ],
+     "correcta": 1,
+     "explicacion": "La línea nueva propone el importe que descuadra: Haber 1.000,00."
+    },
+    {
+     "pregunta": "¿En qué estado nace un asiento?",
+     "opciones": [
+      "Contabilizado",
+      "Finalizado",
+      "Provisional",
+      "Auditado"
+     ],
+     "correcta": 2,
+     "explicacion": "Nace Provisional y pasa a Contabilizado al finalizarlo."
+    }
+   ],
+   "checklist": [
+    "Pulsas «Nuevo» en la lista de asientos.",
+    "Eliges Empresa 0 y Diario EA.",
+    "Eliges el numerador EA en Justificante.",
+    "Escribes Documento EA-DOC-001 y las Notas.",
+    "Guardas y ves el asiento con estado Provisional (banda naranja).",
+    "El numerador EA tiene Rotura #e#yy, Numerador EA#yy-#n y Justificación 6.",
+    "En «Líneas de apuntes» creas la línea 1: Proyecto 0, cuenta 62902.00000, Debe divisa 1.000,00.",
+    "Creas la línea 2: Proyecto 0, cuenta 57200.00000, Haber 1.000,00.",
+    "En la lista de asientos, el 6 sale con diario EA y Debe = Haber = 1.000,00.",
+    "Los asientos nuevos reciben justificantes del tipo EA26-000001."
+   ],
+   "problemas": [
+    {
+     "problema": "El asiento se guarda pero el justificante sale «0» en todos los asientos.",
+     "solucion": "Rotura y Numerador son máscaras, no valores. Corrige el numerador EA: Rotura #e#yy, Numerador EA#yy-#n, Justificación 6. Los ya guardados conservan el «0»."
+    }
+   ]
+  },
+  {
+   "id": "asientos-3",
+   "numero": 3,
+   "titulo": "Verificar el cuadre",
+   "objetivo": "Comprobarás que el asiento 6 cuadra (Debe 1.000,00 = Haber 1.000,00) y entenderás el bloque Totales.",
+   "concepto": "Un asiento solo puede contabilizarse si cuadra: la suma del Debe debe ser igual a la del Haber. El bloque «Totales» de la pestaña Líneas de apuntes va sumando a medida que se graban líneas y muestra la diferencia en «Cuadre».\n\nMientras el Cuadre no es 0, el botón «Finalizar» desaparece de la barra: el ERP no deja contabilizar un asiento descuadrado.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-3-cuadre",
+     "titulo": "Verificar el cuadre",
+     "paraQueSirve": "Un asiento descuadrado no se puede contabilizar. El bloque Totales te dice en todo momento cuánto falta para cuadrar.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "El bloque Totales de la pestaña Líneas de apuntes muestra el número de líneas, el Debe, el Haber y el Cuadre.",
+      "Con una sola línea el Cuadre sale en rojo y el botón Finalizar no aparece. Con las dos líneas, Debe = Haber y vuelve a aparecer «Finalizar»."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Tras guardar la línea 1, mira el bloque Totales.",
+       "detalle": "Debe 1.000,00, Haber 0,00 y Cuadre 1.000,00 en rojo; el botón Finalizar no aparece.",
+       "imagen": "asientos-013.jpg",
+       "hotspot": {
+        "x": 76.8,
+        "y": 32.0,
+        "w": 18.5,
+        "h": 4.4,
+        "etiqueta": "Cuadre"
+       }
+      },
+      {
+       "texto": "Tras guardar la línea 2, comprueba de nuevo Totales.",
+       "detalle": "Debe 1.000,00 = Haber 1.000,00 y Cuadre 0,00; vuelve a aparecer «Finalizar».",
+       "imagen": "asientos-014.jpg",
+       "hotspot": {
+        "x": 76.8,
+        "y": 32.0,
+        "w": 18.5,
+        "h": 4.4,
+        "etiqueta": "Cuadre"
+       }
+      },
+      {
+       "texto": "Si el cuadre no se actualiza, pulsa «Recalcular cuadre» en la barra superior."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El ERP no deja contabilizar un asiento descuadrado: mientras el Cuadre no es 0 el botón «Finalizar» desaparece de la barra."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuándo se puede contabilizar un asiento?",
+     "opciones": [
+      "Cuando el Cuadre es 0 (Debe = Haber)",
+      "Siempre",
+      "Solo con una línea",
+      "Cuando tiene tres líneas"
+     ],
+     "correcta": 0,
+     "explicacion": "Solo cuadra con Debe = Haber; si no, Finalizar desaparece."
+    },
+    {
+     "pregunta": "Con una sola línea de 1.000,00 al Debe, ¿qué muestra el Cuadre?",
+     "opciones": [
+      "0,00",
+      "1.000,00 en rojo",
+      "500,00",
+      "2.000,00"
+     ],
+     "correcta": 1,
+     "explicacion": "Cuadre 1.000,00 en rojo y sin botón Finalizar."
+    },
+    {
+     "pregunta": "¿Qué haces si el cuadre no se actualiza?",
+     "opciones": [
+      "Borras el asiento",
+      "Pulsas «Recalcular cuadre»",
+      "Cambias el diario",
+      "Cierras sesión"
+     ],
+     "correcta": 1,
+     "explicacion": "El botón «Recalcular cuadre» está en la barra superior."
+    },
+    {
+     "pregunta": "¿Qué botón reaparece cuando el asiento cuadra?",
+     "opciones": [
+      "Abrir a provisional",
+      "Finalizar",
+      "Cancelar",
+      "Ordenar"
+     ],
+     "correcta": 1,
+     "explicacion": "Con Cuadre 0,00 vuelve a aparecer «Finalizar»."
+    }
+   ],
+   "checklist": [
+    "Con solo la línea 1, Totales muestra Debe 1.000,00, Haber 0,00 y Cuadre 1.000,00 en rojo.",
+    "Con solo la línea 1 no ves el botón «Finalizar».",
+    "Tras la línea 2, Debe 1.000,00 y Haber 1.000,00.",
+    "Cuadre 0,00.",
+    "Vuelve a aparecer el botón «Finalizar».",
+    "Sabes usar «Recalcular cuadre» si el cuadre no se actualiza."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-4",
+   "numero": 4,
+   "titulo": "Añadir dos líneas más",
+   "objetivo": "El asiento 6 tendrá 4 líneas y seguirá cuadrado: Debe 1.250,00 = Haber 1.250,00.",
+   "concepto": "Un asiento puede tener tantas líneas como haga falta; lo único que se exige es que el total cuadre. Aquí se añade un segundo gasto, de correos y mensajería, pagado también por banco.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-4-lineas",
+     "titulo": "Añadir dos líneas más",
+     "paraQueSirve": "Muestra que un asiento admite varias líneas siempre que el total cuadre.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "Asiento 6 con cuatro líneas: 62902 D 1.000 / 57200 H 1.000 / 62903 D 250 / 57200 H 250."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "En «Líneas de apuntes» pulsa «Nuevo»: Proyecto 0, cuenta 62903.00000 Correos y mensajería, Debe 250. Guarda."
+      },
+      {
+       "texto": "Pulsa «Nuevo»: el ERP propone Haber 250,00. Pon Proyecto 0 y la cuenta 57200.00000. Guarda.",
+       "detalle": "Totales indica 4 líneas, Debe 1.250,00, Haber 1.250,00 y Cuadre 0,00.",
+       "imagen": "asientos-015.jpg",
+       "hotspot": {
+        "x": 1.2,
+        "y": 29.4,
+        "w": 94.5,
+        "h": 7.0,
+        "etiqueta": "Totales"
+       }
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuántas líneas tiene el asiento 6 al terminar este ejercicio?",
+     "opciones": [
+      "2",
+      "3",
+      "4",
+      "6"
+     ],
+     "correcta": 2,
+     "explicacion": "4 líneas: 62902, 57200, 62903 y 57200."
+    },
+    {
+     "pregunta": "¿Qué importe propone el ERP al crear la línea de contrapartida del gasto de 250?",
+     "opciones": [
+      "Haber 250,00",
+      "Debe 250,00",
+      "Haber 1.250,00",
+      "Nada"
+     ],
+     "correcta": 0,
+     "explicacion": "Propone el importe que descuadra: Haber 250,00."
+    },
+    {
+     "pregunta": "¿Cuál es el total del Debe del asiento 6 con las 4 líneas?",
+     "opciones": [
+      "1.000,00",
+      "1.250,00",
+      "250,00",
+      "2.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.000 + 250 = 1.250,00."
+    },
+    {
+     "pregunta": "¿Qué cuenta se usa para correos y mensajería?",
+     "opciones": [
+      "62900.00000",
+      "62902.00000",
+      "62903.00000",
+      "57200.00000"
+     ],
+     "correcta": 2,
+     "explicacion": "62903.00000 Correos y mensajería."
+    }
+   ],
+   "checklist": [
+    "Añades línea 3: Proyecto 0, cuenta 62903.00000, Debe 250.",
+    "Añades línea 4: Proyecto 0, cuenta 57200.00000, Haber 250,00.",
+    "Totales indica 4 líneas.",
+    "Debe 1.250,00 y Haber 1.250,00.",
+    "Cuadre 0,00.",
+    "Las líneas 3 y 4 tienen Documento EA-DOC-001 heredado de la cabecera."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-5",
+   "numero": 5,
+   "titulo": "Crear un asiento nuevo",
+   "objetivo": "Tendrás el asiento 7 (EA-DOC-002) con dos líneas por 300,00 en estado Provisional.",
+   "concepto": "Cada operación independiente va en su propio asiento, con su número y su justificante. Se crea otro asiento en la misma empresa, diario y cuentas: un pago de otros servicios de 300 € por banco.",
+   "duracionMin": 12,
+   "secciones": [
+    {
+     "id": "asientos-5-nuevo",
+     "titulo": "Crear un asiento nuevo",
+     "paraQueSirve": "Una operación independiente se registra en un asiento propio, con su número y justificante.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "El «Nuevo» de la ficha queda inactivo mientras estás en las líneas de otro asiento, así que se vuelve a la lista de asientos para crear uno nuevo."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Vuelve a la lista de asientos y pulsa «Nuevo».",
+       "detalle": "El «Nuevo» de la ficha queda inactivo mientras estás en las líneas de otro asiento."
+      },
+      {
+       "texto": "Rellena la cabecera: Empresa 0, Diario EA, Justificante EA, Documento EA-DOC-002, Notas «EA Ejercicio 2.5 segundo asiento». Guarda."
+      },
+      {
+       "texto": "Abre el asiento 7 › «Líneas de apuntes»: línea 1 cuenta 62900.00000 Otros servicios Debe 300; línea 2 cuenta 57200.00000 Haber 300.",
+       "detalle": "Asiento 7 cuadrado: 62900 Debe 300,00 y 57200 Haber 300,00.",
+       "imagen": "asientos-016.jpg",
+       "hotspot": {
+        "x": 1.2,
+        "y": 29.4,
+        "w": 94.5,
+        "h": 7.0,
+        "etiqueta": "Totales"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En la lista de asientos debe haber dos asientos del diario EA: el 6 por 1.250,00 y el 7 por 300,00."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué número de asiento recibe el segundo asiento del ejercicio?",
+     "opciones": [
+      "6",
+      "7",
+      "8",
+      "1"
+     ],
+     "correcta": 1,
+     "explicacion": "El asiento 7 (EA-DOC-002)."
+    },
+    {
+     "pregunta": "¿Qué cuenta va al Debe en el asiento 7?",
+     "opciones": [
+      "62902.00000",
+      "62903.00000",
+      "62900.00000 Otros servicios",
+      "57200.00000"
+     ],
+     "correcta": 2,
+     "explicacion": "62900.00000 Otros servicios, Debe 300."
+    },
+    {
+     "pregunta": "¿Cuál es el importe del asiento 7?",
+     "opciones": [
+      "250,00",
+      "300,00",
+      "1.250,00",
+      "1.000,00"
+     ],
+     "correcta": 1,
+     "explicacion": "300,00 por banco."
+    },
+    {
+     "pregunta": "¿Desde dónde se crea un asiento nuevo?",
+     "opciones": [
+      "Desde la ficha de otro asiento con su «Nuevo»",
+      "Desde la lista de asientos con «Nuevo»",
+      "Desde el proceso Contabilización",
+      "Desde Integridad"
+     ],
+     "correcta": 1,
+     "explicacion": "El «Nuevo» de la ficha queda inactivo; hay que volver a la lista."
+    }
+   ],
+   "checklist": [
+    "Vuelves a la lista de asientos y pulsas «Nuevo».",
+    "Cabecera: Empresa 0, Diario EA, Justificante EA, Documento EA-DOC-002.",
+    "Notas «EA Ejercicio 2.5 segundo asiento».",
+    "Línea 1: 62900.00000 Debe 300.",
+    "Línea 2: 57200.00000 Haber 300.",
+    "El asiento 7 cuadra y está Provisional.",
+    "En la lista hay dos asientos EA: el 6 por 1.250,00 y el 7 por 300,00."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-6",
+   "numero": 6,
+   "titulo": "Contabilizar el asiento",
+   "objetivo": "Tendrás el asiento 7 contabilizado con «Finalizar» y el asiento 6 contabilizado con el proceso Contabilización filtrado por diario EA.",
+   "concepto": "Contabilizar (finalizar) un asiento lo da por bueno: sus importes pasan al libro mayor y a los saldos de las cuentas, y ya no se puede modificar salvo que se vuelva a abrir. Hay dos maneras: asiento a asiento con el botón «Finalizar», o muchos a la vez con el proceso «Contabilización».\n\nPara contabilizar, la fecha del asiento debe caer dentro de un periodo contable: la empresa tiene una vigencia, cada año su ejercicio y cada ejercicio sus periodos mensuales.",
+   "duracionMin": 25,
+   "secciones": [
+    {
+     "id": "asientos-6-finalizar",
+     "titulo": "Asiento a asiento: botón Finalizar",
+     "paraQueSirve": "Finalizar da el asiento por bueno y mete sus importes en el mayor y en los saldos.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "Al finalizar, el Estado pasa a Contabilizado y aparece la pestaña «Saldos». El botón cambia a «Abrir a provisional», que deshace la contabilización si hay que corregir algo.",
+      "«Abrir a provisional» vuelve a dejar el asiento modificable y quita sus importes del mayor. El asiento provisional no tiene impacto en los estados financieros. Si el periodo está cerrado no se puede abrir a provisional."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre el asiento 7 cuadrado y pulsa «Finalizar» en la barra superior."
+      },
+      {
+       "texto": "Comprueba el resultado: sale «Éxito», la banda pasa a FINALIZADO, el Estado a Contabilizado y aparece la pestaña «Saldos».",
+       "imagen": "asientos-018.jpg",
+       "hotspot": {
+        "x": 1.0,
+        "y": 48.6,
+        "w": 94.4,
+        "h": 4.0,
+        "etiqueta": "FINALIZADO"
+       }
+      },
+      {
+       "texto": "Fíjate en que el botón cambia a «Abrir a provisional».",
+       "detalle": "Su ayuda indica que vuelve a dejar el asiento modificable y quita sus importes del mayor; si el periodo está cerrado no se puede.",
+       "imagen": "asientos-017.jpg",
+       "hotspot": {
+        "x": 63.4,
+        "y": 8.6,
+        "w": 7.0,
+        "h": 3.6,
+        "etiqueta": "Abrir a provisional"
+       }
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "asientos-6-proceso",
+     "titulo": "Varios asientos: proceso Contabilización",
+     "paraQueSirve": "Contabiliza muchos asientos provisionales a la vez, dentro de un rango de fechas.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Procesos",
+      "Contabilización (casientos_contab)"
+     ],
+     "explicacion": [
+      "El proceso contabiliza todos los provisionales del rango, también los de otras personas que trabajan en la misma base, por eso hay que filtrar siempre por empresa y por tu diario."
+     ],
+     "campos": [
+      {
+       "campo": "Fecha inicio / Fecha fin *",
+       "significado": "Rango de fechas de los asientos provisionales que se contabilizan.",
+       "ejemplo": "01-11-2026 / 12-11-2026"
+      },
+      {
+       "campo": "Empresa *",
+       "significado": "Empresa de los asientos. Por defecto «*» (todas).",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Diario (columnas de consulta)",
+       "significado": "Filtro opcional. Limítalo a tu diario para no contabilizar asientos de otros.",
+       "ejemplo": "EA"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta. Pon las fechas, la Empresa 0 y, en Columnas de consulta, el Diario EA.",
+       "imagen": "asientos-019.jpg",
+       "hotspot": {
+        "x": 13.5,
+        "y": 68.5,
+        "w": 34.2,
+        "h": 3.1,
+        "etiqueta": "Diario"
+       }
+      },
+      {
+       "texto": "Pulsa «Ejecutar consulta» y confirma «¿Está seguro de ejecutar el proceso?» con «Aceptar»."
+      },
+      {
+       "texto": "Revisa el resultado: cada asiento tratado sale con el mensaje «Proceso completado correctamente».",
+       "detalle": "En el ejemplo, el asiento con ID 40 (el número 6) queda contabilizado.",
+       "imagen": "asientos-020.jpg",
+       "hotspot": {
+        "x": 0.6,
+        "y": 16.5,
+        "w": 70.8,
+        "h": 2.8,
+        "etiqueta": "Proceso completado correctamente."
+       }
+      },
+      {
+       "texto": "Abre el asiento 6: debe estar FINALIZADO, con 4 líneas y 1.250,00 cuadrado.",
+       "imagen": "asientos-021.jpg",
+       "hotspot": {
+        "x": 1.0,
+        "y": 48.6,
+        "w": 94.4,
+        "h": 4.0,
+        "etiqueta": "FINALIZADO"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si se deja la Empresa en «*» y no se filtra el diario, el proceso contabiliza todos los asientos provisionales del rango, también los de otras personas que trabajan en la misma base."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Filtra siempre por empresa y por tu diario."
+      }
+     ]
+    },
+    {
+     "id": "asientos-6-vigencia",
+     "titulo": "Nota: vigencia de empresa, ejercicio y periodos",
+     "paraQueSirve": "Un asiento solo se puede contabilizar si su fecha cae dentro de la vigencia de la empresa y tiene ejercicio y periodo.",
+     "ruta": [
+      "Maestro de empresas (cempresa)",
+      "Ejercicios contables (cejercic)",
+      "Períodos contables (cperiodo)"
+     ],
+     "explicacion": [
+      "Pueden abrirse desde el buscador. La empresa tiene una vigencia (cempresa); cada año tiene su ejercicio contable (cejercic) dentro de esa vigencia, y cada ejercicio sus periodos mensuales (cperiodo). Los asientos del día a día deben caer dentro de un periodo abierto.",
+      "Cuando la fecha del asiento no tiene ejercicio puede salir el error «cperiodo_ins: Fechas del periodo fuera de rango de vigencia en empresa».",
+      "En TUTORIAL no salió el error: la empresa 0 está vigente desde 2000 sin fecha fin y los ejercicios hasta 2026 existen. Incluso las copias del ejercicio 12 con fecha de 2027 se contabilizaron sin que existiera el ejercicio 2027 en cejercic."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre el Maestro de empresas (cempresa) desde el buscador y mira la vigencia de la empresa 0.",
+       "detalle": "Fecha inicio 01-01-2000 y Fecha fin vacía: vigencia abierta.",
+       "imagen": "asientos-022.jpg",
+       "hotspot": {
+        "x": 63.8,
+        "y": 30.4,
+        "w": 15.5,
+        "h": 5.8,
+        "etiqueta": "Fecha inicio"
+       }
+      },
+      {
+       "texto": "Abre Ejercicios contables (cejercic).",
+       "detalle": "Ejercicios de la empresa 0: 2019 a 2026, todos abiertos. No existe 2027.",
+       "imagen": "asientos-023.jpg",
+       "hotspot": {
+        "x": 16.9,
+        "y": 14.4,
+        "w": 6.4,
+        "h": 30.8,
+        "etiqueta": "Ejercicio"
+       }
+      },
+      {
+       "texto": "Abre Períodos contables (cperiodo).",
+       "detalle": "Hay un periodo por mes, con su fecha inicial y final y su estado contable.",
+       "imagen": "asientos-024.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Al contabilizar sale «cperiodo_ins: Fechas del periodo fuera de rango de vigencia en empresa» cuando la fecha del asiento no tiene ejercicio."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Abre cempresa y revisa que la Fecha inicio de tu empresa sea anterior al ejercicio (y la Fecha fin vacía o posterior); después da de alta el ejercicio en cejercic («Añadir ejercicio») y sus periodos en cperiodo («Añadir periodo»). No cambies la vigencia de empresas que no sean tuyas."
+      },
+      {
+       "tipo": "nota",
+       "texto": "En TUTORIAL no salió el error de vigencia: la empresa 0 está vigente desde 2000 sin fecha fin y existen los ejercicios hasta 2026."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué hace el botón «Finalizar»?",
+     "opciones": [
+      "Borra el asiento",
+      "Contabiliza el asiento: sus importes pasan al mayor y a los saldos",
+      "Duplica el asiento",
+      "Cambia el diario"
+     ],
+     "correcta": 1,
+     "explicacion": "Finalizar contabiliza el asiento."
+    },
+    {
+     "pregunta": "¿Qué botón deshace la contabilización de un asiento?",
+     "opciones": [
+      "Copiar asiento",
+      "Recalcular cuadre",
+      "Abrir a provisional",
+      "Reordenar líneas"
+     ],
+     "correcta": 2,
+     "explicacion": "«Abrir a provisional» lo deja modificable y quita sus importes del mayor (si el periodo no está cerrado)."
+    },
+    {
+     "pregunta": "¿Qué riesgo hay si el proceso Contabilización se ejecuta con Empresa «*» y sin filtrar el diario?",
+     "opciones": [
+      "Ninguno",
+      "Contabiliza también los provisionales de otras personas de la misma base",
+      "No ejecuta nada",
+      "Borra los asientos"
+     ],
+     "correcta": 1,
+     "explicacion": "Contabiliza todos los provisionales del rango; hay que filtrar por empresa y diario."
+    },
+    {
+     "pregunta": "¿Qué mensaje muestra el proceso por cada asiento tratado correctamente?",
+     "opciones": [
+      "Éxito",
+      "Proceso completado correctamente.",
+      "Asiento finalizado",
+      "Cuadre 0,00"
+     ],
+     "correcta": 1,
+     "explicacion": "El resultado lista cada asiento con «Proceso completado correctamente»."
+    },
+    {
+     "pregunta": "¿Qué debe cumplirse para contabilizar según la vigencia?",
+     "opciones": [
+      "Que la fecha caiga dentro de un periodo del ejercicio y de la vigencia de la empresa",
+      "Que el asiento tenga tres líneas",
+      "Que el diario sea DG",
+      "Que no haya justificante"
+     ],
+     "correcta": 0,
+     "explicacion": "La empresa tiene vigencia, cada año un ejercicio y cada ejercicio sus periodos."
+    }
+   ],
+   "checklist": [
+    "Finalizas el asiento 7 con «Finalizar» y sale «Éxito».",
+    "El asiento 7 muestra la banda FINALIZADO y Estado Contabilizado.",
+    "Aparece la pestaña «Saldos».",
+    "El botón ha cambiado a «Abrir a provisional».",
+    "En Contabilización pones fechas 01-11-2026 / 12-11-2026, Empresa 0 y Diario EA.",
+    "Ejecutas la consulta y confirmas con «Aceptar».",
+    "El resultado muestra «Proceso completado correctamente.» para el asiento 6.",
+    "El asiento 6 está FINALIZADO, con 4 líneas y 1.250,00 cuadrado.",
+    "Has mirado la vigencia de la empresa 0 en cempresa y los ejercicios en cejercic."
+   ],
+   "problemas": [
+    {
+     "problema": "Si se deja la Empresa en «*» y no se filtra el diario, se contabilizan los asientos de otras personas.",
+     "solucion": "Filtra siempre por empresa y por tu diario."
+    },
+    {
+     "problema": "Error «cperiodo_ins: Fechas del periodo fuera de rango de vigencia en empresa».",
+     "solucion": "Revisa la Fecha inicio en cempresa, da de alta el ejercicio en cejercic y sus periodos en cperiodo. No cambies la vigencia de empresas que no sean tuyas."
+    }
+   ]
+  },
+  {
+   "id": "asientos-7",
+   "numero": 7,
+   "titulo": "Comprobar el resultado",
+   "objetivo": "Habrás comprobado con el informe de descuadres de impuestos de la empresa 0 que no hay errores tras contabilizar.",
+   "concepto": "Tras contabilizar conviene revisar que no han quedado incoherencias: asientos descuadrados, diferencias entre los apuntes de IVA/IRPF y el registro de impuestos, o efectos de cartera que no casan con la contabilidad. Estos controles se agrupan en el menú Integridad.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-7-integridad",
+     "titulo": "Comprobar el resultado",
+     "paraQueSirve": "Detecta incoherencias después de contabilizar: asientos descuadrados, diferencias con impuestos o con cartera.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Integridad"
+     ],
+     "explicacion": [
+      "El menú Integridad incluye descuadres de asientos, de impuestos, de cartera, de costes y de divisas.",
+      "Los asientos de este ejercicio no llevan IVA ni efectos, así que estos informes salen vacíos. Si un asiento manual usa cuentas 472/477 sin rellenar la pestaña «Impuestos», aparecería aquí como descuadre."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre «Descuadres General e impuestos».",
+       "detalle": "Fíjate en el menú Integridad: descuadres de asientos, de impuestos, de cartera, de costes y de divisas.",
+       "imagen": "asientos-025.jpg",
+       "hotspot": {
+        "x": 2.2,
+        "y": 25.6,
+        "w": 21.0,
+        "h": 3.6,
+        "etiqueta": "Descuadres General e impuestos"
+       }
+      },
+      {
+       "texto": "Pon Empresa 0 y el rango de fechas y pulsa «Ejecutar consulta."
+      },
+      {
+       "texto": "Si la lista sale vacía, no hay asientos con diferencias entre contabilidad e impuestos.",
+       "detalle": "Descuadres contabilidad general-impuestos de la empresa 0: sin filas, no hay errores de IVA/IRPF.",
+       "imagen": "asientos-026.jpg"
+      },
+      {
+       "texto": "Para los efectos usa «Descuadres General -> Cartera por cuentas» o «por terceros»; para asientos que no cuadran, «Descuadres asientos»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Comprueba también «Descuadres asientos» si has modificado líneas después de cuadrar."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Dónde se agrupan los controles de coherencia contable?",
+     "opciones": [
+      "En el menú Integridad",
+      "En Procesos",
+      "En Saldos",
+      "En Diarios"
+     ],
+     "correcta": 0,
+     "explicacion": "Finanzas › Contabilidad General › Diario contable › Integridad."
+    },
+    {
+     "pregunta": "Si «Descuadres General e impuestos» sale vacío, ¿qué significa?",
+     "opciones": [
+      "Hay un error grave",
+      "No hay diferencias entre contabilidad e impuestos",
+      "El informe no funciona",
+      "El asiento no está contabilizado"
+     ],
+     "correcta": 1,
+     "explicacion": "Lista vacía: no hay asientos con diferencias."
+    },
+    {
+     "pregunta": "¿Por qué salen vacíos estos informes con los asientos del ejercicio?",
+     "opciones": [
+      "Porque no llevan IVA ni efectos",
+      "Porque el diario es EA",
+      "Porque no están finalizados",
+      "Porque faltan líneas"
+     ],
+     "correcta": 0,
+     "explicacion": "Los asientos del ejercicio no llevan IVA ni efectos."
+    },
+    {
+     "pregunta": "¿Qué informe usas para asientos que no cuadran?",
+     "opciones": [
+      "Descuadres asientos",
+      "Descuadres General -> Divisas",
+      "Costes no autorizados",
+      "Auxiliares inexistentes"
+     ],
+     "correcta": 0,
+     "explicacion": "«Descuadres asientos» detecta asientos que no cuadran."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Contabilidad General › Diario contable › Integridad.",
+    "Abres «Descuadres General e impuestos».",
+    "Pones Empresa 0 y el rango de fechas.",
+    "Pulsas «Ejecutar consulta».",
+    "La lista sale vacía (sin errores de IVA/IRPF).",
+    "Sabes dónde están los descuadres de cartera y de asientos."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-8",
+   "numero": 8,
+   "titulo": "Listar el asiento",
+   "objetivo": "Verás en Líneas de asiento (capuntes) todos los apuntes del documento EA-DOC*.",
+   "concepto": "El listado de apuntes muestra línea a línea lo que se ha contabilizado: cuenta, documento, descripción, Debe y Haber. Es la consulta rápida para revisar un asiento o buscar todos los apuntes de un documento.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "asientos-8-listar",
+     "titulo": "Listar el asiento",
+     "paraQueSirve": "Consulta rápida línea a línea de un asiento o de todos los apuntes de un documento.",
+     "ruta": [
+      "Buscador",
+      "Líneas de asiento (objeto capuntes)"
+     ],
+     "explicacion": [
+      "También se llega desde la lista de asientos, abriendo el asiento y yendo a Líneas de apuntes.",
+      "El asterisco en el filtro (EA-DOC*) busca todo lo que empieza así."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre capuntes (Líneas de asiento) desde el buscador y pulsa la lupa de la barra superior para abrir el formulario de búsqueda."
+      },
+      {
+       "texto": "En Documento escribe EA-DOC* y pulsa «Ejecutar consulta».",
+       "detalle": "Salen todos los apuntes de los ejercicios, con cuenta, descripción, Debe y Haber.",
+       "imagen": "asientos-027.jpg",
+       "hotspot": {
+        "x": 22.5,
+        "y": 8.8,
+        "w": 17.5,
+        "h": 3.2,
+        "etiqueta": "Documento Es igual a EA-DOC*"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Comprueba que los cuatro apuntes del EA-DOC-001 suman 1.250,00 al Debe y 1.250,00 al Haber."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué objeto lista los apuntes?",
+     "opciones": [
+      "capuntes",
+      "cdiarios",
+      "csaldos",
+      "cempresa"
+     ],
+     "correcta": 0,
+     "explicacion": "Líneas de asiento es el objeto capuntes."
+    },
+    {
+     "pregunta": "¿Qué hace el asterisco en EA-DOC*?",
+     "opciones": [
+      "Excluye EA-DOC",
+      "Busca todo lo que empieza por EA-DOC",
+      "Ordena el listado",
+      "Nada"
+     ],
+     "correcta": 1,
+     "explicacion": "Es un comodín: todo lo que empieza así."
+    },
+    {
+     "pregunta": "¿Cuánto suman al Debe los cuatro apuntes del EA-DOC-001?",
+     "opciones": [
+      "1.000,00",
+      "1.250,00",
+      "300,00",
+      "2.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.000 + 250 = 1.250,00 (y lo mismo al Haber)."
+    },
+    {
+     "pregunta": "¿Para qué sirve el listado de apuntes?",
+     "opciones": [
+      "Para contabilizar",
+      "Para revisar un asiento o buscar los apuntes de un documento",
+      "Para crear diarios",
+      "Para duplicar asientos"
+     ],
+     "correcta": 1,
+     "explicacion": "Es la consulta rápida línea a línea."
+    }
+   ],
+   "checklist": [
+    "Abres Líneas de asiento (capuntes) desde el buscador.",
+    "Pulsas la lupa para abrir el formulario de búsqueda.",
+    "Escribes EA-DOC* en Documento.",
+    "Pulsas «Ejecutar consulta».",
+    "Ves cuenta, descripción, Debe y Haber de cada apunte.",
+    "Los cuatro apuntes del EA-DOC-001 suman 1.250,00 al Debe y 1.250,00 al Haber."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-9",
+   "numero": 9,
+   "titulo": "Extracto de las cuentas del asiento",
+   "objetivo": "Verás el extracto (mayor) de la cuenta 62902.00000 de 2026 con saldo final 3.500,00.",
+   "concepto": "El extracto (mayor) de una cuenta enseña todos sus movimientos en un periodo con el saldo acumulado línea a línea. Es lo que se mira para justificar el saldo de una cuenta o localizar un apunte.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-9-mayor",
+     "titulo": "Extracto de las cuentas del asiento",
+     "paraQueSirve": "Muestra los movimientos de una cuenta con su saldo acumulado.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Extractos",
+      "Mayor de cuentas (capuntes_ext_cuenta_rep)"
+     ],
+     "explicacion": [
+      "Hay que desplazar la tabla a la derecha para ver Debe, Haber y Saldo.",
+      "El extracto de la 62902 muestra los asientos 6 (1.000), 8 (1.000) y 9 (1.500) con saldo acumulado 1.000 › 2.000 › 3.500."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa *",
+       "significado": "Empresa del extracto.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Fecha inicial / Fecha fin *",
+       "significado": "Periodo del extracto; para todo el año, del 1 de enero al 31 de diciembre.",
+       "ejemplo": "01-01-2026 / 31-12-2026"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Cuenta o cuentas a extractar.",
+       "ejemplo": "62902.00000"
+      },
+      {
+       "campo": "Proyecto / Sección *",
+       "significado": "Filtros de unidad de negocio; «*» para todos.",
+       "ejemplo": "*"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta, pon Empresa 0, todo el año y la cuenta 62902.00000.",
+       "imagen": "asientos-028.jpg",
+       "hotspot": {
+        "x": 18.0,
+        "y": 49.0,
+        "w": 19.4,
+        "h": 4.4,
+        "etiqueta": "Cuenta"
+       }
+      },
+      {
+       "texto": "Pulsa «Ejecutar consulta» y desplaza la tabla a la derecha para ver Debe, Haber y Saldo.",
+       "detalle": "Saldo acumulado 1.000 › 2.000 › 3.500; el primer movimiento es el asiento 6, documento EA-DOC-001.",
+       "imagen": "asientos-029.jpg",
+       "hotspot": {
+        "x": 94.8,
+        "y": 15.0,
+        "w": 4.9,
+        "h": 18.6,
+        "etiqueta": "Saldo"
+       }
+      },
+      {
+       "texto": "Repite con 62903.00000 y 57200.00000 si quieres ver las demás cuentas del asiento."
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué enseña el extracto (mayor) de una cuenta?",
+     "opciones": [
+      "Sus movimientos con saldo acumulado línea a línea",
+      "Solo el saldo final",
+      "Los diarios",
+      "Las empresas"
+     ],
+     "correcta": 0,
+     "explicacion": "Movimientos del periodo con saldo acumulado."
+    },
+    {
+     "pregunta": "¿Cuál es el saldo final de la 62902.00000 en 2026?",
+     "opciones": [
+      "1.000,00",
+      "2.000,00",
+      "3.500,00",
+      "1.250,00"
+     ],
+     "correcta": 2,
+     "explicacion": "1.000 + 1.000 + 1.500 = 3.500,00."
+    },
+    {
+     "pregunta": "¿Qué asientos aparecen en el extracto de la 62902?",
+     "opciones": [
+      "6, 8 y 9",
+      "6 y 7",
+      "7 y 8",
+      "1 y 2"
+     ],
+     "correcta": 0,
+     "explicacion": "Asientos 6 (1.000), 8 (1.000) y 9 (1.500)."
+    },
+    {
+     "pregunta": "¿Qué fechas pones para extractar todo el año?",
+     "opciones": [
+      "01-01-2026 / 31-12-2026",
+      "01-11-2026 / 12-11-2026",
+      "01-12-2026 / 01-02-2027",
+      "Ninguna"
+     ],
+     "correcta": 0,
+     "explicacion": "Del 1 de enero al 31 de diciembre."
+    }
+   ],
+   "checklist": [
+    "Abres Mayor de cuentas (capuntes_ext_cuenta_rep).",
+    "Pones Empresa 0, 01-01-2026 / 31-12-2026 y cuenta 62902.00000.",
+    "Ejecutas la consulta.",
+    "Ves los asientos 6, 8 y 9 con saldo 1.000 › 2.000 › 3.500.",
+    "El primer movimiento es el asiento 6, documento EA-DOC-001.",
+    "Repites con 62903.00000 y 57200.00000."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-10",
+   "numero": 10,
+   "titulo": "Sumas y saldos de las cuentas",
+   "objetivo": "Verás los saldos por periodo de las cuentas usadas (57200, 62900, 62902 y 62903) en la empresa 0, ejercicio 2026.",
+   "concepto": "Los saldos de cuentas guardan, por cuenta y periodo, la suma del Debe y del Haber de los asientos contabilizados. Es la base del balance de sumas y saldos y solo recoge asientos finalizados: los provisionales no tienen impacto.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-10-saldos",
+     "titulo": "Sumas y saldos de las cuentas",
+     "paraQueSirve": "Muestra, por cuenta y periodo, lo acumulado en el Debe y el Haber de los asientos contabilizados.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Saldos",
+      "Saldos cuentas (objeto csaldos)"
+     ],
+     "explicacion": [
+      "Los saldos también están en el menú Saldos (Saldos cuentas, mensualizados, agrupados) y en Balances.",
+      "En el periodo 11: 57200 Haber 2.800, 62900 Debe 300, 62902 Debe 2.000 y 62903 Debe 500; el periodo 12 recoge la copia de diciembre."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa la lupa."
+      },
+      {
+       "texto": "Marca Empresa 0 y Ejercicio 2026 y pulsa «Ejecutar consulta»."
+      },
+      {
+       "texto": "Localiza las cuentas 57200, 62900, 62902 y 62903 en los periodos 11 y 12.",
+       "detalle": "Periodo 11: 57200 Haber 2.800, 62900 Debe 300, 62902 Debe 2.000, 62903 Debe 500. Periodo 12: la copia de diciembre.",
+       "imagen": "asientos-030.jpg",
+       "hotspot": {
+        "x": 25.4,
+        "y": 15.4,
+        "w": 8.4,
+        "h": 50.0,
+        "etiqueta": "Cuenta"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Comprueba que la 57200 del periodo 11 suma al Haber lo mismo que las cuentas de gasto al Debe."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué asientos recogen los saldos de cuentas?",
+     "opciones": [
+      "Solo los contabilizados",
+      "Todos",
+      "Solo los provisionales",
+      "Los del diario DG"
+     ],
+     "correcta": 0,
+     "explicacion": "Los provisionales no tienen impacto."
+    },
+    {
+     "pregunta": "¿Cuánto suma al Haber la 57200 en el periodo 11?",
+     "opciones": [
+      "1.250,00",
+      "2.800,00",
+      "300,00",
+      "3.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "57200 Haber 2.800 en el periodo 11."
+    },
+    {
+     "pregunta": "¿Cuánto suma al Debe la 62902 en el periodo 11?",
+     "opciones": [
+      "1.000,00",
+      "1.500,00",
+      "2.000,00",
+      "3.500,00"
+     ],
+     "correcta": 2,
+     "explicacion": "62902 Debe 2.000 en el periodo 11."
+    },
+    {
+     "pregunta": "¿Qué periodo recoge la copia de diciembre?",
+     "opciones": [
+      "11",
+      "12",
+      "1",
+      "2"
+     ],
+     "correcta": 1,
+     "explicacion": "Periodo 12 de 2026."
+    },
+    {
+     "pregunta": "¿Qué objeto abre la pantalla de saldos de cuentas?",
+     "opciones": [
+      "csaldos",
+      "capuntes",
+      "cdiarios",
+      "cempresa"
+     ],
+     "correcta": 0,
+     "explicacion": "Saldos cuentas es el objeto csaldos."
+    }
+   ],
+   "checklist": [
+    "Abres Saldos cuentas (csaldos) y pulsas la lupa.",
+    "Marcas Empresa 0 y Ejercicio 2026.",
+    "Ejecutas la consulta.",
+    "Localizas 57200, 62900, 62902 y 62903 en el periodo 11.",
+    "Localizas las cuentas del periodo 12.",
+    "La 57200 del periodo 11 suma al Haber lo mismo que los gastos al Debe."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-11",
+   "numero": 11,
+   "titulo": "Duplicar el asiento",
+   "objetivo": "Tendrás el asiento 8 (EA-DOC-003), copia exacta del 6 por 1.250,00, en estado Provisional.",
+   "concepto": "Duplicar sirve para asientos que se repiten igual (una cuota, un alquiler, un ajuste mensual): se copia uno ya hecho en lugar de teclearlo de nuevo. La copia nace Provisional para poder revisarla antes de contabilizarla.",
+   "duracionMin": 12,
+   "secciones": [
+    {
+     "id": "asientos-11-duplicar",
+     "titulo": "Duplicar el asiento",
+     "paraQueSirve": "Copia un asiento ya hecho en lugar de teclearlo de nuevo.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "ficha del asiento 6",
+      "Copiar asiento"
+     ],
+     "explicacion": [
+      "El botón «Copiar asiento» hace una copia o varias con cadencia mensual. Si se rellena Descripción, sobrescribe la de los nuevos apuntes. «Invertir asiento» crea un contraasiento a la fecha seleccionada. «Copiar todo» no prescinde de cartera e impuestos, si los tuviere el original. Si se rellena Documento, sobrescribe el de los nuevos apuntes y asientos.",
+      "Al aceptar, la página intenta abrir el asiento nuevo en otra pestaña del navegador. Si el navegador lo bloquea no pasa nada: la copia está creada y se ve en la lista.",
+      "La copia lleva el justificante AC en lugar del numerador EA del original. Si lo necesitas, cámbialo en la cabecera antes de finalizar."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa *",
+       "significado": "Empresa en la que se crea la copia.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Fecha *",
+       "significado": "Fecha de la (primera) copia.",
+       "ejemplo": "12-11-2026"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Si se rellena, sustituye el documento de la cabecera y de las líneas.",
+       "ejemplo": "EA-DOC-003"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Si se rellena, sustituye la descripción de los apuntes y las notas.",
+       "ejemplo": "EA 2.11 duplicado del asiento 6"
+      },
+      {
+       "campo": "Número a generar *",
+       "significado": "Cuántas copias se crean.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Cadencia mensual *",
+       "significado": "Meses entre una copia y la siguiente.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Invertir asiento *",
+       "significado": "Sí: crea el contraasiento (Debe y Haber cambiados), útil para anular.",
+       "ejemplo": "No"
+      },
+      {
+       "campo": "Copiar todo *",
+       "significado": "Sí: copia también los datos de cartera e impuestos del original, si los tiene.",
+       "ejemplo": "Sí"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el asiento 6 y pulsa «Copiar asiento»."
+      },
+      {
+       "texto": "Pon Documento EA-DOC-003 y la Descripción «EA 2.11 duplicado del asiento 6»."
+      },
+      {
+       "texto": "Deja Número a generar 1 y pulsa «Aceptar».",
+       "detalle": "Es el diálogo «Copiar asiento» con una sola copia a la misma fecha.",
+       "imagen": "asientos-031.jpg",
+       "hotspot": {
+        "x": 62.8,
+        "y": 89.8,
+        "w": 5.8,
+        "h": 3.6,
+        "etiqueta": "Aceptar"
+       }
+      },
+      {
+       "texto": "Vuelve a la lista de asientos.",
+       "detalle": "Aparece el asiento 8 por 1.250,00, Provisional y con clasificación Manual; el 6 y el 7 siguen Contabilizados.",
+       "imagen": "asientos-032.jpg",
+       "hotspot": {
+        "x": 30.5,
+        "y": 19.2,
+        "w": 8.5,
+        "h": 3.4,
+        "etiqueta": "Provisional"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Al aceptar, la página intenta abrir el asiento nuevo en otra pestaña. Si el navegador lo bloquea no pasa nada: la copia está creada y se ve en la lista."
+      },
+      {
+       "tipo": "nota",
+       "texto": "La copia lleva el justificante AC en lugar del numerador EA del original. Si lo necesitas, cámbialo en la cabecera antes de finalizar."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿En qué estado nace la copia de un asiento?",
+     "opciones": [
+      "Contabilizado",
+      "Provisional",
+      "Finalizado",
+      "Auditado"
+     ],
+     "correcta": 1,
+     "explicacion": "Nace Provisional para poder revisarla."
+    },
+    {
+     "pregunta": "¿Qué hace «Invertir asiento = Sí»?",
+     "opciones": [
+      "Borra el original",
+      "Crea el contraasiento (Debe y Haber cambiados), útil para anular",
+      "Copia solo el Debe",
+      "Cambia el diario"
+     ],
+     "correcta": 1,
+     "explicacion": "Crea el contraasiento."
+    },
+    {
+     "pregunta": "¿Qué justificante lleva la copia?",
+     "opciones": [
+      "EA",
+      "AC",
+      "DG",
+      "Ninguno"
+     ],
+     "correcta": 1,
+     "explicacion": "Lleva AC en lugar del numerador EA."
+    },
+    {
+     "pregunta": "¿Qué número de asiento recibe la copia del asiento 6?",
+     "opciones": [
+      "7",
+      "8",
+      "9",
+      "11"
+     ],
+     "correcta": 1,
+     "explicacion": "El asiento 8 (EA-DOC-003)."
+    },
+    {
+     "pregunta": "¿Qué hace Documento en el diálogo de copia, si se rellena?",
+     "opciones": [
+      "Nada",
+      "Sustituye el documento de la cabecera y de las líneas",
+      "Cambia la fecha",
+      "Elige la empresa"
+     ],
+     "correcta": 1,
+     "explicacion": "Sustituye el documento de cabecera y líneas."
+    }
+   ],
+   "checklist": [
+    "Abres el asiento 6 y pulsas «Copiar asiento».",
+    "Pones Documento EA-DOC-003 y Descripción «EA 2.11 duplicado del asiento 6».",
+    "Dejas Número a generar 1 y Cadencia mensual 1.",
+    "Pulsas «Aceptar».",
+    "En la lista aparece el asiento 8 por 1.250,00, Provisional y clasificación Manual.",
+    "El asiento 8 tiene las mismas 4 líneas que el 6.",
+    "El 6 y el 7 siguen Contabilizados."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-12",
+   "numero": 12,
+   "titulo": "Tres copias en meses consecutivos",
+   "objetivo": "Tendrás los asientos 9 (01-12-2026), 1 (01-01-2027) y 2 (01-02-2027), con documento EA-DOC-004, contabilizados.",
+   "concepto": "Con Número a generar y Cadencia mensual se programan de una vez los asientos recurrentes de los próximos meses: cada copia se fecha un mes después de la anterior. Aquí se hace desde el 01-12-2026.\n\nLa numeración de asientos empieza de nuevo cada año.",
+   "duracionMin": 18,
+   "secciones": [
+    {
+     "id": "asientos-12-copias",
+     "titulo": "Tres copias en meses consecutivos",
+     "paraQueSirve": "Programa de una vez los asientos recurrentes de los próximos meses.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Copiar asiento"
+     ],
+     "explicacion": [
+      "En la lista salen tres asientos: 01-12-2026 (asiento 9 de 2026), 01-01-2027 y 01-02-2027 (asientos 1 y 2 de 2027).",
+      "En TUTORIAL las copias de 2027 se contabilizaron aunque no existe el ejercicio 2027 en cejercic."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre el asiento 8 y pulsa «Copiar asiento»."
+      },
+      {
+       "texto": "Rellena Fecha 01-12-2026, Documento EA-DOC-004, Descripción «EA 2.12 copia mensual», Número a generar 3 y Cadencia mensual 1. Acepta."
+      },
+      {
+       "texto": "En la lista salen tres asientos: 01-12-2026 (asiento 9 de 2026), 01-01-2027 y 01-02-2027 (asientos 1 y 2 de 2027).",
+       "detalle": "Una copia en diciembre de 2026 y dos en 2027.",
+       "imagen": "asientos-034.jpg",
+       "hotspot": {
+        "x": 0.6,
+        "y": 19.0,
+        "w": 98.1,
+        "h": 7.8,
+        "etiqueta": "EA-DOC-004"
+       }
+      },
+      {
+       "texto": "Abre la última copia: fecha 01-02-2027, ejercicio 2027, periodo 2.",
+       "detalle": "La numeración de asientos empieza de nuevo cada año.",
+       "imagen": "asientos-033.jpg",
+       "hotspot": {
+        "x": 33.5,
+        "y": 32.0,
+        "w": 19.8,
+        "h": 4.2,
+        "etiqueta": "01-02-2027"
+       }
+      },
+      {
+       "texto": "Contabilízalos con el proceso Contabilización poniendo Fecha fin 28-02-2027, Empresa 0 y Diario EA.",
+       "detalle": "Se contabilizan los cuatro asientos provisionales del diario EA.",
+       "imagen": "asientos-035.jpg",
+       "hotspot": {
+        "x": 24.9,
+        "y": 8.8,
+        "w": 14.6,
+        "h": 3.2,
+        "etiqueta": "Diario Está en la lista EA"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En TUTORIAL las copias de 2027 se contabilizaron aunque no existe el ejercicio 2027 en cejercic."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué fecha tiene la segunda copia con Cadencia mensual 1 desde el 01-12-2026?",
+     "opciones": [
+      "01-12-2026",
+      "01-01-2027",
+      "01-02-2027",
+      "01-03-2027"
+     ],
+     "correcta": 1,
+     "explicacion": "Cada copia se fecha un mes después de la anterior."
+    },
+    {
+     "pregunta": "¿Cuántas copias se generan con Número a generar 3?",
+     "opciones": [
+      "1",
+      "2",
+      "3",
+      "4"
+     ],
+     "correcta": 2,
+     "explicacion": "Tres copias: 01-12-2026, 01-01-2027 y 01-02-2027."
+    },
+    {
+     "pregunta": "¿Qué numeración tienen las copias de 2027?",
+     "opciones": [
+      "Siguen la de 2026",
+      "Asientos 1 y 2: la numeración empieza de nuevo cada año",
+      "Asientos 10 y 11",
+      "Sin número"
+     ],
+     "correcta": 1,
+     "explicacion": "La numeración empieza de nuevo cada año."
+    },
+    {
+     "pregunta": "¿Qué Fecha fin se pone en Contabilización para incluir las tres copias?",
+     "opciones": [
+      "12-11-2026",
+      "31-12-2026",
+      "28-02-2027",
+      "01-12-2026"
+     ],
+     "correcta": 2,
+     "explicacion": "28-02-2027."
+    },
+    {
+     "pregunta": "¿Qué documento llevan las copias?",
+     "opciones": [
+      "EA-DOC-001",
+      "EA-DOC-003",
+      "EA-DOC-004",
+      "EA-DOC-005"
+     ],
+     "correcta": 2,
+     "explicacion": "EA-DOC-004."
+    }
+   ],
+   "checklist": [
+    "Abres el asiento 8 y pulsas «Copiar asiento».",
+    "Pones Fecha 01-12-2026, Documento EA-DOC-004, Descripción «EA 2.12 copia mensual».",
+    "Pones Número a generar 3 y Cadencia mensual 1 y aceptas.",
+    "En la lista salen las copias del 01-12-2026, 01-01-2027 y 01-02-2027.",
+    "Las de 2027 son los asientos 1 y 2 de 2027.",
+    "Ejecutas Contabilización con Fecha fin 28-02-2027, Empresa 0 y Diario EA.",
+    "Se contabilizan los cuatro provisionales del diario EA.",
+    "Cada asiento tiene su ejercicio y periodo (2026/12, 2027/1 y 2027/2)."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-13",
+   "numero": 13,
+   "titulo": "Cambiar importes de las dos primeras líneas",
+   "objetivo": "El asiento 9 tendrá las líneas 1 y 2 a 1.500,00 y total 1.750,00 cuadrado.",
+   "concepto": "Mientras el asiento está Provisional se puede corregir cualquier línea. Si se cambia el importe de una sola, el asiento se descuadra; hay que cambiar también su contrapartida. Un asiento ya contabilizado primero se pasa a provisional con «Abrir a provisional».\n\nLas líneas no se editan en la cuadrícula, sino en un panel lateral que se abre al pulsar el número de la fila.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "asientos-13-cambiar",
+     "titulo": "Cambiar importes de las dos primeras líneas",
+     "paraQueSirve": "Corrige líneas mientras el asiento es provisional, manteniendo el cuadre.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "Hay que guardar con el disquete del panel y recargar la lista para ver los totales nuevos.",
+      "Con solo la línea 1 cambiada: Debe 1.750,00, Haber 1.250,00 y Cuadre 500,00 en rojo."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre el asiento 9 (copia de diciembre) antes de contabilizarlo › «Líneas de apuntes»."
+      },
+      {
+       "texto": "Pulsa el número de la línea 1: se abre un panel lateral. Cambia Debe divisa de 1.000 a 1.500 y guarda con el disquete del panel.",
+       "detalle": "El campo modificado se marca con una barra roja hasta que se guarda.",
+       "imagen": "asientos-036.jpg",
+       "hotspot": {
+        "x": 41.8,
+        "y": 33.6,
+        "w": 53.0,
+        "h": 6.8,
+        "etiqueta": "Debe divisa"
+       }
+      },
+      {
+       "texto": "Cierra el panel y pulsa «Recargar» en la lista de líneas.",
+       "detalle": "Cuadre 500,00 en rojo y sin botón Finalizar.",
+       "imagen": "asientos-037.jpg",
+       "hotspot": {
+        "x": 76.8,
+        "y": 32.0,
+        "w": 18.5,
+        "h": 4.4,
+        "etiqueta": "Cuadre"
+       }
+      },
+      {
+       "texto": "Abre la línea 2 y cambia Haber divisa de 1.000 a 1.500. Guarda.",
+       "detalle": "El asiento vuelve a cuadrar: Debe = Haber = 1.750,00 y Cuadre 0,00.",
+       "imagen": "asientos-038.jpg",
+       "hotspot": {
+        "x": 76.8,
+        "y": 32.0,
+        "w": 18.5,
+        "h": 4.4,
+        "etiqueta": "Cuadre"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Un asiento ya contabilizado primero se pasa a provisional con «Abrir a provisional»."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Comprueba en el extracto de la 62902 que el movimiento del 01-12-2026 es de 1.500,00."
+      }
+     ]
+    },
+    {
+     "id": "asientos-13-resumen",
+     "titulo": "Resumen de datos creados",
+     "paraQueSirve": "Recoge lo que has creado en los ejercicios.",
+     "ruta": null,
+     "explicacion": [
+      "Diario EA «Entrada de asientos EA» (cdiarios).",
+      "Numerador de justificantes EA «Asientos manuales EA» (cjusnumh), con máscaras #e#yy / EA#yy-#n.",
+      "Empresa 0, ejercicio 2026: asientos 6 (EA-DOC-001, 1.250,00), 7 (EA-DOC-002, 300,00), 8 (EA-DOC-003, copia), 9 (EA-DOC-004, 01-12-2026, 1.750,00) y 11 (EA-DOC-005, EA26-000001, 50,00), todos contabilizados.",
+      "Empresa 0, ejercicio 2027: asientos 1 y 2 (EA-DOC-004, copias de enero y febrero), contabilizados."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Fíjate en el asiento 11: justificante EA26-000001 generado por el numerador corregido, finalizado.",
+       "imagen": "asientos-039.jpg",
+       "hotspot": {
+        "x": 65.2,
+        "y": 32.0,
+        "w": 19.4,
+        "h": 4.0,
+        "etiqueta": "EA26-000001"
+       }
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cómo se edita una línea de apunte?",
+     "opciones": [
+      "En la cuadrícula directamente",
+      "En un panel lateral que se abre al pulsar el número de la fila",
+      "Solo con el proceso Contabilización",
+      "Duplicando el asiento"
+     ],
+     "correcta": 1,
+     "explicacion": "Se abre un panel lateral y se guarda con el disquete."
+    },
+    {
+     "pregunta": "Si cambias solo el Debe de la línea 1 de 1.000 a 1.500, ¿cuánto marca el Cuadre?",
+     "opciones": [
+      "0,00",
+      "500,00",
+      "1.500,00",
+      "250,00"
+     ],
+     "correcta": 1,
+     "explicacion": "Debe 1.750,00 - Haber 1.250,00 = 500,00."
+    },
+    {
+     "pregunta": "¿Qué haces para ver los totales nuevos tras guardar en el panel?",
+     "opciones": [
+      "Pulsas «Recargar» en la lista de líneas",
+      "Reinicias el ERP",
+      "Duplicas el asiento",
+      "Nada"
+     ],
+     "correcta": 0,
+     "explicacion": "Hay que recargar la lista."
+    },
+    {
+     "pregunta": "¿Qué total tiene el asiento 9 tras cambiar las líneas 1 y 2 a 1.500?",
+     "opciones": [
+      "1.250,00",
+      "1.750,00",
+      "3.000,00",
+      "1.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.500 + 250 = 1.750,00."
+    },
+    {
+     "pregunta": "¿Cómo se corrige un asiento ya contabilizado?",
+     "opciones": [
+      "Se pasa a provisional con «Abrir a provisional»",
+      "Se borra la empresa",
+      "No se puede nunca",
+      "Con Copiar asiento"
+     ],
+     "correcta": 0,
+     "explicacion": "Primero se pasa a provisional (si el periodo no está cerrado)."
+    }
+   ],
+   "checklist": [
+    "Abres el asiento 9 antes de contabilizarlo › «Líneas de apuntes».",
+    "Pulsas el número de la línea 1 y se abre el panel lateral.",
+    "Cambias Debe divisa de 1.000 a 1.500 y guardas con el disquete.",
+    "El campo modificado se marca con una barra roja hasta guardar.",
+    "Recargas la lista: Cuadre 500,00 en rojo y sin botón Finalizar.",
+    "Abres la línea 2 y cambias Haber divisa de 1.000 a 1.500.",
+    "Tras guardar, Debe = Haber = 1.750,00 y Cuadre 0,00.",
+    "En el extracto de la 62902 el movimiento del 01-12-2026 es de 1.500,00."
+   ],
+   "problemas": []
+  }
+ ],
+ "datosSimulador": {
+  "asientos": [
+   {
+    "titulo": "Asiento 6 (EA-DOC-001) con dos líneas",
+    "descripcion": "Gasto diverso de 1.000 € pagado por banco, tal como queda al terminar el apartado de introducir un asiento de dos líneas (ejercicio 2).",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "EA Ejercicio 2 entrada de asientos",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA Ejercicio 2 entrada de asientos",
+      "debe": 0,
+      "haber": 1000
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 6 (EA-DOC-001) con cuatro líneas",
+    "descripcion": "Gasto diverso de 1.000 € y gasto de correos y mensajería de 250 €, ambos pagados por banco. Debe 1.250,00 = Haber 1.250,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "EA Ejercicio 2 entrada de asientos",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA Ejercicio 2 entrada de asientos",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "EA Ejercicio 2 entrada de asientos",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA Ejercicio 2 entrada de asientos",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 7 (EA-DOC-002)",
+    "descripcion": "Pago de otros servicios de 300 € por banco.",
+    "lineas": [
+     {
+      "cuenta": "62900.00000",
+      "nombreCuenta": "Otros servicios",
+      "concepto": "EA Ejercicio 2.5 segundo asiento",
+      "debe": 300,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA Ejercicio 2.5 segundo asiento",
+      "debe": 0,
+      "haber": 300
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 8 (EA-DOC-003): copia del asiento 6",
+    "descripcion": "Copia exacta del asiento 6 por 1.250,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "EA 2.11 duplicado del asiento 6",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.11 duplicado del asiento 6",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "EA 2.11 duplicado del asiento 6",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.11 duplicado del asiento 6",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 9 (EA-DOC-004) tal como se copia el 01-12-2026",
+    "descripcion": "Copia mensual del asiento 6, antes de cambiar importes. Las copias del 01-01-2027 y 01-02-2027 (asientos 1 y 2 de 2027) llevan las mismas cuatro líneas.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 9 (EA-DOC-004) con solo la línea 1 cambiada (descuadrado)",
+    "descripcion": "Estado intermedio del ejercicio 13: la línea 1 pasa a 1.500,00 y la 2 sigue en 1.000,00. Debe 1.750,00, Haber 1.250,00, Cuadre 500,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 1500,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": false
+   },
+   {
+    "titulo": "Asiento 9 (EA-DOC-004) con las líneas 1 y 2 a 1.500,00",
+    "descripcion": "Resultado final del ejercicio 13: Debe = Haber = 1.750,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 1500,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 0,
+      "haber": 1500
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "EA 2.12 copia mensual",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 11 (EA-DOC-005, EA26-000001)",
+    "descripcion": "Asiento de prueba del numerador corregido, por 50,00 Debe y 50,00 Haber. El manual no muestra las cuentas.",
+    "lineas": [
+     {
+      "cuenta": null,
+      "nombreCuenta": null,
+      "concepto": "EA prueba numerador corregido",
+      "debe": 50,
+      "haber": 0
+     },
+     {
+      "cuenta": null,
+      "nombreCuenta": null,
+      "concepto": "EA prueba numerador corregido",
+      "debe": 0,
+      "haber": 50
+     }
+    ],
+    "cuadra": true
+   }
+  ]
+ }
+}
