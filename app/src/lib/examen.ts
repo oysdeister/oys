@@ -1,5 +1,5 @@
 /*
-  Examen final del Taller Axional.
+  Examen final del Practicando Axional Deister VNext.
 
   - Todo se genera de forma determinista a partir del código de examen (EX-<INI>-XXXX).
     El código sale de hash(alumno.id + fecha de inicio); el resto (preguntas, cantidades,
@@ -814,7 +814,7 @@ const fecha = (iso: string) => new Date(iso).toLocaleString('es-ES', { dateStyle
 export function actaTexto(acta: Acta): string {
   const caso = generarCaso(acta.codigo);
   const lineas: string[] = [
-    `ACTA DE EXAMEN · Taller Axional · O&S Consultores`,
+    `ACTA DE EXAMEN · Practicando Axional Deister VNext · O&S Consultores`,
     `Alumno: ${acta.alumno.nombre} (${acta.alumno.ini})${acta.alumno.usuario ? ` · usuario ${acta.alumno.usuario}` : ''}`,
     `Código de examen: ${acta.codigo}`,
     `Proveedor: ${caso.proveedor} · Cliente: ${caso.cliente}`,

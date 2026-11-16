@@ -17,6 +17,7 @@ import { DemoReal } from '../components/exercise/DemoReal';
 import { Problemas } from '../components/exercise/Problemas';
 import { estadoDe } from '../components/exercise/util';
 import './aprender.css';
+import './pulido.css';
 
 const TABS = [
   { id: 'concepto', label: 'Concepto' },

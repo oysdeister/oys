@@ -12,8 +12,10 @@ import { Icon } from '../components/Icon';
 import { SeccionVista } from '../components/exercise/SeccionVista';
 import { estadoDe, pct, useMedia } from '../components/exercise/util';
 import { FICHAS, type PiezaCircuito } from './portadaDatos';
+import { useRevela } from '../components/exercise/Revela';
 import './aprender.css';
 import './portada.css';
+import './pulido.css';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
 const RITMO = 2800; // ms que se queda la ficha en cada pieza
@@ -214,13 +216,16 @@ function CircuitoV({ piezas, ini }: { piezas: PiezaCircuito[]; ini: string }) {
   );
 }
 
-function Desplegable({ titulo, children, abiertoIni = false }: { titulo: string; children: ReactNode; abiertoIni?: boolean }) {
+function Desplegable({ titulo, n, children, abiertoIni = false }: { titulo: string; n: number; children: ReactNode; abiertoIni?: boolean }) {
   const [abierto, setAbierto] = useState(abiertoIni);
   const reducir = useReducedMotion();
   return (
     <div className={`fold${abierto ? ' open' : ''}`}>
       <button className="fold-head" aria-expanded={abierto} onClick={() => setAbierto((a) => !a)}>
-        <span>{titulo}</span>
+        <span className="fold-t">
+          <span className="fold-n" aria-hidden="true">{String(n).padStart(2, '0')}</span>
+          <span>{titulo}</span>
+        </span>
         <motion.span className="fold-ico" animate={{ rotate: abierto ? 45 : 0 }} aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
         </motion.span>
@@ -242,10 +247,59 @@ function Desplegable({ titulo, children, abiertoIni = false }: { titulo: string;
   );
 }
 
+/** Cabecera de sección: antetítulo pequeño con acento, titular con volumen y una línea de ayuda */
+function CabSec({ id, n, kicker, titulo, texto }: { id?: string; n: number; kicker: string; titulo: string; texto?: string }) {
+  const r = useRevela();
+  return (
+    <motion.header className="pm-cab" {...r(0, 14)}>
+      <p className="kick">
+        <span className="kick-n">{String(n).padStart(2, '0')}</span> {kicker}
+      </p>
+      <h2 id={id}>
+        <span className="tx-grad">{titulo}</span>
+      </h2>
+      {texto && <p className="pm-cab-txt">{texto}</p>}
+    </motion.header>
+  );
+}
+
+/** Flecha «baja»: lleva con scroll suave a la ruta de ejercicios */
+function Bajar({ destino, texto }: { destino: string; texto: string }) {
+  const reducir = !!useReducedMotion();
+  const ir = () => {
+    const el = document.getElementById(destino);
+    if (!el) return;
+    el.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
+    const foco = el.querySelector<HTMLElement>('h2');
+    if (foco) {
+      foco.setAttribute('tabindex', '-1');
+      foco.focus({ preventScroll: true });
+    }
+  };
+  return (
+    <div className="pm-bajar-wrap">
+      <button type="button" className="pm-bajar" onClick={ir} aria-label={`${texto}: baja hasta los ejercicios del módulo`}>
+        <span>{texto}</span>
+        <motion.span
+          className="pm-bajar-ico"
+          aria-hidden="true"
+          animate={reducir ? undefined : { y: [0, 5, 0] }}
+          transition={reducir ? undefined : { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M6 13l6 6 6-6" />
+          </svg>
+        </motion.span>
+      </button>
+    </div>
+  );
+}
+
 export default function ModulePage() {
   const { id = '' } = useParams();
   const p = useProgreso();
   const reducir = useReducedMotion();
+  const r = useRevela();
   const movil = useMedia('(max-width: 700px)');
   const modulo = getModulo(id);
 
@@ -354,26 +408,32 @@ export default function ModulePage() {
           </motion.div>
         </div>
         {ficha && (
-          <div className="glass pm-aprendes" aria-labelledby="apr-h">
-            <h2 id="apr-h">Al terminar sabrás</h2>
+          <div className="pm-aprendes" aria-labelledby="apr-h">
+            <h2 id="apr-h" className="kick">Al terminar sabrás</h2>
             <ul>
               {ficha.aprendes.map((a, i) => (
-                <li key={i}>
-                  <Icon name="check" size={20} stroke={3} />
+                <motion.li key={i} className="pm-apr" {...r(i + 2, 12)}>
+                  <span className="pm-apr-ico" aria-hidden="true">
+                    <Icon name="check" size={16} stroke={3} />
+                  </span>
                   <span>{conIni(a, ini)}</span>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
         )}
       </header>
+      <Bajar destino="ruta" texto="Ver tu ruta" />
 
       {piezas.length > 0 && (
         <section className="mod-sec" aria-labelledby="circ-h">
-          <h2 id="circ-h">El circuito</h2>
-          <p className="muted">
-            {movil ? 'Así viaja la información por este módulo. Toca una pieza para pararte en ella.' : 'Así viaja la información por este módulo. Cada pieza necesita la anterior: toca una para pararte en ella.'}
-          </p>
+          <CabSec
+            id="circ-h"
+            n={1}
+            kicker="Cómo encaja todo"
+            titulo="El circuito"
+            texto={movil ? 'Así viaja la información por este módulo. Toca una pieza para pararte en ella.' : 'Así viaja la información por este módulo. Cada pieza necesita la anterior: toca una para pararte en ella.'}
+          />
           <div className="glass pm-panel">
             {movil ? <CircuitoV piezas={piezas} ini={ini} /> : <CircuitoH piezas={piezas} color={meta.color} ini={ini} />}
           </div>
@@ -389,11 +449,11 @@ export default function ModulePage() {
       )}
 
       {modulo.navegacion && modulo.navegacion.length > 0 && (
-        <section className="mod-sec">
-          <h2>Antes de empezar</h2>
+        <section className="mod-sec" aria-labelledby="antes-h">
+          <CabSec id="antes-h" n={piezas.length > 0 ? 2 : 1} kicker="Lo básico" titulo="Antes de empezar" texto="Ábrelo cuando lo necesites: cada bloque se lee en un par de minutos." />
           <div className="folds">
             {modulo.navegacion.map((s, i) => (
-              <Desplegable key={s.id} titulo={conIni(s.titulo, ini)} abiertoIni={i === 0 && av === 0}>
+              <Desplegable key={s.id} n={i + 1} titulo={conIni(s.titulo, ini)} abiertoIni={i === 0 && av === 0}>
                 <SeccionVista s={s} ini={ini} conPasos />
               </Desplegable>
             ))}
@@ -401,9 +461,14 @@ export default function ModulePage() {
         </section>
       )}
 
-      <section className="mod-sec">
-        <h2>Tu ruta</h2>
-        <p className="muted">Cada ejercicio se completa con el recorrido guiado y el test aprobado. La checklist en la demo suma el resto.</p>
+      <section className="mod-sec pm-ruta" id="ruta" aria-labelledby="ruta-h">
+        <CabSec
+          id="ruta-h"
+          n={(piezas.length > 0 ? 1 : 0) + (modulo.navegacion && modulo.navegacion.length > 0 ? 1 : 0) + 1}
+          kicker={`${hechos} de ${modulo.ejercicios.length} hechos`}
+          titulo="Tu ruta"
+          texto="Cada ejercicio se completa con el recorrido guiado y el test aprobado. La checklist en la demo suma el resto."
+        />
         <ol className="route mod-route">
           {modulo.ejercicios.map((e, i) => {
             const est = p.ejercicios[e.id];

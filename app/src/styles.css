@@ -1072,3 +1072,30 @@ body.modo-examen .bottom-nav { display: none !important; }
   --glow: 0 0 0 1px rgba(111, 233, 255, 0.06), 0 0 26px -6px rgba(95, 240, 210, 0.5), 0 0 56px -16px rgba(139, 123, 255, 0.58), 0 26px 50px -30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 .neon-mod.glass:hover, a.neon-mod:hover { box-shadow: var(--glow-strong); }
+
+/* =====================================================================
+   v3.1 · Bordes de neón finos con esquinas de luz
+   Sustituye el degradado plano por uno con dos esquinas brillantes y el
+   centro casi apagado; el borde baja a 1 px. Los tokens --neon-stops
+   permiten girar el degradado (ver pulido.css) sin perder el tema.
+   ===================================================================== */
+:root {
+  --neon-stops: rgba(47, 196, 164, 0.95) 0%, rgba(29, 143, 209, 0.55) 20%, rgba(107, 92, 224, 0.26) 46%, rgba(107, 92, 224, 0.3) 64%, rgba(232, 150, 42, 0.6) 88%, rgba(242, 169, 59, 0.9) 100%;
+  --neon-stops-vivo: #b4fff0 0%, rgba(95, 240, 210, 0.85) 10%, rgba(111, 233, 255, 0.45) 28%, rgba(139, 123, 255, 0.3) 50%, rgba(139, 123, 255, 0.36) 66%, rgba(246, 182, 90, 0.7) 88%, #ffe0a6 100%;
+  --neon: linear-gradient(135deg, var(--neon-stops));
+}
+:root[data-theme='dark'] {
+  --neon-stops: var(--neon-stops-vivo);
+  --neon: linear-gradient(135deg, var(--neon-stops-vivo));
+  --glow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 20px -8px rgba(95, 240, 210, 0.38), 0 0 46px -18px rgba(139, 123, 255, 0.45), 0 26px 50px -30px rgba(0, 0, 0, 0.85);
+}
+:root:not([data-theme='dark']) .ax-banner { --neon: linear-gradient(135deg, var(--neon-stops-vivo)); }
+.sheet, .mod-card, .ax-card, .ax-panel, .route-item, .badge, .quiz-opt, .tabs, .glass, .ax-banner { border-width: 1px; }
+
+/* Titulares: cortes equilibrados en todos los h1-h3 */
+h1, h2, h3 { text-wrap: balance; }
+
+/* Marca de la barra lateral: el nombre completo en dos líneas */
+.sb-brand { align-items: center; padding: 20px 18px 16px 20px; }
+.sb-brand > span { min-width: 0; }
+.sb-brand b { white-space: normal; font-size: 17px; line-height: 1.08; letter-spacing: -0.015em; text-wrap: balance; }

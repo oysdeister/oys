@@ -82,7 +82,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
         <div className="ex-hero-grid">
           <div className="ex-hero-txt">
             <motion.p className="ex-kicker" initial={reducir ? false : { opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-              Taller Axional · prueba final
+              Practicando Axional Deister VNext · prueba final
             </motion.p>
             <h1 className="ex-titular ax-glow-text" aria-label="Examen final">
               {['Examen', 'final'].map((w, k) => (

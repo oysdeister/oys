@@ -242,7 +242,7 @@ export function CertificadoSVG({ nombre, codigo, fecha, nota, estado, validacion
 
       {/* Títulos */}
       <motion.text {...aparece(t(1.0))} x={CX} y={178} textAnchor="middle" fontSize="15" letterSpacing="3" fill={GRIS}>
-        Taller Axional · O&amp;S Consultores
+        Practicando Axional Deister VNext · O&amp;S Consultores
       </motion.text>
       <motion.text {...aparece(t(1.1), 18)} x={CX} y={252} textAnchor="middle" fontFamily={DISPLAY} fontWeight={800} fontSize="80" letterSpacing="-1.5" fill={NAVY} style={{ fontVariationSettings: "'wdth' 75" }}>
         Certificado
@@ -274,7 +274,7 @@ export function CertificadoSVG({ nombre, codigo, fecha, nota, estado, validacion
 
       <motion.g {...aparece(t(2.1))}>
         <text x={CX} y={436} textAnchor="middle" fontSize="18" fill={NAVY}>
-          ha superado el examen final del Taller Axional y es
+          ha superado el examen final de Practicando Axional Deister VNext y es
         </text>
         <text x={CX} y={478} textAnchor="middle" fontFamily={DISPLAY} fontWeight={700} fontSize="29" fill={ARC_DEEP}>
           Practicante certificado en Deister Axional

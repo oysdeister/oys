@@ -12,7 +12,7 @@ export const CORREO_EXAMEN = (import.meta.env.VITE_CORREO_EXAMEN as string | und
 
 function asunto(acta: Acta) {
   const quien = acta.alumno.usuario || acta.alumno.nombre;
-  return `Examen Taller Axional · ${quien} · ${acta.codigo} · ${acta.aprobado ? 'APROBADO' : 'NO APROBADO'}`;
+  return `Examen Practicando Axional Deister VNext · ${quien} · ${acta.codigo} · ${acta.aprobado ? 'APROBADO' : 'NO APROBADO'}`;
 }
 
 export async function enviarActa(acta: Acta, texto: string): Promise<boolean> {

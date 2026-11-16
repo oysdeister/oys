@@ -35,10 +35,10 @@ export function Sidebar({
   const t = (s: string) => (plegada ? s : undefined);
   return (
     <aside className="sb" aria-label="Navegación de la plataforma" id="barra-lateral">
-      <Link to="/" className="sb-brand" onClick={onNavegar} aria-label="Taller Axional, inicio">
+      <Link to="/" className="sb-brand" onClick={onNavegar} aria-label="Practicando Axional Deister VNext, inicio">
         <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="" />
         <span>
-          <b>Taller Axional</b>
+          <b>Practicando Axional Deister VNext</b>
           <small>Práctica guiada del ERP</small>
         </span>
       </Link>

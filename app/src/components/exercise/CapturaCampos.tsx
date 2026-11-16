@@ -5,6 +5,9 @@ import type { Hotspot, Seccion } from '../../types';
 import { imgSrc } from '../../content';
 import { conIni } from '../../lib/texto';
 import { Icon } from '../Icon';
+import { VerMas } from './Revela';
+
+const MAX_FILAS = 6;
 
 interface Vista {
   imagen: string;
@@ -71,6 +74,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
   const [vi, setVi] = useState(mejor);
   const [activa, setActiva] = useState<number | null>(null);
   const [grande, setGrande] = useState(false);
+  const [todas, setTodas] = useState(false);
   useEffect(() => setVi(mejor), [mejor]);
 
   const pins = enlaces
@@ -79,6 +83,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
 
   const activar = (fila: number | null) => {
     setActiva(fila);
+    if (fila != null && fila >= MAX_FILAS) setTodas(true);
     const e = fila == null ? null : enlaces[fila];
     if (e && e.vi !== vi) setVi(e.vi);
   };
@@ -94,6 +99,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
       </thead>
       <tbody onMouseLeave={() => setActiva(null)}>
         {s.campos.map((c, i) => {
+          if (!todas && i >= MAX_FILAS) return null;
           const e = enlaces[i];
           return (
             <tr
@@ -118,7 +124,18 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
     </table>
   );
 
-  if (!vistas.length) return s.campos.length ? <div className="sec-campos">{tabla}</div> : null;
+  const verMas =
+    s.campos.length > MAX_FILAS ? (
+      <VerMas abierto={todas} resto={s.campos.length - MAX_FILAS} que={s.campos.length - MAX_FILAS === 1 ? 'campo más' : 'campos más'} onClick={() => setTodas((v) => !v)} />
+    ) : null;
+
+  if (!vistas.length)
+    return s.campos.length ? (
+      <div className="sec-campos">
+        {tabla}
+        {verMas}
+      </div>
+    ) : null;
 
   const v = vistas[Math.min(vi, vistas.length - 1)];
   const hAct = activa != null && enlaces[activa]?.vi === vi ? enlaces[activa]!.h : null;
@@ -181,7 +198,12 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
           {pins.length > 0 && <figcaption className="small muted">Toca un número o una fila de la tabla para ver dónde está cada campo.</figcaption>}
         </div>
       </figure>
-      {s.campos.length > 0 && <div className="sec-campos cc-campos">{tabla}</div>}
+      {s.campos.length > 0 && (
+        <div className="sec-campos cc-campos">
+          {tabla}
+          {verMas}
+        </div>
+      )}
       <Lightbox abierto={grande} onCerrar={() => setGrande(false)}>
         {lienzo(true)}
       </Lightbox>

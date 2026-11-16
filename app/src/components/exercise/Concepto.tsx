@@ -1,7 +1,9 @@
-import { useReducedMotion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { Ejercicio } from '../../types';
 import { conIni } from '../../lib/texto';
-import { SeccionVista } from './SeccionVista';
+import { Ideas, SeccionVista } from './SeccionVista';
+import { VerMas, useRevela } from './Revela';
 import { parrafos } from './util';
 import { IDEAS_VIDEO } from './videoIdeas';
 import { Link } from 'react-router-dom';
@@ -10,20 +12,41 @@ import { momentosDeSeccion } from '../../content/videoMapa';
 import { Momentos } from './VideoMomento';
 import { Icon } from '../Icon';
 
+/** Ideas de un capítulo: tres a la vista y el resto tras «Ver más» */
+function IdeasCap({ ideas }: { ideas: string[] }) {
+  const [todo, setTodo] = useState(false);
+  const r = useRevela();
+  const vis = todo ? ideas : ideas.slice(0, 3);
+  return (
+    <>
+      <ul>
+        {vis.map((t, k) => (
+          <motion.li key={k} {...r(k, 10)}>
+            {t}
+          </motion.li>
+        ))}
+      </ul>
+      {ideas.length > 3 && <VerMas abierto={todo} resto={ideas.length - 3} que={ideas.length - 3 === 1 ? 'idea más' : 'ideas más'} onClick={() => setTodo((v) => !v)} />}
+    </>
+  );
+}
+
 /** «Lo que cuenta el vídeo»: 2-3 ideas de cada capítulo enlazado al ejercicio */
 function LoQueCuentaElVideo({ id }: { id: string }) {
+  const r = useRevela();
   const caps = (VIDEO_POR_EJERCICIO[id] ?? [])
     .map((n) => ({ cap: CAPITULOS_VIDEO.find((c) => c.n === n), ideas: IDEAS_VIDEO[n] ?? [] }))
     .filter((x) => x.cap && x.ideas.length);
   if (!caps.length) return null;
   return (
     <section className="vid-block" aria-labelledby="vid-h">
+      <p className="kick">Resumen del vídeo</p>
       <h2 id="vid-h">
-        <Icon name="video" size={22} /> Lo que cuenta el vídeo
+        <Icon name="video" size={22} /> <span className="tx-grad">Lo que cuenta el vídeo</span>
       </h2>
       <div className="vid-cards">
-        {caps.map(({ cap, ideas }) => (
-          <article key={cap!.n} className="vid-card">
+        {caps.map(({ cap, ideas }, i) => (
+          <motion.article key={cap!.n} className="vid-card" {...r(i)}>
             <header className="vid-head">
               <span className="vid-n">{cap!.n}</span>
               <span>
@@ -33,12 +56,8 @@ function LoQueCuentaElVideo({ id }: { id: string }) {
                 </Link>
               </span>
             </header>
-            <ul>
-              {ideas.map((t, k) => (
-                <li key={k}>{t}</li>
-              ))}
-            </ul>
-          </article>
+            <IdeasCap ideas={ideas} />
+          </motion.article>
         ))}
       </div>
     </section>
@@ -47,16 +66,22 @@ function LoQueCuentaElVideo({ id }: { id: string }) {
 
 export function Concepto({ ej, ini, modulo, onGuiado }: { ej: Ejercicio; ini: string; modulo: string; onGuiado: () => void }) {
   const reducir = useReducedMotion();
+  const r = useRevela();
   const t = (x: string) => conIni(x, ini);
+  const [primero, ...resto] = parrafos(ej.concepto);
   return (
     <div className="concepto">
       <div className="concepto-intro">
-        <h2>La idea</h2>
-        {parrafos(ej.concepto).map((p, i) => (
-          <p key={i} className={i === 0 ? 'lead-p' : undefined}>
-            {t(p)}
-          </p>
-        ))}
+        <p className="kick">Antes de tocar nada</p>
+        <h2>
+          <span className="tx-grad">La idea</span>
+        </h2>
+        {primero && (
+          <motion.p className="lead-p concepto-lead" {...r(0)}>
+            {t(primero)}
+          </motion.p>
+        )}
+        <Ideas parrafos={resto} ini={ini} />
       </div>
 
       <LoQueCuentaElVideo id={ej.id} />
@@ -76,14 +101,19 @@ export function Concepto({ ej, ini, modulo, onGuiado }: { ej: Ejercicio; ini: st
       )}
 
       {ej.secciones.map((s, i) => (
-        <section key={s.id} id={`sec-${s.id}`} className="sec-block ax-panel">
+        <motion.section key={s.id} id={`sec-${s.id}`} className="sec-block ax-panel" {...r(0, 28)}>
           <header className="sec-head">
             <span className="sec-num">{i + 1}</span>
-            <h3>{t(s.titulo)}</h3>
+            <span className="sec-head-txt">
+              <span className="kick">
+                Parte {i + 1} de {ej.secciones.length}
+              </span>
+              <h3>{t(s.titulo)}</h3>
+            </span>
           </header>
           <Momentos lista={momentosDeSeccion(s.id)} />
           <SeccionVista s={s} ini={ini} modulo={modulo} />
-        </section>
+        </motion.section>
       ))}
 
       <div className="concepto-fin">
