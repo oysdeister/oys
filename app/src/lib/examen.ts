@@ -651,6 +651,8 @@ function pasosClic(moduloId: string) {
         if (p.texto.length > 160 || /^Abre la ruta\.?$/.test(p.texto.trim())) continue;
         const et = h.etiqueta.trim();
         if (et.length < 3 || /^[\d\s.,:/-]+$/.test(et) || /\d{2}-\d{2}-\d{4}/.test(et)) continue;
+        // Chips de filtro de una lista («Diario Está en la lista EA»): no son un sitio donde se hace clic
+        if (/\b(est[áa] en la lista|es igual a|contiene|mayor que|menor que|entre)\b/i.test(et)) continue;
         out.push({ pantalla: s.titulo, texto: p.texto, imagen: p.imagen, zona: { x: h.x, y: h.y, w: h.w, h: h.h }, etiqueta: h.etiqueta, detalle: p.detalle });
       }
   return out;
@@ -730,9 +732,11 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   const cv = r.pick(CIRCUITOS_VIDEO);
   const mods = MODULOS.filter((m) => m.circuito.length >= 4 && m.circuito.length <= 7);
   const cm = r.pick(mods);
+  // En la versión nueva del ERP no hay paso «Conformar»: no se pide ordenarlo.
+  const pasosCm = cm.circuito.filter((x) => !/conformar/i.test(x));
   for (const c of [
     { origen: `vídeo cap. ${cv.cap}`, pregunta: cv.pregunta, pasos: cv.pasos, explicacion: cv.explicacion },
-    { origen: cm.id, pregunta: `Ordena el circuito de ${(META_CORTO[cm.id] ?? cm.titulo).toLowerCase()} que has practicado en el manual.`, pasos: cm.circuito, explicacion: `El orden del manual: ${cm.circuito.join(' › ')}.` },
+    { origen: cm.id, pregunta: `Ordena el circuito de ${(META_CORTO[cm.id] ?? cm.titulo).toLowerCase()} que has practicado en el manual.`, pasos: pasosCm, explicacion: `El orden del manual: ${pasosCm.join(' › ')}.` },
   ].slice(0, REPARTO.orden)) {
     const orden = desordena(r, c.pasos.length);
     elegidas.push({ tipo: 'orden', origen: c.origen, pregunta: c.pregunta, explicacion: c.explicacion, items: orden.map((k) => c.pasos[k]), solucion: c.pasos.map((_, k) => orden.indexOf(k)) });
