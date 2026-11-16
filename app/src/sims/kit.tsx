@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Link } from 'react-router-dom';
-import { Icon } from '../components/Icon';
+import { Icon, Medal } from '../components/Icon';
 import { acciones, useProgreso } from '../lib/progress';
 import { getModulo } from '../content';
 import { num2, redondea } from '../lib/texto';
@@ -58,24 +58,59 @@ export const pad = (n: number, d: number) => String(n).padStart(d, '0');
 
 /* ---------- Celebración ---------- */
 
-const COLORES = ['#4fbfa5', '#2a9c83', '#1f2738', '#f2a93b', '#ffffff'];
+const COLORES = ['#5ff0d2', '#8b7bff', '#f6b65a', '#6fe9ff', '#ffffff'];
 
-export function confeti(reducido: boolean, fuerte = true) {
+export function confeti(reducido: boolean, fuerte = true, color?: string) {
   if (reducido) return;
+  const colors = color ? [color, ...COLORES] : COLORES;
   try {
     if (fuerte) {
-      const fin = Date.now() + 900;
+      const fin = Date.now() + 1400;
       const tiro = () => {
-        confetti({ particleCount: 5, angle: 60, spread: 60, origin: { x: 0, y: 0.75 }, colors: COLORES, disableForReducedMotion: true });
-        confetti({ particleCount: 5, angle: 120, spread: 60, origin: { x: 1, y: 0.75 }, colors: COLORES, disableForReducedMotion: true });
+        confetti({ particleCount: 6, angle: 60, spread: 65, origin: { x: 0, y: 0.75 }, colors, disableForReducedMotion: true });
+        confetti({ particleCount: 6, angle: 120, spread: 65, origin: { x: 1, y: 0.75 }, colors, disableForReducedMotion: true });
         if (Date.now() < fin) requestAnimationFrame(tiro);
       };
       tiro();
+      setTimeout(() => {
+        try {
+          confetti({ particleCount: 120, spread: 360, startVelocity: 34, ticks: 90, origin: { x: 0.5, y: 0.42 }, colors, shapes: ['star', 'circle'], scalar: 1.1, disableForReducedMotion: true });
+        } catch {
+          /* nada */
+        }
+      }, 350);
     } else {
-      confetti({ particleCount: 40, spread: 70, startVelocity: 28, origin: { y: 0.7 }, colors: COLORES, scalar: 0.8, disableForReducedMotion: true });
+      confetti({ particleCount: 46, spread: 75, startVelocity: 30, origin: { y: 0.7 }, colors, scalar: 0.85, disableForReducedMotion: true });
     }
   } catch {
     /* sin canvas: no pasa nada */
+  }
+}
+
+/* ---------- Avance por rondas (solo para la portada del Taller) ---------- */
+
+const CLAVE_AVANCE = 'oys-taller-avance-v1';
+
+/** Rondas superadas como máximo en cada simulador (vive en este navegador) */
+export function leeAvanceTaller(): Record<string, number> {
+  try {
+    const raw = localStorage.getItem(CLAVE_AVANCE);
+    const d: unknown = raw ? JSON.parse(raw) : {};
+    if (!esObj(d)) return {};
+    const r: Record<string, number> = {};
+    for (const [k, v] of Object.entries(d)) if (typeof v === 'number') r[k] = v;
+    return r;
+  } catch {
+    return {};
+  }
+}
+function guardaAvanceTaller(id: string, rondas: number) {
+  try {
+    const a = leeAvanceTaller();
+    if ((a[id] ?? 0) >= rondas) return;
+    localStorage.setItem(CLAVE_AVANCE, JSON.stringify({ ...a, [id]: rondas }));
+  } catch {
+    /* sin almacenamiento: no pasa nada */
   }
 }
 
@@ -88,6 +123,7 @@ export function useSim(id: string, total: number) {
   const [fin, setFin] = useState(false);
   const [partida, setPartida] = useState(0);
   return {
+    id,
     ronda,
     resuelta,
     fin,
@@ -97,13 +133,14 @@ export function useSim(id: string, total: number) {
     acierto() {
       if (resuelta) return;
       setResuelta(true);
+      guardaAvanceTaller(id, ronda + 1);
       confeti(reducido, false);
     },
     siguiente() {
       if (ronda + 1 >= total) {
         setFin(true);
         acciones.simSuperado(id);
-        confeti(reducido, true);
+        guardaAvanceTaller(id, total);
       } else {
         setRonda((r) => r + 1);
         setResuelta(false);
@@ -119,45 +156,51 @@ export function useSim(id: string, total: number) {
 }
 export type Sim = ReturnType<typeof useSim>;
 
+/* ---------- Pulso: cada veredicto avisa al marco (racha, destello, pistas) ---------- */
+
+const PulsoCtx = createContext<(ok: boolean) => void>(() => {});
+
 /* ---------- Marco común de un simulador ---------- */
 
-/** Recorrido de rondas dibujado sobre el arco O&S */
-function ArcoRondas({ total, ronda, fin }: { total: number; ronda: number; fin: boolean }) {
-  const pts = Array.from({ length: total }, (_, i) => {
-    const t = total === 1 ? 0.5 : i / (total - 1);
-    const a = Math.PI * (1 - t);
-    return { x: 60 + 50 * Math.cos(a), y: 58 - 42 * Math.sin(a) };
-  });
+/** Contador de rondas como una órbita: un planeta por ronda alrededor del número */
+function OrbitaRondas({ total, ronda, fin, resuelta, reducido }: { total: number; ronda: number; fin: boolean; resuelta: boolean; reducido: boolean }) {
+  const hechas = fin ? total : ronda + (resuelta ? 1 : 0);
+  const R = 40;
+  const C = 2 * Math.PI * R;
   return (
-    <svg className="tl-arco" viewBox="0 0 120 64" role="img" aria-label={fin ? 'Todas las rondas superadas' : `Ronda ${ronda + 1} de ${total}`}>
-      <path d="M10 58 A50 42 0 0 1 110 58" fill="none" stroke="var(--line)" strokeWidth="4" strokeLinecap="round" />
-      <motion.path
-        d="M10 58 A50 42 0 0 1 110 58"
-        fill="none"
-        stroke="var(--arc)"
-        strokeWidth="4"
-        strokeLinecap="round"
-        initial={false}
-        animate={{ pathLength: fin ? 1 : total === 1 ? 0 : ronda / (total - 1) }}
-        transition={{ type: 'spring', stiffness: 70, damping: 16 }}
-      />
-      {pts.map((p, i) => {
-        const hecho = fin || i < ronda;
-        const actual = !fin && i === ronda;
-        return (
-          <motion.circle
-            key={i}
-            cx={p.x}
-            cy={p.y}
-            initial={false}
-            animate={{ r: actual ? 7 : 5 }}
-            fill={hecho ? 'var(--arc-deep)' : actual ? 'var(--signal)' : 'var(--sheet)'}
-            stroke={hecho ? 'var(--arc-deep)' : actual ? 'var(--signal)' : 'var(--line)'}
-            strokeWidth="2"
-          />
-        );
-      })}
-    </svg>
+    <div className="tlx-orbita" role="img" aria-label={fin ? 'Todas las rondas superadas' : `Ronda ${ronda + 1} de ${total}`}>
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r={R} className="tlx-orbita-trk" />
+        <motion.circle
+          cx="50"
+          cy="50"
+          r={R}
+          className="tlx-orbita-val"
+          strokeDasharray={C}
+          initial={false}
+          animate={{ strokeDashoffset: C * (1 - hechas / total) }}
+          transition={{ type: 'spring', stiffness: 60, damping: 16 }}
+          transform="rotate(-90 50 50)"
+        />
+        {Array.from({ length: total }, (_, i) => {
+          const a = -Math.PI / 2 + (2 * Math.PI * i) / total;
+          const x = 50 + R * Math.cos(a);
+          const y = 50 + R * Math.sin(a);
+          const hecho = fin || i < hechas;
+          const actual = !fin && i === ronda && !resuelta;
+          return (
+            <g key={i}>
+              {actual && !reducido && <circle cx={x} cy={y} r="9" className="tlx-orbita-halo" />}
+              <motion.circle cx={x} cy={y} initial={false} animate={{ r: actual ? 7 : hecho ? 5.5 : 4.5 }} className={`tlx-orbita-p ${hecho ? 'hecho' : actual ? 'actual' : ''}`} />
+            </g>
+          );
+        })}
+      </svg>
+      <span className="tlx-orbita-num">
+        <b>{fin ? total : ronda + 1}</b>
+        <small>de {total}</small>
+      </span>
+    </div>
   );
 }
 
@@ -166,6 +209,8 @@ export function Marco({
   titulo,
   color,
   concepto,
+  instruccion,
+  pistas = [],
   enunciado,
   children,
   extra,
@@ -174,117 +219,221 @@ export function Marco({
   titulo: string;
   color: string;
   concepto: ReactNode;
+  /** Qué hay que hacer, en una línea */
+  instruccion?: ReactNode;
+  /** Pistas que se van destapando con cada fallo de la ronda */
+  pistas?: ReactNode[];
   enunciado?: ReactNode;
   children: ReactNode;
   extra?: ReactNode;
 }) {
-  const [verConcepto, setVerConcepto] = useState(true);
+  const p = useProgreso();
+  const primeraVez = !p.sims[sim.id] && !(leeAvanceTaller()[sim.id] > 0);
+  // En el móvil empieza plegado: la instrucción de arriba basta para jugar
+  const [verConcepto, setVerConcepto] = useState(() => primeraVez && !(typeof window !== 'undefined' && window.matchMedia?.('(max-width: 760px)').matches));
   const r = sim.reducido;
   const resueltaEn = useRef(0);
+  const [racha, setRacha] = useState(0);
+  const [mejor, setMejor] = useState(0);
+  const [fallos, setFallos] = useState(0);
+  const [fallosTotal, setFallosTotal] = useState(0);
+  const [destello, setDestello] = useState<{ ok: boolean; n: number } | null>(null);
+
   useEffect(() => {
     if (sim.resuelta) resueltaEn.current = Date.now();
   }, [sim.resuelta]);
+  // Cada ronda empieza sin pistas destapadas
+  useEffect(() => setFallos(0), [sim.ronda, sim.partida]);
+  useEffect(() => {
+    setRacha(0);
+    setMejor(0);
+    setFallosTotal(0);
+  }, [sim.partida]);
+  // Victoria: lluvia de confeti del color del simulador
+  useEffect(() => {
+    if (sim.fin) confeti(r, true, color);
+  }, [sim.fin, r, color]);
+
+  const pulso = useCallback((ok: boolean) => {
+    setDestello((d) => ({ ok, n: (d?.n ?? 0) + 1 }));
+    if (ok) {
+      setRacha((x) => {
+        const n = x + 1;
+        setMejor((m) => Math.max(m, n));
+        return n;
+      });
+    } else {
+      setRacha(0);
+      setFallos((f) => f + 1);
+      setFallosTotal((f) => f + 1);
+    }
+  }, []);
+
+  const nPistas = Math.min(fallos, pistas.length);
+
   return (
-    <div className="tl-sim" style={{ ['--sim' as string]: color }}>
-      <div className="tl-sim-head">
-        <Link to="/taller" className="btn ghost sm tl-volver">
-          <Icon name="atras" size={18} /> Taller
-        </Link>
-        <header className="ax-banner tl-banner tl-sim-tit">
-          <h1>{titulo}</h1>
-          <ArcoRondas total={sim.total} ronda={sim.ronda} fin={sim.fin} />
-        </header>
-      </div>
-
-      <div className="callout why tl-concepto">
-        <button className="tl-concepto-btn" onClick={() => setVerConcepto((v) => !v)} aria-expanded={verConcepto}>
-          <Icon name="cerebro" size={18} /> En llano
-          <span className="tl-concepto-flecha" aria-hidden="true" style={{ transform: verConcepto ? 'rotate(90deg)' : 'none' }}>
-            <Icon name="flecha" size={16} />
-          </span>
-        </button>
-        <AnimatePresence initial={false}>
-          {verConcepto && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden' }}>
-              <div className="tl-concepto-txt">{concepto}</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <AnimatePresence mode="wait">
-        {sim.fin ? (
-          <motion.section
-            key="fin"
-            className="glass tl-fin"
-            initial={r ? { opacity: 0 } : { opacity: 0, rotateX: -30, y: 30 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0 }}
-            transition={{ type: 'spring', stiffness: 120, damping: 16 }}
-          >
-            <motion.div className="tl-sello" initial={r ? false : { scale: 2.4, rotate: -30, opacity: 0 }} animate={{ scale: 1, rotate: -8, opacity: 1 }} transition={{ delay: 0.25, type: 'spring', stiffness: 260, damping: 14 }}>
-              <svg viewBox="0 0 120 120" aria-hidden="true">
-                <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" strokeWidth="4" />
-                <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 4" />
-                <path d="M26 78 C 22 44, 60 24, 98 40" fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-                <path d="M42 62l12 12 24-26" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span>Superado</span>
-            </motion.div>
-            <div>
-              <h2>¡Simulador superado!</h2>
-              <p className="muted">Has hecho las {sim.total} rondas. Ya cuenta para tus insignias. Si repites, las variaciones salen con datos nuevos.</p>
-              <div className="tl-acciones">
-                <button className="btn arc" onClick={sim.repetir}>
-                  Repetir con datos nuevos
-                </button>
-                <Link className="btn ghost" to="/taller">
-                  Volver al taller
-                </Link>
-              </div>
-            </div>
-          </motion.section>
-        ) : (
-          <motion.section
-            key={`${sim.partida}-${sim.ronda}`}
-            className="glass tl-ronda"
-            initial={r ? { opacity: 0 } : { opacity: 0, rotateY: -14, x: 40 }}
-            animate={{ opacity: 1, rotateY: 0, x: 0 }}
-            exit={r ? { opacity: 0 } : { opacity: 0, rotateY: 14, x: -40 }}
-            transition={{ duration: 0.38, ease: [0.2, 0.7, 0.2, 1] }}
-          >
-            <div className="tl-ronda-num">
-              Ronda {sim.ronda + 1} de {sim.total}
-            </div>
-            {enunciado && <div className="tl-enunciado">{enunciado}</div>}
-            {children}
-          </motion.section>
-        )}
-      </AnimatePresence>
-
-      {!sim.fin && (
-        <AnimatePresence>
-          {sim.resuelta && (
-            <motion.div className="tl-siguiente" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}>
-              <span>
-                <Icon name="check" size={20} /> Ronda superada
-              </span>
-              <button
-                className="btn arc"
-                onClick={() => {
-                  // El Enter que resolvió la ronda no debe saltarla sin ver el mensaje de acierto
-                  if (Date.now() - resueltaEn.current < 600) return;
-                  sim.siguiente();
-                }}
-                autoFocus
+    <PulsoCtx.Provider value={pulso}>
+      <div className="tl-sim tlx-sim" style={{ ['--sim' as string]: color }}>
+        <header className="ax-banner tl-banner tlx-hud">
+          <Link to="/taller" className="btn ghost sm tlx-volver" aria-label="Volver al Taller">
+            <Icon name="atras" size={20} /> <span className="tlx-volver-txt">Taller</span>
+          </Link>
+          <div className="tlx-hud-txt">
+            <h1>{titulo}</h1>
+            {instruccion && (
+              <p className="tlx-instruccion">
+                <Icon name="play" size={14} /> <span>{instruccion}</span>
+              </p>
+            )}
+          </div>
+          <div className="tlx-hud-marcas">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={racha}
+                className={`tlx-racha ${racha >= 3 ? 'caliente' : ''} ${racha === 0 ? 'cero' : ''}`}
+                initial={r ? false : { scale: 1.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 420, damping: 18 }}
+                aria-label={`Racha de ${racha} aciertos seguidos`}
+                title="Aciertos seguidos"
               >
-                {sim.ronda + 1 >= sim.total ? 'Terminar' : 'Siguiente ronda'}
-              </button>
-            </motion.div>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path d="M12 2c1 4 5 5.5 5 11a5 5 0 0 1-10 0c0-2.6 1.4-4 2.4-5.6.3 1.8 1.2 2.7 2.1 3 .2-3-1.3-5.4.5-8.4z" fill="currentColor" />
+                </svg>
+                <b>{racha}</b>
+                <small>racha</small>
+              </motion.span>
+            </AnimatePresence>
+            <OrbitaRondas total={sim.total} ronda={sim.ronda} fin={sim.fin} resuelta={sim.resuelta} reducido={r} />
+          </div>
+        </header>
+
+        <div className="callout why tl-concepto">
+          <button className="tl-concepto-btn" onClick={() => setVerConcepto((v) => !v)} aria-expanded={verConcepto}>
+            <Icon name="cerebro" size={18} /> En llano: qué estás practicando
+            <span className="tl-concepto-flecha" aria-hidden="true" style={{ transform: verConcepto ? 'rotate(90deg)' : 'none' }}>
+              <Icon name="flecha" size={16} />
+            </span>
+          </button>
+          <AnimatePresence initial={false}>
+            {verConcepto && (
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden' }}>
+                <div className="tl-concepto-txt">{concepto}</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {sim.fin ? (
+            <motion.section
+              key="fin"
+              className="glass tl-fin tlx-fin"
+              initial={r ? { opacity: 0 } : { opacity: 0, rotateX: -30, y: 30 }}
+              animate={{ opacity: 1, rotateX: 0, y: 0 }}
+              transition={{ type: 'spring', stiffness: 120, damping: 16 }}
+            >
+              <motion.div className="tlx-trofeo" initial={r ? false : { scale: 0.2, rotate: -40, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 12 }}>
+                <span className="tlx-rayos" aria-hidden="true" />
+                <Medal color={color} label="Medalla del simulador" />
+              </motion.div>
+              <div className="tlx-fin-txt">
+                <h2>¡Simulador superado!</h2>
+                <p className="muted">Has hecho las {sim.total} rondas. Ya cuenta para tus insignias. Si repites, las variaciones salen con datos nuevos.</p>
+                <ul className="tlx-stats">
+                  <li>
+                    <b>{sim.total}</b>
+                    <span>rondas</span>
+                  </li>
+                  <li>
+                    <b>{mejor}</b>
+                    <span>mejor racha</span>
+                  </li>
+                  <li>
+                    <b>{fallosTotal}</b>
+                    <span>{fallosTotal === 1 ? 'fallo' : 'fallos'}</span>
+                  </li>
+                </ul>
+                <div className="tl-acciones">
+                  <button className="btn arc" onClick={sim.repetir}>
+                    Repetir con datos nuevos
+                  </button>
+                  <Link className="btn ghost" to="/taller">
+                    Volver al Taller
+                  </Link>
+                </div>
+              </div>
+            </motion.section>
+          ) : (
+            <motion.section
+              key={`${sim.partida}-${sim.ronda}`}
+              className="glass tl-ronda tlx-ronda"
+              initial={r ? { opacity: 0 } : { opacity: 0, rotateY: -14, x: 40 }}
+              animate={{ opacity: 1, rotateY: 0, x: 0 }}
+              exit={r ? { opacity: 0 } : { opacity: 0, rotateY: 14, x: -40 }}
+              transition={{ duration: 0.38, ease: [0.2, 0.7, 0.2, 1] }}
+            >
+              {destello && <span key={destello.n} className={`tlx-destello ${destello.ok ? 'ok flash-ok' : 'ko flash-ko'}`} aria-hidden="true" />}
+              <div className="tl-ronda-num">
+                Ronda {sim.ronda + 1} de {sim.total}
+              </div>
+              {enunciado && <div className="tl-enunciado">{enunciado}</div>}
+              {children}
+              <AnimatePresence initial={false}>
+                {nPistas > 0 && !sim.resuelta && (
+                  <motion.aside
+                    className="tlx-pistas"
+                    initial={r ? { opacity: 0 } : { opacity: 0, y: 12, rotateX: -20 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    exit={{ opacity: 0 }}
+                    aria-live="polite"
+                  >
+                    <span className="tlx-pistas-tit">
+                      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      {nPistas === 1 ? 'Una pista' : `Pistas (${nPistas} de ${pistas.length})`}
+                    </span>
+                    <ol>
+                      {pistas.slice(0, nPistas).map((t, i) => (
+                        <motion.li key={i} initial={r ? false : { opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+                          {t}
+                        </motion.li>
+                      ))}
+                    </ol>
+                  </motion.aside>
+                )}
+              </AnimatePresence>
+            </motion.section>
           )}
         </AnimatePresence>
-      )}
-      {extra}
-    </div>
+
+        {!sim.fin && (
+          <AnimatePresence>
+            {sim.resuelta && (
+              <motion.div className="tl-siguiente tlx-siguiente" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}>
+                <span>
+                  <Icon name="check" size={20} /> {racha >= 3 ? `¡Ronda superada! Llevas ${racha} aciertos seguidos` : 'Ronda superada'}
+                </span>
+                <button
+                  className="btn arc"
+                  onClick={() => {
+                    // El Enter que resolvió la ronda no debe saltarla sin ver el mensaje de acierto
+                    if (Date.now() - resueltaEn.current < 600) return;
+                    sim.siguiente();
+                  }}
+                  autoFocus
+                >
+                  {sim.ronda + 1 >= sim.total ? 'Terminar' : 'Siguiente'} <Icon name="flecha" size={18} />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
+        {extra}
+      </div>
+    </PulsoCtx.Provider>
   );
 }
 
@@ -294,10 +443,14 @@ export type Veredicto = { ok: boolean; texto: ReactNode; n: number } | null;
 
 /** Hook pequeño para emitir veredictos que se reaniman aunque el texto se repita */
 export function useVeredicto() {
+  const pulso = useContext(PulsoCtx);
   const [v, setV] = useState<Veredicto>(null);
   return [
     v,
-    (ok: boolean, texto: ReactNode) => setV((p) => ({ ok, texto, n: (p?.n ?? 0) + 1 })),
+    (ok: boolean, texto: ReactNode) => {
+      setV((p) => ({ ok, texto, n: (p?.n ?? 0) + 1 }));
+      pulso(ok);
+    },
     () => setV(null),
   ] as const;
 }

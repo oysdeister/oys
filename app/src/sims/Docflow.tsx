@@ -320,6 +320,8 @@ export default function SimDocflow() {
       sim={sim}
       titulo="Lee el Docflow"
       color="#3fa7c9"
+      instruccion="Contesta cada pregunta tocando la caja, la etiqueta o la línea correcta del diagrama."
+      pistas={['Lee el diagrama de izquierda a derecha: cada caja sale de la anterior.', 'Toca justo lo que pide la pregunta: la etiqueta de estado, la caja o la línea del asiento.', 'En el asiento, lo que debes va al Haber y el IVA soportado, al Debe.']}
       concepto={
         <>
           <p>

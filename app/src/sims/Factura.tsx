@@ -325,6 +325,8 @@ export default function SimFactura() {
       sim={sim}
       titulo="Base, IVA y total"
       color="#e0708a"
+      instruccion="Escribe base, IVA y total con 2 decimales y pulsa Comprobar."
+      pistas={['Base = cantidad × precio de cada línea, menos el descuento.', 'Cuota de IVA = base × tipo ÷ 100, redondeada a 2 decimales. Con varios tipos, una cuota por cada base.', 'Total = base + cuota. Revisa que no se te haya colado un decimal de más.']}
       concepto={
         <>
           <p>

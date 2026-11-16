@@ -444,6 +444,8 @@ export default function SimNumerador() {
       sim={sim}
       titulo="Construye la máscara del numerador"
       color="#6c8fd6"
+      instruccion={r.tipo === 'mascara' ? 'Monta la máscara con las fichas (tócalas o arrástralas) y pulsa Comprobar.' : 'Toca el trozo que te pide cada pregunta.'}
+      pistas={r.tipo === 'mascara' ? ['Lee el número de ejemplo de izquierda a derecha: ¿qué trozo es la empresa, cuál la serie y cuál el contador?', 'En el numerador: #e empresa, #s serie y #6n contador de 6 cifras. En el número fiscal: #d serie, #yy año y #n contador.', 'La rotura lleva solo lo que hace empezar un contador nuevo. Nunca lleva el contador.'] : ['Lee el mensaje despacio: dentro vienen el nombre de la tabla y el código de la serie.', 'Sin máscara, el ERP no sabe cómo escribir el número: la solución pasa por la máscara de esa serie.']}
       concepto={
         <>
           <p>

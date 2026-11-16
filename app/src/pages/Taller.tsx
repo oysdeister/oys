@@ -1,68 +1,147 @@
-import type { CSSProperties } from 'react';
+import { useMemo, useRef, type CSSProperties, type PointerEvent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Icon } from '../components/Icon';
+import { Icon, Medal } from '../components/Icon';
 import { NucleoOrbita } from '../components/shell/NucleoOrbita';
 import { useProgreso } from '../lib/progress';
-import { SIMS } from '../sims/registro';
+import { SIMS, type SimInfo } from '../sims/registro';
+import { ILUSTRACIONES } from '../sims/Ilustraciones';
+import { leeAvanceTaller } from '../sims/kit';
 import '../sims/taller.css';
+import '../sims/taller-portada.css';
 import './portada.css';
+
+type Estado = 'nuevo' | 'curso' | 'ok';
+
+/** Anillo de rondas alrededor del planeta: un punto por ronda */
+function AnilloRondas({ total, hechas }: { total: number; hechas: number }) {
+  const R = 47;
+  return (
+    <svg className="tlp-anillo" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r={R} className="trk" />
+      {Array.from({ length: total }, (_, i) => {
+        const a = -Math.PI / 2 + (2 * Math.PI * i) / total;
+        return <circle key={i} cx={50 + R * Math.cos(a)} cy={50 + R * Math.sin(a)} r={i < hechas ? 3.4 : 2.6} className={i < hechas ? 'p hecho' : 'p'} />;
+      })}
+    </svg>
+  );
+}
+
+function Tarjeta({ s, i, estado, hechas, reducido }: { s: SimInfo; i: number; estado: Estado; hechas: number; reducido: boolean }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const Ilu = ILUSTRACIONES[s.id];
+  // Profundidad: la tarjeta se inclina hacia el puntero (solo ratón y sin movimiento reducido)
+  const mueve = (e: PointerEvent<HTMLAnchorElement>) => {
+    if (reducido || e.pointerType !== 'mouse' || !ref.current) return;
+    const b = ref.current.getBoundingClientRect();
+    const x = (e.clientX - b.left) / b.width - 0.5;
+    const y = (e.clientY - b.top) / b.height - 0.5;
+    ref.current.style.setProperty('--rx', `${(-y * 10).toFixed(2)}deg`);
+    ref.current.style.setProperty('--ry', `${(x * 12).toFixed(2)}deg`);
+    ref.current.style.setProperty('--mx', `${((x + 0.5) * 100).toFixed(1)}%`);
+    ref.current.style.setProperty('--my', `${((y + 0.5) * 100).toFixed(1)}%`);
+  };
+  const suelta = () => {
+    ref.current?.style.setProperty('--rx', '0deg');
+    ref.current?.style.setProperty('--ry', '0deg');
+  };
+  const rotulo = estado === 'ok' ? 'Superado' : estado === 'curso' ? 'En curso' : 'Nuevo';
+  const cta = estado === 'ok' ? 'Repetir' : estado === 'curso' ? 'Seguir' : 'Empezar';
+  return (
+    <motion.li
+      initial={reducido ? false : { opacity: 0, y: 40, rotateX: -24, scale: 0.94 }}
+      animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
+      transition={{ delay: 0.07 * i, type: 'spring', stiffness: 110, damping: 15 }}
+      className={`tlp-item est-${estado}`}
+    >
+      <Link
+        ref={ref}
+        to={`/taller/${s.id}`}
+        className="ax-card neon-mod tlp-nave"
+        style={{ ['--sim' as string]: s.color, ['--mod' as string]: s.color } as CSSProperties}
+        onPointerMove={mueve}
+        onPointerLeave={suelta}
+        aria-label={`${s.titulo}. ${rotulo}. ${Math.min(hechas, s.rondas)} de ${s.rondas} rondas. ${cta}.`}
+      >
+        <span className="tlp-brillo" aria-hidden="true" />
+        <span className="ax-card-num" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <span className="tlp-estado" aria-hidden="true">
+          {estado === 'ok' ? <Icon name="check" size={14} stroke={3} /> : estado === 'curso' ? <span className="tlp-punto" /> : <span className="tlp-chispa">✦</span>}
+          {rotulo}
+        </span>
+        <span className="tlp-planeta" aria-hidden="true">
+          <AnilloRondas total={s.rondas} hechas={hechas} />
+          {Ilu && <Ilu />}
+          {estado === 'ok' && (
+            <span className="tlp-medalla">
+              <Medal color={s.color} />
+            </span>
+          )}
+        </span>
+        <h2>{s.titulo}</h2>
+        <span className="tl-puesto-res">{s.resumen}</span>
+        <span className="tlp-pie">
+          <span className="tlp-progreso">
+            <span className="tlp-barra">
+              <span style={{ width: `${(Math.min(hechas, s.rondas) / s.rondas) * 100}%` }} />
+            </span>
+            <small>
+              {Math.min(hechas, s.rondas)} de {s.rondas} rondas
+            </small>
+          </span>
+          <span className={`btn sm tlp-cta ${estado === 'ok' ? 'ghost' : 'arc'}`}>
+            {cta} <Icon name={estado === 'ok' ? 'flecha' : 'play'} size={14} />
+          </span>
+        </span>
+      </Link>
+    </motion.li>
+  );
+}
 
 function Lista() {
   const p = useProgreso();
-  const r = useReducedMotion();
-  const hechos = SIMS.filter((s) => p.sims[s.id]).length;
+  const r = !!useReducedMotion();
+  const avance = useMemo(() => leeAvanceTaller(), []);
+  const datos = SIMS.map((s) => {
+    const ok = !!p.sims[s.id];
+    const hechas = ok ? s.rondas : Math.min(avance[s.id] ?? 0, s.rondas);
+    const estado: Estado = ok ? 'ok' : hechas > 0 ? 'curso' : 'nuevo';
+    return { s, ok, hechas, estado };
+  });
+  const superados = datos.filter((d) => d.ok).length;
+  const rondasHechas = datos.reduce((a, d) => a + d.hechas, 0);
+  const rondasTotal = SIMS.reduce((a, s) => a + s.rondas, 0);
+  const siguiente = datos.find((d) => d.estado === 'curso') ?? datos.find((d) => d.estado === 'nuevo');
   return (
     <div className="wrap tl-lista">
       <header className="ax-banner tl-banner">
         <div className="tl-banner-in">
           <div className="tl-banner-txt">
             <h1>Taller</h1>
-            <p className="lead">
-              Simuladores para practicar lo que más cuesta al principio: cuadrar asientos, numerar documentos, seguir un circuito, leer un Docflow, calcular una factura y seguir un efecto de cartera. Primero con los datos reales de los
-              ejercicios y después con variaciones nuevas.
-            </p>
+            <p className="lead">Seis minijuegos para practicar lo que más cuesta al principio. Primero con los datos de los ejercicios y después con variaciones nuevas.</p>
+            <div className="tlp-resumen">
+              <span className="chip">
+                <b>{rondasHechas}</b>&nbsp;de {rondasTotal} rondas
+              </span>
+              <span className="chip">
+                <b>{superados}</b>&nbsp;de {SIMS.length} medallas
+              </span>
+              {siguiente && (
+                <Link className="btn arc tlp-seguir" to={`/taller/${siguiente.s.id}`}>
+                  {siguiente.estado === 'curso' ? 'Seguir' : 'Empezar'}: {siguiente.s.titulo} <Icon name="play" size={14} />
+                </Link>
+              )}
+            </div>
           </div>
-          <NucleoOrbita valor={hechos / SIMS.length} etiqueta={`${hechos} de ${SIMS.length} superados`} size={180} className="tl-nucleo" />
+          <NucleoOrbita valor={superados / SIMS.length} etiqueta={`${superados} de ${SIMS.length} superados`} size={180} className="tl-nucleo" />
         </div>
       </header>
-      <ul className="tl-banco">
-        {SIMS.map((s, i) => {
-          const ok = !!p.sims[s.id];
-          return (
-            <motion.li
-              key={s.id}
-              initial={r ? false : { opacity: 0, y: 30, rotateX: -18 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{ delay: 0.06 * i, type: 'spring', stiffness: 120, damping: 16 }}
-              className={`tl-puesto ${ok ? 'ok' : ''}`}
-            >
-              <Link to={`/taller/${s.id}`} className="ax-card neon-mod tl-puesto-link" style={{ ['--sim' as string]: s.color, ['--mod' as string]: s.color } as CSSProperties}>
-                <span className="ax-card-num" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="tl-puesto-dibujo">{s.dibujo}</span>
-                <h2>{s.titulo}</h2>
-                <span className="tl-puesto-res">{s.resumen}</span>
-                <span className="tl-puesto-pie">
-                  <span className="chip">{s.rondas} rondas</span>
-                  {ok ? (
-                    <span className="tl-puesto-ok">
-                      <span className="ax-check on" aria-hidden="true">
-                        <Icon name="check" size={16} />
-                      </span>
-                      Superado
-                    </span>
-                  ) : (
-                    <span className="btn arc sm tl-puesto-ir">
-                      Empezar <Icon name="play" size={14} />
-                    </span>
-                  )}
-                </span>
-              </Link>
-            </motion.li>
-          );
-        })}
+      <ul className="tlp-banco">
+        {datos.map((d, i) => (
+          <Tarjeta key={d.s.id} s={d.s} i={i} estado={d.estado} hechas={d.hechas} reducido={r} />
+        ))}
       </ul>
     </div>
   );

@@ -534,6 +534,8 @@ export default function SimCircuito() {
       sim={sim}
       titulo="Ordena el circuito"
       color="#f2a93b"
+      instruccion="Ordena las tarjetas (arrástralas o usa las flechas) y pulsa Comprobar."
+      pistas={['Cada documento nace del anterior: no hay factura sin albarán ni albarán sin pedido.', 'El orden es oferta, pedido, albarán, factura y, al contabilizar la factura, el asiento.', 'El efecto nace pendiente (PE), entra en una remesa (PR), se ordena (OC) y al final se cobra (CO).']}
       concepto={
         <>
           <p>

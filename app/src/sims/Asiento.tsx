@@ -385,6 +385,8 @@ export default function SimAsiento() {
       sim={sim}
       titulo="Cuadra el asiento"
       color="#8a7be0"
+      instruccion="Completa las líneas hasta que Debe y Haber sumen lo mismo y pulsa Comprobar."
+      pistas={['Suma la columna del Debe y luego la del Haber. La diferencia es el Cuadre.', 'Lo que gastas o lo que entra va al Debe. El banco que paga y lo que debes van al Haber.', 'El importe que falta es justo la diferencia, en el lado que suma menos.']}
       concepto={
         <>
           <p>

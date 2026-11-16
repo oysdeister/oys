@@ -238,6 +238,8 @@ export default function SimCartera() {
       sim={sim}
       titulo="Sigue el efecto"
       color="#2a9c83"
+      instruccion="Lee lo que pasa y toca el sello del estado en que queda el efecto."
+      pistas={['Al contabilizar la factura, el efecto nace pendiente (PE).', 'En una remesa queda propuesto (PR) y, al ordenarla, ordenado (OC).', 'Cobrado (CO) es para cobros, pagado (PA) para pagos, y devuelto (DV) si el banco te lo devuelve.']}
       concepto={
         <>
           <p>
