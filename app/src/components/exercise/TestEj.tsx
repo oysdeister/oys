@@ -4,7 +4,7 @@ import confetti from 'canvas-confetti';
 import type { Ejercicio } from '../../types';
 import { APROBADO, acciones, useProgreso } from '../../lib/progress';
 import { conIni } from '../../lib/texto';
-import { Anillo } from './Anillo';
+import { NucleoOrbita } from '../shell/NucleoOrbita';
 import { COLORES_MARCA, barajar } from './util';
 
 const LETRAS = 'ABCDEFGH';
@@ -60,8 +60,10 @@ export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (t
     const nota = aciertos / total;
     const ok = nota >= APROBADO;
     return (
-      <motion.div className="sheet pad test-fin" initial={{ opacity: 0, rotateX: -12, y: 20 }} animate={{ opacity: 1, rotateX: 0, y: 0 }} transition={{ type: 'spring', stiffness: 110, damping: 16 }} style={{ transformPerspective: 1000 }}>
-        <Anillo valor={nota} size={190} etiqueta={`${aciertos} de ${total}`} />
+      <motion.div className={`sheet pad test-fin ${ok ? 'flash-ok' : 'flash-ko'}`} initial={{ opacity: 0, rotateX: -12, y: 20 }} animate={{ opacity: 1, rotateX: 0, y: 0 }} transition={{ type: 'spring', stiffness: 110, damping: 16 }} style={{ transformPerspective: 1000 }}>
+        <div className={`test-nucleo${ok ? ' ok' : ' ko'}`}>
+          <NucleoOrbita valor={nota} size={210} etiqueta={`${aciertos} de ${total} aciertos`} />
+        </div>
         <div>
           <h2>{ok ? 'Aprobado' : 'Casi'}</h2>
           <p className="muted">
@@ -92,7 +94,7 @@ export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (t
   const acerto = elegida !== null && elegida === q.correcta;
 
   return (
-    <div className="test">
+    <div className="test glass">
       <div className="test-top">
         <span className="small muted">
           Pregunta {i + 1} de {total}

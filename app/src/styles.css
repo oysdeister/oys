@@ -939,7 +939,7 @@ a.planeta:hover .planeta-esfera { box-shadow: 0 0 38px 2px color-mix(in srgb, va
   backdrop-filter: blur(6px);
 }
 .nucleo-pct { font-family: var(--display); font-variation-settings: 'wdth' 75; font-weight: 800; font-size: 0.34em; line-height: 0.9; letter-spacing: -0.03em; text-shadow: 0 0 24px rgba(111, 233, 255, 0.8); font-variant-numeric: tabular-nums; }
-.nucleo-pct small { font-size: 0.42em; margin-left: 2px; }
+.nucleo-pct small { font-size: max(14px, 0.42em); margin-left: 2px; }
 .nucleo-et { font-size: max(14px, 0.075em); color: #d6e6ff; margin-top: 6px; font-weight: 600; max-width: 70%; line-height: 1.2; }
 .orbita-trazo { fill: none; stroke: url(#arcoNeon); stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(95, 240, 210, 0.9)) drop-shadow(0 0 18px rgba(95, 240, 210, 0.5)); }
 .orbita-guia { fill: none; stroke: rgba(160, 200, 255, 0.22); stroke-width: 1; stroke-dasharray: 2 8; }
@@ -1011,3 +1011,64 @@ body.modo-examen .bottom-nav { display: none !important; }
 :root:not([data-theme='dark']) .espacio-arco { opacity: 0.3; }
 .sb::before { opacity: 0.2; }
 @media (max-width: 760px) { .bottom-nav .bn-main { top: -24px; } }
+
+/* =====================================================================
+   v4 · Cielo vivo (Espacio.tsx) y capa de brillo del cristal
+   ===================================================================== */
+.espacio { overflow: hidden; }
+.espacio-lienzo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.espacio-nebulosa {
+  position: absolute; inset: -60px; will-change: transform;
+  background:
+    radial-gradient(42% 34% at 82% 12%, rgba(139, 123, 255, 0.26), transparent 70%),
+    radial-gradient(36% 30% at 12% 78%, rgba(95, 240, 210, 0.16), transparent 70%),
+    radial-gradient(30% 26% at 60% 62%, rgba(45, 120, 255, 0.18), transparent 70%),
+    radial-gradient(22% 18% at 30% 22%, rgba(111, 233, 255, 0.1), transparent 70%);
+  filter: blur(8px);
+}
+:root:not([data-theme='dark']) .espacio-nebulosa { opacity: 0.55; }
+.espacio-destellos { position: absolute; inset: 0; }
+.espacio-destellos i {
+  position: absolute; border-radius: 50%; background: #fff; opacity: 0.15;
+  box-shadow: 0 0 6px 1px rgba(170, 240, 255, 0.9), 0 0 14px 2px rgba(139, 123, 255, 0.45);
+  animation: destello 6s ease-in-out infinite;
+}
+@keyframes destello { 0%, 100% { opacity: 0.12; transform: scale(0.7); } 50% { opacity: 0.95; transform: scale(1.25); } }
+:root:not([data-theme='dark']) .espacio-destellos i { background: #4b6fc8; box-shadow: 0 0 6px 1px rgba(75, 111, 200, 0.5); }
+.espacio-fugaz {
+  position: absolute; left: 70%; top: 6%; width: 140px; height: 1.5px; border-radius: 2px; opacity: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(190, 250, 255, 0.95));
+  filter: drop-shadow(0 0 6px rgba(111, 233, 255, 0.9));
+  transform: rotate(155deg);
+  animation: fugaz 11s 3s ease-in infinite;
+}
+@keyframes fugaz {
+  0%, 88% { opacity: 0; transform: rotate(155deg) translateX(0); }
+  90% { opacity: 1; }
+  97%, 100% { opacity: 0; transform: rotate(155deg) translateX(-460px); }
+}
+:root:not([data-theme='dark']) .espacio-fugaz { display: none; }
+.onb .espacio-destellos i { background: #fff !important; }
+@media (prefers-reduced-motion: reduce) { .espacio-destellos i, .espacio-fugaz { animation: none; } .espacio-fugaz { display: none; } }
+
+/* Cristal con brillo especular que sigue al ratón y neón más visible */
+@property --spec { syntax: '<number>'; inherits: false; initial-value: 0; }
+.sheet, .mod-card, .ax-card, .ax-panel, .route-item, .badge, .quiz-opt, .tabs, .glass {
+  background:
+    radial-gradient(420px circle at var(--mx, 50%) var(--my, -30%), rgb(255 255 255 / calc(var(--spec) * 1)), transparent 45%) padding-box,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 38%) padding-box,
+    linear-gradient(160deg, color-mix(in srgb, var(--glass-tint, transparent) 28%, transparent), transparent 70%) padding-box,
+    var(--glass) padding-box,
+    var(--neon) border-box;
+  transition: --spec 0.45s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.2s, opacity 0.2s;
+}
+:is(a, button).ax-card:hover, a.mod-card:hover, a.route-item:hover, .quiz-opt:hover, a.glass:hover, .ax-card:hover, .po-cont:hover { --spec: 0.11; }
+:root:not([data-theme='dark']) :is(a, button).ax-card:hover, :root:not([data-theme='dark']) a.mod-card:hover, :root:not([data-theme='dark']) a.route-item:hover, :root:not([data-theme='dark']) .quiz-opt:hover, :root:not([data-theme='dark']) .ax-card:hover { --spec: 0.55; }
+:root[data-theme='dark'] .neon-mod {
+  --glow: 0 0 0 1px color-mix(in srgb, var(--mod) 18%, transparent), 0 0 24px -6px color-mix(in srgb, var(--mod) 70%, transparent), 0 0 60px -22px color-mix(in srgb, var(--mod) 75%, transparent), 0 26px 50px -30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --glow-strong: 0 0 0 1px color-mix(in srgb, var(--mod) 30%, transparent), 0 0 34px -4px color-mix(in srgb, var(--mod) 85%, transparent), 0 0 80px -20px color-mix(in srgb, var(--mod) 85%, transparent), 0 30px 60px -30px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+:root[data-theme='dark'] {
+  --glow: 0 0 0 1px rgba(111, 233, 255, 0.06), 0 0 26px -6px rgba(95, 240, 210, 0.5), 0 0 56px -16px rgba(139, 123, 255, 0.58), 0 26px 50px -30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.neon-mod.glass:hover, a.neon-mod:hover { box-shadow: var(--glow-strong); }

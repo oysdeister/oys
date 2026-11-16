@@ -73,10 +73,13 @@ export default function Examinador() {
 
   return (
     <div className="wrap ex-pagina">
-      <header className="cert-cab">
-        <div>
-          <h1>Panel del examinador</h1>
-          <p className="muted">Pega el acta que te ha mandado el alumno, o solo su código de examen, para ver lo esperado frente a lo declarado y comprobarlo en Axional.</p>
+      <header className="ax-banner" style={{ ['--mod' as string]: 'var(--arc)' }}>
+        <div className="ax-banner-in">
+          <div className="ax-banner-text">
+            <p className="ax-kicker">Examen final</p>
+            <h1 className="ax-glow-text">Panel del examinador</h1>
+            <p className="lead">Pega el acta que te ha mandado el alumno, o solo su código de examen, para ver lo esperado frente a lo declarado y comprobarlo en Axional.</p>
+          </div>
         </div>
       </header>
 
@@ -101,7 +104,7 @@ export default function Examinador() {
       <AnimatePresence mode="wait">
         {caso && cargado && (
           <motion.div key={cargado.codigo} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="exm-cuerpo">
-            <section className="exam-hero exm-resumen">
+            <section className="ex-profundo exm-resumen">
               <div>
                 <span className="ex-kicker">{acta ? acta.alumno.nombre : 'Solo código: no hay datos declarados'}</span>
                 <div className="ex-codigo">{caso.codigo}</div>
@@ -141,8 +144,8 @@ export default function Examinador() {
               {caso.tareas.map((t) => (
                 <div key={t.id} className="exm-tarea">
                   <h3>{t.titulo}</h3>
-                  <div className="exm-tabla-wrap">
-                    <table className="fields exm-tabla">
+                  <div className="ax-table-scroll">
+                    <table className="ax-table exm-tabla">
                       <thead>
                         <tr>
                           <th>Dato</th>
@@ -177,7 +180,8 @@ export default function Examinador() {
                 {caso.asientos.map((a) => (
                   <div key={a.titulo} className="exm-asiento">
                     <h3>{a.titulo}</h3>
-                    <table className="ledger">
+                    <div className="ax-table-scroll">
+                    <table className="ax-table">
                       <thead>
                         <tr>
                           <th>Cuenta</th>
@@ -197,6 +201,7 @@ export default function Examinador() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </div>
                 ))}
                 <p className="muted small">El proveedor nuevo con relación PRO contabiliza en 40000.00000; el cobro va contra la 57200 de su banco BBVA_{caso.ini}. Si ves una subcuenta distinta, revisa la relación contable del tercero.</p>
@@ -238,7 +243,7 @@ export default function Examinador() {
             <form className="sheet pad exm-validar" onSubmit={generar}>
               <h2>Código de validación</h2>
               <p className="muted">Cuando hayas comprobado todo en Axional, escribe tu clave de examinador y dale al alumno el código para validar su certificado.</p>
-              <div className="cert-validar-fila">
+              <div className="exm-validar-fila">
                 <label className="sr-only" htmlFor="clave">
                   Clave de examinador
                 </label>

@@ -1,0 +1,88 @@
+/* =====================================================================
+   Escena 3D de la portada: caja del canvas y etiquetas HTML encima
+   ===================================================================== */
+
+.e3-caja { position: absolute; inset: 0; }
+.e3-caja canvas { display: block; touch-action: pan-y; }
+
+/* Capa HTML encima del canvas */
+.e3-capa { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.e3-core-pos { position: absolute; left: 0; top: 0; z-index: 5; will-change: transform; }
+.e3-tag { position: absolute; left: 0; top: 0; will-change: transform; }
+
+/* % global en el núcleo de cristal */
+.e3-core {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  animation: e3-entra 1s 0.7s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.e3-core-pct {
+  font-family: var(--display);
+  font-variation-settings: 'wdth' 75;
+  font-weight: 800;
+  font-size: clamp(54px, 6.2vw, 84px);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 22px rgba(111, 233, 255, 0.85), 0 0 2px rgba(2, 12, 48, 0.9), 0 2px 18px rgba(2, 12, 48, 0.8);
+}
+.e3-core-pct small { font-size: 0.42em; margin-left: 2px; letter-spacing: 0; }
+.e3-core-et {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 650;
+  color: #d8f6ff;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(2, 12, 48, 0.9);
+}
+@keyframes e3-entra { from { opacity: 0; transform: scale(0.7); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .e3-core { animation: none; } }
+
+/* Etiqueta de cada planeta: nombre y % sobre una píldora de cristal */
+.e3-tag { transition: opacity 0.3s; }
+.e3-tag a {
+  pointer-events: auto;
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-areas: 'ico nom' 'ico pct';
+  align-items: center;
+  column-gap: 7px;
+  padding: 5px 12px 5px 6px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #fff;
+  white-space: nowrap;
+  background: linear-gradient(160deg, rgba(20, 44, 120, 0.72), rgba(4, 12, 44, 0.78));
+  border: 1px solid color-mix(in srgb, var(--mod) 55%, rgba(160, 200, 255, 0.3));
+  box-shadow: 0 0 16px -6px var(--mod), 0 6px 18px -10px rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
+}
+.e3-tag-ico {
+  grid-area: ico;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--mod) 55%, #fff), var(--mod) 65%);
+}
+.e3-tag b { grid-area: nom; font-family: var(--display); font-weight: 750; font-size: 14.5px; line-height: 1.1; }
+.e3-tag small { grid-area: pct; font-size: 14px; line-height: 1.1; font-weight: 700; color: color-mix(in srgb, var(--mod) 45%, #ffffff); font-variant-numeric: tabular-nums; }
+.e3-tag.act a { border-color: var(--mod); box-shadow: 0 0 22px -4px var(--mod), 0 6px 18px -10px rgba(0, 0, 0, 0.8); }
+.e3-tag.on a, .e3-tag a:hover { transform: translateY(4px) scale(1.06); border-color: var(--mod); box-shadow: 0 0 28px -2px var(--mod), 0 6px 18px -10px rgba(0, 0, 0, 0.8); }
+.e3-tag a:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+
+@media (max-width: 560px) {
+  .e3-tag a { grid-template-columns: auto auto; grid-template-areas: 'nom pct'; column-gap: 6px; padding: 3px 10px; }
+  .e3-tag-ico { display: none; }
+  .e3-tag b { font-size: 14px; }
+  .e3-core-pct { font-size: 52px; }
+  .e3-core-et { font-size: 14px; }
+}

@@ -158,77 +158,61 @@
 }
 
 /* =====================================================================
-   Dirección visual v3: espacio azul profundo, cristal y neón.
-   Los tokens se redefinen solo dentro de .vd, así el resto de la app no cambia.
+   V3 unificado: mismos tokens y cristal que el resto de la app.
+   Sin fondo propio: se ve el cielo global (Espacio.tsx).
    ===================================================================== */
-.vd {
-  --ink: #eef4ff; --ink-2: #b7c6e6; --ink-3: #8597bf;
-  --sheet: rgba(120, 160, 255, 0.07); --line: rgba(150, 190, 255, 0.22);
-  --arc: #5fe3c8; --arc-deep: #43d1b5; --arc-soft: rgba(95, 227, 200, 0.14);
-  --neon: #63e6ff; --neon-2: #a68bff; --neon-3: #ffd27a;
-  position: relative; isolation: isolate; color: var(--ink);
-  background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(80, 140, 255, 0.35), transparent 60%),
-    radial-gradient(900px 500px at 0% 30%, rgba(120, 90, 255, 0.22), transparent 60%),
-    linear-gradient(180deg, #0b1838 0%, #0d1f4a 45%, #0a1636 100%);
-  margin-top: -1px;
-}
-.vd::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.85;
-  background-image:
-    radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 33% 72%, #cfe3ff, transparent),
-    radial-gradient(1.4px 1.4px at 58% 12%, #fff, transparent), radial-gradient(1px 1px at 77% 46%, #dbe8ff, transparent),
-    radial-gradient(1.6px 1.6px at 91% 83%, #fff, transparent), radial-gradient(1px 1px at 46% 38%, #a9c8ff, transparent),
-    radial-gradient(1.2px 1.2px at 22% 91%, #fff, transparent), radial-gradient(1px 1px at 67% 63%, #fff, transparent);
-  background-size: 420px 380px;
-}
+.vd { position: relative; color: var(--ink); }
 .vd .muted { color: var(--ink-2); }
-.vd h1, .vd h2, .vd h3 { color: #fff; }
-.vd-title em { background: linear-gradient(100deg, var(--neon), var(--arc) 50%, var(--neon-2)); -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 18px rgba(99, 230, 255, 0.45)); }
+.vd-title { text-shadow: 0 0 34px rgba(111, 233, 255, 0.35); }
+:root:not([data-theme='dark']) .vd-title { text-shadow: none; }
+.vd-title em { background: linear-gradient(100deg, var(--cyan), var(--arc) 50%, var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 18px rgba(111, 233, 255, 0.4)); }
 
-/* Arco luminoso */
-.vd-arc { filter: drop-shadow(0 0 10px rgba(99, 230, 255, 0.35)); }
-.vd-arc-base { stroke: rgba(160, 200, 255, 0.35); }
-.vd-arc-track { stroke: rgba(120, 170, 255, 0.28); }
-.vd-arc-fill { stroke: url(#vd-neon); filter: drop-shadow(0 0 8px rgba(99, 230, 255, 0.9)); }
-.vd-arc-seg .vd-arc-dot { fill: rgba(15, 30, 70, 0.9); stroke: rgba(150, 200, 255, 0.55); }
-.vd-arc-seg.visto .vd-arc-dot { stroke: var(--neon); }
-.vd-arc-seg.es .vd-arc-dot { fill: #1b3a7a; stroke: var(--neon); filter: drop-shadow(0 0 10px var(--neon)); }
-.vd-arc-num { fill: #cfe0ff; }
+/* Arco de capítulos luminoso */
+.vd-arc { filter: drop-shadow(0 0 10px rgba(111, 233, 255, 0.35)); }
+.vd-arc-base { stroke: color-mix(in srgb, var(--ink) 30%, transparent); }
+.vd-arc-track { stroke: color-mix(in srgb, var(--cyan) 26%, transparent); }
+.vd-arc-fill { stroke: url(#vd-neon); filter: drop-shadow(0 0 8px rgba(111, 233, 255, 0.9)); }
+.vd-arc-seg .vd-arc-dot { fill: var(--sheet-solid); stroke: color-mix(in srgb, var(--cyan) 55%, transparent); }
+.vd-arc-seg.visto .vd-arc-dot { stroke: var(--cyan); }
+.vd-arc-seg.es .vd-arc-dot { fill: #1b3a8f; stroke: #6fe9ff; filter: drop-shadow(0 0 10px #6fe9ff); }
+.vd-arc-num { fill: var(--ink-2); }
 
-/* Cristal con borde de neón */
+/* Cristal + neón (la misma técnica que .glass) */
 .vd-scenes, .vd-step, .vd-prac, .vd-card {
-  background: linear-gradient(160deg, rgba(120, 160, 255, 0.14), rgba(60, 90, 200, 0.06));
-  backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgba(160, 210, 255, 0.35);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 0 1px rgba(99, 230, 255, 0.08), 0 18px 40px -24px rgba(0, 0, 0, 0.7);
+  border: 1.5px solid transparent;
+  background: var(--glass) padding-box, var(--neon) border-box;
+  box-shadow: var(--glow);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
 }
-.vd-card:hover, .vd-step:hover {
-  border-color: rgba(99, 230, 255, 0.85);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 0 22px -4px rgba(99, 230, 255, 0.65), 0 0 50px -18px rgba(166, 139, 255, 0.7);
-}
-.vd-card.es {
-  border-color: var(--neon);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 0 0 1px var(--neon), 0 0 28px -2px rgba(99, 230, 255, 0.7), 0 0 60px -20px rgba(255, 210, 122, 0.6);
-}
-.vd-card:nth-child(3n + 2) .vd-card:hover { box-shadow: 0 0 22px -4px rgba(166, 139, 255, 0.8); }
-.vd-card-n, .vd-big { -webkit-text-stroke-color: var(--neon); filter: drop-shadow(0 0 10px rgba(99, 230, 255, 0.55)); }
-.vd-card-now { background: linear-gradient(90deg, var(--neon), var(--arc)); box-shadow: 0 0 14px rgba(99, 230, 255, 0.8); }
-.vd-prac { border-top: 1px solid rgba(160, 210, 255, 0.35); box-shadow: inset 0 2px 0 var(--mod, var(--neon)), 0 0 30px -16px var(--mod, var(--neon)); }
-.vd-screen {
-  box-shadow: 0 0 0 1px rgba(99, 230, 255, 0.55), 0 0 40px -6px rgba(99, 230, 255, 0.45), 0 0 90px -30px rgba(166, 139, 255, 0.8), 0 40px 70px -40px #000;
-}
-.vd-scene.es { background: rgba(99, 230, 255, 0.14); box-shadow: inset 0 0 0 1px rgba(99, 230, 255, 0.45), 0 0 18px -6px rgba(99, 230, 255, 0.8); }
-.vd-scene-mark { background: var(--neon); box-shadow: 0 0 10px var(--neon); }
-.vd-kicker { color: var(--neon); }
-
-/* Botones píldora luminosos */
-.vd .btn.arc, .vd-prac .btn {
-  border-radius: 999px; border: 1px solid rgba(200, 245, 255, 0.8); color: #062033; font-weight: 700;
-  background: linear-gradient(90deg, #7ff0ff, #5fe3c8); box-shadow: 0 0 18px -2px rgba(99, 230, 255, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-.vd-prac-t { border-radius: 999px; border-color: rgba(99, 230, 255, 0.6); background: rgba(99, 230, 255, 0.1); color: #bff6ff; box-shadow: 0 0 12px -4px rgba(99, 230, 255, 0.9); }
-.vd-prac-t:hover { background: var(--neon); color: #062033; }
+.vd-scenes { border-radius: var(--r-l); padding: 16px 12px 12px 16px; }
+.vd-card { border-radius: var(--r-l); }
+.vd-card:hover, .vd-step:hover { border-color: transparent; box-shadow: var(--glow-strong); }
+.vd-card.es { --neon: linear-gradient(135deg, #6fe9ff, #5ff0d2 50%, #f6b65a); box-shadow: var(--glow-strong), 0 0 0 2px rgba(111, 233, 255, 0.35); }
+.vd-card-n, .vd-big { -webkit-text-stroke-color: var(--cyan); filter: drop-shadow(0 0 10px rgba(111, 233, 255, 0.5)); }
+:root:not([data-theme='dark']) .vd-card-n, :root:not([data-theme='dark']) .vd-big { filter: none; }
+.vd-card-now { background: linear-gradient(90deg, #8ffbe6, #6fe9ff); color: #03142f; box-shadow: 0 0 14px rgba(111, 233, 255, 0.8); }
+.vd-prac { --neon: linear-gradient(135deg, var(--mod, var(--arc)), color-mix(in srgb, var(--mod, var(--arc)) 40%, #6fe9ff) 60%, var(--mod, var(--arc))); border-radius: var(--r-l); border-top-width: 1.5px; }
+.vd-screen { border-radius: 22px; box-shadow: 0 0 0 1.5px rgba(111, 233, 255, 0.6), 0 0 40px -6px rgba(111, 233, 255, 0.5), 0 0 90px -30px rgba(139, 123, 255, 0.85), 0 40px 70px -40px #000; }
+.vd-scene.es { background: color-mix(in srgb, var(--cyan) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cyan) 50%, transparent), 0 0 18px -6px rgba(111, 233, 255, 0.8); }
+.vd-scene-mark { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+.vd-kicker { color: var(--cyan); }
+.vd-prac-t { border-color: color-mix(in srgb, var(--cyan) 55%, transparent); background: color-mix(in srgb, var(--cyan) 12%, transparent); color: var(--ink); box-shadow: 0 0 12px -4px rgba(111, 233, 255, 0.8); }
+.vd-prac-t:hover { background: linear-gradient(135deg, #8ffbe6, #6fe9ff); color: #03142f; }
 .vd-step { border-radius: 999px; padding: 10px 22px; }
-.vd-step svg { color: var(--neon); }
-@media (max-width: 640px) { .vd-step { border-radius: 22px; } }
+.vd-step svg { color: var(--cyan); }
+
+/* Letra mínima de 14 px */
+.vd-scene-t, .vd-step small, .vd-prac-mod, .vd-prac-t, .vd-card-dur, .vd-card-now, .vd-card-meta { font-size: max(14px, 0.8rem); }
+.vd-card-t { font-size: max(16px, 1.02rem); }
+
+@media (max-width: 640px) {
+  .vd-step { border-radius: 24px; }
+  .vd-screen { border-radius: 0; }
+  /* Índice: una columna, miniatura a la izquierda y título legible */
+  .vd-grid { grid-template-columns: 1fr; gap: 12px; }
+  .vd-card { flex-direction: row; align-items: stretch; }
+  .vd-card-img { flex: 0 0 42%; aspect-ratio: 16 / 10; }
+  .vd-card-body { grid-template-columns: 1fr; padding: 10px 12px; align-content: center; }
+  .vd-card-n { font-size: 1.7rem; margin-bottom: 2px; }
+  .vd-card-t { font-size: 16px; }
+}

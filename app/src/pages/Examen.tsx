@@ -65,6 +65,8 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
   const puedeEmpezar = !!p.alumno.ini && (listo || confirmo);
   const banco = bancoTeoria();
   const reducir = useReducedMotion();
+  // El recorte del titular solo hace falta mientras entra: luego estorba al brillo del texto
+  const [titularListo, setTitularListo] = useState(!!reducir);
   useArriba();
 
   const empezar = () => {
@@ -83,12 +85,13 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
             </motion.p>
             <h1 className="ex-titular ax-glow-text" aria-label="Examen final">
               {['Examen', 'final'].map((w, k) => (
-                <span key={w} className="ex-titular-clip" aria-hidden="true">
+                <span key={w} className={`ex-titular-clip ${titularListo ? 'libre' : ''}`} aria-hidden="true">
                   <motion.span
                     className="ex-titular-w"
                     initial={reducir ? false : { y: '105%', rotate: 4 }}
                     animate={{ y: '0%', rotate: 0 }}
                     transition={{ duration: 0.8, delay: 0.12 + k * 0.14, ease: [0.2, 0.8, 0.2, 1] }}
+                    onAnimationComplete={() => k === 1 && setTitularListo(true)}
                   >
                     {w}
                   </motion.span>
@@ -492,7 +495,7 @@ function Practica({ ex }: { ex: EstadoExamen }) {
             <dd>0</dd>
           </div>
         </dl>
-        <a className="ex-caso-demo" href={DEMO_URL} target="_blank" rel="noreferrer">
+        <a className="btn arc ex-caso-demo" href={DEMO_URL} target="_blank" rel="noreferrer">
           <span>
             <small>Abre Axional</small>
             nextdemo · TUTORIAL
