@@ -653,7 +653,7 @@ export function corregir(ex: EstadoExamen): Resultado {
 export interface EstadoExamen {
   version: 1;
   codigo: string;
-  alumno: { id: string; nombre: string; ini: string };
+  alumno: { id: string; nombre: string; ini: string; usuario?: string };
   inicio: string;
   sinRequisito: boolean;
   fase: 'teoria' | 'practica' | 'resultado';
@@ -664,6 +664,8 @@ export interface EstadoExamen {
   fin?: string;
   resultado?: Resultado;
   validacion?: { codigo: string; fecha: string };
+  /** Envío del acta por correo al formador */
+  envio?: { ok: boolean; fecha: string };
 }
 
 interface Almacen {
@@ -716,7 +718,7 @@ function conActual(f: (e: EstadoExamen) => EstadoExamen) {
 }
 
 export const examen = {
-  empezar(alumno: { id: string; nombre: string; ini: string }, sinRequisito: boolean) {
+  empezar(alumno: { id: string; nombre: string; ini: string; usuario?: string }, sinRequisito: boolean) {
     const inicio = new Date().toISOString();
     const codigo = crearCodigo(alumno.id, alumno.ini, inicio);
     const teoria = generarTeoria(codigo);
@@ -752,6 +754,12 @@ export const examen = {
     const actual = almacen.actual?.codigo === aprobado.codigo ? { ...almacen.actual, validacion: v } : almacen.actual;
     guardar({ actual, aprobado });
   },
+  marcarEnvio(codigo: string, ok: boolean) {
+    const v = { ok, fecha: new Date().toISOString() };
+    const act = almacen.actual?.codigo === codigo ? { ...almacen.actual, envio: v } : almacen.actual;
+    const apr = almacen.aprobado?.codigo === codigo ? { ...almacen.aprobado, envio: v } : almacen.aprobado;
+    guardar({ actual: act, aprobado: apr });
+  },
   descartar() {
     guardar({ ...almacen, actual: null });
   },
@@ -763,7 +771,7 @@ export interface Acta {
   tipo: 'oys-acta-examen';
   v: 1;
   codigo: string;
-  alumno: { id: string; nombre: string; ini: string };
+  alumno: { id: string; nombre: string; ini: string; usuario?: string };
   inicio: string;
   fin: string;
   sinRequisito: boolean;
@@ -807,7 +815,7 @@ export function actaTexto(acta: Acta): string {
   const caso = generarCaso(acta.codigo);
   const lineas: string[] = [
     `ACTA DE EXAMEN · Taller Axional · O&S Consultores`,
-    `Alumno: ${acta.alumno.nombre} (${acta.alumno.ini})`,
+    `Alumno: ${acta.alumno.nombre} (${acta.alumno.ini})${acta.alumno.usuario ? ` · usuario ${acta.alumno.usuario}` : ''}`,
     `Código de examen: ${acta.codigo}`,
     `Proveedor: ${caso.proveedor} · Cliente: ${caso.cliente}`,
     `Inicio: ${fecha(acta.inicio)} · Entrega: ${fecha(acta.fin)}`,

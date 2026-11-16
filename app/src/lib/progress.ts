@@ -13,7 +13,7 @@ export interface EstadoEjercicio {
 
 export interface Progreso {
   version: 1;
-  alumno: { id: string; nombre: string; ini: string };
+  alumno: { id: string; nombre: string; ini: string; usuario: string };
   ejercicios: Record<string, EstadoEjercicio>;
   sims: Record<string, boolean>;
   creado: string;
@@ -25,7 +25,7 @@ export const APROBADO = 0.8;
 
 function vacio(): Progreso {
   const ahora = new Date().toISOString();
-  return { version: 1, alumno: { id: '', nombre: '', ini: '' }, ejercicios: {}, sims: {}, creado: ahora, actualizado: ahora };
+  return { version: 1, alumno: { id: '', nombre: '', ini: '', usuario: '' }, ejercicios: {}, sims: {}, creado: ahora, actualizado: ahora };
 }
 
 function leer(): Progreso {
@@ -76,11 +76,22 @@ function conEjercicio(id: string, cambio: (e: EstadoEjercicio) => EstadoEjercici
   guardar({ ...estado, ejercicios: { ...estado.ejercicios, [id]: cambio(actual) } });
 }
 
+/** Nombre de usuario: minúsculas sin acentos, letras, cifras, punto y guion. */
+export function limpiaUsuario(s: string) {
+  return s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, '.')
+    .replace(/[^a-z0-9.-]/g, '')
+    .slice(0, 30);
+}
+
 export const acciones = {
-  setAlumno(nombre: string, ini: string) {
+  setAlumno(nombre: string, ini: string, usuario: string) {
     const limpio = ini.trim().toUpperCase().replace(/[^A-ZÑ0-9]/g, '').slice(0, 4);
     const id = `${limpio}-${nombre.trim().toLowerCase().replace(/\s+/g, '-')}`;
-    guardar({ ...estado, alumno: { id, nombre: nombre.trim(), ini: limpio } });
+    guardar({ ...estado, alumno: { id, nombre: nombre.trim(), ini: limpio, usuario: limpiaUsuario(usuario) } });
   },
   marcarPaso(ej: string, idx: number) {
     conEjercicio(ej, (e) => (e.pasos.includes(idx) ? e : { ...e, pasos: [...e.pasos, idx] }));

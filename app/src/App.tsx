@@ -152,7 +152,7 @@ function Marco() {
       </div>
       <BottomNav />
       <AvisoInsignias />
-      <AnimatePresence>{!p.alumno.ini && <Onboarding key="onb" />}</AnimatePresence>
+      <AnimatePresence>{(!p.alumno.ini || !p.alumno.usuario) && <Onboarding key="onb" />}</AnimatePresence>
     </div>
   );
 }

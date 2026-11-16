@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { enviarActa, enlaceCorreo } from '../lib/envio';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -674,6 +675,24 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
   const d = (s: number) => (reducir ? 0 : s);
   useArriba();
 
+  // Al entregar, el acta se manda sola al correo del formador (una vez por examen).
+  const [enviando, setEnviando] = useState(false);
+  const enviado = ex.envio?.ok === true;
+  const intentado = useRef(false);
+  const enviar = () => {
+    setEnviando(true);
+    void enviarActa(acta, texto).then((ok) => {
+      examen.marcarEnvio(ex.codigo, ok);
+      setEnviando(false);
+    });
+  };
+  useEffect(() => {
+    if (enviado || intentado.current) return;
+    intentado.current = true;
+    enviar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!r.aprobado || reducir || lanzado.current) return;
     lanzado.current = true;
@@ -710,6 +729,31 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
           </div>
         </div>
       </motion.section>
+
+      <section className={`sheet pad ex-envio ${enviado ? 'ok' : ''}`} aria-live="polite">
+        {enviado ? (
+          <p>
+            <b>Examen enviado a tu formador</b> con tu usuario «{ex.alumno.usuario || ex.alumno.nombre}».
+          </p>
+        ) : enviando ? (
+          <p>Enviando tu examen a tu formador…</p>
+        ) : ex.envio ? (
+          <>
+            <p>
+              <b>No se ha podido enviar tu examen.</b> Reinténtalo o mándalo desde tu correo.
+            </p>
+            <div className="ex-botones">
+              <button className="btn arc" onClick={enviar}>
+                Reintentar el envío
+              </button>
+              <a className="btn ghost" href={enlaceCorreo(acta, texto)}>
+                Enviar desde mi correo
+              </a>
+            </div>
+          </>
+        ) : null}
+      </section>
+
 
       <div className="ex-res-cols">
         <section className="sheet pad">

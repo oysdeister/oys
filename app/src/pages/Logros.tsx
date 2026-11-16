@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } fr
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { META, MODULOS } from '../content';
-import { acciones, APROBADO, ejercicioCompletado, useProgreso, type Progreso } from '../lib/progress';
+import { acciones, APROBADO, ejercicioCompletado, useProgreso, type Progreso, limpiaUsuario } from '../lib/progress';
 import { avanceGlobal, avanceModulo } from '../lib/avance';
 import { INSIGNIAS, type Insignia } from '../lib/badges';
 import { Icon } from '../components/Icon';
@@ -20,16 +20,17 @@ function DatosAlumno() {
   const p = useProgreso();
   const [nombre, setNombre] = useState(p.alumno.nombre);
   const [ini, setIni] = useState(p.alumno.ini);
+  const [usuario, setUsuario] = useState(p.alumno.usuario);
   const [guardado, setGuardado] = useState(false);
-  const cambiado = nombre.trim() !== p.alumno.nombre || ini !== p.alumno.ini;
-  const ok = nombre.trim().length > 1 && ini.length >= 2;
+  const cambiado = nombre.trim() !== p.alumno.nombre || ini !== p.alumno.ini || usuario !== p.alumno.usuario;
+  const ok = nombre.trim().length > 1 && ini.length >= 2 && usuario.length >= 3;
   return (
     <form
       className="sheet pad lg-form"
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
-        acciones.setAlumno(nombre, ini);
+        acciones.setAlumno(nombre, ini, usuario);
         setGuardado(true);
         setTimeout(() => setGuardado(false), 2200);
       }}
@@ -43,6 +44,10 @@ function DatosAlumno() {
       <label className="lg-label">
         Iniciales (2 a 4 letras)
         <input className="field-input lg-ini" value={ini} maxLength={4} onChange={(e) => setIni(limpiaIni(e.target.value))} />
+      </label>
+      <label className="lg-label">
+        Nombre de usuario
+        <input className="field-input" value={usuario} maxLength={30} autoCapitalize="none" autoCorrect="off" spellCheck={false} onChange={(e) => setUsuario(limpiaUsuario(e.target.value))} />
       </label>
       <div className="row-btns">
         <button className="btn" type="submit" disabled={!ok || !cambiado}>

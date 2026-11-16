@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { acciones } from '../lib/progress';
+import { acciones, getProgreso, limpiaUsuario } from '../lib/progress';
 import { Espacio } from './shell/Espacio';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
@@ -8,9 +8,12 @@ const EASE = [0.2, 0.7, 0.2, 1] as const;
 /** Primera visita: bienvenida a pantalla completa. Pide nombre e iniciales; las iniciales sustituyen a {INI} en los códigos de los ejercicios. */
 export function Onboarding() {
   const reduce = useReducedMotion();
-  const [nombre, setNombre] = useState('');
+  // Si ya había entrado antes (sin usuario), se rellenan sus datos y solo falta el usuario.
+  const previo = getProgreso().alumno;
+  const [nombre, setNombre] = useState(previo.nombre);
   // Lo que teclea el alumno. Vacío = usar la sugerencia (que se ve como placeholder, nunca se concatena).
-  const [ini, setIni] = useState('');
+  const [ini, setIni] = useState(previo.ini);
+  const [usuario, setUsuario] = useState('');
   const sugeridas = nombre
     .trim()
     .split(/\s+/)
@@ -21,7 +24,10 @@ export function Onboarding() {
     .replace(/[^A-ZÑ0-9]/g, '')
     .slice(0, 4);
   const valor = ini || sugeridas;
-  const ok = nombre.trim().length > 1 && valor.length >= 2;
+  const partes = limpiaUsuario(nombre).split('.').filter(Boolean);
+  const usuarioSugerido = partes.length > 1 ? `${partes[0][0]}${partes[1]}` : (partes[0] ?? '');
+  const usr = usuario || usuarioSugerido;
+  const ok = nombre.trim().length > 1 && valor.length >= 2 && usr.length >= 3;
   const muestra = valor || 'LM';
   const base = import.meta.env.BASE_URL;
 
@@ -76,7 +82,7 @@ export function Onboarding() {
           transition={reduce ? { duration: 0.2 } : { type: 'spring', stiffness: 80, damping: 16, delay: 1.0 }}
           onSubmit={(e) => {
             e.preventDefault();
-            if (ok) acciones.setAlumno(nombre, valor);
+            if (ok) acciones.setAlumno(nombre, valor, usr);
           }}
         >
           <div className="onb-avatar" aria-hidden="true">
@@ -85,7 +91,11 @@ export function Onboarding() {
             </motion.span>
           </div>
           <h2>Antes de empezar</h2>
-          <p className="onb-help">En la demo cada persona crea sus propios datos. Tus códigos llevarán tus iniciales para no chocar con los de tus compañeros.</p>
+          <p className="onb-help">
+            {previo.ini
+              ? 'Ahora hace falta un nombre de usuario: con él te identificamos cuando entregues el examen.'
+              : 'En la demo cada persona crea sus propios datos. Tus códigos llevarán tus iniciales para no chocar con los de tus compañeros.'}
+          </p>
 
           <label className="onb-field">
             <span>Nombre y apellidos</span>
@@ -102,6 +112,19 @@ export function Onboarding() {
               onChange={(e) => setIni(e.target.value.toUpperCase().replace(/[^A-ZÑ0-9]/g, '').slice(0, 4))}
             />
             {!ini && sugeridas && <small>Usaremos «{sugeridas}». Escribe otras si lo prefieres.</small>}
+          </label>
+          <label className="onb-field">
+            <span>Nombre de usuario</span>
+            <input
+              value={usuario}
+              placeholder={usuarioSugerido || 'lmartin'}
+              maxLength={30}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              onChange={(e) => setUsuario(limpiaUsuario(e.target.value))}
+            />
+            <small>{!usuario && usuarioSugerido ? `Usaremos «${usuarioSugerido}». ` : ''}Tu formador recibe tu examen con este nombre.</small>
           </label>
 
           <div className="onb-codes" aria-live="polite">
