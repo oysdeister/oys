@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Icon } from '../components/Icon';
-import { OrbitaExamen, AnillosResultado, LeyendaAnillo, SECUENCIA } from '../components/examen/Deco';
+import { AnillosResultado, LeyendaAnillo, SECUENCIA } from '../components/examen/Deco';
+import { PortadaEspacio } from '../components/examen/Espacio3D';
+import { PreguntaVista, RevisionPregunta } from '../components/examen/Preguntas';
+import { Hiperespacio, OrbitaProgreso } from '../components/examen/Viaje';
+import { Constelacion, DesgloseTeoria } from '../components/examen/Desglose';
 import { RutaFichas } from '../components/examen/RutaFichas';
 import { copiar, descargar, reloj, useAhora, useArriba, useContador } from '../components/examen/util';
 import { useProgreso } from '../lib/progress';
@@ -14,8 +18,17 @@ import { num2 } from '../lib/texto';
 import {
   APROBADO_EXAMEN,
   MIN_TEORIA,
+  NOMBRE_TIPO,
   NUM_TEORIA,
+  REPARTO,
+  aciertaTeoria,
   bancoTeoria,
+  desgloseTeoria,
+  esTest,
+  respondida,
+  tipoDe,
+  type RespuestaTeoria,
+  type TipoPregunta,
   actaTexto,
   corregirCampo,
   crearActa,
@@ -29,6 +42,7 @@ import {
 } from '../lib/examen';
 import { NUM_TAREAS } from '../lib/examen';
 import './examen.css';
+import './examen-espacio.css';
 
 const etiquetaOrigen = (o: string) => (o === 'criterio' ? 'Criterio' : o.startsWith('vídeo') ? o.replace('vídeo', 'Vídeo de compras ·') : `Manual de ${MODULOS.find((m) => m.id === o)?.titulo.toLowerCase() ?? o}`);
 
@@ -109,17 +123,19 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
             </div>
           </div>
           <div className="ex-hero-deco">
-            <OrbitaExamen codigo={aMedias ? actual.codigo : `EX-${ini}-····`} />
+            <PortadaEspacio codigo={aMedias ? actual.codigo : `EX-${ini}-····`} />
           </div>
         </div>
       </section>
+
+      <TiposPregunta />
 
       <div className="ex-portada-grid">
         <section className="sheet pad">
           <h2>Cómo funciona</h2>
           <ol className="ex-reglas">
             <li>
-              <b>Teoría.</b> {NUM_TEORIA} preguntas tipo test con {MIN_TEORIA} minutos, sorteadas de un banco de {banco.tests + banco.video + banco.criterio}: los tests de los seis manuales, el vídeo de compras y preguntas de criterio («¿qué pasa si…?»). Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
+              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de más de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
             </li>
             <li>
               <b>Práctica.</b> {NUM_TAREAS} encargos encadenados que haces de verdad en la demo de Axional (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
@@ -213,6 +229,39 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
   );
 }
 
+const TIPOS_PORTADA: { tipo: TipoPregunta | 'video'; n: number; titulo: string; texto: string; icono: string }[] = [
+  { tipo: 'clic', n: REPARTO.clic, titulo: '¿Dónde harías clic?', texto: 'Una captura real por manual. Toca el botón o el campo.', icono: 'taller' },
+  { tipo: 'video', n: REPARTO.video, titulo: 'Del vídeo', texto: 'Una por capítulo, con su fotograma y su minuto.', icono: 'video' },
+  { tipo: 'orden', n: REPARTO.orden, titulo: 'Ordenar', texto: 'Pon en orden los pasos de un circuito.', icono: 'grip' },
+  { tipo: 'relacion', n: REPARTO.relacion, titulo: 'Relacionar', texto: 'Une cuentas, documentos y estados.', icono: 'flecha' },
+  { tipo: 'dato', n: REPARTO.dato, titulo: 'Completar', texto: 'Calcula un importe o escribe la cuenta.', icono: 'asiento' },
+  { tipo: 'test', n: REPARTO.test + REPARTO.criterio, titulo: 'Test y criterio', texto: 'De los manuales y «¿qué pasa si…?».', icono: 'cerebro' },
+];
+
+function TiposPregunta() {
+  const reducir = useReducedMotion();
+  return (
+    <section className="ext-tipos" aria-label="Tipos de pregunta de la teoría">
+      {TIPOS_PORTADA.map((t, k) => (
+        <motion.div
+          key={t.tipo}
+          className={`ext-tipo glass t-${t.tipo}`}
+          initial={reducir ? false : { opacity: 0, z: -400, rotateX: 35, y: 30 }}
+          animate={{ opacity: 1, z: 0, rotateX: 0, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 + k * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
+        >
+          <span className="ext-ico" aria-hidden="true">
+            <Icon name={t.icono} size={18} />
+          </span>
+          <b className="ext-n">{t.n}</b>
+          <span className="ext-tit">{t.titulo}</span>
+          <span className="ext-txt">{t.texto}</span>
+        </motion.div>
+      ))}
+    </section>
+  );
+}
+
 function Stat({ k, valor, valor2, texto }: { k: number; valor: number; valor2?: number; texto: string }) {
   const reducir = useReducedMotion();
   const retraso = 0.6 + k * 0.12;
@@ -239,8 +288,17 @@ function Stat({ k, valor, valor2, texto }: { k: number; valor: number; valor2?: 
 
 const esCampoTexto = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
 
+const ICONO_TIPO: Record<TipoPregunta, string> = { test: 'cerebro', clic: 'taller', orden: 'grip', relacion: 'flecha', dato: 'asiento' };
+const ENUNCIADO: Record<TipoPregunta, string> = {
+  test: '',
+  clic: 'Busca en la captura real',
+  orden: 'Ordena los pasos',
+  relacion: 'Relaciona',
+  dato: 'Completa el dato',
+};
+
 function Teoria({ ex }: { ex: EstadoExamen }) {
-  const [i, setI] = useState(() => Math.max(0, ex.respTeoria.findIndex((r) => r === null)));
+  const [i, setI] = useState(() => Math.max(0, ex.teoria.findIndex((q, k) => !respondida(q, ex.respTeoria[k]))));
   const [dir, setDir] = useState(1);
   const [confirmar, setConfirmar] = useState(false);
   const reducir = useReducedMotion();
@@ -248,9 +306,11 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
   const total = MIN_TEORIA * 60_000;
   const limite = new Date(ex.inicio).getTime() + total;
   const queda = limite - ahora;
-  const sinResponder = ex.respTeoria.filter((r) => r === null).length;
+  const hechas = ex.teoria.map((q, k) => respondida(q, ex.respTeoria[k]));
+  const sinResponder = hechas.filter((h) => !h).length;
   const avance = useRef<number | undefined>(undefined);
   const [destello, setDestello] = useState('');
+  const ancho = useMedia('(min-width: 761px)');
   useArriba();
 
   useEffect(() => {
@@ -259,6 +319,7 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
   useEffect(() => () => window.clearTimeout(avance.current), []);
 
   const q = ex.teoria[i];
+  const tipo = tipoDe(q);
   const ir = (n: number) => {
     window.clearTimeout(avance.current);
     const dest = Math.max(0, Math.min(ex.teoria.length - 1, n));
@@ -267,19 +328,22 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
     setI(dest);
     setConfirmar(false);
   };
-  const responder = (k: number) => {
-    examen.responderTeoria(i, k);
-    if (!reducir) setDestello(`${i}-${k}-${Date.now()}`);
+  const responder = (r: RespuestaTeoria) => {
+    const antes = respondida(q, ex.respTeoria[i]);
+    examen.responderTeoria(i, r);
+    const ahoraSi = respondida(q, r);
+    if (!reducir && ahoraSi && (!antes || tipo === 'test' || tipo === 'clic')) setDestello(`${i}-${Date.now()}`);
     window.clearTimeout(avance.current);
-    if (i < ex.teoria.length - 1) avance.current = window.setTimeout(() => ir(i + 1), reducir ? 0 : 260);
+    if (tipo === 'test' && i < ex.teoria.length - 1) avance.current = window.setTimeout(() => ir(i + 1), reducir ? 0 : 320);
   };
 
-  // Atajos: 1–4 o A–D responden; ← → navegan. No interfieren con campos de texto ni con modificadores.
-  const teclas = useRef({ ir, responder, i, n: q.opciones.length });
-  teclas.current = { ir, responder, i, n: q.opciones.length };
+  // Atajos: en las de test, 1–4 o A–D responden; ← → navegan. No interfieren con campos ni con las capturas.
+  const teclas = useRef({ ir, responder, i, n: esTest(q) ? q.opciones.length : 0 });
+  teclas.current = { ir, responder, i, n: esTest(q) ? q.opciones.length : 0 };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || esCampoTexto(e.target)) return;
+      if (document.querySelector('.exq-zoom')) return;
       const t = teclas.current;
       if (e.key === 'ArrowRight') {
         e.preventDefault();
@@ -291,6 +355,7 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
         t.ir(t.i - 1);
         return;
       }
+      if (!t.n) return;
       const k = '1234'.indexOf(e.key) >= 0 ? '1234'.indexOf(e.key) : 'abcd'.indexOf(e.key.toLowerCase());
       if (e.key.length === 1 && k >= 0 && k < t.n) {
         e.preventDefault();
@@ -304,6 +369,20 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
   const estado = queda <= 60_000 ? 'final' : queda <= 3 * 60_000 ? 'urgente' : queda <= 10 * 60_000 ? 'aviso' : 'normal';
   const anuncio = queda <= 60_000 ? 'Queda 1 minuto' : queda <= 5 * 60_000 ? 'Quedan 5 minutos' : '';
 
+  // Llegada desde el fondo del espacio (o vuelta hacia él al ir atrás)
+  const llegar = reducir ? undefined : { opacity: 0, scale: dir > 0 ? 0.55 : 1.25, z: dir > 0 ? -600 : 240, rotateX: dir > 0 ? 14 : -10, filter: 'blur(6px)' };
+  const irse = reducir ? undefined : { opacity: 0, scale: dir > 0 ? 1.18 : 0.6, z: dir > 0 ? 260 : -600, rotateX: dir > 0 ? -8 : 12, filter: 'blur(6px)' };
+
+  const saltos = (
+    <div className="ex-dots" role="tablist" aria-label="Preguntas">
+      {ex.teoria.map((p, k) => (
+        <button key={k} role="tab" aria-selected={k === i} className={`${hechas[k] ? 'hecha' : ''} ${k === i ? 'cur' : ''} t-${tipoDe(p)}`} onClick={() => ir(k)} aria-label={`Pregunta ${k + 1}, ${NOMBRE_TIPO[tipoDe(p)].toLowerCase()}${hechas[k] ? ', respondida' : ''}`}>
+          {k + 1}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="wrap ex-pagina">
       <BarraExamen titulo="Teoría" sub={`Pregunta ${i + 1} de ${ex.teoria.length}`} codigo={ex.codigo} estado={estado} fraccion={queda / total}>
@@ -313,48 +392,47 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
         {anuncio}
       </div>
 
-      <div className="ex-dots" role="tablist" aria-label="Preguntas">
-        {ex.teoria.map((_, k) => (
-          <button key={k} role="tab" aria-selected={k === i} className={`${ex.respTeoria[k] !== null ? 'hecha' : ''} ${k === i ? 'cur' : ''}`} onClick={() => ir(k)} aria-label={`Pregunta ${k + 1}${ex.respTeoria[k] !== null ? ', respondida' : ''}`}>
-            {k + 1}
-          </button>
-        ))}
-      </div>
+      <OrbitaProgreso total={ex.teoria.length} actual={i} hechas={hechas} latido={destello} />
+
+      {ancho ? (
+        saltos
+      ) : (
+        <details className="ex-saltos">
+          <summary>
+            Ir a otra pregunta · {ex.teoria.length - sinResponder} de {ex.teoria.length} respondidas
+          </summary>
+          {saltos}
+        </details>
+      )}
 
       <div className="ex-q-wrap">
+        <Hiperespacio key={`h-${i}`} semilla={i + 1} />
         <AnimatePresence mode="wait" custom={dir}>
           <motion.section
             key={i}
-            className="sheet pad ex-q"
-            initial={reducir ? false : { opacity: 0, x: 40 * dir, rotateY: 8 * dir }}
-            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-            exit={reducir ? undefined : { opacity: 0, x: -40 * dir, rotateY: -8 * dir }}
-            transition={{ duration: 0.28 }}
+            className={`sheet pad ex-q exq-t-${tipo} ${destello.startsWith(`${i}-`) ? 'exq-destello' : ''}`}
+            initial={llegar}
+            animate={{ opacity: 1, scale: 1, z: 0, rotateX: 0, filter: 'blur(0px)' }}
+            exit={irse}
+            transition={{ duration: 0.42, ease: [0.2, 0.75, 0.2, 1] }}
+            aria-labelledby={`exq-titulo-${i}`}
           >
-            <span className="ex-origen">{etiquetaOrigen(q.origen)}</span>
-            <h2 className="ex-q-txt">{q.pregunta}</h2>
-            <div role="radiogroup" aria-label="Opciones">
-              {q.opciones.map((op, k) => {
-                const sel = ex.respTeoria[i] === k;
-                return (
-                  <motion.button
-                    key={k}
-                    role="radio"
-                    aria-checked={sel}
-                    aria-keyshortcuts={`${k + 1} ${'ABCD'[k]}`}
-                    className={`quiz-opt ${sel ? 'sel' : ''} ${sel && destello.startsWith(`${i}-${k}-`) ? 'flash-ok' : ''}`}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => responder(k)}
-                  >
-                    <span className="letter">{'ABCD'[k]}</span>
-                    <span>{op}</span>
-                  </motion.button>
-                );
-              })}
+            <div className="exq-cabeza">
+              <span className="ex-origen">{etiquetaOrigen(q.origen)}</span>
+              <span className="exq-tipo">
+                <Icon name={ICONO_TIPO[tipo]} size={14} /> {NOMBRE_TIPO[tipo]}
+              </span>
             </div>
-            <p className="ex-atajos small muted" aria-hidden="true">
-              Atajos: <kbd>1</kbd>–<kbd>4</kbd> o <kbd>A</kbd>–<kbd>D</kbd> para responder, <kbd>←</kbd> <kbd>→</kbd> para moverte.
-            </p>
+            {ENUNCIADO[tipo] && <p className="exq-enunciado">{ENUNCIADO[tipo]}</p>}
+            <h2 className={`ex-q-txt ${tipo !== 'test' ? 'exq-txt-sec' : ''}`} id={`exq-titulo-${i}`}>
+              {q.pregunta}
+            </h2>
+            <PreguntaVista q={q} resp={ex.respTeoria[i]} onResp={responder} destello={destello.startsWith(`${i}-`) ? destello : undefined} />
+            {tipo === 'test' && (
+              <p className="ex-atajos small muted" aria-hidden="true">
+                Atajos: <kbd>1</kbd>–<kbd>4</kbd> o <kbd>A</kbd>–<kbd>D</kbd> para responder, <kbd>←</kbd> <kbd>→</kbd> para moverte.
+              </p>
+            )}
           </motion.section>
         </AnimatePresence>
       </div>
@@ -364,7 +442,7 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
           <Icon name="atras" size={18} /> Anterior
         </button>
         {i < ex.teoria.length - 1 && (
-          <button className="btn ghost" onClick={() => ir(i + 1)}>
+          <button className={`btn ${hechas[i] && tipo !== 'test' ? 'arc' : 'ghost'}`} onClick={() => ir(i + 1)}>
             Siguiente
           </button>
         )}
@@ -375,7 +453,7 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
           </button>
         ) : (
           <div className="ex-confirma" role="alert">
-            <span>Te quedan {sinResponder} sin responder. Cuentan como fallo.</span>
+            <span>Te quedan {sinResponder} sin responder del todo. Cuentan como fallo.</span>
             <button className="btn" onClick={() => examen.cerrarTeoria()}>
               Terminar igualmente
             </button>
@@ -387,6 +465,17 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
       </div>
     </div>
   );
+}
+
+function useMedia(q: string) {
+  const [si, setSi] = useState(() => window.matchMedia(q).matches);
+  useEffect(() => {
+    const m = window.matchMedia(q);
+    const f = () => setSi(m.matches);
+    m.addEventListener('change', f);
+    return () => m.removeEventListener('change', f);
+  }, [q]);
+  return si;
 }
 
 function NucleoTiempo({ fraccion, estado, texto }: { fraccion: number; estado: string; texto: string }) {
@@ -730,6 +819,17 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
         </div>
       </motion.section>
 
+      <section className="sheet pad exr-teoria" aria-labelledby="exr-teoria-t">
+        <div className="exr-teoria-cab">
+          <h2 id="exr-teoria-t">Tu teoría, pregunta a pregunta</h2>
+          <span className="exr-teoria-total">
+            <b>{r.aciertos}</b> de {r.totalTeoria}
+          </span>
+        </div>
+        <Constelacion teoria={ex.teoria} resp={ex.respTeoria} />
+        <DesgloseTeoria bloques={r.desglose ?? desgloseTeoria(ex.teoria, ex.respTeoria)} />
+      </section>
+
       <section className={`sheet pad ex-envio ${enviado ? 'ok' : ''}`} aria-live="polite">
         {enviado ? (
           <p>
@@ -829,15 +929,11 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
         </summary>
         <ol>
           {ex.teoria.map((q, k) => {
-            const tu = ex.respTeoria[k];
-            const bien = tu === q.correcta;
+            const bien = aciertaTeoria(q, ex.respTeoria[k]);
             return (
               <li key={k} className={bien ? 'ok' : 'mal'}>
-                <span className="ex-origen">{etiquetaOrigen(q.origen)}</span> <b>{q.pregunta}</b>
-                <div className="small">
-                  Tu respuesta: {tu === null ? 'sin responder' : q.opciones[tu]} {bien ? '✓' : '✕'}
-                  {!bien && <> · Correcta: {q.opciones[q.correcta]}</>}
-                </div>
+                <span className="ex-origen">{etiquetaOrigen(q.origen)}</span> <span className="exq-tipo">{NOMBRE_TIPO[tipoDe(q)]}</span> <b>{q.pregunta}</b>
+                <RevisionPregunta q={q} r={ex.respTeoria[k]} />
                 <div className="small muted">{q.explicacion}</div>
               </li>
             );

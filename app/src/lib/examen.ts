@@ -105,9 +105,66 @@ export interface TareaExamen {
   campos: CampoExamen[];
 }
 
-export interface PreguntaExamen extends Pregunta {
-  origen: string; // id del módulo o «criterio»
+/* Teoría: cinco tipos de pregunta. Las preguntas antiguas (guardadas sin «tipo») son de test. */
+export type TipoPregunta = 'test' | 'clic' | 'orden' | 'relacion' | 'dato';
+
+interface BasePregunta {
+  /** id del módulo, «vídeo cap. N» o «criterio» */
+  origen: string;
+  pregunta: string;
+  explicacion: string;
 }
+
+export interface PreguntaTest extends Pregunta, BasePregunta {
+  tipo?: 'test';
+  /** Preguntas del vídeo: capítulo y segundo dentro del capítulo */
+  video?: { cap: number; t: number };
+}
+
+export interface PreguntaClic extends BasePregunta {
+  tipo: 'clic';
+  /** Pantalla (título de la sección del manual) */
+  pantalla: string;
+  modulo: string;
+  imagen: string;
+  zona: { x: number; y: number; w: number; h: number };
+  etiqueta: string;
+  /** Paso del manual en el que se hace el clic */
+  paso?: string;
+}
+
+export interface PreguntaOrden extends BasePregunta {
+  tipo: 'orden';
+  /** Elementos en el orden en que se muestran (desordenados) */
+  items: string[];
+  /** Índices de items en el orden correcto */
+  solucion: number[];
+}
+
+export interface PreguntaRelacion extends BasePregunta {
+  tipo: 'relacion';
+  titulos: [string, string];
+  izquierda: string[];
+  derecha: string[];
+  /** Para cada elemento de la izquierda, el índice de su pareja en la derecha */
+  solucion: number[];
+}
+
+export interface PreguntaDato extends BasePregunta {
+  tipo: 'dato';
+  formato: 'importe' | 'cuenta';
+  esperado: number | string;
+  placeholder: string;
+  /** Datos del enunciado (base, IVA…) */
+  datos?: { k: string; v: string }[];
+}
+
+export type PreguntaExamen = PreguntaTest | PreguntaClic | PreguntaOrden | PreguntaRelacion | PreguntaDato;
+/** Respuesta: índice (test), punto en % (clic), orden o parejas (orden, relación), texto (dato) */
+export type RespuestaTeoria = number | string | number[] | { x: number; y: number } | null;
+
+export const esTest = (q: PreguntaExamen): q is PreguntaTest => !q.tipo || q.tipo === 'test';
+export const tipoDe = (q: PreguntaExamen): TipoPregunta => q.tipo ?? 'test';
 
 export interface Caso {
   codigo: string;
@@ -127,14 +184,22 @@ export const IVA = 0.21;
 export const PESO_TEORIA = 0.3;
 export const PESO_PRACTICA = 0.7;
 export const APROBADO_EXAMEN = 0.8;
-export const MIN_TEORIA = 30;
-export const NUM_TEORIA = 24;
+export const MIN_TEORIA = 40;
 /** Encargos de la práctica (8 en Axional + 1 de rutas de menú) */
 export const NUM_TAREAS = 9;
-const N_VIDEO = 7;
-const N_CRITERIO = 5;
+/** Reparto de la teoría: un test y un clic por módulo, un vídeo por capítulo y el resto */
+export const REPARTO = { test: 6, clic: 6, video: 10, orden: 2, relacion: 2, dato: 2, criterio: 2 } as const;
+export const NUM_TEORIA = Object.values(REPARTO).reduce((s, n) => s + n, 0);
+/** Margen (en % de la captura) alrededor de la zona correcta en las preguntas de clic */
+export const MARGEN_CLIC = 2.5;
 /** Tamaño del banco teórico (para la portada) */
-export const bancoTeoria = () => ({ tests: MODULOS.reduce((s, m) => s + m.ejercicios.reduce((t, e) => t + e.test.filter((q) => apta(q)).length, 0), 0), video: VIDEO.length, criterio: CRITERIO.length });
+export const bancoTeoria = () => ({
+  tests: MODULOS.reduce((s, m) => s + m.ejercicios.reduce((t, e) => t + e.test.filter((q) => apta(q)).length, 0), 0),
+  clic: MODULOS.reduce((s, m) => s + pasosClic(m.id).length, 0),
+  video: VIDEO.length,
+  criterio: CRITERIO.length,
+  otras: CIRCUITOS_VIDEO.length + MODULOS.length + RELACIONES.length + 6,
+});
 
 const p2 = (n: number) => num2.format(n);
 
@@ -457,32 +522,35 @@ const CRITERIO: Pregunta[] = [
 
 
 /* Preguntas sacadas del vídeo tutorial de compras (guiones v2, capítulos 1 a 10) */
-const VIDEO: (Pregunta & { cap: number })[] = [
-  { cap: 1, pregunta: 'En Gestión › Compras › Maestros, ¿qué encuentras?', opciones: ['Proveedores y artículos', 'Tarifas, Documentos y Rápeles de compras', 'Asientos y diarios', 'Bancos propios'], correcta: 1, explicacion: 'Proveedores y artículos están en Gestión › Maestros; en Compras › Maestros están Tarifas, Documentos y Rápeles.' },
-  { cap: 1, pregunta: 'No recuerdas dónde está una pantalla. ¿Qué es lo más rápido?', opciones: ['Recorrer todo el menú', 'El buscador «Buscar ⌘K» de la barra superior', 'Preguntar a soporte', 'Abrir el Docflow'], correcta: 1, explicacion: 'Al escribir, por ejemplo, «Proveedores», el buscador lista las pantallas que coinciden.' },
-  { cap: 2, pregunta: 'Acabas de dar de alta un tercero. ¿En qué estado nace?', opciones: ['Validado', 'Provisional', 'Activo', 'Bloqueado'], correcta: 1, explicacion: 'Nace Provisional; con el botón verde «Validar» pasa a Validado.' },
-  { cap: 2, pregunta: 'Quieres crear el proveedor y su tercero no aparece en el desplegable. ¿Qué pasa?', opciones: ['Falta la divisa', 'El tercero no está validado', 'Falta el grupo de precio', 'El artículo no existe'], correcta: 1, explicacion: 'Solo se puede elegir un tercero validado: valídalo antes de crear el proveedor.' },
-  { cap: 2, pregunta: '¿Dónde se pone la forma de pago del proveedor?', opciones: ['En la ficha del proveedor, pestaña Tarifas', 'En el tercero, pestaña Condiciones de pago', 'En el pedido', 'En la lista de precios'], correcta: 1, explicacion: 'Tipo de efecto y plazo de pago van en las Condiciones de pago del tercero, no en el proveedor.' },
-  { cap: 2, pregunta: 'Guardas un proveedor nuevo. ¿Qué estado tiene?', opciones: ['Provisional, hay que validarlo', 'Activo, sin validación aparte', 'Pendiente de autorizar', 'Validado por el tercero'], correcta: 1, explicacion: 'Al guardarlo queda Activo; no hay un paso de validación propio.' },
-  { cap: 2, pregunta: 'Al dar de alta el tercero, el Tipo ID fiscal…', opciones: ['Se rellena solo con el país', 'Hay que elegirlo, por ejemplo «NIF-Empresa»', 'No hace falta', 'Lo pone el proveedor'], correcta: 1, explicacion: 'Es obligatorio y no se rellena solo: se elige en el desplegable.' },
-  { cap: 2, pregunta: '¿Por qué el artículo 13500620 sí contabiliza en la demo?', opciones: ['Porque es de la familia 01', 'Porque su tipo contable es PRODUCTO (PROD), que tiene cuentas', 'Porque tiene stock', 'Porque su precio es 4,00'], correcta: 1, explicacion: 'El tipo contable decide las cuentas; PROD las tiene definidas.' },
-  { cap: 3, pregunta: 'Una línea de lista de precios tiene precio 4,00 y descuento 1 del 10 %. ¿Qué precio neto sale?', opciones: ['4,40', '3,60', '3,96', '0,40'], correcta: 1, explicacion: '4,00 menos el 10 % = 3,60.' },
-  { cap: 3, pregunta: 'El proveedor tiene el grupo de precio 00001. ¿De dónde saca el precio?', opciones: ['Del último pedido', 'De la lista que indica el grupo (por ejemplo COM)', 'Del artículo directamente', 'De la factura anterior'], correcta: 1, explicacion: 'El grupo ordena qué listas aplican (Orden, Condición, Divisa, Lista precio); el 00001 apunta a COM.' },
-  { cap: 3, pregunta: 'Una línea de la lista tiene Fecha fin de ayer. ¿Qué pasa con ese precio?', opciones: ['Sigue valiendo', 'Ya no está vigente', 'Se aplica a la mitad', 'Pasa a la lista siguiente'], correcta: 1, explicacion: 'Cada línea vale entre su Fecha inicio y su Fecha fin.' },
-  { cap: 4, pregunta: 'El numerador tiene rotura #e#s. ¿Qué significa?', opciones: ['Un contador por año', 'Un contador por empresa y serie, sin año', 'Un único contador para todo', 'Un contador por proveedor'], correcta: 1, explicacion: 'La rotura decide cuándo se reinicia la cuenta: #e#s separa por empresa y serie.' },
-  { cap: 4, pregunta: '¿Dónde dices que un pedido PC genera albaranes del tipo ACPC?', opciones: ['En el numerador', 'En el tipo de pedido, caja Logística, campo «Tipo de albarán»', 'En la ficha del proveedor', 'En el albarán'], correcta: 1, explicacion: 'El tipo de documento es la plantilla: PC trae ACPC y ACPC trae FCOA.' },
-  { cap: 4, pregunta: 'Una factura de compra muestra 0FC000009 y FC026-000001. ¿Por qué dos números?', opciones: ['Es un error', 'Uno es el del documento y el otro el de la serie fiscal', 'Uno es el del proveedor y otro el nuestro', 'Uno es el del asiento'], correcta: 1, explicacion: 'El numerador de gestión da el número del documento; la serie fiscal da el número para Hacienda.' },
-  { cap: 4, pregunta: '¿Para qué sirve el control cronológico de una serie?', opciones: ['Para ordenar alfabéticamente', 'Para que un número no lleve fecha anterior al último', 'Para bloquear el proveedor', 'Para calcular el IVA'], correcta: 1, explicacion: 'Asegura que números y fechas van en orden, algo que Hacienda exige en las facturas emitidas.' },
-  { cap: 5, pregunta: 'Validas un pedido. ¿Qué Situación muestra?', opciones: ['Servido', 'Sigue Pendiente hasta que llega la mercancía', 'Facturado', 'Contabilizado'], correcta: 1, explicacion: 'Validar no lo sirve: queda Pendiente hasta generar sus albaranes.' },
-  { cap: 6, pregunta: 'En «Generación de albaranes con origen pedidos» marcas el pedido y pulsas «Generar albaranes». Sale «No se ha seleccionado ninguna línea de pedido». ¿Qué falta?', opciones: ['Validar el proveedor', 'Marcar también la línea del pedido', 'Contabilizar el pedido', 'Cambiar de almacén'], correcta: 1, explicacion: 'Hay que marcar la casilla del pedido y la de su línea.' },
-  { cap: 6, pregunta: 'Recibes solo parte de lo pedido. ¿Cómo queda el pedido?', opciones: ['Servido', 'Parcial', 'Anulado', 'Pendiente de factura'], correcta: 1, explicacion: 'Pasa a Parcial si quedan líneas por servir y a Servido cuando llega todo.' },
-  { cap: 6, pregunta: 'Al contabilizar marcas «Prevista de Asiento Contable». ¿Qué ocurre?', opciones: ['Contabiliza dos veces', 'Te enseña el esquema del asiento sin contabilizar', 'Contabiliza en provisional', 'Envía el asiento al banco'], correcta: 1, explicacion: 'Es una vista previa: muestra cuentas, Debe y Haber sin grabar nada.' },
-  { cap: 7, pregunta: 'En el albarán, Acciones › «Generar factura». ¿Qué te pide?', opciones: ['Proveedor y almacén', 'Fecha factura, Factura proveedor e Importe factura', 'Cuenta contable', 'Nada, la crea sola'], correcta: 1, explicacion: 'Pide la fecha, el número que da el proveedor y el importe de su factura.' },
-  { cap: 7, pregunta: 'El Importe factura que tecleas no coincide con el total calculado. ¿Qué hace el programa?', opciones: ['Bloquea la factura', 'No bloquea: tienes que revisarlo tú (informe de diferencias con albarán)', 'Corrige el albarán', 'Cambia el IVA'], correcta: 1, explicacion: 'Sin tolerancias en el tipo FCOA no bloquea; la comprobación es tuya y la ayuda el informe gcomfach_dif_albaran.' },
-  { cap: 8, pregunta: 'Contabilizas la factura y la ventana muestra un asiento de dos líneas 60000 / 40090. ¿Qué pasa?', opciones: ['La factura está mal', 'La ventana enseña el asiento del albarán: abre el de la factura desde ⌄ › Asientos contables', 'Falta el IVA en el tipo', 'Hay que descontabilizar'], correcta: 1, explicacion: 'Es una trampa de la pantalla: el asiento bueno de la factura tiene cinco líneas.' },
-  { cap: 8, pregunta: 'Base 40,00 e IVA 21 %, con el albarán ya contabilizado. ¿Cuánto suma el Debe del asiento de la factura?', opciones: ['48,40', '88,40', '40,00', '8,40'], correcta: 1, explicacion: '47200 8,40 + 60000 40,00 + 40090 40,00 = 88,40, igual que el Haber (40000 48,40 + 60000 40,00).' },
-  { cap: 9, pregunta: 'En el Docflow, ¿qué indica la caja con el borde naranja?', opciones: ['Un documento con error', 'El documento desde el que lo has abierto', 'El documento más antiguo', 'Un documento anulado'], correcta: 1, explicacion: 'El borde naranja marca dónde estás; el resto de cajas son los documentos enlazados.' },
-  { cap: 9, pregunta: 'En el Docflow de compras, ¿qué son los «Suministros»?', opciones: ['Los pedidos', 'Los albaranes', 'Las facturas', 'Los pagos'], correcta: 1, explicacion: 'Suministros es la tabla de albaranes: Pedidos compras · Suministros · Facturas compras.' },
+const VIDEO: (Pregunta & { cap: number; t: number })[] = [
+  { cap: 1, t: 293, pregunta: 'En Gestión › Compras › Maestros, ¿qué encuentras?', opciones: ['Proveedores y artículos', 'Tarifas, Documentos y Rápeles de compras', 'Asientos y diarios', 'Bancos propios'], correcta: 1, explicacion: 'Proveedores y artículos están en Gestión › Maestros; en Compras › Maestros están Tarifas, Documentos y Rápeles.' },
+  { cap: 1, t: 201, pregunta: 'No recuerdas dónde está una pantalla. ¿Qué es lo más rápido?', opciones: ['Recorrer todo el menú', 'El buscador «Buscar ⌘K» de la barra superior', 'Preguntar a soporte', 'Abrir el Docflow'], correcta: 1, explicacion: 'Al escribir, por ejemplo, «Proveedores», el buscador lista las pantallas que coinciden.' },
+  { cap: 2, t: 284, pregunta: 'Acabas de dar de alta un tercero. ¿En qué estado nace?', opciones: ['Validado', 'Provisional', 'Activo', 'Bloqueado'], correcta: 1, explicacion: 'Nace Provisional; con el botón verde «Validar» pasa a Validado.' },
+  { cap: 2, t: 342, pregunta: 'Quieres crear el proveedor y su tercero no aparece en el desplegable. ¿Qué pasa?', opciones: ['Falta la divisa', 'El tercero no está validado', 'Falta el grupo de precio', 'El artículo no existe'], correcta: 1, explicacion: 'Solo se puede elegir un tercero validado: valídalo antes de crear el proveedor.' },
+  { cap: 2, t: 284, pregunta: '¿Dónde se pone la forma de pago del proveedor?', opciones: ['En la ficha del proveedor, pestaña Tarifas', 'En el tercero, pestaña Condiciones de pago', 'En el pedido', 'En la lista de precios'], correcta: 1, explicacion: 'Tipo de efecto y plazo de pago van en las Condiciones de pago del tercero, no en el proveedor.' },
+  { cap: 2, t: 342, pregunta: 'Guardas un proveedor nuevo. ¿Qué estado tiene?', opciones: ['Provisional, hay que validarlo', 'Activo, sin validación aparte', 'Pendiente de autorizar', 'Validado por el tercero'], correcta: 1, explicacion: 'Al guardarlo queda Activo; no hay un paso de validación propio.' },
+  { cap: 2, t: 143, pregunta: 'Al dar de alta el tercero, el Tipo ID fiscal…', opciones: ['Se rellena solo con el país', 'Hay que elegirlo, por ejemplo «NIF-Empresa»', 'No hace falta', 'Lo pone el proveedor'], correcta: 1, explicacion: 'Es obligatorio y no se rellena solo: se elige en el desplegable.' },
+  { cap: 2, t: 440, pregunta: '¿Por qué el artículo 13500620 sí contabiliza en la demo?', opciones: ['Porque es de la familia 01', 'Porque su tipo contable es PRODUCTO (PROD), que tiene cuentas', 'Porque tiene stock', 'Porque su precio es 4,00'], correcta: 1, explicacion: 'El tipo contable decide las cuentas; PROD las tiene definidas.' },
+  { cap: 3, t: 57, pregunta: 'Una línea de lista de precios tiene precio 4,00 y descuento 1 del 10 %. ¿Qué precio neto sale?', opciones: ['4,40', '3,60', '3,96', '0,40'], correcta: 1, explicacion: '4,00 menos el 10 % = 3,60.' },
+  { cap: 3, t: 221, pregunta: 'El proveedor tiene el grupo de precio 00001. ¿De dónde saca el precio?', opciones: ['Del último pedido', 'De la lista que indica el grupo (por ejemplo COM)', 'Del artículo directamente', 'De la factura anterior'], correcta: 1, explicacion: 'El grupo ordena qué listas aplican (Orden, Condición, Divisa, Lista precio); el 00001 apunta a COM.' },
+  { cap: 3, t: 167, pregunta: 'Una línea de la lista tiene Fecha fin de ayer. ¿Qué pasa con ese precio?', opciones: ['Sigue valiendo', 'Ya no está vigente', 'Se aplica a la mitad', 'Pasa a la lista siguiente'], correcta: 1, explicacion: 'Cada línea vale entre su Fecha inicio y su Fecha fin.' },
+  { cap: 4, t: 157, pregunta: 'El numerador tiene rotura #e#s. ¿Qué significa?', opciones: ['Un contador por año', 'Un contador por empresa y serie, sin año', 'Un único contador para todo', 'Un contador por proveedor'], correcta: 1, explicacion: 'La rotura decide cuándo se reinicia la cuenta: #e#s separa por empresa y serie.' },
+  { cap: 4, t: 606, pregunta: '¿Dónde dices que un pedido PC genera albaranes del tipo ACPC?', opciones: ['En el numerador', 'En el tipo de pedido, caja Logística, campo «Tipo de albarán»', 'En la ficha del proveedor', 'En el albarán'], correcta: 1, explicacion: 'El tipo de documento es la plantilla: PC trae ACPC y ACPC trae FCOA.' },
+  { cap: 4, t: 384, pregunta: 'Una factura de compra muestra 0FC000009 y FC026-000001. ¿Por qué dos números?', opciones: ['Es un error', 'Uno es el del documento y el otro el de la serie fiscal', 'Uno es el del proveedor y otro el nuestro', 'Uno es el del asiento'], correcta: 1, explicacion: 'El numerador de gestión da el número del documento; la serie fiscal da el número para Hacienda.' },
+  { cap: 4, t: 202, pregunta: '¿Para qué sirve el control cronológico de una serie?', opciones: ['Para ordenar alfabéticamente', 'Para que un número no lleve fecha anterior al último', 'Para bloquear el proveedor', 'Para calcular el IVA'], correcta: 1, explicacion: 'Asegura que números y fechas van en orden, algo que Hacienda exige en las facturas emitidas.' },
+  { cap: 5, t: 631, pregunta: 'Validas un pedido. ¿Qué Situación muestra?', opciones: ['Servido', 'Sigue Pendiente hasta que llega la mercancía', 'Facturado', 'Contabilizado'], correcta: 1, explicacion: 'Validar no lo sirve: queda Pendiente hasta generar sus albaranes.' },
+  { cap: 6, t: 133, pregunta: 'En «Generación de albaranes con origen pedidos» marcas el pedido y pulsas «Generar albaranes». Sale «No se ha seleccionado ninguna línea de pedido». ¿Qué falta?', opciones: ['Validar el proveedor', 'Marcar también la línea del pedido', 'Contabilizar el pedido', 'Cambiar de almacén'], correcta: 1, explicacion: 'Hay que marcar la casilla del pedido y la de su línea.' },
+  { cap: 6, t: 285, pregunta: 'Recibes solo parte de lo pedido. ¿Cómo queda el pedido?', opciones: ['Servido', 'Parcial', 'Anulado', 'Pendiente de factura'], correcta: 1, explicacion: 'Pasa a Parcial si quedan líneas por servir y a Servido cuando llega todo.' },
+  { cap: 6, t: 403, pregunta: 'Al contabilizar marcas «Prevista de Asiento Contable». ¿Qué ocurre?', opciones: ['Contabiliza dos veces', 'Te enseña el esquema del asiento sin contabilizar', 'Contabiliza en provisional', 'Envía el asiento al banco'], correcta: 1, explicacion: 'Es una vista previa: muestra cuentas, Debe y Haber sin grabar nada.' },
+  { cap: 7, t: 103, pregunta: 'En el albarán, Acciones › «Generar factura». ¿Qué te pide?', opciones: ['Proveedor y almacén', 'Fecha factura, Factura proveedor e Importe factura', 'Cuenta contable', 'Nada, la crea sola'], correcta: 1, explicacion: 'Pide la fecha, el número que da el proveedor y el importe de su factura.' },
+  { cap: 7, t: 256, pregunta: 'El Importe factura que tecleas no coincide con el total calculado. ¿Qué hace el programa?', opciones: ['Bloquea la factura', 'No bloquea: tienes que revisarlo tú (informe de diferencias con albarán)', 'Corrige el albarán', 'Cambia el IVA'], correcta: 1, explicacion: 'Sin tolerancias en el tipo FCOA no bloquea; la comprobación es tuya y la ayuda el informe gcomfach_dif_albaran.' },
+  { cap: 8, t: 275, pregunta: 'Contabilizas la factura y la ventana muestra un asiento de dos líneas 60000 / 40090. ¿Qué pasa?', opciones: ['La factura está mal', 'La ventana enseña el asiento del albarán: abre el de la factura desde ⌄ › Asientos contables', 'Falta el IVA en el tipo', 'Hay que descontabilizar'], correcta: 1, explicacion: 'Es una trampa de la pantalla: el asiento bueno de la factura tiene cinco líneas.' },
+  { cap: 8, t: 327, pregunta: 'Base 40,00 e IVA 21 %, con el albarán ya contabilizado. ¿Cuánto suma el Debe del asiento de la factura?', opciones: ['48,40', '88,40', '40,00', '8,40'], correcta: 1, explicacion: '47200 8,40 + 60000 40,00 + 40090 40,00 = 88,40, igual que el Haber (40000 48,40 + 60000 40,00).' },
+  { cap: 9, t: 235, pregunta: 'En el Docflow, ¿qué indica la caja con el borde naranja?', opciones: ['Un documento con error', 'El documento desde el que lo has abierto', 'El documento más antiguo', 'Un documento anulado'], correcta: 1, explicacion: 'El borde naranja marca dónde estás; el resto de cajas son los documentos enlazados.' },
+  { cap: 9, t: 189, pregunta: 'En el Docflow de compras, ¿qué son los «Suministros»?', opciones: ['Los pedidos', 'Los albaranes', 'Las facturas', 'Los pagos'], correcta: 1, explicacion: 'Suministros es la tabla de albaranes: Pedidos compras · Suministros · Facturas compras.' },
+  { cap: 10, t: 127, pregunta: 'Antes de contabilizar una factura de compra, ¿qué buena práctica repasa el vídeo?', opciones: ['Contabilizar primero y revisar después', 'Comprobar que el albarán coincide con lo recibido y la factura con el albarán: base, IVA y total', 'Pedir la factura de nuevo al proveedor', 'Borrar el albarán para que no se duplique'], correcta: 1, explicacion: 'Un error detectado antes de contabilizar es mucho más fácil de corregir.' },
+  { cap: 10, t: 100, pregunta: 'Según las ideas clave del vídeo, ¿qué confirma el albarán?', opciones: ['Lo que hay que pagar', 'Lo que ha llegado', 'El precio de la tarifa', 'El asiento de la factura'], correcta: 1, explicacion: 'El albarán confirma lo que llega; la factura, lo que se debe pagar.' },
+  { cap: 10, t: 84, pregunta: 'Te pierdes y no sabes en qué punto está una compra. ¿Qué ayuda te dibuja el camino pedido, albarán y factura?', opciones: ['Sumas y saldos', 'El Docflow', 'El numerador', 'La lista de precios'], correcta: 1, explicacion: 'Docflow enseña el camino; el buscador te lleva a cualquier pantalla y el menú lateral te dice dónde está cada cosa.' },
 ];
 
 /* Preguntas de los tests que solo tienen sentido dentro de su ejercicio (números de asiento,
@@ -490,32 +558,358 @@ const VIDEO: (Pregunta & { cap: number })[] = [
 const DE_CONTEXTO = /\basientos? \d|\b0[A-Z]{2}0000\d{2}\b|FVN0|apuntes del EA-DOC|periodo 11|copia de diciembre|llevan las copias|tres copias|62902(\.00000)? en 2026|extracto de la 62902|este ejercicio|del ejercicio\?|del ejemplo|lista del campo|Justificación 6|plazo de pago \{INI\}1|importe neto de 2,50/i;
 const apta = (q: Pregunta) => !DE_CONTEXTO.test(q.pregunta);
 
+/* Circuitos del vídeo para ordenar (salen de las escenas de cada capítulo) */
+const CIRCUITOS_VIDEO: { cap: number; pregunta: string; pasos: string[]; explicacion: string }[] = [
+  {
+    cap: 10,
+    pregunta: 'Ordena el circuito de compra que repasa el vídeo, de los datos de base al asiento.',
+    pasos: ['Alta del tercero y validarlo', 'Alta del proveedor', 'Pedido de compra', 'Albarán de compra', 'Factura del proveedor', 'Asiento contable'],
+    explicacion: 'Primero los datos de base; después cada documento nace del anterior y, al final, contabilizar deja la compra anotada.',
+  },
+  {
+    cap: 6,
+    pregunta: 'Ha llegado la mercancía. Ordena los pasos para recibirla como en el vídeo.',
+    pasos: ['Abre «Generación de albaranes con origen pedidos»', 'Filtra por tipo de pedido y proveedor', 'Marca el pedido y su línea', 'Pulsa «Generar albaranes»', 'Valida el albarán', 'Contabiliza el albarán'],
+    explicacion: 'El albarán nace del pedido: filtras, marcas pedido y línea, generas, validas y contabilizas.',
+  },
+  {
+    cap: 7,
+    pregunta: 'Llega la factura del proveedor. Ordena los pasos como en el vídeo.',
+    pasos: ['En el albarán, Acciones › «Generar factura»', 'Escribe fecha, factura proveedor e importe', 'Abre la factura creada', 'Compara el importe declarado con el calculado', 'Valida la factura', 'Contabilízala y busca su asiento'],
+    explicacion: 'La factura nace del albarán; antes de validarla compruebas que el importe declarado cuadra.',
+  },
+];
+
+/* Parejas para relacionar */
+const RELACIONES: { origen: string; pregunta: string; titulos: [string, string]; pares: [string, string][]; explicacion: string }[] = [
+  {
+    origen: 'asientos',
+    pregunta: 'Une cada cuenta con lo que recoge.',
+    titulos: ['Cuenta', 'Qué recoge'],
+    pares: [
+      ['40000', 'Proveedores'],
+      ['40090', 'Compras pendiente de factura'],
+      ['47200', 'IVA soportado'],
+      ['47000', 'IVA repercutido'],
+      ['43000', 'Clientes'],
+      ['57200', 'Bancos'],
+      ['70000', 'Ventas'],
+      ['60000', 'Compras'],
+    ],
+    explicacion: 'Son las cuentas del circuito: compras (60000, 40090, 47200, 40000), ventas (43000, 47000, 70000) y tesorería (57200).',
+  },
+  {
+    origen: 'compras',
+    pregunta: 'Une cada tipo de documento con lo que es.',
+    titulos: ['Tipo', 'Documento'],
+    pares: [
+      ['PC', 'Pedido de compra'],
+      ['ACPC', 'Albarán de compra'],
+      ['FCOA', 'Factura de compra'],
+      ['COBD', 'Cobro directo de un efecto'],
+      ['EA', 'Diario de asientos manuales'],
+    ],
+    explicacion: 'El tipo PC trae albaranes ACPC y estos facturas FCOA; COBD cobra un efecto suelto y EA es el diario del asiento manual.',
+  },
+  {
+    origen: 'carteras',
+    pregunta: 'Une cada estado del efecto con su momento.',
+    titulos: ['Estado', 'Cuándo'],
+    pares: [
+      ['PE Pendiente', 'Nace al contabilizar la factura'],
+      ['PR Propuesto', 'Lo agregas a una remesa'],
+      ['CO Cobrado', 'Lo cobras con COBD o con la remesa'],
+      ['DV Devuelto', 'El banco lo devuelve impagado'],
+    ],
+    explicacion: 'El efecto nace en el estado de la condición de cobro (PE) y en la remesa recorre PE › PR › OC › CO.',
+  },
+  {
+    origen: 'compras',
+    pregunta: 'Une cada situación del pedido con lo que ha pasado.',
+    titulos: ['Situación', 'Qué ha pasado'],
+    pares: [
+      ['Pendiente', 'Validado, sin mercancía recibida'],
+      ['Parcial', 'Han llegado algunas líneas'],
+      ['Servido', 'Ha llegado todo lo pedido'],
+    ],
+    explicacion: 'Validar no sirve el pedido: pasa a Parcial o a Servido al generar sus albaranes.',
+  },
+];
+
+/* Pasos de los manuales con captura y zona marcada que sirven para «¿dónde harías clic?» */
+function pasosClic(moduloId: string) {
+  const m = MODULOS.find((x) => x.id === moduloId);
+  if (!m) return [];
+  const out: { pantalla: string; texto: string; imagen: string; zona: { x: number; y: number; w: number; h: number }; etiqueta: string; detalle?: string }[] = [];
+  for (const e of m.ejercicios)
+    for (const s of e.secciones)
+      for (const p of s.pasos) {
+        const h = p.hotspot;
+        if (!p.imagen || !h || !Number.isFinite(h.x + h.y + h.w + h.h)) continue;
+        const area = h.w * h.h;
+        if (area < 8 || area > 320 || h.w < 2 || h.h < 2) continue;
+        if (p.texto.length > 160 || /^Abre la ruta\.?$/.test(p.texto.trim())) continue;
+        const et = h.etiqueta.trim();
+        if (et.length < 3 || /^[\d\s.,:/-]+$/.test(et) || /\d{2}-\d{2}-\d{4}/.test(et)) continue;
+        out.push({ pantalla: s.titulo, texto: p.texto, imagen: p.imagen, zona: { x: h.x, y: h.y, w: h.w, h: h.h }, etiqueta: h.etiqueta, detalle: p.detalle });
+      }
+  return out;
+}
+
+/** Preguntas de completar un dato: los números salen de la semilla */
+function generarDatos(r: ReturnType<typeof rng>): { importe: PreguntaDato[]; cuenta: PreguntaDato[] } {
+  const cent = () => r.pick([0, 0.25, 0.5, 0.75, 0.2, 0.4]);
+  const b1 = redondea(r.int(24, 640) + cent());
+  const iva1 = redondea(b1 * IVA);
+  const b2 = redondea(r.int(30, 900) + cent());
+  const iva2 = redondea(b2 * IVA);
+  const t3 = redondea(r.int(100, 1500) + cent());
+  const ef = redondea(t3 * 0.4);
+  const q = r.int(3, 20);
+  const pr = redondea(r.int(8, 60) * 0.25 + 2);
+  const neto = redondea(q * pr * 0.9);
+  const importe: PreguntaDato[] = [
+    { tipo: 'dato', formato: 'importe', origen: 'compras', pregunta: 'La factura del proveedor tiene esta base. ¿Cuál es el total de la factura?', datos: [{ k: 'Base imponible', v: `${p2(b1)} €` }, { k: 'IVA', v: '21 %' }], esperado: redondea(b1 + iva1), placeholder: '0,00', explicacion: `IVA: ${p2(b1)} × 21 % = ${p2(iva1)}. Total: ${p2(b1)} + ${p2(iva1)} = ${p2(redondea(b1 + iva1))}.` },
+    { tipo: 'dato', formato: 'importe', origen: 'ventas', pregunta: 'Facturas a un cliente esta base. ¿Qué cuota de IVA va al Haber de la 47000?', datos: [{ k: 'Base imponible', v: `${p2(b2)} €` }, { k: 'IVA', v: '21 %' }], esperado: iva2, placeholder: '0,00', explicacion: `${p2(b2)} × 21 % = ${p2(iva2)}, redondeado a dos decimales.` },
+    { tipo: 'dato', formato: 'importe', origen: 'carteras', pregunta: 'La factura vence en tres plazos, a 40, 80 y 120 días, con el 40 %, el 20 % y el 40 %. ¿De cuánto es el primer efecto?', datos: [{ k: 'Total factura', v: `${p2(t3)} €` }], esperado: ef, placeholder: '0,00', explicacion: `Cada efecto lleva su porcentaje del total: 40 % de ${p2(t3)} = ${p2(ef)}.` },
+    { tipo: 'dato', formato: 'importe', origen: 'maestros', pregunta: 'La lista de precios da este precio con un descuento 1 del 10 %. ¿Cuál es el importe neto de la línea?', datos: [{ k: 'Cantidad', v: `${q} UNI` }, { k: 'Precio', v: `${p2(pr)} €` }, { k: 'Descuento 1', v: '10 %' }], esperado: neto, placeholder: '0,00', explicacion: `${q} × ${p2(pr)} = ${p2(redondea(q * pr))}; menos el 10 %: ${p2(neto)}.` },
+  ];
+  const cuenta: PreguntaDato[] = [
+    { tipo: 'dato', formato: 'cuenta', origen: 'compras', pregunta: 'Contabilizas el albarán de compra. ¿Qué cuenta va al Haber?', esperado: '40090', placeholder: '00000', explicacion: 'El albarán lleva la 60000 al Debe contra la 40090 Compras pendiente de factura.' },
+    { tipo: 'dato', formato: 'cuenta', origen: 'ventas', pregunta: 'Contabilizas una factura de venta. ¿En qué cuenta va el IVA repercutido?', esperado: '47000', placeholder: '00000', explicacion: 'La factura de venta lleva 43000 al Debe y 47000 y 70000 al Haber.' },
+    { tipo: 'dato', formato: 'cuenta', origen: 'carteras', pregunta: 'Cobras un efecto por banco con COBD. ¿Qué cuenta va al Debe?', esperado: '57200', placeholder: '00000', explicacion: 'El cobro lleva Bancos 57200 al Debe y Clientes 43000 al Haber.' },
+    { tipo: 'dato', formato: 'cuenta', origen: 'parametrizacion', pregunta: 'Registras una factura de compra con IVA. ¿En qué cuenta va el IVA soportado?', esperado: '47200', placeholder: '00000', explicacion: 'El IVA de las compras va al Debe de la 47200.' },
+  ];
+  return { importe, cuenta };
+}
+
+const desordena = (r: ReturnType<typeof rng>, n: number) => {
+  // nunca deja la solución tal cual
+  for (let k = 0; k < 8; k++) {
+    const o = r.shuffle([...Array(n).keys()]);
+    if (o.some((x, i) => x !== i)) return o;
+  }
+  return [...Array(n).keys()].reverse();
+};
+
 export function generarTeoria(codigo: string): PreguntaExamen[] {
   const ini = iniDeCodigo(codigo);
   const r = rng(hash32(`${codigo}|teoria`));
-  const porModulo = MODULOS.map((m) => ({
-    id: m.id,
-    preguntas: r.shuffle(m.ejercicios.flatMap((e) => e.test).filter(apta)),
-  }));
   const elegidas: PreguntaExamen[] = [];
-  // 2 por módulo de los tests (12), 7 del vídeo de compras y 5 de criterio: 24
-  for (const m of porModulo) for (const q of m.preguntas.slice(0, 2)) elegidas.push({ ...q, origen: m.id });
-  const resto = r.shuffle(porModulo.flatMap((m) => m.preguntas.slice(2).map((q) => ({ ...q, origen: m.id }))));
-  while (elegidas.length < NUM_TEORIA - N_VIDEO - N_CRITERIO && resto.length) elegidas.push(resto.shift()!);
-  for (const { cap, ...q } of r.shuffle(VIDEO).slice(0, N_VIDEO)) elegidas.push({ ...q, origen: `vídeo cap. ${cap}` });
-  for (const q of r.shuffle(CRITERIO).slice(0, NUM_TEORIA - elegidas.length)) elegidas.push({ ...q, origen: 'criterio' });
 
-  return r.shuffle(elegidas).map((q) => {
+  // 1 test y 1 clic por módulo
+  for (const m of MODULOS) {
+    const tests = r.shuffle(m.ejercicios.flatMap((e) => e.test).filter(apta));
+    if (tests[0]) elegidas.push({ ...tests[0], origen: m.id });
+    const pasos = pasosClic(m.id);
+    if (pasos.length) {
+      const p = r.pick(pasos);
+      elegidas.push({
+        tipo: 'clic',
+        origen: m.id,
+        modulo: m.id,
+        pantalla: p.pantalla,
+        pregunta: `¿Dónde tocas «${p.etiqueta.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+Es igual a.*$/i, '').trim()}»?`,
+        paso: p.texto,
+        imagen: p.imagen,
+        zona: p.zona,
+        etiqueta: p.etiqueta,
+        explicacion: `Es «${p.etiqueta}».${p.detalle ? ` ${p.detalle}` : ''}`,
+      });
+    }
+  }
+
+  // 1 pregunta por capítulo del vídeo
+  const caps = Array.from(new Set(VIDEO.map((v) => v.cap))).sort((a, b) => a - b);
+  for (const c of caps.slice(0, REPARTO.video)) {
+    const { cap, t, ...q } = r.pick(VIDEO.filter((v) => v.cap === c));
+    elegidas.push({ ...q, origen: `vídeo cap. ${cap}`, video: { cap, t } });
+  }
+
+  // Ordenar: un circuito del vídeo y otro de un manual
+  const cv = r.pick(CIRCUITOS_VIDEO);
+  const mods = MODULOS.filter((m) => m.circuito.length >= 4 && m.circuito.length <= 7);
+  const cm = r.pick(mods);
+  for (const c of [
+    { origen: `vídeo cap. ${cv.cap}`, pregunta: cv.pregunta, pasos: cv.pasos, explicacion: cv.explicacion },
+    { origen: cm.id, pregunta: `Ordena el circuito de ${(META_CORTO[cm.id] ?? cm.titulo).toLowerCase()} que has practicado en el manual.`, pasos: cm.circuito, explicacion: `El orden del manual: ${cm.circuito.join(' › ')}.` },
+  ].slice(0, REPARTO.orden)) {
+    const orden = desordena(r, c.pasos.length);
+    elegidas.push({ tipo: 'orden', origen: c.origen, pregunta: c.pregunta, explicacion: c.explicacion, items: orden.map((k) => c.pasos[k]), solucion: c.pasos.map((_, k) => orden.indexOf(k)) });
+  }
+
+  // Relacionar: dos juegos distintos de cuatro parejas (o menos si el juego es corto)
+  const rels: typeof RELACIONES = [];
+  for (const rel of r.shuffle(RELACIONES)) if (rels.length < REPARTO.relacion && !rels.some((x) => x.origen === rel.origen)) rels.push(rel);
+  for (const rel of rels) {
+    const pares = r.shuffle(rel.pares).slice(0, 4);
+    const orden = desordena(r, pares.length);
+    elegidas.push({
+      tipo: 'relacion',
+      origen: rel.origen,
+      pregunta: rel.pregunta,
+      titulos: rel.titulos,
+      explicacion: rel.explicacion,
+      izquierda: pares.map((p) => p[0]),
+      derecha: orden.map((k) => pares[k][1]),
+      solucion: pares.map((_, k) => orden.indexOf(k)),
+    });
+  }
+
+  // Completar un dato: un importe y una cuenta
+  const datos = generarDatos(r);
+  elegidas.push(r.pick(datos.importe));
+  if (REPARTO.dato > 1) elegidas.push(r.pick(datos.cuenta));
+
+  // Criterio y, si algún banco se queda corto, más tests
+  for (const q of r.shuffle(CRITERIO).slice(0, REPARTO.criterio)) elegidas.push({ ...q, origen: 'criterio' });
+  const resto = r.shuffle(MODULOS.flatMap((m) => m.ejercicios.flatMap((e) => e.test).filter(apta).map((q) => ({ ...q, origen: m.id }))));
+  while (elegidas.length < NUM_TEORIA && resto.length) {
+    const q = resto.shift()!;
+    if (!elegidas.some((e) => e.pregunta === q.pregunta)) elegidas.push(q);
+  }
+
+  // Reparte cada tipo a lo largo del examen (que no se amontonen los clics o los ordenar)
+  const porTipo = new Map<string, number>();
+  const clave = (q: PreguntaExamen) => (esTest(q) ? (q.video ? 'video' : 'test') : q.tipo);
+  for (const q of elegidas) porTipo.set(clave(q), (porTipo.get(clave(q)) ?? 0) + 1);
+  const visto = new Map<string, number>();
+  const repartidas = r
+    .shuffle(elegidas)
+    .map((q) => {
+      const c = clave(q);
+      const k = visto.get(c) ?? 0;
+      visto.set(c, k + 1);
+      return { q, pos: (k + 0.15 + r.next() * 0.7) / porTipo.get(c)! };
+    })
+    .sort((a, b) => a.pos - b.pos)
+    .map((x) => x.q);
+
+  return repartidas.map((q): PreguntaExamen => {
+    const base = { pregunta: conIni(q.pregunta, ini), explicacion: conIni(q.explicacion, ini) };
+    if (!esTest(q)) {
+      if (q.tipo === 'orden') return { ...q, ...base, items: q.items.map((x) => conIni(x, ini)) };
+      if (q.tipo === 'relacion') return { ...q, ...base, izquierda: q.izquierda.map((x) => conIni(x, ini)), derecha: q.derecha.map((x) => conIni(x, ini)) };
+      if (q.tipo === 'clic') return { ...q, ...base, pantalla: conIni(q.pantalla, ini), etiqueta: conIni(q.etiqueta, ini), paso: q.paso ? conIni(q.paso, ini) : undefined };
+      return { ...q, ...base };
+    }
     const orden = r.shuffle(q.opciones.map((_, i) => i));
     return {
       ...q,
-      pregunta: conIni(q.pregunta, ini),
+      ...base,
       opciones: orden.map((i) => conIni(q.opciones[i], ini)),
       correcta: orden.indexOf(q.correcta),
-      explicacion: conIni(q.explicacion, ini),
     };
   });
 }
+
+const META_CORTO: Record<string, string> = { maestros: 'Maestros', parametrizacion: 'Parametrización', compras: 'Compras', ventas: 'Ventas', asientos: 'Asientos', carteras: 'Carteras' };
+
+/** ¿Ha contestado del todo? (las de ordenar y relacionar pueden quedarse a medias) */
+export function respondida(q: PreguntaExamen, r: RespuestaTeoria | undefined): boolean {
+  if (r === null || r === undefined) return false;
+  switch (tipoDe(q)) {
+    case 'test':
+      return typeof r === 'number';
+    case 'clic':
+      return typeof r === 'object' && !Array.isArray(r);
+    case 'orden':
+      return Array.isArray(r) && r.length === (q as PreguntaOrden).items.length;
+    case 'relacion':
+      return Array.isArray(r) && r.length === (q as PreguntaRelacion).izquierda.length && r.every((x) => x >= 0);
+    case 'dato':
+      return typeof r === 'string' && r.trim() !== '';
+  }
+}
+
+export function dentroDeZona(z: { x: number; y: number; w: number; h: number }, p: { x: number; y: number }, margen = MARGEN_CLIC) {
+  return p.x >= z.x - margen && p.x <= z.x + z.w + margen && p.y >= z.y - margen && p.y <= z.y + z.h + margen;
+}
+
+/** Corrección de una pregunta de teoría (determinista, todo o nada) */
+export function aciertaTeoria(q: PreguntaExamen, r: RespuestaTeoria | undefined): boolean {
+  if (!respondida(q, r)) return false;
+  if (esTest(q)) return r === q.correcta;
+  switch (q.tipo) {
+    case 'clic':
+      return dentroDeZona(q.zona, r as { x: number; y: number });
+    case 'orden':
+    case 'relacion':
+      return (r as number[]).every((x, i) => x === q.solucion[i]);
+    case 'dato': {
+      if (q.formato === 'importe') {
+        const n = parseImporte(r as string);
+        return n !== null && Math.abs(n - Number(q.esperado)) <= 0.011;
+      }
+      return normCuenta(r as string) === String(q.esperado);
+    }
+  }
+}
+
+/** Texto corto de la respuesta del alumno (revisión y acta) */
+export function textoRespuesta(q: PreguntaExamen, r: RespuestaTeoria | undefined): string {
+  if (r === null || r === undefined || (Array.isArray(r) && !r.length) || r === '') return 'sin responder';
+  if (esTest(q)) return typeof r === 'number' ? q.opciones[r] ?? '—' : '—';
+  switch (q.tipo) {
+    case 'clic': {
+      const p = r as { x: number; y: number };
+      return `clic en ${Math.round(p.x)} %, ${Math.round(p.y)} %`;
+    }
+    case 'orden':
+      return (r as number[]).map((k) => q.items[k]).join(' › ');
+    case 'relacion':
+      return (r as number[]).map((k, i) => `${q.izquierda[i]} = ${k >= 0 ? q.derecha[k] : '—'}`).join(' · ');
+    case 'dato':
+      return String(r);
+  }
+}
+
+/** Texto de la respuesta correcta */
+export function textoCorrecta(q: PreguntaExamen): string {
+  if (esTest(q)) return q.opciones[q.correcta];
+  switch (q.tipo) {
+    case 'clic':
+      return `«${q.etiqueta}»`;
+    case 'orden':
+      return q.solucion.map((k) => q.items[k]).join(' › ');
+    case 'relacion':
+      return q.solucion.map((k, i) => `${q.izquierda[i]} = ${q.derecha[k]}`).join(' · ');
+    case 'dato':
+      return typeof q.esperado === 'number' ? p2(q.esperado) : q.esperado;
+  }
+}
+
+export const NOMBRE_TIPO: Record<TipoPregunta, string> = { test: 'Test', clic: '¿Dónde harías clic?', orden: 'Ordenar', relacion: 'Relacionar', dato: 'Completar el dato' };
+
+export interface BloqueTeoria {
+  clave: string;
+  nombre: string;
+  clase: 'modulo' | 'video' | 'criterio';
+  aciertos: number;
+  total: number;
+}
+
+/** Desglose de la teoría por módulo, capítulo del vídeo y criterio */
+export function desgloseTeoria(teoria: PreguntaExamen[], resp: RespuestaTeoria[]): BloqueTeoria[] {
+  const mapa = new Map<string, BloqueTeoria>();
+  teoria.forEach((q, i) => {
+    const vid = /^vídeo cap\. (\d+)/.exec(q.origen);
+    const clave = vid ? `cap${vid[1].padStart(2, '0')}` : q.origen;
+    const b = mapa.get(clave) ?? {
+      clave,
+      nombre: vid ? `Vídeo · cap. ${vid[1]}` : q.origen === 'criterio' ? 'Criterio' : META_CORTO[q.origen] ?? q.origen,
+      clase: vid ? 'video' : q.origen === 'criterio' ? 'criterio' : 'modulo',
+      aciertos: 0,
+      total: 0,
+    };
+    b.total++;
+    if (aciertaTeoria(q, resp[i])) b.aciertos++;
+    mapa.set(clave, b);
+  });
+  const orden = (b: BloqueTeoria) => (b.clase === 'modulo' ? ORDEN_MOD.indexOf(b.clave) : b.clase === 'video' ? 100 + Number(b.clave.slice(3)) : 200);
+  return [...mapa.values()].sort((a, b) => orden(a) - orden(b));
+}
+const ORDEN_MOD = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'carteras'];
 
 /* ---------------------------------------------------------------- corrección */
 
@@ -617,11 +1011,13 @@ export interface Resultado {
   aprobado: boolean;
   tareas: DetalleTarea[];
   coherencia: Coherencia[];
+  /** Teoría por módulo y capítulo del vídeo (los exámenes antiguos no lo traen) */
+  desglose?: BloqueTeoria[];
 }
 
 export function corregir(ex: EstadoExamen): Resultado {
   const caso = generarCaso(ex.codigo);
-  const aciertos = ex.teoria.reduce((s, q, i) => s + (ex.respTeoria[i] === q.correcta ? 1 : 0), 0);
+  const aciertos = ex.teoria.reduce((s, q, i) => s + (aciertaTeoria(q, ex.respTeoria[i]) ? 1 : 0), 0);
   const teoria = ex.teoria.length ? aciertos / ex.teoria.length : 0;
   const tareas = caso.tareas.map((t) => ({
     id: t.id,
@@ -645,6 +1041,7 @@ export function corregir(ex: EstadoExamen): Resultado {
     aprobado: teoria >= APROBADO_EXAMEN && practica >= APROBADO_EXAMEN,
     tareas,
     coherencia: coh,
+    desglose: desgloseTeoria(ex.teoria, ex.respTeoria),
   };
 }
 
@@ -658,7 +1055,7 @@ export interface EstadoExamen {
   sinRequisito: boolean;
   fase: 'teoria' | 'practica' | 'resultado';
   teoria: PreguntaExamen[];
-  respTeoria: (number | null)[];
+  respTeoria: RespuestaTeoria[];
   finTeoria?: string;
   resp: Record<string, string>;
   fin?: string;
@@ -727,7 +1124,7 @@ export const examen = {
       actual: { version: 1, codigo, alumno, inicio, sinRequisito, fase: 'teoria', teoria, respTeoria: teoria.map(() => null), resp: {} },
     });
   },
-  responderTeoria(i: number, op: number) {
+  responderTeoria(i: number, op: RespuestaTeoria) {
     conActual((e) => {
       const r = [...e.respTeoria];
       r[i] = op;
@@ -778,6 +1175,8 @@ export interface Acta {
   nota: { teoria: number; practica: number; global: number };
   aprobado: boolean;
   declarado: Record<string, string>;
+  /** Teoría: aciertos por bloque y, pregunta a pregunta, tipo, origen y si acierta */
+  teoria?: { bloques: { nombre: string; aciertos: number; total: number }[]; preguntas: { tipo: TipoPregunta; origen: string; ok: boolean; respuesta: string }[] };
 }
 
 export function crearActa(ex: EstadoExamen): Acta {
@@ -793,6 +1192,10 @@ export function crearActa(ex: EstadoExamen): Acta {
     nota: { teoria: redondea(r.teoria * 100), practica: redondea(r.practica * 100), global: redondea(r.global * 100) },
     aprobado: r.aprobado,
     declarado: ex.resp,
+    teoria: {
+      bloques: desgloseTeoria(ex.teoria, ex.respTeoria).map((b) => ({ nombre: b.nombre, aciertos: b.aciertos, total: b.total })),
+      preguntas: ex.teoria.map((q, i) => ({ tipo: tipoDe(q), origen: q.origen, ok: aciertaTeoria(q, ex.respTeoria[i]), respuesta: textoRespuesta(q, ex.respTeoria[i]).slice(0, 120) })),
+    },
   };
 }
 
@@ -827,6 +1230,15 @@ export function actaTexto(acta: Acta): string {
   for (const t of caso.tareas) {
     lineas.push(`· ${t.titulo}`);
     for (const c of t.campos) lineas.push(`   ${c.etiqueta}: ${acta.declarado[c.id] || '—'}`);
+  }
+  if (acta.teoria) {
+    lineas.push('', 'Teoría por bloques (módulos, capítulos del vídeo y criterio):');
+    for (const b of acta.teoria.bloques) lineas.push(`   ${b.nombre}: ${b.aciertos}/${b.total}`);
+    lineas.push('', 'Teoría pregunta a pregunta:');
+    acta.teoria.preguntas.forEach((q, i) => {
+      const o = q.origen.startsWith('vídeo') ? q.origen.replace('vídeo', 'Vídeo') : q.origen === 'criterio' ? 'Criterio' : META_CORTO[q.origen] ?? q.origen;
+      lineas.push(`   P${String(i + 1).padStart(2, '0')} · ${NOMBRE_TIPO[q.tipo]} · ${o} · ${q.ok ? 'bien' : 'mal'} · ${q.respuesta}`);
+    });
   }
   lineas.push('', 'Pega este texto entero en /examinador:', `ACTA:${aBase64(JSON.stringify(acta))}`);
   return lineas.join('\n');
