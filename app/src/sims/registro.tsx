@@ -99,7 +99,7 @@ const dCartera = (
 
 export const SIMS: SimInfo[] = [
   { id: 'asiento', titulo: 'Cuadra el asiento', resumen: 'Rellena importes, elige cuentas y lados, y encuentra el error que deja el Cuadre en 500,00.', modulo: 'asientos', rondas: 5, color: '#8a7be0', Componente: SimAsiento, dibujo: dBalanza },
-  { id: 'numerador', titulo: 'Construye la máscara', resumen: 'Monta con fichas la rotura y la máscara del numerador hasta que salga DISPC000001. Y descifra el error «Sin máscara».', modulo: 'parametrizacion', rondas: 6, color: '#6c8fd6', Componente: SimNumerador, dibujo: dTeclas },
+  { id: 'numerador', titulo: 'Construye la máscara', resumen: 'Monta con fichas la rotura y la máscara del numerador hasta que salgan DISPC000001 y el número fiscal FC026-000001. Y descifra el error «Sin máscara».', modulo: 'parametrizacion', rondas: 6, color: '#6c8fd6', Componente: SimNumerador, dibujo: dTeclas },
   { id: 'circuito', titulo: 'Ordena el circuito', resumen: 'Pon en orden oferta, pedido, albarán, factura y asiento, y la vida de un efecto. Luego di qué hace cada paso.', modulo: 'compras', rondas: 4, color: '#f2a93b', Componente: SimCircuito, dibujo: dCircuito },
   { id: 'docflow', titulo: 'Lee el Docflow', resumen: 'Contesta tocando el diagrama: de qué albarán viene la factura, qué estado tiene el pedido, cuánto se debe.', modulo: 'compras', rondas: 3, color: '#3fa7c9', Componente: SimDocflow, dibujo: dDocflow },
   { id: 'factura', titulo: 'Base, IVA y total', resumen: 'Calcula el pie de facturas reales y de otras con descuento y tipos de IVA del 21, 10 y 4 %.', modulo: 'ventas', rondas: 5, color: '#e0708a', Componente: SimFactura, dibujo: dFactura },

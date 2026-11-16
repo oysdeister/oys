@@ -1,0 +1,153 @@
+/* Certificado: escena 3D, capas holográficas e impresión. Se carga después de examen.css y lo sobrescribe. */
+
+.cert-escena {
+  position: relative; perspective: 1500px; perspective-origin: 50% 35%;
+  padding: clamp(18px, 4vw, 40px) clamp(4px, 2vw, 28px) clamp(28px, 5vw, 56px);
+  touch-action: pan-y;
+}
+/* En móvil se recorta en horizontal para que la inclinación no cree scroll lateral; en escritorio el halo respira */
+@media (max-width: 760px) { .cert-escena { overflow-x: clip; overflow-clip-margin: 40px; } }
+.cert-entrada, .cert-sacudida { transform-style: preserve-3d; transform-origin: 50% 60%; }
+.cert-escena:not(.quieto) .cert-entrada { touch-action: none; cursor: grab; }
+.cert-escena:not(.quieto) .cert-entrada:active { cursor: grabbing; }
+
+/* La tarjeta ya no recorta: si recortara, aplanaría el 3D de sus capas */
+.cert-pagina .cert-tarjeta {
+  overflow: visible; background: transparent; box-shadow: none; border-radius: 6px;
+  transform-style: preserve-3d; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.cert-pagina .cert-escena.quieto .cert-tarjeta { cursor: default; touch-action: auto; }
+.cert-tarjeta:active { cursor: grabbing; }
+
+/* Papel: la única capa que se ve en la impresión (vía la copia estática). Sigue claro en los dos temas. */
+.cert-papel {
+  position: relative; line-height: 0; border-radius: 6px; overflow: hidden; background: #fcfdfc;
+  transform: translateZ(0);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7), 0 0 26px -6px rgba(95, 240, 210, 0.55), 0 0 60px -18px rgba(139, 123, 255, 0.55);
+}
+.cert-papel svg { pointer-events: none; }
+
+/* Marco de cristal con neón, más atrás: da el paralaje real al inclinar y el halo turquesa → violeta */
+.cert-base {
+  position: absolute; inset: -2.6% -2.1%; border-radius: var(--r-l, 28px); transform: translateZ(-46px);
+  border: 1.5px solid transparent;
+  background:
+    radial-gradient(120% 90% at 0% 100%, rgba(95, 240, 210, 0.28), transparent 55%) padding-box,
+    radial-gradient(110% 90% at 100% 0%, rgba(139, 123, 255, 0.3), transparent 60%) padding-box,
+    var(--glass, rgba(20, 40, 110, 0.8)) padding-box,
+    var(--neon, linear-gradient(135deg, #5ff0d2, #8b7bff)) border-box;
+  box-shadow:
+    0 0 34px -6px rgba(95, 240, 210, 0.6),
+    0 0 90px -16px rgba(139, 123, 255, 0.65),
+    0 0 160px -40px rgba(111, 233, 255, 0.55);
+}
+.cert-base::after {
+  content: ''; position: absolute; inset: 8px; border-radius: calc(var(--r-l, 28px) - 8px); border: 1px dashed rgba(159, 227, 210, 0.35);
+}
+:root:not([data-theme='dark']) .cert-base {
+  box-shadow: 0 0 30px -8px rgba(63, 191, 159, 0.55), 0 0 80px -20px rgba(107, 92, 224, 0.45), 0 30px 60px -34px rgba(30, 60, 150, 0.5);
+}
+
+/* Reflejo luminoso en el «suelo»: se desplaza al contrario que la inclinación */
+.cert-suelo {
+  position: absolute; left: 8%; right: 8%; bottom: clamp(0px, 1.5vw, 16px); height: 46px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(95, 240, 210, 0.55), rgba(139, 123, 255, 0.28) 55%, rgba(139, 123, 255, 0) 100%);
+  filter: blur(14px); pointer-events: none;
+}
+:root:not([data-theme='dark']) .cert-suelo { background: radial-gradient(closest-side, rgba(63, 191, 159, 0.4), rgba(107, 92, 224, 0.2) 55%, transparent); }
+
+/* Velo iridiscente de toda la hoja: tenue y solo cuando hay examen aprobado */
+.cert-pagina .cert-holo {
+  border-radius: 6px; transform: translateZ(1px); overflow: hidden; mix-blend-mode: soft-light; opacity: 0.12;
+}
+.cert-pagina .estado-validado .cert-holo { opacity: 0.32; mix-blend-mode: overlay; }
+
+/* Banda holográfica: flota por encima del papel */
+.cert-holo-banda {
+  position: absolute; border-radius: 3px; overflow: hidden; transform: translateZ(26px); transform-origin: 50% 0;
+  background:
+    repeating-linear-gradient(-30deg, rgba(255, 255, 255, 0) 0 3px, rgba(255, 255, 255, 0.45) 3px 4px),
+    radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.9) 0 3px, transparent 4px) 0 0 / 100% 12.3%,
+    linear-gradient(175deg, #4fbfa5, #5cb8f5, #9b8cff, #f27fb0, #f5b75a, #4fbfa5, #5cb8f5, #9b8cff, #f27fb0, #4fbfa5);
+  background-size: auto, 100% 12.3%, 100% 320%;
+  background-position: 0 0, 0 0, var(--hp, 50% 50%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8) inset, 0 6px 10px -4px rgba(31, 39, 56, 0.35);
+}
+.cert-holo-banda::before {
+  content: ''; position: absolute; inset: 0;
+  background: conic-gradient(from var(--ha, 90deg) at 50% var(--hy, 50%), #4fbfa5, #8fd3ff, #f5b75a, #f27fb0, #9b8cff, #4fbfa5);
+  mix-blend-mode: hue; opacity: 0.6;
+}
+.cert-holo-banda::after {
+  content: ''; position: absolute; inset: -40% -200%;
+  background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, 0.95) 50%, transparent 58%);
+  transform: translateY(calc((var(--hy, 50%) - 50%) * 1.2));
+  background-position: var(--hp, 50% 50%); background-size: 100% 260%; mix-blend-mode: overlay;
+}
+.cert-holo-banda span {
+  position: absolute; inset: 0; display: grid; place-items: center; writing-mode: vertical-rl; transform: rotate(180deg);
+  font: 800 clamp(5px, 1vw, 11px) / 1 var(--display); letter-spacing: 0.4em; color: rgba(31, 39, 56, 0.4); mix-blend-mode: multiply;
+}
+
+/* En pantalla la banda viva sustituye a la estática del SVG (que sí sale al imprimir y en la imagen) */
+.cert-tarjeta.con-holo .cert-papel .cert-holo-estatico { visibility: hidden; }
+
+/* Brillo del sello validado */
+.cert-holo-sello {
+  position: absolute; border-radius: 50%; transform: translateZ(4px); pointer-events: none; mix-blend-mode: soft-light;
+  opacity: 0.85;
+  background:
+    radial-gradient(circle at var(--hx, 50%) var(--hy, 50%), rgba(255, 255, 255, 0.85), transparent 45%),
+    conic-gradient(from var(--ha, 0deg), #9fe3d2, #8fd3ff, #c7b8ff, #f6c4d8, #f5d58a, #9fe3d2);
+}
+
+/* Reflejo especular: sigue a la luz (puntero o inclinación) */
+.cert-brillo {
+  position: absolute; inset: 0; border-radius: 6px; pointer-events: none; transform: translateZ(2px); overflow: hidden;
+  background:
+    radial-gradient(circle at var(--hx, 50%) var(--hy, 50%), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 42%),
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.22) 46%, rgba(255, 255, 255, 0) 60%) var(--hx, 50%) 0 / 260% 100%;
+  mix-blend-mode: soft-light;
+}
+
+/* Copia estática: oculta en pantalla, visible al imprimir */
+.cert-pagina .cert-impresion { display: none; }
+
+.cert-acciones-3d { margin-top: 10px; align-items: center; }
+.cert-acciones-3d .btn.sm { min-height: 44px; }
+.cert-acciones-3d .btn.activo { box-shadow: var(--glow-strong); }
+.cert-pista { flex-basis: 100%; text-align: center; margin: 0; font-size: max(14px, 0.85rem); color: var(--ink-2); }
+.cert-cab p { color: var(--ink-2); }
+
+@media (max-width: 760px) {
+  .cert-base { inset: -3% -2.5%; transform: translateZ(-26px); border-radius: 8px; }
+  .cert-holo-banda { transform: translateZ(14px); }
+  .cert-papel, .cert-brillo, .cert-pagina .cert-holo { border-radius: 3px; }
+  .cert-acciones .btn { flex: 1 1 auto; }
+  .cert-pagina { padding-bottom: 16px; }
+  .cert-base { border-radius: 18px; box-shadow: 0 0 18px -4px rgba(95, 240, 210, 0.6), 0 0 34px -10px rgba(139, 123, 255, 0.65); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cert-base { transform: none; }
+}
+
+/* ---------- Impresión: solo el certificado, A4 apaisado, una página ---------- */
+@page { size: A4 landscape; margin: 0; }
+@media print {
+  html.cert-activo, html.cert-activo body { margin: 0 !important; padding: 0 !important; background: #fff !important; height: auto !important; min-height: 0 !important; }
+  /* Todo fuera salvo la copia estática y la cadena de contenedores que la llevan (sin depender de la maqueta de la app) */
+  html.cert-activo body *:not(:has(.cert-impresion)):not(.cert-impresion):not(.cert-impresion *) { display: none !important; }
+  html.cert-activo body *:has(.cert-impresion) {
+    display: block !important; position: static !important; margin: 0 !important; padding: 0 !important; border: 0 !important;
+    width: auto !important; max-width: none !important; height: auto !important; min-height: 0 !important; overflow: visible !important;
+    transform: none !important; opacity: 1 !important; background: none !important; box-shadow: none !important; filter: none !important;
+  }
+  html.cert-activo .cert-pagina .cert-impresion {
+    display: block !important; visibility: visible !important; position: absolute !important; left: 0; top: 0; right: auto; bottom: auto;
+    width: 297mm !important; height: 209.5mm !important; overflow: hidden; margin: 0; padding: 0; background: #fff;
+    break-inside: avoid; page-break-after: avoid;
+  }
+  html.cert-activo .cert-impresion svg { display: block; width: 297mm !important; height: 209.5mm !important; }
+  html.cert-activo .cert-impresion, html.cert-activo .cert-impresion * { visibility: visible !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}

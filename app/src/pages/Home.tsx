@@ -1,225 +1,315 @@
-import { useEffect, useMemo, type PointerEvent, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
+import {
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+  type MotionValue,
+} from 'framer-motion';
 import { META, MODULOS, todosEjercicios } from '../content';
+import type { Modulo } from '../types';
 import { avanceEjercicio, ejercicioCompletado, useProgreso, type Progreso } from '../lib/progress';
 import { avanceGlobal, avanceModulo } from '../lib/avance';
+import { useExamen } from '../lib/examen';
 import { conIni } from '../lib/texto';
+import { SIMS } from '../sims/registro';
 import { Icon } from '../components/Icon';
-import { useMedia } from '../components/exercise/util';
+import { Anillo } from '../components/shell/Anillo';
+import { Planeta } from '../components/shell/Planeta';
+import { NucleoOrbita } from '../components/shell/NucleoOrbita';
+import { FICHAS } from './portadaDatos';
 import './aprender.css';
+import './portada.css';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
-const DIBUJO = 1.7; // segundos que tarda el arco en dibujarse
+const metaDe = (m: Modulo) => META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
 
-/* ---------- Geometría de la órbita (viewBox 600 × 480) ---------- */
-const CX = 300, CY = 318, RX = 236, RY = 238;
-const punto = (grados: number) => {
-  const r = (grados * Math.PI) / 180;
-  return { x: CX + RX * Math.cos(r), y: CY - RY * Math.sin(r) };
-};
-const A0 = 214, A1 = 12; // el arco empieza abajo a la izquierda y acaba arriba a la derecha, como en el logo
-const ARCO = (() => {
-  let d = '';
-  for (let a = A0; a >= A1; a -= 2) {
-    const p = punto(a);
-    d += `${d ? ' L' : 'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
-  }
-  return d;
-})();
-const ORBITA = (() => {
-  // La órbita completa menos la parte de abajo, para que no se salga del lienzo
-  let d = '';
-  for (let a = 218; a >= -38; a -= 3) {
-    const p = punto(a);
-    d += `${d ? ' L' : 'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
-  }
-  return d;
-})();
+/* =====================================================================
+   La órbita: un anillo inclinado en 3D con los seis módulos como estaciones.
+   Gira sola despacio; se para al pasar por encima o al enfocar una estación
+   y se puede arrastrar para girarla (ratón o dedo).
+   ===================================================================== */
 
-function anguloEstacion(i: number, n: number) {
-  const ini = 202, fin = 26;
-  return n === 1 ? 90 : ini - ((ini - fin) * i) / (n - 1);
+interface Geo {
+  w: number;
+  h: number;
+  cx: number;
+  cy: number;
+  rx: number;
+  ry: number;
+  movil: boolean;
 }
 
-function Anillito({ valor, color, r = 29 }: { valor: number; color: string; r?: number }) {
+function geometria(w: number): Geo {
+  const movil = w < 420;
+  const rx = w / 2 - (movil ? 46 : 70);
+  const ry = rx * (movil ? 0.82 : 0.7);
+  const h = Math.round(ry * 2 + (movil ? 120 : 190));
+  return { w, h, cx: w / 2, cy: ry + (movil ? 52 : 70), rx, ry, movil };
+}
+
+const rad = (g: number) => (g * Math.PI) / 180;
+/** Profundidad 0 (detrás) … 1 (delante) para un ángulo del anillo */
+const prof = (g: number) => (Math.sin(rad(g)) + 1) / 2;
+
+function Estacion({
+  m,
+  i,
+  n,
+  giro,
+  geo,
+  av,
+  reducir,
+  onPausa,
+}: {
+  m: Modulo;
+  i: number;
+  n: number;
+  giro: MotionValue<number>;
+  geo: Geo;
+  av: number;
+  reducir: boolean;
+  onPausa: (on: boolean) => void;
+}) {
+  const meta = metaDe(m);
+  const base = 90 + (360 / n) * i; // la primera estación empieza delante, abajo
+  const x = useTransform(giro, (g) => geo.cx + geo.rx * Math.cos(rad(g + base)));
+  const y = useTransform(giro, (g) => geo.cy + geo.ry * Math.sin(rad(g + base)));
+  const scale = useTransform(giro, (g) => 0.64 + 0.36 * prof(g + base));
+  const zIndex = useTransform(giro, (g) => Math.round(prof(g + base) * 100));
+  const opacity = useTransform(giro, (g) => 0.62 + 0.38 * prof(g + base));
   return (
-    <svg className="orb-ring" viewBox="0 0 70 70" aria-hidden="true">
-      <circle cx="35" cy="35" r={r} fill="none" stroke="var(--line)" strokeWidth="4" />
-      <motion.circle
-        cx="35"
-        cy="35"
-        r={r}
-        fill="none"
-        stroke={color}
-        strokeWidth="4"
-        strokeLinecap="round"
-        transform="rotate(-90 35 35)"
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: Math.max(valor, 0.001) }}
-        transition={{ duration: 1, delay: DIBUJO, ease: EASE }}
-      />
-    </svg>
+    <motion.div className="po-st" style={{ x, y, scale, zIndex }}>
+      <motion.div
+        initial={reducir ? false : { scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: reducir ? 0 : 0.5 + i * 0.12, type: 'spring', stiffness: 220, damping: 14 }}
+      >
+        <motion.div style={{ opacity }}>
+          <span
+            className="po-st-link"
+            onPointerEnter={(e) => e.pointerType === 'mouse' && onPausa(true)}
+            onPointerLeave={(e) => e.pointerType === 'mouse' && onPausa(false)}
+            onFocus={() => onPausa(true)}
+            onBlur={() => onPausa(false)}
+          >
+            <Planeta color={meta.color} valor={av} size={geo.movil ? 40 : 60} icono={meta.icono} etiqueta={meta.corto} pct={!geo.movil} to={`/modulo/${m.id}`} />
+          </span>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 
-/** La órbita: el arco del logo O&S con los seis módulos como estaciones */
+/** Ficha de documento que da vueltas por el anillo, más deprisa que las estaciones */
+function Cometa({ ang, geo }: { ang: MotionValue<number>; geo: Geo }) {
+  const x = useTransform(ang, (g) => geo.cx + geo.rx * Math.cos(rad(g)));
+  const y = useTransform(ang, (g) => geo.cy + geo.ry * Math.sin(rad(g)));
+  const zIndex = useTransform(ang, (g) => Math.round(prof(g) * 100) + 1);
+  const scale = useTransform(ang, (g) => 0.6 + 0.4 * prof(g));
+  const rotate = useTransform(ang, (g) => Math.cos(rad(g)) * -14);
+  return (
+    <motion.div className="po-comet" style={{ x, y, zIndex, scale, rotate }} aria-hidden="true">
+      <svg viewBox="0 0 24 30" width="20" height="26">
+        <path d="M3 2h12l6 6v20H3z" fill="var(--sheet)" stroke="var(--arc)" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M15 2v6h6M7 14h10M7 18h10M7 22h6" fill="none" stroke="var(--arc-deep)" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    </motion.div>
+  );
+}
+
 function Orbita({ p }: { p: Progreso }) {
   const reducir = !!useReducedMotion();
+  const caja = useRef<HTMLDivElement>(null);
+  const [w, setW] = useState(0);
+  const giro = useMotionValue(-8);
+  const cometa = useMotionValue(140);
+  const pausa = useRef(false);
+  const arrastre = useRef<{ x: number; ultimo: number; t: number; movido: boolean; id: number } | null>(null);
+  const vel = useRef(0); // grados por milisegundo tras soltar
+  const anularClic = useRef(false);
+  // Inclinación que sigue al ratón (paralaje suave)
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 60, damping: 16 });
-  const sy = useSpring(my, { stiffness: 60, damping: 16 });
-  const inclinacion = useTransform(sy, (v) => 26 + v * 7);
-  const giro = useTransform(sx, (v) => v * 9);
-  const contraX = useTransform(inclinacion, (v) => -v);
-  const contraY = useTransform(giro, (v) => -v);
-  const n = MODULOS.length;
+  const sx = useSpring(mx, { stiffness: 50, damping: 14 });
+  const sy = useSpring(my, { stiffness: 50, damping: 14 });
+  const rotX = useTransform(sy, (v) => v * -5);
+  const rotY = useTransform(sx, (v) => v * 7);
+
+  useLayoutEffect(() => {
+    const el = caja.current;
+    if (!el) return;
+    const medir = () => setW(Math.round(el.getBoundingClientRect().width));
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useAnimationFrame((_, dt) => {
+    const paso = Math.min(dt, 50);
+    if (!reducir) cometa.set(cometa.get() + paso * 0.045);
+    if (arrastre.current) return;
+    if (Math.abs(vel.current) > 0.0005) {
+      giro.set(giro.get() + vel.current * paso);
+      vel.current *= Math.pow(0.94, paso / 16);
+      return;
+    }
+    if (!reducir && !pausa.current) giro.set(giro.get() + paso * 0.004);
+  });
+
+  const geo = w ? geometria(w) : null;
   const global = avanceGlobal(p);
 
+  const abajo = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    arrastre.current = { x: e.clientX, ultimo: e.clientX, t: performance.now(), movido: false, id: e.pointerId };
+    vel.current = 0;
+  };
   const mover = (e: PointerEvent<HTMLDivElement>) => {
-    if (reducir || e.pointerType !== 'mouse') return;
     const r = e.currentTarget.getBoundingClientRect();
-    mx.set(((e.clientX - r.left) / r.width - 0.5) * 2);
-    my.set(((e.clientY - r.top) / r.height - 0.5) * 2);
+    if (!reducir && e.pointerType === 'mouse') {
+      mx.set(((e.clientX - r.left) / r.width - 0.5) * 2);
+      my.set(((e.clientY - r.top) / r.height - 0.5) * 2);
+    }
+    const a = arrastre.current;
+    if (!a || !geo) return;
+    const dx = e.clientX - a.ultimo;
+    if (!a.movido && Math.abs(e.clientX - a.x) > 6) {
+      a.movido = true;
+      try {
+        e.currentTarget.setPointerCapture(a.id);
+      } catch {
+        /* sin captura: seguimos igual */
+      }
+    }
+    if (!a.movido) return;
+    const ahora = performance.now();
+    const grados = (dx / (Math.PI * geo.rx)) * 180;
+    giro.set(giro.get() - grados);
+    vel.current = -grados / Math.max(8, ahora - a.t);
+    a.ultimo = e.clientX;
+    a.t = ahora;
+  };
+  const soltar = () => {
+    const a = arrastre.current;
+    if (a?.movido) anularClic.current = true;
+    if (performance.now() - (a?.t ?? 0) > 80) vel.current = 0;
+    arrastre.current = null;
+  };
+  const clicCaptura = (e: MouseEvent<HTMLDivElement>) => {
+    if (anularClic.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      anularClic.current = false;
+    }
   };
 
+  // Anillo como trazado (para dibujarlo al entrar)
+  const elipse = geo
+    ? `M ${geo.cx - geo.rx} ${geo.cy} a ${geo.rx} ${geo.ry} 0 1 0 ${geo.rx * 2} 0 a ${geo.rx} ${geo.ry} 0 1 0 ${-geo.rx * 2} 0`
+    : '';
+
   return (
-    <div className="orbit orb" onPointerMove={mover} onPointerLeave={() => { mx.set(0); my.set(0); }}>
-      <motion.div className="orbit-plane" style={{ rotateX: inclinacion, rotateY: giro }}>
-        <svg viewBox="0 0 600 480" aria-hidden="true">
-          <defs>
-            <linearGradient id="orb-grad" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0" style={{ stopColor: 'var(--arc)', stopOpacity: 0.35 }} />
-              <stop offset="0.45" style={{ stopColor: 'var(--arc)' }} />
-              <stop offset="1" style={{ stopColor: 'var(--arc-deep)' }} />
-            </linearGradient>
-            <radialGradient id="orb-disc">
-              <stop offset="0" style={{ stopColor: 'var(--arc)', stopOpacity: 0.22 }} />
-              <stop offset="1" style={{ stopColor: 'var(--arc)', stopOpacity: 0 }} />
-            </radialGradient>
-          </defs>
-          <ellipse cx={CX} cy={CY} rx={RX * 0.82} ry={RY * 0.62} fill="url(#orb-disc)" />
-          <path d={ORBITA} fill="none" stroke="var(--line)" strokeWidth="1.5" strokeDasharray="3 9" />
-          <motion.path
-            d={ARCO}
-            fill="none"
-            stroke="url(#orb-grad)"
-            strokeWidth="16"
-            strokeLinecap="round"
-            initial={{ pathLength: reducir ? 1 : 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: reducir ? 0 : DIBUJO, ease: [0.45, 0, 0.2, 1] }}
-          />
-          {!reducir && (
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: DIBUJO + 0.2, duration: 0.5 }}>
-              <g>
-                <rect x="-9" y="-11" width="18" height="22" rx="3" fill="var(--sheet)" stroke="var(--ink)" strokeWidth="2" />
-                <path d="M-4 -4h8M-4 1h8M-4 6h5" stroke="var(--arc-deep)" strokeWidth="2" strokeLinecap="round" />
-                <animateMotion dur="11s" repeatCount="indefinite" path={ARCO} keyPoints="0;1" keyTimes="0;1" calcMode="linear" />
-              </g>
-            </motion.g>
-          )}
-        </svg>
+    <div className="po-orbit-wrap">
+      <div
+        ref={caja}
+        className="po-orbit"
+        style={{ height: geo?.h ?? undefined }}
+        onPointerDown={abajo}
+        onPointerMove={mover}
+        onPointerUp={soltar}
+        onPointerCancel={soltar}
+        onPointerLeave={() => {
+          mx.set(0);
+          my.set(0);
+        }}
+        onClickCapture={clicCaptura}
+        role="group"
+        aria-label="Los seis módulos de la formación"
+      >
+        {geo && (
+          <motion.div className="po-stage" style={{ rotateX: rotX, rotateY: rotY }}>
+            <svg className="po-svg" width={geo.w} height={geo.h} aria-hidden="true">
+              <defs>
+                <radialGradient id="po-halo">
+                  <stop offset="0" stopColor="#5ff0d2" stopOpacity="0.28" />
+                  <stop offset="0.6" stopColor="#6fe9ff" stopOpacity="0.07" />
+                  <stop offset="1" stopColor="#6fe9ff" stopOpacity="0" />
+                </radialGradient>
+                <linearGradient id="arcoNeon" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stopColor="#5ff0d2" />
+                  <stop offset="0.55" stopColor="#6fe9ff" />
+                  <stop offset="1" stopColor="#8b7bff" />
+                </linearGradient>
+                <filter id="po-glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="10" />
+                </filter>
+              </defs>
+              <ellipse cx={geo.cx} cy={geo.cy} rx={geo.rx * 0.9} ry={geo.ry * 0.95} fill="url(#po-halo)" />
+              <ellipse className="orbita-guia" cx={geo.cx} cy={geo.cy} rx={geo.rx * 1.16} ry={geo.ry * 1.16} />
+              <ellipse className="orbita-guia" cx={geo.cx} cy={geo.cy} rx={geo.rx * 0.74} ry={geo.ry * 0.74} />
+              <ellipse cx={geo.cx} cy={geo.cy} rx={geo.rx} ry={geo.ry} fill="none" stroke="#5ff0d2" strokeOpacity="0.4" strokeWidth={geo.movil ? 14 : 20} filter="url(#po-glow)" />
+              <motion.path
+                d={elipse}
+                className="orbita-trazo"
+                strokeWidth={geo.movil ? 6 : 8}
+                strokeLinecap="round"
+                initial={{ pathLength: reducir ? 1 : 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: reducir ? 0 : 1.6, ease: [0.45, 0, 0.2, 1] }}
+              />
+            </svg>
 
-        <motion.div className="orb-center" style={{ rotateX: contraX, rotateY: contraY, x: '-50%', y: '-50%', z: 20 }}>
-          <motion.strong initial={reducir ? false : { opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: DIBUJO * 0.6, duration: 0.6 }}>
-            {Math.round(global * 100)}
-            <small>%</small>
-          </motion.strong>
-          <span>de tu formación</span>
-        </motion.div>
-
-        {MODULOS.map((m, i) => {
-          const meta = META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
-          const pt = punto(anguloEstacion(i, n));
-          const av = avanceModulo(p, m.id);
-          const retraso = reducir ? 0 : 0.15 + (DIBUJO * i) / Math.max(1, n - 1);
-          return (
+            {/* Núcleo: el avance total, con el arco del logo O&S */}
             <motion.div
-              key={m.id}
-              className="orb-st-wrap"
-              style={{ left: `${(pt.x / 600) * 100}%`, top: `${(pt.y / 480) * 100}%`, rotateX: contraX, rotateY: contraY, x: '-50%', y: '-50%', z: 46 }}
+              className="po-core"
+              style={{ left: geo.cx, top: geo.cy, zIndex: 50, x: '-50%', y: '-50%' }}
+              initial={reducir ? false : { opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.25, duration: 0.8, ease: EASE }}
             >
-              <motion.div initial={reducir ? false : { scale: 0, opacity: 0, y: 14 }} animate={{ scale: 1, opacity: 1, y: 0 }} transition={{ delay: retraso, type: 'spring', stiffness: 240, damping: 15 }}>
-                <Link to={`/modulo/${m.id}`} className="station orb-st" aria-label={`${meta.corto}: ${Math.round(av * 100)} % hecho`}>
-                  <span className="station-dot" style={{ color: meta.color }}>
-                    <Anillito valor={av} color={meta.color} />
-                    <Icon name={meta.icono} />
-                    <i className="orb-n">{i + 1}</i>
-                  </span>
-                  <span className="station-name">{meta.corto}</span>
-                  <span className="station-pct">{Math.round(av * 100)} %</span>
-                </Link>
-              </motion.div>
+              <NucleoOrbita valor={global} size={Math.round(Math.min(geo.ry * 0.95, 230))} />
             </motion.div>
-          );
-        })}
-      </motion.div>
-    </div>
-  );
-}
 
-/** En el móvil la órbita se despliega en vertical: el arco baja y las estaciones lo siguen */
-function OrbitaVertical({ p }: { p: Progreso }) {
-  const reducir = !!useReducedMotion();
-  const n = MODULOS.length;
-  const FILA = 74;
-  const xs = MODULOS.map((_, i) => 30 + Math.sin((i / Math.max(1, n - 1)) * Math.PI) * 34);
-  const ys = MODULOS.map((_, i) => i * FILA + FILA / 2);
-  let d = `M ${xs[0]} ${ys[0] - 26}`;
-  d += ` L ${xs[0]} ${ys[0]}`;
-  for (let i = 0; i < n - 1; i++) {
-    const my = (ys[i] + ys[i + 1]) / 2;
-    d += ` C ${xs[i]} ${my}, ${xs[i + 1]} ${my}, ${xs[i + 1]} ${ys[i + 1]}`;
-  }
-  return (
-    <div className="orb-v" style={{ height: n * FILA }}>
-      <svg width="100" height={n * FILA} aria-hidden="true">
-        <motion.path
-          d={d}
-          fill="none"
-          stroke="var(--arc)"
-          strokeWidth="8"
-          strokeLinecap="round"
-          initial={{ pathLength: reducir ? 1 : 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: reducir ? 0 : 1.4, ease: [0.45, 0, 0.2, 1] }}
-        />
-      </svg>
-      {MODULOS.map((m, i) => {
-        const meta = META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
-        const av = avanceModulo(p, m.id);
-        return (
-          <motion.div
-            key={m.id}
-            className="orb-v-row"
-            style={{ top: ys[i] - 28, left: xs[i] - 28 }}
-            initial={reducir ? false : { opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: reducir ? 0 : 0.1 + (1.4 * i) / Math.max(1, n - 1), type: 'spring', stiffness: 220, damping: 18 }}
-          >
-            <Link to={`/modulo/${m.id}`} className="orb-v-link">
-              <span className="station-dot" style={{ color: meta.color }}>
-                <Anillito valor={av} color={meta.color} />
-                <Icon name={meta.icono} />
-              </span>
-              <span>
-                <span className="station-name">
-                  {i + 1}. {meta.corto}
-                </span>
-                <span className="station-pct">{Math.round(av * 100)} % hecho</span>
-              </span>
-            </Link>
+            {!reducir && <Cometa ang={cometa} geo={geo} />}
+
+            {MODULOS.map((m, i) => (
+              <Estacion
+                key={m.id}
+                m={m}
+                i={i}
+                n={MODULOS.length}
+                giro={giro}
+                geo={geo}
+                av={avanceModulo(p, m.id)}
+                reducir={reducir}
+                onPausa={(on) => {
+                  pausa.current = on;
+                }}
+              />
+            ))}
           </motion.div>
-        );
-      })}
+        )}
+      </div>
+      <p className="po-hint" aria-hidden="true">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 2 1 6l4 4M13 2l4 4-4 4M1 6h16" />
+        </svg>
+        Arrastra para girar · toca un módulo para entrar
+      </p>
     </div>
   );
 }
 
-/** Tarjeta con una leve inclinación 3D que sigue al ratón */
-function TiltCard({ to, color, children }: { to: string; color: string; children: ReactNode }) {
+/* =====================================================================
+   Tarjetas de módulo
+   ===================================================================== */
+
+function TiltCard({ to, color, hecho, children }: { to: string; color: string; hecho: boolean; children: ReactNode }) {
   const reducir = useReducedMotion();
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
@@ -232,15 +322,15 @@ function TiltCard({ to, color, children }: { to: string; color: string; children
       onPointerMove={(e) => {
         if (reducir || e.pointerType !== 'mouse') return;
         const r = e.currentTarget.getBoundingClientRect();
-        rx.set(-((e.clientY - r.top) / r.height - 0.5) * 8);
-        ry.set(((e.clientX - r.left) / r.width - 0.5) * 10);
+        rx.set(-((e.clientY - r.top) / r.height - 0.5) * 7);
+        ry.set(((e.clientX - r.left) / r.width - 0.5) * 9);
       }}
       onPointerLeave={() => {
         rx.set(0);
         ry.set(0);
       }}
     >
-      <Link to={to} className="mod-card home-card" style={{ ['--mod' as string]: color }}>
+      <Link to={to} className={`ax-card neon-mod po-card${hecho ? ' done' : ''}`} style={{ ['--mod' as string]: color } as CSSProperties}>
         {children}
       </Link>
     </motion.div>
@@ -249,9 +339,9 @@ function TiltCard({ to, color, children }: { to: string; color: string; children
 
 export default function Home() {
   const p = useProgreso();
+  const ex = useExamen();
   const loc = useLocation();
   const reducir = useReducedMotion();
-  const movil = useMedia('(max-width: 640px)');
   const ini = p.alumno.ini;
   const nombre = p.alumno.nombre.split(/\s+/)[0] ?? '';
 
@@ -263,166 +353,206 @@ export default function Home() {
 
   const continuar = useMemo(() => {
     const lista = todosEjercicios();
-    return lista.find(({ ejercicio }) => !ejercicioCompletado(p.ejercicios[ejercicio.id])) ?? null;
+    // Primero el que tienes a medias; si no hay, el primero sin completar en el orden de la formación
+    const aMedias = lista.find(({ ejercicio }) => {
+      const e = p.ejercicios[ejercicio.id];
+      return !!e && !ejercicioCompletado(e) && (e.guiado || e.pasos.length > 0 || e.test !== null || e.demo.length > 0);
+    });
+    return aMedias ?? lista.find(({ ejercicio }) => !ejercicioCompletado(p.ejercicios[ejercicio.id])) ?? null;
   }, [p]);
 
-  const global = avanceGlobal(p);
   const empezado = Object.keys(p.ejercicios).length > 0;
+  const totalEj = todosEjercicios().length;
+  const hechosEj = todosEjercicios().filter(({ ejercicio }) => ejercicioCompletado(p.ejercicios[ejercicio.id])).length;
+  const simsHechos = SIMS.filter((s) => p.sims[s.id]).length;
 
   let tabSugerida = '';
+  let pasoSugerido = 'Empieza por el concepto y el recorrido guiado.';
   if (continuar) {
     const e = p.ejercicios[continuar.ejercicio.id];
-    tabSugerida = !e ? '' : !e.guiado ? '?tab=guiado' : '?tab=test';
+    if (e && !e.guiado) {
+      tabSugerida = '?tab=guiado';
+      pasoSugerido = 'Te queda terminar el recorrido guiado.';
+    } else if (e) {
+      tabSugerida = '?tab=test';
+      pasoSugerido = 'Ya hiciste el guiado: te falta aprobar el test.';
+    }
   }
+  const colCont = continuar ? metaDe(continuar.modulo).color : 'var(--arc)';
+  const avCont = continuar ? avanceEjercicio(p.ejercicios[continuar.ejercicio.id], continuar.ejercicio.checklist.length) : 1;
+
+  const aparece = (d: number) =>
+    reducir ? {} : { initial: { opacity: 0, y: 18 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: d, ease: EASE } };
+
+  const examenEstado = ex.aprobado
+    ? { t: 'Aprobado. Descarga tu certificado.', to: '/certificado', b: 'Ver certificado' }
+    : ex.actual && !ex.actual.fin
+      ? { t: 'Tienes un examen a medias.', to: '/examen', b: 'Retomar el examen' }
+      : { t: 'Teoría y un caso práctico completo en la demo.', to: '/examen', b: 'Ir al examen' };
 
   return (
-    <div className="home">
-      <section className="hero">
-        <div className="wrap hero-grid">
-          <div className="home-copy">
-            <motion.p className="home-hola" initial={reducir ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              {nombre ? `Hola, ${nombre}` : 'Hola'}
-              {ini && <span className="home-ini">{ini}</span>}
-            </motion.p>
-            <motion.h1 initial={reducir ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.08, ease: EASE }}>
-              Aprende Axional haciéndolo
-            </motion.h1>
-            <motion.p className="lead" initial={reducir ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.16, ease: EASE }}>
-              Seis módulos, del tercero al cobro. En cada ejercicio entiendes la idea, lo haces sobre pantallas reales del ERP y lo repites en la demo.
-            </motion.p>
-            <motion.div className="row-btns home-ctas" initial={reducir ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-              {continuar ? (
-                <Link className="btn arc" to={`/ejercicio/${continuar.ejercicio.id}${tabSugerida}`}>
-                  {empezado ? 'Seguir practicando' : 'Empezar por el primero'}
-                </Link>
-              ) : (
-                <Link className="btn arc" to="/examen">
-                  Ir al examen final
-                </Link>
-              )}
-              <a
-                className="btn ghost"
-                href="#modulos"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('modulos')?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth' });
-                }}
-              >
-                Ver los módulos
-              </a>
-            </motion.div>
+    <div className="home po">
+      <div className="wrap">
+        <header className="ax-banner po-banner">
+          <div className="po-hero-grid">
+            <div className="po-top">
+              <motion.p className="home-hola" {...aparece(0)}>
+                {nombre ? `Hola, ${nombre}` : 'Hola'}
+                {ini && <span className="home-ini">{ini}</span>}
+              </motion.p>
+              <motion.h1 className="po-h1" {...aparece(0.08)}>
+                Aprende Axional <em>haciéndolo</em>
+              </motion.h1>
+            </div>
+            <div className="po-orbit-cell">
+              <Orbita p={p} />
+            </div>
+            <div className="po-bottom">
+              <motion.p className="lead" {...aparece(0.16)}>
+                Seis módulos, del tercero al cobro. En cada ejercicio entiendes la idea, lo practicas sobre pantallas reales del ERP y lo repites en la demo.
+              </motion.p>
+              <motion.div className="po-ctas" {...aparece(0.26)}>
+                {continuar ? (
+                  <Link className="btn arc lg" to={`/ejercicio/${continuar.ejercicio.id}${tabSugerida}`}>
+                    {empezado ? 'Seguir donde lo dejé' : 'Empezar el primer ejercicio'}
+                  </Link>
+                ) : (
+                  <Link className="btn arc lg" to="/examen">
+                    Ir al examen final
+                  </Link>
+                )}
+                <a
+                  className="btn ghost lg"
+                  href="#modulos"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('modulos')?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth' });
+                  }}
+                >
+                  Ver los módulos
+                </a>
+              </motion.div>
+            </div>
           </div>
-          {movil ? <OrbitaVertical p={p} /> : <Orbita p={p} />}
-        </div>
-      </section>
+        </header>
+      </div>
 
       <div className="wrap">
-        {continuar && (
-          <motion.section
-            className="sheet continue"
-            style={{ ['--mod' as string]: META[continuar.modulo.id]?.color ?? 'var(--arc)' }}
-            initial={reducir ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: EASE }}
-            aria-labelledby="cont-h"
-          >
-            <div className="continue-ico" aria-hidden="true">
-              <Icon name={META[continuar.modulo.id]?.icono ?? 'maestros'} size={30} />
-            </div>
-            <div className="continue-body">
-              <h2 id="cont-h" className="continue-h">
-                {empezado ? 'Continúa donde lo dejaste' : 'Tu primer ejercicio'}
-              </h2>
-              <p className="continue-t">
-                <span className="muted">
-                  {META[continuar.modulo.id]?.corto ?? continuar.modulo.titulo} · Ejercicio {continuar.ejercicio.numero}
-                </span>
-                <strong>{conIni(continuar.ejercicio.titulo, ini)}</strong>
-              </p>
-              <div className="meter" aria-hidden="true">
-                <motion.i initial={{ width: 0 }} animate={{ width: `${avanceEjercicio(p.ejercicios[continuar.ejercicio.id], continuar.ejercicio.checklist.length) * 100}%` }} transition={{ duration: 0.9, delay: 0.3 }} />
+        {/* Seguir donde lo dejaste */}
+        <section className="po-next" aria-label="Tu siguiente paso">
+          {continuar ? (
+            <motion.div
+              className="glass neon-mod po-cont"
+              style={{ ['--mod' as string]: colCont } as CSSProperties}
+              initial={reducir ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
+            >
+              <div className="po-cont-ico" aria-hidden="true">
+                <Icon name={metaDe(continuar.modulo).icono} size={28} />
               </div>
+              <div className="po-cont-body">
+                <h2 className="po-cont-h">{empezado ? 'Continúa donde lo dejaste' : 'Tu primer ejercicio'}</h2>
+                <p className="po-cont-mod">
+                  {metaDe(continuar.modulo).corto}, ejercicio {continuar.ejercicio.numero}. {pasoSugerido}
+                </p>
+                <p className="po-cont-t">{conIni(continuar.ejercicio.titulo, ini)}</p>
+                <div className="ax-bar lg po-cont-bar" aria-hidden="true">
+                  <i style={{ width: `${Math.max(avCont * 100, 2)}%` }} />
+                </div>
+              </div>
+              <Link className="btn arc po-cont-btn" to={`/ejercicio/${continuar.ejercicio.id}${tabSugerida}`}>
+                {empezado ? 'Continuar' : 'Empezar'}
+              </Link>
+            </motion.div>
+          ) : (
+            <div className="glass neon-mod po-cont po-cont-fin">
+              <div className="po-cont-body">
+                <h2 className="po-cont-h">Has completado todos los ejercicios</h2>
+                <p className="po-cont-t">Ya puedes presentarte al examen final.</p>
+              </div>
+              <Link className="btn arc po-cont-btn" to="/examen">
+                Ir al examen
+              </Link>
             </div>
-            <Link className="btn arc" to={`/ejercicio/${continuar.ejercicio.id}${tabSugerida}`}>
-              {empezado ? 'Continuar' : 'Empezar'}
-            </Link>
-          </motion.section>
-        )}
-        {!continuar && MODULOS.length > 0 && (
-          <section className="sheet continue">
-            <div className="continue-body">
-              <h2 className="continue-h">Has completado todos los ejercicios</h2>
-              <p className="muted">Ya puedes presentarte al examen final y conseguir tu certificado.</p>
-            </div>
-            <Link className="btn arc" to="/examen">
-              Ir al examen
-            </Link>
-          </section>
-        )}
+          )}
+        </section>
 
-        <section id="modulos" className="home-mods" aria-labelledby="mods-h">
-          <div className="home-sec-head">
+        <section id="modulos" className="po-mods" aria-labelledby="mods-h">
+          <div className="po-sec-head">
             <h2 id="mods-h">Los módulos</h2>
-            <p className="muted">En este orden: cada uno usa lo que montaste en el anterior. Llevas un {Math.round(global * 100)} %.</p>
+            <p className="muted">
+              Hazlos en este orden: cada uno usa lo que montaste en el anterior. Llevas {hechosEj} de {totalEj} ejercicios.
+            </p>
           </div>
-          <div className="mod-grid">
+          <div className="po-grid">
             {MODULOS.map((m, i) => {
-              const meta = META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
+              const meta = metaDe(m);
+              const ficha = FICHAS[m.id];
               const av = avanceModulo(p, m.id);
               const min = m.ejercicios.reduce((s, e) => s + e.duracionMin, 0);
               const hechos = m.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
+              const hecho = hechos === m.ejercicios.length && hechos > 0;
               return (
-                <motion.div
-                  key={m.id}
-                  initial={reducir ? false : { opacity: 0, y: 30, rotateX: -10 }}
-                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ delay: (i % 3) * 0.08, duration: 0.5, ease: EASE }}
-                  style={{ transformPerspective: 1000 }}
-                >
-                  <TiltCard to={`/modulo/${m.id}`} color={meta.color}>
-                    <span className="arcdeco" style={{ borderTopColor: meta.color, borderRightColor: meta.color }} aria-hidden="true" />
-                    <span className="hc-top">
-                      <span className="hc-ico" style={{ background: meta.color }}>
-                        <Icon name={meta.icono} size={22} />
-                      </span>
-                      <span className="hc-n" aria-hidden="true">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
+                <TiltCard key={m.id} to={`/modulo/${m.id}`} color={meta.color} hecho={hecho}>
+                  <span className="po-card-top">
+                    <span className="ax-card-icon">
+                      <Icon name={meta.icono} size={24} />
                     </span>
-                    <h3>{m.titulo}</h3>
-                    <p className="small muted hc-res">{conIni(m.resumen, ini)}</p>
-                    <span className="hc-foot">
-                      <span className="small muted">
-                        {m.ejercicios.length} ejercicios · {min} min · {hechos} completados
+                    <span className="ax-card-num" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </span>
+                  <h3>{m.titulo}</h3>
+                  <p className="po-card-frase">{ficha ? ficha.frase : conIni(m.resumen, ini)}</p>
+                  <span className="po-card-foot">
+                    <span className="po-card-meta">
+                      {m.ejercicios.length} ejercicios, {min} min
+                    </span>
+                    {hecho ? (
+                      <span className="ax-check on" aria-label="Módulo completado">
+                        <Icon name="check" size={18} />
                       </span>
-                      <span className="hc-pct">{Math.round(av * 100)} %</span>
-                    </span>
-                    <span className="meter" aria-hidden="true">
-                      <i style={{ width: `${av * 100}%`, background: meta.color }} />
-                    </span>
-                  </TiltCard>
-                </motion.div>
+                    ) : (
+                      <Anillo valor={av} size={46} grosor={4} className="po-card-ring" texto={`${Math.round(av * 100)}`} />
+                    )}
+                  </span>
+                  <div className="ax-bar mod po-card-bar" aria-hidden="true">
+                    <i style={{ width: `${av * 100}%` }} />
+                  </div>
+                </TiltCard>
               );
             })}
           </div>
         </section>
 
-        <section className="home-access" aria-label="Más práctica">
-          <Link to="/taller" className="acc acc-taller">
-            <Icon name="taller" size={30} />
-            <span>
+        <section className="po-puertas" aria-label="Practicar y demostrar">
+          <Link to="/taller" className="po-door po-door-taller">
+            <span className="po-door-ico" aria-hidden="true">
+              <Icon name="taller" size={26} />
+            </span>
+            <span className="po-door-txt">
               <strong>Taller</strong>
-              <span className="small">Simuladores para equivocarte sin miedo: cuadrar un asiento, montar un numerador, seguir un Docflow.</span>
+              <span>Simuladores para equivocarte sin miedo.</span>
+            </span>
+            <span className="po-door-dots" aria-label={`${simsHechos} de ${SIMS.length} simuladores superados`}>
+              {SIMS.map((s) => (
+                <i key={s.id} className={p.sims[s.id] ? 'on' : ''} title={s.titulo} />
+              ))}
+              <b>
+                {simsHechos}/{SIMS.length}
+              </b>
             </span>
           </Link>
-          <Link to="/examen" className="acc acc-examen">
-            <Icon name="examen" size={30} />
-            <span>
-              <strong>Examen final</strong>
-              <span className="small">Teoría y un caso práctico completo en la demo. Si apruebas, te llevas el certificado de O&S.</span>
+          <Link to={examenEstado.to} className="po-door po-door-examen">
+            <span className="po-door-ico" aria-hidden="true">
+              <Icon name="examen" size={26} />
             </span>
+            <span className="po-door-txt">
+              <strong>Examen final</strong>
+              <span>{examenEstado.t}</span>
+            </span>
+            <span className="btn arc sm po-door-cta">{examenEstado.b}</span>
           </Link>
         </section>
       </div>

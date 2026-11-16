@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Icon } from '../components/Icon';
-import { OrbitaExamen, AnilloNota } from '../components/examen/Deco';
+import { OrbitaExamen, AnillosResultado, LeyendaAnillo, SECUENCIA } from '../components/examen/Deco';
 import { RutaFichas } from '../components/examen/RutaFichas';
-import { copiar, descargar, reloj, useAhora } from '../components/examen/util';
+import { copiar, descargar, reloj, useAhora, useArriba, useContador } from '../components/examen/util';
 import { useProgreso } from '../lib/progress';
 import { INSIGNIAS } from '../lib/badges';
 import { MODULOS } from '../content';
@@ -26,11 +26,12 @@ import {
   type EstadoExamen,
   type TareaExamen,
 } from '../lib/examen';
+import { NUM_TAREAS } from '../lib/examen';
 import './examen.css';
 
 const etiquetaOrigen = (o: string) => (o === 'criterio' ? 'Criterio' : o.startsWith('vídeo') ? o.replace('vídeo', 'Vídeo de compras ·') : `Manual de ${MODULOS.find((m) => m.id === o)?.titulo.toLowerCase() ?? o}`);
 
-const MARCA = ['#4fbfa5', '#2a9c83', '#1f2738', '#f2a93b', '#dff3ee'];
+const MARCA = ['#5ff0d2', '#6fe9ff', '#8b7bff', '#f6b65a', '#ffffff'];
 const DEMO_URL = 'https://nextdemo.geasa.eu';
 
 export default function Examen() {
@@ -63,6 +64,8 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
   const aMedias = actual && actual.fase !== 'resultado';
   const puedeEmpezar = !!p.alumno.ini && (listo || confirmo);
   const banco = bancoTeoria();
+  const reducir = useReducedMotion();
+  useArriba();
 
   const empezar = () => {
     if (!p.alumno.ini) return;
@@ -72,34 +75,40 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
 
   return (
     <div className="wrap ex-pagina">
-      <motion.section className="exam-hero ex-hero" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      <section className="ex-hero ex-profundo">
         <div className="ex-hero-grid">
           <div className="ex-hero-txt">
-            <p className="ex-kicker">Taller Axional · prueba final</p>
-            <h1>Examen final</h1>
-            <p className="lead muted">
+            <motion.p className="ex-kicker" initial={reducir ? false : { opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
+              Taller Axional · prueba final
+            </motion.p>
+            <h1 className="ex-titular ax-glow-text" aria-label="Examen final">
+              {['Examen', 'final'].map((w, k) => (
+                <span key={w} className="ex-titular-clip" aria-hidden="true">
+                  <motion.span
+                    className="ex-titular-w"
+                    initial={reducir ? false : { y: '105%', rotate: 4 }}
+                    animate={{ y: '0%', rotate: 0 }}
+                    transition={{ duration: 0.8, delay: 0.12 + k * 0.14, ease: [0.2, 0.8, 0.2, 1] }}
+                  >
+                    {w}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
+            <motion.p className="lead muted" initial={reducir ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }}>
               Demuestra que sabes llevar un caso real de punta a punta en Axional: del alta del proveedor al cobro del cliente, de memoria y sin consultar nada. Si apruebas, consigues tu certificado.
-            </p>
+            </motion.p>
             <div className="ex-stats">
-              <div className="ex-stat">
-                <b>{NUM_TEORIA}</b>
-                <span>preguntas · {MIN_TEORIA} min</span>
-              </div>
-              <div className="ex-stat">
-                <b>9</b>
-                <span>encargos en Axional</span>
-              </div>
-              <div className="ex-stat">
-                <b>30 / 70</b>
-                <span>teoría / práctica</span>
-              </div>
+              <Stat k={0} valor={NUM_TEORIA} texto={`preguntas · ${MIN_TEORIA} min`} />
+              <Stat k={1} valor={NUM_TAREAS} texto="encargos en Axional" />
+              <Stat k={2} valor={30} valor2={70} texto="teoría / práctica" />
             </div>
           </div>
           <div className="ex-hero-deco">
             <OrbitaExamen codigo={aMedias ? actual.codigo : `EX-${ini}-····`} />
           </div>
         </div>
-      </motion.section>
+      </section>
 
       <div className="ex-portada-grid">
         <section className="sheet pad">
@@ -109,10 +118,10 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
               <b>Teoría.</b> {NUM_TEORIA} preguntas tipo test con {MIN_TEORIA} minutos, sorteadas de un banco de {banco.tests + banco.video + banco.criterio}: los tests de los seis manuales, el vídeo de compras y preguntas de criterio («¿qué pasa si…?»). Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
             </li>
             <li>
-              <b>Práctica.</b> Nueve encargos encadenados que haces de verdad en la demo de Axional (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
+              <b>Práctica.</b> {NUM_TAREAS} encargos encadenados que haces de verdad en la demo de Axional (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
             </li>
             <li>
-              <b>Tus datos son únicos.</b> Proveedor <code className="k">T{ini}EX</code>, cliente <code className="k">C{ini}EX</code> y un código de examen que pondrás en «Su referencia». Las cantidades y los precios solo los tienes tú.
+              <b>Tus datos son únicos.</b> Proveedor <code className="k">T{ini}EX</code>, cliente <code className="k">C{ini}EX</code> y un código de examen que pondrás en la «Referencia» del pedido, en «Factura proveedor» y en el «Documento» del asiento. Las cantidades y los precios solo los tienes tú.
             </li>
             <li>
               <b>De memoria.</b> Durante el examen se ocultan la navegación y las ayudas. No abras los manuales ni los vídeos.
@@ -181,7 +190,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
                     )}
                   </>
                 ) : (
-                  <button className="btn arc ex-cta" disabled={!puedeEmpezar} onClick={empezar}>
+                  <button className="btn arc lg ex-cta" disabled={!puedeEmpezar} onClick={empezar}>
                     <Icon name="reloj" size={18} /> Empezar examen
                   </button>
                 )}
@@ -200,7 +209,31 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
   );
 }
 
+function Stat({ k, valor, valor2, texto }: { k: number; valor: number; valor2?: number; texto: string }) {
+  const reducir = useReducedMotion();
+  const retraso = 0.6 + k * 0.12;
+  const a = useContador(valor, { duracion: 1.1, retraso });
+  const b = useContador(valor2 ?? 0, { duracion: 1.1, retraso });
+  return (
+    <motion.div
+      className="ex-stat glass"
+      initial={reducir ? false : { opacity: 0, y: 16, rotateX: -40 }}
+      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+      transition={{ duration: 0.6, delay: retraso, ease: [0.2, 0.7, 0.2, 1] }}
+      aria-label={`${valor2 !== undefined ? `${valor} / ${valor2}` : valor} ${texto}`}
+    >
+      <b aria-hidden="true">
+        {Math.round(a)}
+        {valor2 !== undefined && <> / {Math.round(b)}</>}
+      </b>
+      <span aria-hidden="true">{texto}</span>
+    </motion.div>
+  );
+}
+
 /* ---------------------------------------------------------------- teoría */
+
+const esCampoTexto = (t: EventTarget | null) => t instanceof HTMLElement && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
 
 function Teoria({ ex }: { ex: EstadoExamen }) {
   const [i, setI] = useState(() => Math.max(0, ex.respTeoria.findIndex((r) => r === null)));
@@ -208,28 +241,73 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
   const [confirmar, setConfirmar] = useState(false);
   const reducir = useReducedMotion();
   const ahora = useAhora();
-  const limite = new Date(ex.inicio).getTime() + MIN_TEORIA * 60_000;
+  const total = MIN_TEORIA * 60_000;
+  const limite = new Date(ex.inicio).getTime() + total;
   const queda = limite - ahora;
   const sinResponder = ex.respTeoria.filter((r) => r === null).length;
+  const avance = useRef<number | undefined>(undefined);
+  const [destello, setDestello] = useState('');
+  useArriba();
 
   useEffect(() => {
     if (queda <= 0) examen.cerrarTeoria();
   }, [queda]);
+  useEffect(() => () => window.clearTimeout(avance.current), []);
 
   const q = ex.teoria[i];
   const ir = (n: number) => {
-    setDir(n > i ? 1 : -1);
-    setI(Math.max(0, Math.min(ex.teoria.length - 1, n)));
+    window.clearTimeout(avance.current);
+    const dest = Math.max(0, Math.min(ex.teoria.length - 1, n));
+    if (dest === i) return;
+    setDir(dest > i ? 1 : -1);
+    setI(dest);
     setConfirmar(false);
   };
+  const responder = (k: number) => {
+    examen.responderTeoria(i, k);
+    if (!reducir) setDestello(`${i}-${k}-${Date.now()}`);
+    window.clearTimeout(avance.current);
+    if (i < ex.teoria.length - 1) avance.current = window.setTimeout(() => ir(i + 1), reducir ? 0 : 260);
+  };
+
+  // Atajos: 1–4 o A–D responden; ← → navegan. No interfieren con campos de texto ni con modificadores.
+  const teclas = useRef({ ir, responder, i, n: q.opciones.length });
+  teclas.current = { ir, responder, i, n: q.opciones.length };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || esCampoTexto(e.target)) return;
+      const t = teclas.current;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        t.ir(t.i + 1);
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        t.ir(t.i - 1);
+        return;
+      }
+      const k = '1234'.indexOf(e.key) >= 0 ? '1234'.indexOf(e.key) : 'abcd'.indexOf(e.key.toLowerCase());
+      if (e.key.length === 1 && k >= 0 && k < t.n) {
+        e.preventDefault();
+        t.responder(k);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const estado = queda <= 60_000 ? 'final' : queda <= 3 * 60_000 ? 'urgente' : queda <= 10 * 60_000 ? 'aviso' : 'normal';
+  const anuncio = queda <= 60_000 ? 'Queda 1 minuto' : queda <= 5 * 60_000 ? 'Quedan 5 minutos' : '';
 
   return (
     <div className="wrap ex-pagina">
-      <BarraExamen titulo="Teoría" sub={`Pregunta ${i + 1} de ${ex.teoria.length}`} codigo={ex.codigo}>
-        <span className={`timer ${queda < 3 * 60_000 ? 'ex-urgente' : ''}`} role="timer" aria-label={`Quedan ${reloj(queda)}`}>
-          <Icon name="reloj" size={18} /> {reloj(queda)}
-        </span>
+      <BarraExamen titulo="Teoría" sub={`Pregunta ${i + 1} de ${ex.teoria.length}`} codigo={ex.codigo} estado={estado} fraccion={queda / total}>
+        <NucleoTiempo fraccion={queda / total} estado={estado} texto={reloj(queda)} />
       </BarraExamen>
+      <div className="sr-only" aria-live="polite">
+        {anuncio}
+      </div>
 
       <div className="ex-dots" role="tablist" aria-label="Preguntas">
         {ex.teoria.map((_, k) => (
@@ -259,12 +337,10 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
                     key={k}
                     role="radio"
                     aria-checked={sel}
-                    className={`quiz-opt ${sel ? 'sel' : ''}`}
+                    aria-keyshortcuts={`${k + 1} ${'ABCD'[k]}`}
+                    className={`quiz-opt ${sel ? 'sel' : ''} ${sel && destello.startsWith(`${i}-${k}-`) ? 'flash-ok' : ''}`}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      examen.responderTeoria(i, k);
-                      if (i < ex.teoria.length - 1) setTimeout(() => ir(i + 1), reducir ? 0 : 260);
-                    }}
+                    onClick={() => responder(k)}
                   >
                     <span className="letter">{'ABCD'[k]}</span>
                     <span>{op}</span>
@@ -272,6 +348,9 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
                 );
               })}
             </div>
+            <p className="ex-atajos small muted" aria-hidden="true">
+              Atajos: <kbd>1</kbd>–<kbd>4</kbd> o <kbd>A</kbd>–<kbd>D</kbd> para responder, <kbd>←</kbd> <kbd>→</kbd> para moverte.
+            </p>
           </motion.section>
         </AnimatePresence>
       </div>
@@ -306,15 +385,37 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
   );
 }
 
-function BarraExamen({ titulo, sub, codigo, children }: { titulo: string; sub: string; codigo: string; children?: ReactNode }) {
+function NucleoTiempo({ fraccion, estado, texto }: { fraccion: number; estado: string; texto: string }) {
+  const r = 15;
+  const c = 2 * Math.PI * r;
+  const f = Math.max(0, Math.min(1, fraccion));
   return (
-    <div className="ex-barra">
+    <span className={`ex-nucleo-t ex-t-${estado}`} role="timer" aria-label={`Quedan ${texto}`}>
+      <span className="ex-nucleo-t-esfera" aria-hidden="true">
+        <svg viewBox="0 0 40 40">
+          <circle className="trk" cx="20" cy="20" r={r} />
+          <circle className="val" cx="20" cy="20" r={r} strokeDasharray={c} strokeDashoffset={c * (1 - f)} transform="rotate(-90 20 20)" />
+        </svg>
+      </span>
+      <span className="ex-nucleo-t-txt">{texto}</span>
+    </span>
+  );
+}
+
+function BarraExamen({ titulo, sub, codigo, estado, fraccion, children }: { titulo: string; sub: string; codigo: string; estado?: string; fraccion?: number; children?: ReactNode }) {
+  return (
+    <div className={`ex-barra glass ${estado ? `ex-b-${estado}` : ''}`}>
       <div>
         <b>{titulo}</b>
         <span className="muted small"> · {sub}</span>
       </div>
       <code className="k ex-barra-cod">{codigo}</code>
       {children}
+      {fraccion !== undefined && (
+        <span className="ex-tiempo" aria-hidden="true">
+          <i style={{ transform: `scaleX(${Math.max(0, Math.min(1, fraccion))})` }} />
+        </span>
+      )}
     </div>
   );
 }
@@ -329,7 +430,26 @@ function Practica({ ex }: { ex: EstadoExamen }) {
   const desde = new Date(ex.finTeoria ?? ex.inicio).getTime();
   const reducir = useReducedMotion();
   const tarea = caso.tareas[i];
+  // «Lo que la demo no hace sola» (campo opcional notas de TareaExamen)
+  const notas: string[] = tarea.notas ?? [];
   const topRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const entregaRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (entregar) entregaRef.current?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'nearest' });
+  }, [entregar, reducir]);
+  useArriba();
+
+  // La pestaña del encargo actual siempre a la vista (solo en horizontal, sin mover la página)
+  useEffect(() => {
+    const nav = navRef.current;
+    const el = nav?.children[i] as HTMLElement | undefined;
+    if (!nav || !el) return;
+    const izq = el.offsetLeft - 12;
+    const der = el.offsetLeft + el.offsetWidth + 12 - nav.clientWidth;
+    const left = izq < nav.scrollLeft ? izq : der > nav.scrollLeft ? der : null;
+    if (left !== null) nav.scrollTo({ left: Math.max(0, left), behavior: reducir ? 'auto' : 'smooth' });
+  }, [i, reducir]);
 
   const rellenos = (t: TareaExamen) => t.campos.filter((c) => (ex.resp[c.id] ?? '').trim()).length;
   const vacios = caso.tareas.reduce((s, t) => s + t.campos.length - rellenos(t), 0);
@@ -344,17 +464,17 @@ function Practica({ ex }: { ex: EstadoExamen }) {
   return (
     <div className="wrap ex-pagina" ref={topRef}>
       <BarraExamen titulo="Práctica" sub={`Encargo ${i + 1} de ${caso.tareas.length}`} codigo={ex.codigo}>
-        <span className="timer" role="timer" aria-label={`Llevas ${reloj(ahora - desde)}`}>
+        <span className="timer ex-crono" role="timer" aria-label={`Llevas ${reloj(ahora - desde)}`}>
           <Icon name="reloj" size={18} /> {reloj(ahora - desde)}
         </span>
       </BarraExamen>
 
-      <section className="ex-caso">
-        <div>
-          <span className="muted small">Tu código de examen</span>
+      <section className="ex-caso ex-profundo">
+        <div className="ex-caso-cod">
+          <span className="ex-caso-lbl">Tu código de examen</span>
           <div className="ex-codigo">{ex.codigo}</div>
         </div>
-        <dl>
+        <dl className="ex-caso-datos">
           <div>
             <dt>Proveedor</dt>
             <dd>{caso.proveedor}</dd>
@@ -365,20 +485,23 @@ function Practica({ ex }: { ex: EstadoExamen }) {
           </div>
           <div>
             <dt>Empresa</dt>
-            <dd>0 · CENTRAL · almacén 0</dd>
+            <dd>0 · CENTRAL</dd>
           </div>
           <div>
-            <dt>Axional</dt>
-            <dd>
-              <a href={DEMO_URL} target="_blank" rel="noreferrer">
-                nextdemo · TUTORIAL
-              </a>
-            </dd>
+            <dt>Almacén</dt>
+            <dd>0</dd>
           </div>
         </dl>
+        <a className="ex-caso-demo" href={DEMO_URL} target="_blank" rel="noreferrer">
+          <span>
+            <small>Abre Axional</small>
+            nextdemo · TUTORIAL
+          </span>
+          <Icon name="flecha" size={18} />
+        </a>
       </section>
 
-      <nav className="ex-tareas" aria-label="Encargos">
+      <nav className="ex-tareas" aria-label="Encargos" ref={navRef}>
         {caso.tareas.map((t, k) => {
           const n = rellenos(t);
           const hecho = n === t.campos.length;
@@ -394,16 +517,16 @@ function Practica({ ex }: { ex: EstadoExamen }) {
       <AnimatePresence mode="wait">
         <motion.article
           key={tarea.id}
-          className="ex-encargo"
+          className="ex-encargo glass"
           initial={reducir ? false : { opacity: 0, y: 24, rotateX: -6 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
           exit={reducir ? undefined : { opacity: 0, y: -12 }}
           transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
         >
           <header className="ex-encargo-cab">
-            <span className="ex-encargo-n">{String(i + 1).padStart(2, '0')}</span>
+            <span className="ax-card-num ex-encargo-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <div>
-              <span className="muted small">{tarea.modulo === 'pantalla' ? 'Pregunta de pantalla' : 'Encargo del cliente'}</span>
+              <span className="muted small">{tarea.modulo === 'pantalla' ? 'Pregunta de pantalla' : 'Encargo'}</span>
               <h2>{tarea.titulo}</h2>
             </div>
           </header>
@@ -417,6 +540,16 @@ function Practica({ ex }: { ex: EstadoExamen }) {
                 </div>
               ))}
             </dl>
+          )}
+          {notas.length > 0 && (
+            <aside className="callout nota ex-notas" aria-label="Ojo con la demo">
+              <b>Ojo con la demo</b>
+              <ul>
+                {notas.map((n) => (
+                  <li key={n}>{n}</li>
+                ))}
+              </ul>
+            </aside>
           )}
           <div className="ex-declara">
             <h3>{tarea.modulo === 'pantalla' ? 'Tu respuesta' : 'Lo que has registrado en Axional'}</h3>
@@ -445,7 +578,7 @@ function Practica({ ex }: { ex: EstadoExamen }) {
 
       <AnimatePresence>
         {entregar && (
-          <motion.div className="sheet pad ex-entrega" role="alertdialog" aria-label="Confirmar entrega" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
+          <motion.div ref={entregaRef} className="sheet pad ex-entrega" role="alertdialog" aria-label="Confirmar entrega" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
             <h3>¿Entregas el examen?</h3>
             {vacios > 0 && <p>Te quedan {vacios} datos sin rellenar. Cuentan como fallo.</p>}
             {malFormato > 0 && <p className="ex-error-txt">Hay {malFormato} datos con un formato que no encaja. Revísalos.</p>}
@@ -531,39 +664,46 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
   const r = ex.resultado!;
   const caso = useMemo(() => generarCaso(ex.codigo), [ex.codigo]);
   const reducir = useReducedMotion();
-  const [copiado, setCopiado] = useState(false);
   const [nuevo, setNuevo] = useState(false);
-  const texto = useMemo(() => (r.aprobado ? actaTexto(crearActa(ex)) : ''), [ex, r.aprobado]);
+  const acta = useMemo(() => crearActa(ex), [ex]);
+  const texto = useMemo(() => actaTexto(acta), [acta]);
   const lanzado = useRef(false);
+  const d = (s: number) => (reducir ? 0 : s);
+  useArriba();
 
   useEffect(() => {
     if (!r.aprobado || reducir || lanzado.current) return;
     lanzado.current = true;
     const t = setTimeout(() => {
-      void confetti({ particleCount: 160, spread: 90, origin: { y: 0.45 }, colors: MARCA, disableForReducedMotion: true });
-    }, 1400);
+      void confetti({ particleCount: 160, spread: 90, origin: { y: 0.4 }, colors: MARCA, disableForReducedMotion: true });
+    }, (SECUENCIA.veredicto + 0.3) * 1000);
     return () => clearTimeout(t);
   }, [r.aprobado, reducir]);
 
   return (
     <div className="wrap ex-pagina">
-      <motion.section className="exam-hero ex-hero ex-res" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
+      <motion.section className={`ex-hero ex-profundo ex-res ${r.aprobado ? 'aprobado' : 'suspenso'}`} initial={reducir ? false : { opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
         <div className="ex-res-grid">
-          <div>
+          <div className="ex-res-txt">
             <p className="ex-kicker">Examen {ex.codigo}</p>
-            <h1>{r.aprobado ? '¡Aprobado!' : 'Esta vez no'}</h1>
-            <p className="lead muted">
+            <motion.h1 className="ax-glow-text ex-veredicto" initial={reducir ? false : { opacity: 0, y: 24, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: d(SECUENCIA.veredicto), duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}>
+              {r.aprobado ? '¡Aprobado!' : 'Esta vez no'}
+            </motion.h1>
+            <motion.p className="lead muted" initial={reducir ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: d(SECUENCIA.veredicto + 0.25), duration: 0.5 }}>
               {r.aprobado
                 ? 'Has superado las dos partes. Manda el acta al examinador para que valide tu certificado.'
                 : `Necesitas un ${Math.round(APROBADO_EXAMEN * 100)} % en la teoría y en la práctica. Repasa lo que ha fallado y vuelve a intentarlo con un caso nuevo.`}
-            </p>
-            <div className="ex-global">
+            </motion.p>
+            <motion.div className={`ex-global ${r.aprobado ? 'ok' : 'mal'}`} initial={reducir ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: d(SECUENCIA.veredicto + 0.4) }}>
               Nota global <b>{num2.format(r.global * 100)} %</b>
-            </div>
+            </motion.div>
           </div>
           <div className="ex-anillos">
-            <AnilloNota valor={r.teoria} etiqueta={`Teoría · ${r.aciertos}/${r.totalTeoria}`} />
-            <AnilloNota valor={r.practica} etiqueta={`Práctica · ${r.puntos}/${r.maxPuntos} ptos`} />
+            <AnillosResultado teoria={r.teoria} practica={r.practica} global={r.global} aprobado={r.aprobado} umbral={APROBADO_EXAMEN} />
+            <div className="ex-leyendas">
+              <LeyendaAnillo valor={r.teoria} nombre="Teoría" detalle={`${r.aciertos}/${r.totalTeoria} aciertos`} color={r.teoria >= APROBADO_EXAMEN ? 'linear-gradient(135deg, #5ff0d2, #8b7bff)' : '#ff8a80'} retraso={SECUENCIA.teoria} />
+              <LeyendaAnillo valor={r.practica} nombre="Práctica" detalle={`${r.puntos}/${r.maxPuntos} puntos`} color={r.practica >= APROBADO_EXAMEN ? 'linear-gradient(135deg, #8b7bff, #5ff0d2)' : '#ff8a80'} retraso={SECUENCIA.practica} />
+            </div>
           </div>
         </div>
       </motion.section>
@@ -579,7 +719,7 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
                   {t.puntos}/{t.max}
                 </span>
                 <div className="meter" aria-hidden="true">
-                  <motion.i initial={{ width: 0 }} animate={{ width: `${(t.puntos / t.max) * 100}%` }} transition={{ delay: 0.3 + k * 0.06, duration: 0.6 }} style={{ background: t.puntos / t.max >= APROBADO_EXAMEN ? 'var(--arc-deep)' : 'var(--signal)' }} />
+                  <motion.i initial={reducir ? false : { width: 0 }} animate={{ width: `${(t.puntos / t.max) * 100}%` }} transition={{ delay: d(0.3 + k * 0.06), duration: 0.6 }} style={{ background: t.puntos / t.max >= APROBADO_EXAMEN ? 'var(--arc-deep)' : 'var(--signal)' }} />
                 </div>
               </li>
             ))}
@@ -599,44 +739,40 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
           <section className="sheet pad ex-acta">
             <h2>Tu acta</h2>
             <p className="muted">Cópiala y mándasela al examinador. Él comprobará en Axional lo que has registrado y te dará un código de validación.</p>
-            <textarea readOnly value={texto} rows={10} aria-label="Acta del examen" onFocus={(e) => e.currentTarget.select()} />
-            <div className="ex-botones">
-              <button
-                className="btn"
-                onClick={async () => {
-                  setCopiado(await copiar(texto));
-                  setTimeout(() => setCopiado(false), 2200);
-                }}
-              >
-                {copiado ? 'Copiada' : 'Copiar acta'}
-              </button>
-              <button className="btn ghost" onClick={() => descargar(`acta-${ex.codigo}.json`, JSON.stringify(crearActa(ex), null, 2))}>
-                Descargar JSON
-              </button>
+            <ActaBloque texto={texto} codigo={ex.codigo} json={() => JSON.stringify(acta, null, 2)} etiqueta="Acta del examen">
               <Link className="btn arc" to="/certificado">
                 Ver mi certificado
               </Link>
-            </div>
+            </ActaBloque>
           </section>
         ) : (
-          <section className="sheet pad">
-            <h2>Siguiente intento</h2>
-            <p className="muted">Tendrás un código nuevo, otras cantidades y otras preguntas. Repasa antes los módulos donde más has fallado.</p>
-            {!nuevo ? (
-              <button className="btn arc" onClick={() => setNuevo(true)}>
-                Preparar otro intento
-              </button>
-            ) : (
-              <div className="ex-botones">
-                <button className="btn arc" onClick={onNuevo}>
-                  Sí, empezar de cero
+          <div className="ex-res-lado">
+            <section className="sheet pad">
+              <h2>Siguiente intento</h2>
+              <p className="muted">Tendrás un código nuevo, otras cantidades y otras preguntas. Repasa antes los módulos donde más has fallado.</p>
+              {!nuevo ? (
+                <button className="btn arc" onClick={() => setNuevo(true)}>
+                  Preparar otro intento
                 </button>
-                <button className="btn ghost" onClick={() => setNuevo(false)}>
-                  Todavía no
-                </button>
-              </div>
-            )}
-          </section>
+              ) : (
+                <div className="ex-botones">
+                  <button className="btn arc" onClick={onNuevo}>
+                    Sí, empezar de cero
+                  </button>
+                  <button className="btn ghost" onClick={() => setNuevo(false)}>
+                    Todavía no
+                  </button>
+                </div>
+              )}
+            </section>
+            <details className="sheet pad ex-acta ex-acta-intento">
+              <summary>
+                <h3>Acta de este intento</h3>
+              </summary>
+              <p className="muted small">No sirve para el certificado, pero le cuenta a tu formador qué registraste en Axional. Pásasela si quieres que lo revise contigo.</p>
+              <ActaBloque texto={texto} codigo={ex.codigo} json={() => JSON.stringify(acta, null, 2)} etiqueta="Acta de este intento" filas={7} />
+            </details>
+          </div>
         )}
       </div>
 
@@ -687,5 +823,29 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
         ))}
       </details>
     </div>
+  );
+}
+
+function ActaBloque({ texto, codigo, json, etiqueta, filas = 10, children }: { texto: string; codigo: string; json: () => string; etiqueta: string; filas?: number; children?: ReactNode }) {
+  const [copiado, setCopiado] = useState(false);
+  return (
+    <>
+      <textarea readOnly value={texto} rows={filas} aria-label={etiqueta} onFocus={(e) => e.currentTarget.select()} />
+      <div className="ex-botones">
+        <button
+          className="btn"
+          onClick={async () => {
+            setCopiado(await copiar(texto));
+            setTimeout(() => setCopiado(false), 2200);
+          }}
+        >
+          {copiado ? 'Copiada' : 'Copiar acta'}
+        </button>
+        <button className="btn ghost" onClick={() => descargar(`acta-${codigo}.json`, json())}>
+          Descargar JSON
+        </button>
+        {children}
+      </div>
+    </>
   );
 }

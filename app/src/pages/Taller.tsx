@@ -1,9 +1,12 @@
+import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Icon } from '../components/Icon';
+import { NucleoOrbita } from '../components/shell/NucleoOrbita';
 import { useProgreso } from '../lib/progress';
 import { SIMS } from '../sims/registro';
 import '../sims/taller.css';
+import './portada.css';
 
 function Lista() {
   const p = useProgreso();
@@ -11,32 +14,16 @@ function Lista() {
   const hechos = SIMS.filter((s) => p.sims[s.id]).length;
   return (
     <div className="wrap tl-lista">
-      <header className="tl-lista-cab">
-        <div>
-          <h1>Taller</h1>
-          <p className="lead muted">
-            Simuladores para practicar lo que más cuesta al principio: cuadrar asientos, numerar documentos, seguir un circuito y leer un Docflow. Primero con los datos reales de los
-            ejercicios y después con variaciones nuevas.
-          </p>
-        </div>
-        <div className="tl-lista-cont" aria-label={`${hechos} de ${SIMS.length} superados`}>
-          <svg viewBox="0 0 120 70" aria-hidden="true">
-            <path d="M10 64 A50 50 0 0 1 110 64" fill="none" stroke="var(--line)" strokeWidth="9" strokeLinecap="round" />
-            <motion.path
-              d="M10 64 A50 50 0 0 1 110 64"
-              fill="none"
-              stroke="var(--arc)"
-              strokeWidth="9"
-              strokeLinecap="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: hechos / SIMS.length }}
-              transition={{ duration: r ? 0 : 1.1, ease: [0.2, 0.7, 0.2, 1] }}
-            />
-          </svg>
-          <b>
-            {hechos}/{SIMS.length}
-          </b>
-          <span>superados</span>
+      <header className="ax-banner tl-banner">
+        <div className="tl-banner-in">
+          <div className="tl-banner-txt">
+            <h1>Taller</h1>
+            <p className="lead">
+              Simuladores para practicar lo que más cuesta al principio: cuadrar asientos, numerar documentos, seguir un circuito, leer un Docflow, calcular una factura y seguir un efecto de cartera. Primero con los datos reales de los
+              ejercicios y después con variaciones nuevas.
+            </p>
+          </div>
+          <NucleoOrbita valor={hechos / SIMS.length} etiqueta={`${hechos} de ${SIMS.length} superados`} size={180} className="tl-nucleo" />
         </div>
       </header>
       <ul className="tl-banco">
@@ -45,30 +32,32 @@ function Lista() {
           return (
             <motion.li
               key={s.id}
-              style={{ ['--sim' as string]: s.color }}
               initial={r ? false : { opacity: 0, y: 30, rotateX: -18 }}
               animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{ delay: 0.08 * i, type: 'spring', stiffness: 120, damping: 16 }}
-              className={`tl-puesto ${ok ? 'ok' : ''} ${i % 3 === 0 ? 'ancho' : ''}`}
+              transition={{ delay: 0.06 * i, type: 'spring', stiffness: 120, damping: 16 }}
+              className={`tl-puesto ${ok ? 'ok' : ''}`}
             >
-              <Link to={`/taller/${s.id}`} className="tl-puesto-link">
+              <Link to={`/taller/${s.id}`} className="ax-card neon-mod tl-puesto-link" style={{ ['--sim' as string]: s.color, ['--mod' as string]: s.color } as CSSProperties}>
+                <span className="ax-card-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 <span className="tl-puesto-dibujo">{s.dibujo}</span>
-                <span className="tl-puesto-txt">
-                  <span className="tl-puesto-n">{String(i + 1).padStart(2, '0')}</span>
-                  <h2>{s.titulo}</h2>
-                  <span className="muted">{s.resumen}</span>
-                  <span className="tl-puesto-pie">
-                    <span className="chip">{s.rondas} rondas</span>
-                    {ok ? (
-                      <span className="chip ok">
-                        <Icon name="check" size={14} /> Superado
+                <h2>{s.titulo}</h2>
+                <span className="tl-puesto-res">{s.resumen}</span>
+                <span className="tl-puesto-pie">
+                  <span className="chip">{s.rondas} rondas</span>
+                  {ok ? (
+                    <span className="tl-puesto-ok">
+                      <span className="ax-check on" aria-hidden="true">
+                        <Icon name="check" size={16} />
                       </span>
-                    ) : (
-                      <span className="tl-puesto-ir">
-                        Empezar <Icon name="play" size={14} />
-                      </span>
-                    )}
-                  </span>
+                      Superado
+                    </span>
+                  ) : (
+                    <span className="btn arc sm tl-puesto-ir">
+                      Empezar <Icon name="play" size={14} />
+                    </span>
+                  )}
                 </span>
               </Link>
             </motion.li>

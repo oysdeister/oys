@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Link } from 'react-router-dom';
@@ -180,16 +180,20 @@ export function Marco({
 }) {
   const [verConcepto, setVerConcepto] = useState(true);
   const r = sim.reducido;
+  const resueltaEn = useRef(0);
+  useEffect(() => {
+    if (sim.resuelta) resueltaEn.current = Date.now();
+  }, [sim.resuelta]);
   return (
     <div className="tl-sim" style={{ ['--sim' as string]: color }}>
       <div className="tl-sim-head">
         <Link to="/taller" className="btn ghost sm tl-volver">
           <Icon name="atras" size={18} /> Taller
         </Link>
-        <div className="tl-sim-tit">
+        <header className="ax-banner tl-banner tl-sim-tit">
           <h1>{titulo}</h1>
           <ArcoRondas total={sim.total} ronda={sim.ronda} fin={sim.fin} />
-        </div>
+        </header>
       </div>
 
       <div className="callout why tl-concepto">
@@ -212,7 +216,7 @@ export function Marco({
         {sim.fin ? (
           <motion.section
             key="fin"
-            className="tl-fin"
+            className="glass tl-fin"
             initial={r ? { opacity: 0 } : { opacity: 0, rotateX: -30, y: 30 }}
             animate={{ opacity: 1, rotateX: 0, y: 0 }}
             transition={{ type: 'spring', stiffness: 120, damping: 16 }}
@@ -242,7 +246,7 @@ export function Marco({
         ) : (
           <motion.section
             key={`${sim.partida}-${sim.ronda}`}
-            className="tl-ronda"
+            className="glass tl-ronda"
             initial={r ? { opacity: 0 } : { opacity: 0, rotateY: -14, x: 40 }}
             animate={{ opacity: 1, rotateY: 0, x: 0 }}
             exit={r ? { opacity: 0 } : { opacity: 0, rotateY: 14, x: -40 }}
@@ -264,7 +268,15 @@ export function Marco({
               <span>
                 <Icon name="check" size={20} /> Ronda superada
               </span>
-              <button className="btn arc" onClick={sim.siguiente} autoFocus>
+              <button
+                className="btn arc"
+                onClick={() => {
+                  // El Enter que resolvió la ronda no debe saltarla sin ver el mensaje de acierto
+                  if (Date.now() - resueltaEn.current < 600) return;
+                  sim.siguiente();
+                }}
+                autoFocus
+              >
                 {sim.ronda + 1 >= sim.total ? 'Terminar' : 'Siguiente ronda'}
               </button>
             </motion.div>

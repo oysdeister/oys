@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useAnimate } from 'framer-motion';
+import { Icon } from '../components/Icon';
 import { conIni } from '../lib/texto';
+import './taller-b.css';
 import { Marco, MensajeVeredicto, azar, datosSim, esObj, f2, lista, num, pad, txt, useIni, useSim, useVeredicto, type Sim } from './kit';
 
 interface Estado {
@@ -101,18 +103,23 @@ function RondaCartera({ r, sim, ests }: { r: Ronda; sim: Sim; ests: Estado[] }) 
   const [actual, setActual] = useState<string | null>(null);
   const [fallo, setFallo] = useState<{ c: string; n: number } | null>(null);
   const [v, decir] = useVeredicto();
+  const [papel, animaPapel] = useAnimate();
   const ev = r.eventos[i];
+  const puestos = r.eventos.slice(0, i).map((e) => e.estado);
   const nombre = (c: string) => ests.find((e) => e.codigo === c)?.nombre ?? c;
 
   const elige = (c: string) => {
     if (!ev || sim.resuelta) return;
     if (c !== ev.estado) {
       setFallo((f) => ({ c, n: (f?.n ?? 0) + 1 }));
-      decir(false, `${c} (${nombre(c)}) no es. ${ests.find((e) => e.codigo === c)?.descripcion ?? ''}`);
+      decir(false, `No queda en ${c} (${nombre(c)}). ${c} es esto: ${ests.find((e) => e.codigo === c)?.descripcion ?? ''} Vuelve a leer qué acaba de pasar.`);
       return;
     }
     setFallo(null);
     setActual(c);
+    if (!sim.reducido && papel.current)
+      // golpe del sello: el papel se hunde y tiembla al caer
+      animaPapel(papel.current, { y: [0, 6, -2, 0], rotate: [-1.5, -0.4, -2.2, -1.5], scale: [1, 0.985, 1.005, 1] }, { duration: 0.42, delay: 0.14 });
     decir(true, ev.porQue);
     if (i + 1 >= r.eventos.length) sim.acierto();
     setI((x) => x + 1);
@@ -121,7 +128,7 @@ function RondaCartera({ r, sim, ests }: { r: Ronda; sim: Sim; ests: Estado[] }) 
   return (
     <div className="tl-cart">
       <div className="tl-cart-mesa">
-        <motion.div className="tl-efecto" initial={sim.reducido ? false : { rotate: -4, y: 20, opacity: 0 }} animate={{ rotate: -1.5, y: 0, opacity: 1 }}>
+        <motion.div ref={papel} className="tl-efecto" initial={sim.reducido ? false : { rotate: -4, y: 20, opacity: 0 }} animate={{ rotate: -1.5, y: 0, opacity: 1 }}>
           <div className="tl-efecto-cab">
             <small>Efecto a {r.efecto.clase.toLowerCase()}</small>
             <b className="tl-mono">{r.efecto.documento}</b>
@@ -150,21 +157,46 @@ function RondaCartera({ r, sim, ests }: { r: Ronda; sim: Sim; ests: Estado[] }) 
                 key={actual}
                 className="tl-estampa"
                 style={{ color: COLOR[actual] ?? 'var(--ink)' }}
-                initial={sim.reducido ? { opacity: 0 } : { scale: 2.6, opacity: 0, rotate: -25 }}
-                animate={{ scale: 1, opacity: 1, rotate: -12 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ type: 'spring', stiffness: 420, damping: 18 }}
+                initial={sim.reducido ? { opacity: 0 } : { scale: 3.2, opacity: 0, rotate: -32, y: -30 }}
+                animate={{ scale: 1, opacity: 1, rotate: -12, y: 0 }}
+                exit={sim.reducido ? { opacity: 0 } : { opacity: 0, scale: 0.5, x: -60, y: 70, rotate: -6 }}
+                transition={sim.reducido ? { duration: 0.2 } : { type: 'spring', stiffness: 520, damping: 20, mass: 0.9 }}
               >
                 <b>{actual}</b>
                 <span>{nombre(actual)}</span>
               </motion.div>
             )}
           </AnimatePresence>
+          <div className="tlb-hist-sellos" aria-label="Sellos que lleva el efecto">
+            <small>Sellos que lleva</small>
+            {puestos.length === 0 && <span className="small muted">Aún ninguno.</span>}
+            {puestos.map((c, k) => (
+              <span key={k} style={{ display: 'contents' }}>
+                {k > 0 && (
+                  <span className="tlb-mini-flecha" aria-hidden="true">
+                    <Icon name="flecha" size={14} />
+                  </span>
+                )}
+                <motion.span
+                  className="tlb-mini-sello"
+                  style={{ ['--c' as string]: COLOR[c] ?? 'var(--ink)' }}
+                  title={nombre(c)}
+                  initial={sim.reducido ? false : { scale: 0, opacity: 0, x: 40, y: -60 }}
+                  animate={{ scale: 1, opacity: 1, x: 0, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+                >
+                  {c}
+                </motion.span>
+              </span>
+            ))}
+          </div>
         </motion.div>
         <ol className="tl-cart-hist">
           {r.eventos.slice(0, i + 1).map((e, k) => (
             <motion.li key={k} initial={sim.reducido ? false : { opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} className={k < i ? 'hecho' : 'ahora'}>
-              <span className="tl-cart-hist-n">{k < i ? e.estado : '?'}</span>
+              <span className={`tl-cart-hist-n ${k < i ? 'tlb-cart-n' : ''}`} style={k < i ? { background: COLOR[e.estado] ?? 'var(--ink)' } : undefined}>
+                {k < i ? e.estado : '?'}
+              </span>
               {e.texto}
             </motion.li>
           ))}
@@ -173,7 +205,7 @@ function RondaCartera({ r, sim, ests }: { r: Ronda; sim: Sim; ests: Estado[] }) 
       {ev ? (
         <>
           <p className="tl-pregunta">¿En qué estado queda el efecto?</p>
-          <div className="tl-sellos" role="group" aria-label="Estados del efecto">
+          <div className="tl-sellos tlb-sellos" role="group" aria-label="Estados del efecto">
             {ests.map((e) => (
               <motion.button
                 key={`${e.codigo}-${fallo?.c === e.codigo ? fallo.n : 0}`}

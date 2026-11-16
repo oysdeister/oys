@@ -8,6 +8,7 @@ export const IDEAS_VIDEO: Record<number, string[]> = {
     'Un maestro son datos que se escriben una vez y se reutilizan en todos los documentos.',
     'Primero el tercero (NIF, dirección y forma de pago, y validado); después el proveedor, con su tipo, divisa y facturación.',
     'Comprueba que el proveedor está Activo y que en su pestaña Tarifas tiene un grupo de precios: sin él, el programa no sabe qué precios aplicarle.',
+    'El artículo es lo que compras: su ficha dice la unidad, la familia, el tipo contable (PRODUCTO, PROD) y la clave fiscal (BOG, bienes a tipo general).',
   ],
   3: [
     'Una lista de precios es un catálogo con fechas de vigencia; cada línea puede tener cantidad mínima (escalado) y hasta tres descuentos.',
@@ -26,8 +27,8 @@ export const IDEAS_VIDEO: Record<number, string[]> = {
   ],
   6: [
     'El albarán acompaña a la mercancía y la hace entrar en el almacén.',
-    'Se genera desde el pedido, sin teclear nada dos veces; al validarlo ya no se modifica.',
-    'Al contabilizarlo se apunta la mercancía pendiente de facturar y el pedido queda Servido.',
+    'Se genera desde el pedido, sin teclear nada dos veces, y el pedido pasa de Pendiente a Servido.',
+    'Validar es darlo por bueno: ya no se modifica. Al contabilizarlo se apunta la mercancía pendiente de facturar.',
   ],
   7: [
     'La factura se genera desde el albarán con «Acciones» › «Generar factura».',

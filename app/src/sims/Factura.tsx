@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { conIni, redondea } from '../lib/texto';
+import './taller-b.css';
+import type { ReactNode } from 'react';
 import { Marco, MensajeVeredicto, azar, baraja, datosSim, elige, esObj, f2, igual, leeImporte, lista, num, sacude, txt, useIni, useSim, useVeredicto, type Sim } from './kit';
 
 interface Linea {
@@ -42,7 +44,8 @@ function lineasDe(v: unknown): Linea[] {
   }));
 }
 
-const ARTICULOS = ['13500620 6000-2RS ISB', '00000016 Rodamiento 6201', '32515225 Retén 25x52', 'Servicio de montaje', 'Libro técnico', 'Fruta para el comedor', 'Caja de cartón 40x30'];
+// Solo 13500620 6000-2RS ISB es un artículo real de la demo; el resto va sin código.
+const ARTICULOS = ['13500620 6000-2RS ISB', 'Rodamiento 6201', 'Retén 25x52', 'Servicio de montaje', 'Libro técnico', 'Fruta para el comedor', 'Caja de cartón 40x30'];
 
 function construirRondas(ini: string): Ronda[] {
   const fc = datosSim('compras').factura;
@@ -100,6 +103,54 @@ function RondaFactura({ r, sim }: { r: Ronda; sim: Sim }) {
   const [v, decir] = useVeredicto();
   const conDto = r.lineas.some((l) => l.dto > 0);
 
+  const linea = (l: Linea) => `${l.cantidad} × ${f2(l.precio)}${l.dto ? ` − ${f2(l.dto)} %` : ''} = ${f2(importe(l))}`;
+
+  /** Pista concreta: qué falla y con qué cuenta */
+  const pista = (ok: { base: boolean; iva: boolean; total: boolean }, b: number | null, i: number | null): ReactNode => {
+    if (!ok.base) {
+      const sinDto = redondea(r.lineas.reduce((s, l) => s + redondea(l.cantidad * l.precio), 0));
+      const olvido = conDto && igual(b, sinDto);
+      return (
+        <>
+          {olvido ? 'Te has dejado el descuento. ' : ''}La base es la suma de importes:
+          <span className="tlb-pista-calc">
+            {r.lineas.map((l, k) => (
+              <span key={k}>{linea(l)}</span>
+            ))}
+            {r.lineas.length > 1 && (
+              <span>
+                <b>Suma: {f2(sol.base)}</b>
+              </span>
+            )}
+          </span>
+        </>
+      );
+    }
+    if (!ok.iva) {
+      if (sol.desglose.length === 1) {
+        const d0 = sol.desglose[0];
+        return <>La base está bien. La cuota es base × tipo: {f2(d0.base)} × {d0.tipo} % = {f2(d0.cuota)}.</>;
+      }
+      const todo21 = igual(i, redondea((sol.base * 21) / 100));
+      return (
+        <>
+          {todo21 ? 'Has aplicado el 21 % a todo. ' : 'La base está bien. '}Cada tipo de IVA va sobre su propia base:
+          <span className="tlb-pista-calc">
+            {sol.desglose.map((d0) => (
+              <span key={d0.tipo}>
+                {d0.tipo} % de {f2(d0.base)} = {f2(d0.cuota)}
+              </span>
+            ))}
+            <span>
+              <b>Cuota total: {f2(sol.iva)}</b>
+            </span>
+          </span>
+        </>
+      );
+    }
+    return <>Base e IVA bien. El total es base + cuota: {f2(sol.base)} + {f2(sol.iva)} = {f2(sol.total)}.</>;
+  };
+
   const comprobar = () => {
     const b = leeImporte(val.base);
     const i = leeImporte(val.iva);
@@ -113,10 +164,7 @@ function RondaFactura({ r, sim }: { r: Ronda; sim: Sim }) {
       sim.acierto();
       return;
     }
-    if (!ok.base) decir(false, conDto ? 'La base no cuadra. Calcula cada línea: cantidad × precio, menos el descuento, y súmalas.' : 'La base no cuadra: suma cantidad × precio de cada línea.');
-    else if (!ok.iva)
-      decir(false, sol.desglose.length > 1 ? 'La base está bien. El IVA no: calcula la cuota de cada tipo por separado, redondea cada una a 2 decimales y súmalas.' : 'La base está bien. El IVA es base × tipo / 100, redondeado a 2 decimales.');
-    else decir(false, 'Base e IVA bien. El total es la suma de los dos.');
+    decir(false, pista(ok, b, i));
   };
 
   const campo = (k: 'base' | 'iva' | 'total', etiqueta: string) => (
@@ -138,7 +186,12 @@ function RondaFactura({ r, sim }: { r: Ronda; sim: Sim }) {
 
   return (
     <div className="tl-fac-zona">
-      <motion.article className="tl-papel" initial={sim.reducido ? false : { rotateX: 25, y: 30, opacity: 0 }} animate={{ rotateX: 0, y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 110, damping: 15 }}>
+      <motion.article
+        className="tl-papel"
+        initial={sim.reducido ? false : { rotateX: 25, y: 30, opacity: 0 }}
+        animate={sim.resuelta && !sim.reducido ? { rotateX: [0, 4, 0], y: [0, 5, 0], opacity: 1 } : { rotateX: 0, y: 0, opacity: 1 }}
+        transition={sim.resuelta ? { duration: 0.35, delay: 0.12 } : { type: 'spring', stiffness: 110, damping: 15 }}
+      >
         <header className="tl-papel-cab">
           <div>
             <small>Factura</small>
@@ -173,7 +226,18 @@ function RondaFactura({ r, sim }: { r: Ronda; sim: Sim }) {
                 {l.iva}
               </span>
               <span role="cell" data-et="Importe" className="imp">
-                {verDesglose ? f2(importe(l)) : '?'}
+                {verDesglose ? (
+                  <motion.span
+                    className="tlb-imp"
+                    initial={sim.reducido ? false : { opacity: 0, y: -10, filter: 'blur(3px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    transition={{ delay: i * 0.12, duration: 0.3 }}
+                  >
+                    {f2(importe(l))}
+                  </motion.span>
+                ) : (
+                  '?'
+                )}
               </span>
             </div>
           ))}
@@ -186,7 +250,13 @@ function RondaFactura({ r, sim }: { r: Ronda; sim: Sim }) {
         </div>
         <AnimatePresence>
           {verDesglose && (
-            <motion.div className="tl-desglose" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} style={{ overflow: 'hidden' }}>
+            <motion.div
+              className="tl-desglose"
+              initial={sim.reducido ? { opacity: 0 } : { height: 0, opacity: 0, scaleY: 0.6 }}
+              animate={{ height: 'auto', opacity: 1, scaleY: 1 }}
+              transition={sim.reducido ? { duration: 0.2 } : { type: 'spring', stiffness: 170, damping: 13 }}
+              style={{ overflow: 'hidden', transformOrigin: 'top' }}
+            >
               <b>Desglose</b>
               {r.lineas.map((l, i) => (
                 <div key={i} className="tl-desglose-l">
@@ -206,11 +276,31 @@ function RondaFactura({ r, sim }: { r: Ronda; sim: Sim }) {
                 </div>
               ))}
               {sim.resuelta && (
-                <div className="tl-desglose-l tot">
+                <motion.div
+                  className="tl-desglose-l tot"
+                  initial={sim.reducido ? false : { opacity: 0, scale: 1.4 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.25 }}
+                >
                   <span>Total</span>
-                  <span>{f2(sol.total)}</span>
-                </div>
+                  <span>{f2(sol.total)} €</span>
+                </motion.div>
               )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {sim.resuelta && (
+            <motion.div
+              className="tlb-fac-sello"
+              role="img"
+              aria-label={`Factura cuadrada: total ${f2(sol.total)} euros`}
+              initial={sim.reducido ? { opacity: 0, x: '-50%' } : { opacity: 0, x: '-50%', scale: 3, rotate: -28 }}
+              animate={{ opacity: 1, x: '-50%', scale: 1, rotate: -7 }}
+              transition={sim.reducido ? { duration: 0.2 } : { type: 'spring', stiffness: 420, damping: 17 }}
+            >
+              <small>Cuadrada</small>
+              <b>{f2(sol.total)} €</b>
             </motion.div>
           )}
         </AnimatePresence>

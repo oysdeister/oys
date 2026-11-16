@@ -14,6 +14,8 @@ interface Linea {
   pide: Pide;
   /** importe que se enseña al empezar (para «encuentra el error») */
   inicial?: number;
+  /** pista concreta si esta línea está mal */
+  pista?: string;
 }
 
 interface Ronda {
@@ -30,6 +32,8 @@ const CUENTAS: Record<string, string> = {
   '40000.00000': 'Proveedores (euros)',
   '60000.00000': 'Compras de mercancías',
   '47200.00000': 'Hacienda Pública, IVA',
+  '40000.00010': 'Proveedores (euros) · Rodamientos del Norte',
+  '40090.00000': 'Proveedores, facturas pendientes de recibir o de formalizar',
   '70000.00000': 'Ventas de mercancías',
   '62900.00000': 'Otros servicios',
   '62902.00000': 'Gastos diversos',
@@ -68,11 +72,13 @@ function construirRondas(ini: string): Ronda[] {
       { cuenta: '57200.00000', nombre: CUENTAS['57200.00000'], lado: 'H', importe: 250, pide: 'importe' },
     ];
 
-  // 2 · Factura de compra 0FC000004: elige el lado
+  // 2 · Factura de compra 0FC000009 del vídeo (cap. 8): asiento de 5 líneas, elige el lado
   const r2: Linea[] = [
-    { cuenta: '60000.00000', nombre: 'Compras de mercancías', lado: 'D', importe: 40, pide: 'lado' },
-    { cuenta: '47200.00000', nombre: 'Hacienda Pública, IVA', lado: 'D', importe: 8.4, pide: 'lado' },
-    { cuenta: '40000.00000', nombre: 'Proveedores (euros)', lado: 'H', importe: 48.4, pide: 'lado' },
+    { cuenta: '40000.00010', nombre: CUENTAS['40000.00010'], lado: 'H', importe: 48.4, pide: 'lado', pista: 'La 40000.00010 es lo que debes al proveedor: una deuda va al Haber.' },
+    { cuenta: '47200.00000', nombre: CUENTAS['47200.00000'], lado: 'D', importe: 8.4, pide: 'lado', pista: 'El IVA que pagas en una compra (47200) lo recuperas de Hacienda: va al Debe.' },
+    { cuenta: '60000.00000', nombre: 'Compras de mercancías', lado: 'D', importe: 40, pide: 'lado', pista: 'La primera 60000 es la compra de verdad: un gasto va al Debe.' },
+    { cuenta: '40090.00000', nombre: CUENTAS['40090.00000'], lado: 'D', importe: 40, pide: 'lado', pista: 'El albarán dejó la 40090 al Haber. La factura la anula poniéndola al lado contrario: Debe.' },
+    { cuenta: '60000.00000', nombre: 'Compras de mercancías (retroceso del albarán)', lado: 'H', importe: 40, pide: 'lado', pista: 'Esta segunda 60000 deshace la compra que ya anotó el albarán: va al Haber.' },
   ];
 
   // 3 · Cobro CA026-000001 (carteras): elige la cuenta
@@ -117,9 +123,10 @@ function construirRondas(ini: string): Ronda[] {
       modo: 'normal',
     },
     {
-      titulo: 'Factura de compra 0FC000004',
-      texto: 'Proveedor 00001 (FRA-TUTORIAL-02). Base 40,00 + IVA 21 % 8,40 = 48,40. Toca el lado (Debe o Haber) de cada línea.',
-      ayuda: 'Lo que compras y el IVA que pagas son cosas que «entran»: van al Debe. Lo que debes al proveedor es una deuda: va al Haber.',
+      titulo: 'Factura de compra 0FC000009',
+      texto:
+        'La factura FRA-2026-0157 de Rodamientos del Norte (proveedor 00010): 10 × 4,00 = 40,00 + IVA 21 % 8,40 = 48,40. Viene del albarán 0AC000011, que ya se contabilizó. Toca el lado de cada una de las 5 líneas.',
+      ayuda: 'Compra e IVA van al Debe; la deuda con el proveedor, al Haber. Las dos últimas líneas deshacen el apunte del albarán (60000 al Debe, 40090 al Haber), así que van al revés.',
       lineas: r2,
       modo: 'normal',
     },
@@ -239,6 +246,10 @@ function RondaAsiento({ ronda, sim }: { ronda: Ronda; sim: Sim }) {
       return f.cuenta !== l.cuenta || f.lado !== l.lado || !igual(leeImporte(f.importe), l.importe);
     });
     setMal(errores);
+    const pistaDe = () => {
+      const k = errores.findIndex((e, i) => e && ronda.lineas[i].pista && filas[i].lado !== null);
+      return k >= 0 ? ronda.lineas[k].pista : undefined;
+    };
     setSac((xs) => errores.map((e, i) => (xs[i] ?? 0) + (e ? 1 : 0)));
     const nMal = errores.filter(Boolean).length;
     const cuadra = Math.abs(totales.d - totales.h) < 0.005;
@@ -253,12 +264,18 @@ function RondaAsiento({ ronda, sim }: { ronda: Ronda; sim: Sim }) {
     else if (sinCuenta) decir(false, 'Falta elegir alguna cuenta.');
     else if (ronda.modo === 'error' && cuadra)
       decir(false, <>Ahora cuadra, pero el gasto diverso debía quedarse en 1.500,00. Arregla la línea del banco, no la del gasto.</>);
-    else if (cuadra) decir(false, <>Cuadra, pero {nMal === 1 ? 'una línea no es correcta' : `${nMal} líneas no son correctas`}: está marcada en rojo. {ronda.ayuda}</>);
+    else if (cuadra)
+      decir(
+        false,
+        <>
+          Cuadra, pero {nMal === 1 ? 'una línea no es correcta' : `${nMal} líneas no son correctas`} (en rojo). {pistaDe() ?? ronda.ayuda}
+        </>,
+      );
     else
       decir(
         false,
         <>
-          Debe {f2(totales.d)} y Haber {f2(totales.h)}: sobran {f2(Math.abs(totales.d - totales.h))} en el {totales.d > totales.h ? 'Debe' : 'Haber'}. {ronda.ayuda}
+          Debe {f2(totales.d)} y Haber {f2(totales.h)}: sobran {f2(Math.abs(totales.d - totales.h))} en el {totales.d > totales.h ? 'Debe' : 'Haber'}. {pistaDe() ?? ronda.ayuda}
         </>,
       );
   };

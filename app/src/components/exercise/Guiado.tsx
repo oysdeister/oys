@@ -8,7 +8,9 @@ import { conIni } from '../../lib/texto';
 import { Icon } from '../Icon';
 import { Captura, CajaHotspot, Fallos, type Marca } from './Captura';
 import { RutaMenu } from './SeccionVista';
-import { COLORES_MARCA, dentro, pasosPlanos } from './util';
+import { COLORES_MARCA, dentro, pasosPlanos, useMedia } from './util';
+import { momentosDeSeccion } from '../../content/videoMapa';
+import { Momentos } from './VideoMomento';
 
 type Fase = 'jugando' | 'acierto';
 
@@ -28,7 +30,9 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
   const [fin, setFin] = useState(false);
   const [dir, setDir] = useState(1);
   const idMarca = useRef(0);
+  const stageRef = useRef<HTMLDivElement>(null);
   const t = (x: string) => conIni(x, ini);
+  const tactil = useMedia('(pointer: coarse)');
 
   const actual = pasos[i];
   const total = pasos.length;
@@ -36,6 +40,18 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
   const img = actual?.paso.imagen;
   const conClic = !!(h && img);
   const hecho = actual ? hechos.includes(actual.idx) : false;
+
+  // En móvil la captura va ampliada con desplazamiento lateral: céntrala en el hotspot
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const el = stageRef.current?.querySelector<HTMLElement>('.shot');
+      const hs = pasos[i]?.paso.hotspot;
+      if (!el || el.scrollWidth <= el.clientWidth + 2) return;
+      const cx = hs ? ((hs.x + hs.w / 2) / 100) * el.scrollWidth : 0;
+      el.scrollTo({ left: Math.max(0, cx - el.clientWidth / 2), behavior: reducir ? 'auto' : 'smooth' });
+    }, reducir ? 0 : 420);
+    return () => window.clearTimeout(id);
+  }, [i, pasos, reducir]);
 
   // Precarga la captura siguiente
   useEffect(() => {
@@ -84,7 +100,7 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
 
   const onPunto = (x: number, y: number) => {
     if (!h || fase !== 'jugando' || fin) return;
-    if (dentro(h, x, y)) acertar();
+    if (dentro(h, x, y, tactil ? 3.5 : 1.5)) acertar();
     else {
       setFallos((f) => f + 1);
       setMarcas((m) => [...m.slice(-3), { id: ++idMarca.current, x, y }]);
@@ -144,14 +160,14 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
 
   return (
     <div className="player gd">
-      <div className="gd-stage">
+      <div className="gd-stage" ref={stageRef}>
         <div className="gd-sec">
           <span className="gd-sec-n">
             Parte {actual.secIdx + 1} de {nSec}
           </span>
           <strong>{t(actual.seccion.titulo)}</strong>
         </div>
-        <p className="gd-caption">{t(actual.paso.texto)}</p>
+        {img && <p className="gd-caption">{t(actual.paso.texto)}</p>}
         <AnimatePresence mode="wait" custom={dir} initial={false}>
           <motion.div
             key={i}
@@ -163,6 +179,7 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
             style={{ transformPerspective: 1400, transformOrigin: dir > 0 ? '0% 50%' : '100% 50%' }}
           >
             {img ? (
+              <>
               <Captura src={imgSrc(modulo, img)} alt={`Captura del ERP: ${t(actual.paso.texto)}`} onPunto={onPunto} clicable={conClic && fase === 'jugando'}>
                 {h && fase === 'acierto' && <CajaHotspot h={h} modo="acierto" />}
                 {h && fase === 'jugando' && <CajaHotspot h={h} modo={fallos >= 2 ? 'pista' : 'aro'} />}
@@ -180,6 +197,8 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
                 )}
                 <Fallos marcas={marcas} />
               </Captura>
+              {conClic && <p className="gd-swipe">Desliza la captura a los lados para verla entera.</p>}
+              </>
             ) : (
               <div className="shot shot-text">
                 <div className="shot-text-in">
@@ -203,7 +222,8 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
           {hecho && <span className="chip ok">Hecho</span>}
         </div>
         <p className="gd-texto">{t(actual.paso.texto)}</p>
-        {actual.paso.detalle && <p className="small muted">{t(actual.paso.detalle)}</p>}
+        {actual.paso.detalle && <p className={`small muted${img ? '' : ' gd-det-dup'}`}>{t(actual.paso.detalle)}</p>}
+        {actual.local === 0 && <Momentos lista={momentosDeSeccion(actual.seccion.id)} compacto />}
         {instruccion && (
           <motion.div key={fallos >= 2 ? 'pista' : 'base'} className={`gd-instr${fallos >= 2 ? ' hint' : ''}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
             <span className="gd-target" aria-hidden="true" />
@@ -230,6 +250,14 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
               Saltar este paso
             </button>
           )}
+        </div>
+        <div className="gd-bar" aria-hidden="true">
+          <div className="ax-bar">
+            <i style={{ width: `${((i + 1) / total) * 100}%` }} />
+          </div>
+          <span>
+            Parte {actual.secIdx + 1} de {nSec} · paso {actual.local + 1} de {actual.seccion.pasos.length}
+          </span>
         </div>
         <div className="dots gd-dots" role="group" aria-label="Pasos">
           {pasos.map((x, n) => (

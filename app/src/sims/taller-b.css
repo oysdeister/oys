@@ -1,0 +1,136 @@
+/* ==========================================================
+   Taller · Circuito, Factura y Cartera (capa b)
+   ========================================================== */
+
+/* ---------- Circuito: la vía sobre el arco O&S ---------- */
+.tlb-objetivo { font-size: 1.05rem; font-weight: 600; color: var(--ink) !important; }
+.tlb-ayuda { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: var(--fs-sm); color: var(--ink-3); }
+
+.tlb-escena { perspective: 1100px; perspective-origin: 50% 0; }
+.tlb-anden {
+  position: relative; padding: 6px 6px 14px; border-radius: 22px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--arc) 14%, transparent), transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ink) 4%, var(--sheet)), var(--sheet));
+  border: 1px solid var(--line);
+  transform: rotateX(9deg); transform-origin: 50% 100%; transform-style: preserve-3d;
+  box-shadow: 0 30px 40px -34px rgba(31, 39, 56, 0.55);
+}
+.tlb-escena.vert .tlb-anden { transform: none; padding: 10px 8px 4px 4px; }
+
+.tlb-via-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tlb-via-fondo { fill: none; stroke: color-mix(in srgb, var(--ink) 14%, transparent); stroke-width: 9; stroke-linecap: round; }
+.tlb-via-traviesas { fill: none; stroke: var(--sheet); stroke-width: 3; stroke-dasharray: 2 7; }
+.tlb-via-luz { fill: none; stroke: var(--arc); stroke-width: 7; stroke-linecap: round; filter: drop-shadow(0 0 5px color-mix(in srgb, var(--arc) 70%, transparent)); }
+.tlb-via-luz.mal { stroke: var(--error); filter: none; stroke-dasharray: 3 5; }
+.tlb-est { fill: var(--sheet); stroke: color-mix(in srgb, var(--ink) 35%, transparent); stroke-width: 2.5; transition: fill 0.3s ease, stroke 0.3s ease; }
+.tlb-est.ok { fill: var(--arc); stroke: var(--arc-deep); }
+.tlb-est.mal { fill: var(--error-soft); stroke: var(--error); stroke-width: 3; }
+.tlb-est-n { font-family: var(--display); font-weight: 800; font-size: 13px; fill: var(--ink); pointer-events: none; }
+.tlb-doc path:first-child { fill: var(--sheet); stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.tlb-doc.ok path:first-child { fill: color-mix(in srgb, var(--arc) 30%, var(--sheet)); }
+.tlb-doc.mal path:first-child { fill: var(--error-soft); }
+.tlb-doc-pliegue { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+.tlb-doc-lineas { fill: none; stroke: var(--ink-3); stroke-width: 1.4; stroke-linecap: round; }
+
+.tlb-raiz { position: relative; }
+.tlb-billetes { list-style: none; margin: -4px 0 0; padding: 0; display: flex; position: relative; }
+.tlb-billete {
+  flex: 1 1 0; min-width: 0; margin: 0 5px; position: relative; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; text-align: center;
+  background: var(--sheet); border: 1.5px solid var(--line); border-radius: 16px; padding: 0 6px 6px; user-select: none; touch-action: auto;
+  box-shadow: 0 1px 0 rgba(31, 39, 56, 0.05), 0 16px 22px -18px rgba(31, 39, 56, 0.6);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+/* muesca de billete */
+.tlb-billete::before { content: ''; position: absolute; top: 44px; left: 10px; right: 10px; border-top: 1.5px dashed var(--line); }
+.tlb-billete.ok { border-color: var(--arc); background: color-mix(in srgb, var(--arc) 14%, var(--sheet)); }
+.tlb-billete.mal { border-color: var(--error); background: var(--error-soft); }
+.tlb-billete-asa { width: 100%; height: 44px; display: grid; place-items: center; color: var(--ink-3); cursor: grab; touch-action: none; border-radius: 12px 12px 0 0; }
+.tlb-billete-asa:hover { color: var(--ink); background: color-mix(in srgb, var(--sim) 18%, transparent); }
+.tlb-billete-asa:active { cursor: grabbing; }
+.tlb-billete-txt { display: grid; align-content: center; gap: 2px; padding: 10px 2px; min-width: 0; }
+.tlb-billete-txt b { font-family: var(--display); font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.1; overflow-wrap: anywhere; }
+.tlb-billete-txt b.tl-mono { font-size: clamp(0.88rem, 1.3vw, 1.02rem); font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+.tlb-billete-txt small { color: var(--ink-3); font-size: var(--fs-xs); overflow-wrap: anywhere; }
+.tlb-billete-flechas { display: flex; gap: 6px; justify-content: center; }
+.tlb-flecha { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.tlb-flecha > span { display: grid; }
+.tlb-flecha:hover:not(:disabled) { border-color: var(--ink); }
+.tlb-flecha:disabled { opacity: 0.28; cursor: default; }
+.tlb-flecha:focus-visible, .tlb-parada-btn:focus-visible, .tlb-frase:focus-visible { outline: 3px solid var(--signal); outline-offset: 2px; }
+
+/* móvil: la vía va en vertical, a la izquierda */
+.tlb-escena.vert .tlb-raiz { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: start; }
+.tlb-via-svg.vert { width: auto; }
+.tlb-escena.vert .tlb-billetes { display: block; margin: 0; }
+.tlb-escena.vert .tlb-billete {
+  margin: 0 0 10px; height: 62px; grid-template-rows: none; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; justify-items: start; text-align: left; padding: 0 6px 0 0; gap: 4px;
+}
+.tlb-escena.vert .tlb-billete::before { top: 8px; bottom: 8px; left: 34px; right: auto; border-top: 0; border-left: 1.5px dashed var(--line); }
+.tlb-escena.vert .tlb-billete-asa { width: 34px; height: 60px; border-radius: 14px 0 0 14px; }
+.tlb-escena.vert .tlb-billete-txt { padding: 0 0 0 6px; }
+.tlb-escena.vert .tlb-billete-txt b { font-size: 1.02rem; }
+.tlb-escena.vert .tlb-billete-txt b.tl-mono { font-size: var(--fs-sm); letter-spacing: 0; }
+.tlb-escena.vert .tlb-billete-txt small { font-size: var(--fs-xs); }
+.tlb-escena.vert .tlb-billete-flechas { gap: 4px; }
+
+/* fase 2: conectar */
+.tlb-conectar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .tlb-conectar { grid-template-columns: 1fr; } }
+.tlb-paradas { list-style: none; margin: 0; padding: 0; position: relative; }
+.tlb-paradas::before { content: ''; position: absolute; left: 21px; top: 24px; bottom: 24px; width: 6px; border-radius: 6px; background: color-mix(in srgb, var(--ink) 12%, transparent); }
+.tlb-paradas::after { content: ''; position: absolute; left: 21px; top: 24px; bottom: 24px; width: 6px; border-radius: 6px; background: linear-gradient(var(--arc), var(--arc-deep)); transform: scaleY(0); transform-origin: top; transition: transform 1s cubic-bezier(.2,.7,.2,1); box-shadow: 0 0 10px var(--arc); }
+.tlb-paradas.encendida::after { transform: scaleY(1); }
+.tlb-parada { position: relative; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 10px; align-items: center; margin-bottom: 10px; }
+.tlb-parada-nodo { position: relative; z-index: 1; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--sheet); border: 3px solid color-mix(in srgb, var(--ink) 30%, transparent); font-family: var(--display); font-weight: 800; }
+.tlb-parada-btn { text-align: left; display: grid; gap: 2px; padding: 10px 14px; border-radius: var(--r-m); border: 1.5px solid var(--line); background: var(--sheet); min-height: 58px; color: var(--ink); cursor: pointer; font: inherit; }
+.tlb-parada-btn b { font-family: var(--display); }
+.tlb-parada-btn b small { font-family: var(--text); font-weight: 600; color: var(--ink-3); }
+.tlb-parada.activo .tlb-parada-btn { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); }
+.tlb-parada.activo .tlb-parada-nodo { border-color: var(--signal); }
+.tlb-parada.mal .tlb-parada-btn { border-color: var(--error); background: var(--error-soft); }
+.tlb-parada.mal .tlb-parada-nodo { border-color: var(--error); }
+.tlb-parada.ok .tlb-parada-btn { border-color: var(--arc); background: color-mix(in srgb, var(--arc) 12%, var(--sheet)); cursor: default; }
+.tlb-parada.ok .tlb-parada-nodo { background: var(--arc); border-color: var(--arc-deep); color: #1f2738; }
+.tlb-parada-hueco { color: var(--ink-3); font-size: var(--fs-sm); font-style: italic; }
+.tlb-parada-frase { font-size: var(--fs-sm); color: var(--ink-2); }
+.tlb-frases { display: flex; flex-wrap: wrap; gap: 8px; align-content: start; }
+.tlb-frases-tit { flex-basis: 100%; margin: 0 0 2px; font-size: var(--fs-sm); color: var(--ink-2); }
+.tlb-frase { text-align: left; padding: 10px 14px; border-radius: 14px; border: 1.5px solid var(--ink); background: var(--sheet); color: var(--ink); font: inherit; font-size: var(--fs-sm); min-height: 44px; max-width: 100%; cursor: pointer; }
+.tlb-frase:hover:not(:disabled) { background: color-mix(in srgb, var(--signal) 14%, var(--sheet)); }
+.tlb-frase.usada { opacity: 0.45; border-style: dashed; }
+.tlb-frase.suya { opacity: 1; border-style: solid; border-color: var(--signal); background: var(--signal-soft); }
+
+/* ---------- Factura: total que se imprime ---------- */
+.tlb-papel-wrap { position: relative; }
+.tlb-fac-sello {
+  position: absolute; left: 50%; bottom: 34px; z-index: 3; pointer-events: none; white-space: nowrap;
+  display: grid; justify-items: center; padding: 8px 16px 6px; border: 4px double var(--arc-deep); border-radius: 12px; color: var(--arc-deep);
+  background: color-mix(in srgb, var(--sheet) 55%, transparent); transform-origin: center; mix-blend-mode: multiply;
+}
+:root[data-theme='dark'] .tlb-fac-sello { mix-blend-mode: normal; background: color-mix(in srgb, var(--sheet) 70%, transparent);
+}
+.tlb-fac-sello small { font-family: var(--display); font-weight: 800; font-size: var(--fs-xs); letter-spacing: 0.08em; }
+.tlb-fac-sello b { font-family: var(--display); font-size: clamp(1.4rem, 4vw, 2rem); line-height: 1.05; font-variant-numeric: tabular-nums; }
+.tlb-imp { display: inline-block; }
+.tlb-desglose-cuota { font-weight: 700; }
+.tlb-pista-calc { display: grid; gap: 2px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.tlb-pista-calc span { display: block; }
+
+/* ---------- Cartera: sellos que se estampan ---------- */
+.tlb-hist-sellos { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 14px; padding-top: 10px; border-top: 1.5px dashed color-mix(in srgb, var(--ink) 25%, transparent); min-height: 44px; }
+.tlb-hist-sellos > small { flex-basis: 100%; font-size: var(--fs-xs); color: var(--ink-3); }
+.tlb-mini-sello { display: inline-grid; place-items: center; min-width: 38px; height: 28px; padding: 0 6px; border: 2.5px double var(--c); color: var(--c); border-radius: 7px; font-family: var(--display); font-weight: 900; font-size: var(--fs-sm); transform: rotate(-6deg); background: color-mix(in srgb, var(--c) 8%, var(--sheet)); }
+.tlb-mini-flecha { color: var(--ink-3); display: grid; }
+.tlb-cart-n { color: #fff; border-color: transparent !important; }
+.tl-efecto .tl-estampa { box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 20%, transparent); }
+.tlb-sellos { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .tlb-sellos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } }
+.tlb-sellos .tl-sello-btn { min-height: 64px; min-width: 0; cursor: pointer; }
+.tlb-sellos .tl-sello-btn:focus-visible { outline: 3px solid var(--signal); outline-offset: 2px; }
+.tlb-polvo { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tlb-anden { transform: none; }
+  .tlb-paradas::after { transition: none; }
+}

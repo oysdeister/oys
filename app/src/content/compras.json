@@ -55,10 +55,10 @@
   {
    "id": "compras-1",
    "numero": 1,
-   "titulo": "Nuevo proveedor y tarifa de compras",
-   "objetivo": "Tendrás dado de alta el proveedor T{INI} con su tercero, relaciones, dirección, condiciones, lista y grupo de precios.",
-   "concepto": "Un proveedor se monta en capas: primero el tercero (la persona jurídica, común a finanzas y gestión), después sus relaciones contables, direcciones y condiciones de pago, la tarifa de precios y, por último, el proveedor de compras que enlaza todo.\n\nSi una capa falta o está mal, el fallo aparece más tarde (por ejemplo, al contabilizar una factura). Por eso conviene montar el proveedor completo y comprobar cada pestaña antes de hacer documentos.",
-   "duracionMin": 45,
+   "titulo": "Proveedor, artículo y tarifa de compras",
+   "objetivo": "Tendrás dados de alta los datos maestros para comprar: el proveedor T{INI} con su tercero, relaciones, dirección y condiciones; el artículo {INI}001 con tipo contable PROD; y la lista y el grupo de precios.",
+   "concepto": "Antes de comprar, el ERP necesita saber a quién le compras y qué le compras. Son los maestros: fichas que se escriben una vez y se reutilizan en todos los documentos.\n\nEl proveedor se monta en capas: primero el tercero (la persona jurídica, común a finanzas y gestión), sus relaciones contables, direcciones y condiciones de pago, y después la ficha de proveedor. Luego, el artículo, con su unidad, familia, tipo contable y clave fiscal. Por último, la tarifa: la lista de precios, el grupo que la contiene y el enlace del grupo con el proveedor.\n\nSi una capa falta o está mal, el fallo aparece más tarde (por ejemplo, al contabilizar una factura). Por eso conviene montarlo todo y comprobar cada pestaña antes de hacer documentos.",
+   "duracionMin": 60,
    "secciones": [
     {
      "id": "compras-1-tercero",
@@ -415,6 +415,322 @@
      ]
     },
     {
+     "id": "compras-1-proveedor",
+     "titulo": "Proveedor",
+     "paraQueSirve": "El proveedor es la ficha de compras del tercero: a quién se factura, centrales de compras y pagos, logística y tarifa. Los documentos de compra (oferta, pedido, albarán, factura) se hacen contra el proveedor, no contra el tercero.",
+     "ruta": [
+      "Gestión",
+      "Maestros",
+      "Terceros",
+      "Proveedores",
+      "Registro (gproveed)"
+     ],
+     "explicacion": [
+      "El proveedor se da de alta en el «Maestro de proveedores», no como pestaña del tercero. La tarifa no se asigna directamente: se asigna un grupo de precios que contiene la lista.",
+      "El grupo de precios G{INI} aún no existe: lo crearás al final del ejercicio y entonces volverás al proveedor para asignarlo."
+     ],
+     "campos": [
+      {
+       "campo": "Proveedor *",
+       "significado": "Tercero que se da de alta como proveedor.",
+       "ejemplo": "T{INI}"
+      },
+      {
+       "campo": "Fecha alta *",
+       "significado": "Desde cuándo se le puede comprar.",
+       "ejemplo": "Hoy (defecto)"
+      },
+      {
+       "campo": "Fecha baja",
+       "significado": "A partir de esta fecha no se le puede comprar. Una fecha lejana lo deja activo.",
+       "ejemplo": "31-12-2099"
+      },
+      {
+       "campo": "Comercial *",
+       "significado": "Tercero comercial del proveedor.",
+       "ejemplo": "T{INI}"
+      },
+      {
+       "campo": "Grupo de empresas *",
+       "significado": "Sociedades que le pueden comprar.",
+       "ejemplo": "ALL"
+      },
+      {
+       "campo": "Tipo proveedor",
+       "significado": "Clasificación del proveedor.",
+       "ejemplo": "0 GENERAL"
+      },
+      {
+       "campo": "Grupo",
+       "significado": "Tercero de agrupación.",
+       "ejemplo": "Vacío"
+      },
+      {
+       "campo": "Tercero / Dirección facturación",
+       "significado": "A quién y dónde factura el proveedor (pestaña Facturación).",
+       "ejemplo": "T{INI} / 0"
+      },
+      {
+       "campo": "Divisa",
+       "significado": "Moneda de compra.",
+       "ejemplo": "EUR"
+      },
+      {
+       "campo": "Central de compras / Proveedor compras",
+       "significado": "Tercero que centraliza las compras y su proveedor. Van en pareja.",
+       "ejemplo": "T{INI} / T{INI}"
+      },
+      {
+       "campo": "Central de pagos / Proveedor pagos",
+       "significado": "Tercero que centraliza los pagos y su proveedor. Van en pareja.",
+       "ejemplo": "T{INI} / T{INI}"
+      },
+      {
+       "campo": "Grupo precio",
+       "significado": "Grupo de precios que valora sus compras (Datos financieros › Tarifas). Se asigna al final, cuando exista el grupo.",
+       "ejemplo": "G{INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el Maestro de proveedores y pulsa «Nuevo»"
+      },
+      {
+       "texto": "Rellena Proveedor T{INI}, Comercial T{INI}, Grupo de empresas ALL, Tipo proveedor GENERAL y Divisa EUR. Deja vacías las centrales"
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "detalle": "Si informas una central sin su proveedor sale un error de restricciones de verificación; por eso se guarda primero sin centrales.",
+       "imagen": "compras-013.jpg"
+      },
+      {
+       "texto": "Abre la ficha del proveedor T{INI} (clic en el código)"
+      },
+      {
+       "texto": "Pon Fecha baja 31-12-2099 y, en las pestañas Central de compras y Central de pagos, Central = T{INI} y Proveedor = T{INI}",
+       "detalle": "Ficha del proveedor: Fecha baja 2099 y central de pagos T{INI} con su proveedor T{INI}.",
+       "imagen": "compras-014.jpg",
+       "hotspot": {
+        "x": 19.5,
+        "y": 63.6,
+        "w": 36.5,
+        "h": 9.5,
+        "etiqueta": "Central pagos"
+       }
+      },
+      {
+       "texto": "Guarda con el disquete"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "«Las siguientes restricciones de verificación fallaron: si la central de pagos no es nula, tampoco lo será su proveedor…»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "La central y su «Proveedor compras/pagos» van en pareja. Como T{INI} aún no es proveedor al darlo de alta, guarda primero sin centrales y después informa las dos parejas en la ficha."
+      }
+     ]
+    },
+    {
+     "id": "compras-1-articulo",
+     "titulo": "Alta del artículo",
+     "paraQueSirve": "El artículo es lo que le compras al proveedor: un rodamiento, un tornillo o un servicio. Su ficha guarda la descripción, la unidad, la familia, el tipo contable y la clave fiscal. Así, en el pedido no tienes que escribir nada de esto: el ERP lo toma de la ficha.",
+     "ruta": [
+      "Gestión",
+      "Maestros",
+      "Artículos",
+      "Registro (garticul)"
+     ],
+     "explicacion": [
+      "El artículo se da de alta en el «Maestro de artículos». Es un maestro: lo escribes una vez y lo usan todos los documentos de compra.",
+      "Para comprar importan cinco datos: descripción, unidad, familia, tipo contable y clave fiscal. La familia propone la clave fiscal y la naturaleza.",
+      "El tipo contable decide a qué cuenta va el gasto al contabilizar la factura. Para compras usa PRODUCTO (PROD), como el artículo de referencia 13500620."
+     ],
+     "campos": [
+      {
+       "campo": "Artículo *",
+       "significado": "Código del artículo.",
+       "ejemplo": "{INI}001"
+      },
+      {
+       "campo": "Descripción artículo",
+       "significado": "Nombre con el que lo reconoces. Se guarda en mayúsculas.",
+       "ejemplo": "RODAMIENTO {INI}"
+      },
+      {
+       "campo": "Unidad base *",
+       "significado": "Cómo se cuenta y en qué unidad se lleva el stock.",
+       "ejemplo": "UNIDAD (UNI)"
+      },
+      {
+       "campo": "Agrupación empresas *",
+       "significado": "Sociedades que pueden usarlo.",
+       "ejemplo": "ALL"
+      },
+      {
+       "campo": "Tipo *",
+       "significado": "Clasificación del artículo.",
+       "ejemplo": "ARTICULOS"
+      },
+      {
+       "campo": "Familia *",
+       "significado": "Grupo al que pertenece. Propone la clave fiscal y la naturaleza.",
+       "ejemplo": "01.01.001352 Serie 6.0xx-6.2xx-6.3xx hasta Ø60 mm IS"
+      },
+      {
+       "campo": "Tipo contable",
+       "significado": "A qué cuenta de contabilidad va el gasto al comprarlo (bloque «Contabilidad»).",
+       "ejemplo": "PRODUCTO (PROD)"
+      },
+      {
+       "campo": "Clave fiscal / Naturaleza *",
+       "significado": "Qué IVA se aplica y tipo de bien. Se heredan de la familia.",
+       "ejemplo": "BOG (bienes a tipo general, IVA 21 %) / Bien"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Situación del artículo. Tras «Validar» queda activo.",
+       "ejemplo": "Activo"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el «Maestro de artículos» y pulsa «Nuevo»",
+       "detalle": "Verás la lista de artículos con su unidad base, familia, tipo contable y tipo.",
+       "imagen": "compras-art-01.jpg",
+       "hotspot": {
+        "x": 87.8,
+        "y": 7.6,
+        "w": 4.0,
+        "h": 3.4,
+        "etiqueta": "Nuevo"
+       }
+      },
+      {
+       "texto": "En «Artículo» escribe {INI}001 y en «Descripción artículo» RODAMIENTO {INI}",
+       "detalle": "Así lo ves en la ficha del artículo de referencia 13500620 (6000-2RS ISB).",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 16.5,
+        "y": 15.0,
+        "w": 52.0,
+        "h": 5.6,
+        "etiqueta": "Artículo y descripción"
+       }
+      },
+      {
+       "texto": "En «Unidad base» elige UNIDAD",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 16.5,
+        "y": 22.5,
+        "w": 17.0,
+        "h": 5.3,
+        "etiqueta": "Unidad base"
+       }
+      },
+      {
+       "texto": "Deja «Agrupación empresas» en ALL y en «Tipo» elige ARTICULOS",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 16.5,
+        "y": 59.5,
+        "w": 38.6,
+        "h": 5.4,
+        "etiqueta": "Tipo"
+       }
+      },
+      {
+       "texto": "En «Familia» teclea 01.01.001352 y sal con Tab",
+       "detalle": "El desplegable no muestra opciones al escribir: teclea el código exacto.",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 57.0,
+        "y": 37.6,
+        "w": 38.5,
+        "h": 5.4,
+        "etiqueta": "Familia"
+       }
+      },
+      {
+       "texto": "En el bloque «Contabilidad», en «Tipo contable», elige PRODUCTO (PROD)",
+       "detalle": "Sin este dato la factura de compra no encuentra la cuenta de gasto.",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 16.5,
+        "y": 74.8,
+        "w": 38.6,
+        "h": 6.6,
+        "etiqueta": "Tipo contable"
+       }
+      },
+      {
+       "texto": "Comprueba que «Clave fiscal» es BOG y «Naturaleza» es Bien. Guarda",
+       "detalle": "BOG significa bienes a tipo general: el IVA normal, del 21 %.",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 16.5,
+        "y": 89.4,
+        "w": 38.6,
+        "h": 5.0,
+        "etiqueta": "Clave fiscal"
+       }
+      },
+      {
+       "texto": "Busca {INI}001 en la lista con «Filtros»",
+       "detalle": "Tras guardar, el artículo nuevo puede no salir en la primera página de la lista.",
+       "imagen": "compras-art-01.jpg",
+       "hotspot": {
+        "x": 42.9,
+        "y": 7.6,
+        "w": 5.1,
+        "h": 3.4,
+        "etiqueta": "Filtros"
+       }
+      },
+      {
+       "texto": "Abre su ficha pulsando el número de la fila y pulsa «Validar»",
+       "detalle": "El «Estado» queda en Activo.",
+       "imagen": "compras-art-02.jpg",
+       "hotspot": {
+        "x": 79.6,
+        "y": 7.6,
+        "w": 4.0,
+        "h": 3.4,
+        "etiqueta": "Validar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "El desplegable de «Familia» no muestra ninguna opción al escribir ni al pulsar flecha abajo."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Teclea el código exacto de la familia (01.01.001352) y sal con Tab. Los códigos están en Gestión › Maestros › Artículos › Auxiliares › Familias (gartfami)."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida». El artículo tiene «Tipo contable» Ventas (o vacío), que no tiene cuenta de compras."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Abre el artículo, bloque «Contabilidad», cambia «Tipo contable» a PRODUCTO (PROD) y guarda. No hace falta tocar la factura."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Fíjate en la lista: casi todos los artículos de la demo tienen «Tipo contable» Ventas. El 13500620 tiene PRODUCTO; por eso es el que usarás en los documentos de compra."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Un artículo sin línea en la lista de precios del proveedor no trae precio en el pedido. Si quieres comprar {INI}001, añádelo también a tu lista TF{INI} (siguiente apartado)."
+      }
+     ]
+    },
+    {
      "id": "compras-1-lista",
      "titulo": "Lista de precios de compra (tarifa)",
      "paraQueSirve": "La lista de precios guarda el precio pactado con el proveedor para cada artículo y periodo. Sirve para valorar pedidos y albaranes sin teclear precios y para controlar desviaciones en la factura. Cada línea tiene su propia vigencia, así que se pueden cambiar precios sin crear otra tarifa.",
@@ -517,7 +833,12 @@
        "imagen": "compras-011.jpg"
       }
      ],
-     "avisos": []
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si quieres comprar también tu artículo {INI}001, añade en TF{INI} otra línea con él y su precio."
+      }
+     ]
     },
     {
      "id": "compras-1-grupo",
@@ -578,115 +899,9 @@
        "texto": "Rellena Orden 1, Divisa EUR y Lista precio TF{INI}. Pulsa «Guardar»",
        "detalle": "Grupo G{INI} con la lista TF{INI} en orden 1.",
        "imagen": "compras-012.jpg"
-      }
-     ],
-     "avisos": []
-    },
-    {
-     "id": "compras-1-proveedor",
-     "titulo": "Proveedor",
-     "paraQueSirve": "El proveedor es la ficha de compras del tercero: a quién se factura, centrales de compras y pagos, logística y tarifa. Los documentos de compra (oferta, pedido, albarán, factura) se hacen contra el proveedor, no contra el tercero.",
-     "ruta": [
-      "Gestión",
-      "Maestros",
-      "Terceros",
-      "Proveedores",
-      "Registro (gproveed)"
-     ],
-     "explicacion": [
-      "El proveedor se da de alta en el «Maestro de proveedores», no como pestaña del tercero. La tarifa no se asigna directamente: se asigna un grupo de precios que contiene la lista."
-     ],
-     "campos": [
-      {
-       "campo": "Proveedor *",
-       "significado": "Tercero que se da de alta como proveedor.",
-       "ejemplo": "T{INI}"
       },
       {
-       "campo": "Fecha alta *",
-       "significado": "Desde cuándo se le puede comprar.",
-       "ejemplo": "Hoy (defecto)"
-      },
-      {
-       "campo": "Fecha baja",
-       "significado": "A partir de esta fecha no se le puede comprar. Una fecha lejana lo deja activo.",
-       "ejemplo": "31-12-2099"
-      },
-      {
-       "campo": "Comercial *",
-       "significado": "Tercero comercial del proveedor.",
-       "ejemplo": "T{INI}"
-      },
-      {
-       "campo": "Grupo de empresas *",
-       "significado": "Sociedades que le pueden comprar.",
-       "ejemplo": "ALL"
-      },
-      {
-       "campo": "Tipo proveedor",
-       "significado": "Clasificación del proveedor.",
-       "ejemplo": "0 GENERAL"
-      },
-      {
-       "campo": "Grupo",
-       "significado": "Tercero de agrupación.",
-       "ejemplo": "Vacío"
-      },
-      {
-       "campo": "Tercero / Dirección facturación",
-       "significado": "A quién y dónde factura el proveedor (pestaña Facturación).",
-       "ejemplo": "T{INI} / 0"
-      },
-      {
-       "campo": "Divisa",
-       "significado": "Moneda de compra.",
-       "ejemplo": "EUR"
-      },
-      {
-       "campo": "Central de compras / Proveedor compras",
-       "significado": "Tercero que centraliza las compras y su proveedor. Van en pareja.",
-       "ejemplo": "T{INI} / T{INI}"
-      },
-      {
-       "campo": "Central de pagos / Proveedor pagos",
-       "significado": "Tercero que centraliza los pagos y su proveedor. Van en pareja.",
-       "ejemplo": "T{INI} / T{INI}"
-      },
-      {
-       "campo": "Grupo precio",
-       "significado": "Grupo de precios que valora sus compras (Datos financieros › Tarifas).",
-       "ejemplo": "G{INI}"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre el Maestro de proveedores y pulsa «Nuevo»"
-      },
-      {
-       "texto": "Rellena Proveedor T{INI}, Comercial T{INI}, Grupo de empresas ALL, Tipo proveedor GENERAL y Divisa EUR. Deja vacías las centrales"
-      },
-      {
-       "texto": "Pulsa «Guardar»",
-       "detalle": "Si informas una central sin su proveedor sale un error de restricciones de verificación; por eso se guarda primero sin centrales.",
-       "imagen": "compras-013.jpg"
-      },
-      {
-       "texto": "Abre la ficha del proveedor T{INI} (clic en el código)"
-      },
-      {
-       "texto": "Pon Fecha baja 31-12-2099 y, en las pestañas Central de compras y Central de pagos, Central = T{INI} y Proveedor = T{INI}",
-       "detalle": "Ficha del proveedor: Fecha baja 2099 y central de pagos T{INI} con su proveedor T{INI}.",
-       "imagen": "compras-014.jpg",
-       "hotspot": {
-        "x": 19.5,
-        "y": 63.6,
-        "w": 76.4,
-        "h": 11.4,
-        "etiqueta": "Central de pagos"
-       }
-      },
-      {
-       "texto": "En Datos financieros › Tarifas elige Grupo precio G{INI}",
+       "texto": "Vuelve al proveedor T{INI}: en Datos financieros › Tarifas elige Grupo precio G{INI} y guarda con el disquete",
        "detalle": "El grupo G{INI} contiene la lista TF{INI}.",
        "imagen": "compras-015.jpg",
        "hotspot": {
@@ -696,21 +911,9 @@
         "h": 11.4,
         "etiqueta": "Grupo precio"
        }
-      },
-      {
-       "texto": "Guarda con el disquete"
       }
      ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "«Las siguientes restricciones de verificación fallaron: si la central de pagos no es nula, tampoco lo será su proveedor…»."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "La central y su «Proveedor compras/pagos» van en pareja. Como T{INI} aún no es proveedor al darlo de alta, guarda primero sin centrales y después informa las dos parejas en la ficha."
-      }
-     ]
+     "avisos": []
     }
    ],
    "test": [
@@ -768,6 +971,39 @@
      ],
      "correcta": 1,
      "explicacion": "Con TF la factura exige la cuenta bancaria; si no, sale «DOMICILIACIÓN BANCARIA NO INFORMADA»."
+    },
+    {
+     "pregunta": "¿Qué «Tipo contable» debe tener un artículo para que la factura de compra se contabilice?",
+     "opciones": [
+      "Ventas (VEN)",
+      "PRODUCTO (PROD)",
+      "Vacío: lo pone la factura",
+      "El de la familia, sin elegir nada"
+     ],
+     "correcta": 1,
+     "explicacion": "La cuenta de compras sale de Relaciones contables según el tipo contable del artículo. Con Ventas sale «tipcon [VEN] cuenta no definida»; con PROD sí hay cuenta de compras."
+    },
+    {
+     "pregunta": "Al crear el artículo, ¿de dónde salen la clave fiscal BOG y la naturaleza Bien?",
+     "opciones": [
+      "Se escriben a mano siempre",
+      "Las propone la familia",
+      "Las copia el proveedor",
+      "Las pone el pedido de compra"
+     ],
+     "correcta": 1,
+     "explicacion": "Al informar la familia 01.01.001352, el ERP propone clave fiscal BOG (bienes a tipo general, IVA 21 %) y naturaleza Bien."
+    },
+    {
+     "pregunta": "El desplegable de «Familia» no muestra opciones. ¿Qué haces?",
+     "opciones": [
+      "Dejarla vacía y guardar",
+      "Elegir otra unidad base",
+      "Teclear el código exacto de la familia y salir con Tab",
+      "Crear una familia nueva"
+     ],
+     "correcta": 2,
+     "explicacion": "La familia es obligatoria. Teclea su código (01.01.001352) y sal con Tab; los códigos están en Auxiliares › Familias."
     }
    ],
    "checklist": [
@@ -778,6 +1014,8 @@
     "Dirección tipo 0 con código postal 08001 y zona impositiva ESCO.",
     "Condición de cobro EF con Plazo pago 30D en la pestaña Condiciones de cobro.",
     "Condición de pago TF con Plazo pago 30D en la pestaña Condiciones de pago.",
+    "Artículo {INI}001 creado con unidad UNIDAD, familia 01.01.001352, tipo contable PRODUCTO (PROD) y clave fiscal BOG.",
+    "Artículo {INI}001 validado: estado Activo en el Maestro de artículos.",
     "Lista TF{INI} con la línea del artículo 13500620 a 12,50, de 01-01-2026 a 31-12-2099.",
     "Grupo G{INI} con la lista TF{INI} en orden 1.",
     "Proveedor T{INI} de tipo GENERAL con Fecha baja 31-12-2099 y centrales de compras y pagos T{INI} / T{INI}.",
@@ -796,6 +1034,14 @@
     {
      "problema": "La factura no contabilizará si el tercero no tiene la relación contable de la tipología.",
      "solucion": "Añade en la pestaña Relaciones la relación que pide la tipología de factura (ver ejercicio 2)."
+    },
+    {
+     "problema": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida».",
+     "solucion": "El artículo tiene «Tipo contable» Ventas. En su ficha, bloque «Contabilidad», cámbialo a PRODUCTO (PROD) y guarda."
+    },
+    {
+     "problema": "El desplegable de «Familia» del artículo no muestra opciones.",
+     "solucion": "Teclea el código exacto de la familia y sal con Tab. Los códigos están en Gestión › Maestros › Artículos › Auxiliares › Familias."
     }
    ]
   },
@@ -1125,10 +1371,10 @@
        "detalle": "Datos financieros copiados del tercero: Tipo efecto TF y Forma pago 30 días.",
        "imagen": "compras-022.jpg",
        "hotspot": {
-        "x": 1.5,
-        "y": 21.2,
-        "w": 18.0,
-        "h": 9.4,
+        "x": 2.0,
+        "y": 19.5,
+        "w": 9.0,
+        "h": 8.0,
         "etiqueta": "Proveedor"
        }
       },
@@ -1808,10 +2054,10 @@
        "detalle": "Se crea la oferta 0OC000001. La cabecera tiene tres fechas: oferta, inicio y fin de vigencia.",
        "imagen": "compras-040.jpg",
        "hotspot": {
-        "x": 1.8,
-        "y": 19.3,
-        "w": 9.6,
-        "h": 7.8,
+        "x": 2.5,
+        "y": 54.5,
+        "w": 8.5,
+        "h": 7.5,
         "etiqueta": "Proveedor"
        }
       },

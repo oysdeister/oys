@@ -1,4 +1,4 @@
-import { MODULOS } from '../content';
+import { META, MODULOS } from '../content';
 import { ejercicioCompletado, type Progreso } from './progress';
 
 export interface Insignia {
@@ -21,12 +21,12 @@ export const INSIGNIAS: Insignia[] = [
       return MODULOS.some((m) => m.ejercicios.some((e) => e.checklist.length > 0 && (p.ejercicios[e.id]?.demo.length ?? 0) >= e.checklist.length));
     } },
   { id: 'cuadrado', titulo: 'Asiento cuadrado', texto: 'Cuadra un asiento en el simulador.', color: '#8a7be0', ganada: (p) => !!p.sims['asiento'] },
-  { id: 'taller', titulo: 'Taller completo', texto: 'Supera todos los simuladores.', color: '#e0708a', ganada: (p) => ['asiento', 'numerador', 'circuito', 'docflow', 'factura'].every((s) => p.sims[s]) },
+  { id: 'taller', titulo: 'Taller completo', texto: 'Supera todos los simuladores.', color: '#e0708a', ganada: (p) => ['asiento', 'numerador', 'circuito', 'docflow', 'factura', 'cartera'].every((s) => p.sims[s]) },
   ...MODULOS.map((m) => ({
     id: `mod-${m.id}`,
     titulo: m.titulo,
     texto: 'Termina todos los ejercicios del módulo.',
-    color: '#2a9c83',
+    color: META[m.id]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => modCompleto(p, m.id),
   })),
   { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa los seis módulos.', color: '#1f2738', ganada: (p) => MODULOS.length > 0 && MODULOS.every((m) => modCompleto(p, m.id)) },

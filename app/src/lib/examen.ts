@@ -100,6 +100,8 @@ export interface TareaExamen {
   encargo: string;
   /** Datos del encargo que el alumno necesita (sin pasos) */
   datos: { k: string; v: string }[];
+  /** Lo que la demo no hace sola: avisos que no son pasos (ver skill erp-nuevo-compras) */
+  notas?: string[];
   campos: CampoExamen[];
 }
 
@@ -127,10 +129,12 @@ export const PESO_PRACTICA = 0.7;
 export const APROBADO_EXAMEN = 0.8;
 export const MIN_TEORIA = 30;
 export const NUM_TEORIA = 24;
+/** Encargos de la práctica (8 en Axional + 1 de rutas de menú) */
+export const NUM_TAREAS = 9;
 const N_VIDEO = 7;
 const N_CRITERIO = 5;
 /** Tamaño del banco teórico (para la portada) */
-export const bancoTeoria = () => ({ tests: MODULOS.reduce((s, m) => s + m.ejercicios.reduce((t, e) => t + e.test.length, 0), 0), video: VIDEO.length, criterio: CRITERIO.length });
+export const bancoTeoria = () => ({ tests: MODULOS.reduce((s, m) => s + m.ejercicios.reduce((t, e) => t + e.test.filter((q) => apta(q)).length, 0), 0), video: VIDEO.length, criterio: CRITERIO.length });
 
 const p2 = (n: number) => num2.format(n);
 
@@ -202,14 +206,7 @@ export function generarCaso(codigo: string): Caso {
       ],
     },
     {
-      titulo: 'Pago de la factura de compra',
-      lineas: [
-        { cuenta: '40000', nombre: 'Proveedores', debe: compra.total, haber: 0 },
-        { cuenta: '57200', nombre: 'Bancos', debe: 0, haber: compra.total },
-      ],
-    },
-    {
-      titulo: 'Factura de venta',
+      titulo: 'Factura de venta (F' + ini + ', plantilla FV)',
       lineas: [
         { cuenta: '43000', nombre: 'Clientes', debe: venta.total, haber: 0 },
         { cuenta: '47000', nombre: 'IVA repercutido 21 %', debe: 0, haber: iv },
@@ -232,7 +229,7 @@ export function generarCaso(codigo: string): Caso {
     },
   ];
 
-  const ESTADOS_DOC = ['Pendiente', 'Servido', 'Facturado', 'Anulado'];
+  const ESTADOS_DOC = ['Pendiente', 'Parcial', 'Servido', 'Facturado'];
   const ESTADOS_EF = ['PE Pendiente', 'PR Propuesto', 'CO Cobrado', 'PA Pagado', 'DV Devuelto'];
   const ESTADOS_AS = ['Provisional', 'Contabilizado', 'Anulado'];
 
@@ -241,59 +238,74 @@ export function generarCaso(codigo: string): Caso {
       id: 't1',
       modulo: 'maestros',
       titulo: 'Alta del proveedor',
-      encargo: `Empezamos a comprar rodamientos a un proveedor nuevo. Dalo de alta como tercero y como proveedor con el código ${proveedor}. Que compre en euros, con el grupo de precio 00001 y sin ningún descuento ni pronto pago. Valida el tercero.`,
+      encargo: `Empezamos a comprar rodamientos a un proveedor nuevo. Dalo de alta como tercero y como proveedor con el código ${proveedor}, listo para que sus facturas contabilicen y generen su vencimiento en la cartera de pagos. Compra en euros, con el grupo de precio 00001 y sin ningún descuento ni pronto pago.`,
       datos: [
         { k: 'Código', v: proveedor },
         { k: 'Nombre', v: `Proveedor examen ${codigo}` },
-        { k: 'NIF', v: 'el que te indique el examinador o uno de prueba' },
-        { k: 'Divisa', v: 'EUR' },
+        { k: 'NIF', v: 'uno de prueba (o el que te dé el examinador)' },
+        { k: 'Dirección', v: 'tipo 0, domicilio fiscal' },
+        { k: 'Condición de pago', v: 'tipo de efecto EF, plazo 30D' },
+        { k: 'Relación contable', v: 'Proveedor · PRO · 40000.00000' },
+        { k: 'Tipo proveedor y divisa', v: 'GENERAL · EUR' },
         { k: 'Grupo de precio', v: '00001' },
       ],
       campos: [
         { id: 't1.codigo', etiqueta: 'Código de proveedor que has creado', tipo: 'texto', esperado: proveedor, puntos: 2, placeholder: 'T…EX' },
         { id: 't1.grupo', etiqueta: 'Grupo de precio del proveedor', tipo: 'texto', esperado: '00001', puntos: 2, placeholder: '00000' },
         { id: 't1.dtos', etiqueta: 'Qué has puesto en descuentos 1, 2, 3 y pronto pago', tipo: 'opcion', opciones: ['Los he dejado vacíos', '0 en los cuatro', '100 en los cuatro', 'Solo el pronto pago a 0'], esperado: '0 en los cuatro', puntos: 3 },
+        { id: 't1.estado', etiqueta: 'Estado del tercero antes de crear el proveedor', tipo: 'opcion', opciones: ['Provisional', 'Validado', 'Activo', 'Bloqueado'], esperado: 'Validado', puntos: 2 },
+        { id: 't1.cat', etiqueta: 'Categoría que has elegido para el tercero', tipo: 'opcion', opciones: ['001 Clientes', '002 Proveedores', '003 Acreedores', '008 Entidades Financieras'], esperado: '002 Proveedores', puntos: 1 },
       ],
     },
     {
       id: 't2',
       modulo: 'compras',
       titulo: 'Pedido al proveedor',
-      encargo: `Pídele a ${proveedor} ${qc} unidades del rodamiento ${ARTICULO.codigo} (${ARTICULO.nombre}) a ${p2(compra.precio)} € la unidad. Empresa 0, delegación CENTRAL, almacén 0, tipo de pedido PC. En «Su referencia» pon el código de examen.`,
+      encargo: `Pídele a ${proveedor} ${qc} unidades del rodamiento ${ARTICULO.codigo} (${ARTICULO.nombre}) a ${p2(compra.precio)} € la unidad. Empresa 0, delegación CENTRAL, departamento COMPRAS, almacén 0, tipo de pedido PC. En «Referencia» pon el código de examen. Déjalo validado.`,
       datos: [
         { k: 'Artículo', v: `${ARTICULO.codigo} ${ARTICULO.nombre}` },
         { k: 'Cantidad', v: `${qc} UNI` },
         { k: 'Precio', v: `${p2(compra.precio)} €` },
-        { k: 'Su referencia', v: codigo },
+        { k: 'Referencia', v: codigo },
+      ],
+      notas: [
+        'La ficha de pedido de la demo no aplica el numerador: el número 0PC lo tecleas tú (el siguiente libre de la lista).',
+        'Importe bruto y neto de la cabecera también se teclean.',
+        'Las líneas se cargan con ⋮ › Importar en «Líneas de pedidos» (CSV con «;», cabecera cabid;linrel;orden;codart;varlog;numlot;canped;udmcom;canpre;udmpre;precio;impnet;canser;dtoimp, cabid = Identificador del pedido, dtoimp 0).',
       ],
       campos: [
         { id: 't2.num', etiqueta: 'Número del pedido', tipo: 'doc', patron: '^0PC\\d{6}$', placeholder: '0PC000000', puntos: 2 },
-        { id: 't2.ref', etiqueta: 'Qué has escrito en «Su referencia»', tipo: 'texto', esperado: codigo, puntos: 1, placeholder: 'EX-…' },
+        { id: 't2.ref', etiqueta: 'Qué has escrito en «Referencia»', tipo: 'texto', esperado: codigo, puntos: 1, placeholder: 'EX-…' },
         { id: 't2.neto', etiqueta: 'Importe neto del pedido (sin IVA)', tipo: 'importe', esperado: bc, puntos: 3, placeholder: '0,00' },
+        { id: 't2.situ', etiqueta: 'Situación del pedido recién validado', tipo: 'opcion', opciones: ESTADOS_DOC, esperado: 'Pendiente', puntos: 2 },
       ],
     },
     {
       id: 't3',
       modulo: 'compras',
       titulo: 'Recepción de la mercancía',
-      encargo: 'Ha llegado todo lo pedido. Genera el albarán de compra desde el pedido (tipo ACPC), valídalo y contabilízalo.',
-      datos: [{ k: 'Origen', v: 'el pedido de la tarea anterior' }],
+      encargo: 'Ha llegado todo lo pedido. Genera el albarán de compra (tipo ACPC) a partir del pedido con el proceso de generación de albaranes, comprueba que queda validado y contabilízalo.',
+      datos: [
+        { k: 'Origen', v: 'tu pedido del encargo 2' },
+        { k: 'Tipo de albarán', v: 'ACPC' },
+      ],
       campos: [
         { id: 't3.num', etiqueta: 'Número del albarán', tipo: 'doc', patron: '^0AC\\d{6}$', placeholder: '0AC000000', puntos: 2 },
         { id: 't3.neto', etiqueta: 'Importe neto del albarán', tipo: 'importe', esperado: bc, puntos: 2, placeholder: '0,00' },
         { id: 't3.asiento', etiqueta: 'Número del asiento del albarán', tipo: 'entero', patron: '^\\d{1,7}$', placeholder: '0', puntos: 1 },
         { id: 't3.debe', etiqueta: 'Cuenta al Debe del asiento', tipo: 'cuenta', esperado: '60000', puntos: 2, placeholder: '00000' },
         { id: 't3.haber', etiqueta: 'Cuenta al Haber del asiento', tipo: 'cuenta', esperado: '40090', puntos: 2, placeholder: '00000' },
-        { id: 't3.pedido', etiqueta: 'Estado del pedido en el Docflow tras generar el albarán', tipo: 'opcion', opciones: ESTADOS_DOC, esperado: 'Servido', puntos: 2 },
+        { id: 't3.pedido', etiqueta: 'Situación del pedido tras generar el albarán', tipo: 'opcion', opciones: ESTADOS_DOC, esperado: 'Servido', puntos: 2 },
       ],
     },
     {
       id: 't4',
       modulo: 'compras',
       titulo: 'Factura del proveedor',
-      encargo: `Ha llegado la factura del proveedor con el número ${codigo}. Genérala desde el albarán (tipo FCOA), comprueba que cuadra y contabilízala.`,
+      encargo: `Ha llegado la factura del proveedor con el número ${codigo} por el total de la compra. Genérala desde el albarán (tipo FCOA), comprueba que el importe que te declara cuadra con el calculado y contabilízala. Busca después su asiento: no te fíes de la ventana que se abre al contabilizar.`,
       datos: [
         { k: 'Factura proveedor', v: codigo },
+        { k: 'Importe factura', v: `${p2(compra.total)} €` },
         { k: 'IVA', v: '21 %' },
       ],
       campos: [
@@ -306,35 +318,38 @@ export function generarCaso(codigo: string): Caso {
         { id: 't4.prov', etiqueta: 'Cuenta del proveedor (al Haber por el total)', tipo: 'cuenta', esperado: '40000', puntos: 2, placeholder: '00000' },
         { id: 't4.cuentaiva', etiqueta: 'Cuenta del IVA soportado', tipo: 'cuenta', esperado: '47200', puntos: 2, placeholder: '00000' },
         { id: 't4.salda', etiqueta: 'Cuenta que salda el albarán al Debe', tipo: 'cuenta', esperado: '40090', puntos: 2, placeholder: '00000' },
+        { id: 't4.lineas', etiqueta: 'Cuántas líneas tiene el asiento de la factura', tipo: 'opcion', opciones: ['2', '3', '5', '6'], esperado: '5', puntos: 2 },
         { id: 't4.alb', etiqueta: 'Estado del albarán en el Docflow', tipo: 'opcion', opciones: ESTADOS_DOC, esperado: 'Facturado', puntos: 2 },
       ],
     },
     {
       id: 't5',
       modulo: 'carteras',
-      titulo: 'Pago al proveedor',
-      encargo: 'Pagamos hoy la factura por banco. Liquida su efecto en la cartera de pagos.',
-      datos: [{ k: 'Cuenta financiera', v: 'el banco que uses en la empresa 0' }],
+      titulo: 'Efectos de la compra',
+      encargo: 'Tesorería quiere saber qué le debemos al proveedor. Busca en la cartera de pagos los efectos que ha generado tu factura de compra y anota lo que ves. No lo pagues.',
+      datos: [{ k: 'Dónde', v: 'cartera de efectos, clase Pagar' }],
       campos: [
-        { id: 't5.importe', etiqueta: 'Importe pagado', tipo: 'importe', esperado: compra.total, puntos: 2, placeholder: '0,00' },
-        { id: 't5.estado', etiqueta: 'Estado final del efecto', tipo: 'opcion', opciones: ESTADOS_EF, esperado: 'PA Pagado', puntos: 2 },
-        { id: 't5.asiento', etiqueta: 'Número del asiento del pago', tipo: 'entero', patron: '^\\d{1,7}$', placeholder: '0', puntos: 1 },
-        { id: 't5.debe', etiqueta: 'Cuenta al Debe', tipo: 'cuenta', esperado: '40000', puntos: 2, placeholder: '00000' },
-        { id: 't5.haber', etiqueta: 'Cuenta al Haber', tipo: 'cuenta', esperado: '57200', puntos: 2, placeholder: '00000' },
+        { id: 't5.num', etiqueta: 'Cuántos efectos ha generado la factura', tipo: 'opcion', opciones: ['Ninguno', '1', '2', '3'], esperado: '1', puntos: 2 },
+        { id: 't5.importe', etiqueta: 'Importe del efecto', tipo: 'importe', esperado: compra.total, puntos: 3, placeholder: '0,00' },
+        { id: 't5.tipo', etiqueta: 'Tipo de efecto', tipo: 'texto', esperado: 'EF', puntos: 1, placeholder: 'EF' },
+        { id: 't5.dias', etiqueta: 'A cuántos días de la fecha de factura vence', tipo: 'opcion', opciones: ['0', '30', '60', '90'], esperado: '30', puntos: 2 },
+        { id: 't5.estado', etiqueta: 'Estado del efecto', tipo: 'opcion', opciones: ESTADOS_EF, esperado: 'PE Pendiente', puntos: 2 },
       ],
     },
     {
       id: 't6',
       modulo: 'ventas',
       titulo: 'Venta completa',
-      encargo: `Un cliente nuevo, ${cliente}, nos pide oferta de ${qv} unidades del ${ARTICULO.codigo} a ${p2(venta.precio)} €. Dalo de alta como tercero y cliente. Hazle la oferta; la acepta: pásala a pedido, sirve el pedido con un albarán y factúralo. Contabiliza solo la factura. En «Su referencia» pon el código de examen.`,
+      encargo: `Un cliente nuevo, ${cliente}, nos pide oferta de ${qv} unidades del ${ARTICULO.codigo} a ${p2(venta.precio)} €. Dalo de alta como tercero y cliente. Hazle la oferta; la acepta: pásala a pedido, sirve el pedido con un albarán y factúralo. Usa tus tipologías del circuito oferta-pedido-albarán-factura. Contabiliza solo la factura.`,
       datos: [
-        { k: 'Cliente', v: cliente },
-        { k: 'Cantidad', v: `${qv} UNIDAD` },
+        { k: 'Cliente', v: `${cliente} · categoría Clientes · dirección 0` },
+        { k: 'Relación contable', v: 'Cliente · CLI · 43000.00000' },
+        { k: 'Condición de cobro', v: 'EF · estado PE · plazo 30D' },
+        { k: 'Tipologías', v: `O${ini} › P${ini} › A${ini}2 › F${ini}` },
+        { k: 'Cantidad', v: `${qv} unidades` },
         { k: 'Precio', v: `${p2(venta.precio)} €` },
-        { k: 'Cobro', v: 'EF / 30D' },
-        { k: 'Su referencia', v: codigo },
       ],
+      notas: ['Al elegir el Origen en el pedido se vacía el Cliente: vuelve a ponerlo.', 'Revisa el importe neto de la línea del albarán: si no cuadra, reescribe Precio e Importe dto. 0 y guarda.'],
       campos: [
         { id: 't6.cliente', etiqueta: 'Código de cliente', tipo: 'texto', esperado: cliente, puntos: 1, placeholder: 'C…EX' },
         { id: 't6.oferta', etiqueta: 'Número de la oferta', tipo: 'doc', patron: '^0OV\\d{6}$', placeholder: '0OV000000', puntos: 1 },
@@ -346,18 +361,21 @@ export function generarCaso(codigo: string): Caso {
         { id: 't6.total', etiqueta: 'Total factura', tipo: 'importe', esperado: venta.total, puntos: 2, placeholder: '0,00' },
         { id: 't6.asiento', etiqueta: 'Número del asiento de la factura', tipo: 'entero', patron: '^\\d{1,7}$', placeholder: '0', puntos: 1 },
         { id: 't6.cli', etiqueta: 'Cuenta del cliente (al Debe)', tipo: 'cuenta', esperado: '43000', puntos: 2, placeholder: '00000' },
-        { id: 't6.cuentaiva', etiqueta: 'Cuenta del IVA repercutido', tipo: 'cuenta', esperado: '47000', puntos: 2, placeholder: '00000' },
-        { id: 't6.ventas', etiqueta: 'Cuenta de ventas', tipo: 'cuenta', esperado: '70000', puntos: 2, placeholder: '00000' },
+        { id: 't6.cuentaiva', etiqueta: 'Cuenta del IVA repercutido (al Haber)', tipo: 'cuenta', esperado: '47000', puntos: 2, placeholder: '00000' },
+        { id: 't6.ventas', etiqueta: 'Cuenta de ventas (al Haber)', tipo: 'cuenta', esperado: '70000', puntos: 2, placeholder: '00000' },
       ],
     },
     {
       id: 't7',
       modulo: 'carteras',
       titulo: 'Cobro del cliente',
-      encargo: 'El cliente nos ha pagado hoy por transferencia. Cobra su vencimiento de forma individual, sin remesa.',
-      datos: [{ k: 'Cuenta financiera', v: 'el banco que uses en la empresa 0' }],
+      encargo: 'El cliente nos ha pagado hoy por transferencia. Cobra su vencimiento de forma individual, sin remesa, con una gestión de cobro.',
+      datos: [
+        { k: 'Cuenta financiera', v: `tu banco BBVA_${ini} (57200)` },
+        { k: 'Perceptor', v: cliente },
+      ],
       campos: [
-        { id: 't7.accion', etiqueta: 'Acción que has usado', tipo: 'opcion', opciones: ['COBD Cobro directo', 'CSCTS Remesa', 'AV Albarán de venta', 'PE Pendiente'], esperado: 'COBD Cobro directo', puntos: 2 },
+        { id: 't7.accion', etiqueta: 'Acción que has usado', tipo: 'opcion', opciones: ['COBD Cobro directo', 'Una remesa CSCTS', '«Evolucionar estado» desde la ficha del efecto', 'Volver a contabilizar la factura'], esperado: 'COBD Cobro directo', puntos: 2 },
         { id: 't7.importe', etiqueta: 'Importe cobrado', tipo: 'importe', esperado: venta.total, puntos: 2, placeholder: '0,00' },
         { id: 't7.estado', etiqueta: 'Estado final del efecto', tipo: 'opcion', opciones: ESTADOS_EF, esperado: 'CO Cobrado', puntos: 2 },
         { id: 't7.asiento', etiqueta: 'Número del asiento del cobro', tipo: 'entero', patron: '^\\d{1,7}$', placeholder: '0', puntos: 1 },
@@ -369,7 +387,7 @@ export function generarCaso(codigo: string): Caso {
       id: 't8',
       modulo: 'asientos',
       titulo: 'Asiento manual',
-      encargo: `Hemos pagado por banco ${p2(gasto.importe)} € de ${gasto.concepto}. Regístralo a mano en el diario EA de la empresa 0, con la cuenta ${gasto.cuenta}.00000 (${gasto.nombre}) contra el banco, y en Documento pon el código de examen. Deja el asiento contabilizado.`,
+      encargo: `Hemos pagado por banco ${p2(gasto.importe)} € de ${gasto.concepto}. Regístralo a mano en el diario EA de la empresa 0, con la cuenta ${gasto.cuenta}.00000 (${gasto.nombre}) contra el banco 57200.00000, y en Documento pon el código de examen. Deja el asiento contabilizado.`,
       datos: [
         { k: 'Diario', v: 'EA' },
         { k: 'Documento', v: codigo },
@@ -427,12 +445,12 @@ const CRITERIO: Pregunta[] = [
   { pregunta: 'En un asiento manual el bloque Totales marca Cuadre 25,00 en rojo. ¿Qué pasa?', opciones: ['Puedes finalizar igualmente', 'No aparece «Finalizar» hasta que cuadre', 'Se cuadra solo al guardar', 'Se contabiliza en provisional'], correcta: 1, explicacion: 'Mientras Debe y Haber no coinciden no ves el botón «Finalizar».' },
   { pregunta: 'Copias un asiento con «Número a generar» 3 y «Cadencia mensual» 1. ¿Qué obtienes?', opciones: ['Un asiento con el triple de importe', 'Tres copias en meses consecutivos', 'Tres líneas nuevas en el mismo asiento', 'Tres asientos el mismo día'], correcta: 1, explicacion: 'Genera tres asientos, uno por mes, a partir de la fecha indicada.' },
   { pregunta: 'Contabilizas el albarán de venta con la plantilla AV y la factura con FV, sin más. ¿Qué pasa?', opciones: ['Nada, es lo normal', 'La venta queda registrada dos veces', 'La factura no deja contabilizar', 'El IVA se duplica pero las ventas no'], correcta: 1, explicacion: 'El albarán ya llevó la venta contra la 43090 y la factura vuelve a llevarla contra la 430: queda dos veces.' },
-  { pregunta: 'Contabilizas una factura de venta con forma de pago 30D. ¿En qué estado nace su efecto?', opciones: ['CO Cobrado', 'PE Pendiente', 'PR Propuesto', 'OC Ordenado'], correcta: 1, explicacion: 'Los efectos nacen en PE y pasan a CO al cobrarlos.' },
-  { pregunta: 'Agregas un efecto a una remesa de cobro. ¿Qué estado toma?', opciones: ['CO Cobrado', 'PR Propuesto', 'DV Devuelto', 'Se queda en PE'], correcta: 1, explicacion: 'En la remesa recorre PE › PR › OC › CO.' },
+  { pregunta: 'El cliente tiene la condición de cobro RC Recibo a 30D con estado de efecto PE. Contabilizas su factura. ¿Cómo está el efecto en la cartera?', opciones: ['CO Cobrado', 'PE Pendiente', 'PR Propuesto', 'OC Ordenado'], correcta: 1, explicacion: 'Nace en el estado de la condición de cobro, PE, y pasa a CO cuando lo cobras (COBD o remesa).' },
+  { pregunta: 'Agregas un efecto pendiente a una remesa de cobro. ¿Qué estado toma?', opciones: ['CO Cobrado', 'PR Propuesto', 'DV Devuelto', 'Se queda en PE'], correcta: 1, explicacion: 'En la remesa recorre PE › PR › OC › CO.' },
   { pregunta: 'Una factura de 121,00 tiene un plazo de pago 40-80-120 días con 40 % / 20 % / 40 %. ¿Qué efectos genera?', opciones: ['Uno de 121,00', '48,40 / 24,20 / 48,40', '40,33 / 40,33 / 40,34', '40,00 / 20,00 / 40,00'], correcta: 1, explicacion: 'Cada vencimiento lleva su porcentaje del total: 40 % de 121 = 48,40 y 20 % = 24,20.' },
   { pregunta: 'Base 40,00 con IVA 21 %. ¿Qué va al Haber de la 40000?', opciones: ['40,00', '48,40', '8,40', '32,60'], correcta: 1, explicacion: 'Al proveedor se le debe el total: 40,00 + 8,40 = 48,40.' },
   { pregunta: 'Con la máscara #e#s#6n, empresa 0 y serie PC, ¿cómo sale el primer número?', opciones: ['PC0000001', '0PC000001', '0-PC-1', '2026PC000001'], correcta: 1, explicacion: '#e es la empresa, #s la serie y #6n un contador de seis cifras: 0PC000001.' },
-  { pregunta: 'Junto a «Validar» en un albarán con líneas aparece «Anular». ¿Qué haces si lo pulsas sin querer?', opciones: ['Nada, es lo mismo que validar', 'Cancelar en la confirmación: anula el albarán y pide motivo', 'Recargar la página', 'Contabilizar enseguida'], correcta: 1, explicacion: '«Anular» pide un motivo y anula el documento. Si fue sin querer, cancela la confirmación.' },
+  { pregunta: 'Junto a «Validar» en un albarán con líneas aparece «Anular». ¿Qué haces si lo pulsas sin querer?', opciones: ['Nada, es lo mismo que validar', 'Cancelas la confirmación: «Anular» pide un motivo y anularía el albarán', 'Recargas la página', 'Contabilizas enseguida'], correcta: 1, explicacion: '«Anular» pide un motivo y anula el documento. Si fue sin querer, cancela la confirmación.' },
   { pregunta: 'En la línea del albarán de compra no se rellena el precio de la tarifa. ¿Qué haces?', opciones: ['Cambias el grupo de precio del proveedor', 'Tecleas Precio, Precio con IVA e Importe dto.', 'Guardas a 0 y lo corriges en la factura', 'Borras el albarán'], correcta: 1, explicacion: 'En la demo el diálogo de línea no aplica la tarifa: esos tres campos se teclean. El neto lo calcula el servidor.' },
   { pregunta: 'En la pestaña Tarifas del proveedor, ¿a qué apuntas?', opciones: ['A una tarifa concreta', 'A un grupo de precios, que decide qué lista aplica', 'A un artículo', 'A una cuenta contable'], correcta: 1, explicacion: 'El proveedor apunta a un grupo de precios (por ejemplo 00001, que lleva a la lista COM).' },
 ];
@@ -467,12 +485,17 @@ const VIDEO: (Pregunta & { cap: number })[] = [
   { cap: 9, pregunta: 'En el Docflow de compras, ¿qué son los «Suministros»?', opciones: ['Los pedidos', 'Los albaranes', 'Las facturas', 'Los pagos'], correcta: 1, explicacion: 'Suministros es la tabla de albaranes: Pedidos compras · Suministros · Facturas compras.' },
 ];
 
+/* Preguntas de los tests que solo tienen sentido dentro de su ejercicio (números de asiento,
+   documentos o importes concretos de la práctica): fuera del examen final */
+const DE_CONTEXTO = /\basientos? \d|\b0[A-Z]{2}0000\d{2}\b|FVN0|apuntes del EA-DOC|periodo 11|copia de diciembre|llevan las copias|tres copias|62902(\.00000)? en 2026|extracto de la 62902|este ejercicio|del ejercicio\?|del ejemplo|lista del campo|Justificación 6|plazo de pago \{INI\}1|importe neto de 2,50/i;
+const apta = (q: Pregunta) => !DE_CONTEXTO.test(q.pregunta);
+
 export function generarTeoria(codigo: string): PreguntaExamen[] {
   const ini = iniDeCodigo(codigo);
   const r = rng(hash32(`${codigo}|teoria`));
   const porModulo = MODULOS.map((m) => ({
     id: m.id,
-    preguntas: r.shuffle(m.ejercicios.flatMap((e) => e.test)),
+    preguntas: r.shuffle(m.ejercicios.flatMap((e) => e.test).filter(apta)),
   }));
   const elegidas: PreguntaExamen[] = [];
   // 2 por módulo de los tests (12), 7 del vídeo de compras y 5 de criterio: 24
@@ -559,20 +582,20 @@ export function coherencia(caso: Caso, resp: Record<string, string>): Coherencia
     return Number.isFinite(v) ? v : null;
   };
   const docs = ['t2.num', 't3.num', 't4.num', 't6.oferta', 't6.pedido', 't6.albaran', 't6.factura'].map((k) => (resp[k] ?? '').trim().toUpperCase());
-  const asientos = ['t3.asiento', 't4.asiento', 't5.asiento', 't6.asiento', 't7.asiento', 't8.asiento'].map(n);
+  const asientos = ['t3.asiento', 't4.asiento', 't6.asiento', 't7.asiento', 't8.asiento'].map(n);
   const sinRepetir = asientos.filter((x): x is number => x !== null);
   const a3 = n('t3.asiento');
   const a4 = n('t4.asiento');
-  const a5 = n('t5.asiento');
   const a6 = n('t6.asiento');
   const a7 = n('t7.asiento');
   return [
     { id: 'cadena', texto: 'Has declarado la cadena completa de compras y de ventas, con el formato correcto', ok: docs.every((d, i) => d && new RegExp(['^0PC', '^0AC', '^0FC', '^0OV', '^0PV', '^0AV', '^0FV'][i] + '\\d{6}$').test(d)), puntos: 2 },
-    { id: 'ref', texto: '«Su referencia» y «Factura proveedor» llevan el código de examen', ok: normTexto(resp['t2.ref'] ?? '') === caso.codigo && normTexto(resp['t4.ref'] ?? '') === caso.codigo, puntos: 2 },
-    { id: 'orden-compra', texto: 'El asiento de la factura de compra es posterior al del albarán, y el del pago posterior al de la factura', ok: a3 !== null && a4 !== null && a5 !== null && a4 > a3 && a5 > a4, puntos: 2 },
+    { id: 'ref', texto: '«Referencia» del pedido y «Factura proveedor» llevan el código de examen', ok: normTexto(resp['t2.ref'] ?? '') === caso.codigo && normTexto(resp['t4.ref'] ?? '') === caso.codigo, puntos: 2 },
+    { id: 'orden-compra', texto: 'El asiento de la factura de compra es posterior al del albarán', ok: a3 !== null && a4 !== null && a4 > a3, puntos: 2 },
     { id: 'orden-venta', texto: 'El asiento del cobro es posterior al de la factura de venta', ok: a6 !== null && a7 !== null && a7 > a6, puntos: 2 },
-    { id: 'unicos', texto: 'Cada documento contable tiene su propio asiento (no repites números)', ok: sinRepetir.length === 6 && new Set(sinRepetir).size === 6, puntos: 2 },
-    { id: 'cuadre', texto: 'Los importes de compra cuadran entre sí: albarán = base de la factura y pago = total', ok: [resp['t3.neto'], resp['t4.base']].every((x) => igual(x, caso.compra.base)) && igual(resp['t5.importe'], caso.compra.total), puntos: 2 },
+    { id: 'unicos', texto: 'Cada documento contable tiene su propio asiento (no repites números)', ok: sinRepetir.length === 5 && new Set(sinRepetir).size === 5, puntos: 2 },
+    { id: 'cuadre', texto: 'Los importes de compra cuadran entre sí: pedido = albarán = base de la factura y efecto = total', ok: [resp['t2.neto'], resp['t3.neto'], resp['t4.base']].every((x) => igual(x, caso.compra.base)) && igual(resp['t5.importe'], caso.compra.total), puntos: 2 },
+    { id: 'cuadre-venta', texto: 'Lo cobrado coincide con el total de la factura de venta', ok: igual(resp['t6.total'], caso.venta.total) && igual(resp['t7.importe'], caso.venta.total), puntos: 2 },
   ];
 }
 
@@ -913,46 +936,48 @@ export function consultaSql(caso: Caso) {
   const c = caso.codigo;
   const p = caso.proveedor;
   const cl = caso.cliente;
-  return `-- BORRADOR ORIENTATIVO para DBStudio (base TUTORIAL).
--- Las columnas NO están verificadas: revísalas con el diccionario antes de lanzarla.
--- Solo SELECT.
+  return `-- BORRADOR ORIENTATIVO para DBStudio (base TUTORIAL). Solo SELECT.
+-- Tablas confirmadas por los manuales y el vídeo; los nombres de COLUMNA no están
+-- verificados: compruébalos en el diccionario (o usa las pantallas) antes de lanzarla.
 
--- Compras: pedido, albarán y factura del proveedor ${p}
-SELECT 'PEDIDO' AS doc, h.docser, h.fecped AS fecha, h.tercer, h.refter, h.imptot, h.estado
-  FROM gcompedh h WHERE h.tercer = '${p}' OR h.refter = '${c}';
-SELECT 'ALBARAN' AS doc, h.docser, h.fecmov AS fecha, h.tercer, h.refter, h.imptot, h.estado
-  FROM gcomalbh h WHERE h.tercer = '${p}' OR h.refter = '${c}';
-SELECT 'FACTURA' AS doc, h.docser, h.fecha, h.tercer, h.refter, h.imptot, h.estado
-  FROM gcomfach h WHERE h.tercer = '${p}' OR h.refter = '${c}';
+-- Terceros y su papel
+SELECT * FROM ctercero WHERE codigo IN ('${p}', '${cl}');
+SELECT * FROM gproveed WHERE codigo = '${p}';
+SELECT * FROM gcliente WHERE codigo = '${cl}';
 
--- Ventas del cliente ${cl}
-SELECT 'FACTURA VENTA' AS doc, h.docser, h.fecha, h.tercer, h.imptot, h.estado
-  FROM gvenfach h WHERE h.tercer = '${cl}';
+-- Compras: pedido (PC), albarán (ACPC) y factura (FCOA) del proveedor ${p}
+SELECT * FROM gcompedh WHERE tercer = '${p}';
+SELECT * FROM gcomalbh WHERE tercer = '${p}';
+SELECT * FROM gcomfach WHERE tercer = '${p}';
 
--- Asientos con el código de examen o de los documentos anteriores
-SELECT a.empcode, a.asient, a.fecha, a.diario, a.docume, a.estado,
-       p.cuenta, p.debe, p.haber, p.concep
-  FROM casientos a, capuntes p
- WHERE p.loteid = a.loteid
-   AND (a.docume LIKE '%${c}%' OR p.concep LIKE '%${c}%' OR p.docume LIKE '%${c}%')
- ORDER BY a.asient, p.orden;
+-- Ventas del cliente ${cl}: oferta, pedido, albarán y factura
+SELECT * FROM gvenofeh WHERE tercer = '${cl}';
+SELECT * FROM gvenpedh WHERE tercer = '${cl}';
+SELECT * FROM gvenalbh WHERE tercer = '${cl}';
+SELECT * FROM gvenfach WHERE tercer = '${cl}';
 
 -- Efectos de cartera de los dos terceros
-SELECT e.clase, e.tercer, e.tipefe, e.numero, e.fecven, e.import, e.estado
-  FROM cefectos e WHERE e.tercer IN ('${p}', '${cl}');`;
+SELECT * FROM cefectos WHERE tercer IN ('${p}', '${cl}');
+
+-- Asiento manual (diario EA, Documento = ${c}) y apuntes
+SELECT * FROM casientos WHERE docume = '${c}';
+SELECT * FROM capuntes WHERE docume = '${c}';`;
 }
 
 export function checklistExaminador(caso: Caso): string[] {
+  const ini = caso.ini;
   return [
-    `Busca el tercero ${caso.proveedor}: existe, está validado y como proveedor tiene grupo de precio 00001 y descuentos 1, 2, 3 y pronto pago a 0.`,
-    `En pedidos de compra, filtra por «Su referencia» = ${caso.codigo}: un pedido PC de ${caso.compra.cantidad} × ${ARTICULO.codigo} a ${p2(caso.compra.precio)} €.`,
-    'Abre el Docflow del pedido: pedido Servido → albarán ACPC Facturado → factura FCOA.',
-    `En facturas de compra, «Factura proveedor» = ${caso.codigo}: base ${p2(caso.compra.base)}, IVA ${p2(caso.compra.iva)}, total ${p2(caso.compra.total)}.`,
-    'Revisa el asiento del albarán (60000 / 40090) y el de la factura (40000, 47200, 60000, 40090) con los números que declara.',
-    `En cartera de pagos, el efecto de ${caso.proveedor} por ${p2(caso.compra.total)} está pagado, con su asiento 40000 / 57200.`,
-    `Busca el cliente ${caso.cliente} y su cadena oferta → pedido → albarán → factura con «Su referencia» = ${caso.codigo}; solo la factura contabilizada (43000 / 47000 / 70000).`,
-    `En cartera de cobros, el efecto de ${caso.cliente} por ${p2(caso.venta.total)} está en CO, cobrado con COBD.`,
-    `En asientos, diario EA con Documento = ${caso.codigo}: ${caso.gasto.cuenta}.00000 Debe ${p2(caso.gasto.importe)} / 57200.00000 Haber, contabilizado.`,
-    'Las fechas de los documentos caen dentro del día del examen y los números de asiento coinciden con lo declarado.',
+    `Registro de terceros › ${caso.proveedor}: Validado, categoría 002, dirección 0, condición de pago EF / 30D y relación PRO 40000.00000.`,
+    `Maestro de proveedores › ${caso.proveedor}: GENERAL, EUR, grupo de precio 00001 y descuentos 1, 2, 3 y pronto pago a 0 (no vacíos).`,
+    `Pedidos de compras: pedido PC del ${caso.proveedor} con «Referencia» ${caso.codigo}, una línea de ${caso.compra.cantidad} × ${ARTICULO.codigo} a ${p2(caso.compra.precio)} € (neto ${p2(caso.compra.base)}), Validado y Situación Servido.`,
+    'Docflow del albarán: pedido Servido → albarán ACPC Facturado → factura FCOA. Los números coinciden con lo declarado.',
+    `Albarán: asiento 60000 Debe / 40090 Haber por ${p2(caso.compra.base)}, con el número declarado.`,
+    `Factura de compra con «Factura proveedor» ${caso.codigo}: base ${p2(caso.compra.base)}, IVA ${p2(caso.compra.iva)}, total ${p2(caso.compra.total)}, Contabilizada; asiento de 5 líneas (40000 H, 47200 D, 60000 D, 40090 D, 60000 H).`,
+    `Cartera de pagos: un efecto EF de ${caso.proveedor} por ${p2(caso.compra.total)}, en PE, a 30 días de la fecha de factura (sin pagar).`,
+    `Cliente ${caso.cliente}: relación CLI 43000.00000 y condición de cobro EF / PE / 30D; cadena O${ini} › P${ini} › A${ini}2 › F${ini} con los números declarados y el albarán SIN contabilizar.`,
+    `Factura de venta: base ${p2(caso.venta.base)}, IVA ${p2(caso.venta.iva)}, total ${p2(caso.venta.total)}, Contabilizada con 43000 D / 47000 H / 70000 H.`,
+    `Gestión de cobro COBD con BBVA_${ini}: el efecto de ${caso.cliente} está en CO y su asiento es 57200 D / 43000 H por ${p2(caso.venta.total)}.`,
+    `Asientos, diario EA, Documento ${caso.codigo}: ${caso.gasto.cuenta}.00000 Debe ${p2(caso.gasto.importe)} / 57200.00000 Haber, Contabilizado.`,
+    'Todas las fechas caen en el día del examen y nada se ha creado con otro código de alumno.',
   ];
 }

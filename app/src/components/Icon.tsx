@@ -20,6 +20,12 @@ const P: Record<string, string> = {
   cerebro: 'M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 0V4.5A2.5 2.5 0 0 0 9 4zm6 0a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 0',
   aviso: 'M12 3l10 18H2zM12 10v5m0 3h.01',
   video: 'M3 6h13v12H3zM16 10l5-3v10l-5-3',
+  menu: 'M4 7h16M4 12h16M4 17h10',
+  buscar: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm9 3-4.35-4.35',
+  plegar: 'M11 17l-5-5 5-5M18 17l-5-5 5-5',
+  desplegar: 'M13 17l5-5-5-5M6 17l5-5-5-5',
+  cerrar: 'M6 6l12 12M18 6 6 18',
+  chevron: 'M9 6l6 6-6 6',
 };
 
 export function Icon({ name, size = 22, stroke = 2 }: { name: string; size?: number; stroke?: number }) {

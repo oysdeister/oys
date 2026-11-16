@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { animate, useReducedMotion } from 'framer-motion';
 
 export async function copiar(texto: string): Promise<boolean> {
   try {
@@ -51,3 +52,22 @@ export function reloj(ms: number) {
 }
 
 export const fechaLarga = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+/** Cifra que cuenta de 0 al valor (respeta reduced-motion: devuelve el valor final) */
+export function useContador(hasta: number, { duracion = 1.2, retraso = 0 }: { duracion?: number; retraso?: number } = {}) {
+  const reducir = useReducedMotion();
+  const [v, setV] = useState(() => (reducir ? hasta : 0));
+  useEffect(() => {
+    if (reducir) return;
+    const c = animate(0, hasta, { duration: duracion, delay: retraso, ease: [0.2, 0.7, 0.2, 1], onUpdate: setV });
+    return () => c.stop();
+  }, [hasta, duracion, retraso, reducir]);
+  return reducir ? hasta : v;
+}
+
+/** Sube al principio de la página al montar (cambios de fase del examen) */
+export function useArriba() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+  }, []);
+}

@@ -1,10 +1,13 @@
-import { useRef, type KeyboardEvent } from 'react';
+import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
 import { META, getEjercicio, todosEjercicios } from '../content';
 import { APROBADO, avanceEjercicio, useProgreso } from '../lib/progress';
 import { conIni } from '../lib/texto';
-import { CAPITULOS_VIDEO, VIDEO_POR_EJERCICIO, VIDEO_URL, mmss, urlCapitulo } from '../lib/config';
+import { CAPITULOS_VIDEO, VIDEO_POR_EJERCICIO } from '../lib/config';
+import { momentosDeEjercicio } from '../content/videoMapa';
+import { Momentos } from '../components/exercise/VideoMomento';
+import { Anillo } from '../components/exercise/Anillo';
 import { Icon } from '../components/Icon';
 import { Concepto } from '../components/exercise/Concepto';
 import { Guiado } from '../components/exercise/Guiado';
@@ -12,7 +15,7 @@ import { DeMemoria } from '../components/exercise/DeMemoria';
 import { TestEj } from '../components/exercise/TestEj';
 import { DemoReal } from '../components/exercise/DemoReal';
 import { Problemas } from '../components/exercise/Problemas';
-import { estadoDe, pct } from '../components/exercise/util';
+import { estadoDe } from '../components/exercise/util';
 import './aprender.css';
 
 const TABS = [
@@ -31,6 +34,14 @@ export default function ExercisePage() {
   const p = useProgreso();
   const tabsRef = useRef<HTMLDivElement>(null);
   const hallado = getEjercicio(id);
+  const tabActual = sp.get('tab') ?? 'concepto';
+
+  // La pestaña activa siempre a la vista en la barra deslizable (móvil)
+  useEffect(() => {
+    const el = tabsRef.current;
+    const btn = el?.querySelector<HTMLElement>('[role=tab][aria-selected=true]');
+    if (el && btn && el.scrollWidth > el.clientWidth) el.scrollTo({ left: Math.max(0, btn.offsetLeft - 24), behavior: 'smooth' });
+  }, [tabActual, id]);
 
   if (!hallado) {
     return (
@@ -87,53 +98,56 @@ export default function ExercisePage() {
     btn?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   };
 
-  const capitulos = VIDEO_URL ? (VIDEO_POR_EJERCICIO[ej.id] ?? []).map((n) => CAPITULOS_VIDEO.find((c) => c.n === n)).filter((c): c is (typeof CAPITULOS_VIDEO)[number] => !!c) : [];
+  const momentos = momentosDeEjercicio(ej.id);
+  const nPasos = ej.secciones.reduce((n, x) => n + x.pasos.length, 0);
+  const capitulos = (VIDEO_POR_EJERCICIO[ej.id] ?? []).map((n) => CAPITULOS_VIDEO.find((c) => c.n === n)).filter((c): c is (typeof CAPITULOS_VIDEO)[number] => !!c);
 
   return (
     <div className="wrap ex-page" style={{ ['--mod' as string]: meta.color }}>
-      <nav className="crumbs" aria-label="Migas">
-        <Link to="/">Inicio</Link>
-        <span aria-hidden="true">/</span>
-        <Link to={`/modulo/${modulo.id}`}>{modulo.titulo}</Link>
-        <span aria-hidden="true">/</span>
-        <span>Ejercicio {ej.numero}</span>
-      </nav>
-
-      <header className="ex-head ex-hero">
-        <motion.div className="ex-num" initial={reducir ? false : { rotateY: -70, opacity: 0 }} animate={{ rotateY: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 90, damping: 14 }}>
-          {ej.numero}
-        </motion.div>
-        <div className="ex-title">
-          <div className="ex-chips">
-            <Link to={`/modulo/${modulo.id}`} className="chip mod-chip">
-              <Icon name={meta.icono} size={14} /> {meta.corto}
-            </Link>
-            <span className="chip">
-              <Icon name="reloj" size={14} /> {ej.duracionMin} min
-            </span>
-            <span className={estado.clase}>{estado.texto}</span>
-            {avance > 0 && <span className="chip">{pct(avance)}</span>}
+      <header className={`ax-banner ex-banner${tab !== 'concepto' ? ' ex-compact' : ''}`} style={{ ['--mod' as string]: meta.color }}>
+        <div className="ax-banner-in">
+          <div className="ax-banner-text">
+            <p className="ax-kicker ex-kicker">
+              <Link to={`/modulo/${modulo.id}`} className="ex-back">
+                <Icon name="atras" size={16} /> {modulo.titulo}
+              </Link>
+              <span aria-hidden="true">·</span> Ejercicio {ej.numero} de {modulo.ejercicios.length}
+            </p>
+            <h1>{conIni(ej.titulo, ini)}</h1>
+            <p className="lead">{conIni(ej.objetivo, ini)}</p>
+            <div className="ex-chips">
+              <span className="chip">
+                <Icon name="reloj" size={14} /> {ej.duracionMin} min
+              </span>
+              <span className="chip">{nPasos} pasos guiados</span>
+              <span className={estado.clase}>{estado.texto}</span>
+            </div>
+            {momentos.length > 0 ? (
+              <div className="ex-vm">
+                <Momentos lista={momentos.slice(0, 3)} compacto />
+              </div>
+            ) : (
+              capitulos.length > 0 && (
+                <div className="ex-video">
+                  <Icon name="video" size={18} />
+                  <span>En el vídeo:</span>
+                  {capitulos.map((c) => (
+                    <Link key={c.n} className="chip" to={`/video/${c.n}`}>
+                      Cap. {c.n} · {c.titulo}
+                    </Link>
+                  ))}
+                </div>
+              )
+            )}
           </div>
-          <h1 className="ex-h1">{conIni(ej.titulo, ini)}</h1>
+          <div className="ax-banner-side ex-side">
+            <motion.div className="ex-num ax-num" initial={reducir ? false : { rotateY: -70, opacity: 0 }} animate={{ rotateY: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 90, damping: 14 }}>
+              {ej.numero}
+            </motion.div>
+            <Anillo valor={avance} size={104} etiqueta="hecho" />
+          </div>
         </div>
-        {sig && (
-          <Link className="btn ghost sm ex-next" to={`/ejercicio/${sig.ejercicio.id}`}>
-            {sig.modulo.id === modulo.id ? 'Siguiente ejercicio' : `Empezar ${META[sig.modulo.id]?.corto ?? sig.modulo.titulo}`}
-          </Link>
-        )}
       </header>
-
-      {capitulos.length > 0 && (
-        <div className="ex-video">
-          <Icon name="video" size={18} />
-          <span className="small">En el vídeo:</span>
-          {capitulos.map((c) => (
-            <a key={c.n} className="chip" href={urlCapitulo(c.t)} target="_blank" rel="noopener noreferrer">
-              {mmss(c.t)} · {c.titulo}
-            </a>
-          ))}
-        </div>
-      )}
 
       <div ref={tabsRef} className="tabs ex-tabs" role="tablist" aria-label="Partes del ejercicio" onKeyDown={onTeclaTabs}>
         <LayoutGroup id={`tabs-${ej.id}`}>
@@ -176,7 +190,7 @@ export default function ExercisePage() {
           transition={{ duration: 0.26, ease: [0.2, 0.7, 0.2, 1] }}
           style={{ transformPerspective: 1400, transformOrigin: '50% 0' }}
         >
-          {tab === 'concepto' && <Concepto ej={ej} ini={ini} onGuiado={() => ir('guiado')} />}
+          {tab === 'concepto' && <Concepto ej={ej} ini={ini} modulo={modulo.id} onGuiado={() => ir('guiado')} />}
           {tab === 'guiado' && <Guiado ej={ej} modulo={modulo.id} ini={ini} onIr={ir} />}
           {tab === 'memoria' && <DeMemoria ej={ej} modulo={modulo.id} ini={ini} />}
           {tab === 'test' && <TestEj ej={ej} ini={ini} onIr={ir} />}

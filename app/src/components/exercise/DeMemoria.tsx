@@ -7,7 +7,7 @@ import { conIni } from '../../lib/texto';
 import { Icon } from '../Icon';
 import { Anillo } from './Anillo';
 import { Captura, CajaHotspot, Fallos, type Marca } from './Captura';
-import { COLORES_MARCA, barajarDistinto, dentro, pasosPlanos, type PasoPlano } from './util';
+import { COLORES_MARCA, barajarDistinto, dentro, pasosPlanos, useMedia, type PasoPlano } from './util';
 
 const MAX_CLICS = 10;
 
@@ -55,6 +55,7 @@ export function DeMemoria({ ej, modulo, ini }: { ej: Ejercicio; modulo: string; 
 
 function DondeClic({ pasos, modulo, ini }: { pasos: PasoPlano[]; modulo: string; ini: string }) {
   const reducir = useReducedMotion();
+  const tactil = useMedia('(pointer: coarse)');
   const [ronda, setRonda] = useState(0);
   const lista = useMemo(() => repartidos(pasos, MAX_CLICS), [pasos]);
   const [i, setI] = useState(0);
@@ -80,7 +81,7 @@ function DondeClic({ pasos, modulo, ini }: { pasos: PasoPlano[]; modulo: string;
 
   const onPunto = (x: number, y: number) => {
     if (!h || res !== 'nada') return;
-    if (dentro(h, x, y)) {
+    if (dentro(h, x, y, tactil ? 3.5 : 2)) {
       setRes('bien');
       if (intentos === 0) setAciertos((a) => a + 1);
     } else {

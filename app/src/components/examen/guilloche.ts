@@ -64,3 +64,24 @@ export const ARCO = {
   guia: 'M64 690 C 60 250, 380 40, 1070 70',
   relleno: 'M64 690 C 60 250, 380 40, 1070 70 C 392 60, 86 262, 88 690 Z',
 };
+
+/** Media luna pequeña con la forma del arco de la marca (para la banda holográfica) */
+export function lunita(cx: number, cy: number, r: number) {
+  return `M${f(cx - r)} ${f(cy + r * 0.35)} C ${f(cx - r)} ${f(cy - r * 0.9)}, ${f(cx + r * 0.2)} ${f(cy - r)}, ${f(cx + r)} ${f(cy - r * 0.55)} C ${f(cx + r * 0.1)} ${f(cy - r * 0.6)}, ${f(cx - r * 0.62)} ${f(cy - r * 0.4)}, ${f(cx - r * 0.62)} ${f(cy + r * 0.35)} Z`;
+}
+
+/** Rayos cortos alrededor de un centro: las gotas de tinta que salta el sello al caer */
+export function salpicaduras(n: number, r0: number, r1: number, semilla = 7) {
+  const out: { x: number; y: number; r: number; dx: number; dy: number }[] = [];
+  let s = semilla;
+  const rnd = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + rnd() * 0.5;
+    const d = r0 + rnd() * (r1 - r0);
+    out.push({ x: Math.cos(a) * r0, y: Math.sin(a) * r0, r: 1.2 + rnd() * 2.4, dx: Math.cos(a) * d, dy: Math.sin(a) * d });
+  }
+  return out;
+}

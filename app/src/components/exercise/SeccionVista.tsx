@@ -1,6 +1,7 @@
 import type { Seccion } from '../../types';
 import { conIni } from '../../lib/texto';
 import { Icon } from '../Icon';
+import { CapturaCampos } from './CapturaCampos';
 
 const TITULO_AVISO = { problema: 'Ojo', solucion: 'Solución', nota: 'Nota' } as const;
 
@@ -17,7 +18,7 @@ export function RutaMenu({ ruta }: { ruta: string[] | null }) {
 }
 
 /** Contenido de una sección: para qué sirve, ruta, explicación, campos y avisos */
-export function SeccionVista({ s, ini, conPasos = false }: { s: Seccion; ini: string; conPasos?: boolean }) {
+export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion; ini: string; conPasos?: boolean; modulo?: string }) {
   const t = (x: string) => conIni(x, ini);
   return (
     <div className="sec-body">
@@ -36,7 +37,9 @@ export function SeccionVista({ s, ini, conPasos = false }: { s: Seccion; ini: st
       {s.explicacion.map((p, i) => (
         <p key={i}>{t(p)}</p>
       ))}
-      {s.campos.length > 0 && (
+      {modulo ? (
+        <CapturaCampos s={s} modulo={modulo} ini={ini} />
+      ) : s.campos.length > 0 && (
         <div className="sec-campos">
           <table className="fields">
             <thead>

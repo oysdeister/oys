@@ -199,7 +199,7 @@ export default function Examinador() {
                     </table>
                   </div>
                 ))}
-                <p className="muted small">El pago y el cobro dependen de la acción de cartera y del banco que use el alumno: revisa las cuentas en el asiento real.</p>
+                <p className="muted small">El proveedor nuevo con relación PRO contabiliza en 40000.00000; el cobro va contra la 57200 de su banco BBVA_{caso.ini}. Si ves una subcuenta distinta, revisa la relación contable del tercero.</p>
               </section>
 
               <section className="sheet pad">
@@ -226,7 +226,7 @@ export default function Examinador() {
             <section className="sheet pad">
               <div className="exm-sql-cab">
                 <h2>Consulta para DBStudio</h2>
-                <span className="chip warn">Borrador · columnas sin verificar</span>
+                <span className="chip warn">Borrador · columnas por verificar</span>
                 <button className="btn sm ghost" onClick={() => copia('sql', consultaSql(caso))}>
                   {copiado === 'sql' ? 'Copiada' : 'Copiar'}
                 </button>

@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { HashRouter, Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Icon, Medal } from './components/Icon';
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Medal } from './components/Icon';
+import { Sidebar } from './components/shell/Sidebar';
+import { Topbar } from './components/shell/Topbar';
+import { BottomNav } from './components/shell/BottomNav';
+import { Espacio } from './components/shell/Espacio';
 import { Onboarding } from './components/Onboarding';
 import { useProgreso } from './lib/progress';
 import { INSIGNIAS, insigniasGanadas } from './lib/badges';
-import { avanceGlobal } from './lib/avance';
 import Home from './pages/Home';
 import ModulePage from './pages/ModulePage';
 import ExercisePage from './pages/ExercisePage';
@@ -14,6 +17,7 @@ import Logros from './pages/Logros';
 import Examen from './pages/Examen';
 import Certificado from './pages/Certificado';
 import Examinador from './pages/Examinador';
+import Video from './pages/Video';
 
 function useTema() {
   const [oscuro, setOscuro] = useState(() => document.documentElement.dataset.theme === 'dark');
@@ -28,56 +32,22 @@ function useTema() {
   return [oscuro, () => setOscuro((o) => !o)] as const;
 }
 
-const NAV = [
-  { to: '/', label: 'Inicio', icon: 'inicio' },
-  { to: '/taller', label: 'Taller', icon: 'taller' },
-  { to: '/examen', label: 'Examen', icon: 'examen' },
-  { to: '/logros', label: 'Logros', icon: 'logros' },
-];
-
-function Cabecera() {
-  const [oscuro, toggle] = useTema();
-  const p = useProgreso();
-  const pct = avanceGlobal(p);
-  return (
-    <header className="top">
-      <div className="wrap top-in">
-        <Link to="/" className="brand" aria-label="Inicio">
-          <img src={`${import.meta.env.BASE_URL}brand/${oscuro ? 'oys_logo_light' : 'oys_logo'}.png`} alt="O&S Consultores" />
-          <span className="brand-name">
-            Taller Axional
-            <small>Práctica guiada del ERP</small>
-          </span>
-        </Link>
-        <nav className="nav" aria-label="Principal">
-          {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.to === '/'}>
-              {n.label}
-            </NavLink>
-          ))}
-        </nav>
-        <button className="icon-btn" onClick={toggle} aria-label={oscuro ? 'Modo claro' : 'Modo oscuro'} style={{ marginLeft: 'auto' }}>
-          <Icon name={oscuro ? 'sol' : 'luna'} size={18} />
-        </button>
-      </div>
-      <div className="meter top-meter" aria-hidden="true">
-        <motion.i initial={false} animate={{ width: `${pct * 100}%` }} transition={{ type: 'spring', stiffness: 60, damping: 18 }} />
-      </div>
-    </header>
-  );
-}
-
-function NavMovil() {
-  return (
-    <nav className="bottom-nav" aria-label="Principal">
-      {[...NAV.slice(0, 2), { to: '/modulos', label: 'Módulos', icon: 'maestros' }, ...NAV.slice(2)].map((n) => (
-        <NavLink key={n.to} to={n.to === '/modulos' ? '/#modulos' : n.to} end={n.to === '/'}>
-          <Icon name={n.icon} />
-          {n.label}
-        </NavLink>
-      ))}
-    </nav>
-  );
+function usePlegada() {
+  const [plegada, setPlegada] = useState(() => {
+    try {
+      return localStorage.getItem('oys-barra') === 'plegada';
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem('oys-barra', plegada ? 'plegada' : 'abierta');
+    } catch {
+      /* sin almacenamiento */
+    }
+  }, [plegada]);
+  return [plegada, () => setPlegada((v) => !v)] as const;
 }
 
 /** Avisa con una medalla cuando se gana una insignia nueva */
@@ -115,42 +85,82 @@ function AvisoInsignias() {
 
 function Rutas() {
   const loc = useLocation();
+  const reduce = useReducedMotion();
   useEffect(() => {
     if (loc.hash) return;
     window.scrollTo({ top: 0 });
   }, [loc.pathname, loc.hash]);
   return (
     <AnimatePresence mode="wait">
-      <motion.main key={loc.pathname} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.28, ease: [0.2, 0.7, 0.2, 1] }}>
+      <motion.div
+        key={loc.pathname}
+        className="page-host"
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 34, rotateX: 7, scale: 0.975, filter: 'blur(6px)', transformPerspective: 1600 }}
+        animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)', transitionEnd: { filter: 'none', transform: 'none' } }}
+        exit={reduce ? { opacity: 0 } : { opacity: 0, y: -18, rotateX: -4, scale: 0.985, filter: 'blur(4px)' }}
+        transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1], opacity: { duration: 0.3 } }}
+      >
         <Routes location={loc}>
           <Route path="/" element={<Home />} />
           <Route path="/modulo/:id" element={<ModulePage />} />
           <Route path="/ejercicio/:id" element={<ExercisePage />} />
           <Route path="/taller" element={<Taller />} />
           <Route path="/taller/:sim" element={<Taller />} />
+          <Route path="/video" element={<Video />} />
+          <Route path="/video/:cap" element={<Video />} />
           <Route path="/logros" element={<Logros />} />
           <Route path="/examen" element={<Examen />} />
           <Route path="/certificado" element={<Certificado />} />
           <Route path="/examinador" element={<Examinador />} />
           <Route path="*" element={<Home />} />
         </Routes>
-      </motion.main>
+      </motion.div>
     </AnimatePresence>
   );
 }
 
-export default function App() {
+function Marco() {
   const p = useProgreso();
+  const [oscuro, toggleTema] = useTema();
+  const [plegada, togglePlegada] = usePlegada();
+  const [cajon, setCajon] = useState(false);
+  const loc = useLocation();
+  useEffect(() => setCajon(false), [loc.pathname]);
+  useEffect(() => {
+    if (!cajon) return;
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && setCajon(false);
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [cajon]);
+  return (
+    <div className={`app-shell${plegada ? ' collapsed' : ''}${cajon ? ' drawer' : ''}`}>
+      <Espacio />
+      <Sidebar oscuro={oscuro} onTema={toggleTema} plegada={plegada} onPlegar={togglePlegada} onNavegar={() => setCajon(false)} />
+      <div className="sb-scrim" onClick={() => setCajon(false)} aria-hidden="true" />
+      <div className="app-main">
+        <Topbar onMenu={() => setCajon(true)} />
+        <main>
+          <Rutas />
+        </main>
+        <footer className="footer">
+          <div className="wrap">
+            <img src={`${import.meta.env.BASE_URL}brand/oys_logo.png`} alt="O&S Consultores" className="logo-claro" />
+            <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="O&S Consultores" className="logo-oscuro" />
+            <span>Ejercicios sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). Tu progreso se guarda en este navegador.</span>
+          </div>
+        </footer>
+      </div>
+      <BottomNav />
+      <AvisoInsignias />
+      <AnimatePresence>{!p.alumno.ini && <Onboarding key="onb" />}</AnimatePresence>
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <HashRouter>
-      <Cabecera />
-      {!p.alumno.ini && <Onboarding />}
-      <Rutas />
-      <NavMovil />
-      <AvisoInsignias />
-      <footer className="footer">
-        <div className="wrap">O&S Consultores · Ejercicios sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). Tu progreso se guarda en este navegador.</div>
-      </footer>
+      <Marco />
     </HashRouter>
   );
 }
