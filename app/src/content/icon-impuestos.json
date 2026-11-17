@@ -298,7 +298,7 @@
             "Clases de impuestos"
           ],
           "explicacion": [
-            "Clase de impuesto: la familia. En la demo, la clase IVA «Impuesto sobre el valor añadido» es de tipo Normal, tiene orden de precedencia 1 y se envía telemáticamente por el SII (SII Facturas). Otras clases son IRPF (retenciones), IGIC e IPSI.",
+            "Clase de impuesto: la familia. En la demo, la clase IVA «Impuesto sobre el valor añadido» es de tipo Normal, tiene orden de precedencia 1 y se envía telemáticamente por el SII (SII Facturas): el sistema por el que muchas empresas comunican cada factura a Hacienda en un plazo de cuatro días hábiles; lo verás en el ejercicio 7. Otras clases son IRPF (retenciones), IGIC e IPSI.",
             "El orden de precedencia decide qué impuesto se calcula antes cuando una línea lleva varios, por ejemplo IVA y retención de IRPF: el número más bajo va primero.",
             "Tipo de impuesto: el porcentaje concreto dentro de una clase. ESG «ES, IVA 21 % General» y ESR «ES, IVA 10 % reducido» son dos tipos de la clase IVA. Cada tipo indica la base de cálculo (normalmente Importe neto), el porcentaje y si se puede deducir (Aplicar deducción) y si le afecta la prorrata (Aplicar prorrata).",
             "El tipo no lleva cuentas contables directamente, sino mnemotécnicos: códigos que el plan contable traduce a una cuenta. En la captura, ES-IVA-SOP para el IVA soportado de las compras y ES-IVA-REP para el repercutido de las ventas, con variantes para documentos no validados (NV) y para rectificativas (REC).",
@@ -387,8 +387,8 @@
           ],
           "explicacion": [
             "Muchos códigos se leen por partes: CLBC = Compra · Local · Bienes · Corrientes; CLSC = Compra · Local · Servicios · Corrientes; VLBC = Venta · Local · Bienes · Corrientes.",
-            "Sujeta: No, Sí o Destino (OSS). Una operación no sujeta queda fuera del IVA. «Destino (OSS)» se usa para ventas a consumidores particulares de otros países de la UE, que tributan con el IVA del país del comprador y se declaran por la ventanilla única europea (OSS).",
-            "ISP: marca la inversión del sujeto pasivo, en la que el IVA lo declara el comprador en lugar del vendedor (lo verás en el ejercicio 6). Si está marcada, se informan la operación ISP recibida y la emitida, que el ERP usa para generar la autofactura.",
+            "Sujeta: No, Sí o Destino (OSS). Una operación no sujeta queda fuera del IVA (por ejemplo, la venta de un negocio entero); no es lo mismo que una exenta, que está dentro del IVA pero la ley la libera de pagarlo. «Destino (OSS)» se usa para ventas a consumidores particulares de otros países de la UE, que tributan con el IVA del país del comprador y se declaran por la ventanilla única europea (OSS).",
+            "Marca ISP (inversión del sujeto pasivo): el IVA lo declara el comprador en lugar del vendedor (lo verás en el ejercicio 6). Si está marcada, se informan la operación ISP recibida y la emitida, que el ERP usa para generar la autofactura.",
             "Libro fiscal: el libro registro donde se anota la operación; en la captura, R «L.R. de Facturas Recibidas». Naturaleza: Bien, Servicio, Inversión, Alquiler, Suplido…",
             "Para programadores: la tabla es ctax_operation."
           ],
@@ -741,7 +741,7 @@
           "explicacion": [
             "El artículo 002 Material deportivo tiene en su ficha el campo Clave fiscal art. con el valor BOG.",
             "El desplegable ofrece variantes de la clave general: BOG «Bienes a tipo general», BOGISP «Bienes a tipo general. Local ISP» y BOGNQ «Bienes a tipo general, sin recargo».",
-            "El campo Tipo fiscal vale Bien: es la naturaleza del artículo (bien o servicio)."
+            "Tipo fiscal: Bien. Es la naturaleza del artículo (bien o servicio)."
           ],
           "campos": [
             {
@@ -765,7 +765,7 @@
                 "y": 30,
                 "w": 40,
                 "h": 6,
-                "etiqueta": "Clave fiscal del artículo"
+                "etiqueta": "Clave fiscal art."
               }
             }
           ],
@@ -941,7 +941,7 @@
                 "y": 75.5,
                 "w": 5,
                 "h": 5,
-                "etiqueta": "Id de la regla aplicada"
+                "etiqueta": "Regla"
               }
             }
           ],
@@ -985,7 +985,7 @@
             },
             {
               "campo": "Prioridad",
-              "significado": "Desempate si encajan varias reglas: gana la de mayor prioridad.",
+              "significado": "Desempate si encajan varias reglas: gana el número más alto (al revés que el orden de precedencia de las clases).",
               "ejemplo": "1"
             },
             {
@@ -1040,7 +1040,7 @@
           ],
           "explicacion": [
             "El tipo ES, IVA 21 % General tiene el código ESG y la clase Impuesto sobre el valor añadido.",
-            "Base de cálculo Importe neto e impuesto del 21,000 %: por eso 800 × 21 % = 168,00.",
+            "Base de cálculo: importe neto, con un impuesto del 21,000 %. Por eso 800 × 21 % = 168,00.",
             "Están marcadas Aplicar deducción y Aplicar prorrata.",
             "El bloque Cuentas usa mnemotécnicos: ESG-IVA-SV para compras y ESG-IVA-RV para ventas (S de soportado, R de repercutido, V de validado), con variantes para no validados (SN, RN) y abonos."
           ],
@@ -1078,16 +1078,20 @@
           ],
           "pasos": [
             {
-              "texto": "Abre Finanzas › Impuestos › Maestros › Tipos de impuestos y localiza ESG.",
-              "detalle": "Comprueba base Importe neto, 21,000, Aplicar deducción, Aplicar prorrata y los mnemotécnicos ESG-IVA-SV y ESG-IVA-RV.",
+              "texto": "Desde la regla 2586, pulsa el tipo ESG para abrirlo.",
+              "detalle": "Comprueba la base de cálculo Importe neto y el 21,000: el resto del tipo ya lo viste en el ejercicio 2. En esta demo los mnemotécnicos son ESG-IVA-SV y ESG-IVA-RV.",
               "imagen": "v-tax-tablas-012.jpg",
               "hotspot": {
                 "x": 17.5,
                 "y": 36.5,
                 "w": 27,
                 "h": 4.5,
-                "etiqueta": "Base de cálculo"
+                "etiqueta": "Base cálculo"
               }
+            },
+            {
+              "texto": "Abre la pestaña inferior Reglas en adquisiciones.",
+              "detalle": "Comprueba que la regla 2586 aparece en la lista: es la prueba de que esta regla devuelve ESG en compras."
             }
           ],
           "avisos": [
@@ -1109,7 +1113,7 @@
           ],
           "explicacion": [
             "Una regla tiene tres bloques: Identificación (clase, país, fecha de inicio, prioridad y estado), Condiciones de aplicación (zona empresa, zona tercero, clave tercero, clave artículo, clave documento, tipo CIF y prorrata) e Impuesto de compras / de ventas (operación, tipo, clave para las declaraciones y porcentaje deducible o aplicable).",
-            "Si varias reglas encajan con la misma línea, gana la de mayor prioridad. Si no encaja ninguna, la factura no se puede validar y hay que crear la regla que falta.",
+            "Si varias reglas encajan con la misma línea, gana la de número de prioridad más alto: una regla especial con prioridad 10 se impone a la general con prioridad 1. Ojo: es al revés que el orden de precedencia de las clases, donde el número más bajo va primero. Si no encaja ninguna, la factura no se puede validar y hay que crear la regla que falta.",
             "Impuestos por tercero: sustituye el impuesto o la operación para un tercero concreto durante unas fechas. En la captura, el cliente OUTDOOR SPORTS SA pasa del 21 % al 0 % exento y del 10 % al 4 % durante 2021.",
             "Grupos fiscales: tratamiento de las operaciones entre empresas de un mismo grupo de IVA, con emisor, receptor y porcentaje de base fiscal (40 % en la captura).",
             "Periodos fiscales y agencias tributarias: los periodos ordenan las liquidaciones (01 a 12 mensuales, 1T a 4T trimestrales y 0A anual); las agencias guardan los parámetros de envío a cada hacienda (SII, TicketBAI, VERIFACTU).",
@@ -1123,7 +1127,7 @@
             },
             {
               "campo": "Prioridad",
-              "significado": "Gana la regla de mayor prioridad.",
+              "significado": "Gana el número más alto: una regla especial con prioridad 10 se impone a la general con prioridad 1.",
               "ejemplo": "1"
             },
             {
@@ -1142,9 +1146,9 @@
               "ejemplo": "CLBC + ESG / VLBC + ESG"
             },
             {
-              "campo": "Operación origen → destino",
+              "campo": "Impuesto origen → destino",
               "significado": "Sustitución en Impuestos por tercero.",
-              "ejemplo": "ES, IVA 21 % → ES, IVA 0 % Exento"
+              "ejemplo": "ES, IVA 21 % General → ES, IVA 0 % Exento"
             },
             {
               "campo": "Emisor / Receptor / Base fiscal %",
@@ -1187,15 +1191,15 @@
       ],
       "test": [
         {
-          "pregunta": "¿Qué factura de la demo se usa para leer la regla 2586?",
+          "pregunta": "La regla 2586 tiene vacía la Clave tercero. ¿Se aplica a un proveedor con clave RREQ?",
           "opciones": [
-            "FCALA23-000016",
-            "FACT0000044",
-            "FCALA23-000015",
-            "FCTRI26-000065"
+            "No, solo a RGEN",
+            "No, la regla da error",
+            "Sí: un campo de condición vacío vale para cualquier valor",
+            "Solo si la empresa está en ESCO"
           ],
           "correcta": 2,
-          "explicacion": "Es la factura de compra de ALA con base 800 €."
+          "explicacion": "Las condiciones vacías no restringen; las informadas (ESAR + ESAR + BOG) sí deben coincidir."
         },
         {
           "pregunta": "¿Qué combinación de condiciones activa la regla 2586?",
@@ -1222,13 +1226,13 @@
         {
           "pregunta": "Si dos reglas encajan con la misma línea, ¿cuál se aplica?",
           "opciones": [
-            "La más antigua",
+            "La de número de prioridad más bajo",
             "La de menor número de Id",
-            "La de mayor prioridad",
+            "La de número de prioridad más alto",
             "Ninguna: la factura da error"
           ],
           "correcta": 2,
-          "explicacion": "La prioridad desempata: gana el valor más alto."
+          "explicacion": "La prioridad desempata: gana el valor más alto (10 se impone a 1)."
         },
         {
           "pregunta": "¿Para qué sirve el maestro Impuestos por tercero?",
@@ -1246,7 +1250,7 @@
         "Abres la factura FCALA23-000015 y compruebas FC, ALA, proveedor 00003 y 800,00 €.",
         "En Impuestos por documento compruebas base 800,00, cuota 168,00, total 968,00 y regla 2586.",
         "Abres la regla 2586 y compruebas ESAR + ESAR + BOG y CLBC + ESG en compras.",
-        "Abres el tipo ESG y compruebas Importe neto y 21 %.",
+        "Desde el tipo ESG, en Reglas en adquisiciones, localizas la regla 2586.",
         "Explicas qué pasa si encajan dos reglas (prioridad) y si no encaja ninguna (no se puede validar).",
         "Revisas un ejemplo de Impuestos por tercero y uno de Grupos fiscales."
       ],
@@ -1327,15 +1331,8 @@
             },
             {
               "texto": "Entra en Finanzas › Facturación › Compras › Registro, pasa a modo lista y pulsa el botón de nuevo registro.",
-              "detalle": "Rellena tipo FC, empresa ALA, fecha contable y proveedor 00003. Escribe {INI} en las notas para reconocer tu factura.",
-              "imagen": "v-tax-tablas-013.jpg",
-              "hotspot": {
-                "x": 20.5,
-                "y": 93.5,
-                "w": 6,
-                "h": 4.5,
-                "etiqueta": "Botón Validar"
-              }
+              "detalle": "Rellena tipo FC, empresa ALA, fecha contable y proveedor 00003. Escribe {INI} en las notas para reconocer tu factura. El botón Validar del pie lo usarás después de añadir la línea.",
+              "imagen": "v-tax-tablas-013.jpg"
             },
             {
               "texto": "Añade la línea del artículo Material deportivo con cantidad 1 y precio 1.200.",
@@ -1416,7 +1413,7 @@
                 "y": 75.5,
                 "w": 5,
                 "h": 5,
-                "etiqueta": "Regla 1477"
+                "etiqueta": "Regla"
               }
             }
           ],
@@ -1485,12 +1482,12 @@
               "imagen": "v-tax-tablas-016.jpg"
             },
             {
-              "texto": "En tu factura, añade la línea del artículo 008 «Trabajos realizados por otras empresas», cantidad 1 y precio 800, y abre Datos contables › Impuestos de esa línea.",
-              "detalle": "Verás Compra local de servicios corrientes, ES, IVA 10 % reducido y regla 1479. Fíjate también en el campo Clave fiscal art. de la línea.",
+              "texto": "En tu factura, añade la línea del artículo 008 «Trabajos realizados por otras empresas», cantidad 1 y precio 800, y vuelve a validar. Si la factura validada no te deja añadir líneas, devuélvela antes a provisional.",
+              "detalle": "Después abre Datos contables › Impuestos de esa línea: verás Compra local de servicios corrientes, ES, IVA 10 % reducido y regla 1479. Fíjate también en el campo Clave fiscal art. de la línea.",
               "imagen": "v-tax-tablas-017.jpg"
             },
             {
-              "texto": "Valida y abre Impuestos por documento.",
+              "texto": "Abre Impuestos por documento.",
               "detalle": "Deben salir dos filas: 1.200 al 21 % (regla 1477) y 800 al 10 % (regla 1479). Total de la factura: 1.452 + 880 = 2.332 €."
             },
             {
@@ -1709,7 +1706,7 @@
             {
               "campo": "Zona empresa / Zona tercero",
               "significado": "Zonas de la línea.",
-              "ejemplo": "ESCO / INT"
+              "ejemplo": "ESCO / ESCO"
             },
             {
               "campo": "Operación",
@@ -1937,8 +1934,8 @@
       ],
       "problemas": [
         {
-          "problema": "Un registro no se guarda porque la fecha contable es anterior a la del documento.",
-          "solucion": "La fecha contable debe ser igual o posterior a la fecha de la factura. Corrige la fecha en el documento."
+          "problema": "Un registro fiscal no se guarda por un problema de fechas.",
+          "solucion": "En el registro fiscal la fecha no puede ser anterior a la fecha del documento; revisa qué fecha de documento hereda el registro de la factura."
         },
         {
           "problema": "En una compra con ISP no se generan las líneas de autofactura.",
@@ -1974,7 +1971,7 @@
           "explicacion": [
             "Modelo 303: autoliquidación del IVA. Recoge el IVA repercutido y el soportado deducible del periodo y calcula el resultado. Se presenta cada trimestre, o cada mes en empresas grandes o inscritas en el SII.",
             "Modelo 390: resumen anual del IVA. Repite en un solo documento lo declarado en los 303 del año. Algunas empresas están exoneradas de presentarlo.",
-            "Modelo 349: declaración informativa de las operaciones con empresas de otros países de la UE (compras y ventas intracomunitarias). Mensual o trimestral.",
+            "Modelo 349, operaciones con la UE: declaración informativa de las compras y ventas intracomunitarias con empresas de otros países de la UE. Mensual o trimestral.",
             "El ERP calcula cada casilla sumando las líneas de los registros fiscales del periodo según su operación impositiva y su tipo: por eso es tan importante que la regla haya elegido bien la operación.",
             "Para programadores: la configuración de cada formulario (ES303, ES390) está en ctax_form_head y ctax_form_oper, que relaciona operaciones con casillas."
           ],
@@ -2174,7 +2171,7 @@
             "Procesos de impuestos: generar autofacturas e ISP en un rango de fechas, validar los movimientos fiscales, retroceder (deshacer) una validación, cargar registros desde Excel y enviar al SII las facturas y los pagos.",
             "SII (suministro inmediato de información): las empresas grandes, las inscritas en la devolución mensual y los grupos de IVA envían a la AEAT el detalle de cada factura en un plazo de cuatro días hábiles. Sustituye a llevar los libros registro en papel.",
             "VERIFACTU: requisitos para los programas de facturación. Cada factura genera un registro encadenado que no se puede alterar sin dejar rastro y, en la modalidad VERIFACTU, se envía a la AEAT al emitirla. Las empresas que ya envían por SII quedan fuera.",
-            "TicketBAI: obligación equivalente en el País Vasco (Álava, Bizkaia y Gipuzkoa), ante sus haciendas forales.",
+            "TicketBAI, el equivalente vasco: obligación parecida a VERIFACTU que se cumple ante las haciendas forales de Álava, Bizkaia y Gipuzkoa.",
             "Las cargas desde Excel quedan registradas con su estado (pendiente o cargado) y el mensaje de error si falla; los envíos al SII guardan su estado y el error devuelto por Hacienda."
           ],
           "campos": [
@@ -2269,7 +2266,7 @@
           "opciones": [
             "Son el mismo sistema con dos nombres",
             "El SII es solo para el País Vasco",
-            "El SII comunica los libros de facturas en cuatro días; VERIFACTU regula el programa de facturación y el envío de cada factura al emitirla",
+            "SII: libros de facturas en 4 días. VERIFACTU: control del programa de facturación",
             "VERIFACTU es el modelo anual de IVA"
           ],
           "correcta": 2,
@@ -2335,8 +2332,8 @@
           "explicacion": [
             "Justificación: compara los registros fiscales con los apuntes contables. Cada registro debe estar enlazado con su asiento y la cuota fiscal debe coincidir con la que se contabilizó en las cuentas de IVA.",
             "Identificación fiscal: revisa los NIF de los terceros.",
-            "Importes: compara el total de la cabecera del registro fiscal con la suma de sus líneas, en euros y en divisa.",
-            "Duplicados: busca facturas que parecen la misma registrada dos veces.",
+            "Control de importes: compara el total de la cabecera del registro fiscal con la suma de sus líneas, en euros y en divisa.",
+            "Control de duplicados: busca facturas que parecen la misma registrada dos veces.",
             "El resultado es una lista de incidencias para analizar, no una corrección automática.",
             "Para programadores: los controles cruzan ctax_move_head y ctax_move_line con los apuntes (capuntes) y asientos (casientos)."
           ],
