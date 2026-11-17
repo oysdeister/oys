@@ -1,6 +1,6 @@
 /** Botón de usuario, estado de la copia en la cuenta y botón de salir (en la barra superior). */
 import { useState } from 'react';
-import { UserButton, useClerk } from '@clerk/clerk-react';
+import { UserButton, useClerk } from '@clerk/react';
 import { CLERK_ACTIVO, useEstadoSync } from './Acceso';
 import { vaciarPendiente } from './sincronizar';
 

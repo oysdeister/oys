@@ -14,7 +14,7 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
 | Estilos (fondo espacial, cristal y neón) | `app/src/auth/auth.css` |
 
 - **Clave:** se lee de `VITE_CLERK_PUBLISHABLE_KEY`. Si no está definida, la app funciona como antes: sin login y con el progreso solo en el navegador.
-- **Router:** la app usa `HashRouter` y los componentes de Clerk usan `routing="virtual"`, que no tocan la URL. Funciona igual en `/oys/` de GitHub Pages, en un dominio propio o en `localhost`.
+- **Router:** la app usa `HashRouter` y los componentes de Clerk usan `routing="hash"` (solo en la pantalla de entrada, cuando la app aún no está montada). Funciona igual en `/oys/` de GitHub Pages, en un dominio propio o en `localhost`.
 - **Dónde se guarda:** en `user.unsafeMetadata.oys` de Clerk, sin backend. Clerk admite como máximo 8 KB de metadata por usuario.
   - En JSON tal cual, el progreso completo de los 80 ejercicios ocupa unos 8,9 KB y no cabe.
   - Por eso se compacta: los pasos y la checklist se guardan como máscaras de bits y se quitan los textos. Así ocupa unos 3 KB con todo completado.

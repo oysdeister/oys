@@ -7,7 +7,7 @@
  * - Si entra otra persona en el mismo navegador, el progreso local del anterior no se le mezcla.
  */
 import { useEffect, useRef, useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@clerk/react';
 import { EVENTO_CAMBIO, sinAvisos } from '../lib/sync';
 import { recargarProgreso } from '../lib/progress';
 import { recargarExamen } from '../lib/examen';

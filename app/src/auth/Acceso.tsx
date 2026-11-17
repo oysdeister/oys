@@ -3,7 +3,7 @@
  * Sin VITE_CLERK_PUBLISHABLE_KEY la app funciona como antes, sin login y con el progreso solo en el navegador.
  */
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import { ClerkLoaded, ClerkLoading, ClerkProvider, SignIn, SignUp, SignedIn, SignedOut } from '@clerk/clerk-react';
+import { ClerkLoaded, ClerkLoading, ClerkProvider, Show, SignIn, SignUp } from '@clerk/react';
 import { esES } from '@clerk/localizations';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Espacio } from '../components/shell/Espacio';
@@ -83,7 +83,7 @@ function PantallaEntrada() {
             </div>
           </ClerkLoading>
           <ClerkLoaded>
-            {alta ? <SignUp routing="virtual" signInUrl="#" /> : <SignIn routing="virtual" withSignUp={false} />}
+            {alta ? <SignUp routing="hash" signInUrl="#" /> : <SignIn routing="hash" withSignUp={false} />}
             {alta && (
               <button type="button" className="acc-cambiar" onClick={() => setAlta(false)}>
                 Ya tengo cuenta: entrar
@@ -100,12 +100,12 @@ export function Acceso({ children }: { children: ReactNode }) {
   if (!CLERK_ACTIVO) return <>{children}</>;
   return (
     <ClerkProvider publishableKey={CLAVE_CLERK} localization={esES} appearance={APARIENCIA} afterSignOutUrl={window.location.pathname}>
-      <SignedOut>
+      <Show when="signed-out">
         <PantallaEntrada />
-      </SignedOut>
-      <SignedIn>
+      </Show>
+      <Show when="signed-in">
         <Sincronizado>{children}</Sincronizado>
-      </SignedIn>
+      </Show>
     </ClerkProvider>
   );
 }
