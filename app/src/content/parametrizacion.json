@@ -1183,7 +1183,7 @@
    "numero": 7,
    "titulo": "Orden de carga de las tablas de Finanzas",
    "objetivo": "Tendrás una visión general de las áreas de Finanzas, qué produce contabilizar y el orden lógico de carga de maestros, diferenciando lo explícito de lo deducido.",
-   "concepto": "Axional Finanzas es el núcleo económico-financiero: registra, procesa y presenta la información contable del ciclo de negocio y se nutre de datos de otros módulos. Antes de parametrizar debes decidir el entorno empresarial (unisociedad o multisociedad, multipaís, consolidación, contabilidad de gestión) y después cargas los maestros en un orden lógico: permisos, empresa (con su tercero previo), ejercicio y periodos, plan contable y cuentas, numeradores, terceros funcionales, tipologías y plantillas de contabilización. Algunas dependencias son explícitas en la documentación y otras se deducen de los campos de cada maestro.",
+   "concepto": "Axional Finanzas es el núcleo económico-financiero: registra, procesa y presenta la información contable del ciclo de negocio y se nutre de datos de otros módulos. Antes de parametrizar debes decidir el entorno empresarial (unisociedad o multisociedad, multipaís, consolidación, contabilidad de gestión) y después cargas los maestros en un orden lógico: permisos, tercero de empresa, plan contable/PGC, empresa, ejercicio y periodos, cuentas, numeradores, terceros funcionales, tipologías y plantillas de contabilización. Algunas dependencias son explícitas en la documentación y otras se deducen de los campos de cada maestro.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -1208,7 +1208,7 @@
        "texto": "Identifica al menos tres áreas que se nutren de otros módulos, como Costes, Cartera y Tesorería"
       },
       {
-       "texto": "Revisa en la documentación qué efectos tiene la contabilización sobre un documento origen"
+       "texto": "Abre un documento ya contabilizado y comprueba que no es editable y que puedes navegar a su asiento"
       }
      ],
      "avisos": [
@@ -1253,9 +1253,9 @@
      "paraQueSirve": "Conocer la secuencia de maestros y separar las dependencias documentadas de las que se deducen de los campos.",
      "ruta": null,
      "explicacion": [
-      "La documentación establece de forma explícita varias dependencias: primero se define la agrupación de permisos, luego los permisos y sus valores. Para dar de alta una empresa, antes debe existir el tercero de la empresa. Un tercero, aunque esté Activo, no es completamente funcional hasta definir direcciones, relaciones contables, domiciliaciones, condiciones de pago y contactos. Para que un ejercicio pueda utilizarse contablemente debe tener registros de periodificación, que se generan automáticamente al crearlo. Antes de crear cualquier documento de compras o ventas debe existir al menos una tipología. Los numeradores se asignan a los tipos de documento. Para contabilizar se requiere una plantilla por cada origen de impactos.",
-      "De los campos se deducen otras dependencias: la empresa referencia tercero, plan contable, moneda, idioma y zona impositiva; las cuentas financieras de empresa referencian proyecto, sección, cuenta financiera, banco, entidad, calendario, línea financiera y agrupación de cuentas; el tercero referencia tipo de identificación fiscal, país, idioma, clave fiscal, tipo de tercero, holding, responsable y workflow; las direcciones, datos bancarios, condiciones de pago, mandatos SEPA y contactos referencian sus propios maestros; el ejercicio referencia empresa y usuario; las tipologías referencian tabla origen y numerador; las plantillas referencian etiquetas tabla.campo y hojas destino capuntes, cimpcont, cefectos.",
-      "Orden recomendado de carga: permisos por grupo → empresa (con su tercero previo) → ejercicio y periodos → plan contable y cuentas → numeradores por tipo de documento → terceros funcionales (con auxiliares mínimos) → tipologías → plantillas de contabilización."
+      "La documentación establece de forma explícita varias dependencias: primero se define la agrupación de permisos, luego los permisos y, si aplica, sus valores. Para dar de alta una empresa, antes debe existir el tercero de la empresa. La empresa debe escoger un plan contable ya dado de alta. Un tercero, aunque esté Activo, no es completamente funcional hasta definir direcciones, relaciones contables, domiciliaciones contables, condiciones de pago y contactos. Para que un ejercicio pueda utilizarse contablemente debe tener registros de periodificación, que se generan automáticamente al crearlo. Antes de crear cualquier documento de compras o ventas debe existir al menos una tipología. Los numeradores se asignan a los tipos de documento. Para contabilizar se requiere una plantilla por cada origen de impactos.",
+      "De los campos se deducen otras dependencias: la empresa referencia tercero, moneda, idioma y zona impositiva; las cuentas financieras de empresa referencian proyecto, sección, cuenta financiera, banco, entidad, calendario, línea financiera y agrupación de cuentas; el tercero referencia tipo de identificación fiscal, país, idioma, clave fiscal, tipo de tercero, holding, responsable y workflow; las direcciones, datos bancarios, condiciones de pago, mandatos SEPA y contactos referencian sus propios maestros; el ejercicio referencia empresa y usuario; las tipologías referencian tabla origen y numerador; las plantillas referencian etiquetas tabla.campo y hojas destino capuntes, cimpcont, cefectos.",
+      "Orden recomendado de carga: permisos por grupo → tercero de empresa → plan contable/PGC → empresa → ejercicio y periodos → cuentas → numeradores por tipo de documento → terceros funcionales (con auxiliares mínimos) → tipologías → plantillas de contabilización."
      ],
      "campos": [
       {
@@ -1295,15 +1295,15 @@
        "imagen": "parametrizacion-icon-001.webp"
       },
       {
-       "texto": "Abre la ficha de empresa y localiza el campo «Tercero»; revisa que debe estar informado con un tercero previo",
+       "texto": "En planes contables, comprueba que existe el PGC por defecto",
        "imagen": "parametrizacion-icon-002.webp"
       },
       {
-       "texto": "Abre un ejercicio y revisa que al crearlo se generan los periodos contables y fiscales",
+       "texto": "Abre la ficha de empresa y localiza el campo «Tercero»; revisa que debe estar informado con un tercero previo",
        "imagen": "parametrizacion-icon-003.webp"
       },
       {
-       "texto": "En planes contables, comprueba que existe el PGC por defecto",
+       "texto": "Abre un ejercicio y revisa que al crearlo se generan los periodos contables y fiscales",
        "imagen": "parametrizacion-icon-004.webp"
       },
       {
@@ -1324,13 +1324,13 @@
      "paraQueSirve": "Identificar las tablas de base de datos nombradas en la documentación para permisos, numeradores y plantillas.",
      "ruta": null,
      "explicacion": [
-      "Por dentro: en permisos se nombran cuserperh, cuserperl, cuserperv, cusergrp y gusergrp. En numeradores, las tablas de tipos de factura son gvenfacd para ventas y gcommovd para compras. En plantillas de contabilización se usan etiquetas como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid, y las hojas destino capuntes, cimpcont y cefectos.",
-      "La documentación no nombra tablas físicas para empresa, ejercicio, plan contable, terceros o tipologías; solo para permisos, numeradores y plantillas."
+      "Por dentro: en permisos se nombran cuserperh, cuserperl, cuserperv, cusergrp, gusergrp, cuserauth y guserauth. En numeradores, las tablas de tipos de factura son gvenfacd para ventas y gcommovd para compras. En plantillas de contabilización se usan etiquetas como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid, y las hojas destino capuntes, cimpcont y cefectos.",
+      "No se nombran tablas físicas para empresa, ejercicio, plan contable o terceros; para tipologías, intervienen las tablas de tipos de documento usadas por numeradores (gvenford, gvenacud, gvenpedd, gvenfacd, gcommovd, etc.), además de permisos y plantillas."
      ],
      "campos": [],
      "pasos": [
       {
-       "texto": "Localiza en la documentación de permisos las tablas cuserperh, cuserperl y cuserperv"
+       "texto": "En permisos por grupo de usuarios, localiza la agrupación, el permiso y sus valores (tablas cuserperh, cuserperl y cuserperv)"
       },
       {
        "texto": "Revisa en numeradores las tablas gvenfacd y gcommovd"
@@ -1339,14 +1339,14 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Las hojas destino capuntes, cimpcont y cefectos no son tablas físicas de base de datos sino convenciones de hojas en las plantillas."
+       "texto": "Las hojas destino capuntes, cimpcont y cefectos son nombres de hoja por convenio que coinciden con la tabla principal de destino."
       }
      ]
     }
    ],
    "test": [
     {
-     "pregunta": "¿Qué efecto NO produce la contabilización según la documentación?",
+     "pregunta": "¿Qué efecto NO produce la contabilización de un documento?",
      "opciones": [
       "Elimina el documento origen",
       "Permite navegar al asiento si hay permisos",
@@ -1365,7 +1365,7 @@
       "Asignar valores"
      ],
      "correcta": 1,
-     "explicacion": "Primero se define la agrupación; luego los permisos y sus valores."
+     "explicacion": "Primero se define la agrupación; luego los permisos y, si aplica, sus valores."
     },
     {
      "pregunta": "¿Qué debe existir antes de dar de alta una empresa?",
@@ -1390,15 +1390,15 @@
      "explicacion": "Al crear el primer ejercicio se generan doce registros en periodos contables y periodos de impuestos."
     },
     {
-     "pregunta": "¿Cuál de estas dependencias se deduce de los campos y no está indicada como secuencia explícita?",
+     "pregunta": "¿Cómo se relacionan las tres entidades con las que se define un permiso?",
      "opciones": [
-      "La empresa referencia un plan contable previamente definido",
-      "Para crear empresa, antes debe existir su tercero",
-      "Primero se define la agrupación de permisos y después el permiso",
-      "Un tercero activo necesita direcciones y relaciones contables"
+      "Los permisos pertenecen a una agrupación y los valores pertenecen a un permiso",
+      "Los valores pertenecen a una agrupación y las agrupaciones a un permiso",
+      "Las agrupaciones pertenecen a un grupo de usuarios y no tienen permisos",
+      "Todo permiso necesita valores, aunque sea de tipo Verdadero/Falso"
      ],
      "correcta": 0,
-     "explicacion": "La referencia al plan contable se desprende del campo «Plan contable» de empresa; las otras son afirmaciones explícitas de la documentación."
+     "explicacion": "Agrupación de permisos, Permisos y Valores están relacionados jerárquicamente; los permisos de tipo Verdadero/Falso no necesitan valores."
     }
    ],
    "checklist": [
@@ -1515,7 +1515,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "En ventas, el diario por defecto es VE; en compras no se documenta un diario por defecto, se define en el tipo de factura."
+       "texto": "En ventas, el diario por defecto es VE; en compras no se documenta un diario por defecto."
       }
      ]
     },
@@ -1531,7 +1531,7 @@
      "explicacion": [
       "Los documentos de gestión incluyen concursos (solo compras), ofertas, formularios, solicitudes (solo compras), acuerdos, planes de recepción o de entrega, pedidos, albaranes y facturas. Cada documento puede tener distintas tipologías; ejemplos de factura: factura directa, factura de abono, factura con IVA incluido.",
       "Se pueden definir circuitos de distinta complejidad, por ejemplo Pedido → Albarán → Factura, Oferta → Pedido → Albarán → Factura, o Pedido de compra → Pedido de venta → Albarán de venta → Albarán de compra → Factura de venta → Factura de compra. El ciclo básico de compras exige tipologías: pedido de compra directo, albarán con origen pedido y factura con origen albarán; el de ventas es análogo.",
-      "En las tipologías, el bloque de documento origen se controla con «Tabla origen» (Ninguna si no hay origen), «Actualización tabla origen» (Restando, Sumando, No) y «Copiar líneas» (Sí, Validar, No). Por ejemplo, un albarán con origen pedido estándar no abono usa Sumando."
+      "En las tipologías, el bloque de documento origen se controla con «Tabla origen» (Ninguna si no hay origen), «Actualización tabla origen» (Restando, Sumando, No; NULL si Tabla origen = Ninguna) y «Copiar líneas» (Sí, Validar, No; NULL si Tabla origen = Ninguna). Por ejemplo, un albarán con origen pedido estándar no abono usa Sumando."
      ],
      "campos": [
       {
@@ -1541,12 +1541,12 @@
       },
       {
        "campo": "Actualización tabla origen",
-       "significado": "Restando, Sumando, No",
+       "significado": "Restando, Sumando, No; NULL si Tabla origen = Ninguna",
        "ejemplo": "Sumando"
       },
       {
        "campo": "Copiar líneas",
-       "significado": "Sí, Validar, No",
+       "significado": "Sí, Validar, No; NULL si Tabla origen = Ninguna",
        "ejemplo": "Sí"
       },
       {
@@ -1611,7 +1611,7 @@
      ],
      "explicacion": [
       "Para cada posible origen de impactos a contabilidad se requiere un patrón de contabilización, registrado mediante hojas de cálculo. El gestor de plantillas hoja de cálculo permite definir libros maestros para crear registros en contabilidad, impuestos, carteras, costes y partidas presupuestarias.",
-      "Por dentro: cada libro contiene una hoja origen con los datos a procesar y una o más hojas destino donde se define el mapeo. Las hojas destino por convenio son capuntes (registro de asientos contables), cimpcont (registro de datos fiscales) y cefectos (registro de efectos en cartera). Las etiquetas de origen usan tabla.campo, como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid.",
+      "Por dentro: cada libro contiene una hoja origen con los datos a procesar y una o más hojas destino donde se define el mapeo. Las hojas destino por convenio son capuntes (asientos, costes y partidas presupuestarias), cimpcont (registro de datos fiscales) y cefectos (registro de efectos en cartera). Las etiquetas de origen usan tabla.campo, como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid.",
       "El permiso «Contabilizar» puede tener valores Real y Diferido. Sin permiso no se contabiliza; con valor Real se contabiliza en tiempo real; con Diferido se contabiliza en área diferida. La documentación usa como ejemplo restringir la contabilización de albaranes y acuerdos. En usuarios existe un indicador para que los procesos registren en área diferida o directamente en real."
      ],
      "campos": [
@@ -1718,7 +1718,7 @@
       "cimpcont"
      ],
      "correcta": 0,
-     "explicacion": "capuntes es el registro de asientos contables."
+     "explicacion": "capuntes es la hoja destino para asientos contables, costes y partidas presupuestarias."
     },
     {
      "pregunta": "¿Qué valores puede tomar el permiso «Contabilizar»?",
@@ -1737,12 +1737,12 @@
     "Localiza el botón de contabilización en factura de venta y revisa qué genera.",
     "Abre una factura de compra y localiza el botón de contabilización.",
     "En tipologías de documentos de gestión, abre una tipología de albarán con origen pedido y comprueba «Actualización tabla origen» = Sumando.",
-    "Identifica un circuito básico de compras (pedido directo, albarán con origen pedido, factura con origen albarán) en la documentación o en el sistema.",
+    "Identifica en el sistema un circuito básico de compras: pedido directo, albarán con origen pedido y factura con origen albarán.",
     "En una factura con origen albarán, localiza la pestaña «Albaranes compras conformar» y revisa el botón «Conformar».",
     "Abre el gestor de plantillas hoja de cálculo y localiza una plantilla con hojas destino capuntes, cimpcont y cefectos.",
     "Dentro de una plantilla, identifica una etiqueta de origen como ccomfach.fecfac.",
     "En permisos por grupo de usuarios, localiza el permiso «Contabilizar» y sus valores Real y Diferido.",
-    "Revisa en la documentación de permisos el ejemplo de restringir la contabilización de albaranes y acuerdos."
+    "En permisos por grupo de usuarios, comprueba que un permiso de tipo Verdadero/Falso (por ejemplo, Contabilizar en la agrupación Albaranes) no tiene valores definidos."
    ],
    "problemas": [
     {

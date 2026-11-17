@@ -44,21 +44,6 @@
        "campo": "sección",
        "significado": "Identificador alfanumérico por apunte para contabilidad por secciones",
        "ejemplo": "S"
-      },
-      {
-       "campo": "Diario anual",
-       "significado": "Consulta del diario ordenado por periodos anuales",
-       "ejemplo": "consulta"
-      },
-      {
-       "campo": "Diario resumen",
-       "significado": "Diario oficial resumido por periodos",
-       "ejemplo": "consulta"
-      },
-      {
-       "campo": "Diario por asiento",
-       "significado": "Consulta de asientos sin cálculo de saldos anteriores",
-       "ejemplo": "consulta"
       }
      ],
      "pasos": [
@@ -133,13 +118,12 @@
      "ruta": [
       "Finanzas",
       "Contabilidad general",
-      "Diario contable",
       "Plantillas de contabilización"
      ],
      "explicacion": [
       "Las plantillas de contabilización son libros maestros XLS que definen cómo crear registros en contabilidad según el origen de los datos. Sirven de patrón para generar apuntes, impuestos, carteras, costes y partidas presupuestarias.",
       "Cada hoja puede contener tipos de área como Datos de cabecera, Datos únicos estructurados, Multilínea censado o Multilínea indeterminado. Las hojas destino se asocian a tablas: capuntes para asientos contables, cimpcont para datos fiscales y cefectos para efectos en cartera.",
-      "Por dentro: intervienen las tablas ccomfach, ccomefec y ccomfacl como maestros de plantilla, junto con capuntes, cimpcont y cefectos como destinos de los datos."
+      "Por dentro: intervienen las tablas origen que pone como ejemplo la documentación: ccomfach (cabecera), ccomefec (vencimientos) y ccomfacl (líneas), junto con capuntes, cimpcont y cefectos como destinos de los datos."
      ],
      "campos": [
       {
@@ -180,7 +164,7 @@
       },
       {
        "texto": "Identifica las tablas destino capuntes, cimpcont y cefectos",
-       "detalle": "Comprueba las etiquetas tabla.campo de la documentación."
+       "detalle": "Comprueba las etiquetas tabla.campo de la plantilla."
       }
      ],
      "avisos": [
@@ -205,8 +189,8 @@
       "Procesos sobre asientos"
      ],
      "explicacion": [
-      "Sobre el diario existen procesos masivos de mantenimiento: la generación de periodificaciones reparte importes de apuntes en varios periodos; la auditoría automática marca apuntes como auditados por documento, por saldo o con IA; y el cambio de sistema traslada asientos entre sistemas contables.",
-      "Estos procesos se ejecutan desde la ruta de procesos sobre asientos y actúan sobre conjuntos de apuntes, no sobre transacciones sueltas. La documentación los describe como procesos con filtros y parámetros, no como pantallas de alta.",
+      "Sobre el diario existen procesos masivos de mantenimiento: la generación de periodificaciones reparte importes de apuntes en varios periodos; la auditoría automática marca apuntes como auditados por documento o por saldo, y con IA solo propone punteo = P; y el cambio de sistema traslada asientos entre sistemas contables.",
+      "Estos procesos se ejecutan desde la ruta de procesos sobre asientos; la generación de periodificaciones puede ejecutarse individual o masiva, mientras que la auditoría automática y el cambio de sistema actúan sobre conjuntos de apuntes. La documentación los describe como procesos con filtros y parámetros, no como pantallas de alta.",
       "Por dentro: la generación de periodificaciones usa casientos, capuntes, ccuentas, ccoscont, cdistrih y cdistril. La auditoría automática usa casientos, capuntes, caudctas_prop, ccuentas y cmonedas. El cambio de sistema usa casientos, ccuentas, csistema, ctax_move_head, ccoscont, cefectos, cproyect, cseccion, cctaauxl y ccosdesc."
      ],
      "campos": [
@@ -217,7 +201,7 @@
       },
       {
        "campo": "auditoría automática",
-       "significado": "Marca apuntes de asientos contabilizados por documento, saldo o IA",
+       "significado": "Marca apuntes de asientos contabilizados por documento o saldo; con IA propone punteo = P",
        "ejemplo": "proceso masivo"
       },
       {
@@ -233,7 +217,7 @@
        "imagen": "icon-contabilidad-003.webp"
       },
       {
-       "texto": "Localiza Auditoría automática de apuntes contables y revisa las acciones por documento, por saldo y con IA",
+       "texto": "Localiza Auditoría automática de apuntes contables y revisa las acciones por documento, por saldo y la propuesta de IA",
        "detalle": "Comprueba los permisos MODAUD y AUDACEPTAR."
       },
       {
@@ -315,9 +299,9 @@
     "Abre un apunte y verifica que tiene campos de proyecto y sección.",
     "Consulta Diario resumen y comprueba que se agrupa por periodos.",
     "Abre configuración contable y comprueba que existen doce periodos contables.",
-    "Comprueba que también existen doce periodos de impuestos al crear el primer ejercicio.",
+    "En Periodos fiscales, comprueba que el primer ejercicio tiene también doce periodos de impuestos.",
     "Abre plantillas de contabilización y localiza los tipos de área.",
-    "Identifica las tablas destino capuntes, cimpcont y cefectos en la documentación de plantillas.",
+    "Abre una plantilla de contabilización y localiza las hojas destino capuntes, cimpcont y cefectos.",
     "Localiza generación de periodificaciones y revisa sus condiciones de elegibilidad.",
     "Localiza auditoría automática y anota los tres algoritmos disponibles.",
     "Localiza cambio de sistema y comprueba que exige imp_cuadre = 0."
@@ -357,7 +341,7 @@
      ],
      "explicacion": [
       "La página de procesos periódicos agrupa la regularización contable de cuentas en divisas, la actualización de deuda de cartera en moneda extranjera, la regularización de ejercicios, el cierre temporal, el cierre definitivo, la reapertura, el paso a histórico y la reclasificación de deuda a largo plazo.",
-      "El orden que sugiere la documentación es: regularización de divisas, actualización de deuda en divisa, regularización, cierre temporal, cierre definitivo, reapertura si estaba cerrado temporalmente, paso a histórico y reclasificación de deuda a largo plazo. Los procesos de cierre y apertura alteran asientos y saldos; conviene revisarlos antes de ejecutarlos."
+      "El orden que sugiere la documentación es: regularización de divisas, actualización de deuda en divisa, regularización, cierre temporal, reapertura si estaba cerrado temporalmente, cierre definitivo, paso a histórico y reclasificación de deuda a largo plazo. Los procesos de cierre y apertura alteran asientos y saldos; conviene revisarlos antes de ejecutarlos."
      ],
      "campos": [
       {
@@ -466,7 +450,7 @@
        "imagen": "icon-contabilidad-004.webp"
       },
       {
-       "texto": "Revisa el asiento 99999998 y el periodo 98 en la documentación",
+       "texto": "Revisa el asiento 99999998 y su periodo de saldos 98",
        "detalle": "Comprueba que el ejercicio queda regularizado."
       },
       {
@@ -580,7 +564,7 @@
      "paraQueSirve": "Conocer los mecanismos documentados para consultar la contabilidad a una fecha anterior.",
      "ruta": null,
      "explicacion": [
-      "La documentación ofrece varios mecanismos para ver la contabilidad a una fecha pasada: los saldos por periodo, el histórico de saldos, los extractos con filtro de fechas y el cierre temporal, que refleja saldos de apertura sin generar asientos reales.",
+      "La documentación ofrece varios mecanismos para ver la contabilidad a una fecha pasada: los saldos por periodo, el histórico de saldos y los extractos con filtro de fechas. El cierre temporal prepara saldos de apertura del ejercicio siguiente y no es un mecanismo de consulta a fecha pasada.",
       "No se describe un informe específico adicional para ver la situación a una fecha pasada distinta de estos mecanismos. Si necesitas una foto exacta a 31-12, utiliza los saldos por periodo o los extractos filtrando hasta esa fecha."
      ],
      "campos": [
@@ -598,11 +582,6 @@
        "campo": "extractos con filtro de fechas",
        "significado": "Extracto de apuntes entre fechas",
        "ejemplo": "consulta"
-      },
-      {
-       "campo": "cierre temporal",
-       "significado": "Prepara saldos de apertura del ejercicio siguiente",
-       "ejemplo": "proceso repetible"
       }
      ],
      "pasos": [
@@ -690,7 +669,7 @@
     "Comprueba que la actualización de deuda en divisa genera asiento agrupado por proyecto, sección, cuenta y sistema.",
     "Localiza la regularización de ejercicio y verifica el asiento 99999998.",
     "Localiza el cierre temporal y comprueba la validación de ejercicio+1 activo.",
-    "Ejecuta o simula cierre temporal y comprueba en csaldos la inserción de periodos -1 y 0.",
+    "Lanza el simulacro del cierre temporal y consulta los saldos del ejercicio siguiente en los periodos -1 y 0.",
     "Localiza el cierre definitivo y revisa los asientos 99999999 y 0.",
     "Localiza la reapertura y comprueba que elimina asientos de cierre.",
     "Localiza paso a histórico y verifica que solo admite ejercicios cerrados.",
@@ -764,11 +743,6 @@
        "campo": "clasif",
        "significado": "BALANCE08 para ESF, CTEPIG08 para ER",
        "ejemplo": "BALANCE08"
-      },
-      {
-       "campo": "cctasal_agrs",
-       "significado": "Tabla de saldos agrupados que leen los reportes",
-       "ejemplo": "resultado"
       }
      ],
      "pasos": [
@@ -904,7 +878,7 @@
      ],
      "pasos": [
       {
-       "texto": "Localiza la documentación de Motor de consultas excel",
+       "texto": "Localiza Motor de consultas Excel dentro de Balances",
        "detalle": "Revisa las funciones VBA disponibles."
       },
       {
@@ -1040,12 +1014,12 @@
     "En Balances, localiza un informe y comprueba que muestra Saldo anterior, Importe deudor, Importe acreedor, Saldo del período y Saldo acumulado.",
     "Abre Por agrupación y localiza Estado de Situación Financiera y Estado de Resultados.",
     "Comprueba que el ESF usa clasif = 'BALANCE08' y el ER 'CTEPIG08'.",
-    "Revisa los parámetros de cctasal_agrs_genera y anótalos.",
+    "Abre Por agrupación, lanza el Estado de Situación Financiera y anota los parámetros que pide.",
     "En Cuentas anuales XLS, examina las tres hojas: estructura, Input y Datos.",
     "Localiza la pantalla Cuentas Anuales e Informes y comprueba que existe el botón Ejecutar y el histórico.",
     "En Motor de consultas Excel, localiza las funciones GetDecimalSeparator, AXIONAL y AX_Saldo.",
     "En Consolidación, revisa las siete etapas y localiza la eliminación de operaciones intra-grupo.",
-    "Anota la tabla cxlstemplate para plantillas de cuentas anuales."
+    "En Cuentas Anuales e Informes, abre un informe y localiza la plantilla XLS que tiene asociada."
    ],
    "problemas": [
     {
@@ -1058,7 +1032,7 @@
     },
     {
      "problema": "En el motor de consultas Excel no encuentras una pantalla para ejecutar las funciones.",
-     "solucion": "Las funciones VBA se usan dentro de hojas de cálculo; revisa la documentación de la página Motor de consultas excel."
+     "solucion": "Las funciones VBA se usan dentro de hojas de cálculo: revisa en Motor de consultas Excel qué hacen GetDecimalSeparator, AXIONAL y AX_Saldo."
     }
    ]
   }

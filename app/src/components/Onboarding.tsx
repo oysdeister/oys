@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { acciones, getProgreso, limpiaUsuario } from '../lib/progress';
 import { Espacio } from './shell/Espacio';
+import { MODULOS } from '../content';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
 
@@ -60,11 +61,11 @@ export function Onboarding() {
             Aprende Axional con las manos en el ERP.
           </motion.h1>
           <motion.p className="onb-lead" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={d(1.15)}>
-            Seis módulos, del maestro de artículos al asiento contable. Practicas aquí con capturas reales y luego lo haces de memoria en la demo.
+            {MODULOS.length} módulos, del maestro de artículos a los activos fijos. Practicas aquí con capturas reales y luego lo haces de memoria en la demo.
           </motion.p>
           <motion.ul className="onb-facts" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={d(1.35)}>
             <li>
-              <b>6</b> módulos
+              <b>{MODULOS.length}</b> módulos
             </li>
             <li>
               <b>6</b> simuladores

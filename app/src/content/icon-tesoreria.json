@@ -191,10 +191,10 @@
      ],
      "explicacion": [
       "El diario de movimientos se registra en ccajamov. Cada registro queda identificado por cajaid y asociado a caja, empresa, proyecto y sección contable. El estado inicial es Abierto (A).",
-      "Las líneas de movimiento (ccajalin) son las contrapartidas contables. Al registrar un movimiento, el sistema inserta automáticamente una línea de saldo inicial, modificable por el usuario, si el tipo de operación está parametrizado como saldo inicial.",
+      "Las líneas de movimiento (ccajalin) son las contrapartidas contables. Al registrar un movimiento, si existen saldo o movimientos anteriores, el sistema inserta automáticamente una línea de saldo inicial, modificable por el usuario, si el tipo de operación está parametrizado como saldo inicial.",
       "Los vales representan préstamos de dinero realizados con fondos de caja. Al cancelar un vale, su importe vuelve al saldo disponible.",
-      "La liquidación comprueba que la suma física de monedas y billetes coincide con el saldo que se desprende de líneas y vales. Si coinciden, actualiza ccajamov a Liquidado (L); si no, muestra el descuadre.",
-      "Por dentro: ccajamov contiene campos como codcaj, turno, fecmov, jusser, estado. ccajalin tiene tipo de operación, importe en divisa y estado de línea (Inicial o Definitivo)."
+      "Si la caja tiene activado el control de liquidación (ccajadef.indliq = 'S'), la liquidación comprueba que la suma física de monedas y billetes coincide con el saldo que se desprende de líneas y vales. Si coinciden, actualiza ccajamov a Liquidado (L); si no, muestra el descuadre.",
+      "Por dentro: ccajamov contiene campos como codcaj, turno, fecmov, jusser, estado. ccajalin tiene tipo de operación, importe en divisa y estado de línea (Inicial, Definitivo o D)."
      ],
      "campos": [
       {
@@ -234,8 +234,8 @@
       },
       {
        "campo": "Estado de línea",
-       "significado": "Inicial (saldo inicial) o Definitivo (movimiento normal).",
-       "ejemplo": "Definitivo"
+       "significado": "Inicial (saldo inicial), Definitivo (movimiento normal) o D (actualizado por liquidación).",
+       "ejemplo": "D"
       }
      ],
      "pasos": [
@@ -373,7 +373,6 @@
      "explicacion": [
       "El dashboard de cajas (PAGE 766) proporciona una visión general de la información asociada al módulo, tomando como referencia la empresa y el ejercicio seleccionados. Se basa en ccajamov y cempresa, y se restringe a la empresa indicada en $EMPCODE.",
       "Los informes de seguimiento (PAGE 767) incluyen Resumen de caja, Desglose de caja, Detalle de líneas, Detalle de vales, Detalle de cheques, Detalle de liquidaciones, Resumen y Contrapartidas.",
-      "Estos informes son de consulta y no generan asientos.",
       "Por dentro: el dashboard usa ccajamov.empcode y cempresa.empname."
      ],
      "campos": [
@@ -477,9 +476,9 @@
    ],
    "checklist": [
     "Abre Finanzas/Caja y comprueba que existen las opciones Visión General, Dashboard y KPI, Informes y seguimiento, Configuración, Registro y operativa y Cheques y Remesas.",
-    "Localiza el maestro ccajadef y comprueba que tiene los campos codcaj, nomcaj, empcode, ctafin, moneda, cuenta, etc.",
-    "Localiza ccajaope y verifica que los valores de tippag son E, I, T, D.",
-    "Localiza ccajamon y comprueba que hay billetes y monedas definidos.",
+    "Abre Definición de cajas y comprueba los campos código, nombre, empresa, cuenta financiera, moneda y cuenta contable.",
+    "Abre las operaciones de caja y comprueba que el tipo de pago admite E, I, T y D.",
+    "Abre las monedas admitidas de una caja y comprueba que hay billetes y monedas definidos.",
     "Abre Movimientos y comprueba que el estado inicial es A.",
     "En una línea de movimiento, comprueba que se genera automáticamente la línea de saldo inicial.",
     "Abre Vales y comprueba los campos Documento, Importe, Solicitante y Fecha prevista cancelación.",
@@ -580,7 +579,7 @@
      "explicacion": [
       "El registro de financiación (objeto cfinconh) da de alta cada préstamo, leasing o financiación intragrupo. Incluye grupo financiación, perfil, empresa, capital, interés anual nominal, cuotas, método de cálculo, modo de cálculo de intereses, fecha inicio de amortización y vencimiento.",
       "Los estados del contrato son Solicitado, Activo y Cerrado. Solicitado se puede modificar y borrar. Activo tiene cuadro de amortización y ya no se puede modificar ni borrar. Cerrado cancelado; cuotas pendientes pasan a Anuladas.",
-      "Las acciones sobre el contrato incluyen Activar contrato, Desactivar contrato, Cancelar contrato, Reactivar contrato, Copiar contrato, Modificar cuenta, Cambiar Tercero, Contabilizar automático / Contabilidad NO automática.",
+      "Las acciones sobre el contrato incluyen Activar contrato, Desactivar contrato, Cancelar contrato, Reactivar contrato, Copiar contrato, Modificar cuenta, Cambiar Tercero; los botones Contabilizar automático / Contabilidad NO automática aparecen como Nunca / Desactivados.",
       "Al activar el contrato se calcula el cuadro de amortización y pasa a Activo. Desactivar contrato no se ejecuta si alguna cuota tiene factura o tesorería.",
       "Por dentro: cfinconh guarda la cabecera de cada contrato."
      ],
@@ -749,7 +748,6 @@
      "ruta": [
       "Finanzas",
       "Tesorería",
-      "Maestros",
       "Financiación"
      ],
      "explicacion": [
@@ -757,6 +755,7 @@
       "Los tipos de financiación LP (cfincond) son plantillas de cada tipo de contrato. Definen clasificación, activo/pasivo, cuenta tercero, generación de tesorería, flujo capital e intereses, y tipo de factura. Generar tesorería Sí crea previsión de tesorería por cuota; No liquida por factura.",
       "Las cuentas de depósito/préstamo C.P. (tdepmovd) indican por empresa y cuenta bancaria las operaciones y flujos para depósitos/préstamos a corto plazo. Sin esta fila, Confirmar da «No especificada parametrización para la cuenta y empresa del registro actual».",
       "Los componentes de la financiación (cfincomp) vinculan contratos con inmovilizado. Los tipos de cambio (cfincamb) registran cambios por empresa, ejercicio, mes y divisa.",
+      "Los maestros de grupos de cuentas, tipos financiación LP y cuentas de depósito/préstamo C.P. se encuentran en Finanzas > Tesorería > Maestros > Financiación. Tipos de cambio está en Finanzas > Tesorería > Financiación > Tipos de cambio.",
       "Por dentro: cfinctas, cfincond, tdepmovd, cfincomp y cfincamb son las tablas de configuración."
      ],
      "campos": [
@@ -777,8 +776,8 @@
       },
       {
        "campo": "Tipo financiación",
-       "significado": "Préstamo, Leasing, Interempresa u Otros.",
-       "ejemplo": "Préstamo"
+       "significado": "Código del tipo de financiación (por ejemplo, LESA).",
+       "ejemplo": "LESA"
       },
       {
        "campo": "Generar tesorería",
@@ -845,11 +844,10 @@
      "paraQueSirve": "Gestiona préstamos y depósitos entre cuentas con liquidación de intereses, y define líneas financieras asignables a avales, remesas y condiciones de crédito.",
      "ruta": [
       "Finanzas",
-      "Tesorería",
-      "Financiación",
-      "Préstamos y depósitos"
+      "Tesorería"
      ],
      "explicacion": [
+      "Los préstamos y depósitos a corto plazo se encuentran en Finanzas > Tesorería > Financiación > Préstamos y depósitos. Las líneas financieras se acceden desde Finanzas > Tesorería > Líneas financieras.",
       "Los préstamos y depósitos a corto plazo permiten definir y crear emisión de préstamos y depósitos entre cuentas, con gestión de liquidación de intereses y devolución del importe.",
       "Al confirmar una operación se generan cinco movimientos de tesorería: dos de pago, dos de cobro y uno de cobro/pago de intereses. Mientras los movimientos no estén conciliados es posible anular mediante el botón Anular.",
       "Las fórmulas de intereses son: Depósito → (Importe * % interés * número de días) / 36500; Préstamo → (Importe * % interés * número de días) / 36000.",
@@ -869,7 +867,7 @@
       },
       {
        "campo": "Cuenta salida",
-       "significado": "Cuenta financiera de salida de fondos.",
+       "significado": "Cuenta financiera sobre la que se realiza la operación; en préstamo es prestataria y abona intereses.",
        "ejemplo": "código de cuenta"
       },
       {
@@ -884,8 +882,8 @@
       },
       {
        "campo": "Devengo de interés",
-       "significado": "Fecha de devengo de intereses.",
-       "ejemplo": "fecha"
+       "significado": "Modalidad de devengo de intereses: Anticipados o Vencidos.",
+       "ejemplo": "Anticipados"
       },
       {
        "campo": "Cuenta financiera",
@@ -1257,8 +1255,7 @@
      ],
      "explicacion": [
       "Dentro de Informes de Posición dispones de varios informes: posición de flujos financieros por tramo de días, posición de fondos para grupos de cuentas y entidades, posición de agrupaciones de cuentas y entidades financieras, flujos financieros por mes, saldos de cuentas financieras y situación global por entidad y cuentas.",
-      "El informe de posición por tramo de días proyecta la liquidez de una empresa distribuyendo el saldo inicial de tesorería y los cobros y pagos previstos en doce intervalos temporales sucesivos.",
-      "Estos informes son de consulta y no generan asientos."
+      "El informe de posición por tramo de días proyecta la liquidez de una empresa distribuyendo el saldo inicial de tesorería y los cobros y pagos previstos en doce intervalos temporales sucesivos."
      ],
      "campos": [
       {
@@ -1330,15 +1327,15 @@
      "explicacion": "Cancelar elimina las cuotas pendientes de contabilización, dejando solo las debitadas por conciliación."
     },
     {
-     "pregunta": "¿Qué determina si una operación de cartera usa contabilidad o tesorería?",
+     "pregunta": "¿Con qué cuenta genera el sistema los apuntes y los movimientos de tesorería de las operaciones de cartera de valores con cargo o abono bancario?",
      "opciones": [
-      "El número de títulos",
-      "La cuenta financiera de la tipología de cartera",
-      "El tipo de valor",
-      "El mercado financiero"
+      "Con la cuenta financiera indicada en el tipo de cartera",
+      "Con la cuenta del mercado financiero",
+      "Con la cuenta del tercero emisor",
+      "Con una cuenta puente fija"
      ],
-     "correcta": 1,
-     "explicacion": "La Cuenta financiera de la tipología de cartera determina contabilidad o tesorería."
+     "correcta": 0,
+     "explicacion": "La cuenta financiera del tipo de cartera se usa para los apuntes (con su cuenta contable asociada) y para los movimientos de tesorería a corto plazo."
     },
     {
      "pregunta": "¿Cuántos intervalos temporales utiliza el informe de posición por tramo de días?",

@@ -44,7 +44,7 @@ export const META: Record<string, { color: string; icono: string; corto: string 
   ventas: { color: '#e0708a', icono: 'ventas', corto: 'Ventas' },
   asientos: { color: '#8a7be0', icono: 'asiento', corto: 'Asientos' },
   carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Carteras' },
-  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad general' },
+  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad' },
   'icon-cartera': { color: '#2fae8f', icono: 'cobros', corto: 'Cobros y pagos' },
   'icon-impuestos': { color: '#d9824b', icono: 'impuestos', corto: 'Impuestos' },
   'icon-activos': { color: '#b06fc4', icono: 'activos', corto: 'Activos fijos' },

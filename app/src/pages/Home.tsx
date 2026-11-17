@@ -476,7 +476,7 @@ export default function Home() {
             Aprende Axional haciéndolo
           </motion.h1>
           <motion.p className="po3-lead" {...aparece(1.25)}>
-            Seis módulos, del tercero al cobro. Entiendes la idea, la practicas sobre pantallas reales del ERP y la repites en la demo.
+            {MODULOS.length} módulos, del tercero a los activos fijos. Entiendes la idea, la practicas sobre pantallas reales del ERP y la repites en la demo.
           </motion.p>
           <motion.div className="po3-ctas" {...aparece(1.4)}>
             {continuar ? (

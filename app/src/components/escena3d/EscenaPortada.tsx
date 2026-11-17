@@ -573,9 +573,11 @@ function Planeta3D({
       const media = (ancho ?? 0) / 2 + 6;
       const x = Math.max(media, Math.min(st.size.width - media, ((V1.x + 1) / 2) * st.size.width));
       const y = ((1 - V1.y) / 2) * st.size.height;
-      el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, 0)`;
+      // Con 10 módulos las etiquetas del fondo se pisan: las de detrás, más pequeñas y tenues
+      const fondo = sobre || activo ? 1 : (Math.sin(ang) + 1) / 2;
+      el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, 0) scale(${(0.8 + 0.2 * fondo).toFixed(3)})`;
       el.style.zIndex = String(Math.round((1 - V1.z) * 1000) + 10);
-      el.style.opacity = String(clamp01(reducir ? 1 : (t - 1.2 - i * 0.13) / 0.5));
+      el.style.opacity = String(clamp01(reducir ? 1 : (t - 1.2 - i * 0.13) / 0.5) * (0.6 + 0.4 * fondo));
     }
   });
 
@@ -704,7 +706,7 @@ function Mundo({ planetas, global, activo, reducir, centrada, onIr, movil, apunt
   }, [clock]);
   const px = Math.min(gl.getPixelRatio(), 2);
   // En pantallas estrechas la órbita se ve más de frente: los planetas no tapan el %
-  const elev = centrada && size.width < 600 ? 1.02 : ELEV;
+  const elev = centrada ? (size.width < 600 ? 1.02 : 0.9) : ELEV;
 
   // Sin animación (frameloop «demand»): unos cuantos fotogramas al montar para encuadrar cámara y etiquetas
   useEffect(() => {

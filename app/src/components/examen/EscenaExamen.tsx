@@ -1,16 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { META, ORDEN } from '../../content';
 
 /* =====================================================================
    Escena 3D de la portada del examen: un núcleo de cristal con tres
    órbitas de neón. En las órbitas viajan las preguntas (satélites) y los
-   seis módulos (planetas). La cámara llega desde el fondo del espacio.
+   módulos (planetas). La cámara llega desde el fondo del espacio.
    Ligera: sin postproceso (el brillo son sprites aditivos) y con fondo
    transparente para que se vea el cielo de la tarjeta.
    ===================================================================== */
 
-const MODULOS_COL = ['#4fbfa5', '#6c8fd6', '#f2a93b', '#e0708a', '#8a7be0', '#3fa7c9'];
+const MODULOS_COL = ORDEN.map((id) => META[id]?.color ?? '#4fbfa5');
 const INTRO = 2.4;
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const easeOut = (t: number) => 1 - Math.pow(1 - clamp01(t), 3);
@@ -136,7 +137,7 @@ function Mundo({ reducir, apunta }: { reducir: boolean; apunta: { current: { x: 
     () => [
       { r: 2.35, color: '#5ff0d2', giro: [0.95, 0.15, 0.35] as [number, number, number], velocidad: 0.22, cuerpos: Array.from({ length: 8 }, (_, k) => ({ color: k % 2 ? '#bffcf0' : '#5ff0d2', tam: 0.055, fase: (k / 8) * Math.PI * 2 })) },
       { r: 3.25, color: '#8b7bff', giro: [1.18, -0.42, -0.5] as [number, number, number], velocidad: -0.14, cuerpos: Array.from({ length: 12 }, (_, k) => ({ color: k % 3 ? '#c9c0ff' : '#6fe9ff', tam: 0.05, fase: (k / 12) * Math.PI * 2 + 0.2 })) },
-      { r: 4.3, color: '#6fe9ff', giro: [0.82, 0.3, 0.7] as [number, number, number], velocidad: 0.07, cuerpos: [...MODULOS_COL.map((c, k) => ({ color: c, tam: 0.16, fase: (k / 6) * Math.PI * 2 })), ...Array.from({ length: 10 }, (_, k) => ({ color: '#f6b65a', tam: 0.04, fase: (k / 10) * Math.PI * 2 + 0.3 }))] },
+      { r: 4.3, color: '#6fe9ff', giro: [0.82, 0.3, 0.7] as [number, number, number], velocidad: 0.07, cuerpos: [...MODULOS_COL.map((c, k) => ({ color: c, tam: 0.16, fase: (k / MODULOS_COL.length) * Math.PI * 2 })), ...Array.from({ length: 10 }, (_, k) => ({ color: '#f6b65a', tam: 0.04, fase: (k / 10) * Math.PI * 2 + 0.3 }))] },
     ],
     [],
   );

@@ -164,6 +164,31 @@
        "campo": "Sección",
        "significado": "Código de sección contable.",
        "ejemplo": "código de sección"
+      },
+      {
+       "campo": "Partida",
+       "significado": "Código de partida contable.",
+       "ejemplo": "código de partida"
+      },
+      {
+       "campo": "Cuenta explotación",
+       "significado": "Cuenta de explotación asociada al elemento.",
+       "ejemplo": "código de cuenta"
+      },
+      {
+       "campo": "Centro",
+       "significado": "Centro de coste al que se imputa el elemento.",
+       "ejemplo": "código de centro"
+      },
+      {
+       "campo": "Localización",
+       "significado": "Localización física asignada al elemento.",
+       "ejemplo": "código y descripción"
+      },
+      {
+       "campo": "Sublocalización",
+       "significado": "Sublocalización física dentro de la localización.",
+       "ejemplo": "código y descripción"
       }
      ],
      "pasos": [
@@ -189,13 +214,13 @@
      "ruta": [
       "Finanzas",
       "Activos permanentes",
-      "Configuración"
+      "Maestros"
      ],
      "explicacion": [
-      "La configuración inicial incluye grupos de inmovilizado, grupos de cuentas contables, grupos fiscales, tabla oficial de amortizaciones fiscales, sistemas de amortización especiales, localizaciones y sublocalizaciones.",
+      "La configuración inicial incluye grupos de inmovilizado, grupos de cuentas contables, grupos fiscales, tabla oficial de amortizaciones fiscales, sistemas de amortización especiales, localizaciones y sublocalizaciones. Los grupos y cuentas se configuran en Maestro / Cuentas, y los grupos fiscales y tablas en Tablas fiscales / Grupos.",
       "Desde los grupos de inmovilizado se accede a la consulta de los bienes asociados. El grupo contable del elemento se utiliza en los procesos de contabilización; el grupo contable del bien es informativo y se propone en altas de elementos.",
       "La tabla oficial de amortizaciones fiscales registra los porcentajes mínimo y máximo por grupo fiscal; el sistema limita los valores de amortización según esos porcentajes.",
-      "Por dentro: se utilizan tablas como cinmgrps, cinmctas, cinmfgrp, cinmftab, cinmlopr y cinmlosu, junto con maestros como FIN__actfij_grp_cont_maestro, cod_fisc_maestro, sist_amor_esp_maestro, loc_fis_inm_maestro y subloc_maestro."
+      "Por dentro: se utilizan tablas como cinmgrps, cinmctas, cinmfgrp, cinmftab, cinmlopr y cinmlosu, junto con maestros como Grupos contables, Códigos fiscales, Sistemas de amortización especiales, Localizaciones y Sublocalizaciones."
      ],
      "campos": [
       {
@@ -220,7 +245,7 @@
       },
       {
        "campo": "Sistema de amortización especial",
-       "significado": "Sistemas definidos por el usuario que no son lineal ni decreciente.",
+       "significado": "Sistemas especiales definidos por el usuario que no se ajustan a los generalmente admitidos.",
        "ejemplo": "código de sistema"
       },
       {
@@ -266,7 +291,7 @@
      "explicacion": [
       "Los componentes son las unidades de información mínimas para el control del inmovilizado. Sus registros pueden expresar las adquisiciones factura a factura y el control económico recae en este nivel.",
       "La documentación no detalla campos literales para el alta de componentes; se describe como unidad mínima y se muestra su formulario en captura.",
-      "Por dentro: la tabla es cinmcomp, con procesos asociados como bajas, ventas, traspasos y desactivaciones."
+      "Por dentro: la tabla es cinmcomp, con procesos asociados como bajas, ventas y desactivaciones; los traspasos documentados son de elementos."
      ],
      "campos": [],
      "pasos": [
@@ -329,15 +354,15 @@
      "explicacion": "El elemento concentra la práctica totalidad de la información contable y de costes."
     },
     {
-     "pregunta": "¿Qué significa que un elemento no puede pertenecer a varios bienes?",
+     "pregunta": "¿Qué relación hay entre bienes y elementos de inmovilizado?",
      "opciones": [
-      "No puede pertenecer a varios bienes",
-      "Puede estar sin bien",
-      "Solo puede estar en dos bienes",
-      "Puede pertenecer a varios bienes"
+      "Un bien puede tener muchos elementos, pero cada elemento pertenece a un solo bien",
+      "Un elemento puede pertenecer a varios bienes",
+      "Cada bien tiene exactamente un elemento",
+      "Bienes y elementos no están relacionados"
      ],
      "correcta": 0,
-     "explicacion": "Cada elemento está vinculado a un único bien."
+     "explicacion": "Se pueden crear muchos elementos para un bien, pero un elemento no puede pertenecer a varios bienes."
     }
    ],
    "checklist": [
@@ -347,7 +372,7 @@
     "Navega a la configuración de cuentas contables de inmovilizado y anota los grupos contables disponibles.",
     "Revisa la tabla oficial de amortizaciones fiscales y localiza los porcentajes mínimo y máximo para un grupo fiscal.",
     "Abre un formulario de componente y observa las pestañas o bloques que muestra.",
-    "Comprueba que la ruta de menú para grupos es «Finanzas / Activos permanentes / Maestros / Grupos».",
+    "Abre un bien y comprueba que tiene varios elementos asociados y que cada elemento pertenece solo a ese bien.",
     "Localiza el campo «Localización» en la pantalla de elementos y comprueba que referencia a la tabla de localizaciones físicas.",
     "Verifica que en la definición de bien existe el campo «Serie inmovilizado».",
     "Consulta la visión general de activos y confirma que muestra la jerarquía bien-elemento-componente."
@@ -574,8 +599,8 @@
      ],
      "explicacion": [
       "Desde el detalle de componentes, en la parte inferior se muestra el detalle de valores de amortización; ahí puedes realizar baja total, parcial o venta.",
-      "Baja parcial: genera dos apuntes para amortización pendiente y divide el componente en dos. Baja total: genera dos apuntes de amortización pendiente y tres apuntes para retroceder valor de adquisición y amortización acumulada. Venta: contabiliza amortización pendiente, la venta en cuenta indicada y la diferencia entre venta y VNC como beneficio o pérdida.",
-      "La desactivación temporal no genera apuntes contables. Fuera de servicio genera un apunte contra Pérdidas procedentes del inmovilizado (671).",
+      "Baja parcial: genera dos apuntes para amortización pendiente, si existe amortización pendiente hasta la fecha, y divide el componente en dos. Baja total: genera dos apuntes de amortización pendiente, si existe amortización pendiente hasta la fecha, y tres apuntes para retroceder valor de adquisición y amortización acumulada. Venta: contabiliza amortización pendiente, si existe amortización pendiente hasta la fecha, la venta en cuenta indicada y la diferencia entre venta y VNC como beneficio o pérdida.",
+      "La desactivación temporal no genera apuntes contables. Fuera de servicio genera un apunte contra Pérdidas procedentes del inmovilizado (671), salvo puestas en funcionamiento, que no generan apuntes.",
       "Los asientos se generan según las Normas de Registro y Valoración (NRV)."
      ],
      "campos": [
@@ -652,7 +677,8 @@
      ],
      "explicacion": [
       "El sistema proporciona informes estándar de comprobación, amortización, situación, control de integridad y análisis de desviaciones.",
-      "Desde cada informe se puede navegar al siguiente estrato. Los informes de situación muestran valores de inventario, residual, neto, amortización acumulada, agrupados por bien, elemento, componente o proyecto.",
+      "Los informes de comprobación muestran valores de inventario, residual, neto, amortización acumulada y estado, agrupados por bien, elemento, componente o proyecto, y permiten navegar al siguiente estrato.",
+      "Los informes de situación muestran el estado de amortizaciones.",
       "No se requiere intervención manual: no es posible insertar, modificar o borrar registros."
      ],
      "campos": [
@@ -713,7 +739,7 @@
    ],
    "test": [
     {
-     "pregunta": "¿Qué sistemas de amortización vienen citados literalmente en la documentación?",
+     "pregunta": "Además de los que defina el usuario, ¿qué sistemas de amortización admite el campo Sistema de los valores de un elemento?",
      "opciones": [
       "L Lineal, D Decreciente y S Sin amortización",
       "L Lineal y D Decreciente",
@@ -721,7 +747,7 @@
       "Solo D Decreciente"
      ],
      "correcta": 1,
-     "explicacion": "La ficha cita los valores L (Lineal) y D (Decreciente) para el campo «Sistema»."
+     "explicacion": "El campo Sistema admite L Lineal y D Decreciente (coeficiente fijo), además de cualquier sistema definido por el usuario."
     },
     {
      "pregunta": "¿Qué acción genera un asiento de signo inverso?",
@@ -772,7 +798,7 @@
     "Abre la pantalla de valores por elemento y comprueba que el campo «Sistema» admite los valores L y D.",
     "Localiza la columna «Amortización inicial» y lee su descripción.",
     "Abre el proceso de contabilización de amortizaciones y verifica que pide período, proyecto y sistemas contables.",
-    "Comprueba en la documentación qué validación exige el ejercicio contable para contabilizar.",
+    "Abre el proceso de contabilización de amortizaciones y localiza las acciones Contabilizar y Descontabilizar.",
     "Revisa el proceso de traspaso y anota qué códigos permite cambiar.",
     "En el cambio de amortización, localiza la nota que indica que no genera asientos.",
     "Abre el formulario de división y comprueba que pide serial, tipo, número, valor y serie (por defecto «AUTO»).",

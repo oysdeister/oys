@@ -127,4 +127,72 @@ export const FICHAS: Record<string, FichaModulo> = {
       { t: 'Asiento', d: 'Cada cambio de estado deja su asiento contable.', ej: 'Efecto en CO = cobrado' },
     ],
   },
+  'icon-contabilidad': {
+    frase: 'Entiendes el diario, los periodos y las plantillas, y localizas los procesos de cierre, balances y consolidación.',
+    recorrido: 'Del diario a la consolidación',
+    aprendes: [
+      'Navegar por el diario, los periodos contables y las plantillas de contabilización.',
+      'Ejecutar procesos periódicos de cierre y apertura y consultar la contabilidad a una fecha pasada.',
+      'Generar balances y trabajar con cuentas anuales XLS, el motor de consultas Excel y la consolidación.',
+    ],
+    circuito: [
+      { t: 'Diario y periodos', d: 'El diario orientado al apunte y la configuración del ejercicio con doce periodos contables y de impuestos.', ej: 'Diario anual, Diario resumen, Diario por asiento' },
+      { t: 'Plantillas de contabilización', d: 'Libros maestros XLS que generan apuntes, impuestos, cartera y costes.', ej: 'capuntes, cimpcont, cefectos' },
+      { t: 'Procesos periódicos', d: 'Regularización, cierre temporal, cierre definitivo y otros procesos sobre el ejercicio.', ej: 'asiento 99999998' },
+      { t: 'Cierre y apertura', d: 'El cierre definitivo genera asiento de cierre y apertura; la reapertura los elimina.', ej: 'asientos 99999999 y 0' },
+      { t: 'Balances', d: 'Balances de saldos y estados financieros por agrupación con cuentas anuales XLS.', ej: 'BALANCE08 · CTEPIG08' },
+      { t: 'Consolidación', d: 'Siete etapas para combinar estados financieros de varias empresas del grupo.', ej: 'eliminación de operaciones intra-grupo' },
+    ],
+  },
+  'icon-cartera': {
+    frase: 'Gestionas los efectos a cobrar y a pagar desde la factura hasta el asiento y el histórico.',
+    recorrido: 'De la factura al histórico',
+    aprendes: [
+      'Configurar estados, acciones y enlaces contables de la cartera.',
+      'Cerrar gestiones y entender qué actualiza en efectos, histórico y tesorería.',
+      'Usar anticipos, reclasificaciones y remesas, y reconstruir la cartera a una fecha pasada.',
+    ],
+    circuito: [
+      { t: 'Factura', d: 'Al contabilizar la factura nacen efectos en cartera.' },
+      { t: 'Efecto pendiente', d: 'El estado del efecto decide si se puede modificar o gestionar.', ej: 'cefectos · estado' },
+      { t: 'Gestión o remesa', d: 'Agrupas efectos para aplicar una acción; en remesas puedes evolucionar o retroceder.', ej: 'cefecges_pcs · cefecges_det' },
+      { t: 'Cierre', d: 'Ejecuta el cambio de estado y genera asiento si la acción tiene plantilla contable.', ej: 'cefeacti.codast · cefeplah.codpla' },
+      { t: 'Asiento', d: 'Actualiza cefectos, escribe histórico y crea movimientos de tesorería si corresponde.', ej: 'capuntes40 · actlog 0, 1, 2' },
+      { t: 'Histórico', d: 'Cada cambio queda en cefechis; sirve para reaperturas y consulta a fecha pasada.', ej: 'cefechis · cefecges_det' },
+    ],
+  },
+  'icon-impuestos': {
+    frase: 'Identificas los maestros fiscales y sigues el IVA de una línea desde la zona fiscal hasta la declaración.',
+    recorrido: 'De la zona fiscal a la declaración',
+    aprendes: [
+      'Entender los maestros que intervienen en el cálculo del impuesto de una línea.',
+      'Generar y consultar el registro fiscal con IVA, prorrata e inversión del sujeto pasivo.',
+      'Preparar la liquidación del IVA y ejecutar los procesos de impuestos y E-Reporting/SII.',
+    ],
+    circuito: [
+      { t: 'Zona fiscal', d: 'Sitúa territorialmente a la empresa y al tercero y aporta contexto de país e INTRASTAT.', ej: 'ESCO · zone_intrast 0 o 1 · zone_taiter 1' },
+      { t: 'Clave fiscal', d: 'Clasifica el artículo, el tercero o el documento y alimenta el motor fiscal.', ej: 'BOR · RECC · RREQ · REBU · REAGYP' },
+      { t: 'Tipo de impuesto', d: 'Define porcentaje, base de cálculo, deducibilidad, prorrata y cuentas contables.', ej: 'ESG · type_porcen 21 · type_bascal 0' },
+      { t: 'Línea del documento', d: 'El motor combina zonas y claves y devuelve operación y tipo de impuesto.', ej: 'CLBC · ESG' },
+      { t: 'Registro fiscal', d: 'Centraliza cabecera y líneas por documento; guarda naturaleza, libro y rectificaciones.', ej: 'taxh_natfac C/V · taxh_tipdoc F1' },
+      { t: 'Declaración', d: 'Liquidas el IVA con los modelos y ejecutas los procesos de impuestos.', ej: 'Modelo 303 · Modelo 390 · Modelo 349' },
+    ],
+  },
+  'icon-activos': {
+    frase: 'Organizas el inmovilizado en bienes, elementos y componentes y registras amortizaciones, traspasos, bajas y ventas.',
+    recorrido: 'De los grupos y cuentas a la baja o venta',
+    aprendes: [
+      'Configurar grupos, cuentas y tablas fiscales del inmovilizado.',
+      'Dar de alta bienes, elementos y componentes con su información contable y de costes.',
+      'Registrar amortizaciones, traspasos, bajas y ventas, y consultar informes.',
+    ],
+    circuito: [
+      { t: 'Grupos y cuentas', d: 'Maestros previos de grupos de inmovilizado, cuentas contables y tablas fiscales.', ej: 'cinmgrps · cinmctas · cinmftab' },
+      { t: 'Bien', d: 'Unidad genérica que agrupa elementos y define clasificaciones comunes.', ej: 'cinmhead' },
+      { t: 'Elemento', d: 'Nivel con la información contable y de costes: proyecto, sección, centro y localización.', ej: 'cinmelem · Presupuesto · Proyecto' },
+      { t: 'Componente', d: 'Unidad mínima de control económico; soporta adquisiciones factura a factura.', ej: 'cinmcomp' },
+      { t: 'Amortización', d: 'Calculas, contabilizas o descontabilizas la amortización del período.', ej: 'Sistema L Lineal · D Decreciente' },
+      { t: 'Baja o venta', d: 'Das de baja total o parcial, vendes o desactivas temporalmente el activo.', ej: 'Baja total · Venta · Fuera de servicio' },
+    ],
+  },
 };

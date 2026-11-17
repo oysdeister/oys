@@ -37,7 +37,7 @@
       {
        "campo": "Remesa",
        "significado": "Indica si el efecto está remesado y el número de remesa.",
-       "ejemplo": "Pendiente, remesado, cobrado o pagado"
+       "ejemplo": "número de remesa"
       },
       {
        "campo": "Tercero",
@@ -123,12 +123,12 @@
       },
       {
        "campo": "Días post-pago",
-       "significado": "Días posteriores al pago para considerar el efecto como pagado.",
+       "significado": "Es el número de días de ajuste que se añade al cálculo de la fecha de operación.",
        "ejemplo": "número de días"
       },
       {
        "campo": "Días decalaje",
-       "significado": "Días de decalaje entre la fecha de operación y la fecha de efecto.",
+       "significado": "Código de medio de pago según estándar 4661 de UN; no a fecha de efecto.",
        "ejemplo": "número de días"
       }
      ],
@@ -637,15 +637,15 @@
      "explicacion": "El asiento se genera si la acción tiene cefeacti.codast y una plantilla contable asociada."
     },
     {
-     "pregunta": "¿Qué hoja de la plantilla contable se reserva a los gastos bancarios?",
+     "pregunta": "Al reabrir una gestión de cartera cerrada, ¿de dónde se restauran las deudas?",
      "opciones": [
-      "capuntes60",
-      "capuntes20",
-      "capuntes10",
-      "capuntes40"
+      "Del histórico de efectos cefechis",
+      "De la remesa original",
+      "Del asiento anulado",
+      "No se restauran: se crean efectos nuevos"
      ],
-     "correcta": 3,
-     "explicacion": "La hoja capuntes40 se reserva a los gastos bancarios y solo se evalúa si la gestión tiene gastos."
+     "correcta": 0,
+     "explicacion": "La reapertura borra el asiento, restaura las deudas desde el histórico cefechis, borra los movimientos de tesorería de la gestión y la deja Abierta."
     },
     {
      "pregunta": "¿Cuándo se actualiza cefectos.feccon en el cierre?",
@@ -671,16 +671,16 @@
     }
    ],
    "checklist": [
-    "Abre «Gestiones sobre la cartera de efectos» y localiza la cabecera cefecges_pcs con campo pcs_estado.",
-    "Comprueba que pcs_estado solo admite A y C.",
+    "Abre «Gestiones sobre la cartera de efectos» y localiza el estado de la gestión en la cabecera.",
+    "Comprueba que el estado de la gestión solo puede ser A (Abierta) o C (Cerrada).",
     "Usa el selector de efectos y verifica que limita a 1.000 efectos en inserción.",
     "Localiza el botón «Cerrar» y anota la función que ejecuta.",
-    "Revisa si una acción tiene cefeacti.codast.",
-    "Localiza la hoja capuntes40 en un enlace contable.",
-    "Comprueba que el error cefecges_estado_ava_06 aparece con diferencias de cambio sin asiento.",
+    "Abre una acción de cartera y comprueba si tiene informado el código de asiento.",
+    "Abre una gestión cerrada de una acción con asiento y localiza el asiento que ha generado.",
+    "En una acción, localiza el indicador de diferencias de cambio y comprueba que la acción tiene asiento asociado.",
     "Abre «Visión general» de remesas y localiza los botones «Evolucionar estado» y «Retroceder estado».",
-    "Verifica que cremesas.estrem admite A y C.",
-    "Anota qué ocurre al retroceder con periodo cerrado."
+    "Comprueba que el estado de una remesa solo puede ser Abierta o Cerrada.",
+    "En una remesa contabilizada, localiza «Retroceder estado» y anota si su periodo contable está abierto (se anulan los apuntes) o cerrado (se genera un asiento de compensación)."
    ],
    "problemas": [
     {
@@ -721,9 +721,9 @@
      ],
      "explicacion": [
       "El proceso de anticipos crea dos efectos: numefe = 1 positivo y numefe = 2 negativo. El positivo materializa el cobro o pago inmediato y su liquidación genera el asiento contable correspondiente; el negativo queda pendiente de aplicarse contra la factura futura.",
-      "El anticipo se registra en cefectos_anticipo_gen con campos como seqno, clase, tercero, cuenta, fecha, fecven, docser, empcode, proyec, seccio, tipefe, sistem, moneda, cambio, camope, impdiv, codper, numban, tipdoc, numero1, numero2 y notas.",
+      "El anticipo se registra en cefectos_anticipo_gen con campos como seqno, clase, tercer, cuenta, fecha, fecven, docser, empcode, proyec, seccio, tipefe, sistem, moneda, cambio, camope, impdiv, codper, numban, tipdoc, numero1, numero2 y notas.",
       "La reversión solo es posible si ninguno de los dos efectos ha evolucionado: ambos deben tener opeant = 0. La acción «Crear anticipo» solo se activa cuando numero1 y numero2 están vacíos. «Retroceder anticipo» o «Eliminar Efectos» permiten revertir.",
-      "Por dentro: cefectos_anticipo_gen genera filas en cefectos. El campo camope: 0 multiplica tipo de cambio, 1 divide. domban = 'T' exige domiciliación bancaria. La reversión elimina físicamente las filas de cefectos, pero queda constancia en el histórico cefechis."
+      "Por dentro: cefectos_anticipo_gen genera filas en cefectos. El campo camope: 0 multiplica tipo de cambio, 1 divide. ctipoefe.domban = 'T' exige domiciliación bancaria. La reversión elimina físicamente las filas de cefectos, pero queda constancia en el histórico cefechis."
      ],
      "campos": [
       {
@@ -759,7 +759,7 @@
        "imagen": "icon-cartera-007.webp"
       },
       {
-       "texto": "Localiza los botones «Crear anticipo» y «Retroceder anticipo»",
+       "texto": "Localiza los botones «Generar Efectos» y «Eliminar Efectos»",
        "detalle": "Comprueba que solo se activan según el estado de numero1 y numero2.",
        "imagen": "icon-cartera-008.webp"
       },
@@ -845,10 +845,18 @@
      "titulo": "Cambios de titularidad y alinear vencimientos",
      "paraQueSirve": "Reasigna deudas de pago a otro tercero y agrupa vencimientos de un mismo tercero.",
      "ruta": [
-      "Finanzas",
-      "Cobros y pagos",
-      "Procesos",
-      "Cambios de titularidad"
+      [
+       "Finanzas",
+       "Cobros y pagos",
+       "Procesos",
+       "Cambios de titularidad"
+      ],
+      [
+       "Finanzas",
+       "Cobros y pagos",
+       "Procesos",
+       "Alinear vencimientos"
+      ]
      ],
      "explicacion": [
       "El cambio de titularidad reasigna deudas a pagar desde un tercero titular hacia un sustituto, típicamente por embargo. Usa las tablas cefetith y cefetitl. Solo opera sobre efectos de pago clase = P.",
@@ -914,7 +922,7 @@
       "Gestión de Recobros"
      ],
      "explicacion": [
-      "La página «Gestión de Recobros» controla facturas pendientes, conflictos y agenda de gestiones. Los estados de gestión son abierto o cerrado; los conflictos de efecto pueden ser No conflicto, Pendiente o Solucionado.",
+      "La página «Gestión de Recobros» controla facturas pendientes, conflictos y agenda de gestiones. Los estados de gestión son abierto o cerrado; el estado del conflicto puede ser No conflicto, Pendiente o Solucionado.",
       "Los campos incluyen Empresa, Estado, Gestor, Fecha próxima gestión, Cliente, Primera gestión, Última gestión, Conflictos y Agenda.",
       "En los maestros de Recobros se definen Medios de comunicación, Grupo de clientes y Relaciones entre gestores y clientes.",
       "Reglas: un cliente solo puede tener un gestor; un gestor puede tener varios clientes. Una gestión solo puede ser modificada por el usuario que la creó durante el día de creación; las gestiones anteriores a hoy no se pueden modificar.",
@@ -937,7 +945,7 @@
        "ejemplo": "código"
       },
       {
-       "campo": "Conflicto",
+       "campo": "Estado del conflicto",
        "significado": "No conflicto, Pendiente o Solucionado.",
        "ejemplo": "Pendiente"
       },
@@ -1093,15 +1101,15 @@
    ],
    "checklist": [
     "Abre «Anticipos» y comprueba que existen campos numero1 y numero2.",
-    "Verifica que la reversión de un anticipo exige que ambos efectos tengan opeant = 0.",
+    "En un anticipo, comprueba que la reversión solo está disponible si ninguno de sus dos efectos ha evolucionado en cartera.",
     "Abre «Reclasificaciones» y localiza la validación de suma de importes cero.",
-    "En «Inversión de reclasificación», comprueba que se crea una nueva cabecera con pcs_seqori.",
+    "En «Inversión de reclasificación», comprueba que se crea una reclasificación nueva enlazada a la original, que no se modifica.",
     "Abre «Cambios de titularidad» y comprueba que solo opera sobre clase P.",
-    "En «Alinear vencimientos», comprueba que se genera una gestión con pcs_tipgen 0.",
+    "En «Alinear vencimientos», comprueba que se genera una gestión de cartera por grupo y que el sistema la avanza automáticamente.",
     "Abre «Gestión de Recobros» y comprueba los estados de conflicto No conflicto, Pendiente, Solucionado.",
-    "Consulta la tabla cefechis y comprueba que hay histórico de efectos.",
-    "Localiza en cefecges_pcs el campo pcs_fecpro.",
-    "Revisa cefecges_det y anota los campos det_import, det_cuenta."
+    "Tras cerrar una gestión, consulta el histórico de efectos y comprueba que hay una línea por cada efecto modificado.",
+    "En la cabecera de una gestión, localiza la fecha de proceso.",
+    "Abre el detalle de una gestión y anota el importe y la cuenta de cada efecto."
    ],
    "problemas": [
     {
