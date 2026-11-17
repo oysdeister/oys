@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Glosa } from '../Glosario';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { Ejercicio } from '../../types';
 import { conIni } from '../../lib/texto';
@@ -78,7 +79,7 @@ export function Concepto({ ej, ini, modulo, onGuiado }: { ej: Ejercicio; ini: st
         </h2>
         {primero && (
           <motion.p className="lead-p concepto-lead" {...r(0)}>
-            {t(primero)}
+            <Glosa>{t(primero)}</Glosa>
           </motion.p>
         )}
         <Ideas parrafos={resto} ini={ini} />

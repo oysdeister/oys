@@ -2,14 +2,14 @@
   "id": "maestros",
   "titulo": "Mantenimiento de tablas maestras",
   "sesion": "Sesión 2",
-  "resumen": "Aprendes a dar de alta y mantener los datos básicos que usan todos los documentos del ERP: el tercero con su cuenta contable y su forma de cobro, artículos, almacenes, cuentas financieras y logísticas. Terminas registrando una entrada de stock y comprobándola en el Stock global y en el kardex.",
+  "resumen": "Aprendes a leer la ficha de la empresa, el plan contable y los mnemotécnicos, y a dar de alta los datos básicos que usan todos los documentos del ERP: el tercero con su cuenta contable y su forma de cobro, artículos, almacenes, cuentas financieras y logísticas. Registras una entrada de stock, la compruebas en el Stock global y en el kardex y, como ampliación, das de alta una empresa nueva.",
   "circuito": [
+    "Empresa y plan contable",
+    "Cuentas y mnemotécnicos",
     "Tercero y su cuenta contable",
     "Forma de cobro: efecto + plazo",
     "Artículo, proveedor y almacén",
-    "Cuenta logística",
-    "Movimiento de stock",
-    "Stock global y kardex"
+    "Movimiento de stock y kardex"
   ],
   "navegacion": [
     {
@@ -20,7 +20,8 @@
       "explicacion": [
         "En esta sesión trabajas sobre la base de formación TUTORIAL del ERP Deister Manager. Cada pantalla se hace de verdad: das de alta un registro propio, ves para qué sirve, dónde está en el menú, qué significa cada campo y qué pasos seguir.",
         "Todos los datos que creas llevan tus iniciales como prefijo (tercero {INI}1, artículo financiero {INI}, artículo {INI}0001, almacén {INI}1…). En las tablas de campos, un asterisco rojo (*) indica que la pantalla marca el campo como obligatorio.",
-        "Tabla de referencia: cada maestro con su objeto en el ERP y la ruta donde lo encuentras."
+        "Tabla de referencia: cada maestro con su objeto en el ERP y la ruta donde lo encuentras.",
+        "Si nunca has trabajado con contabilidad, no te preocupes: cada término (tercero, cuenta contable, debe y haber, efecto, kardex…) se explica en lenguaje llano la primera vez que sale, y todos están en el glosario del módulo."
       ],
       "campos": [
         {
@@ -136,8 +137,611 @@
   ],
   "ejercicios": [
     {
-      "id": "maestros-1",
+      "id": "maestros-v-3",
       "numero": 1,
+      "titulo": "Maestro de empresas",
+      "objetivo": "Saber leer la ficha de una empresa: su identificación, el tercero al que está vinculada y sus datos contables (plan contable y moneda).",
+      "concepto": "Una empresa (o sociedad) es la entidad legal que lleva la contabilidad: cada factura, asiento o movimiento de stock pertenece a una empresa. El ERP es multiempresa (varias sociedades en la misma base de datos) y multimoneda (puede trabajar con varias divisas).\n\nLa ficha de la empresa guarda su identificación fiscal, la fecha de inicio, la zona impositiva (qué impuestos se le aplican) y los datos contables: el plan contable que usa y su moneda. En la base TUTORIAL hay dos empresas, 0 Deister Software y DIS Distribuidora S.L.; todos los ejercicios del curso trabajan en la empresa 0.",
+      "duracionMin": 30,
+      "secciones": [
+        {
+          "id": "maestros-v-3-cabecera",
+          "titulo": "Cabecera e identificación",
+          "paraQueSirve": "Define los datos generales y fiscales de la empresa.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Parametrización",
+            "Empresas"
+          ],
+          "explicacion": [
+            "En el maestro de empresas abre la empresa 0 Deister Software. Revisa el código, el nombre y la fecha de inicio: no se puede contabilizar con una fecha anterior a ella.",
+            "También verás la identificación fiscal (Tipo ID fiscal y NIF empresa) y la zona impositiva ESCO, que decide qué impuestos (IVA) se calculan en sus documentos."
+          ],
+          "campos": [
+            {
+              "campo": "Empresa",
+              "significado": "Código de la empresa.",
+              "ejemplo": "0"
+            },
+            {
+              "campo": "Nombre empresa",
+              "significado": "Nombre de la sociedad.",
+              "ejemplo": "Deister Software"
+            },
+            {
+              "campo": "Fecha inicio",
+              "significado": "Fecha de inicio de la empresa.",
+              "ejemplo": "01-01-2000"
+            },
+            {
+              "campo": "Zona impositiva",
+              "significado": "Zona fiscal de la empresa.",
+              "ejemplo": "ESCO"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Entra en Finanzas › Maestros › Parametrización › Empresas."
+            },
+            {
+              "texto": "Abre la empresa 0 Deister Software (clic en el número de la fila).",
+              "detalle": "Observa la cabecera: código 0, nombre Deister Software, fecha de inicio 01-01-2000 y estado Abierto.",
+              "imagen": "v-maestros-005.jpg"
+            },
+            {
+              "texto": "Revisa Tipo ID fiscal, NIF empresa y Zona impositiva (ESCO).",
+              "imagen": "v-maestros-006.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "La fecha de inicio de la empresa limita la contabilidad: no se puede contabilizar con una fecha anterior."
+            }
+          ]
+        },
+        {
+          "id": "maestros-v-3-vinculo",
+          "titulo": "Vínculo con tercero",
+          "paraQueSirve": "Relaciona la empresa con un tercero previamente creado; la relación es uno a uno.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Parametrización",
+            "Empresas"
+          ],
+          "explicacion": [
+            "Cada empresa está vinculada a un tercero: la ficha con su nombre, su NIF y su dirección. En la lista del maestro de empresas, la columna Tercero muestra 0 para Deister Software y 00003 para Distribuidora S.L.",
+            "La relación empresa-tercero es uno a uno: una empresa tiene un solo tercero y ese tercero solo representa a esa empresa."
+          ],
+          "campos": [
+            {
+              "campo": "Tercero",
+              "significado": "Tercero vinculado a la empresa (relación 1 a 1).",
+              "ejemplo": "0 (empresa 0) / 00003 (empresa DIS)"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Vuelve a la lista del maestro de empresas y localiza la columna Tercero."
+            },
+            {
+              "texto": "Comprueba que la empresa 0 está vinculada al tercero 0 y la DIS al tercero 00003.",
+              "detalle": "Si quieres ver la ficha de ese tercero, ábrela en Finanzas › Maestros › Terceros › Registro terceros."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "La relación empresa-tercero es 1 a 1. Si necesitas otra empresa, deberás crear otro tercero."
+            }
+          ]
+        },
+        {
+          "id": "maestros-v-3-datos-contables",
+          "titulo": "Datos contables",
+          "paraQueSirve": "Configura el plan contable, moneda funcional, cuentas de cierres y calendario de la empresa.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Parametrización",
+            "Empresas"
+          ],
+          "explicacion": [
+            "En la ficha de la empresa están el plan contable (PGE 2008, el plan español), la moneda de la empresa (EUR), el calendario y las cuentas de diferencias de cambio: lo que se gana o se pierde cuando cambia el valor de una divisa entre la factura y el pago.",
+            "Sin plan contable la empresa no puede contabilizar: es lo primero que se define al crearla."
+          ],
+          "campos": [
+            {
+              "campo": "Plan contable",
+              "significado": "Plan que usará la empresa.",
+              "ejemplo": "PGE 2008"
+            },
+            {
+              "campo": "Moneda de la empresa",
+              "significado": "Moneda funcional.",
+              "ejemplo": "EUR"
+            },
+            {
+              "campo": "Cuenta diferencias positivas de cambio",
+              "significado": "Cuenta para diferencias de cambio.",
+              "ejemplo": "Vacía en la empresa 0 (no trabaja con divisas)"
+            },
+            {
+              "campo": "Cuenta diferencias negativas de cambio",
+              "significado": "Cuenta para diferencias de cambio.",
+              "ejemplo": "Vacía en la empresa 0"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Dentro de la ficha de la empresa, localiza Plan contable y Moneda empresa y abre la pestaña Datos contables."
+            },
+            {
+              "texto": "Observa el plan contable PGE 2008 y la moneda EUR.",
+              "imagen": "v-maestros-007.jpg"
+            },
+            {
+              "texto": "Revisa las cuentas de diferencias de cambio y el calendario (España)."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Si no se identifica el plan contable en la empresa desde el inicio, no se podrá contabilizar."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Define siempre el plan contable y la moneda funcional al crear la empresa."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Cuántos terceros se pueden vincular a una empresa?",
+          "opciones": [
+            "Varios",
+            "Depende del país",
+            "Cuatro",
+            "Uno"
+          ],
+          "correcta": 3,
+          "explicacion": "La relación empresa-tercero es uno a uno."
+        },
+        {
+          "pregunta": "¿Qué es Axional en términos de empresas?",
+          "opciones": [
+            "Monoempresa",
+            "Multiempresa y multimoneda",
+            "Solo multiusuario",
+            "Solo multimoneda"
+          ],
+          "correcta": 1,
+          "explicacion": "Axional es multiempresa y multimoneda."
+        },
+        {
+          "pregunta": "¿Qué dato de la empresa es importante para los ejercicios contables?",
+          "opciones": [
+            "La identificación fiscal",
+            "La zona impositiva",
+            "La fecha de inicio",
+            "El código"
+          ],
+          "correcta": 2,
+          "explicacion": "La fecha de inicio marca desde cuándo existe la empresa: no se puede contabilizar antes de esa fecha."
+        },
+        {
+          "pregunta": "¿Qué moneda usa la empresa 0 Deister Software?",
+          "opciones": [
+            "Dólar",
+            "Peso",
+            "Libra",
+            "Euro"
+          ],
+          "correcta": 3,
+          "explicacion": "La moneda funcional es el euro (EUR)."
+        },
+        {
+          "pregunta": "¿Qué plan contable tiene asignado la empresa 0 Deister Software?",
+          "opciones": [
+            "PE (PG Perú 2019)",
+            "ES (PGE 2008)",
+            "PT (PG Portugal)",
+            "AD (PG Andorra 2012)"
+          ],
+          "correcta": 1,
+          "explicacion": "La empresa 0 usa el plan contable de España, PGE 2008 (código ES)."
+        }
+      ],
+      "checklist": [
+        "Entras en Finanzas › Maestros › Parametrización › Empresas y abres la empresa 0 Deister Software.",
+        "Observas la cabecera: código 0, nombre y fecha de inicio 01-01-2000.",
+        "Revisas el Tipo ID fiscal, el NIF empresa y la zona impositiva ESCO.",
+        "Compruebas en la lista que la empresa 0 está vinculada al tercero 0 y la DIS al 00003.",
+        "Ves que la empresa 0 tiene el plan contable PGE 2008 y la moneda EUR.",
+        "Localizas las cuentas de diferencias de cambio y el calendario España.",
+        "Sabes explicar que la relación empresa-tercero es uno a uno."
+      ],
+      "problemas": [
+        {
+          "problema": "No se puede contabilizar porque no se definió el plan contable.",
+          "solucion": "Asigna un plan contable y moneda funcional en los Datos contables de la empresa."
+        },
+        {
+          "problema": "Se intenta asociar más de un tercero a la empresa.",
+          "solucion": "La relación empresa-tercero es uno a uno; crea otra empresa si necesitas otro tercero."
+        }
+      ]
+    },
+    {
+      "id": "maestros-v-1",
+      "numero": 2,
+      "titulo": "Planes contables y cuentas contables",
+      "objetivo": "Conocer los planes contables de la demo y entender los indicadores de una cuenta contable (ejemplo: 10200.00000 Capital del PGE 2008).",
+      "concepto": "Un plan contable es la lista ordenada de cuentas que usa la contabilidad de un país. Cada cuenta es un código numérico con un nombre (por ejemplo, 43000 Clientes o 70000 Ventas de mercaderías) y cada operación se anota en las cuentas que le corresponden. España usa el PGE 2008 (código ES).\n\nEn el ERP la cuenta lleva un punto: a la izquierda va la cuenta base y a la derecha un código que permite abrir subcuentas, por ejemplo una por cliente (43000.00901). Cada cuenta tiene indicadores que cambian su comportamiento: su posición (debe o haber), su tipo (Normal, Terceros, Entidades financieras, Costes o Analítica) y si es periodificable.",
+      "duracionMin": 25,
+      "secciones": [
+        {
+          "id": "maestros-v-1-planes-contables",
+          "titulo": "Planes contables",
+          "paraQueSirve": "Muestra los planes contables (listas de cuentas) que hay en el sistema, uno por país.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cuentas contables",
+            "Planes contables"
+          ],
+          "explicacion": [
+            "El plan contable es la lista de cuentas que usa la empresa para anotar sus operaciones. En la base TUTORIAL hay cuatro: AD (PG Andorra 2012), ES (PGE 2008, el de España), PE (PG Perú 2019) y PT (PG Portugal).",
+            "Es el primer paso de la configuración contable: sin plan contable no se pueden crear cuentas."
+          ],
+          "campos": [
+            {
+              "campo": "Código",
+              "significado": "Identifica el plan contable.",
+              "ejemplo": "ES"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Nombre del plan.",
+              "ejemplo": "PGE 2008"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Entra en Finanzas › Maestros › Cuentas contables › Planes contables."
+            },
+            {
+              "texto": "Se abre la lista de planes contables.",
+              "detalle": "En la demo hay cuatro planes: AD Andorra, ES España, PE Perú y PT Portugal.",
+              "imagen": "v-maestros-001.jpg"
+            },
+            {
+              "texto": "Identifica el plan de España (ES, PGE 2008) y el de Perú (PE)."
+            },
+            {
+              "texto": "Fíjate en que cada país tiene su propia codificación de cuentas."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El plan contable es lo primero que hay que tener creado antes de crear cuentas."
+            }
+          ]
+        },
+        {
+          "id": "maestros-v-1-cuentas-contables",
+          "titulo": "Cuentas contables",
+          "paraQueSirve": "Define las cuentas de cada plan contable y sus indicadores de comportamiento.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cuentas contables",
+            "Cuentas contables"
+          ],
+          "explicacion": [
+            "Las cuentas contables son los códigos en los que se anotan los importes de cada asiento. Por ejemplo, la 10200 es Capital. Tras el punto se puede añadir un código para abrir una subcuenta, por ejemplo una para cada cliente.",
+            "Indicadores principales: la Posición (Debe o Haber: el lado en el que suele crecer el saldo de la cuenta), el Tipo, Activa y Activar (qué procesos auxiliares activa, como impuestos o cartera de efectos) y Periodificable (si su importe se puede repartir entre varios meses). Para calcular impuestos y generar efectos en cartera la cuenta tiene que ser de tipo Terceros, como las 430 de clientes y las 400 de proveedores."
+          ],
+          "campos": [
+            {
+              "campo": "Plan contable",
+              "significado": "Plan al que pertenece la cuenta.",
+              "ejemplo": "PGE 2008"
+            },
+            {
+              "campo": "Cuenta",
+              "significado": "Código de la cuenta. Tras el punto puede ir el código de un tercero.",
+              "ejemplo": "10200.00000"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Nombre de la cuenta.",
+              "ejemplo": "Capital"
+            },
+            {
+              "campo": "Tipo",
+              "significado": "Clase de cuenta: Normal, Terceros, Entidades financieras, Costes o Analítica.",
+              "ejemplo": "Normal (el capital no es una cuenta de clientes ni proveedores)"
+            },
+            {
+              "campo": "Periodificable",
+              "significado": "Indica si la cuenta se periodifica.",
+              "ejemplo": "No"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Entra en Finanzas › Maestros › Cuentas contables › Cuentas contables."
+            },
+            {
+              "texto": "Abre la cuenta 10200.00000 Capital del plan PGE 2008.",
+              "detalle": "La lista empieza por las cuentas del plan de Andorra: usa Filtros con Plan contable PGE 2008 y Cuenta 10200*.",
+              "imagen": "v-maestros-002.jpg"
+            },
+            {
+              "texto": "Revisa el campo Tipo y despliega la lista.",
+              "detalle": "Las opciones son Normal, Terceros, Entidades financieras, Costes y Analítica.",
+              "imagen": "v-maestros-003.jpg"
+            },
+            {
+              "texto": "Observa los indicadores: Posición (Debe), Tipo, Activa, Activar y Periodificable."
+            },
+            {
+              "texto": "Recuerda que la cuenta con punto + código de tercero identifica una subcuenta específica."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El tipo Terceros es imprescindible para calcular impuestos y generar cartera de efectos: lo llevan las cuentas de clientes (430) y proveedores (400)."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué es un plan contable?",
+          "opciones": [
+            "Una lista de clientes y proveedores",
+            "Una tabla de impuestos por país",
+            "Una lista ordenada de cuentas con las que se anotan las operaciones",
+            "Un calendario fiscal"
+          ],
+          "correcta": 2,
+          "explicacion": "El plan contable es la lista de cuentas de un país en las que se anotan las operaciones de la empresa."
+        },
+        {
+          "pregunta": "¿Qué país corresponde al plan con código ES?",
+          "opciones": [
+            "España",
+            "Perú",
+            "Portugal",
+            "Andorra"
+          ],
+          "correcta": 0,
+          "explicacion": "ES corresponde a España (PGE 2008)."
+        },
+        {
+          "pregunta": "¿Qué indica el punto en una cuenta contable como 43000.00901?",
+          "opciones": [
+            "Separador decimal del importe",
+            "Indica la moneda",
+            "Es un error",
+            "Separa la cuenta base del código de tercero"
+          ],
+          "correcta": 3,
+          "explicacion": "El código a la derecha del punto identifica a un tercero concreto."
+        },
+        {
+          "pregunta": "¿Qué tipo de cuenta hace falta para calcular impuestos y generar cartera de efectos?",
+          "opciones": [
+            "Normal",
+            "Terceros",
+            "Costes",
+            "Analítica"
+          ],
+          "correcta": 1,
+          "explicacion": "Las cuentas de tipo Terceros (clientes, proveedores) son las que calculan impuestos y generan efectos en cartera."
+        },
+        {
+          "pregunta": "¿Qué opción NO aparece en el campo Tipo de una cuenta contable?",
+          "opciones": [
+            "Normal",
+            "Costes",
+            "Facturación",
+            "Terceros"
+          ],
+          "correcta": 2,
+          "explicacion": "Las opciones del Tipo son Normal, Terceros, Entidades financieras, Costes y Analítica."
+        }
+      ],
+      "checklist": [
+        "Entras en Planes contables y ves los cuatro planes de la demo (AD, ES, PE y PT).",
+        "Identificas el plan ES (PGE 2008) de España.",
+        "Identificas el plan PE de Perú.",
+        "Abres la cuenta 10200.00000 Capital del plan PGE 2008.",
+        "Despliegas el campo Tipo y ves sus cinco opciones.",
+        "Identificas los indicadores Posición, Tipo, Activa, Activar y Periodificable.",
+        "Sabes explicar que el punto separa la cuenta base del código de la subcuenta (por ejemplo, un cliente)."
+      ],
+      "problemas": [
+        {
+          "problema": "Al ver la cuenta 10200, no queda claro para qué sirve el indicador Terceros.",
+          "solucion": "El tipo Terceros permite abrir subcuentas por tercero (lo que va tras el punto) para ver el saldo de cada cliente o proveedor, y además activa el cálculo de impuestos y la cartera de efectos. La 10200 Capital es Normal porque no es de clientes ni proveedores."
+        }
+      ]
+    },
+    {
+      "id": "maestros-v-2",
+      "numero": 3,
+      "titulo": "Mnemotécnicos de cuentas",
+      "objetivo": "Entender qué es un mnemotécnico de cuenta y cómo lo traduce el ERP a una cuenta real de cada plan contable.",
+      "concepto": "Un mnemotécnico es un código corto que apunta a una cuenta contable de cada plan. Los maestros (artículos, tipos de tercero, tipologías…) guardan el mnemotécnico y no la cuenta; al contabilizar, el ERP lo traduce a la cuenta real del plan de la empresa. Así quien da de alta un artículo no necesita conocer el plan contable, y el mismo artículo sirve para empresas con planes distintos.\n\nEn la base TUTORIAL los mnemotécnicos tienen 5 cifras y coinciden con la cuenta base: el mnemotécnico 10200 «Capital» apunta a la cuenta 10200.00000 del plan PGE 2008. Con plan contable, cuentas y mnemotécnicos ya se puede parametrizar una empresa.",
+      "duracionMin": 15,
+      "secciones": [
+        {
+          "id": "maestros-v-2-concepto",
+          "titulo": "Concepto y estructura",
+          "paraQueSirve": "Lista los mnemotécnicos y, para cada uno, la cuenta real a la que apunta en cada plan contable.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cuentas contables",
+            "Mnemotécnicas de cuentas"
+          ],
+          "explicacion": [
+            "Un mnemotécnico no es una cuenta: es un atajo hacia una cuenta. Se usa en los maestros para no escribir la cuenta completa de un plan concreto.",
+            "La ficha tiene la cabecera (Nemotécnico y Descripción) y la pestaña «Detalle cuentas mnemotécnicas», con una línea por plan contable y la cuenta real a la que apunta."
+          ],
+          "campos": [
+            {
+              "campo": "Código",
+              "significado": "Código del mnemotécnico. En la TUTORIAL, 5 cifras iguales a la cuenta base.",
+              "ejemplo": "10200"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Qué representa el mnemotécnico.",
+              "ejemplo": "Capital"
+            },
+            {
+              "campo": "Plan contable y cuenta",
+              "significado": "En las líneas del mnemotécnico: plan y cuenta real a la que apunta.",
+              "ejemplo": "PGE 2008 › 10200.00000"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Entra en Finanzas › Maestros › Cuentas contables › Mnemotécnicas de cuentas."
+            },
+            {
+              "texto": "Observa la lista: 00000 Default, 10000 Capital social, 10200 Capital…",
+              "detalle": "Cada mnemotécnico tiene su descripción.",
+              "imagen": "v-maestros-004.jpg"
+            },
+            {
+              "texto": "Abre el 10200 Capital y mira la pestaña «Detalle cuentas mnemotécnicas»: plan PGE 2008, cuenta 10200.00000."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Los mnemotécnicos no son cuentas contables: son atajos que el ERP traduce a la cuenta del plan de cada empresa."
+            }
+          ]
+        },
+        {
+          "id": "maestros-v-2-uso",
+          "titulo": "Uso en otros módulos",
+          "paraQueSirve": "Explica cómo otros módulos usan mnemotécnicos en lugar de cuentas contables.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Clasificación",
+            "Tipos de terceros"
+          ],
+          "explicacion": [
+            "Muchos maestros piden un mnemotécnico en lugar de una cuenta. Lo verás en el artículo financiero (mnemotécnicos 62300 de compras y 70500 de ventas) y aquí, en los tipos de tercero.",
+            "Con plan contable + cuentas contables + mnemotécnicos ya se puede parametrizar una empresa: los maestros usan mnemotécnicos y el ERP los traduce a cuentas reales."
+          ],
+          "campos": [
+            {
+              "campo": "Cuenta contable de cliente / proveedor",
+              "significado": "En el tipo de tercero se indican mnemotécnicos, no cuentas.",
+              "ejemplo": "Tipo 001 Clientes: cuenta de cliente 43000; tipo 002 Proveedores: cuenta de proveedor 40000"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Maestros › Terceros › Clasificación › Tipos de terceros."
+            },
+            {
+              "texto": "Fíjate en el tipo 001 Clientes: la cuenta de cliente es el mnemotécnico 43000. En el 002 Proveedores es el 40000.",
+              "detalle": "Cuando das de alta un tercero con la Categoría (tipo) 001, el ERP le propone la relación de cliente con la cuenta 43000.00000."
+            }
+          ],
+          "avisos": []
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué son los mnemotécnicos de cuentas?",
+          "opciones": [
+            "Códigos contables numéricos obligatorios",
+            "Números de cuenta bancaria",
+            "Workflows de validación",
+            "Identificadores no contables asociados a plan y cuenta"
+          ],
+          "correcta": 3,
+          "explicacion": "Son códigos que no son cuentas, sino atajos que apuntan a una cuenta de cada plan contable."
+        },
+        {
+          "pregunta": "¿Qué tres elementos son suficientes para iniciar la parametrización de una empresa?",
+          "opciones": [
+            "Empresa, banco y calendario",
+            "Plan contable, cuentas y mnemotécnicos",
+            "Moneda, workflow e impuestos",
+            "Tercero, cartera y condiciones comerciales"
+          ],
+          "correcta": 1,
+          "explicacion": "Con plan contable + cuentas contables + mnemotécnicos ya se puede parametrizar."
+        },
+        {
+          "pregunta": "¿Qué tipo de usuario utiliza normalmente los mnemotécnicos?",
+          "opciones": [
+            "Usuario no contable",
+            "Contable experto",
+            "Auditor",
+            "Administrador de sistemas"
+          ],
+          "correcta": 0,
+          "explicacion": "Los mnemotécnicos permiten a usuarios no contables identificar transacciones."
+        },
+        {
+          "pregunta": "En la tabla de mnemotécnicos, ¿qué campos tiene cada línea?",
+          "opciones": [
+            "Código mnemotécnico y descripción",
+            "Solo cuenta contable",
+            "Plan contable y cuenta contable",
+            "Solo plan contable"
+          ],
+          "correcta": 2,
+          "explicacion": "Las líneas tienen plan contable y cuenta contable asociada al mnemotécnico."
+        },
+        {
+          "pregunta": "En la base TUTORIAL, ¿a qué cuenta apunta el mnemotécnico 10200 en el plan PGE 2008?",
+          "opciones": [
+            "10200.00000 Capital",
+            "43000.00000 Clientes",
+            "57000.00000 Caja",
+            "A ninguna: los mnemotécnicos no apuntan a cuentas"
+          ],
+          "correcta": 0,
+          "explicacion": "Su línea de detalle dice plan PGE 2008, cuenta 10200.00000."
+        }
+      ],
+      "checklist": [
+        "Entras en Mnemotécnicas de cuentas y ves la lista.",
+        "Abres el mnemotécnico 10200 y ves que apunta a la cuenta 10200.00000 del plan PGE 2008.",
+        "Sabes explicar que cada línea del mnemotécnico une un plan contable con una cuenta real.",
+        "Compruebas en el tipo de tercero 001 Clientes que la cuenta de cliente se indica con el mnemotécnico 43000.",
+        "Sabes que con plan, cuentas y mnemotécnicos se puede iniciar la parametrización."
+      ],
+      "problemas": [
+        {
+          "problema": "No entiendes la diferencia entre un mnemotécnico y una cuenta contable.",
+          "solucion": "El mnemotécnico es un atajo; la cuenta contable es el código real de un plan. El mnemotécnico apunta a una cuenta de cada plan y permite que quien no conoce el plan contable la use sin equivocarse."
+        }
+      ]
+    },
+    {
+      "id": "maestros-1",
+      "numero": 4,
       "titulo": "Mantenimiento de datos básicos de Contabilidad (Finanzas)",
       "objetivo": "Tener dado de alta el circuito contable de un tercero: el tercero, su cuenta contable propia y su relación contable, su forma de cobro, un artículo financiero, un cambio de divisa, una caja y un código postal.",
       "concepto": "Los maestros de Contabilidad son las fichas de las que beben todas las facturas, efectos y asientos. Aquí se da de alta el circuito contable de un tercero: el tercero, su cuenta contable propia y su relación contable, su forma de cobro (tipo de efecto + plazo), un artículo financiero, un cambio de divisa, una caja y un código postal.\n\nSi uno de estos maestros está mal o incompleto, el error se arrastra a cada documento que lo use. Por eso se crean con cuidado, se comprueban y el tercero se valida antes de usarlo.",
@@ -146,7 +750,7 @@
         {
           "id": "maestros-1-terceros",
           "titulo": "Terceros (ctercero)",
-          "paraQueSirve": "El tercero es la ficha única de cualquier persona o empresa con la que se trabaja: cliente, proveedor, acreedor, banco… Guarda los datos fiscales (NIF, país), las direcciones y la relación contable (qué cuenta 430/400 usa). Después, en Gestión, el mismo tercero se da de alta como cliente o proveedor. Mientras está «Provisional» no se puede usar en documentos.",
+          "paraQueSirve": "El tercero es la ficha única de cualquier persona o empresa con la que se trabaja: cliente, proveedor, acreedor, banco… Guarda los datos fiscales (NIF, país), las direcciones y la relación contable: con qué papel trabaja y en qué cuenta se anota lo que nos debe o le debemos (430 si es cliente, 400 si es proveedor). Después, en Gestión, el mismo tercero se da de alta como cliente o proveedor. Mientras está «Provisional» no se puede usar en documentos.",
           "ruta": [
             "Finanzas",
             "Maestros",
@@ -287,7 +891,7 @@
             },
             {
               "tipo": "nota",
-              "texto": "Cualquier cambio posterior en las pestañas del tercero (relaciones, condiciones de cobro…) lo devuelve a «Provisional». Hay que volver a pulsar «Validar» (ver 1.6)."
+              "texto": "Cualquier cambio posterior en las pestañas del tercero (relaciones, condiciones de cobro…) lo devuelve a «Provisional». Hay que volver a pulsar «Validar» (lo verás en el apartado «Cuentas contables y perfil contable del tercero»)."
             }
           ]
         },
@@ -302,7 +906,7 @@
             "Artículos"
           ],
           "explicacion": [
-            "Objeto carticul. Las cuentas se eligen por «mnemotécnico» (cuenta de 5 dígitos) en lugar de la cuenta completa."
+            "Objeto carticul. Las cuentas se eligen por mnemotécnico (el atajo de 5 cifras que viste en el ejercicio 3) en lugar de la cuenta completa."
           ],
           "campos": [
             {
@@ -426,7 +1030,7 @@
             },
             {
               "campo": "Cambio spot *",
-              "significado": "Equivalencia en la divisa destino.",
+              "significado": "Cambio del día (al contado): cuántas unidades de la divisa destino vale la base de la moneda origen.",
               "ejemplo": "0,920000"
             },
             {
@@ -469,7 +1073,7 @@
         {
           "id": "maestros-1-plazos",
           "titulo": "Formas de pago: plazos de pago (ctipopag)",
-          "paraQueSirve": "El plazo de pago dice en cuántos vencimientos se divide una factura y a cuántos días o meses vence cada uno. Al contabilizar la factura, el ERP crea un efecto en la cartera por cada vencimiento.",
+          "paraQueSirve": "El plazo de pago dice en cuántos vencimientos se divide una factura y a cuántos días o meses vence cada uno. Al contabilizar la factura, el ERP crea un efecto en la cartera por cada vencimiento. Un efecto es cada cobro o pago pendiente con su fecha de vencimiento, y la cartera es la lista de todos ellos.",
           "ruta": [
             "Finanzas",
             "Maestros",
@@ -478,7 +1082,7 @@
             "Plazos de pago"
           ],
           "explicacion": [
-            "Objeto ctipopag. Los plazos de pago solo guardan los vencimientos. El tipo de efecto (recibo, transferencia…) se combina con el plazo en la pestaña «Condiciones de cobro/pago» del tercero (ver 2.1)."
+            "Objeto ctipopag. Los plazos de pago solo guardan los vencimientos. El tipo de efecto (recibo, transferencia…) se combina con el plazo en la pestaña «Condiciones de cobro/pago» del tercero (lo harás en el ejercicio 5, «Datos básicos de Gestión»)."
           ],
           "campos": [
             {
@@ -605,17 +1209,17 @@
             },
             {
               "campo": "Días decalaje *",
-              "significado": "Días que se suman a la fecha prevista de operación.",
+              "significado": "Días de margen que se suman a la fecha de la operación para prever cuándo llega el dinero al banco.",
               "ejemplo": "2"
             },
             {
               "campo": "Días post-pago *",
-              "significado": "Días tras el vencimiento hasta liberar el riesgo.",
+              "significado": "Días tras el vencimiento durante los que el efecto sigue contando en el riesgo del cliente (por si el banco lo devuelve).",
               "ejemplo": "4"
             },
             {
               "campo": "Interés / Riesgo / Factura demora *",
-              "significado": "Interés de demora, control de riesgo y refacturación de intereses.",
+              "significado": "Interés de demora, si cuenta para el riesgo del cliente (lo que nos debe en total y su límite) y si se refacturan los intereses.",
               "ejemplo": "0 / Sí / No"
             },
             {
@@ -625,7 +1229,7 @@
             },
             {
               "campo": "UN/EDIFACT y Código fiscal *",
-              "significado": "Códigos estándar del medio de pago para facturae y Hacienda.",
+              "significado": "Códigos estándar del medio de pago que usan la factura electrónica y Hacienda.",
               "ejemplo": "Domiciliación bancaria"
             }
           ],
@@ -681,7 +1285,7 @@
         {
           "id": "maestros-1-cuentas-perfil",
           "titulo": "Cuentas contables y perfil contable del tercero (ccuentas / ctertipo)",
-          "paraQueSirve": "Cada cliente debería tener su subcuenta 430 propia para ver su saldo en el mayor. Se crea la cuenta en el plan contable y luego se asigna al tercero en su perfil contable (relación CLI). Las facturas del cliente se contabilizarán en esa subcuenta.",
+          "paraQueSirve": "Cada cliente debería tener su subcuenta 430 propia para ver su saldo en el mayor (el listado de movimientos de cada cuenta). Se crea la cuenta en el plan contable y luego se asigna al tercero en su perfil contable (relación CLI). Las facturas del cliente se contabilizarán en esa subcuenta.",
           "ruta": [
             "Finanzas",
             "Maestros",
@@ -709,7 +1313,7 @@
             },
             {
               "campo": "Posición / Estado / Grupo *",
-              "significado": "Saldo natural, estado y grupo de partes vinculadas.",
+              "significado": "Lado en el que suele crecer el saldo (Debe para clientes), estado y grupo de partes vinculadas.",
               "ejemplo": "Debe / Abierto / Standard"
             },
             {
@@ -719,7 +1323,7 @@
             },
             {
               "campo": "Activa",
-              "significado": "Auxiliares que activa la cuenta (I impuestos, E efectos/cartera, V…).",
+              "significado": "Procesos auxiliares que activa la cuenta, como I (impuestos) y E (efectos de cartera). Pon el mismo valor que las demás 430.",
               "ejemplo": "IEV"
             },
             {
@@ -876,7 +1480,7 @@
             {
               "campo": "Preferencia / Fecha apertura / Formato extracto *",
               "significado": "Se proponen.",
-              "ejemplo": "Sí / hoy / AEB43"
+              "ejemplo": "Sí / hoy / AEB43 (formato español de extracto bancario)"
             },
             {
               "campo": "Agrupación cuentas *",
@@ -1051,7 +1655,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "El alta se hace desde la ficha del país, pestaña «Municipios y poblaciones», botón «Añadir municipio». Después el CP ya se puede elegir en cualquier dirección (como el 08001 del apartado 1.1)."
+              "texto": "El alta se hace desde la ficha del país, pestaña «Municipios y poblaciones», botón «Añadir municipio». Después el CP ya se puede elegir en cualquier dirección (como el 08001 de la dirección del tercero)."
             }
           ]
         }
@@ -1119,7 +1723,7 @@
         "La pestaña Direcciones tiene la dirección 0 con CP 08001, provincia 08 y población Barcelona.",
         "El tercero {INI}1 sale en estado «Validado» tras pulsar «Validar».",
         "El artículo financiero {INI} (Servicio, SOG, mnemotécnicos 62300 / 70500) aparece en la lista de artículos.",
-        "El cambio USD › EUR del 12-11-2026 (spot 0,92 y compra 0,91) está en Cambios diarios.",
+        "El cambio USD › EUR (spot 0,92 y compra 0,91) está en Cambios diarios con la fecha que le pusiste.",
         "El plazo de pago {INI}1 reparte 50 % a 30 días y 50 % a 60 días, con 0 en los plazos 3 y 4.",
         "El tipo de efecto {INI} «Recibo domiciliado {INI}» (domiciliación Tercero, decalaje 2, post-pago 4, fecha operación Vencimiento) está en la lista de tipos.",
         "La cuenta 43000.00901 «Tercero Maestros {INI}» existe, de tipo Terceros con Activa IEV.",
@@ -1150,17 +1754,17 @@
         },
         {
           "problema": "Al dar de alta un tercero no se crean las cuentas de cliente y proveedor.",
-          "solucion": "Revisa en el tipo de tercero (c_tipo_ter) que los mnemotécnicos de cuenta de cliente y de proveedor estén indicados."
+          "solucion": "Revisa en Finanzas › Maestros › Terceros › Clasificación › Tipos de terceros (ctipoter) que el tipo indique los mnemotécnicos de cuenta de cliente y de proveedor (por ejemplo, 43000 y 40000)."
         },
         {
           "problema": "No queda claro si el código tras el punto indica cliente o proveedor.",
-          "solucion": "El código tras el punto identifica al tercero concreto. El tipo cliente/proveedor lo determina la cuenta base: 4000 proveedor, 44 cliente."
+          "solucion": "El código tras el punto identifica al tercero concreto (su subcuenta). Que sea cliente o proveedor lo dice la cuenta base: 43000 clientes, 40000 proveedores, 41000 acreedores."
         }
       ]
     },
     {
       "id": "maestros-2",
-      "numero": 2,
+      "numero": 5,
       "titulo": "Mantenimiento de datos básicos de Gestión (IGES)",
       "objetivo": "Tener completa la parte logística: el tercero como cliente, un artículo con stock asignado a su proveedor, un almacén y una cuenta logística.",
       "concepto": "Para comprar, almacenar y vender no basta con los maestros contables: el tercero se da de alta también como cliente (o proveedor) en Gestión, y aparecen los maestros logísticos: el artículo con control de stock, su proveedor habitual, el almacén donde se guarda y las cuentas logísticas en las que se reparte el stock.\n\nEstos datos los heredan después pedidos, albaranes y movimientos de stock. Si el almacén no tiene delegación y departamento o el artículo no tiene familia, los movimientos darán error.",
@@ -1505,7 +2109,7 @@
             },
             {
               "campo": "Tipo valoración *",
-              "significado": "Cómo se calcula el coste del stock.",
+              "significado": "Cómo se calcula el coste del stock: FIFO (lo primero que entra es lo primero que sale) o Medio (precio medio de las entradas).",
               "ejemplo": "FIFO"
             },
             {
@@ -1562,7 +2166,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Si el almacén no tiene delegación y departamento, al grabar un movimiento interno sale «Delegación y departamento no informados para el almacén» (ver 3.1). Rellénalos ya en el alta."
+              "texto": "Si el almacén no tiene delegación y departamento, al grabar un movimiento interno sale «Delegación y departamento no informados para el almacén» (lo verás en el ejercicio 6). Rellénalos ya en el alta."
             }
           ]
         },
@@ -1731,7 +2335,7 @@
     },
     {
       "id": "maestros-3",
-      "numero": 3,
+      "numero": 6,
       "titulo": "Consultas e informes de stock",
       "objetivo": "Haber registrado una entrada inicial de 10 unidades de {INI}0001 en el almacén {INI}1 y haberla comprobado en el Stock global y en el kardex.",
       "concepto": "Una vez creados artículo y almacén, el stock se alimenta con movimientos. Aquí se registra una entrada inicial de 10 unidades mediante un movimiento interno y se comprueba con las dos consultas básicas: el Stock global («¿cuánto tengo y dónde?») y el kardex (el historial de movimientos de un artículo).\n\nSi las dos consultas coinciden en las 10 unidades, los maestros (artículo, almacén y cuentas logísticas) están bien configurados.",
@@ -1819,7 +2423,7 @@
             },
             {
               "texto": "Si ahora sale un error de delegación y departamento, completa el almacén y repite el movimiento.",
-              "detalle": "Sale «Delegación y departamento no informados para el almacén [{INI}1]»: el movimiento los toma del almacén y no se pueden escribir aquí. Informa Delegación CENTRAL y Departamento COMPRAS en la ficha del almacén, guarda y valida (ver 2.4).",
+              "detalle": "Sale «Delegación y departamento no informados para el almacén [{INI}1]»: el movimiento los toma del almacén y no se pueden escribir aquí. Informa Delegación CENTRAL y Departamento COMPRAS en la ficha del almacén, guarda y valida (apartado «Almacenes logísticos» del ejercicio 5).",
               "imagen": "maestros-d-109.webp"
             },
             {
@@ -1880,7 +2484,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "En la ficha del almacén {INI}1 informa Delegación CENTRAL y Departamento COMPRAS, guarda y valida (ver 2.4). Repite el movimiento."
+              "texto": "En la ficha del almacén {INI}1 informa Delegación CENTRAL y Departamento COMPRAS, guarda y valida (apartado «Almacenes logísticos» del ejercicio 5). Repite el movimiento."
             },
             {
               "tipo": "problema",
@@ -1962,7 +2566,7 @@
             {
               "campo": "Fecha inicial / Fecha fin *",
               "significado": "Periodo.",
-              "ejemplo": "01-11-2026 / 12-11-2026"
+              "ejemplo": "Del día 1 del mes a hoy (que incluya la fecha de tu movimiento)"
             },
             {
               "campo": "Contabilizar / Periodo completo *",
@@ -1976,7 +2580,7 @@
             },
             {
               "texto": "Cambia Almacén a {INI}1 y Artículo a {INI}0001; deja el resto en %. Revisa las fechas.",
-              "detalle": "Variables del kardex: almacén {INI}1, artículo {INI}0001 y periodo del 1 al 12 de noviembre.",
+              "detalle": "Variables del kardex: almacén {INI}1, artículo {INI}0001 y un periodo que incluya la fecha de tu movimiento.",
               "imagen": "maestros-d-116.webp",
               "hotspot": {
                 "x": 63.4,
@@ -2068,7 +2672,7 @@
         "El movimiento está validado y muestra el botón «Pasar a provisional».",
         "En Líneas de movimientos internos aparece la línea de {INI}0001 por 10 unidades.",
         "En Stock global, filtrando Almacén = {INI}1, sale la cuenta DISP con stock 10 y disponible 10 de {INI}0001.",
-        "En el kardex (almacén {INI}1, artículo {INI}0001, del 01-11-2026 al 12-11-2026) aparece un movimiento RIDP con documento {INI}000001.",
+        "En el kardex (almacén {INI}1, artículo {INI}0001, con un periodo que incluya la fecha del movimiento) aparece un movimiento RIDP con documento {INI}000001.",
         "El kardex muestra NSAL › DISP, entradas 10, salidas 0 y saldo 10.",
         "Stock global y kardex coinciden en 10 unidades."
       ],
@@ -2079,7 +2683,7 @@
         },
         {
           "problema": "Sale «Delegación y departamento no informados para el almacén [{INI}1]».",
-          "solucion": "En la ficha del almacén {INI}1 informa Delegación CENTRAL y Departamento COMPRAS, guarda y valida (ver 2.4). Repite el movimiento."
+          "solucion": "En la ficha del almacén {INI}1 informa Delegación CENTRAL y Departamento COMPRAS, guarda y valida (apartado «Almacenes logísticos» del ejercicio 5). Repite el movimiento."
         },
         {
           "problema": "Al elegir el artículo en la línea sale el aviso técnico «ELResolver no manejó el tipo: null con propiedad de 'null'» y la cantidad se queda en 0.",
@@ -2092,607 +2696,11 @@
       ]
     },
     {
-      "id": "maestros-v-1",
-      "numero": 4,
-      "titulo": "Planes contables y cuentas contables",
-      "objetivo": "Observar los planes contables disponibles y entender los indicadores de una cuenta contable (ejemplo: 10200 Capital).",
-      "concepto": "Un plan contable es una relación de códigos numéricos que identifica cada transacción económica o financiera. Cada país tiene su propia codificación: España usa ES / PG2008, Perú usa PE, etc.\n\nLas cuentas contables pertenecen a un plan contable. En la cuenta 10200 (Capital) se observan indicadores que afectan a la contabilidad: lógica de debe/haber, tipo de terceros, tipo de costes, gestión de impuestos, cartera y periodificable. El punto en la cuenta separa el código base del código de tercero.",
-      "duracionMin": 25,
-      "secciones": [
-        {
-          "id": "maestros-v-1-planes-contables",
-          "titulo": "Planes contables",
-          "paraQueSirve": "Muestra los planes contables definidos en el sistema, organizados por país.",
-          "ruta": [
-            "Finanzas",
-            "Maestros",
-            "Cuentas",
-            "Planes contables"
-          ],
-          "explicacion": [
-            "El plan contable es una cartilla de códigos numéricos que identifica cada transacción económica o financiera de la empresa. Cada país tiene su propia codificación: España usa ES / PG2008, Perú usa PE, y también hay planes para Colombia, Andorra y de prueba.",
-            "En la pantalla de planes contables se consulta la lista de planes disponibles. Es el primer paso de la configuración contable: sin plan contable no se pueden crear cuentas contables."
-          ],
-          "campos": [
-            {
-              "campo": "Código",
-              "significado": "Identifica el plan contable.",
-              "ejemplo": "ES (plan de España)"
-            },
-            {
-              "campo": "Descripción",
-              "significado": "Nombre del plan.",
-              "ejemplo": "PGE 2008"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Entra en Finanzas › Maestros › Cuentas › Planes contables."
-            },
-            {
-              "texto": "Se abre la lista de planes contables.",
-              "detalle": "En la demo verás unos 11 planes: España, Perú, Colombia, Andorra y alguno de prueba.",
-              "imagen": "v-maestros-001.jpg"
-            },
-            {
-              "texto": "Identifica el plan de España (ES / PG2008) y el de Perú (PE)."
-            },
-            {
-              "texto": "Fíjate en que cada país tiene su propia codificación de cuentas."
-            }
-          ],
-          "avisos": [
-            {
-              "tipo": "nota",
-              "texto": "El plan contable es lo primero que hay que tener creado antes de crear cuentas."
-            }
-          ]
-        },
-        {
-          "id": "maestros-v-1-cuentas-contables",
-          "titulo": "Cuentas contables",
-          "paraQueSirve": "Define las cuentas contables asociadas a un plan y sus indicadores de comportamiento.",
-          "ruta": [
-            "Finanzas",
-            "Maestros",
-            "Cuentas",
-            "Cuentas contables"
-          ],
-          "explicacion": [
-            "Las cuentas contables son los códigos numéricos que se usan en los asientos. Por ejemplo, la cuenta 10200 corresponde a Capital. Axional permite separar el código de cuenta con un punto y añadir a la derecha un código para identificar a un tercero concreto.",
-            "Cada cuenta tiene indicadores que condicionan su uso: lógica de debe/haber, tipo de terceros, tipo de costes, gestión de impuestos, cartera y periodificable. Para calcular impuestos y generar cartera, la cuenta debe tener la marca de terceros."
-          ],
-          "campos": [
-            {
-              "campo": "Plan contable",
-              "significado": "Plan al que pertenece la cuenta.",
-              "ejemplo": "PG Andorra 2012"
-            },
-            {
-              "campo": "Cuenta",
-              "significado": "Código de la cuenta. Tras el punto puede ir el código de un tercero.",
-              "ejemplo": "10200.00000"
-            },
-            {
-              "campo": "Descripción",
-              "significado": "Nombre de la cuenta.",
-              "ejemplo": "Capital"
-            },
-            {
-              "campo": "Tipo",
-              "significado": "Clase de cuenta.",
-              "ejemplo": "Terceros"
-            },
-            {
-              "campo": "Periodificable",
-              "significado": "Indica si la cuenta se periodifica.",
-              "ejemplo": "No"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Entra en Finanzas › Maestros › Cuentas › Cuentas contables."
-            },
-            {
-              "texto": "Abre la cuenta 10200 (Capital) del plan PG Andorra 2012.",
-              "detalle": "Observa el campo Cuenta con el código 10200 y su descripción Capital.",
-              "imagen": "v-maestros-002.jpg"
-            },
-            {
-              "texto": "Revisa el campo Tipo y despliega la lista.",
-              "detalle": "Las opciones son Normal, Equity, Terceros, Entidades financieras, Costes y Pasivos.",
-              "imagen": "v-maestros-003.jpg"
-            },
-            {
-              "texto": "Observa los indicadores: debe/haber, terceros, costes, impuestos, cartera y periodificable."
-            },
-            {
-              "texto": "Recuerda que la cuenta con punto + código de tercero identifica una subcuenta específica."
-            }
-          ],
-          "avisos": [
-            {
-              "tipo": "nota",
-              "texto": "La marca de terceros es imprescindible para calcular impuestos y generar cartera."
-            }
-          ]
-        }
-      ],
-      "test": [
-        {
-          "pregunta": "¿Qué es un plan contable?",
-          "opciones": [
-            "Una lista de clientes y proveedores",
-            "Una tabla de impuestos por país",
-            "Una cartilla de códigos numéricos que identifican transacciones",
-            "Un calendario fiscal"
-          ],
-          "correcta": 2,
-          "explicacion": "El plan contable es una relación de códigos numéricos que identifica cada transacción económica o financiera."
-        },
-        {
-          "pregunta": "¿Qué país corresponde al plan con código ES?",
-          "opciones": [
-            "España",
-            "Perú",
-            "Colombia",
-            "Andorra"
-          ],
-          "correcta": 0,
-          "explicacion": "ES corresponde a España (PG2008)."
-        },
-        {
-          "pregunta": "¿Qué indica el punto en una cuenta contable como 4000.00074?",
-          "opciones": [
-            "Separador decimal del importe",
-            "Indica la moneda",
-            "Es un error",
-            "Separa la cuenta base del código de tercero"
-          ],
-          "correcta": 3,
-          "explicacion": "El código a la derecha del punto identifica a un tercero concreto."
-        },
-        {
-          "pregunta": "¿Qué indicador de cuenta permite calcular impuestos y generar cartera?",
-          "opciones": [
-            "Periodificable",
-            "Tipo terceros",
-            "Tipo costes",
-            "Debe/haber"
-          ],
-          "correcta": 1,
-          "explicacion": "La marca de terceros permite calcular impuestos y generar cartera."
-        },
-        {
-          "pregunta": "¿Qué opción NO aparece en el campo Tipo de una cuenta contable?",
-          "opciones": [
-            "Normal",
-            "Equity",
-            "Facturación",
-            "Terceros"
-          ],
-          "correcta": 2,
-          "explicacion": "Las opciones son Normal, Equity, Terceros, Entidades financieras, Costes y Pasivos."
-        }
-      ],
-      "checklist": [
-        "Entras en Planes contables y ves la lista con 11 planes.",
-        "Identificas el plan ES / PG2008 para España.",
-        "Identificas el plan PE para Perú.",
-        "Entras en Cuentas contables y localizas la cuenta 10200.",
-        "Observas el campo Tipo y sus opciones.",
-        "Identificas los indicadores: debe/haber, terceros, costes, impuestos, cartera y periodificable.",
-        "Comprendes que el punto en la cuenta separa el código base del código de tercero."
-      ],
-      "problemas": [
-        {
-          "problema": "Al ver la cuenta 10200, no queda claro para qué sirve el indicador Terceros.",
-          "solucion": "El indicador Terceros permite usar el punto para añadir el código de un tercero y así analizar subcuentas por tercero, además de calcular impuestos y generar cartera."
-        }
-      ]
-    },
-    {
-      "id": "maestros-v-2",
-      "numero": 5,
-      "titulo": "Mnemotécnicos de cuentas",
-      "objetivo": "Comprender los mnemotécnicos como códigos no contables que apuntan a plan y cuenta.",
-      "concepto": "Los mnemotécnicos de cuentas son identificadores alfanuméricos que no son códigos contables. Sirven para que usuarios no contables o módulos identifiquen transacciones sin conocer la cuenta numérica.\n\nCada mnemotécnico se asocia internamente a un plan contable y a una cuenta concreta. Con plan contable + cuentas contables + mnemotécnicos ya se puede iniciar la parametrización de una empresa.",
-      "duracionMin": 15,
-      "secciones": [
-        {
-          "id": "maestros-v-2-concepto",
-          "titulo": "Concepto y estructura",
-          "paraQueSirve": "Permite a usuarios no contables identificar transacciones mediante códigos alfanuméricos.",
-          "ruta": [
-            "Finanzas",
-            "Maestros",
-            "Cuentas",
-            "Mnemotécnicas de cuentas"
-          ],
-          "explicacion": [
-            "Los mnemotécnicos son códigos no contables, normalmente alfanuméricos, que se utilizan para que otros módulos o usuarios no contables identifiquen transacciones sin escribir la cuenta numérica.",
-            "En la tabla de mnemotécnicos se ve una cabecera con el código mnemotécnico y líneas con el plan contable y la cuenta real asociada."
-          ],
-          "campos": [
-            {
-              "campo": "Código",
-              "significado": "Mnemotécnico: código alfanumérico, no contable.",
-              "ejemplo": "PEE-IGV-… (aparecen así en la lista)"
-            },
-            {
-              "campo": "Descripción",
-              "significado": "Qué representa el mnemotécnico.",
-              "ejemplo": "Se ve en la columna Descripción de la lista"
-            },
-            {
-              "campo": "Plan contable y cuenta",
-              "significado": "En las líneas del mnemotécnico: plan y cuenta real a la que apunta.",
-              "ejemplo": "Plan PE y su cuenta"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Entra en Finanzas › Maestros › Cuentas › Mnemotécnicas de cuentas."
-            },
-            {
-              "texto": "Observa la lista de mnemotécnicos.",
-              "detalle": "Los códigos son alfanuméricos y cada uno tiene su descripción.",
-              "imagen": "v-maestros-004.jpg"
-            },
-            {
-              "texto": "Abre uno y mira sus líneas: cada una tiene plan contable y cuenta real."
-            }
-          ],
-          "avisos": [
-            {
-              "tipo": "nota",
-              "texto": "Los mnemotécnicos no son códigos contables: son atajos para identificar cuentas."
-            }
-          ]
-        },
-        {
-          "id": "maestros-v-2-uso",
-          "titulo": "Uso en otros módulos",
-          "paraQueSirve": "Explica cómo otros módulos usan mnemotécnicos en lugar de cuentas contables.",
-          "ruta": null,
-          "explicacion": [
-            "Muchos módulos de Axional piden un mnemotécnico en lugar de una cuenta contable, porque así el usuario no necesita conocer el plan contable.",
-            "Con plan contable + cuentas contables + mnemotécnicos ya se puede parametrizar una empresa: los módulos usarán los mnemotécnicos y el sistema los traducirá a cuentas reales."
-          ],
-          "campos": [
-            {
-              "campo": "Cuenta contable de cliente / proveedor",
-              "significado": "En el tipo de tercero se indican mnemotécnicos, no cuentas.",
-              "ejemplo": "Mnemotécnicos (ver ejercicio 4)"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Abre el tipo de tercero 100 (lo verás en el ejercicio 4)."
-            },
-            {
-              "texto": "Fíjate en que las cuentas de cliente y proveedor se piden como mnemotécnicos, no como cuentas."
-            }
-          ],
-          "avisos": []
-        }
-      ],
-      "test": [
-        {
-          "pregunta": "¿Qué son los mnemotécnicos de cuentas?",
-          "opciones": [
-            "Códigos contables numéricos obligatorios",
-            "Números de cuenta bancaria",
-            "Workflows de validación",
-            "Identificadores no contables asociados a plan y cuenta"
-          ],
-          "correcta": 3,
-          "explicacion": "Son códigos alfanuméricos no contables que se asocian a plan y cuenta para facilitar su uso."
-        },
-        {
-          "pregunta": "¿Qué tres elementos son suficientes para iniciar la parametrización de una empresa?",
-          "opciones": [
-            "Empresa, banco y calendario",
-            "Plan contable, cuentas y mnemotécnicos",
-            "Moneda, workflow e impuestos",
-            "Tercero, cartera y condiciones comerciales"
-          ],
-          "correcta": 1,
-          "explicacion": "Con plan contable + cuentas contables + mnemotécnicos ya se puede parametrizar."
-        },
-        {
-          "pregunta": "¿Qué tipo de usuario utiliza normalmente los mnemotécnicos?",
-          "opciones": [
-            "Usuario no contable",
-            "Contable experto",
-            "Auditor",
-            "Administrador de sistemas"
-          ],
-          "correcta": 0,
-          "explicacion": "Los mnemotécnicos permiten a usuarios no contables identificar transacciones."
-        },
-        {
-          "pregunta": "En la tabla de mnemotécnicos, ¿qué campos tiene cada línea?",
-          "opciones": [
-            "Código mnemotécnico y descripción",
-            "Solo cuenta contable",
-            "Plan contable y cuenta contable",
-            "Solo plan contable"
-          ],
-          "correcta": 2,
-          "explicacion": "Las líneas tienen plan contable y cuenta contable asociada al mnemotécnico."
-        },
-        {
-          "pregunta": "¿Los mnemotécnicos son códigos contables?",
-          "opciones": [
-            "No, son códigos no contables",
-            "Sí, siempre",
-            "Depende del país",
-            "Solo si son numéricos"
-          ],
-          "correcta": 0,
-          "explicacion": "Son códigos no contables, alfanuméricos, que se asocian a cuentas."
-        }
-      ],
-      "checklist": [
-        "Entras en la tabla de mnemotécnicos de cuentas.",
-        "Observas que hay códigos alfanuméricos.",
-        "Identificas que cada mnemotécnico tiene asociado un plan y una cuenta.",
-        "Comprendes que otros módulos piden mnemotécnicos en lugar de cuentas.",
-        "Sabes que con plan, cuentas y mnemotécnicos se puede iniciar la parametrización."
-      ],
-      "problemas": [
-        {
-          "problema": "No entiendes la diferencia entre un mnemotécnico y una cuenta contable.",
-          "solucion": "El mnemotécnico es un código alfanumérico amigable; la cuenta contable es el código numérico real. El mnemotécnico apunta a la cuenta y permite que usuarios no contables la identifiquen."
-        }
-      ]
-    },
-    {
-      "id": "maestros-v-3",
-      "numero": 6,
-      "titulo": "Maestro de empresas",
-      "objetivo": "Entender la configuración básica de una empresa: multiempresa, vínculo con tercero y datos contables.",
-      "concepto": "Axional es multiempresa y multimoneda. Cada empresa se define con un código, nombre, fecha de inicio, identificación fiscal, zona impositiva y datos contables como plan contable, moneda funcional y calendario.\n\nLa empresa se vincula a un tercero previamente creado. La relación empresa-tercero es uno a uno: una empresa solo puede tener un tercero asociado.",
-      "duracionMin": 30,
-      "secciones": [
-        {
-          "id": "maestros-v-3-cabecera",
-          "titulo": "Cabecera e identificación",
-          "paraQueSirve": "Define los datos generales y fiscales de la empresa.",
-          "ruta": [
-            "Finanzas",
-            "Maestros",
-            "Parametrización",
-            "Empresas"
-          ],
-          "explicacion": [
-            "En el maestro de empresas se selecciona la empresa, por ejemplo C05. Se revisa el código, nombre y fecha de inicio, que es importante para los ejercicios contables.",
-            "También se define la identificación fiscal, la zona impositiva y la identificación social/fiscal."
-          ],
-          "campos": [
-            {
-              "campo": "Empresa",
-              "significado": "Código de la empresa.",
-              "ejemplo": "C05 (según el formador)"
-            },
-            {
-              "campo": "Nombre empresa",
-              "significado": "Nombre de la sociedad.",
-              "ejemplo": "Cons. Sport nature foundation"
-            },
-            {
-              "campo": "Fecha inicio",
-              "significado": "Fecha de inicio de la empresa.",
-              "ejemplo": "01-01-2017"
-            },
-            {
-              "campo": "Zona impositiva",
-              "significado": "Zona fiscal de la empresa.",
-              "ejemplo": "España continental"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Entra en Finanzas › Maestros › Parametrización › Empresas."
-            },
-            {
-              "texto": "Busca y selecciona la empresa C05.",
-              "detalle": "Observa la cabecera con código, nombre y fecha de inicio.",
-              "imagen": "v-maestros-005.jpg"
-            },
-            {
-              "texto": "Revisa la identificación fiscal y la identificación social/fiscal.",
-              "imagen": "v-maestros-006.jpg"
-            }
-          ],
-          "avisos": [
-            {
-              "tipo": "nota",
-              "texto": "La fecha de inicio es importante para los ejercicios contables."
-            }
-          ]
-        },
-        {
-          "id": "maestros-v-3-vinculo",
-          "titulo": "Vínculo con tercero",
-          "paraQueSirve": "Relaciona la empresa con un tercero previamente creado; la relación es uno a uno.",
-          "ruta": [
-            "Finanzas",
-            "Maestros",
-            "Parametrización",
-            "Empresas"
-          ],
-          "explicacion": [
-            "La empresa debe estar vinculada a un tercero. En el ejemplo, la empresa C05 está vinculada al tercero 95005 Sport Nature Foundation.",
-            "La relación empresa-tercero es uno a uno: no se pueden asociar varios terceros a una misma empresa."
-          ],
-          "campos": [
-            {
-              "campo": "Tercero",
-              "significado": "Tercero vinculado a la empresa (relación 1 a 1).",
-              "ejemplo": "95005 (según el formador)"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Dentro de la ficha de la empresa, localiza el campo de vínculo con tercero."
-            },
-            {
-              "texto": "Comprueba que aparece el tercero 95005.",
-              "detalle": "Puedes abrir el tercero desde el enlace para ver su ficha."
-            }
-          ],
-          "avisos": [
-            {
-              "tipo": "nota",
-              "texto": "La relación empresa-tercero es 1 a 1. Si necesitas otra empresa, deberás crear otro tercero."
-            }
-          ]
-        },
-        {
-          "id": "maestros-v-3-datos-contables",
-          "titulo": "Datos contables",
-          "paraQueSirve": "Configura el plan contable, moneda funcional, cuentas de cierres y calendario de la empresa.",
-          "ruta": [
-            "Finanzas",
-            "Maestros",
-            "Parametrización",
-            "Empresas"
-          ],
-          "explicacion": [
-            "En los datos contables de la empresa se asigna el plan contable (España), la moneda funcional (euro), las cuentas de cierres y el calendario.",
-            "Si no se define el plan contable desde el inicio, no se podrá contabilizar."
-          ],
-          "campos": [
-            {
-              "campo": "Plan contable",
-              "significado": "Plan que usará la empresa.",
-              "ejemplo": "PGE 2008"
-            },
-            {
-              "campo": "Moneda de la empresa",
-              "significado": "Moneda funcional.",
-              "ejemplo": "EUR"
-            },
-            {
-              "campo": "Cuenta diferencias positivas de cambio",
-              "significado": "Cuenta para diferencias de cambio.",
-              "ejemplo": "Se ve «Diferencias positivas de cambio»"
-            },
-            {
-              "campo": "Cuenta diferencias negativas de cambio",
-              "significado": "Cuenta para diferencias de cambio.",
-              "ejemplo": "Se ve «Diferencias negativas de cambio»"
-            }
-          ],
-          "pasos": [
-            {
-              "texto": "Dentro de la ficha de la empresa, accede a la sección de Datos contables."
-            },
-            {
-              "texto": "Observa el plan contable asignado (España) y la moneda funcional (euro).",
-              "imagen": "v-maestros-007.jpg"
-            },
-            {
-              "texto": "Revisa las cuentas de diferencias de cambio y de cierres, y el calendario."
-            }
-          ],
-          "avisos": [
-            {
-              "tipo": "problema",
-              "texto": "Si no se identifica el plan contable en la empresa desde el inicio, no se podrá contabilizar."
-            },
-            {
-              "tipo": "solucion",
-              "texto": "Define siempre el plan contable y la moneda funcional al crear la empresa."
-            }
-          ]
-        }
-      ],
-      "test": [
-        {
-          "pregunta": "¿Cuántos terceros se pueden vincular a una empresa?",
-          "opciones": [
-            "Varios",
-            "Depende del país",
-            "Cuatro",
-            "Uno"
-          ],
-          "correcta": 3,
-          "explicacion": "La relación empresa-tercero es uno a uno."
-        },
-        {
-          "pregunta": "¿Qué es Axional en términos de empresas?",
-          "opciones": [
-            "Monoempresa",
-            "Multiempresa y multimoneda",
-            "Solo multiusuario",
-            "Solo multimoneda"
-          ],
-          "correcta": 1,
-          "explicacion": "Axional es multiempresa y multimoneda."
-        },
-        {
-          "pregunta": "¿Qué dato de la empresa es importante para los ejercicios contables?",
-          "opciones": [
-            "La identificación fiscal",
-            "La zona impositiva",
-            "La fecha de inicio",
-            "El código"
-          ],
-          "correcta": 2,
-          "explicacion": "La fecha de inicio determina el primer ejercicio contable."
-        },
-        {
-          "pregunta": "¿Qué moneda funcional se usa en la empresa C05?",
-          "opciones": [
-            "Dólar",
-            "Peso",
-            "Libra",
-            "Euro"
-          ],
-          "correcta": 3,
-          "explicacion": "La moneda funcional es el euro (EUR)."
-        },
-        {
-          "pregunta": "¿Qué plan contable se asigna a la empresa C05?",
-          "opciones": [
-            "PE",
-            "ES / PG2008",
-            "CO",
-            "Andorra"
-          ],
-          "correcta": 1,
-          "explicacion": "Se asigna el plan contable de España (ES / PG2008)."
-        }
-      ],
-      "checklist": [
-        "Entras en Empresas y seleccionas C05.",
-        "Observas cabecera con código, nombre y fecha de inicio.",
-        "Revisas identificación fiscal y zona impositiva.",
-        "Compruebas el vínculo con el tercero 95005.",
-        "Accedes a Datos contables y ves plan España y moneda EUR.",
-        "Localizas las cuentas de cierres y el calendario.",
-        "Comprendes que la relación empresa-tercero es 1 a 1."
-      ],
-      "problemas": [
-        {
-          "problema": "No se puede contabilizar porque no se definió el plan contable.",
-          "solucion": "Asigna un plan contable y moneda funcional en los Datos contables de la empresa."
-        },
-        {
-          "problema": "Se intenta asociar más de un tercero a la empresa.",
-          "solucion": "La relación empresa-tercero es uno a uno; crea otra empresa si necesitas otro tercero."
-        }
-      ]
-    },
-    {
       "id": "maestros-v-4",
       "numero": 7,
       "titulo": "Dar de alta una empresa en el maestro de empresas",
-      "objetivo": "Crearás la empresa S{INI} con ejercicio 2026 y banco propio CAIXA{INI} para poder facturar y remesar.",
-      "concepto": "El maestro de empresas (C-Empresa) parametriza los datos de la sociedad: identificación, plan contable, ejercicios y bancos propios.\n\nEn el vídeo se crea la empresa SOR «SORBITOS CAFE SAC» con fecha 01-01-2026, moneda EUR y plan contable ES (PGE 2008). Después se crea el ejercicio 2026 y un banco propio CAIXA13 con cuenta financiera, IBAN y cuenta contable 57900.00000. Tú crearás la variante con tus iniciales, p. ej. S{INI} y CAIXA{INI}, para no pisar los datos de otros alumnos.",
+      "objetivo": "Crearás la empresa S{INI} con el ejercicio contable 2026 y el banco propio CAIXA{INI}, lo mínimo para poder facturar, cobrar y pagar.",
+      "concepto": "El maestro de empresas también sirve para crear sociedades nuevas. Una empresa nueva necesita, como mínimo, su identificación (que se copia de un tercero), su plan contable y su moneda, un ejercicio contable abierto (el año en el que se va a contabilizar) y un banco propio por el que cobrar y pagar.\n\nCrearás la empresa S{INI} con el ejercicio 2026 y el banco propio CAIXA{INI}. Usa siempre tus iniciales: la base TUTORIAL es compartida y así no pisas los datos de otros alumnos.",
       "duracionMin": 14,
       "secciones": [
         {
@@ -2706,19 +2714,19 @@
             "Empresas"
           ],
           "explicacion": [
-            "Desde la pantalla «MAESTRO DE EMPRESAS» se pulsa «Añadir empresa». Los datos de identificación y dirección se toman del tercero.",
-            "En el vídeo se usa Sorbitos Café; tú puedes usar un tercero que tengas creado y poner la empresa S{INI}."
+            "Desde la pantalla «MAESTRO DE EMPRESAS» se pulsa «Añadir empresa». Los datos de identificación y dirección se copian del tercero.",
+            "Elige un tercero tuyo, por ejemplo {INI}1. En un caso real sería un tercero creado para la propia sociedad."
           ],
           "campos": [
             {
               "campo": "Empresa",
               "significado": "Código corto de la empresa.",
-              "ejemplo": "SOR en el vídeo; propón S{INI}"
+              "ejemplo": "S{INI}"
             },
             {
               "campo": "Nombre",
               "significado": "Razón social de la empresa.",
-              "ejemplo": "SORBITOS CAFE SAC"
+              "ejemplo": "Empresa prácticas {INI}"
             },
             {
               "campo": "Fecha inicio",
@@ -2758,7 +2766,7 @@
             {
               "campo": "Tercero",
               "significado": "Tercero del que se copian dirección e identificación.",
-              "ejemplo": "Sorbitos Café"
+              "ejemplo": "{INI}1"
             }
           ],
           "pasos": [
@@ -2774,7 +2782,7 @@
               }
             },
             {
-              "texto": "Pulsa «Añadir empresa» y escribe el código de empresa, p. ej. S{INI}.",
+              "texto": "Pulsa «Añadir empresa» y escribe el código S{INI} y el nombre «Empresa prácticas {INI}».",
               "imagen": "v-icon1-007.jpg",
               "hotspot": {
                 "x": 61.2,
@@ -2788,7 +2796,7 @@
               "texto": "Rellena fecha de inicio 01-01-2026, estado Abierto, moneda EUR, plan contable ES (PGE 2008), tipo NIF-Empresa, país ES y prorrata No."
             },
             {
-              "texto": "Selecciona el tercero del que se toman la dirección y la identificación fiscal."
+              "texto": "Selecciona tu tercero ({INI}1): de él se copian la dirección y la identificación fiscal."
             },
             {
               "texto": "Guarda y comprueba la ficha con las pestañas Empresa, Ejercicio, Bancos propios, Clasificación, Empresa y agencias tributarias, Ajustes de impresión, Prorrata por empresa y Declaraciones.",
@@ -2805,7 +2813,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "En el vídeo se ve la empresa SOR «SORBITOS CAFE SAC». Para practicar sin pisar datos, usa el código S{INI} con tu propio tercero."
+              "texto": "Usa el código S{INI} con tu propio tercero para no pisar los datos de otros alumnos."
             },
             {
               "tipo": "nota",
@@ -2813,21 +2821,21 @@
             },
             {
               "tipo": "nota",
-              "texto": "Al guardar la empresa puede salir el aviso «¿Quieres guardar la dirección?»: pulsa «Guardar» para que la dirección del tercero quede registrada."
+              "texto": "Al guardar la empresa puede salir «¿Quieres guardar la dirección?»: pulsa «Guardar» para que la dirección del tercero quede registrada en la empresa."
             }
           ]
         },
         {
           "id": "maestros-v-4-ejercicio",
           "titulo": "Creación del ejercicio contable 2026",
-          "paraQueSirve": "Dejas abierto el ejercicio contable para poder asentar operaciones en 2026.",
+          "paraQueSirve": "Abres el ejercicio contable (el año contable) para poder contabilizar operaciones de 2026.",
           "ruta": [
             "Ficha de empresa",
             "pestaña Ejercicio"
           ],
           "explicacion": [
             "Una empresa nueva necesita al menos el ejercicio contable del año en que se va a operar.",
-            "Si la empresa viniera de años anteriores, habría que crear también los ejercicios previos; en el vídeo solo se crea 2026."
+            "Si la empresa viniera de años anteriores, habría que crear también esos ejercicios; aquí basta con 2026."
           ],
           "campos": [
             {
@@ -2838,7 +2846,7 @@
             {
               "campo": "Pestaña Ejercicio",
               "significado": "Donde se añaden los ejercicios de la empresa.",
-              "ejemplo": "Ficha SORBITOS CAFE SAC"
+              "ejemplo": "Ficha de la empresa S{INI}"
             },
             {
               "campo": "Fecha inicio",
@@ -2869,7 +2877,7 @@
               }
             },
             {
-              "texto": "Rellena empresa, ejercicio 2026 y descripción (en el vídeo, «EJERCICIO 2026»; estado Abierto) y guarda.",
+              "texto": "Rellena empresa S{INI}, ejercicio 2026, descripción «EJERCICIO 2026» y estado Abierto, y guarda.",
               "imagen": "v-icon1-009.jpg",
               "hotspot": {
                 "x": 11.7,
@@ -2883,48 +2891,48 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "En el vídeo solo se crea el ejercicio 2026. Si la empresa existiera desde años anteriores, habría que crear también esos ejercicios."
+              "texto": "Basta con el ejercicio del año en el que vas a trabajar. Si la empresa existiera desde años anteriores, habría que crear también esos ejercicios."
             }
           ]
         },
         {
           "id": "maestros-v-4-banco-propio",
           "titulo": "Banco propio para remesas",
-          "paraQueSirve": "Crear la cuenta bancaria y la cuenta financiera que usarás en facturas y remesas.",
+          "paraQueSirve": "Crear la cuenta financiera (el banco propio) que usarás para cobrar, pagar y remesar recibos.",
           "ruta": [
             "Ficha de empresa",
             "pestaña Bancos propios",
             "Añadir bancos propios"
           ],
           "explicacion": [
-            "En Bancos propios se crea la cuenta financiera y se asocia a una cuenta contable 57900.00000, «Fondos en movimiento para los bancos».",
-            "El banco debe tener entidad y cuenta bancaria rellenas a la vez; el formador usa una calculadora de IBAN externa para el IBAN válido."
+            "En Bancos propios se crea la cuenta financiera y se asocia a la cuenta contable de bancos 57200.00000, la misma que usa la cuenta BBVA_CA de la empresa 0.",
+            "Banco y cuenta bancaria (IBAN) se rellenan a la vez. No uses nunca un IBAN real: usa el de ejemplo ES91 2100 0418 4502 0005 1332."
           ],
           "campos": [
             {
               "campo": "Cuenta financiera",
               "significado": "Código que identifica la cuenta para facturas y remesas.",
-              "ejemplo": "CAIXA13 en el vídeo; propón CAIXA{INI}"
+              "ejemplo": "CAIXA{INI}"
             },
             {
               "campo": "Banco",
               "significado": "Código del banco.",
-              "ejemplo": "ES0130, banco CAIXA"
+              "ejemplo": "Elígelo de la lista (en el vídeo, ES0130)"
             },
             {
               "campo": "Cuenta corriente",
               "significado": "IBAN de la cuenta bancaria.",
-              "ejemplo": "IBAN válido calculado con calculadora externa"
+              "ejemplo": "ES9121000418450200051332 (IBAN de ejemplo, no real)"
             },
             {
               "campo": "Entidad financiera",
               "significado": "Código de entidad.",
-              "ejemplo": "00101"
+              "ejemplo": "Elígela de la lista (en el vídeo, 00101)"
             },
             {
               "campo": "Cuenta contable",
               "significado": "Cuenta contable asociada al banco.",
-              "ejemplo": "57900.00000 Fondos en movimiento para los bancos"
+              "ejemplo": "57200.00000 (bancos, cuentas corrientes en euros)"
             }
           ],
           "pasos": [
@@ -2940,11 +2948,11 @@
               }
             },
             {
-              "texto": "Escribe la cuenta financiera CAIXA{INI}, banco ES0130 y entidad financiera 00101.",
-              "detalle": "En el vídeo se ve CAIXA13."
+              "texto": "Escribe la cuenta financiera CAIXA{INI} y elige de la lista el banco y la entidad financiera.",
+              "detalle": "En el vídeo se usan el banco ES0130 y la entidad 00101."
             },
             {
-              "texto": "Rellena el IBAN y la cuenta bancaria a la vez.",
+              "texto": "Rellena a la vez el banco y la cuenta bancaria con el IBAN de ejemplo ES9121000418450200051332.",
               "detalle": "Si solo pones uno, verás el error de restricciones de verificación.",
               "imagen": "v-icon1-012.jpg",
               "hotspot": {
@@ -2956,7 +2964,7 @@
               }
             },
             {
-              "texto": "Asocia la cuenta contable 57900.00000 y guarda."
+              "texto": "Asocia la cuenta contable 57200.00000 y guarda."
             }
           ],
           "avisos": [
@@ -2966,7 +2974,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "Rellena entidad y cuenta bancaria (banco e IBAN) a la vez; usa una calculadora de IBAN externa para un IBAN válido."
+              "texto": "Rellena a la vez la entidad y la cuenta bancaria (banco e IBAN). Usa el IBAN de ejemplo ES9121000418450200051332, nunca uno real."
             }
           ]
         }
@@ -2998,12 +3006,12 @@
           "pregunta": "¿Qué cuenta contable se asigna al banco propio?",
           "opciones": [
             "60000.00000",
-            "57900.00000",
+            "57200.00000",
             "70000.00000",
             "43000.00000"
           ],
           "correcta": 1,
-          "explicacion": "Se usa la 57900.00000, Fondos en movimiento para los bancos."
+          "explicacion": "Los bancos se asocian a una cuenta 572 (bancos): aquí, la 57200.00000, como la cuenta BBVA_CA de la empresa 0."
         },
         {
           "pregunta": "¿Cuál es el error típico al crear el banco si no rellenas banco e IBAN a la vez?",
@@ -3017,15 +3025,15 @@
           "explicacion": "El error pide que entidad y cuenta bancaria estén ambas rellenas o ambas vacías."
         },
         {
-          "pregunta": "¿Qué datos propones para no pisar los del vídeo?",
+          "pregunta": "¿Qué códigos usas para no pisar los datos de otros alumnos?",
           "opciones": [
             "S{INI} y CAIXA{INI}",
-            "SOR y CAIXA13",
-            "LIZ y CAIXAQUA04",
-            "Deister y CAIXA13"
+            "0 y BBVA_CA",
+            "DIS y 5700000",
+            "SOR y CAIXA13"
           ],
           "correcta": 0,
-          "explicacion": "Usa tus iniciales, por ejemplo S{INI} y CAIXA{INI}, para no pisar datos."
+          "explicacion": "Usa tus iniciales (S{INI} y CAIXA{INI}); los demás códigos ya existen o son de otros."
         }
       ],
       "checklist": [
@@ -3034,18 +3042,18 @@
         "Rellenas fecha, moneda, plan contable, ID fiscal, país y prorrata.",
         "Guardas y ves la ficha con sus pestañas.",
         "Creas el ejercicio contable 2026 en la pestaña Ejercicio.",
-        "Añades bancos propios con CAIXA{INI}, ES0130, IBAN y entidad 00101.",
-        "Asocias la cuenta contable 57900.00000.",
+        "Añades el banco propio CAIXA{INI} con banco, entidad financiera y el IBAN de ejemplo.",
+        "Asocias la cuenta contable 57200.00000.",
         "Guardas sin el error de entidad y cuenta bancaria."
       ],
       "problemas": [
         {
           "problema": "Al crear el banco aparece «restricciones de verificación fallaron...».",
-          "solucion": "Rellena entidad y cuenta bancaria a la vez; usa una calculadora de IBAN externa."
+          "solucion": "Rellena a la vez la entidad y la cuenta bancaria. Usa el IBAN de ejemplo ES9121000418450200051332."
         },
         {
           "problema": "Al guardar la empresa aparece «¿Quieres guardar la dirección?».",
-          "solucion": "Es una pregunta del navegador sobre la dirección que se rellena sola desde el tercero; confírmala y sigue con la ficha."
+          "solucion": "Pulsa «Guardar»: la dirección que se ha copiado del tercero queda registrada en la empresa. Después sigue con la ficha."
         }
       ]
     }

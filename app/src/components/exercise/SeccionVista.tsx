@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Glosa } from '../Glosario';
 import { motion } from 'framer-motion';
 import type { Seccion } from '../../types';
 import { conIni } from '../../lib/texto';
@@ -28,7 +29,7 @@ export function Ideas({ parrafos, ini, max = MAX_IDEAS }: { parrafos: string[]; 
   const [todo, setTodo] = useState(false);
   const r = useRevela();
   if (!parrafos.length) return null;
-  if (parrafos.length === 1) return <motion.p className="sv-p" {...r(0)}>{conIni(parrafos[0], ini)}</motion.p>;
+  if (parrafos.length === 1) return <motion.p className="sv-p" {...r(0)}><Glosa>{conIni(parrafos[0], ini)}</Glosa></motion.p>;
   const vis = todo ? parrafos : parrafos.slice(0, max);
   return (
     <div className="sv-ideas-wrap">
@@ -41,7 +42,7 @@ export function Ideas({ parrafos, ini, max = MAX_IDEAS }: { parrafos: string[]; 
                 {String(i + 1).padStart(2, '0')}
               </span>
               {cab && <strong>{cab}</strong>}
-              <span>{resto}</span>
+              <span><Glosa>{resto}</Glosa></span>
             </motion.li>
           );
         })}
@@ -68,7 +69,7 @@ export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion;
           </span>
           <span>
             <b>¿Para qué sirve?</b>
-            {t(s.paraQueSirve)}
+            <Glosa>{t(s.paraQueSirve)}</Glosa>
           </span>
         </motion.div>
       )}
@@ -96,7 +97,7 @@ export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion;
                 {campos.map((c, i) => (
                   <tr key={i}>
                     <td>{t(c.campo)}</td>
-                    <td>{t(c.significado)}</td>
+                    <td><Glosa>{t(c.significado)}</Glosa></td>
                     <td>{c.ejemplo ? <code>{t(c.ejemplo)}</code> : null}</td>
                   </tr>
                 ))}
@@ -117,8 +118,8 @@ export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion;
                   {i + 1}
                 </span>
                 <span>
-                  <span>{t(p.texto)}</span>
-                  {p.detalle && <small className="muted">{t(p.detalle)}</small>}
+                  <span><Glosa>{t(p.texto)}</Glosa></span>
+                  {p.detalle && <small className="muted"><Glosa>{t(p.detalle)}</Glosa></small>}
                 </span>
               </motion.li>
             ))}
@@ -133,7 +134,7 @@ export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion;
               <b>
                 <Icon name={a.tipo === 'problema' ? 'aviso' : a.tipo === 'solucion' ? 'check' : 'cerebro'} size={16} /> {TITULO_AVISO[a.tipo] ?? 'Nota'}
               </b>
-              {t(a.texto)}
+              <Glosa>{t(a.texto)}</Glosa>
             </motion.div>
           ))}
         </div>

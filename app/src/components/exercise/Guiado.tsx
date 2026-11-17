@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Glosa } from '../Glosario';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import type { Ejercicio } from '../../types';
@@ -203,8 +204,8 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
               <div className="shot shot-text">
                 <div className="shot-text-in">
                   <RutaMenu ruta={actual.seccion.ruta?.map(t) ?? null} />
-                  <p>{t(actual.paso.texto)}</p>
-                  {actual.paso.detalle && <small>{t(actual.paso.detalle)}</small>}
+                  <p><Glosa>{t(actual.paso.texto)}</Glosa></p>
+                  {actual.paso.detalle && <small><Glosa>{t(actual.paso.detalle)}</Glosa></small>}
                   <span className="shot-text-note">Este paso no tiene captura: hazlo mentalmente y sigue.</span>
                 </div>
               </div>
@@ -221,8 +222,8 @@ export function Guiado({ ej, modulo, ini, onIr }: { ej: Ejercicio; modulo: strin
           </span>
           {hecho && <span className="chip ok">Hecho</span>}
         </div>
-        <p className="gd-texto">{t(actual.paso.texto)}</p>
-        {actual.paso.detalle && <p className={`small muted${img ? '' : ' gd-det-dup'}`}>{t(actual.paso.detalle)}</p>}
+        <p className="gd-texto"><Glosa>{t(actual.paso.texto)}</Glosa></p>
+        {actual.paso.detalle && <p className={`small muted${img ? '' : ' gd-det-dup'}`}><Glosa>{t(actual.paso.detalle)}</Glosa></p>}
         {actual.local === 0 && <Momentos lista={momentosDeSeccion(actual.seccion.id)} compacto />}
         {instruccion && (
           <motion.div key={fallos >= 2 ? 'pista' : 'base'} className={`gd-instr${fallos >= 2 ? ' hint' : ''}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>

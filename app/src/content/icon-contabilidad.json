@@ -2,22 +2,1210 @@
  "id": "icon-contabilidad",
  "titulo": "Contabilidad general",
  "sesion": "",
- "resumen": "Aprendes a localizar la estructura del diario contable, su configuración de ejercicio y periodos y las plantillas de contabilización. Consultas los procesos periódicos de cierre y apertura y los mecanismos para ver la contabilidad a una fecha pasada. Localizas los balances, las cuentas anuales XLS, el motor de consultas Excel y la documentación de consolidación.",
+ "resumen": "Empiezas viendo qué genera contabilizar una factura (asiento, cartera de efectos y registro fiscal), cómo se hace una factura directa, cuándo rectificar o sustituir y por qué una factura no contabiliza. Después localizas la estructura del diario, los periodos y las plantillas, los procesos de cierre y apertura del ejercicio, los balances, las cuentas anuales XLS, el motor de consultas Excel y la consolidación.",
  "circuito": [
+  "Contabilizar facturas",
+  "Corregir facturas",
   "Diario y periodos",
   "Plantillas de contabilización",
-  "Procesos periódicos",
   "Cierre y apertura",
   "Balances",
   "Consolidación"
  ],
  "ejercicios": [
   {
-   "id": "icon-contabilidad-1",
+   "id": "icon-contabilidad-v-1",
    "numero": 1,
+   "titulo": "Contabilizar una factura de compra y ver qué genera",
+   "objetivo": "Contabilizarás una factura de compra con origen albarán y comprobarás que genera asiento contable, cartera de efectos y registros fiscales. También revisarás la cartera de efectos de la factura FC-012345 y sus datos de pago.",
+   "concepto": "Al contabilizar una factura de compra, el ERP genera tres cosas: el asiento contable (Debe y Haber), la cartera de efectos (la deuda pendiente con el proveedor, con su fecha de vencimiento: lo que pagarás más adelante) y los registros fiscales (el IVA de la factura, que después se declara a Hacienda).\n\nEn el vídeo se usa la factura ML0260020 de tipo «FACTURA COMPRA ORIGEN ALBARAN» con proveedor 00027: base 875,00 + IVA 21 % 183,75 = 1.058,75. El asiento cuadra por 1.058,75: Debe la compra (875,00) y el IVA soportado (183,75), Haber el proveedor (1.058,75). La cartera deja un efecto TF (transferencia) pendiente por 1.058,75 y el registro fiscal recoge el IVA deducible de 183,75, el que la empresa paga al proveedor y podrá restar del IVA que cobra a sus clientes.\n\nPara repasar la cartera se usa otra factura de compra ya contabilizada, la FC-012345 del proveedor 00087: su efecto es de clase Pagar, tipo TF, importe 1.815,00, vencimiento 23-07-2026 y estado Pendiente (PE).",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-contabilidad-v-1-factura-origen",
+     "titulo": "Factura de compra con origen albarán",
+     "paraQueSirve": "Ves la factura antes de contabilizar y entiendes qué bloques muestra y qué cambia al contabilizar.",
+     "ruta": [
+      "Gestión",
+      "Compras",
+      "Facturas"
+     ],
+     "explicacion": [
+      "La factura de compra con origen albarán llega desde el circuito de compras. En la cabecera se ven el número, el tipo, el proveedor y el estado.",
+      "Al contabilizar se añaden asientos contables, cartera de efectos y registros fiscales. La factura pasa de «Entrada/Validado» a «Contabilizada» y aparece el botón Descontabilizar."
+     ],
+     "campos": [
+      {
+       "campo": "Factura",
+       "significado": "Número de la factura de compra que vas a contabilizar.",
+       "ejemplo": "ML0260020 en el vídeo"
+      },
+      {
+       "campo": "Tipo",
+       "significado": "Origen de la factura.",
+       "ejemplo": "FACTURA COMPRA ORIGEN ALBARAN"
+      },
+      {
+       "campo": "Proveedor",
+       "significado": "Tercero acreedor de la factura.",
+       "ejemplo": "00027"
+      },
+      {
+       "campo": "DocFlow",
+       "significado": "Circuito documental de la factura.",
+       "ejemplo": "DocFlow, Acuerdos compras, Albaranes compras, Suministros"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Situación de la factura antes y después de contabilizar.",
+       "ejemplo": "Entrada/Validado antes; Contabilizada después"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la factura de compra con origen albarán desde Gestión > Compras > Facturas.",
+       "imagen": "v-icon1-001.jpg"
+      },
+      {
+       "texto": "Revisa en la cabecera los bloques del circuito: DocFlow, acuerdos compras, albaranes de compras, suministros."
+      },
+      {
+       "texto": "Anota el número, tipo, proveedor y estado antes de contabilizar."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El botón Descontabilizar solo aparece tras contabilizar; si no está, la factura aún no ha sido contabilizada."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-1-contabilizar",
+     "titulo": "Contabilizar y abrir el menú de la cabecera",
+     "paraQueSirve": "Ejecutas la contabilización y compruebas que el ERP añade los bloques generados.",
+     "ruta": null,
+     "explicacion": [
+      "El botón Contabilizar cambia el estado de la factura y dispara la generación de asiento, cartera y registros fiscales.",
+      "En el menú desplegable de la cabecera puedes saltar a los documentos generados: Docflow, Acuerdos compras, Albaranes compras, Suministros, Asientos contables, Cartera de efectos, Registros fiscales."
+     ],
+     "campos": [
+      {
+       "campo": "Botón Contabilizar",
+       "significado": "Acción que valida y genera los documentos contables de la factura.",
+       "ejemplo": "Contabilizar"
+      },
+      {
+       "campo": "Botón Descontabilizar",
+       "significado": "Acción inversa que devuelve la factura a un estado sin asiento.",
+       "ejemplo": "Descontabilizar"
+      },
+      {
+       "campo": "Menú desplegable",
+       "significado": "Acceso a los documentos del circuito y a los generados.",
+       "ejemplo": "Asientos contables, Cartera de efectos, Registros fiscales"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Si la factura está en «Entrada/Validado», pulsa «Contabilizar».",
+       "detalle": "La factura pasa de «Entrada/Validado» a «Contabilizada». Si ya está contabilizada (otra persona lo hizo antes), sigue con el paso siguiente: verás directamente el botón «Descontabilizar».",
+       "imagen": "v-icon1-001.jpg",
+       "hotspot": {
+        "x": 84.2,
+        "y": 6.8,
+        "w": 6,
+        "h": 4,
+        "etiqueta": "Contabilizar"
+       }
+      },
+      {
+       "texto": "Comprueba que ahora aparece el botón «Descontabilizar».",
+       "detalle": "Eso confirma que la factura ya está contabilizada."
+      },
+      {
+       "texto": "Abre el menú desplegable de la cabecera y localiza las entradas Asientos contables, Cartera de efectos y Registros fiscales.",
+       "imagen": "v-icon1-002.jpg",
+       "hotspot": {
+        "x": 32.5,
+        "y": 39,
+        "w": 8.5,
+        "h": 4.5,
+        "etiqueta": "Registros fiscales"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Contabilizar genera tres cosas: asiento contable, cartera de efectos y registros fiscales. Memorízalo."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-1-asiento",
+     "titulo": "Asiento contable generado",
+     "paraQueSirve": "Compruebas el apunte contable y su cuadre.",
+     "ruta": null,
+     "explicacion": [
+      "El asiento de una factura de compra anota al Debe lo que compras (cuenta de compras, grupo 60) y el IVA soportado (47200), y al Haber lo que debes al proveedor (cuenta del proveedor, grupo 40). Aquí: Debe 875,00 + 183,75 = Haber 1.058,75.",
+      "Es la regla básica: un asiento siempre cuadra."
+     ],
+     "campos": [
+      {
+       "campo": "Debe",
+       "significado": "Importe anotado al debe del asiento.",
+       "ejemplo": "1.058,75"
+      },
+      {
+       "campo": "Haber",
+       "significado": "Importe anotado al haber del asiento.",
+       "ejemplo": "1.058,75"
+      },
+      {
+       "campo": "Cuadre",
+       "significado": "Resultado de comparar debe y haber; debe ser 0.",
+       "ejemplo": "0,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Desde el menú de la cabecera abre «Asientos contables».",
+       "imagen": "v-icon1-003.jpg",
+       "hotspot": {
+        "x": 66.5,
+        "y": 23,
+        "w": 15.5,
+        "h": 6,
+        "etiqueta": "Debe, haber y cuadre"
+       }
+      },
+      {
+       "texto": "Comprueba que el asiento cuadra por 1.058,75."
+      },
+      {
+       "texto": "Repasa el asiento con la regla del cuadre",
+       "detalle": "Debe compras 875,00 y IVA soportado 183,75; Haber proveedor 1.058,75. Lo que debes al proveedor es la compra más el IVA."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Un asiento siempre cuadra: el total del Debe (875,00 + 183,75) es igual al del Haber (1.058,75)."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-1-cartera-fiscales",
+     "titulo": "Cartera de efectos y registros fiscales",
+     "paraQueSirve": "Compruebas el importe pendiente y el IVA generado por la factura.",
+     "ruta": null,
+     "explicacion": [
+      "La cartera de efectos es el importe pendiente de pago o cobro; para una factura de compra es lo que pagarás por remesa.",
+      "Los registros fiscales muestran los impuestos: IVA 21 %, base imponible y total."
+     ],
+     "campos": [
+      {
+       "campo": "Efecto",
+       "significado": "Documento de cobro/pago generado en cartera.",
+       "ejemplo": "Tipo TF transferencia, estado pendiente"
+      },
+      {
+       "campo": "Importe cartera",
+       "significado": "Importe pendiente de la factura.",
+       "ejemplo": "1.058,75"
+      },
+      {
+       "campo": "IVA",
+       "significado": "Porcentaje de impuesto aplicado.",
+       "ejemplo": "21 %"
+      },
+      {
+       "campo": "Base imponible",
+       "significado": "Base sobre la que se calcula el IVA.",
+       "ejemplo": "875,00"
+      },
+      {
+       "campo": "Impuesto deducible",
+       "significado": "Cuota de IVA deducible generada.",
+       "ejemplo": "183,75"
+      },
+      {
+       "campo": "Total registro fiscal",
+       "significado": "Total del apunte fiscal.",
+       "ejemplo": "1.058,75"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Cartera de efectos» y comprueba el efecto TF transferencia con estado pendiente e importe 1.058,75.",
+       "imagen": "v-icon1-004.jpg",
+       "hotspot": {
+        "x": 38,
+        "y": 27.5,
+        "w": 21,
+        "h": 6,
+        "etiqueta": "Importe pendiente"
+       }
+      },
+      {
+       "texto": "Abre «Registros fiscales» y comprueba el IVA 21 %, el impuesto deducible 183,75 y el total 1.058,75.",
+       "imagen": "v-icon1-005.jpg",
+       "hotspot": {
+        "x": 15.6,
+        "y": 65,
+        "w": 66.5,
+        "h": 4.5,
+        "etiqueta": "Detalle fiscal: IVA y total"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El importe de la cartera de efectos es el que más tarde deberá cargarse en una remesa."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-1-cartera",
+     "titulo": "Revisar la cartera de efectos generada",
+     "paraQueSirve": "Comprobar la deuda generada con el proveedor y los datos del efecto que luego se remesará.",
+     "ruta": null,
+     "explicacion": [
+      "Para practicar la lectura de la cartera se usa otra factura de compra ya contabilizada, la FC-012345: al contabilizarse generó el efecto «CARTERA DE EFECTOS › FC-012345».",
+      "El efecto muestra clase Pagar porque es una factura de compra, tipo de efecto TF y estado Pendiente."
+     ],
+     "campos": [
+      {
+       "campo": "Clase",
+       "significado": "Indica si el efecto es de pago o de cobro.",
+       "ejemplo": "Pagar"
+      },
+      {
+       "campo": "Tipo de efecto",
+       "significado": "Forma de pago del efecto. TF es transferencia.",
+       "ejemplo": "TF"
+      },
+      {
+       "campo": "Moneda",
+       "significado": "Divisa del efecto.",
+       "ejemplo": "EUR"
+      },
+      {
+       "campo": "Importe",
+       "significado": "Importe de la deuda pendiente.",
+       "ejemplo": "1.815,00"
+      },
+      {
+       "campo": "Vencimiento",
+       "significado": "Fecha prevista de pago.",
+       "ejemplo": "23-07-2026"
+      },
+      {
+       "campo": "Tercero",
+       "significado": "Proveedor acreedor del efecto.",
+       "ejemplo": "00087 LABORATORIOS UNION"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Situación del efecto. PE es pendiente.",
+       "ejemplo": "Pendiente (PE)"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la cartera de efectos de la factura FC-012345 (desde su menú de cabecera, «Cartera de efectos»).",
+       "detalle": "Verás las pestañas Cartera de efectos, Historia efecto y Asientos contables."
+      },
+      {
+       "texto": "Comprueba el importe 1.815,00, clase Pagar, tipo TF y estado Pendiente (PE).",
+       "imagen": "v-icon11-003.jpg"
+      },
+      {
+       "texto": "Revisa el vencimiento 23-07-2026 y el tercero 00087.",
+       "detalle": "Son los datos que se usarán en la remesa de pago."
+      },
+      {
+       "texto": "Si quieres ver el asiento contable, abre la pestaña «Asientos contables».",
+       "detalle": "Ese asiento refleja la contabilización de la factura, no la futura remesa."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La cartera de efectos es la deuda con el proveedor. No la confundas con el asiento contable ni con los registros fiscales de impuestos."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué tres cosas genera contabilizar una factura?",
+     "opciones": [
+      "Asiento contable, cartera de efectos y registros fiscales",
+      "Albarán, pedido y factura",
+      "Banco propio, ejercicio y C-Empresa",
+      "DocFlow, acuerdos y suministros"
+     ],
+     "correcta": 0,
+     "explicacion": "Al contabilizar se generan asiento contable, cartera de efectos y registros fiscales."
+    },
+    {
+     "pregunta": "¿En qué estado pasa la factura tras contabilizar?",
+     "opciones": [
+      "Provisional",
+      "Entrada/Validado",
+      "Descontabilizada",
+      "Contabilizada"
+     ],
+     "correcta": 3,
+     "explicacion": "Pasa de «Entrada/Validado» a «Contabilizada» y aparece el botón Descontabilizar."
+    },
+    {
+     "pregunta": "¿Cuál es el importe de la cartera de efectos de la factura ML0260020?",
+     "opciones": [
+      "875,00",
+      "183,75",
+      "1.058,75",
+      "1.000,00"
+     ],
+     "correcta": 2,
+     "explicacion": "La cartera muestra el importe pendiente de pago: 1.058,75."
+    },
+    {
+     "pregunta": "¿Qué reflejan los registros fiscales?",
+     "opciones": [
+      "Las cuentas contables del asiento",
+      "Los impuestos de la factura",
+      "Los albaranes de compra",
+      "Los bancos propios"
+     ],
+     "correcta": 1,
+     "explicacion": "Los registros fiscales son los impuestos; en el vídeo se ve IVA 21 %."
+    },
+    {
+     "pregunta": "¿Qué tipo de efecto aparece en la cartera FC-012345?",
+     "opciones": [
+      "TF transferencia",
+      "Cheque",
+      "Pagaré",
+      "Recibo"
+     ],
+     "correcta": 0,
+     "explicacion": "El efecto de la demo es de tipo TF, es decir, transferencia."
+    },
+    {
+     "pregunta": "¿Qué representa la cartera de efectos de una factura de compra?",
+     "opciones": [
+      "Un impuesto",
+      "La deuda con el proveedor",
+      "Un cobro de cliente",
+      "Un registro fiscal"
+     ],
+     "correcta": 1,
+     "explicacion": "En una factura de compra, la cartera de efectos representa la deuda con el proveedor."
+    }
+   ],
+   "checklist": [
+    "Abres la factura ML0260020 desde Compras > Facturas.",
+    "Identificas su tipo «FACTURA COMPRA ORIGEN ALBARAN» y proveedor 00027.",
+    "Pulsas Contabilizar y ves el estado «Contabilizada» y el botón Descontabilizar.",
+    "Localizas en el menú de cabecera Asientos contables, Cartera de efectos y Registros fiscales.",
+    "Compruebas el asiento cuadrado por 1.058,75.",
+    "Compruebas la cartera con efecto TF transferencia pendiente por 1.058,75.",
+    "Compruebas el registro fiscal con IVA 21 %, base 875,00 e impuesto deducible 183,75.",
+    "Abres la cartera FC-012345 y verificas clase Pagar, tipo TF, importe 1.815,00 y estado Pendiente."
+   ],
+   "problemas": [
+    {
+     "problema": "Al abrir «Registros fiscales» sale una franja roja con «Table … does not exists in database».",
+     "solucion": "Es un fallo del entorno de formación, no tuyo: el detalle fiscal (IVA, importe 1.058,75) se ve igual debajo. Sigue con el ejercicio."
+    },
+    {
+     "problema": "No aparecen Asientos contables, Cartera de efectos o Registros fiscales en la factura.",
+     "solucion": "Comprueba que la factura esté Contabilizada. Mientras siga en «Entrada / Validado», esos bloques no existen todavía."
+    }
+   ]
+  },
+  {
+   "id": "icon-contabilidad-v-2",
+   "numero": 2,
+   "titulo": "Factura directa de compra (FC) y de venta (FB) desde Finanzas",
+   "objetivo": "Crearás una factura directa de compra FC y una de venta FB y comprobarás los importes necesarios para validar.",
+   "concepto": "En Finanzas puedes crear facturas directas sin origen de albarán, pedido o solicitud. Para compras se usa el tipo FC; para ventas, el tipo FB.\n\nEn el vídeo se crea una factura de compra de la empresa LIZ (Liz Sport España) con proveedor 00003, línea de 5.000,00 y total 6.050,00. Al validar se activa Contabilizar porque el importe total y el importe factura coinciden. La factura de venta FB se intenta validar y da un error del entorno de formación, no por fallo del alumno.",
+   "duracionMin": 12,
+   "secciones": [
+    {
+     "id": "icon-contabilidad-v-2-fc",
+     "titulo": "Factura directa de compra FC",
+     "paraQueSirve": "Crear una factura de compra directa desde Finanzas, sin albarán de origen.",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Compras",
+      "Facturas de compras"
+     ],
+     "explicacion": [
+      "Se pulsa «Nuevo documento» y se elige tipo FC (Fact. compra). La factura pide empresa, proveedor y los datos financieros.",
+      "En el vídeo se ve la empresa LIZ y proveedor 00003. La cuenta financiera es obligatoria."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura",
+       "significado": "Clase de factura directa.",
+       "ejemplo": "FC (Fact. compra)"
+      },
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad que registra la factura (la que compra).",
+       "ejemplo": "LIZ en el vídeo; usa la tuya p. ej. S{INI}"
+      },
+      {
+       "campo": "Proveedor",
+       "significado": "Tercero acreedor.",
+       "ejemplo": "00003"
+      },
+      {
+       "campo": "Perceptor",
+       "significado": "Receptor del pago.",
+       "ejemplo": "Proveedor en datos financieros"
+      },
+      {
+       "campo": "Tipo efecto",
+       "significado": "Forma de pago/efecto.",
+       "ejemplo": "CH cheque"
+      },
+      {
+       "campo": "Plazo de pago",
+       "significado": "Días para el pago.",
+       "ejemplo": "30D"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta bancaria propia para el pago.",
+       "ejemplo": "CAIXAQUA04 en el vídeo"
+      },
+      {
+       "campo": "Número de factura",
+       "significado": "Número generado por el ERP.",
+       "ejemplo": "FCLIZ26-000001"
+      },
+      {
+       "campo": "Factura proveedor",
+       "significado": "Serie o número editable del proveedor.",
+       "ejemplo": "F001-0000012"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre las facturas de compras: Finanzas > Facturación > Compras > Facturas de compras.",
+       "imagen": "v-icon1-013.jpg",
+       "hotspot": {
+        "x": 33.4,
+        "y": 23,
+        "w": 16.5,
+        "h": 23.7,
+        "etiqueta": "Tipos de factura"
+       }
+      },
+      {
+       "texto": "Pulsa «Nuevo documento» y elige el tipo FC."
+      },
+      {
+       "texto": "Rellena empresa LIZ o S{INI} y proveedor 00003."
+      },
+      {
+       "texto": "En Datos financieros completa perceptor, tipo efecto CH, plazo 30D y cuenta financiera CAIXAQUA04 o tu CAIXA{INI}.",
+       "imagen": "v-icon1-014.jpg",
+       "hotspot": {
+        "x": 12.3,
+        "y": 66.5,
+        "w": 27.5,
+        "h": 5.7,
+        "etiqueta": "Cuenta financiera"
+       }
+      },
+      {
+       "texto": "Añade una línea con artículo B, cuenta 60000.00000 (compras), cantidad 1 y precio 5.000,00.",
+       "detalle": "El neto es 5.000,00 y con IVA el total es 6.050,00."
+      },
+      {
+       "texto": "Comprueba que el importe factura y el importe total son 6.050,00.",
+       "detalle": "5.000,00 de base + 21 % de IVA (1.050,00) = 6.050,00.",
+       "imagen": "v-icon1-015.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En el vídeo, el número de factura sale FCLIZ26-000001 y la factura proveedor F001-0000012; tú puedes dejarlos o cambiarlos según tu numerador."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Si el importe factura no coincide con el importe total, no se activa el botón Contabilizar."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Revisa las líneas y los impuestos hasta que ambos importes sean 6.050,00."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-2-contabilizar-fc",
+     "titulo": "Validar y contabilizar la FC",
+     "paraQueSirve": "Compruebas que la FC genera asiento, cartera y registros fiscales al contabilizar.",
+     "ruta": null,
+     "explicacion": [
+      "La validación confirma que el importe factura y el importe total coinciden.",
+      "Contabilizar genera asiento contable, cartera de efectos y registros fiscales."
+     ],
+     "campos": [
+      {
+       "campo": "Importe neto",
+       "significado": "Base de la línea sin IVA.",
+       "ejemplo": "5.000,00"
+      },
+      {
+       "campo": "Importe factura",
+       "significado": "Total factura con impuestos.",
+       "ejemplo": "6.050,00"
+      },
+      {
+       "campo": "Importe total",
+       "significado": "Suma total calculada de la factura.",
+       "ejemplo": "6.050,00"
+      },
+      {
+       "campo": "Detalle de impuestos",
+       "significado": "Monto, cuota deducible e impuesto.",
+       "ejemplo": "Monto 5.000,00, cuota 1.050,00, total 6.050,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Con el importe factura y el importe total en 6.050,00, pulsa Validar."
+      },
+      {
+       "texto": "Verás el toast «Éxito»."
+      },
+      {
+       "texto": "Pulsa Contabilizar y comprueba que se generan asiento contable, cartera de efectos y registros fiscales."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El detalle de impuestos muestra monto, cuota deducible e impuesto; en el vídeo el total es 6.050,00."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-2-fb",
+     "titulo": "Factura directa de venta FB",
+     "paraQueSirve": "Crear una factura directa de ventas y reconocer el error de training al validar.",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Ventas",
+      "Facturas de ventas"
+     ],
+     "explicacion": [
+      "La factura directa de venta usa tipo FB. En el vídeo se usa cliente 00003 y líneas con cuenta 70000.00000.",
+      "Al validar dio «An error occurred … ha sido consolidado», un error del entorno de formación; el formador lo verá con sistemas. No es fallo del alumno."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura",
+       "significado": "Clase de factura directa de venta.",
+       "ejemplo": "FB"
+      },
+      {
+       "campo": "Cliente",
+       "significado": "Tercero deudor.",
+       "ejemplo": "00003"
+      },
+      {
+       "campo": "Líneas",
+       "significado": "Artículos o conceptos de la venta.",
+       "ejemplo": "Artículo B/I"
+      },
+      {
+       "campo": "Cuenta contable",
+       "significado": "Cuenta de ingreso de la línea.",
+       "ejemplo": "70000.00000"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Ventas > Facturas de ventas y pulsa «Nuevo documento»."
+      },
+      {
+       "texto": "Elige tipo FB y cliente 00003."
+      },
+      {
+       "texto": "Añade líneas con artículo B/I y cuenta 70000.00000 (ventas).",
+       "imagen": "v-icon1-016.jpg",
+       "hotspot": {
+        "x": 61.2,
+        "y": 92,
+        "w": 6.6,
+        "h": 4.5,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Añade otra línea si la venta la requiere.",
+       "imagen": "v-icon1-017.jpg",
+       "hotspot": {
+        "x": 61.2,
+        "y": 92,
+        "w": 6.6,
+        "h": 4.5,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Intenta validar. Si sale «An error occurred … ha sido consolidado», anótalo como error del entorno de formación."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Al validar la FB del vídeo salió «An error occurred … ha sido consolidado»."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "El formador lo revisará con sistemas; en un entorno normal no es fallo del alumno."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué tipo de factura directa se usa para compras?",
+     "opciones": [
+      "FB",
+      "FU",
+      "FC",
+      "R4"
+     ],
+     "correcta": 2,
+     "explicacion": "FC es factura de compras; FB es factura de ventas."
+    },
+    {
+     "pregunta": "¿Qué importe debe coincidir para que se active Contabilizar?",
+     "opciones": [
+      "Importe total e importe factura",
+      "Importe neto e IVA",
+      "Cantidad y precio",
+      "Factura proveedor y número de factura"
+     ],
+     "correcta": 0,
+     "explicacion": "Si el importe factura no coincide con el importe total, no se activa Contabilizar."
+    },
+    {
+     "pregunta": "¿Por qué la línea de compra lleva la cuenta 60000.00000 y la de venta la 70000.00000?",
+     "opciones": [
+      "60000 es la cuenta de compras (gasto) y 70000 la de ventas (ingreso)",
+      "Las dos son cuentas de bancos",
+      "60000 es de clientes y 70000 de proveedores",
+      "Las elige el ERP al azar"
+     ],
+     "correcta": 0,
+     "explicacion": "En el plan contable el grupo 6 son compras y gastos y el grupo 7 ventas e ingresos."
+    },
+    {
+     "pregunta": "¿Qué cuenta se usa en la línea de compra del vídeo?",
+     "opciones": [
+      "70000.00000",
+      "60000.00000",
+      "57900.00000",
+      "57200.00000"
+     ],
+     "correcta": 1,
+     "explicacion": "La línea de compra usa la cuenta 60000.00000."
+    },
+    {
+     "pregunta": "¿Qué error apareció al validar la factura de venta FB?",
+     "opciones": [
+      "Falta de proveedor",
+      "No coincide el importe",
+      "An error occurred … ha sido consolidado",
+      "No existe el cliente"
+     ],
+     "correcta": 2,
+     "explicacion": "Al validar FB salió «An error occurred … ha sido consolidado», un error del entorno."
+    },
+    {
+     "pregunta": "¿Cuál es el total de la factura FC del vídeo?",
+     "opciones": [
+      "6.050,00",
+      "5.000,00",
+      "1.050,00",
+      "1.058,75"
+     ],
+     "correcta": 0,
+     "explicacion": "La factura FC tiene importe total e importe factura 6.050,00."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas > Facturación > Compras > Facturas de compras.",
+    "El tipo de factura es FC y la empresa LIZ o S{INI}.",
+    "Completas perceptor, tipo efecto CH, plazo 30D y cuenta financiera.",
+    "Añades línea B con cuenta 60000.00000, cantidad 1 y precio 5.000,00.",
+    "Verificas que importe factura e importe total son 6.050,00.",
+    "Validas y ves el toast Éxito.",
+    "Contabilizas y compruebas asiento, cartera y registros fiscales.",
+    "Intentas la FB y anotas el error del entorno si aparece."
+   ],
+   "problemas": [
+    {
+     "problema": "No se activa Contabilizar en la FC.",
+     "solucion": "Comprueba que importe factura e importe total son 6.050,00; si no coinciden revisa líneas e impuestos."
+    },
+    {
+     "problema": "Al validar la factura de venta FB sale «An error occurred … ha sido consolidado».",
+     "solucion": "Es el error de training; no es fallo del alumno."
+    }
+   ]
+  },
+  {
+   "id": "icon-contabilidad-v-3",
+   "numero": 3,
+   "titulo": "Rectificativa frente a sustitutiva",
+   "objetivo": "Decidirás cuándo usar una factura rectificativa y cuándo una sustitutiva según el caso.",
+   "concepto": "La rectificativa corrige descuentos, importes mal u otros ajustes sin anular la factura original. En España debe quedar registro de todo lo que sucede con la factura; por eso no se elimina y se usa una rectificativa.\n\nLa sustitutiva anula definitivamente la factura inicial, por ejemplo si te equivocaste de proveedor. La rectificativa queda vinculada al documento original y dentro del DocFlow; la sustitutiva es para reemplazar algo que no se puede corregir.\n\nEjemplo: a una factura de 1.000 € + IVA se le olvidó un descuento del 10 %. Se emite una rectificativa de −100 € + IVA; las dos juntas suman 900 € + IVA y la original sigue registrada.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "icon-contabilidad-v-3-rectificativa",
+     "titulo": "Factura rectificativa: corregir sin anular",
+     "paraQueSirve": "Corrige descuentos o importes manteniendo el registro continuo de la factura.",
+     "ruta": null,
+     "explicacion": [
+      "La rectificativa actúa como una nota de crédito en otros países, pero en España se usa para hacer modificaciones: descuentos, ajustes de importe, etc.",
+      "No se elimina la factura original. La rectificativa va vinculada al documento original y entra en el DocFlow del circuito."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura",
+       "significado": "Tipología que identifica la corrección.",
+       "ejemplo": "Factura rectificativa de la factura"
+      },
+      {
+       "campo": "Caso de uso",
+       "significado": "Cuándo se aplica.",
+       "ejemplo": "Descuentos o importe mal sin anular"
+      },
+      {
+       "campo": "DocFlow",
+       "significado": "Circuito donde queda vinculada.",
+       "ejemplo": "Dentro del DocFlow de la factura original"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas › Facturación › Compras › Facturas de compras, pulsa «Nuevo documento» y mira la lista de tipos: localiza los de rectificativa y la FU Fact. Sustitutiva. Cancela sin guardar."
+      },
+      {
+       "texto": "Recuerda: si hay que corregir un importe o un descuento, no elimines la factura."
+      },
+      {
+       "texto": "Usa una factura rectificativa para que quede registro del cambio."
+      },
+      {
+       "texto": "Comprueba que la rectificativa queda vinculada al documento original."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En España debe quedar registro de todo lo que sucede con la factura; la rectificativa no borra el original."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-3-sustitutiva",
+     "titulo": "Factura sustitutiva: anular definitivamente",
+     "paraQueSirve": "Anulas y reemplazas la factura inicial cuando el error no se puede corregir.",
+     "ruta": null,
+     "explicacion": [
+      "La sustitutiva anula definitivamente la factura inicial y la reemplaza por otra. Se usa cuando el error no se arregla con un ajuste de importes, por ejemplo si te equivocaste de proveedor.",
+      "La diferencia es fácil: la rectificativa corrige; la sustitutiva anula o reemplaza."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura",
+       "significado": "Tipología que sustituye a la inicial.",
+       "ejemplo": "FU Fact. Sustitutiva"
+      },
+      {
+       "campo": "Caso de uso",
+       "significado": "Cuándo se aplica.",
+       "ejemplo": "Proveedor equivocado; no se puede rectificar"
+      },
+      {
+       "campo": "Diferencia",
+       "significado": "Comparación con la rectificativa.",
+       "ejemplo": "Rectificativa corrige; sustitutiva anula definitivamente"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Identifica si el error es corregible o si la factura inicial es insalvable."
+      },
+      {
+       "texto": "Si es insalvable, usa una factura sustitutiva para anular la inicial."
+      },
+      {
+       "texto": "No uses sustitutiva para un simple descuento: para eso está la rectificativa."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No se mostró pantalla de sustitutiva en el vídeo: solo se explicó el concepto."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve la factura rectificativa?",
+     "opciones": [
+      "Anular definitivamente",
+      "Corregir descuentos o importe mal sin anular",
+      "Crear factura nueva desde cero",
+      "Pagar facturas"
+     ],
+     "correcta": 1,
+     "explicacion": "La rectificativa corrige descuentos o importes mal sin anular la factura original."
+    },
+    {
+     "pregunta": "¿Cuándo usarías una factura sustitutiva?",
+     "opciones": [
+      "Te equivocaste de proveedor y no se puede rectificar",
+      "Para un descuento",
+      "Para una factura con IVA 21 %",
+      "Para calcular el IBAN"
+     ],
+     "correcta": 0,
+     "explicacion": "La sustitutiva anula definitivamente la factura inicial, por ejemplo si te equivocaste de proveedor."
+    },
+    {
+     "pregunta": "¿Qué relación tiene la rectificativa con el documento original?",
+     "opciones": [
+      "Ninguna",
+      "Solo si es de venta",
+      "Se elimina",
+      "Va vinculada y dentro del DocFlow"
+     ],
+     "correcta": 3,
+     "explicacion": "La rectificativa va vinculada al documento original y dentro del DocFlow."
+    },
+    {
+     "pregunta": "En España, ¿por qué se usan rectificativas en lugar de eliminar facturas?",
+     "opciones": [
+      "Para que no haya IVA",
+      "Porque no existe botón eliminar",
+      "Debe quedar registro de todo lo que sucede",
+      "Para no pagar impuestos"
+     ],
+     "correcta": 2,
+     "explicacion": "Debe quedar registro de todo lo que sucede con la factura."
+    },
+    {
+     "pregunta": "¿Qué diferencia hay entre rectificativa y sustitutiva?",
+     "opciones": [
+      "Son iguales",
+      "La rectificativa corrige; la sustitutiva anula definitivamente",
+      "La sustitutiva corrige; la rectificativa elimina",
+      "Solo cambia el número"
+     ],
+     "correcta": 1,
+     "explicacion": "La rectificativa corrige sin anular; la sustitutiva anula o reemplaza definitivamente."
+    }
+   ],
+   "checklist": [
+    "Identificas la diferencia entre rectificativa y sustitutiva.",
+    "Sabes que la rectificativa corrige descuentos o importe mal sin anular.",
+    "Sabes que la sustitutiva anula definitivamente la factura inicial.",
+    "Sabes que en España debe quedar registro de todo lo que sucede.",
+    "Sabes que la rectificativa va vinculada al documento original y dentro del DocFlow.",
+    "Eres capaz de decidir cuál usar ante un caso."
+   ],
+   "problemas": [
+    {
+     "problema": "Un junior quiere eliminar una factura con importe mal.",
+     "solucion": "Usa rectificativa si se puede corregir; así no se rompe el registro."
+    },
+    {
+     "problema": "Se confunde la sustitutiva con la rectificativa.",
+     "solucion": "Rectificativa corrige; sustitutiva anula o reemplaza definitivamente."
+    }
+   ]
+  },
+  {
+   "id": "icon-contabilidad-v-4",
+   "numero": 4,
+   "titulo": "Cuando una factura no contabiliza",
+   "objetivo": "Tendrás identificados los tres motivos que impiden contabilizar o remesar: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.",
+   "concepto": "Una factura puede quedarse sin contabilizar o sin cartera de efectos por tres motivos principales: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.\n\nCon importe total 0 la factura contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos; por eso no se puede remesar ni conciliar.\n\nUn período cerrado impide contabilizar y se corrige usando una fecha en un período abierto. En facturas origen pedido, pasa primero a provisional para cambiar el tipo de efecto y revisa el tipo de asiento.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-contabilidad-v-4-importe-0",
+     "titulo": "Factura con importe total 0",
+     "paraQueSirve": "Evitar el caso en el que una factura contabiliza pero no se puede remesar ni conciliar.",
+     "ruta": null,
+     "explicacion": [
+      "Una factura con importe total 0 (por ejemplo, una línea de 100 € y otra de −100 €) contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos.",
+      "Sin efecto de cartera no hay deuda que incluir en una remesa ni que conciliar contra el banco."
+     ],
+     "campos": [
+      {
+       "campo": "Importe total",
+       "significado": "Total de la factura.",
+       "ejemplo": "0,00"
+      },
+      {
+       "campo": "Cartera de efectos",
+       "significado": "Efecto de deuda o cobro generado al contabilizar.",
+       "ejemplo": "No se genera con importe 0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Revisa el importe total de la factura antes de contabilizar."
+      },
+      {
+       "texto": "Si contabilizas una factura de importe 0, comprueba que no aparece en cartera de efectos."
+      },
+      {
+       "texto": "Si ya está contabilizada, descontabilízala, corrige el importe y vuelve a contabilizar antes de querer remesarla."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si la cartera aparece vacía tras contabilizar, revisa primero si el importe total de la factura es 0."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Descontabiliza la factura, corrige las líneas para que el total no sea 0 y vuelve a contabilizar: entonces se genera su efecto."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-4-periodos",
+     "titulo": "Períodos contables cerrados",
+     "paraQueSirve": "Revisar el estado de los períodos del ejercicio y usar una fecha contable permitida.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Parametrización",
+      "Empresas",
+      "Empresa 0",
+      "Ejercicio"
+     ],
+     "explicacion": [
+      "El ejercicio 2026 tiene 12 períodos contables.",
+      "En la demo, enero-junio estaban Cerrado y julio en adelante Abierto."
+     ],
+     "campos": [
+      {
+       "campo": "Ejercicio",
+       "significado": "Año contable.",
+       "ejemplo": "2026"
+      },
+      {
+       "campo": "Período",
+       "significado": "Mes contable dentro del ejercicio.",
+       "ejemplo": "julio"
+      },
+      {
+       "campo": "Estado del período",
+       "significado": "Abierto o Cerrado.",
+       "ejemplo": "Enero-junio Cerrado; julio en adelante Abierto"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el maestro de empresas y ve a la pestaña «Ejercicio».",
+       "imagen": "v-icon11-012.jpg"
+      },
+      {
+       "texto": "Revisa el estado de los períodos de 2026.",
+       "detalle": "Enero-junio Cerrado; desde julio Abierto."
+      },
+      {
+       "texto": "Si la factura no contabiliza, comprueba que su fecha no caiga en un período cerrado."
+      },
+      {
+       "texto": "Usa una fecha desde julio en adelante para poder contabilizar."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "No se puede contabilizar una factura fechada en un período cerrado."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Corrige la fecha de la factura a un período abierto. Abrir un período cerrado lo hace quien administra la contabilidad; en la demo no lo cambies tú."
+      }
+     ]
+    },
+    {
+     "id": "icon-contabilidad-v-4-origen-pedido",
+     "titulo": "Factura origen pedido y tipo de asiento",
+     "paraQueSirve": "Saber cómo corregir una factura de origen pedido y qué tipo de asiento debe usar.",
+     "ruta": [
+      "Gestión",
+      "Compras",
+      "Facturas",
+      "Facturas"
+     ],
+     "explicacion": [
+      "En una factura de origen pedido, antes de cambiar el tipo de efecto hay que pulsar «Pasar a provisional».",
+      "Si al contabilizar falla, revisa el tipo de documento y el tipo de asiento."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo documento",
+       "significado": "Origen de la factura.",
+       "ejemplo": "FACTURA COMPRA ORIGEN PEDIDO"
+      },
+      {
+       "campo": "Tipo de asiento",
+       "significado": "Plantilla contable usada al contabilizar.",
+       "ejemplo": "EPC en compras; FB en ventas"
+      },
+      {
+       "campo": "Tipo de efecto",
+       "significado": "Forma de pago propuesta para la cartera.",
+       "ejemplo": "TF o cheque"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Localiza en la lista la factura de compra de origen pedido.",
+       "imagen": "v-icon11-014.jpg"
+      },
+      {
+       "texto": "Abre la factura y observa los botones «Pasar a provisional» y «Contabilizar».",
+       "imagen": "v-icon11-013.jpg"
+      },
+      {
+       "texto": "Si necesitas cambiar el tipo de efecto, pulsa primero «Pasar a provisional»."
+      },
+      {
+       "texto": "Revisa la pestaña de tipología y confirma el tipo de asiento EPC para compras o FB para ventas."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si aparece un error de tipo de asiento al contabilizar, suele ser porque el tipo de documento o de asiento no corresponde."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Comprueba que la factura de compra usa EPC y la de venta usa FB antes de contabilizar."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué ocurre si contabilizas una factura con importe total 0?",
+     "opciones": [
+      "No deja contabilizar",
+      "Genera asiento y registro fiscal, pero no cartera de efectos",
+      "Genera cartera de efectos negativa",
+      "Genera una remesa automática"
+     ],
+     "correcta": 1,
+     "explicacion": "La factura contabiliza, pero sin cartera de efectos no se puede remesar ni conciliar."
+    },
+    {
+     "pregunta": "¿Qué meses de 2026 estaban cerrados en la demo?",
+     "opciones": [
+      "Enero-junio",
+      "Julio-diciembre",
+      "Solo enero",
+      "Ninguno"
+     ],
+     "correcta": 0,
+     "explicacion": "Enero-junio estaban Cerrado y julio en adelante Abierto."
+    },
+    {
+     "pregunta": "Antes de cambiar el tipo de efecto en una factura de origen pedido hay que…",
+     "opciones": [
+      "Contabilizar",
+      "Guardar",
+      "Pasar a provisional",
+      "Descontabilizar"
+     ],
+     "correcta": 2,
+     "explicacion": "Primero se pasa a provisional para poder modificar la tipología."
+    },
+    {
+     "pregunta": "En ventas, ¿qué tipo de asiento debe usarse?",
+     "opciones": [
+      "EPC",
+      "PSCTT",
+      "TF",
+      "FB"
+     ],
+     "correcta": 3,
+     "explicacion": "En ventas se usa FB y en compras EPC."
+    },
+    {
+     "pregunta": "¿Por qué una factura de importe 0 no se puede remesar?",
+     "opciones": [
+      "Porque no genera asiento",
+      "Porque no genera cartera de efectos",
+      "Porque no tiene vencimiento",
+      "Porque no tiene proveedor"
+     ],
+     "correcta": 1,
+     "explicacion": "Sin cartera de efectos no hay deuda que incluir en una remesa."
+    }
+   ],
+   "checklist": [
+    "Revisas el importe total antes de contabilizar.",
+    "Compruebas que la fecha cae en un período abierto.",
+    "Pulsas «Pasar a provisional» antes de cambiar el tipo de efecto.",
+    "Confirmas EPC para compras y FB para ventas.",
+    "Compruebas que no aparece cartera con importe 0.",
+    "Corriges fecha o tipo de asiento antes de reintentar."
+   ],
+   "problemas": [
+    {
+     "problema": "Contabilizas una factura y no aparece en la cartera de efectos.",
+     "solucion": "Revisa el importe total: si es 0, no se genera cartera. Corrige el importe y vuelve a contabilizar."
+    },
+    {
+     "problema": "La factura no contabiliza y su fecha es de junio.",
+     "solucion": "El período está cerrado. Cambia la fecha a un período abierto, como julio."
+    },
+    {
+     "problema": "Aparece un error de tipo de asiento al contabilizar.",
+     "solucion": "Comprueba que la factura de compra usa EPC y la de venta usa FB."
+    },
+    {
+     "problema": "No puedes cambiar el tipo de efecto en una factura origen pedido.",
+     "solucion": "Pasa la factura a provisional antes de modificar la tipología."
+    }
+   ]
+  },
+  {
+   "id": "icon-contabilidad-1",
+   "numero": 5,
    "titulo": "Estructura del diario: diarios, periodos y plantillas",
    "objetivo": "Tendrás localizada la organización del diario, la configuración del ejercicio con sus doce periodos contables y de impuestos, y las plantillas de contabilización, además de identificar los procesos masivos de mantenimiento del diario.",
-   "concepto": "El diario contable está orientado al apunte y permite localizar apuntes individuales dentro de asientos. La configuración contable define el ejercicio y genera doce periodos contables y doce periodos de impuestos al crear el primer ejercicio. Las plantillas de contabilización son libros maestros XLS que sirven de patrón por origen para generar apuntes, impuestos, cartera y costes.",
+   "concepto": "El diario es el libro con todos los asientos por orden de fecha; el mayor es la misma información ordenada por cuenta. En Axional el diario está orientado al apunte: permite localizar apuntes sueltos dentro de los asientos. La configuración contable define el ejercicio y, al crear el primero, genera doce periodos contables (uno por mes) y doce periodos de impuestos. Las plantillas de contabilización son libros XLS que sirven de patrón por origen para generar apuntes, impuestos, cartera y costes. Además hay procesos masivos que trabajan sobre los apuntes ya hechos.",
    "duracionMin": 30,
    "secciones": [
     {
@@ -32,18 +1220,18 @@
      ],
      "explicacion": [
       "El diario está orientado al apunte: puedes buscar y seleccionar apuntes individuales de distintos asientos para consultarlos o revisarlos. Cada apunte lleva un identificador de proyecto y sección para contabilidad por proyectos u operaciones.",
-      "La página describe tres consultas: Diario anual, Diario resumen y Diario por asiento. El Diario resumen construye el diario oficial resumido por periodos; el nivel de consolidación fija la longitud de las cuentas contables. El Diario por asiento no calcula saldos anteriores, solo muestra asientos."
+      "La página describe tres consultas: Diario anual, Diario resumen y Diario por asiento. El Diario resumen construye el diario oficial resumido por periodos; su nivel de consolidación es el número de dígitos con que se agrupan las cuentas (con 3 dígitos, la 62900, la 62902 y la 62903 salen juntas como 629). El Diario por asiento no calcula saldos anteriores, solo muestra asientos."
      ],
      "campos": [
       {
        "campo": "proyecto",
        "significado": "Identificador alfanumérico por apunte para contabilidad por proyectos u operaciones",
-       "ejemplo": "P1"
+       "ejemplo": "0 GENERAL o tu {INI}1"
       },
       {
        "campo": "sección",
        "significado": "Identificador alfanumérico por apunte para contabilidad por secciones",
-       "ejemplo": "S"
+       "ejemplo": "0 o tu {INI}ADM"
       }
      ],
      "pasos": [
@@ -81,7 +1269,7 @@
       {
        "campo": "ejercicio contable",
        "significado": "Ejercicio que se configura",
-       "ejemplo": "2024"
+       "ejemplo": "2026"
       },
       {
        "campo": "periodos contables",
@@ -122,7 +1310,7 @@
      ],
      "explicacion": [
       "Las plantillas de contabilización son libros maestros XLS que definen cómo crear registros en contabilidad según el origen de los datos. Sirven de patrón para generar apuntes, impuestos, carteras, costes y partidas presupuestarias.",
-      "Cada hoja puede contener tipos de área como Datos de cabecera, Datos únicos estructurados, Multilínea censado o Multilínea indeterminado. Las hojas destino se asocian a tablas: capuntes para asientos contables, cimpcont para datos fiscales y cefectos para efectos en cartera.",
+      "Cada hoja puede contener tipos de área como Datos de cabecera, Datos únicos estructurados, Multilínea censado o Multilínea indeterminado. Como viste en Parametrización, las hojas destino son capuntes (asientos), cimpcont (datos fiscales) y cefectos (efectos en cartera).",
       "Por dentro: intervienen las tablas origen que pone como ejemplo la documentación: ccomfach (cabecera), ccomefec (vencimientos) y ccomfacl (líneas), junto con capuntes, cimpcont y cefectos como destinos de los datos."
      ],
      "campos": [
@@ -138,7 +1326,7 @@
       },
       {
        "campo": "Datos únicos estructurados",
-       "significado": "Campos que se repiten una sola vez y se asignan a un registro",
+       "significado": "Campos que aparecen una sola vez y se asignan a un registro",
        "ejemplo": "fecha"
       },
       {
@@ -189,14 +1377,14 @@
       "Procesos sobre asientos"
      ],
      "explicacion": [
-      "Sobre el diario existen procesos masivos de mantenimiento: la generación de periodificaciones reparte importes de apuntes en varios periodos; la auditoría automática marca apuntes como auditados por documento o por saldo, y con IA solo propone punteo = P; y el cambio de sistema traslada asientos entre sistemas contables.",
+      "Sobre el diario existen procesos masivos de mantenimiento: la generación de periodificaciones reparte el importe de un apunte entre varios periodos (un seguro anual de 1.200 € pagado en enero se lleva a gasto a 100 € por mes); la auditoría automática marca apuntes como auditados (revisados) por documento o por saldo, y con IA solo propone el punteo P, que acepta alguien con permiso; y el cambio de sistema traslada asientos entre sistemas contables.",
       "Estos procesos se ejecutan desde la ruta de procesos sobre asientos; la generación de periodificaciones puede ejecutarse individual o masiva, mientras que la auditoría automática y el cambio de sistema actúan sobre conjuntos de apuntes. La documentación los describe como procesos con filtros y parámetros, no como pantallas de alta.",
       "Por dentro: la generación de periodificaciones usa casientos, capuntes, ccuentas, ccoscont, cdistrih y cdistril. La auditoría automática usa casientos, capuntes, caudctas_prop, ccuentas y cmonedas. El cambio de sistema usa casientos, ccuentas, csistema, ctax_move_head, ccoscont, cefectos, cproyect, cseccion, cctaauxl y ccosdesc."
      ],
      "campos": [
       {
        "campo": "generación de periodificaciones",
-       "significado": "Reparte el importe de un apunte en varios periodos generando asientos en estado C",
+       "significado": "Reparte el importe de un apunte entre varios periodos. Solo para cuentas marcadas como Periodificables (campo ctaper = 1).",
        "ejemplo": "proceso masivo"
       },
       {
@@ -226,6 +1414,10 @@
       }
      ],
      "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No ejecutes estos procesos en la demo: cambian apuntes de todos. Basta con localizarlos y leer sus filtros y parámetros."
+      },
       {
        "tipo": "nota",
        "texto": "Estos procesos no son de introducción manual; actúan sobre apuntes existentes."
@@ -323,10 +1515,10 @@
   },
   {
    "id": "icon-contabilidad-2",
-   "numero": 2,
+   "numero": 6,
    "titulo": "Procesos periódicos: cierre y apertura del ejercicio",
    "objetivo": "Tendrás identificados los procesos periódicos en el orden que indica la documentación y sabrás consultar la contabilidad a una fecha pasada con los mecanismos disponibles.",
-   "concepto": "Los procesos periódicos transforman el estado del ejercicio y preparan saldos: regularización de divisas, actualización de deuda, regularización, cierre temporal, cierre definitivo, reapertura, paso a histórico y reclasificación de deuda a largo plazo. La documentación indica un orden recomendado para ejecutarlos y ofrece mecanismos para ver la contabilidad a una fecha pasada.",
+   "concepto": "Al terminar el año se hacen tres cosas, en este orden. Regularizar: llevar todos los gastos e ingresos del año a la cuenta de resultados (129); con 10.000 € de ventas y 7.000 € de gastos, la 129 queda con 3.000 € de beneficio y las cuentas de los grupos 6 y 7 a cero. Cerrar: dejar a cero el resto de cuentas (bancos, clientes, proveedores…) con el asiento de cierre. Abrir: copiar esos mismos saldos al 1 de enero del año siguiente con el asiento de apertura; el banco que acabó con 5.000 € empieza el nuevo año con 5.000 €.\n\nEn el ERP estos pasos son procesos periódicos: regularización de divisas, actualización de deuda, regularización, cierre temporal, cierre definitivo, reapertura, paso a histórico y reclasificación de deuda a largo plazo. La documentación indica un orden recomendado y varios mecanismos para ver la contabilidad a una fecha pasada.",
    "duracionMin": 35,
    "secciones": [
     {
@@ -346,17 +1538,17 @@
      "campos": [
       {
        "campo": "regularización de divisas",
-       "significado": "Regulariza cuentas contratadas en divisas",
+       "significado": "Ajusta al cambio de cierre las cuentas en moneda extranjera (una deuda de 1.000 $ vale distinto en euros en enero que en diciembre)",
        "ejemplo": "proceso"
       },
       {
        "campo": "actualización de deuda en divisa",
-       "significado": "Actualiza deuda de cartera en moneda extranjera al cambio vigente",
+       "significado": "Actualiza al cambio vigente la deuda de cartera en moneda extranjera",
        "ejemplo": "proceso"
       },
       {
        "campo": "regularización de ejercicio",
-       "significado": "Traslada saldos de ingresos y gastos a Pérdidas y Ganancias",
+       "significado": "Traslada los saldos de ingresos y gastos a la cuenta de resultados (Pérdidas y Ganancias, 129)",
        "ejemplo": "asiento 99999998"
       },
       {
@@ -381,7 +1573,7 @@
       },
       {
        "campo": "reclasificación de deuda a largo plazo",
-       "significado": "Sala cuentas de largo plazo e imputa a corto plazo",
+       "significado": "Salda las cuentas de deuda a largo plazo (más de un año) y pasa a corto plazo la parte que vence en los próximos 12 meses",
        "ejemplo": "asiento"
       }
      ],
@@ -399,6 +1591,10 @@
       {
        "tipo": "nota",
        "texto": "El cierre temporal no sustituye a la regularización ni al cierre definitivo."
+      },
+      {
+       "tipo": "nota",
+       "texto": "No ejecutes estos procesos en la demo: cambian el ejercicio para todas las personas. Basta con localizarlos y leer qué piden."
       }
      ]
     },
@@ -413,7 +1609,7 @@
      ],
      "explicacion": [
       "La regularización de un ejercicio genera apuntes que trasladan saldos de cuentas de ingresos y gastos a una cuenta de Pérdidas y Ganancias. El asiento generado es siempre el 99999998 y los saldos acumulados usan el periodo 98; el ejercicio pasa a estado regularizado.",
-      "El cierre temporal prepara los saldos de apertura del ejercicio siguiente sin ejecutar regularización previa ni generar asientos reales: copia el asiento de resultados a origen y traslada saldos a csaldos del ejercicio siguiente. Exige que exista el ejercicio +1 en estado A; si no, lanza la excepción capuntes_ejtmpcie_01.",
+      "El cierre temporal prepara los saldos de apertura del ejercicio siguiente sin ejecutar regularización previa ni generar asientos reales: copia el asiento de resultados a origen y traslada saldos a csaldos del ejercicio siguiente. Exige que exista el ejercicio +1 en estado A; si no, lanza la excepción capuntes_ejtmpcie_01. Los saldos de apertura quedan en los periodos especiales -1 y 0 del ejercicio siguiente.",
       "Por dentro: la regularización usa las definiciones de regularización; el cierre temporal usa cejercic, csaldos, la tabla temporal tmp_csaldos y la función capuntes_ejtmpcie(pStrEmpcode, pIntEjercicio)."
      ],
      "campos": [
@@ -521,7 +1717,7 @@
       },
       {
        "campo": "reclasificación deuda",
-       "significado": "Sala largo plazo e imputa a corto plazo",
+       "significado": "Salda largo plazo e imputa a corto plazo",
        "ejemplo": "asiento"
       }
      ],
@@ -562,7 +1758,11 @@
      "id": "icon-contabilidad-2-ver-fecha-pasada",
      "titulo": "Ver la contabilidad a una fecha pasada (p. ej. a 31-12)",
      "paraQueSirve": "Conocer los mecanismos documentados para consultar la contabilidad a una fecha anterior.",
-     "ruta": null,
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Saldos"
+     ],
      "explicacion": [
       "La documentación ofrece varios mecanismos para ver la contabilidad a una fecha pasada: los saldos por periodo, el histórico de saldos y los extractos con filtro de fechas. El cierre temporal prepara saldos de apertura del ejercicio siguiente y no es un mecanismo de consulta a fecha pasada.",
       "No se describe un informe específico adicional para ver la situación a una fecha pasada distinta de estos mecanismos. Si necesitas una foto exacta a 31-12, utiliza los saldos por periodo o los extractos filtrando hasta esa fecha."
@@ -586,7 +1786,7 @@
      ],
      "pasos": [
       {
-       "texto": "Abre Saldos y selecciona Periodos para consultar un periodo pasado",
+       "texto": "Abre Finanzas › Contabilidad General › Saldos › Saldos cuentas (csaldos) y consulta un periodo pasado, por ejemplo el periodo 12 de 2025",
        "detalle": "Fíjate en la captura de saldos mensualizados.",
        "imagen": "icon-contabilidad-010.webp"
       },
@@ -595,7 +1795,7 @@
        "detalle": "Localiza la opción en la consulta de saldos."
       },
       {
-       "texto": "Abre Extractos y filtra por fechas hasta 31-12",
+       "texto": "Abre Finanzas › Contabilidad General › Extractos › Mayor de cuentas y filtra las fechas hasta el 31-12",
        "detalle": "Revisa que el extracto muestre saldo acumulado a esa fecha."
       }
      ],
@@ -666,10 +1866,10 @@
    ],
    "checklist": [
     "Abre procesos periódicos y localiza la regularización de divisas.",
-    "Comprueba que la actualización de deuda en divisa genera asiento agrupado por proyecto, sección, cuenta y sistema.",
+    "Localiza la actualización de deuda en divisa (pone al cambio del día lo que debes o te deben en moneda extranjera).",
     "Localiza la regularización de ejercicio y verifica el asiento 99999998.",
     "Localiza el cierre temporal y comprueba la validación de ejercicio+1 activo.",
-    "Lanza el simulacro del cierre temporal y consulta los saldos del ejercicio siguiente en los periodos -1 y 0.",
+    "Sabes que el cierre temporal deja los saldos de apertura del ejercicio siguiente en los periodos especiales -1 y 0 (no lo ejecutes en la demo).",
     "Localiza el cierre definitivo y revisa los asientos 99999999 y 0.",
     "Localiza la reapertura y comprueba que elimina asientos de cierre.",
     "Localiza paso a histórico y verifica que solo admite ejercicios cerrados.",
@@ -693,10 +1893,10 @@
   },
   {
    "id": "icon-contabilidad-3",
-   "numero": 3,
+   "numero": 7,
    "titulo": "Balances y consolidación",
    "objetivo": "Tendrás localizados los balances generales y por agrupación, la generación de cuentas anuales XLS, el motor de consultas Excel y la documentación de consolidación.",
-   "concepto": "Los balances muestran saldos contables desde distintas categorías y niveles de detalle; los estados financieros por agrupación se calculan sobre una tabla intermedia. Las cuentas anuales XLS se generan con plantillas de Excel y el motor de consultas Excel permite obtener datos desde funciones VBA. La consolidación documenta las etapas para combinar estados financieros de varias empresas.",
+   "concepto": "Los balances muestran los saldos contables con distintos niveles de detalle. El Estado de Situación Financiera (balance) es la foto, a una fecha, de lo que la empresa tiene (bancos, clientes…) y de lo que debe (proveedores, préstamos); el Estado de Resultados (cuenta de pérdidas y ganancias) resta los gastos de los ingresos de un periodo. Los estados por agrupación se calculan sobre una tabla intermedia. Las cuentas anuales XLS se generan con plantillas de Excel y el motor de consultas Excel permite traer saldos con funciones VBA. La consolidación suma los estados de varias empresas de un grupo como si fueran una.",
    "duracionMin": 35,
    "secciones": [
     {
@@ -856,7 +2056,7 @@
      ],
      "explicacion": [
       "El motor de consultas Excel documenta tres funciones VBA: GetDecimalSeparator devuelve el separador decimal del sistema; AXIONAL procesa comentarios de celda, devolviendo el número si lo contiene o concatenando parámetros separados por |; AX_Saldo construye una cadena @AX_Saldo... o devuelve el valor numérico del comentario.",
-      "La función AX_Saldo recibe tipo, ejercicio, periodo, empresa, cuenta y opcionales proyecto, sección, sistema, dimensiones y tercero. Un ejemplo de salida es @AX_SaldoBALANCE|2024|12|EmpresaX|Cuenta123|||||||.",
+      "La función AX_Saldo recibe tipo, ejercicio, periodo, empresa, cuenta y, como opcionales, proyecto, sección, sistema, dimensiones y tercero. Por ejemplo, el saldo de balance de la cuenta 57200.00000 de la empresa 0 en el periodo 12 de 2026 empieza por @AX_SaldoBALANCE|2026|12|0|57200.00000 y sigue con los opcionales, separados por |.",
       "Estas funciones se integran en hojas de cálculo para obtener saldos contables sin salir de Excel."
      ],
      "campos": [
@@ -873,7 +2073,7 @@
       {
        "campo": "AX_Saldo",
        "significado": "Construye una cadena @AX_Saldo... o devuelve valor numérico",
-       "ejemplo": "@AX_SaldoBALANCE|2024|12|EmpresaX|Cuenta123"
+       "ejemplo": "@AX_SaldoBALANCE|2026|12|0|57200.00000…"
       }
      ],
      "pasos": [
@@ -904,7 +2104,7 @@
       "Visión general"
      ],
      "explicacion": [
-      "La consolidación contable combina los estados financieros de varias empresas de un grupo para presentar un solo conjunto de estados financieros consolidados.",
+      "La consolidación contable combina los estados financieros de varias empresas de un grupo para presentar uno solo. Ejemplo: si la matriz vende a su filial por 1.000 €, en el consolidado esa venta y esa compra se eliminan, porque el grupo no puede venderse a sí mismo.",
       "La documentación describe siete etapas: preparación (definir periodo y entidades), recopilación de información, eliminación de operaciones intra-grupo, ajustes de consolidación, elaboración de estados financieros consolidados, revisión y validación, y presentación y aprobación.",
       "Cada etapa incluye tareas como uniformizar estados financieros, eliminar inversiones en filiales y saldos recíprocos, ajustar participaciones no dominantes y diferencias de valoración, y elaborar balance, cuenta de pérdidas y ganancias y flujos de efectivo consolidados."
      ],
@@ -1033,1203 +2233,6 @@
     {
      "problema": "En el motor de consultas Excel no encuentras una pantalla para ejecutar las funciones.",
      "solucion": "Las funciones VBA se usan dentro de hojas de cálculo: revisa en Motor de consultas Excel qué hacen GetDecimalSeparator, AXIONAL y AX_Saldo."
-    }
-   ]
-  },
-  {
-   "id": "icon-contabilidad-v-1",
-   "numero": 4,
-   "titulo": "Contabilizar una factura de compra y ver qué genera",
-   "objetivo": "Contabilizarás una factura de compra con origen albarán y comprobarás que genera asiento contable, cartera de efectos y registros fiscales. También revisarás la cartera de efectos de la factura FC-012345 y sus datos de pago.",
-   "concepto": "Al contabilizar una factura de compra, el ERP genera tres elementos: el asiento contable con su debe y haber, la cartera de efectos con el importe pendiente y los registros fiscales con el IVA.\n\nEn el vídeo se usa la factura ML0260020 de tipo «FACTURA COMPRA ORIGEN ALBARAN» con proveedor 00027. Tras contabilizar, el asiento cuadra por 1.058,75; la cartera de efectos deja un efecto TF transferencia pendiente por 1.058,75 y el registro fiscal refleja IVA 21 % con 183,75 de impuesto deducible sobre una base de 875,00.\n\nPara repasar la cartera con otra factura se usa FC-012345 del proveedor 00087: genera un efecto de clase Pagar, tipo TF, importe 1.815,00, vencimiento 23-07-2026 y estado Pendiente (PE).",
-   "duracionMin": 30,
-   "secciones": [
-    {
-     "id": "icon-contabilidad-v-1-factura-origen",
-     "titulo": "Factura de compra con origen albarán",
-     "paraQueSirve": "Ves la factura antes de contabilizar y entiendes qué bloques muestra y qué cambia al contabilizar.",
-     "ruta": [
-      "Gestión",
-      "Compras",
-      "Facturas"
-     ],
-     "explicacion": [
-      "La factura de compra con origen albarán llega desde el circuito de compras. En la cabecera se ven el número, el tipo, el proveedor y el estado.",
-      "Al contabilizar se añaden asientos contables, cartera de efectos y registros fiscales. La factura pasa de «Entrada/Validado» a «Contabilizada» y aparece el botón Descontabilizar."
-     ],
-     "campos": [
-      {
-       "campo": "Factura",
-       "significado": "Número de la factura de compra que vas a contabilizar.",
-       "ejemplo": "ML0260020 en el vídeo"
-      },
-      {
-       "campo": "Tipo",
-       "significado": "Origen de la factura.",
-       "ejemplo": "FACTURA COMPRA ORIGEN ALBARAN"
-      },
-      {
-       "campo": "Proveedor",
-       "significado": "Tercero acreedor de la factura.",
-       "ejemplo": "00027"
-      },
-      {
-       "campo": "DocFlow",
-       "significado": "Circuito documental de la factura.",
-       "ejemplo": "DocFlow, Acuerdos compras, Albaranes compras, Suministros"
-      },
-      {
-       "campo": "Estado",
-       "significado": "Situación de la factura antes y después de contabilizar.",
-       "ejemplo": "Entrada/Validado antes; Contabilizada después"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la factura de compra con origen albarán desde Gestión > Compras > Facturas.",
-       "imagen": "v-icon1-001.jpg"
-      },
-      {
-       "texto": "Revisa en la cabecera los bloques del circuito: DocFlow, acuerdos compras, albaranes de compras, suministros."
-      },
-      {
-       "texto": "Anota el número, tipo, proveedor y estado antes de contabilizar."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "El botón Descontabilizar solo aparece tras contabilizar; si no está, la factura aún no ha sido contabilizada."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-1-contabilizar",
-     "titulo": "Contabilizar y abrir el menú de la cabecera",
-     "paraQueSirve": "Ejecutas la contabilización y compruebas que el ERP añade los bloques generados.",
-     "ruta": null,
-     "explicacion": [
-      "El botón Contabilizar cambia el estado de la factura y dispara la generación de asiento, cartera y registros fiscales.",
-      "En el menú desplegable de la cabecera puedes saltar a los documentos generados: Docflow, Acuerdos compras, Albaranes compras, Suministros, Asientos contables, Cartera de efectos, Registros fiscales."
-     ],
-     "campos": [
-      {
-       "campo": "Botón Contabilizar",
-       "significado": "Acción que valida y genera los documentos contables de la factura.",
-       "ejemplo": "Contabilizar"
-      },
-      {
-       "campo": "Botón Descontabilizar",
-       "significado": "Acción inversa que devuelve la factura a un estado sin asiento.",
-       "ejemplo": "Descontabilizar"
-      },
-      {
-       "campo": "Menú desplegable",
-       "significado": "Acceso a los documentos del circuito y a los generados.",
-       "ejemplo": "Asientos contables, Cartera de efectos, Registros fiscales"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "En la factura pulsa «Contabilizar».",
-       "detalle": "La factura pasa de «Entrada/Validado» a «Contabilizada».",
-       "imagen": "v-icon1-001.jpg",
-       "hotspot": {
-        "x": 84.2,
-        "y": 6.8,
-        "w": 6,
-        "h": 4,
-        "etiqueta": "Contabilizar"
-       }
-      },
-      {
-       "texto": "Comprueba que ahora aparece el botón «Descontabilizar».",
-       "detalle": "Eso confirma que la factura ya está contabilizada."
-      },
-      {
-       "texto": "Abre el menú desplegable de la cabecera y localiza las entradas Asientos contables, Cartera de efectos y Registros fiscales.",
-       "imagen": "v-icon1-002.jpg",
-       "hotspot": {
-        "x": 32.5,
-        "y": 39,
-        "w": 8.5,
-        "h": 4.5,
-        "etiqueta": "Registros fiscales"
-       }
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Contabilizar genera tres cosas: asiento contable, cartera de efectos y registros fiscales. Memorízalo."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-1-asiento",
-     "titulo": "Asiento contable generado",
-     "paraQueSirve": "Compruebas el apunte contable y su cuadre.",
-     "ruta": null,
-     "explicacion": [
-      "El asiento contable registra la entrada y la salida de importes. En este caso la factura total es 1.058,75 y el debe y haber cuadran.",
-      "Es la regla básica: un asiento siempre debe estar cuadrado."
-     ],
-     "campos": [
-      {
-       "campo": "Debe",
-       "significado": "Importe anotado al debe del asiento.",
-       "ejemplo": "1.058,75"
-      },
-      {
-       "campo": "Haber",
-       "significado": "Importe anotado al haber del asiento.",
-       "ejemplo": "1.058,75"
-      },
-      {
-       "campo": "Cuadre",
-       "significado": "Resultado de comparar debe y haber; debe ser 0.",
-       "ejemplo": "1.058,75"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Desde el menú de la cabecera abre «Asientos contables».",
-       "imagen": "v-icon1-003.jpg",
-       "hotspot": {
-        "x": 66.5,
-        "y": 23,
-        "w": 15.5,
-        "h": 6,
-        "etiqueta": "Debe, haber y cuadre"
-       }
-      },
-      {
-       "texto": "Comprueba que el asiento cuadra por 1.058,75."
-      },
-      {
-       "texto": "Cierra recordando la regla: si sale dinero por un lado, entra por otro, y el asiento siempre cuadra.",
-       "detalle": "Ejemplo del cierre: compras una mesa de 1.000, sale de la cuenta bancaria y entra el activo."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Un asiento siempre cuadra: si salieron 1.000 por banco, entraron 1.000 en otro lado."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-1-cartera-fiscales",
-     "titulo": "Cartera de efectos y registros fiscales",
-     "paraQueSirve": "Compruebas el importe pendiente y el IVA generado por la factura.",
-     "ruta": null,
-     "explicacion": [
-      "La cartera de efectos es el importe pendiente de pago o cobro; para una factura de compra es lo que pagarás por remesa.",
-      "Los registros fiscales muestran los impuestos: IVA 21 %, base imponible y total."
-     ],
-     "campos": [
-      {
-       "campo": "Efecto",
-       "significado": "Documento de cobro/pago generado en cartera.",
-       "ejemplo": "Tipo TF transferencia, estado pendiente"
-      },
-      {
-       "campo": "Importe cartera",
-       "significado": "Importe pendiente de la factura.",
-       "ejemplo": "1.058,75"
-      },
-      {
-       "campo": "IVA",
-       "significado": "Porcentaje de impuesto aplicado.",
-       "ejemplo": "21 %"
-      },
-      {
-       "campo": "Base imponible",
-       "significado": "Base sobre la que se calcula el IVA.",
-       "ejemplo": "875,00"
-      },
-      {
-       "campo": "Impuesto deducible",
-       "significado": "Cuota de IVA deducible generada.",
-       "ejemplo": "183,75"
-      },
-      {
-       "campo": "Total registro fiscal",
-       "significado": "Total del apunte fiscal.",
-       "ejemplo": "1.058,75"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre «Cartera de efectos» y comprueba el efecto TF transferencia con estado pendiente e importe 1.058,75.",
-       "imagen": "v-icon1-004.jpg",
-       "hotspot": {
-        "x": 38,
-        "y": 27.5,
-        "w": 21,
-        "h": 6,
-        "etiqueta": "Importe pendiente"
-       }
-      },
-      {
-       "texto": "Abre «Registros fiscales» y comprueba el IVA 21 %, el impuesto deducible 183,75 y el total 1.058,75.",
-       "imagen": "v-icon1-005.jpg",
-       "hotspot": {
-        "x": 15.6,
-        "y": 65,
-        "w": 66.5,
-        "h": 4.5,
-        "etiqueta": "Detalle fiscal: IVA y total"
-       }
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "El importe de la cartera de efectos es el que más tarde deberá cargarse en una remesa."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-1-cartera",
-     "titulo": "Revisar la cartera de efectos generada",
-     "paraQueSirve": "Comprobar la deuda generada con el proveedor y los datos del efecto que luego se remesará.",
-     "ruta": null,
-     "explicacion": [
-      "Al contabilizar, la factura genera un efecto en «CARTERA DE EFECTOS › FC-012345».",
-      "El efecto muestra clase Pagar porque es una factura de compra, tipo de efecto TF y estado Pendiente."
-     ],
-     "campos": [
-      {
-       "campo": "Clase",
-       "significado": "Indica si el efecto es de pago o de cobro.",
-       "ejemplo": "Pagar"
-      },
-      {
-       "campo": "Tipo de efecto",
-       "significado": "Forma de pago del efecto. TF es transferencia.",
-       "ejemplo": "TF"
-      },
-      {
-       "campo": "Moneda",
-       "significado": "Divisa del efecto.",
-       "ejemplo": "EUR"
-      },
-      {
-       "campo": "Importe",
-       "significado": "Importe de la deuda pendiente.",
-       "ejemplo": "1.815,00"
-      },
-      {
-       "campo": "Vencimiento",
-       "significado": "Fecha prevista de pago.",
-       "ejemplo": "23-07-2026"
-      },
-      {
-       "campo": "Tercero",
-       "significado": "Proveedor acreedor del efecto.",
-       "ejemplo": "00087 LABORATORIOS UNION"
-      },
-      {
-       "campo": "Estado",
-       "significado": "Situación del efecto. PE es pendiente.",
-       "ejemplo": "Pendiente (PE)"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Desde la factura contabilizada abre la cartera de efectos FC-012345.",
-       "detalle": "Verás las pestañas Cartera de efectos, Historia efecto y Asientos contables."
-      },
-      {
-       "texto": "Comprueba el importe 1.815,00, clase Pagar, tipo TF y estado Pendiente (PE).",
-       "imagen": "v-icon11-003.jpg"
-      },
-      {
-       "texto": "Revisa el vencimiento 23-07-2026 y el tercero 00087.",
-       "detalle": "Son los datos que se usarán en la remesa de pago."
-      },
-      {
-       "texto": "Si quieres ver el asiento contable, abre la pestaña «Asientos contables».",
-       "detalle": "Ese asiento refleja la contabilización de la factura, no la futura remesa."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La cartera de efectos es la deuda con el proveedor. No la confundas con el asiento contable ni con los registros fiscales de impuestos."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Qué tres cosas genera contabilizar una factura?",
-     "opciones": [
-      "Asiento contable, cartera de efectos y registros fiscales",
-      "Albarán, pedido y factura",
-      "Banco propio, ejercicio y C-Empresa",
-      "DocFlow, acuerdos y suministros"
-     ],
-     "correcta": 0,
-     "explicacion": "Al contabilizar se generan asiento contable, cartera de efectos y registros fiscales."
-    },
-    {
-     "pregunta": "¿En qué estado pasa la factura tras contabilizar?",
-     "opciones": [
-      "Provisional",
-      "Entrada/Validado",
-      "Descontabilizada",
-      "Contabilizada"
-     ],
-     "correcta": 3,
-     "explicacion": "Pasa de «Entrada/Validado» a «Contabilizada» y aparece el botón Descontabilizar."
-    },
-    {
-     "pregunta": "¿Cuál es el importe de la cartera de efectos de la factura ML0260020?",
-     "opciones": [
-      "875,00",
-      "183,75",
-      "1.058,75",
-      "1.000,00"
-     ],
-     "correcta": 2,
-     "explicacion": "La cartera muestra el importe pendiente de pago: 1.058,75."
-    },
-    {
-     "pregunta": "¿Qué reflejan los registros fiscales?",
-     "opciones": [
-      "Las cuentas contables del asiento",
-      "Los impuestos de la factura",
-      "Los albaranes de compra",
-      "Los bancos propios"
-     ],
-     "correcta": 1,
-     "explicacion": "Los registros fiscales son los impuestos; en el vídeo se ve IVA 21 %."
-    },
-    {
-     "pregunta": "¿Qué tipo de efecto aparece en la cartera FC-012345?",
-     "opciones": [
-      "TF transferencia",
-      "Cheque",
-      "Pagaré",
-      "Recibo"
-     ],
-     "correcta": 0,
-     "explicacion": "El efecto de la demo es de tipo TF, es decir, transferencia."
-    },
-    {
-     "pregunta": "¿Qué representa la cartera de efectos de una factura de compra?",
-     "opciones": [
-      "Un impuesto",
-      "La deuda con el proveedor",
-      "Un cobro de cliente",
-      "Un registro fiscal"
-     ],
-     "correcta": 1,
-     "explicacion": "En una factura de compra, la cartera de efectos representa la deuda con el proveedor."
-    }
-   ],
-   "checklist": [
-    "Abres la factura ML0260020 desde Compras > Facturas.",
-    "Identificas su tipo «FACTURA COMPRA ORIGEN ALBARAN» y proveedor 00027.",
-    "Pulsas Contabilizar y ves el estado «Contabilizada» y el botón Descontabilizar.",
-    "Localizas en el menú de cabecera Asientos contables, Cartera de efectos y Registros fiscales.",
-    "Compruebas el asiento cuadrado por 1.058,75.",
-    "Compruebas la cartera con efecto TF transferencia pendiente por 1.058,75.",
-    "Compruebas el registro fiscal con IVA 21 %, base 875,00 e impuesto deducible 183,75.",
-    "Abres la cartera FC-012345 y verificas clase Pagar, tipo TF, importe 1.815,00 y estado Pendiente."
-   ],
-   "problemas": [
-    {
-     "problema": "Al abrir «Registros fiscales» sale una franja roja con «Table … does not exists in database».",
-     "solucion": "Es un fallo del entorno de formación, no tuyo: el detalle fiscal (IVA, importe 1.058,75) se ve igual debajo. Sigue con el ejercicio."
-    },
-    {
-     "problema": "No aparecen Asientos contables, Cartera de efectos o Registros fiscales en la factura.",
-     "solucion": "Comprueba que la factura esté Contabilizada. Mientras siga en «Entrada / Validado», esos bloques no existen todavía."
-    }
-   ]
-  },
-  {
-   "id": "icon-contabilidad-v-2",
-   "numero": 5,
-   "titulo": "Factura directa de compra (FC) y de venta (FB) desde Finanzas",
-   "objetivo": "Crearás una factura directa de compra FC y una de venta FB y comprobarás los importes necesarios para validar.",
-   "concepto": "En Finanzas puedes crear facturas directas sin origen de albarán, pedido o solicitud. Para compras se usa el tipo FC; para ventas, el tipo FB.\n\nEn el vídeo se crea una factura de compra de la empresa LIZ (Liz Sport España) con proveedor 00003, línea de 5.000,00 y total 6.050,00. Al validar se activa Contabilizar porque el importe total y el importe factura coinciden. La factura de venta FB se intenta validar y da un error del entorno de formación, no por fallo del alumno.",
-   "duracionMin": 12,
-   "secciones": [
-    {
-     "id": "icon-contabilidad-v-2-fc",
-     "titulo": "Factura directa de compra FC",
-     "paraQueSirve": "Crear una factura de compra directa desde Finanzas, sin albarán de origen.",
-     "ruta": [
-      "Finanzas",
-      "Facturación",
-      "Compras",
-      "Facturas de compras"
-     ],
-     "explicacion": [
-      "Se pulsa «Nuevo documento» y se elige tipo FC (Fact. compra). La factura pide empresa, proveedor y los datos financieros.",
-      "En el vídeo se ve la empresa LIZ y proveedor 00003. La cuenta financiera es obligatoria."
-     ],
-     "campos": [
-      {
-       "campo": "Tipo de factura",
-       "significado": "Clase de factura directa.",
-       "ejemplo": "FC (Fact. compra)"
-      },
-      {
-       "campo": "Empresa",
-       "significado": "Sociedad que emite la factura directa.",
-       "ejemplo": "LIZ en el vídeo; usa la tuya p. ej. S{INI}"
-      },
-      {
-       "campo": "Proveedor",
-       "significado": "Tercero acreedor.",
-       "ejemplo": "00003"
-      },
-      {
-       "campo": "Perceptor",
-       "significado": "Receptor del pago.",
-       "ejemplo": "Proveedor en datos financieros"
-      },
-      {
-       "campo": "Tipo efecto",
-       "significado": "Forma de pago/efecto.",
-       "ejemplo": "CH cheque"
-      },
-      {
-       "campo": "Plazo de pago",
-       "significado": "Días para el pago.",
-       "ejemplo": "30D"
-      },
-      {
-       "campo": "Cuenta financiera",
-       "significado": "Cuenta bancaria propia para el pago.",
-       "ejemplo": "CAIXAQUA04 en el vídeo"
-      },
-      {
-       "campo": "Número de factura",
-       "significado": "Número generado por el ERP.",
-       "ejemplo": "FCLIZ26-000001"
-      },
-      {
-       "campo": "Factura proveedor",
-       "significado": "Serie o número editable del proveedor.",
-       "ejemplo": "F001-0000012"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre las facturas de compras: Finanzas > Facturación > Compras > Facturas de compras.",
-       "imagen": "v-icon1-013.jpg",
-       "hotspot": {
-        "x": 33.4,
-        "y": 23,
-        "w": 16.5,
-        "h": 23.7,
-        "etiqueta": "Tipos de factura"
-       }
-      },
-      {
-       "texto": "Pulsa «Nuevo documento» y elige el tipo FC."
-      },
-      {
-       "texto": "Rellena empresa LIZ o S{INI} y proveedor 00003."
-      },
-      {
-       "texto": "En Datos financieros completa perceptor, tipo efecto CH, plazo 30D y cuenta financiera CAIXAQUA04 o tu CAIXA{INI}.",
-       "imagen": "v-icon1-014.jpg",
-       "hotspot": {
-        "x": 12.3,
-        "y": 66.5,
-        "w": 27.5,
-        "h": 5.7,
-        "etiqueta": "Cuenta financiera"
-       }
-      },
-      {
-       "texto": "Añade una línea con artículo B, cuenta 60000.00000, cantidad 1 y precio 5.000,00.",
-       "detalle": "El neto es 5.000,00 y con IVA el total es 6.050,00."
-      },
-      {
-       "texto": "Comprueba que el importe factura y el importe total son 6.050,00 y pulsa Validar.",
-       "imagen": "v-icon1-015.jpg",
-       "hotspot": {
-        "x": 69.4,
-        "y": 66.5,
-        "w": 27.2,
-        "h": 5.7,
-        "etiqueta": "Importe factura"
-       }
-      },
-      {
-       "texto": "Si todo está bien, verás el toast «Éxito» y la factura queda Provisional hasta validar."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "En el vídeo, el número de factura sale FCLIZ26-000001 y la factura proveedor F001-0000012; tú puedes dejarlos o cambiarlos según tu numerador."
-      },
-      {
-       "tipo": "problema",
-       "texto": "Si el importe factura no coincide con el importe total, no se activa el botón Contabilizar."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Revisa las líneas y los impuestos hasta que ambos importes sean 6.050,00."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-2-contabilizar-fc",
-     "titulo": "Validar y contabilizar la FC",
-     "paraQueSirve": "Compruebas que la FC genera asiento, cartera y registros fiscales al contabilizar.",
-     "ruta": [
-      "Factura FC",
-      "Botón Validar",
-      "Botón Contabilizar"
-     ],
-     "explicacion": [
-      "La validación confirma que el importe factura y el importe total coinciden.",
-      "Contabilizar genera asiento contable, cartera de efectos y registros fiscales."
-     ],
-     "campos": [
-      {
-       "campo": "Importe neto",
-       "significado": "Base de la línea sin IVA.",
-       "ejemplo": "5.000,00"
-      },
-      {
-       "campo": "Importe factura",
-       "significado": "Total factura con impuestos.",
-       "ejemplo": "6.050,00"
-      },
-      {
-       "campo": "Importe total",
-       "significado": "Suma total calculada de la factura.",
-       "ejemplo": "6.050,00"
-      },
-      {
-       "campo": "Detalle de impuestos",
-       "significado": "Monto, cuota deducible e impuesto.",
-       "ejemplo": "Monto 5.000,00, cuota 1.050,00, total 6.050,00"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Con el importe factura y el importe total en 6.050,00, pulsa Validar."
-      },
-      {
-       "texto": "Verás el toast «Éxito»."
-      },
-      {
-       "texto": "Pulsa Contabilizar y comprueba que se generan asiento contable, cartera de efectos y registros fiscales."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "El detalle de impuestos muestra monto, cuota deducible e impuesto; en el vídeo el total es 6.050,00."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-2-fb",
-     "titulo": "Factura directa de venta FB",
-     "paraQueSirve": "Crear una factura directa de ventas y reconocer el error de training al validar.",
-     "ruta": [
-      "Finanzas",
-      "Facturación",
-      "Ventas",
-      "Facturas de ventas"
-     ],
-     "explicacion": [
-      "La factura directa de venta usa tipo FB. En el vídeo se usa cliente 00003 y líneas con cuenta 70000.00000.",
-      "Al validar dio «An error occurred … ha sido consolidado», un error del entorno de formación; el formador lo verá con sistemas. No es fallo del alumno."
-     ],
-     "campos": [
-      {
-       "campo": "Tipo de factura",
-       "significado": "Clase de factura directa de venta.",
-       "ejemplo": "FB"
-      },
-      {
-       "campo": "Cliente",
-       "significado": "Tercero deudor.",
-       "ejemplo": "00003"
-      },
-      {
-       "campo": "Líneas",
-       "significado": "Artículos o conceptos de la venta.",
-       "ejemplo": "Artículo B/I"
-      },
-      {
-       "campo": "Cuenta contable",
-       "significado": "Cuenta de ingreso de la línea.",
-       "ejemplo": "70000.00000"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre Ventas > Facturas de ventas y pulsa «Nuevo documento»."
-      },
-      {
-       "texto": "Elige tipo FB y cliente 00003."
-      },
-      {
-       "texto": "Añade líneas con artículo B/I y cuenta 70000.00000.",
-       "imagen": "v-icon1-016.jpg",
-       "hotspot": {
-        "x": 61.2,
-        "y": 92,
-        "w": 6.6,
-        "h": 4.5,
-        "etiqueta": "Guardar"
-       }
-      },
-      {
-       "texto": "Añade otra línea si la venta la requiere.",
-       "imagen": "v-icon1-017.jpg",
-       "hotspot": {
-        "x": 61.2,
-        "y": 92,
-        "w": 6.6,
-        "h": 4.5,
-        "etiqueta": "Guardar"
-       }
-      },
-      {
-       "texto": "Intenta validar. Si sale «An error occurred … ha sido consolidado», anótalo como error del entorno de formación."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Al validar la FB del vídeo salió «An error occurred … ha sido consolidado»."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "El formador lo revisará con sistemas; en un entorno normal no es fallo del alumno."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Qué tipo de factura directa se usa para compras?",
-     "opciones": [
-      "FB",
-      "FU",
-      "FC",
-      "R4"
-     ],
-     "correcta": 2,
-     "explicacion": "FC es factura de compras; FB es factura de ventas."
-    },
-    {
-     "pregunta": "¿Qué importe debe coincidir para que se active Contabilizar?",
-     "opciones": [
-      "Importe total e importe factura",
-      "Importe neto e IVA",
-      "Cantidad y precio",
-      "Factura proveedor y número de factura"
-     ],
-     "correcta": 0,
-     "explicacion": "Si el importe factura no coincide con el importe total, no se activa Contabilizar."
-    },
-    {
-     "pregunta": "En el vídeo, ¿qué cuenta financiera se usó en la FC?",
-     "opciones": [
-      "CAIXA13",
-      "ES0130",
-      "00101",
-      "CAIXAQUA04"
-     ],
-     "correcta": 3,
-     "explicacion": "La cuenta financiera obligatoria usada fue CAIXAQUA04."
-    },
-    {
-     "pregunta": "¿Qué cuenta se usa en la línea de compra del vídeo?",
-     "opciones": [
-      "70000.00000",
-      "60000.00000",
-      "57900.00000",
-      "57200.00000"
-     ],
-     "correcta": 1,
-     "explicacion": "La línea de compra usa la cuenta 60000.00000."
-    },
-    {
-     "pregunta": "¿Qué error apareció al validar la factura de venta FB?",
-     "opciones": [
-      "Falta de proveedor",
-      "No coincide el importe",
-      "An error occurred … ha sido consolidado",
-      "No existe el cliente"
-     ],
-     "correcta": 2,
-     "explicacion": "Al validar FB salió «An error occurred … ha sido consolidado», un error del entorno."
-    },
-    {
-     "pregunta": "¿Cuál es el total de la factura FC del vídeo?",
-     "opciones": [
-      "6.050,00",
-      "5.000,00",
-      "1.050,00",
-      "1.058,75"
-     ],
-     "correcta": 0,
-     "explicacion": "La factura FC tiene importe total e importe factura 6.050,00."
-    }
-   ],
-   "checklist": [
-    "Abres Finanzas > Facturación > Compras > Facturas de compras.",
-    "El tipo de factura es FC y la empresa LIZ o S{INI}.",
-    "Completas perceptor, tipo efecto CH, plazo 30D y cuenta financiera.",
-    "Añades línea B con cuenta 60000.00000, cantidad 1 y precio 5.000,00.",
-    "Verificas que importe factura e importe total son 6.050,00.",
-    "Validas y ves el toast Éxito.",
-    "Contabilizas y compruebas asiento, cartera y registros fiscales.",
-    "Intentas la FB y anotas el error del entorno si aparece."
-   ],
-   "problemas": [
-    {
-     "problema": "No se activa Contabilizar en la FC.",
-     "solucion": "Comprueba que importe factura e importe total son 6.050,00; si no coinciden revisa líneas e impuestos."
-    },
-    {
-     "problema": "Al validar la factura de venta FB sale «An error occurred … ha sido consolidado».",
-     "solucion": "Es el error de training; no es fallo del alumno."
-    }
-   ]
-  },
-  {
-   "id": "icon-contabilidad-v-3",
-   "numero": 6,
-   "titulo": "Rectificativa frente a sustitutiva",
-   "objetivo": "Decidirás cuándo usar una factura rectificativa y cuándo una sustitutiva según el caso.",
-   "concepto": "La rectificativa corrige descuentos, importes mal u otros ajustes sin anular la factura original. En España debe quedar registro de todo lo que sucede con la factura; por eso no se elimina y se usa una rectificativa.\n\nLa sustitutiva anula definitivamente la factura inicial, por ejemplo si te equivocaste de proveedor. La rectificativa queda vinculada al documento original y dentro del DocFlow; la sustitutiva es para reemplazar algo que no se puede corregir.",
-   "duracionMin": 8,
-   "secciones": [
-    {
-     "id": "icon-contabilidad-v-3-rectificativa",
-     "titulo": "Factura rectificativa: corregir sin anular",
-     "paraQueSirve": "Corrige descuentos o importes manteniendo el registro continuo de la factura.",
-     "ruta": null,
-     "explicacion": [
-      "La rectificativa actúa como una nota de crédito en otros países, pero en España se usa para hacer modificaciones: descuentos, ajustes de importe, etc.",
-      "No se elimina la factura original. La rectificativa va vinculada al documento original y entra en el DocFlow del circuito."
-     ],
-     "campos": [
-      {
-       "campo": "Tipo de factura",
-       "significado": "Tipología que identifica la corrección.",
-       "ejemplo": "Factura rectificativa de la factura"
-      },
-      {
-       "campo": "Caso de uso",
-       "significado": "Cuándo se aplica.",
-       "ejemplo": "Descuentos o importe mal sin anular"
-      },
-      {
-       "campo": "DocFlow",
-       "significado": "Circuito donde queda vinculada.",
-       "ejemplo": "Dentro del DocFlow de la factura original"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Recuerda: si hay que corregir un importe o un descuento, no elimines la factura."
-      },
-      {
-       "texto": "Usa una factura rectificativa para que quede registro del cambio."
-      },
-      {
-       "texto": "Comprueba que la rectificativa queda vinculada al documento original."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "En España debe quedar registro de todo lo que sucede con la factura; la rectificativa no borra el original."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-3-sustitutiva",
-     "titulo": "Factura sustitutiva: anular definitivamente",
-     "paraQueSirve": "Anulas y reemplazas la factura inicial cuando el error no se puede corregir.",
-     "ruta": null,
-     "explicacion": [
-      "La sustitutiva anula definitivamente la factura inicial. Se usa cuando estás ante algo nuevo, por ejemplo te equivocaste de proveedor.",
-      "La diferencia es fácil: la rectificativa corrige; la sustitutiva anula o reemplaza."
-     ],
-     "campos": [
-      {
-       "campo": "Tipo de factura",
-       "significado": "Tipología que sustituye a la inicial.",
-       "ejemplo": "FU Fact. Sustitutiva"
-      },
-      {
-       "campo": "Caso de uso",
-       "significado": "Cuándo se aplica.",
-       "ejemplo": "Proveedor equivocado; no se puede rectificar"
-      },
-      {
-       "campo": "Diferencia",
-       "significado": "Comparación con la rectificativa.",
-       "ejemplo": "Rectificativa corrige; sustitutiva anula definitivamente"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Identifica si el error es corregible o si la factura inicial es insalvable."
-      },
-      {
-       "texto": "Si es insalvable, usa una factura sustitutiva para anular la inicial."
-      },
-      {
-       "texto": "No uses sustitutiva para un simple descuento: para eso está la rectificativa."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "No se mostró pantalla de sustitutiva en el vídeo: solo se explicó el concepto."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Para qué sirve la factura rectificativa?",
-     "opciones": [
-      "Anular definitivamente",
-      "Corregir descuentos o importe mal sin anular",
-      "Crear factura nueva desde cero",
-      "Pagar facturas"
-     ],
-     "correcta": 1,
-     "explicacion": "La rectificativa corrige descuentos o importes mal sin anular la factura original."
-    },
-    {
-     "pregunta": "¿Cuándo usarías una factura sustitutiva?",
-     "opciones": [
-      "Te equivocaste de proveedor y no se puede rectificar",
-      "Para un descuento",
-      "Para una factura con IVA 21 %",
-      "Para calcular el IBAN"
-     ],
-     "correcta": 0,
-     "explicacion": "La sustitutiva anula definitivamente la factura inicial, por ejemplo si te equivocaste de proveedor."
-    },
-    {
-     "pregunta": "¿Qué relación tiene la rectificativa con el documento original?",
-     "opciones": [
-      "Ninguna",
-      "Solo si es de venta",
-      "Se elimina",
-      "Va vinculada y dentro del DocFlow"
-     ],
-     "correcta": 3,
-     "explicacion": "La rectificativa va vinculada al documento original y dentro del DocFlow."
-    },
-    {
-     "pregunta": "En España, ¿por qué se usan rectificativas en lugar de eliminar facturas?",
-     "opciones": [
-      "Para que no haya IVA",
-      "Porque no existe botón eliminar",
-      "Debe quedar registro de todo lo que sucede",
-      "Para no pagar impuestos"
-     ],
-     "correcta": 2,
-     "explicacion": "Debe quedar registro de todo lo que sucede con la factura."
-    },
-    {
-     "pregunta": "¿Qué diferencia hay entre rectificativa y sustitutiva?",
-     "opciones": [
-      "Son iguales",
-      "La rectificativa corrige; la sustitutiva anula definitivamente",
-      "La sustitutiva corrige; la rectificativa elimina",
-      "Solo cambia el número"
-     ],
-     "correcta": 1,
-     "explicacion": "La rectificativa corrige sin anular; la sustitutiva anula o reemplaza definitivamente."
-    }
-   ],
-   "checklist": [
-    "Identificas la diferencia entre rectificativa y sustitutiva.",
-    "Sabes que la rectificativa corrige descuentos o importe mal sin anular.",
-    "Sabes que la sustitutiva anula definitivamente la factura inicial.",
-    "Sabes que en España debe quedar registro de todo lo que sucede.",
-    "Sabes que la rectificativa va vinculada al documento original y dentro del DocFlow.",
-    "Eres capaz de decidir cuál usar ante un caso."
-   ],
-   "problemas": [
-    {
-     "problema": "Un junior quiere eliminar una factura con importe mal.",
-     "solucion": "Usa rectificativa si se puede corregir; así no se rompe el registro."
-    },
-    {
-     "problema": "Se confunde la sustitutiva con la rectificativa.",
-     "solucion": "Rectificativa corrige; sustitutiva anula o reemplaza definitivamente."
-    }
-   ]
-  },
-  {
-   "id": "icon-contabilidad-v-4",
-   "numero": 7,
-   "titulo": "Cuando una factura no contabiliza",
-   "objetivo": "Tendrás identificados los tres motivos que impiden contabilizar o remesar: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.",
-   "concepto": "Una factura puede quedarse sin contabilizar o sin cartera de efectos por tres motivos principales: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.\n\nCon importe total 0 la factura contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos; por eso no se puede remesar ni conciliar.\n\nUn período cerrado impide contabilizar y se corrige usando una fecha en un período abierto. En facturas origen pedido, pasa primero a provisional para cambiar el tipo de efecto y revisa el tipo de asiento.",
-   "duracionMin": 30,
-   "secciones": [
-    {
-     "id": "icon-contabilidad-v-4-importe-0",
-     "titulo": "Factura con importe total 0",
-     "paraQueSirve": "Evitar el caso en el que una factura contabiliza pero no se puede remesar ni conciliar.",
-     "ruta": null,
-     "explicacion": [
-      "Una factura con importe total 0 contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos.",
-      "Sin efecto de cartera no hay deuda que incluir en una remesa ni que conciliar contra el banco."
-     ],
-     "campos": [
-      {
-       "campo": "Importe total",
-       "significado": "Total de la factura.",
-       "ejemplo": "0,00"
-      },
-      {
-       "campo": "Cartera de efectos",
-       "significado": "Efecto de deuda o cobro generado al contabilizar.",
-       "ejemplo": "No se genera con importe 0"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Revisa el importe total de la factura antes de contabilizar."
-      },
-      {
-       "texto": "Si contabilizas una factura de importe 0, comprueba que no aparece en cartera de efectos."
-      },
-      {
-       "texto": "Corrige la factura para que tenga un importe real antes de querer remesarla."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Si la cartera aparece vacía tras contabilizar, revisa primero si el importe total de la factura es 0."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Corrige la factura con un importe distinto de 0 y vuelve a contabilizar para que se genere su efecto."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-4-periodos",
-     "titulo": "Períodos contables cerrados",
-     "paraQueSirve": "Revisar el estado de los períodos del ejercicio y usar una fecha contable permitida.",
-     "ruta": [
-      "Finanzas",
-      "Maestros",
-      "Parametrización",
-      "Empresas",
-      "Empresa 0",
-      "Ejercicio"
-     ],
-     "explicacion": [
-      "El ejercicio 2026 tiene 12 períodos contables.",
-      "En la demo, enero-junio estaban Cerrado y julio en adelante Abierto."
-     ],
-     "campos": [
-      {
-       "campo": "Ejercicio",
-       "significado": "Año contable.",
-       "ejemplo": "2026"
-      },
-      {
-       "campo": "Período",
-       "significado": "Mes contable dentro del ejercicio.",
-       "ejemplo": "julio"
-      },
-      {
-       "campo": "Estado del período",
-       "significado": "Abierto o Cerrado.",
-       "ejemplo": "Enero-junio Cerrado; julio en adelante Abierto"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre el maestro de empresas y ve a la pestaña «Ejercicio».",
-       "imagen": "v-icon11-012.jpg"
-      },
-      {
-       "texto": "Revisa el estado de los períodos de 2026.",
-       "detalle": "Enero-junio Cerrado; desde julio Abierto."
-      },
-      {
-       "texto": "Si la factura no contabiliza, comprueba que su fecha no caiga en un período cerrado."
-      },
-      {
-       "texto": "Usa una fecha desde julio en adelante para poder contabilizar."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "No se puede contabilizar una factura fechada en un período cerrado."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Corrige la fecha de la factura a un período abierto. Para abrir meses anteriores habría que borrar el ejercicio y recrearlo después de fijar bien el año de inicio de la empresa."
-      }
-     ]
-    },
-    {
-     "id": "icon-contabilidad-v-4-origen-pedido",
-     "titulo": "Factura origen pedido y tipo de asiento",
-     "paraQueSirve": "Saber cómo corregir una factura de origen pedido y qué tipo de asiento debe usar.",
-     "ruta": [
-      "Gestión",
-      "Compras",
-      "Facturas",
-      "Facturas"
-     ],
-     "explicacion": [
-      "En una factura de origen pedido, antes de cambiar el tipo de efecto hay que pulsar «Pasar a provisional».",
-      "Si al contabilizar falla, revisa el tipo de documento y el tipo de asiento."
-     ],
-     "campos": [
-      {
-       "campo": "Tipo documento",
-       "significado": "Origen de la factura.",
-       "ejemplo": "FACTURA COMPRA ORIGEN PEDIDO"
-      },
-      {
-       "campo": "Tipo de asiento",
-       "significado": "Plantilla contable usada al contabilizar.",
-       "ejemplo": "EPC en compras; FB en ventas"
-      },
-      {
-       "campo": "Tipo de efecto",
-       "significado": "Forma de pago propuesta para la cartera.",
-       "ejemplo": "TF o cheque"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Localiza en la lista la factura de compra de origen pedido.",
-       "imagen": "v-icon11-014.jpg"
-      },
-      {
-       "texto": "Abre la factura y observa los botones «Pasar a provisional» y «Contabilizar».",
-       "imagen": "v-icon11-013.jpg"
-      },
-      {
-       "texto": "Si necesitas cambiar el tipo de efecto, pulsa primero «Pasar a provisional»."
-      },
-      {
-       "texto": "Revisa la pestaña de tipología y confirma el tipo de asiento EPC para compras o FB para ventas."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Si aparece un error de tipo de asiento al contabilizar, suele ser porque el tipo de documento o de asiento no corresponde."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Comprueba que la factura de compra usa EPC y la de venta usa FB antes de contabilizar."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Qué ocurre si contabilizas una factura con importe total 0?",
-     "opciones": [
-      "No deja contabilizar",
-      "Genera asiento y registro fiscal, pero no cartera de efectos",
-      "Genera cartera de efectos negativa",
-      "Genera una remesa automática"
-     ],
-     "correcta": 1,
-     "explicacion": "La factura contabiliza, pero sin cartera de efectos no se puede remesar ni conciliar."
-    },
-    {
-     "pregunta": "¿Qué meses de 2026 estaban cerrados en la demo?",
-     "opciones": [
-      "Enero-junio",
-      "Julio-diciembre",
-      "Solo enero",
-      "Ninguno"
-     ],
-     "correcta": 0,
-     "explicacion": "Enero-junio estaban Cerrado y julio en adelante Abierto."
-    },
-    {
-     "pregunta": "Antes de cambiar el tipo de efecto en una factura de origen pedido hay que…",
-     "opciones": [
-      "Contabilizar",
-      "Guardar",
-      "Pasar a provisional",
-      "Descontabilizar"
-     ],
-     "correcta": 2,
-     "explicacion": "Primero se pasa a provisional para poder modificar la tipología."
-    },
-    {
-     "pregunta": "En ventas, ¿qué tipo de asiento debe usarse?",
-     "opciones": [
-      "EPC",
-      "PSCTT",
-      "TF",
-      "FB"
-     ],
-     "correcta": 3,
-     "explicacion": "En ventas se usa FB y en compras EPC."
-    },
-    {
-     "pregunta": "¿Por qué una factura de importe 0 no se puede remesar?",
-     "opciones": [
-      "Porque no genera asiento",
-      "Porque no genera cartera de efectos",
-      "Porque no tiene vencimiento",
-      "Porque no tiene proveedor"
-     ],
-     "correcta": 1,
-     "explicacion": "Sin cartera de efectos no hay deuda que incluir en una remesa."
-    }
-   ],
-   "checklist": [
-    "Revisas el importe total antes de contabilizar.",
-    "Compruebas que la fecha cae en un período abierto.",
-    "Pulsas «Pasar a provisional» antes de cambiar el tipo de efecto.",
-    "Confirmas EPC para compras y FB para ventas.",
-    "Compruebas que no aparece cartera con importe 0.",
-    "Corriges fecha o tipo de asiento antes de reintentar."
-   ],
-   "problemas": [
-    {
-     "problema": "Contabilizas una factura y no aparece en la cartera de efectos.",
-     "solucion": "Revisa el importe total: si es 0, no se genera cartera. Corrige el importe y vuelve a contabilizar."
-    },
-    {
-     "problema": "La factura no contabiliza y su fecha es de junio.",
-     "solucion": "El período está cerrado. Cambia la fecha a un período abierto, como julio."
-    },
-    {
-     "problema": "Aparece un error de tipo de asiento al contabilizar.",
-     "solucion": "Comprueba que la factura de compra usa EPC y la de venta usa FB."
-    },
-    {
-     "problema": "No puedes cambiar el tipo de efecto en una factura origen pedido.",
-     "solucion": "Pasa la factura a provisional antes de modificar la tipología."
     }
    ]
   }

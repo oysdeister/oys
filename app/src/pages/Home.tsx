@@ -84,8 +84,11 @@ function Estacion({
   const scale = useTransform(giro, (g) => 0.64 + 0.36 * prof(g + base));
   const zIndex = useTransform(giro, (g) => Math.round(prof(g + base) * 100));
   const opacity = useTransform(giro, (g) => 0.62 + 0.38 * prof(g + base));
+  // Solo se rotulan las estaciones de delante: con 11 módulos las de detrás se pisaban
+  const umbral = geo.movil ? 0.95 : 0.45;
+  const lbl = useTransform(giro, (g) => (prof(g + base) >= umbral ? 1 : 0));
   return (
-    <motion.div className="po-st" style={{ x, y, scale, zIndex }}>
+    <motion.div className="po-st" style={{ x, y, scale, zIndex, ['--lbl' as string]: lbl }}>
       <motion.div
         initial={reducir ? false : { scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

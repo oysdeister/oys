@@ -1,1836 +1,2171 @@
 {
- "id": "icon-activos",
- "titulo": "Activos fijos",
- "sesion": "",
- "resumen": "Organiza el inmovilizado mediante bienes, elementos y componentes, y configura los maestros necesarios. También registra amortizaciones, traspasos, bajas y ventas, y consulta informes de activos.",
- "circuito": [
-  "Grupos y cuentas",
-  "Bien",
-  "Elemento",
-  "Componente",
-  "Amortización",
-  "Baja o venta"
- ],
- "ejercicios": [
-  {
-   "id": "icon-activos-1",
-   "numero": 1,
-   "titulo": "Estructura y configuración del inmovilizado",
-   "objetivo": "Tendrás identificada la estructura jerárquica de los activos y los maestros de configuración necesarios para darlos de alta.",
-   "concepto": "El inmovilizado se organiza en una jerarquía: el bien agrupa elementos y cada elemento contiene componentes. Antes de dar de alta activos, se configuran grupos, cuentas, tablas fiscales, sistemas especiales y localizaciones.",
-   "duracionMin": 25,
-   "secciones": [
+  "id": "icon-activos",
+  "titulo": "Activos fijos",
+  "sesion": "",
+  "resumen": "Aprendes qué es un activo fijo y cómo se amortiza con ejemplos numéricos, preparas los maestros y la estructura bien, elemento y componente, ves cómo una factura de compra crea el activo automáticamente (tipología y familia del artículo) y terminas amortizando, traspasando, dando de baja, vendiendo y consultando informes.",
+  "circuito": [
+    "Conceptos",
+    "Maestros y estructura",
+    "Tipología y familia",
+    "Factura contabilizada",
+    "Amortización",
+    "Baja o venta"
+  ],
+  "ejercicios": [
     {
-     "id": "icon-activos-1-bien",
-     "titulo": "Definición del bien",
-     "paraQueSirve": "El bien es la unidad genérica que agrupa elementos; aquí se definen sus datos de clasificación.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "El bien es la unidad genérica del inmovilizado. Agrupa elementos y permite establecer clasificaciones comunes: grupo de inmovilizado, grupo contable y grupo fiscal.",
-      "En la pantalla de bienes defines estos códigos y el estado propuesto para los componentes. Los bienes engloban elementos, que a su vez contienen componentes; la definición de bien es libre según la organización.",
-      "Por dentro: la tabla principal es cinmhead, con campos como empresa, bien, descripción, grupo inmovilizado, grupo contable, serie inmovilizado, grupo fiscal, código fiscal y estado de componentes."
-     ],
-     "campos": [
-      {
-       "campo": "Empresa",
-       "significado": "Código de la empresa.",
-       "ejemplo": "código interno de la empresa"
-      },
-      {
-       "campo": "Bien",
-       "significado": "Código de bien de inmovilizado.",
-       "ejemplo": "código alfanumérico"
-      },
-      {
-       "campo": "Descripción",
-       "significado": "Descripción del bien de inmovilizado.",
-       "ejemplo": "texto libre"
-      },
-      {
-       "campo": "Grupo inmovilizado",
-       "significado": "Código de grupo de inmovilizado.",
-       "ejemplo": "código de grupo"
-      },
-      {
-       "campo": "Grupo contable",
-       "significado": "Código de grupo o familia de cuentas contables; se propone por defecto al dar de alta un elemento.",
-       "ejemplo": "código de grupo contable"
-      },
-      {
-       "campo": "Serie inmovilizado",
-       "significado": "Código de serie de inmovilizado.",
-       "ejemplo": "código de serie"
-      },
-      {
-       "campo": "Grupo fiscal",
-       "significado": "Código de grupo fiscal.",
-       "ejemplo": "código de grupo fiscal"
-      },
-      {
-       "campo": "Código fiscal",
-       "significado": "Código de tablas fiscales.",
-       "ejemplo": "código de tabla fiscal"
-      },
-      {
-       "campo": "Estado de componentes",
-       "significado": "Estado propuesto por defecto para la creación de componentes.",
-       "ejemplo": "estado inicial"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la pantalla de bienes de inmovilizado y fíjate en el formulario de alta.",
-       "imagen": "icon-activos-001.webp"
-      },
-      {
-       "texto": "Localiza los campos «Grupo inmovilizado», «Grupo contable» y «Grupo fiscal» y revisa qué códigos admiten."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La documentación no indica generación de asiento en el alta del bien."
-      }
-     ]
+      "id": "icon-activos-conceptos",
+      "numero": 1,
+      "titulo": "Activo fijo y amortización en llano",
+      "objetivo": "Sabrás explicar con ejemplos numéricos qué es un activo fijo, cómo se calcula su amortización, qué son el valor residual y el valor neto contable y qué pasa en la contabilidad cuando se da de baja o se vende.",
+      "concepto": "Cuando una empresa compra un ordenador, una máquina o una furgoneta para usarlos varios años, no se apunta todo el importe como gasto del año de compra: lo registra como un activo y va repartiendo su coste como gasto a lo largo de su vida útil. Ese reparto es la amortización.\n\nEn este ejercicio no abres el ERP: aprendes los cuatro importes que hay que tener en la cabeza (coste, amortización acumulada, gasto del año y valor neto contable) y las calculas a mano. Las usarás en todos los ejercicios siguientes.",
+      "duracionMin": 20,
+      "secciones": [
+        {
+          "id": "icon-activos-conceptos-activo",
+          "titulo": "Qué es un activo fijo",
+          "paraQueSirve": "Distinguir un activo fijo de una compra normal y saber por qué no se lleva entero a gasto.",
+          "ruta": null,
+          "explicacion": [
+            "Activo fijo o inmovilizado: un bien que la empresa compra para usarlo durante más de un año en su actividad, no para revenderlo. Ejemplos: maquinaria, ordenadores, vehículos, mobiliario, instalaciones, edificios y también programas informáticos (inmovilizado intangible).",
+            "Su compra no es un gasto del año: se registra como activo en el grupo 2 del plan contable (por ejemplo, 213 Maquinaria, 217 Equipos para procesos de información, 206 Aplicaciones informáticas).",
+            "Cada año se pasa a gasto una parte de su coste: la dotación a la amortización (cuenta 68x). Lo ya amortizado se acumula en una cuenta que resta del activo: la amortización acumulada (28x).",
+            "Ejemplo: un ordenador de 1.200 € que se usará 4 años genera 300 € de gasto al año, no 1.200 € el primer año."
+          ],
+          "campos": [
+            {
+              "campo": "Activo fijo (inmovilizado)",
+              "significado": "Bien que se usa más de un año en la actividad.",
+              "ejemplo": "Ordenador de 1.200 €"
+            },
+            {
+              "campo": "Vida útil",
+              "significado": "Años que se espera usar el bien.",
+              "ejemplo": "4 años"
+            },
+            {
+              "campo": "Dotación a la amortización",
+              "significado": "Gasto del año por el uso del bien.",
+              "ejemplo": "300 € al año"
+            },
+            {
+              "campo": "Amortización acumulada",
+              "significado": "Suma de las dotaciones ya registradas.",
+              "ejemplo": "600 € tras 2 años"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Clasifica estas compras: un paquete de folios, un portátil, una furgoneta y la factura de la luz.",
+              "detalle": "Activos fijos: el portátil y la furgoneta. Gastos del periodo: los folios y la luz."
+            },
+            {
+              "texto": "Calcula la dotación anual de un ordenador de 1.200 € con 4 años de vida útil.",
+              "detalle": "1.200 / 4 = 300 € al año."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "En general, los terrenos no se amortizan: no se desgastan con el uso."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-conceptos-amortizacion",
+          "titulo": "Amortización, valor residual y valor neto contable",
+          "paraQueSirve": "Calcular la amortización lineal, entender el valor residual y obtener el valor neto contable de un activo.",
+          "ruta": null,
+          "explicacion": [
+            "Amortización lineal: el mismo importe cada año. Fórmula: (coste − valor residual) / años de vida útil. También se expresa como porcentaje anual sobre el coste.",
+            "Valor residual: lo que esperas obtener por el bien al final de su vida útil; esa parte no se amortiza. Ejemplo: furgoneta de 20.000 € que esperas vender por 2.000 € a los 6 años → (20.000 − 2.000) / 6 = 3.000 € al año.",
+            "Valor neto contable (VNC): coste − amortización acumulada (y, si lo hubiera, el deterioro de valor). Es lo que «vale» el activo en la contabilidad en cada momento. La furgoneta, tras 2 años: 20.000 − 6.000 = 14.000 €.",
+            "Si el bien empieza a amortizarse a mitad de año, el primer año se calcula solo la parte proporcional. Ejemplo de la demo: mostrador de 1.480 € al 10 % (148 € al año) que empieza el 01-05-2018 → el primer año amortiza 99,34 €.",
+            "Amortización decreciente: más gasto los primeros años y menos los últimos. Encaja con bienes que pierden valor deprisa, como los equipos informáticos.",
+            "Hacienda limita cuánto puedes amortizar con una tabla oficial de coeficientes: para cada tipo de bien fija un porcentaje máximo anual y un número máximo de años. Por ejemplo, equipos para procesos de información: máximo 25 % y 8 años."
+          ],
+          "campos": [
+            {
+              "campo": "Coste (valor de inventario)",
+              "significado": "Precio de compra del bien más los gastos para ponerlo en marcha.",
+              "ejemplo": "20.000 €"
+            },
+            {
+              "campo": "Valor residual",
+              "significado": "Valor que se espera recuperar al final.",
+              "ejemplo": "2.000 €"
+            },
+            {
+              "campo": "Amortización anual",
+              "significado": "(Coste − residual) / años.",
+              "ejemplo": "3.000 €"
+            },
+            {
+              "campo": "% de amortización",
+              "significado": "Amortización anual sobre el coste.",
+              "ejemplo": "15 %"
+            },
+            {
+              "campo": "Valor neto contable",
+              "significado": "Coste − amortización acumulada.",
+              "ejemplo": "14.000 € tras 2 años"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Calcula la amortización anual de un programa de 4.000 € al 33 %.",
+              "detalle": "4.000 × 33 % = 1.320 € al año, unos 110 € al mes. Es un caso real de la demo que verás en el ejercicio 8."
+            },
+            {
+              "texto": "Calcula el valor neto contable de la furgoneta del ejemplo al final del año 4.",
+              "detalle": "20.000 − (4 × 3.000) = 8.000 €."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El ERP calcula todo esto solo: tú informas el coste, el porcentaje o los años, el valor residual y la fecha de inicio. Lo importante es que sepas comprobar si el resultado tiene sentido."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-conceptos-baja",
+          "titulo": "Baja y venta de un activo",
+          "paraQueSirve": "Entender qué asiento provoca retirar o vender un activo y cómo sale el beneficio o la pérdida.",
+          "ruta": null,
+          "explicacion": [
+            "Dar de baja un activo es sacarlo del inventario: se rompe, queda obsoleto, se pierde o se vende. Antes de hacerlo hay que registrar la amortización pendiente hasta la fecha de baja.",
+            "En la baja se cancelan a la vez el coste del activo y su amortización acumulada. Si queda valor neto contable sin amortizar, esa cantidad es una pérdida (cuenta 671 Pérdidas procedentes del inmovilizado material; 670 si es intangible).",
+            "En una venta se compara el precio con el valor neto contable: si vendes por más, hay beneficio (771 Beneficios procedentes del inmovilizado material, o 770 si es intangible); si vendes por menos, pérdida (671 o 670).",
+            "Ejemplo: máquina de 10.000 € con 6.000 € amortizados (VNC 4.000 €). Vendida por 5.000 € → 1.000 € de beneficio. Vendida por 3.000 € → 1.000 € de pérdida. Tirada sin venderla → 4.000 € de pérdida."
+          ],
+          "campos": [
+            {
+              "campo": "Precio de venta",
+              "significado": "Importe que cobras por el activo.",
+              "ejemplo": "5.000 €"
+            },
+            {
+              "campo": "Valor neto contable en la fecha",
+              "significado": "Coste − amortización acumulada en la fecha de baja.",
+              "ejemplo": "4.000 €"
+            },
+            {
+              "campo": "Beneficio o pérdida",
+              "significado": "Precio de venta − VNC.",
+              "ejemplo": "+1.000 € (771)"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Calcula el resultado de vender por 450 € una aspiradora industrial de 600 € con 5,57 € amortizados.",
+              "detalle": "VNC = 600 − 5,57 = 594,43 €. Resultado: 450 − 594,43 = −144,43 € de pérdida. Es el caso real de la demo que verás en el ejercicio 8."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Desactivar temporalmente un activo no es darlo de baja: sigue en el inventario."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Cuál de estas compras es un activo fijo?",
+          "opciones": [
+            "Un paquete de folios",
+            "Un portátil que la empresa usará 4 años",
+            "La factura de la luz",
+            "Mercancía para revender"
+          ],
+          "correcta": 1,
+          "explicacion": "Se usa más de un año en la actividad y no se compra para revender."
+        },
+        {
+          "pregunta": "Furgoneta de 20.000 €, valor residual 2.000 € y 6 años de vida útil. ¿Cuál es la amortización lineal anual?",
+          "opciones": [
+            "3.333,33 €",
+            "2.000 €",
+            "18.000 €",
+            "3.000 €"
+          ],
+          "correcta": 3,
+          "explicacion": "(20.000 − 2.000) / 6 = 3.000 € al año."
+        },
+        {
+          "pregunta": "¿Qué es el valor neto contable de un activo?",
+          "opciones": [
+            "Su coste menos la amortización acumulada",
+            "Su precio de venta",
+            "Su coste más el IVA",
+            "La amortización del año"
+          ],
+          "correcta": 0,
+          "explicacion": "Por ejemplo, 20.000 − 6.000 = 14.000 € tras dos años."
+        },
+        {
+          "pregunta": "Una máquina con VNC de 4.000 € se vende por 5.000 €. ¿Qué resultado hay?",
+          "opciones": [
+            "1.000 € de pérdida",
+            "5.000 € de beneficio",
+            "1.000 € de beneficio",
+            "Ninguno"
+          ],
+          "correcta": 2,
+          "explicacion": "Precio 5.000 − VNC 4.000 = 1.000 € de beneficio (cuenta 771)."
+        },
+        {
+          "pregunta": "¿Para qué sirve la tabla oficial de coeficientes de amortización?",
+          "opciones": [
+            "Para fijar el precio de venta de los activos",
+            "Para calcular el IVA de la compra",
+            "Para decidir la cuenta bancaria del pago",
+            "Para limitar el porcentaje máximo anual y el número máximo de años que admite Hacienda"
+          ],
+          "correcta": 3,
+          "explicacion": "Por ejemplo, equipos para procesos de información: máximo 25 % y 8 años."
+        }
+      ],
+      "checklist": [
+        "Distingues un activo fijo de un gasto del periodo con ejemplos.",
+        "Calculas una amortización lineal con valor residual.",
+        "Calculas el valor neto contable tras varios años.",
+        "Calculas el beneficio o la pérdida de una venta.",
+        "Explicas qué es la tabla oficial de coeficientes."
+      ],
+      "problemas": [
+        {
+          "problema": "No sabes si restar el valor residual.",
+          "solucion": "Sí: lo que se amortiza es el coste menos el valor residual."
+        },
+        {
+          "problema": "Confundes amortización anual y acumulada.",
+          "solucion": "La anual es el gasto de un año; la acumulada es la suma de todos los años ya pasados."
+        },
+        {
+          "problema": "Calculas el resultado de la venta contra el coste.",
+          "solucion": "Se compara con el valor neto contable (coste − amortización acumulada), no con el coste."
+        }
+      ]
     },
     {
-     "id": "icon-activos-1-elemento",
-     "titulo": "Definición del elemento",
-     "paraQueSirve": "El elemento concentra la información contable y de costes del activo; aquí se asignan cuentas, proyecto, centro y localización.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "El elemento es el nivel donde se define la práctica totalidad de la información contable general y de costes: grupo contable, proyecto, sección, cuenta de explotación y centro de coste.",
-      "Puedes crear muchos elementos para un bien, pero un elemento no puede pertenecer a varios bienes.",
-      "Por dentro: la tabla es cinmelem, con campos que incluyen empresa, bien, elemento, descripción, grupo inmovilizado, grupo contable, grupo fiscal, código fiscal, partida, presupuesto, proyecto, sección, cuenta explotación, centro, localización y sublocalización."
-     ],
-     "campos": [
-      {
-       "campo": "Empresa",
-       "significado": "Código de la empresa.",
-       "ejemplo": "código interno de la empresa"
-      },
-      {
-       "campo": "Bien",
-       "significado": "Código de bien de inmovilizado al que pertenece.",
-       "ejemplo": "código de bien"
-      },
-      {
-       "campo": "Elemento",
-       "significado": "Código de elemento de inmovilizado; útil para códigos de barras y uso interno.",
-       "ejemplo": "código alfanumérico"
-      },
-      {
-       "campo": "Descripción",
-       "significado": "Descripción del elemento de inmovilizado.",
-       "ejemplo": "texto libre"
-      },
-      {
-       "campo": "Grupo inmovilizado",
-       "significado": "Código de grupo de inmovilizado.",
-       "ejemplo": "código de grupo"
-      },
-      {
-       "campo": "Grupo contable",
-       "significado": "Código de grupo o familia de cuentas contables; determina las cuentas propuestas.",
-       "ejemplo": "código de grupo contable"
-      },
-      {
-       "campo": "Grupo fiscal",
-       "significado": "Código de grupo fiscal.",
-       "ejemplo": "código de grupo fiscal"
-      },
-      {
-       "campo": "Código fiscal",
-       "significado": "Código de tablas fiscales.",
-       "ejemplo": "código de tabla fiscal"
-      },
-      {
-       "campo": "Presupuesto",
-       "significado": "Código de presupuesto, previamente definido en la tabla de inversiones.",
-       "ejemplo": "código de presupuesto"
-      },
-      {
-       "campo": "Proyecto",
-       "significado": "Código de proyecto contable.",
-       "ejemplo": "código de proyecto"
-      },
-      {
-       "campo": "Sección",
-       "significado": "Código de sección contable.",
-       "ejemplo": "código de sección"
-      },
-      {
-       "campo": "Partida",
-       "significado": "Código de partida contable.",
-       "ejemplo": "código de partida"
-      },
-      {
-       "campo": "Cuenta explotación",
-       "significado": "Cuenta de explotación asociada al elemento.",
-       "ejemplo": "código de cuenta"
-      },
-      {
-       "campo": "Centro",
-       "significado": "Centro de coste al que se imputa el elemento.",
-       "ejemplo": "código de centro"
-      },
-      {
-       "campo": "Localización",
-       "significado": "Localización física asignada al elemento.",
-       "ejemplo": "código y descripción"
-      },
-      {
-       "campo": "Sublocalización",
-       "significado": "Sublocalización física dentro de la localización.",
-       "ejemplo": "código y descripción"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la pantalla de elementos y fíjate en los campos de cabecera.",
-       "imagen": "icon-activos-002.webp"
-      },
-      {
-       "texto": "Localiza «Presupuesto» y «Proyecto» y comprueba que se refieren a tablas auxiliares."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "El campo «Presupuesto» requiere un código previamente definido en la tabla de inversiones."
-      }
-     ]
+      "id": "icon-activos-1",
+      "numero": 2,
+      "titulo": "Maestros y estructura: bien, elemento y componente",
+      "objetivo": "Conocerás los maestros que hay que preparar antes de dar de alta activos y la estructura en tres niveles con la que el ERP los organiza: bien, elemento y componente.",
+      "concepto": "El ERP organiza el inmovilizado en tres niveles. El bien es la categoría (por ejemplo, Maquinaria). El elemento es cada activo concreto dentro de esa categoría (un taladro concreto), con su contabilidad y sus costes. El componente es cada pieza o compra que forma ese elemento y es donde vive la amortización.\n\nAntes de crear bienes hay que tener preparados los maestros: grupos de inmovilizado, grupos contables (las cuentas), grupos y códigos fiscales (los límites de amortización) y localizaciones. En este ejercicio los recorres en ese orden y después abres un bien, un elemento y un componente.",
+      "duracionMin": 30,
+      "secciones": [
+        {
+          "id": "icon-activos-1-config",
+          "titulo": "Maestros: grupos, cuentas, grupos fiscales y localizaciones",
+          "paraQueSirve": "Preparar las clasificaciones y las cuentas que heredarán todos los activos.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Maestros"
+          ],
+          "explicacion": [
+            "Grupos de inmovilizado: clasificación libre de la empresa para agrupar sus activos (por ejemplo, ES20 Inmovilizaciones intangibles o ES21 Inmovilizaciones materiales).",
+            "Grupos contables (cuentas de amortización): un paquete de seis cuentas que heredan los activos del grupo: cuenta de inmovilizado, de amortización acumulada, de dotación a la amortización, de beneficios por ventas, de pérdidas por ventas y cuenta puente para traspasos. En la captura, el grupo ES200 Investigación usa 20000, 28000, 68000, 77000, 67000 y 29900.",
+            "Grupos fiscales y códigos fiscales: reproducen la tabla oficial de coeficientes de Hacienda. El grupo es la familia de bienes (ES0 Terrenos, ES5 Elementos de transporte, ES7 Equipos electrónicos e informáticos…) y el código fiscal concreta el porcentaje y los años máximos. El ERP no deja amortizar fuera de esos límites.",
+            "Sistemas de amortización especiales, localizaciones y sublocalizaciones físicas: métodos propios de la empresa y lugares donde están los activos (oficina, nave, planta…).",
+            "Para programadores: las tablas son cinmgrps (grupos), cinmctas (cuentas), cinmfgrp y cinmftab (grupos y tablas fiscales) y cinmlopr y cinmlosu (localizaciones)."
+          ],
+          "campos": [
+            {
+              "campo": "Grupo de inmovilizado",
+              "significado": "Clasificación de la empresa.",
+              "ejemplo": "ES20, Inmovilizaciones intangibles"
+            },
+            {
+              "campo": "Grupo contable",
+              "significado": "Paquete de seis cuentas.",
+              "ejemplo": "ES200, Investigación"
+            },
+            {
+              "campo": "Cuenta inmovilizado / amortización acumulada / dotación",
+              "significado": "Cuentas del activo, de lo amortizado y del gasto anual.",
+              "ejemplo": "20000 / 28000 / 68000"
+            },
+            {
+              "campo": "Cuenta beneficios / pérdidas ventas",
+              "significado": "Resultado de vender el activo.",
+              "ejemplo": "77000 / 67000"
+            },
+            {
+              "campo": "Cuenta puente traspasos",
+              "significado": "Cuenta transitoria de los traspasos.",
+              "ejemplo": "29900"
+            },
+            {
+              "campo": "Grupo fiscal",
+              "significado": "Familia de la tabla oficial.",
+              "ejemplo": "ES5, Elementos de transporte"
+            },
+            {
+              "campo": "Localización física",
+              "significado": "Lugar donde está el activo.",
+              "ejemplo": "Oficina central"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Activos permanentes › Maestros y localiza Grupos de inmovilizado. Abre el grupo ES20.",
+              "detalle": "Inmovilizaciones intangibles.",
+              "imagen": "icon-activos-003.webp"
+            },
+            {
+              "texto": "Abre las cuentas de amortización del grupo contable ES200.",
+              "detalle": "Comprueba las seis cuentas: inmovilizado 20000, amortización acumulada 28000, dotación 68000, beneficios 77000, pérdidas 67000 y puente 29900.",
+              "imagen": "icon-activos-004.webp"
+            },
+            {
+              "texto": "Abre la lista de Grupos fiscales y relaciona cada grupo con un ejemplo real.",
+              "detalle": "ES5 para una furgoneta, ES6 para una mesa, ES7 para un ordenador.",
+              "imagen": "icon-activos-005.webp"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Las cuentas se definen una vez en el grupo contable y se heredan: no hace falta escribirlas en cada activo."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-1-bien",
+          "titulo": "El bien: la categoría",
+          "paraQueSirve": "Crear la categoría que agrupa elementos parecidos y les propone clasificación y cuentas.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Bienes"
+          ],
+          "explicacion": [
+            "El bien es la categoría genérica: Maquinaria, Mobiliario, Aplicaciones informáticas… Agrupa elementos y les propone sus clasificaciones.",
+            "En la ficha del bien se informan el grupo de inmovilizado, el grupo contable, la serie con la que se numerarán sus elementos, el grupo y el código fiscal y el estado con el que nacerán los componentes.",
+            "Ejemplo de la captura: empresa Triathlon [ALA] S.L., bien ES2130 Maquinaria, grupo contable ES212 Instalaciones técnicas, serie ELE, grupo fiscal ES4 Instalaciones, código fiscal ES14 Maquinaria y estado de componentes Activo.",
+            "El alta de un bien no genera ningún asiento: solo es una ficha de clasificación.",
+            "Para programadores: la tabla es cinmhead."
+          ],
+          "campos": [
+            {
+              "campo": "Empresa",
+              "significado": "Empresa del bien.",
+              "ejemplo": "Triathlon [ALA] S.L."
+            },
+            {
+              "campo": "Bien",
+              "significado": "Código y descripción del bien.",
+              "ejemplo": "ES2130, Maquinaria"
+            },
+            {
+              "campo": "Grupo inmovilizado",
+              "significado": "Clasificación de la empresa.",
+              "ejemplo": "ES22"
+            },
+            {
+              "campo": "Grupo contable",
+              "significado": "Paquete de cuentas que se propone a los elementos.",
+              "ejemplo": "ES212, Instalaciones técnicas"
+            },
+            {
+              "campo": "Serie inmovilizado",
+              "significado": "Serie con la que se numeran los elementos.",
+              "ejemplo": "ELE"
+            },
+            {
+              "campo": "Grupo fiscal / Código fiscal",
+              "significado": "Límites de la tabla oficial.",
+              "ejemplo": "ES4 / ES14"
+            },
+            {
+              "campo": "Estado componentes",
+              "significado": "Estado con el que nacen los componentes.",
+              "ejemplo": "Activo"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Activos permanentes › Bienes y abre el bien ES2130 Maquinaria de la empresa ALA.",
+              "detalle": "Localiza grupo de inmovilizado, grupo contable, serie, grupo fiscal, código fiscal y estado de componentes.",
+              "imagen": "icon-activos-001.webp"
+            },
+            {
+              "texto": "Baja al bloque Cuentas y comprueba las seis cuentas que hereda del grupo contable."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El grupo contable del bien solo se propone al crear elementos; el que se usa al contabilizar es el del elemento."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-1-elemento",
+          "titulo": "El elemento: el activo concreto",
+          "paraQueSirve": "Dar de alta cada activo concreto con su contabilidad, sus costes y su ubicación.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Elementos"
+          ],
+          "explicacion": [
+            "El elemento es el activo concreto: un taladro, una furgoneta, un servidor. Pertenece a un solo bien, y un bien puede tener muchos elementos.",
+            "Concentra la información contable y de costes: grupo contable (decide las cuentas), proyecto, sección, cuenta de explotación y centro de coste a los que se imputará la amortización, además de su localización física.",
+            "Ejemplo de la captura: empresa ALA, bien ES2130, descripción Taladro, serie ELE, grupo contable ES213 Maquinaria, proyecto GENERAL y sección General.",
+            "Para programadores: la tabla es cinmelem; sus valores de amortización por sistema están en cinmeval."
+          ],
+          "campos": [
+            {
+              "campo": "Bien",
+              "significado": "Bien al que pertenece.",
+              "ejemplo": "ES2130"
+            },
+            {
+              "campo": "Elemento",
+              "significado": "Serie con la que se numera.",
+              "ejemplo": "ELE, Elementos de activos"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Nombre del activo.",
+              "ejemplo": "Taladro"
+            },
+            {
+              "campo": "Grupo contable",
+              "significado": "Cuentas que se usarán al contabilizar.",
+              "ejemplo": "ES213, Maquinaria"
+            },
+            {
+              "campo": "Proyecto / Sección",
+              "significado": "Dónde se imputa la amortización.",
+              "ejemplo": "GENERAL / General"
+            },
+            {
+              "campo": "Cuenta explotación / Centro",
+              "significado": "Imputación analítica de la amortización.",
+              "ejemplo": "Opcionales"
+            },
+            {
+              "campo": "Localización / Sublocalización",
+              "significado": "Dónde está físicamente.",
+              "ejemplo": "Opcionales"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Activos permanentes › Elementos y abre un elemento del bien ES2130.",
+              "detalle": "Localiza grupo contable, proyecto, sección, cuenta de explotación, centro y localización.",
+              "imagen": "icon-activos-002.webp"
+            },
+            {
+              "texto": "Desde el bien, comprueba cuántos elementos tiene.",
+              "detalle": "Cada elemento pertenece a un único bien."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El campo Presupuesto solo admite códigos dados de alta antes en el maestro de inversiones."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-1-componente",
+          "titulo": "El componente: donde vive la amortización",
+          "paraQueSirve": "Ver el nivel en el que se registran las compras y se calcula la amortización.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Componentes"
+          ],
+          "explicacion": [
+            "El componente es la unidad mínima: cada compra o pieza que forma un elemento. Un elemento puede tener varios componentes; por ejemplo, la instalación de agua de un local comprada en dos facturas.",
+            "En el componente están la fecha de alta, la fecha de inicio de la amortización, el proveedor y la factura de origen, y abajo los Valores de los componentes (sistema de amortización, porcentaje, años, valor de inventario, residual, amortización acumulada y valor neto) y el Cuadro de amortizaciones año a año.",
+            "Al pie están las acciones que verás en el ejercicio 8: Baja, Baja parcial, Venta, Desactivar, Fuera de servicio y Recalcular amortizaciones.",
+            "Ejemplo de la captura: componente 000019 «Instalación agua corriente Diagonal», 5.168 € al 50 % lineal (2 años), con su cuadro de amortizaciones de 2018 a 2020.",
+            "Para programadores: la tabla es cinmcomp."
+          ],
+          "campos": [
+            {
+              "campo": "Componente",
+              "significado": "Código y descripción.",
+              "ejemplo": "000019, Instalación agua corriente Diagonal"
+            },
+            {
+              "campo": "Fecha alta / Fecha inicio",
+              "significado": "Alta del componente e inicio de la amortización.",
+              "ejemplo": "07-01-2018 / 01-04-2018"
+            },
+            {
+              "campo": "Proveedor",
+              "significado": "Proveedor de la factura de origen.",
+              "ejemplo": "00006"
+            },
+            {
+              "campo": "Valor inventario",
+              "significado": "Coste del componente.",
+              "ejemplo": "5.168,00"
+            },
+            {
+              "campo": "% Amortización / Años",
+              "significado": "Ritmo de amortización.",
+              "ejemplo": "50 % / 2"
+            },
+            {
+              "campo": "Cuadro amortizaciones",
+              "significado": "Importe de cada periodo y su estado.",
+              "ejemplo": "1.946,85 en 2018"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Activos permanentes › Componentes y abre un componente.",
+              "detalle": "Localiza la identificación (empresa, bien, elemento), las fechas y el bloque Identificación factura.",
+              "imagen": "icon-activos-006.webp"
+            },
+            {
+              "texto": "Baja a Valores de los componentes y al Cuadro amortizaciones.",
+              "detalle": "Comprueba que la suma de las amortizaciones del cuadro se acerca al valor de inventario menos el residual."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Si en un elemento solo ves totales, baja al componente: el detalle de compra y de amortización está ahí."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿En qué orden se organiza el inmovilizado en el ERP?",
+          "opciones": [
+            "Componente → Elemento → Bien",
+            "Bien → Elemento → Componente",
+            "Bien → Componente → Elemento",
+            "Elemento → Bien → Componente"
+          ],
+          "correcta": 1,
+          "explicacion": "El bien es la categoría, el elemento el activo concreto y el componente cada compra o pieza."
+        },
+        {
+          "pregunta": "¿Qué contiene un grupo contable de activos?",
+          "opciones": [
+            "El porcentaje máximo de amortización",
+            "La localización física del activo",
+            "Seis cuentas: inmovilizado, amortización acumulada, dotación, beneficios, pérdidas y puente de traspasos",
+            "La serie de numeración"
+          ],
+          "correcta": 2,
+          "explicacion": "Las cuentas se definen en el grupo y las heredan bienes y elementos."
+        },
+        {
+          "pregunta": "¿Qué limita el grupo fiscal y su código fiscal?",
+          "opciones": [
+            "El porcentaje y los años de amortización según la tabla oficial",
+            "El número de elementos de un bien",
+            "Las cuentas contables",
+            "La fecha de compra"
+          ],
+          "correcta": 0,
+          "explicacion": "Reproducen la tabla oficial de coeficientes de Hacienda."
+        },
+        {
+          "pregunta": "¿En qué nivel se define la información contable y de costes del activo?",
+          "opciones": [
+            "En el elemento",
+            "En el bien",
+            "En el grupo de inmovilizado",
+            "En la localización"
+          ],
+          "correcta": 0,
+          "explicacion": "El elemento lleva grupo contable, proyecto, sección, cuenta de explotación y centro."
+        },
+        {
+          "pregunta": "¿Dónde están el cuadro de amortizaciones y las acciones de baja y venta?",
+          "opciones": [
+            "En el bien",
+            "En el grupo contable",
+            "En el componente",
+            "En el maestro de localizaciones"
+          ],
+          "correcta": 2,
+          "explicacion": "El componente es la unidad mínima de control económico."
+        }
+      ],
+      "checklist": [
+        "Abres Grupos de inmovilizado y localizas el grupo ES20.",
+        "Abres las cuentas de amortización del grupo ES200 y nombras sus seis cuentas.",
+        "Relacionas tres grupos fiscales con ejemplos reales.",
+        "Abres el bien ES2130 y localizas grupo contable, serie y grupo fiscal.",
+        "Abres un elemento y localizas su proyecto, sección y localización.",
+        "Abres un componente y localizas sus valores y su cuadro de amortizaciones."
+      ],
+      "problemas": [
+        {
+          "problema": "Al crear un elemento no se propone ningún grupo contable.",
+          "solucion": "Revisa que el bien tenga grupo contable: es el que se propone al crear elementos."
+        },
+        {
+          "problema": "El ERP no acepta un porcentaje de amortización.",
+          "solucion": "Está fuera de los límites del código fiscal; consulta el grupo fiscal y su tabla."
+        },
+        {
+          "problema": "Quieres que un elemento pertenezca a dos bienes.",
+          "solucion": "No es posible: cada elemento pertenece a un único bien. Si cambia de categoría, usa un traspaso."
+        },
+        {
+          "problema": "Confundes grupo contable y grupo fiscal.",
+          "solucion": "El contable dice a qué cuentas va; el fiscal, cuánto se puede amortizar."
+        },
+        {
+          "problema": "Solo ves totales en el elemento.",
+          "solucion": "Baja al componente: ahí está el detalle de compra y de amortización."
+        }
+      ]
     },
     {
-     "id": "icon-activos-1-config",
-     "titulo": "Configuración de maestros",
-     "paraQueSirve": "Antes de dar de alta activos, se configuran los grupos, cuentas, tablas fiscales, sistemas especiales y localizaciones.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes",
-      "Maestros"
-     ],
-     "explicacion": [
-      "La configuración inicial incluye grupos de inmovilizado, grupos de cuentas contables, grupos fiscales, tabla oficial de amortizaciones fiscales, sistemas de amortización especiales, localizaciones y sublocalizaciones. Los grupos y cuentas se configuran en Maestro / Cuentas, y los grupos fiscales y tablas en Tablas fiscales / Grupos.",
-      "Desde los grupos de inmovilizado se accede a la consulta de los bienes asociados. El grupo contable del elemento se utiliza en los procesos de contabilización; el grupo contable del bien es informativo y se propone en altas de elementos.",
-      "La tabla oficial de amortizaciones fiscales registra los porcentajes mínimo y máximo por grupo fiscal; el sistema limita los valores de amortización según esos porcentajes.",
-      "Por dentro: se utilizan tablas como cinmgrps, cinmctas, cinmfgrp, cinmftab, cinmlopr y cinmlosu, junto con maestros como Grupos contables, Códigos fiscales, Sistemas de amortización especiales, Localizaciones y Sublocalizaciones."
-     ],
-     "campos": [
-      {
-       "campo": "Grupo de inmovilizado",
-       "significado": "Clasificación de activos según criterio de empresa.",
-       "ejemplo": "código y descripción"
-      },
-      {
-       "campo": "Grupo contable",
-       "significado": "Familia de cuentas contables asociada a bienes y elementos.",
-       "ejemplo": "código de grupo contable"
-      },
-      {
-       "campo": "Grupo fiscal",
-       "significado": "Naturaleza de activo según legislación.",
-       "ejemplo": "código de grupo fiscal"
-      },
-      {
-       "campo": "Tabla oficial de amortizaciones fiscales",
-       "significado": "Porcentajes mínimo y máximo por grupo fiscal.",
-       "ejemplo": "porcentajes legales"
-      },
-      {
-       "campo": "Sistema de amortización especial",
-       "significado": "Sistemas especiales definidos por el usuario que no se ajustan a los generalmente admitidos.",
-       "ejemplo": "código de sistema"
-      },
-      {
-       "campo": "Localización física",
-       "significado": "Ubicación física asignada a elementos y componentes.",
-       "ejemplo": "código y descripción"
-      },
-      {
-       "campo": "Sublocalización física",
-       "significado": "Lugar físico dentro de una localización.",
-       "ejemplo": "código y descripción"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la configuración de grupos de inmovilizado y fíjate en el formulario.",
-       "imagen": "icon-activos-003.webp"
-      },
-      {
-       "texto": "Revisa la parametrización de cuentas contables.",
-       "imagen": "icon-activos-004.webp"
-      },
-      {
-       "texto": "Consulta los grupos fiscales y la tabla de porcentajes.",
-       "imagen": "icon-activos-005.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La documentación no enumera campos literales para estos formularios; describe su finalidad y muestra capturas."
-      }
-     ]
+      "id": "icon-activos-v-1",
+      "numero": 3,
+      "titulo": "Revisar la pestaña Contabilización de una tipología de albarán",
+      "objetivo": "Localizarás la pestaña Contabilización de una tipología de albarán, distinguirás sus tipos de asiento y comprobarás que el indicador Generar inmovilizado está en «No generar».",
+      "concepto": "Los activos no se dan de alta solo a mano: también pueden nacer de una compra. Lo que decide si un documento de compra crea activos es su tipología (el maestro que define cómo se comporta cada tipo de documento) y, dentro de ella, la pestaña Contabilización.\n\nEmpiezas por una tipología de albarán: la AACF «Carga inicial existencias caducado farmacia». Su pestaña Contabilización define qué asientos genera el albarán y tiene el indicador Generar inmovilizado en «No generar»: los albaranes de esta tipología contabilizan sin crear fichas de activo.",
+      "duracionMin": 10,
+      "secciones": [
+        {
+          "id": "icon-activos-v-1-contabilizacion",
+          "titulo": "Abrir la pestaña Contabilización",
+          "paraQueSirve": "Llegar a la configuración contable de la tipología, separada de sus datos logísticos.",
+          "ruta": [
+            "Compras",
+            "Maestros",
+            "Documentos",
+            "Albaranes"
+          ],
+          "explicacion": [
+            "Desde Compras › Maestros › Documentos › Albaranes abres la ventana «Tipología de albaranes y suministros de compras» y eliges una tipología.",
+            "La tipología del ejemplo es AACF «Carga inicial existencias caducado farmacia», de tipo de movimiento Entrada.",
+            "En el bloque central hay varias pestañas (Valoración, Anticipos, Contabilización…). Contabilización agrupa los asientos que puede generar el albarán y el indicador Generar inmovilizado."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo movimiento",
+              "significado": "Código de la tipología de albarán.",
+              "ejemplo": "AACF"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Nombre de la tipología.",
+              "ejemplo": "Carga inicial existencias caducado farmacia"
+            },
+            {
+              "campo": "Pestaña Contabilización",
+              "significado": "Configuración contable de la tipología.",
+              "ejemplo": "Bloque central de la ficha"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Entra en Compras › Maestros › Documentos › Albaranes y abre la tipología AACF.",
+              "detalle": "En la demo de los vídeos el menú de compras cuelga de Compras; en la demo de prácticas, el mismo menú está en Gestión › Compras."
+            },
+            {
+              "texto": "Localiza la pestaña Contabilización en el bloque central y ábrela.",
+              "detalle": "No la confundas con Valoración ni con Anticipos, que están al lado.",
+              "imagen": "v-asientos-001.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Todos los documentos que usan una tipología heredan su configuración contable. Por eso se revisa antes de empezar a trabajar con documentos reales."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-1-asientos-contables",
+          "titulo": "Tipos de asiento del albarán",
+          "paraQueSirve": "Saber qué asientos puede generar un albarán según su tipología.",
+          "ruta": [
+            "Compras",
+            "Maestros",
+            "Documentos",
+            "Albaranes"
+          ],
+          "explicacion": [
+            "Asiento suministros y Asiento albaranes: el tipo de asiento que se usa al recibir la mercancía.",
+            "Asiento no facturados: reconoce en contabilidad una compra recibida que aún no se ha facturado, para que el gasto aparezca en el mes en que se produjo.",
+            "Asiento provisiones y la marca Provisión: dotan una provisión de gastos pendientes.",
+            "Datos contables: marca si el albarán arrastra datos contables (proyecto, sección…) a sus asientos.",
+            "En la tipología AACF los tipos de asiento están vacíos y Datos contables está marcada."
+          ],
+          "campos": [
+            {
+              "campo": "Asiento suministros",
+              "significado": "Asiento de la recepción de suministros.",
+              "ejemplo": "Vacío en AACF"
+            },
+            {
+              "campo": "Asiento albaranes",
+              "significado": "Asiento propio del albarán.",
+              "ejemplo": "Vacío en AACF"
+            },
+            {
+              "campo": "Asiento no facturados",
+              "significado": "Asiento de lo recibido y no facturado.",
+              "ejemplo": "Vacío en AACF"
+            },
+            {
+              "campo": "Asiento provisiones / Provisión",
+              "significado": "Asiento y marca de la provisión.",
+              "ejemplo": "Vacío / sin marcar"
+            },
+            {
+              "campo": "Datos contables",
+              "significado": "Si se arrastran datos contables.",
+              "ejemplo": "Marcada"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Revisa los campos Asiento suministros, Asiento albaranes, Asiento no facturados y Asiento provisiones.",
+              "detalle": "En AACF están vacíos.",
+              "imagen": "v-asientos-001.jpg"
+            },
+            {
+              "texto": "Comprueba la marca Provisión y la marca Datos contables."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Buscas el asiento de la factura dentro de la tipología de albarán y no lo encuentras."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Cada tipología tiene su propia pestaña Contabilización: el asiento de la factura se configura en la tipología de factura (ejercicio siguiente)."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-1-indicador-inmovilizado",
+          "titulo": "El indicador Generar inmovilizado",
+          "paraQueSirve": "Saber qué decide este indicador y por qué en un albarán suele estar desactivado.",
+          "ruta": [
+            "Compras",
+            "Maestros",
+            "Documentos",
+            "Albaranes"
+          ],
+          "explicacion": [
+            "Generar inmovilizado no es un tipo de asiento: decide si el documento crea fichas de activo en Finanzas y en qué momento.",
+            "En AACF vale «No generar»: los albaranes de esta tipología no crean componentes ni elementos.",
+            "Es lo habitual: la ficha del activo se suele crear desde la factura, que es el documento con el coste definitivo."
+          ],
+          "campos": [
+            {
+              "campo": "Generar inmovilizado",
+              "significado": "Si el documento crea fichas de activo y cuándo.",
+              "ejemplo": "No generar"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Dentro de Contabilización, localiza Generar inmovilizado y comprueba su valor.",
+              "detalle": "Debe verse «No generar».",
+              "imagen": "v-asientos-001.jpg",
+              "hotspot": {
+                "x": 40,
+                "y": 35,
+                "w": 14,
+                "h": 5,
+                "etiqueta": "Generar inmovilizado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "«No generar» en un albarán no es un error: es lo esperado cuando el activo se crea desde la factura."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Dónde se define qué asientos genera un tipo de albarán?",
+          "opciones": [
+            "En las líneas de cada albarán",
+            "En la pestaña Contabilización de su tipología",
+            "En la ficha del proveedor",
+            "En el diario contable"
+          ],
+          "correcta": 1,
+          "explicacion": "La tipología define la huella contable y todos sus documentos la heredan."
+        },
+        {
+          "pregunta": "¿Qué decide el indicador Generar inmovilizado?",
+          "opciones": [
+            "El asiento de suministros",
+            "Si se crea automáticamente una factura",
+            "Si se dota la provisión",
+            "Si el documento crea fichas de activo en Finanzas y en qué momento"
+          ],
+          "correcta": 3,
+          "explicacion": "No es un tipo de asiento: conecta el documento de compra con Activos permanentes."
+        },
+        {
+          "pregunta": "¿Qué valor tiene Generar inmovilizado en la tipología AACF?",
+          "opciones": [
+            "En validación",
+            "No generar",
+            "En contabilización",
+            "Siempre"
+          ],
+          "correcta": 1,
+          "explicacion": "Sus albaranes contabilizan sin crear fichas de activo."
+        },
+        {
+          "pregunta": "¿Para qué sirve el asiento de no facturados?",
+          "opciones": [
+            "Para pagar al proveedor",
+            "Para crear la ficha del activo",
+            "Para anular el albarán",
+            "Para reconocer una compra recibida que aún no se ha facturado"
+          ],
+          "correcta": 3,
+          "explicacion": "Así el gasto aparece en el mes en que se recibió la mercancía."
+        },
+        {
+          "pregunta": "¿Por qué lo habitual es que el albarán no genere inmovilizado?",
+          "opciones": [
+            "Porque la ficha del activo se suele crear desde la factura, que tiene el coste definitivo",
+            "Porque los albaranes no se contabilizan nunca",
+            "Porque el ERP no lo permite",
+            "Porque el albarán no tiene artículos"
+          ],
+          "correcta": 0,
+          "explicacion": "La factura fija el importe real del activo."
+        }
+      ],
+      "checklist": [
+        "Abres Compras › Maestros › Documentos › Albaranes y la tipología AACF.",
+        "Abres la pestaña Contabilización.",
+        "Identificas los cuatro tipos de asiento.",
+        "Compruebas las marcas Provisión y Datos contables.",
+        "Compruebas que Generar inmovilizado está en «No generar»."
+      ],
+      "problemas": [
+        {
+          "problema": "No encuentras dónde se configuran los asientos del albarán.",
+          "solucion": "En la tipología, pestaña Contabilización; no en las líneas del documento."
+        },
+        {
+          "problema": "Crees que el albarán debería crear el activo y no lo hace.",
+          "solucion": "Revisa Generar inmovilizado: en AACF está en «No generar». El activo se crea desde la factura."
+        },
+        {
+          "problema": "No encuentras el menú Compras.",
+          "solucion": "En la demo de prácticas está en Gestión › Compras."
+        }
+      ]
     },
     {
-     "id": "icon-activos-1-componente",
-     "titulo": "Componentes del inmovilizado",
-     "paraQueSirve": "El componente es la unidad mínima de control económico del activo; aquí se registran adquisiciones y métodos de amortización.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "Los componentes son las unidades de información mínimas para el control del inmovilizado. Sus registros pueden expresar las adquisiciones factura a factura y el control económico recae en este nivel.",
-      "La documentación no detalla campos literales para el alta de componentes; se describe como unidad mínima y se muestra su formulario en captura.",
-      "Por dentro: la tabla es cinmcomp, con procesos asociados como bajas, ventas y desactivaciones; los traspasos documentados son de elementos."
-     ],
-     "campos": [],
-     "pasos": [
-      {
-       "texto": "Abre la pantalla de componentes y fíjate en la estructura del formulario.",
-       "imagen": "icon-activos-006.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La ficha no enumera campos literales para el alta de componentes; solo indica que es la unidad mínima de control."
-      }
-     ]
+      "id": "icon-activos-v-2",
+      "numero": 4,
+      "titulo": "Configurar la generación de inmovilizado en una factura",
+      "objetivo": "Abrirás la tipología de factura de activos FACT, revisarás su pestaña Contabilización y entenderás las opciones «No generar», «En validación» y «En contabilización».",
+      "concepto": "La tipología de factura es otro maestro de compras con su propia pestaña Contabilización. En la tipología FACT «Factura activo fijos», el indicador Generación inmovilizado decide si la factura crea fichas de activo y en qué momento de su circuito.\n\nLas opciones son tres: no generar, generar al validar o generar al contabilizar. La factura nace provisional, se valida y después se contabiliza; la opción elegida dice en cuál de esos pasos aparecen las fichas en Finanzas.",
+      "duracionMin": 10,
+      "secciones": [
+        {
+          "id": "icon-activos-v-2-tipologia-factura",
+          "titulo": "Abrir la tipología de factura de activos",
+          "paraQueSirve": "Localizar la configuración contable de la factura, separada de la del albarán.",
+          "ruta": [
+            "Compras",
+            "Maestros",
+            "Documentos",
+            "Tipos de facturas"
+          ],
+          "explicacion": [
+            "La ventana «Tipología de facturas de compras» se abre desde Compras › Maestros › Documentos › Tipos de facturas.",
+            "La tipología del ejemplo es FACT «Factura activo fijos», con serie FACT y estado Activo. Su documento origen son los suministros de tipología AACT (albaranes de activos), y su Docflow lo muestra: los albaranes AACT se facturan con FACT.",
+            "En la pestaña Contabilización están el tipo de asiento (FACT), la marca Datos contables y el indicador Generación inmovilizado."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo factura",
+              "significado": "Código de la tipología.",
+              "ejemplo": "FACT"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Nombre de la tipología.",
+              "ejemplo": "Factura activo fijos"
+            },
+            {
+              "campo": "Tipo asiento",
+              "significado": "Asiento que genera la factura.",
+              "ejemplo": "FACT"
+            },
+            {
+              "campo": "Condición selección",
+              "significado": "Albaranes que puede facturar.",
+              "ejemplo": "Tipología AACT"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Entra en Compras › Maestros › Documentos › Tipos de facturas y abre la tipología FACT.",
+              "detalle": "En la demo de los vídeos el menú de compras cuelga de Compras; en la demo de prácticas, el mismo menú está en Gestión › Compras."
+            },
+            {
+              "texto": "Abre la pestaña Contabilización.",
+              "detalle": "Comprueba el tipo de asiento FACT y la marca Datos contables.",
+              "imagen": "v-asientos-002.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "No revises la generación de inmovilizado de una factura en la tipología de albarán: cada documento tiene su propio maestro y su propia pestaña Contabilización."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-2-opciones-indicador",
+          "titulo": "Opciones del indicador Generación inmovilizado",
+          "paraQueSirve": "Elegir cuándo crea la factura las fichas de activo.",
+          "ruta": [
+            "Compras",
+            "Maestros",
+            "Documentos",
+            "Tipos de facturas"
+          ],
+          "explicacion": [
+            "El indicador (en esta pantalla, Generación inmovilizado) tiene tres valores: «No generar», «En validación» y «En contabilización».",
+            "En la tipología FACT está en «En contabilización»: las fichas se crean cuando se contabiliza la factura."
+          ],
+          "campos": [
+            {
+              "campo": "No generar",
+              "significado": "No crea fichas de activo.",
+              "ejemplo": "Facturas de gasto"
+            },
+            {
+              "campo": "En validación",
+              "significado": "Crea las fichas al validar la factura.",
+              "ejemplo": "Si quieres ver el activo antes del asiento"
+            },
+            {
+              "campo": "En contabilización",
+              "significado": "Crea las fichas al contabilizar la factura.",
+              "ejemplo": "Configuración de FACT"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Localiza Generación inmovilizado en la pestaña Contabilización y despliégalo.",
+              "detalle": "Verás No generar, En validación y En contabilización.",
+              "imagen": "v-asientos-002.jpg",
+              "hotspot": {
+                "x": 30,
+                "y": 34,
+                "w": 24,
+                "h": 5,
+                "etiqueta": "Generación inmovilizado"
+              }
+            },
+            {
+              "texto": "Comprueba que FACT está en «En contabilización»."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Con el indicador en «No generar», la factura contabiliza pero no crea componentes ni elementos."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Elige «En validación» o «En contabilización» según cuándo quieras que aparezca el activo."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-2-circuito-estados",
+          "titulo": "Circuito provisional, validada y contabilizada",
+          "paraQueSirve": "Relacionar cada opción del indicador con el estado de la factura.",
+          "ruta": [
+            "Compras",
+            "Facturas",
+            "Consultar facturas"
+          ],
+          "explicacion": [
+            "Una factura nace Provisional (se puede modificar), se valida (queda revisada y bloqueada) y después se contabiliza (genera su asiento).",
+            "Con «En validación», la ficha del activo se crea al validar. Con «En contabilización», al contabilizar.",
+            "«En contabilización» asegura que el activo solo existe cuando la compra ya está en la contabilidad."
+          ],
+          "campos": [
+            {
+              "campo": "Provisional",
+              "significado": "Estado inicial, modificable.",
+              "ejemplo": "Factura recién creada"
+            },
+            {
+              "campo": "Validado",
+              "significado": "Revisada y lista para contabilizar.",
+              "ejemplo": "Estado de FACT0000044 antes de contabilizar"
+            },
+            {
+              "campo": "En contabilidad",
+              "significado": "Contabilizada.",
+              "ejemplo": "Banda naranja «EN CONTABILIDAD»"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre una factura FACT y localiza su Estado.",
+              "detalle": "En la factura FACT0000044 del ejemplo, Validado; al pie, los botones Pasar a provisional y Contabilizar.",
+              "imagen": "v-asientos-004.jpg"
+            },
+            {
+              "texto": "Relaciona «En validación» con el botón de validar y «En contabilización» con el botón Contabilizar."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Con «En contabilización», una factura validada todavía no ha creado fichas: hay que contabilizarla."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué opciones tiene el indicador Generación inmovilizado?",
+          "opciones": [
+            "Solo Sí o No",
+            "Provisional o definitivo",
+            "No generar, En validación y En contabilización",
+            "Contabilizado o anulado"
+          ],
+          "correcta": 2,
+          "explicacion": "Deciden si se crea la ficha y en qué paso."
+        },
+        {
+          "pregunta": "Con el indicador en «En contabilización», ¿cuándo se crea la ficha del activo?",
+          "opciones": [
+            "Al validar",
+            "Al crear la factura",
+            "Al imprimirla",
+            "Al contabilizar la factura"
+          ],
+          "correcta": 3,
+          "explicacion": "Es la configuración de la tipología FACT."
+        },
+        {
+          "pregunta": "¿Qué estado tiene una factura justo después de validarla?",
+          "opciones": [
+            "Contabilizado",
+            "Validado",
+            "Provisional",
+            "Anulado"
+          ],
+          "correcta": 1,
+          "explicacion": "Después de validar se puede contabilizar."
+        },
+        {
+          "pregunta": "¿Qué tipología de albaranes factura la tipología FACT?",
+          "opciones": [
+            "AACF",
+            "PACT",
+            "AACT",
+            "SFOR"
+          ],
+          "correcta": 2,
+          "explicacion": "Su condición de selección y su Docflow muestran los albaranes AACT."
+        },
+        {
+          "pregunta": "Una factura FACT está validada y aún no ves la ficha del activo. ¿Es un error?",
+          "opciones": [
+            "No: con «En contabilización» la ficha aparece al contabilizar",
+            "Sí: debería haberse creado al validar",
+            "Sí: falta el albarán",
+            "Sí: la factura está anulada"
+          ],
+          "correcta": 0,
+          "explicacion": "Hay que contabilizarla para que se cree."
+        }
+      ],
+      "checklist": [
+        "Abres Compras › Maestros › Documentos › Tipos de facturas y la tipología FACT.",
+        "Abres la pestaña Contabilización y localizas el tipo de asiento FACT.",
+        "Despliegas Generación inmovilizado y ves sus tres opciones.",
+        "Compruebas que FACT está en «En contabilización».",
+        "Relacionas cada opción con un estado de la factura."
+      ],
+      "problemas": [
+        {
+          "problema": "La factura contabiliza y no crea ninguna ficha de activo.",
+          "solucion": "Revisa la tipología: si Generación inmovilizado está en «No generar», cámbialo. Si está bien, revisa la familia del artículo (ejercicio 5)."
+        },
+        {
+          "problema": "No sabes si la ficha saldrá al validar o al contabilizar.",
+          "solucion": "Mira el indicador de la tipología: en FACT, al contabilizar."
+        }
+      ]
+    },
+    {
+      "id": "icon-activos-v-4",
+      "numero": 5,
+      "titulo": "Parametrizar la familia de un artículo para inmovilizado",
+      "objetivo": "Abrirás el artículo de la factura de activos, llegarás a su familia y comprobarás en «Parámetros inmovilizado» el bien y la serie de inmovilizado, que son imprescindibles para crear la ficha.",
+      "concepto": "No basta con que la tipología de factura tenga activada la generación de inmovilizado: el artículo que se factura también tiene que estar preparado. El ERP crea la ficha del activo con los datos de la familia del artículo.\n\nEn el ejemplo, el artículo 0012051 «ASCENSOR KONE EMONOSPACE» es de tipo 06 Inmovilizado y pertenece a la familia 06010000 «INVERSIONES OBRAS GENERICO». En el bloque Parámetros inmovilizado de esa familia están el bien 020192 y la serie de inmovilizado CMP: con ellos el ERP sabe en qué bien colgar el nuevo elemento y con qué serie numerarlo.",
+      "duracionMin": 10,
+      "secciones": [
+        {
+          "id": "icon-activos-v-4-abrir-articulo-familia",
+          "titulo": "Abrir el artículo y su familia",
+          "paraQueSirve": "Llegar desde el artículo facturado a la familia que guarda los parámetros de inmovilizado.",
+          "ruta": [
+            "Maestros",
+            "Artículos",
+            "Registro"
+          ],
+          "explicacion": [
+            "El artículo 0012051 «ASCENSOR KONE EMONOSPACE» es de tipo 06 INMOVILIZADO y tiene clave fiscal BOG.",
+            "En el bloque Familias se ve su familia: 06010000 «INVERSIONES OBRAS GENERICO».",
+            "La familia se abre desde Maestros › Artículos › Auxiliares › Familias (ventana «Maestro de familias de artículos»). En su pie, el bloque Artículos lista los artículos que la usan; en el ejemplo, también un elevador de silla de ruedas."
+          ],
+          "campos": [
+            {
+              "campo": "Artículo",
+              "significado": "Código y descripción.",
+              "ejemplo": "0012051, ASCENSOR KONE EMONOSPACE"
+            },
+            {
+              "campo": "Tipo",
+              "significado": "Tipo de artículo.",
+              "ejemplo": "06, INMOVILIZADO"
+            },
+            {
+              "campo": "Familia",
+              "significado": "Familia del artículo.",
+              "ejemplo": "06010000, INVERSIONES OBRAS GENERICO"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Maestros › Artículos › Registro y localiza el artículo 0012051.",
+              "detalle": "Comprueba el tipo 06 INMOVILIZADO y la familia 06010000.",
+              "imagen": "v-asientos-007.jpg"
+            },
+            {
+              "texto": "Abre la familia 06010000 en Maestros › Artículos › Auxiliares › Familias.",
+              "detalle": "Localiza el bloque Parámetros inmovilizado.",
+              "imagen": "v-asientos-008.jpg",
+              "hotspot": {
+                "x": 33,
+                "y": 45.5,
+                "w": 25,
+                "h": 13,
+                "etiqueta": "Parámetros inmovilizado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "La configuración está en la familia, no en cada artículo: todos los artículos de la familia comparten los mismos parámetros de inmovilizado."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-4-codigo-bien-serie",
+          "titulo": "Bien y serie de inmovilizado",
+          "paraQueSirve": "Identificar los dos datos sin los que no se crea la ficha.",
+          "ruta": [
+            "Maestros",
+            "Artículos",
+            "Auxiliares",
+            "Familias"
+          ],
+          "explicacion": [
+            "Bien: el bien de Activos permanentes en el que se creará el nuevo elemento. En la familia del ejemplo, 020192.",
+            "Serie inmovilizado: la serie con la que se numerará el elemento. En el ejemplo, CMP.",
+            "El bloque tiene además Grupo contable, Sistema amortización, Grupo fiscal, Código fiscal y Agrupar elementos, que son opcionales: si están vacíos, se usan los del bien.",
+            "Si falta el bien o la serie, la factura contabiliza igualmente pero no crea ninguna ficha de activo."
+          ],
+          "campos": [
+            {
+              "campo": "Bien",
+              "significado": "Bien en el que se crea el elemento.",
+              "ejemplo": "020192"
+            },
+            {
+              "campo": "Serie inmovilizado",
+              "significado": "Serie de numeración del elemento.",
+              "ejemplo": "CMP"
+            },
+            {
+              "campo": "Grupo contable / Grupo fiscal / Código fiscal",
+              "significado": "Opcionales; si están vacíos se usan los del bien.",
+              "ejemplo": "Vacíos"
+            },
+            {
+              "campo": "Agrupar elementos",
+              "significado": "Si las líneas se agrupan en un mismo elemento.",
+              "ejemplo": "Sin marcar"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "En Parámetros inmovilizado, localiza el campo Bien.",
+              "detalle": "En el ejemplo, 020192.",
+              "imagen": "v-asientos-008.jpg",
+              "hotspot": {
+                "x": 33,
+                "y": 45.5,
+                "w": 25,
+                "h": 13,
+                "etiqueta": "Parámetros inmovilizado"
+              }
+            },
+            {
+              "texto": "Despliega Serie inmovilizado para ver las series disponibles.",
+              "detalle": "El desplegable permite añadir una serie nueva o gestionar las existentes.",
+              "imagen": "v-asientos-009.jpg"
+            },
+            {
+              "texto": "Comprueba que el bien y la serie están informados."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Falta el bien o la serie en la familia."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Complétalos en Parámetros inmovilizado antes de contabilizar la factura."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-4-requisito-creacion",
+          "titulo": "Las dos condiciones juntas",
+          "paraQueSirve": "Relacionar la configuración de la familia con la de la tipología.",
+          "ruta": null,
+          "explicacion": [
+            "Para que una factura cree la ficha de un activo se necesitan dos cosas a la vez: la tipología de factura con la generación de inmovilizado activada y la familia del artículo con bien y serie informados.",
+            "Si falla cualquiera de las dos, la factura contabiliza pero no se crea ningún componente ni elemento.",
+            "Las dos condiciones se revisan en sitios distintos: la tipología en los maestros de compras y la familia en los maestros de artículos."
+          ],
+          "campos": [
+            {
+              "campo": "Tipología con Generación inmovilizado",
+              "significado": "Primera condición.",
+              "ejemplo": "FACT en «En contabilización»"
+            },
+            {
+              "campo": "Familia con bien y serie",
+              "significado": "Segunda condición.",
+              "ejemplo": "06010000 con bien 020192 y serie CMP"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Confirma que la tipología FACT tiene Generación inmovilizado en «En contabilización»."
+            },
+            {
+              "texto": "Confirma que la familia 06010000 tiene bien y serie informados."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Ante una factura que no crea su activo, revisa siempre las dos condiciones, en este orden: tipología y familia."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Dónde se configuran los parámetros de inmovilizado de un artículo?",
+          "opciones": [
+            "En la familia del artículo",
+            "En la factura",
+            "En la tipología de albarán",
+            "En el grupo contable"
+          ],
+          "correcta": 0,
+          "explicacion": "La familia guarda el bloque Parámetros inmovilizado."
+        },
+        {
+          "pregunta": "¿Qué dos datos de la familia son imprescindibles para crear la ficha del activo?",
+          "opciones": [
+            "El precio y el proveedor",
+            "La cuenta contable y el grupo fiscal",
+            "El bien y la serie de inmovilizado",
+            "La fecha y la moneda"
+          ],
+          "correcta": 2,
+          "explicacion": "Sin ellos el ERP no sabe dónde colgar el elemento ni cómo numerarlo."
+        },
+        {
+          "pregunta": "Si a la familia le falta la serie de inmovilizado, ¿qué ocurre al contabilizar la factura?",
+          "opciones": [
+            "Da error de cuentas",
+            "Contabiliza, pero no crea la ficha del activo",
+            "Crea un bien sin componente",
+            "Asigna una serie por defecto"
+          ],
+          "correcta": 1,
+          "explicacion": "La factura sigue su circuito sin crear activo."
+        },
+        {
+          "pregunta": "¿Qué artículo se usa como ejemplo en el vídeo?",
+          "opciones": [
+            "Una impresora",
+            "Un vehículo",
+            "Un ordenador",
+            "Un ascensor"
+          ],
+          "correcta": 3,
+          "explicacion": "El artículo 0012051 ASCENSOR KONE EMONOSPACE."
+        },
+        {
+          "pregunta": "¿Qué hace falta para que la factura cree la ficha?",
+          "opciones": [
+            "Solo la tipología",
+            "La tipología y la familia configuradas a la vez",
+            "Solo la familia",
+            "El grupo contable y la moneda"
+          ],
+          "correcta": 1,
+          "explicacion": "Tipología con generación de inmovilizado y familia con bien y serie."
+        }
+      ],
+      "checklist": [
+        "Abres el artículo 0012051 y compruebas su tipo 06 INMOVILIZADO.",
+        "Localizas su familia 06010000.",
+        "Abres la familia y el bloque Parámetros inmovilizado.",
+        "Compruebas el bien 020192.",
+        "Compruebas la serie de inmovilizado CMP.",
+        "Explicas las dos condiciones que necesita la factura para crear el activo."
+      ],
+      "problemas": [
+        {
+          "problema": "La factura contabiliza pero no crea ninguna ficha de activo.",
+          "solucion": "Revisa la familia del artículo y completa el bien y la serie en Parámetros inmovilizado."
+        },
+        {
+          "problema": "No sabes si el fallo está en la tipología o en la familia.",
+          "solucion": "Revisa las dos: tipología con generación de inmovilizado y familia con bien y serie."
+        }
+      ]
+    },
+    {
+      "id": "icon-activos-v-3",
+      "numero": 6,
+      "titulo": "Contabilizar una factura de activos y ver sus componentes",
+      "objetivo": "Recorrerás el circuito documental de una factura de activos, la contabilizarás y comprobarás que se habilita la pestaña Componentes con la ficha creada.",
+      "concepto": "La factura de activos FACT0000044 no nace aislada. Su Docflow muestra el circuito: una solicitud de compra (SFOR) que da lugar a dos pedidos (PSER y PACT), un albarán de activos (AACT) y, por último, la factura (FACT).\n\nLa factura ya está validada. Al pulsar Contabilizar aparece la banda «EN CONTABILIDAD» y, como su tipología genera inmovilizado al contabilizar y las familias de sus artículos están configuradas, se habilita la pestaña Componentes, que lleva a las fichas creadas en Activos permanentes.",
+      "duracionMin": 12,
+      "secciones": [
+        {
+          "id": "icon-activos-v-3-circuito-docflow",
+          "titulo": "Circuito documental de la factura de activos",
+          "paraQueSirve": "Ver la trazabilidad de la compra antes de contabilizar.",
+          "ruta": [
+            "Compras",
+            "Facturas",
+            "Consultar facturas"
+          ],
+          "explicacion": [
+            "El Docflow es un gráfico con los documentos encadenados. El de la factura FACT0000044 muestra: SFOR0002026 (solicitud) → PSER0000492 y PACT0000074 (pedidos) → AACT0000155 (albarán) → FACT0000044 (factura), todos de 07-06-2023.",
+            "La leyenda colorea cada tipo: solicitudes, pedidos, suministros (albaranes) y facturas de compras."
+          ],
+          "campos": [
+            {
+              "campo": "Solicitud",
+              "significado": "Petición inicial de compra.",
+              "ejemplo": "SFOR0002026"
+            },
+            {
+              "campo": "Pedidos",
+              "significado": "Pedidos derivados de la solicitud.",
+              "ejemplo": "PSER0000492 y PACT0000074"
+            },
+            {
+              "campo": "Albarán",
+              "significado": "Recepción de los bienes.",
+              "ejemplo": "AACT0000155"
+            },
+            {
+              "campo": "Factura",
+              "significado": "Documento final del circuito.",
+              "ejemplo": "FACT0000044"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la factura FACT0000044 desde Compras › Facturas › Consultar facturas.",
+              "detalle": "En la demo de los vídeos el menú de compras cuelga de Compras; en la demo de prácticas, el mismo menú está en Gestión › Compras."
+            },
+            {
+              "texto": "Abre la pestaña Docflow y sigue el circuito de izquierda a derecha.",
+              "detalle": "SFOR → PSER y PACT → AACT → FACT.",
+              "imagen": "v-asientos-003.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El circuito explica de dónde viene la factura, pero la creación del activo solo se evalúa en la factura, al validarla o al contabilizarla."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-3-validar-contabilizar",
+          "titulo": "Contabilizar la factura validada",
+          "paraQueSirve": "Ejecutar el contabilizado y comprobar el cambio de estado.",
+          "ruta": [
+            "Compras",
+            "Facturas",
+            "Consultar facturas"
+          ],
+          "explicacion": [
+            "La factura FACT0000044 está en estado Validado: el pie muestra Pasar a provisional, Copiar, Contabilizar, Anticipo y Enviar e-mail.",
+            "Al pulsar Contabilizar aparece una banda naranja «EN CONTABILIDAD» y el pie cambia: ahora ofrece Descontabilizar.",
+            "Arriba se habilitan nuevas pestañas: Apuntes, Cartera de efectos y Componentes."
+          ],
+          "campos": [
+            {
+              "campo": "Estado",
+              "significado": "Estado antes de contabilizar.",
+              "ejemplo": "Validado"
+            },
+            {
+              "campo": "Botón Contabilizar",
+              "significado": "Genera el asiento de la factura.",
+              "ejemplo": "Pie de la ficha"
+            },
+            {
+              "campo": "EN CONTABILIDAD",
+              "significado": "Banda que indica que la factura está contabilizada.",
+              "ejemplo": "Tras contabilizar"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Comprueba que la factura está en estado Validado.",
+              "detalle": "Si está Provisional, valídala primero.",
+              "imagen": "v-asientos-004.jpg"
+            },
+            {
+              "texto": "Pulsa Contabilizar.",
+              "detalle": "Es el tercer botón del pie.",
+              "imagen": "v-asientos-004.jpg",
+              "hotspot": {
+                "x": 29,
+                "y": 96.5,
+                "w": 4,
+                "h": 3,
+                "etiqueta": "Contabilizar"
+              }
+            },
+            {
+              "texto": "Comprueba la banda «EN CONTABILIDAD» y las nuevas pestañas.",
+              "detalle": "Apuntes, Cartera de efectos y Componentes.",
+              "imagen": "v-asientos-005.jpg",
+              "hotspot": {
+                "x": 17.6,
+                "y": 36,
+                "w": 80,
+                "h": 3.4,
+                "etiqueta": "EN CONTABILIDAD"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "No aparece el botón Contabilizar."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "La factura no está validada: valídala primero."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-v-3-pestana-componentes",
+          "titulo": "Pestaña Componentes habilitada",
+          "paraQueSirve": "Comprobar que la contabilización creó las fichas en Activos permanentes.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Componentes"
+          ],
+          "explicacion": [
+            "Tras contabilizar, la pestaña Componentes queda habilitada y lleva a Finanzas › Activos permanentes › Componentes, con las fichas creadas.",
+            "La factura tiene varias líneas y cada una crea su componente según la familia de su artículo. En la captura se ve uno de ellos: componente 004105 del bien 010159 «Equipos médicos mayores», elemento 125017407, tipo Inversión inicial y estado Activo.",
+            "El ERP ha propuesto la fecha de inicio de la amortización: el primer día del mes siguiente a la contabilización (contabilizado el 07-06-2023, empieza el 01-07-2023). Se puede cambiar con el botón Fecha inicio depreciación.",
+            "El componente hereda grupo fiscal (310 Equipo biomédico) y código fiscal (31001, con un 10 %), y guarda la factura de origen en Identificación factura."
+          ],
+          "campos": [
+            {
+              "campo": "Componente",
+              "significado": "Ficha creada.",
+              "ejemplo": "004105"
+            },
+            {
+              "campo": "Bien / Elemento",
+              "significado": "Dónde se ha colgado.",
+              "ejemplo": "010159 / 125017407"
+            },
+            {
+              "campo": "Tipo",
+              "significado": "Origen del componente.",
+              "ejemplo": "Inversión inicial"
+            },
+            {
+              "campo": "Fecha contabilización / Inicio depreciación",
+              "significado": "Contabilización y comienzo de la amortización.",
+              "ejemplo": "07-06-2023 / 01-07-2023"
+            },
+            {
+              "campo": "Grupo fiscal / Código fiscal",
+              "significado": "Límites de amortización heredados.",
+              "ejemplo": "310 / 31001"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Pulsa la pestaña Componentes de la factura.",
+              "detalle": "Se habilita después de contabilizar.",
+              "imagen": "v-asientos-005.jpg",
+              "hotspot": {
+                "x": 45.6,
+                "y": 14,
+                "w": 5,
+                "h": 2.4,
+                "etiqueta": "Componentes"
+              }
+            },
+            {
+              "texto": "Comprueba la ficha del componente creado.",
+              "detalle": "Bien, elemento, tipo Inversión inicial, fecha de contabilización, inicio de depreciación y factura de origen.",
+              "imagen": "v-asientos-006.jpg"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Antes de contabilizar, la pestaña Componentes está deshabilitada. Que se habilite confirma que la integración con Activos permanentes se ha ejecutado."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué documento inicia el circuito de la factura FACT0000044?",
+          "opciones": [
+            "El pedido PACT0000074",
+            "El albarán AACT0000155",
+            "La propia factura",
+            "La solicitud SFOR0002026"
+          ],
+          "correcta": 3,
+          "explicacion": "El Docflow empieza en la solicitud y sigue con pedidos, albarán y factura."
+        },
+        {
+          "pregunta": "¿Qué estado tiene la factura antes de pulsar Contabilizar?",
+          "opciones": [
+            "Validado",
+            "En contabilidad",
+            "Provisional",
+            "Anulado"
+          ],
+          "correcta": 0,
+          "explicacion": "Solo se puede contabilizar una factura validada."
+        },
+        {
+          "pregunta": "¿Qué aparece en la factura al contabilizarla?",
+          "opciones": [
+            "Un mensaje de error",
+            "La pestaña Docflow",
+            "La banda «EN CONTABILIDAD» y las pestañas Apuntes, Cartera de efectos y Componentes",
+            "El botón Validar"
+          ],
+          "correcta": 2,
+          "explicacion": "El pie cambia y ofrece Descontabilizar."
+        },
+        {
+          "pregunta": "La factura se contabiliza el 07-06-2023. ¿Qué fecha de inicio de amortización propone el ERP?",
+          "opciones": [
+            "07-06-2023",
+            "01-06-2023",
+            "31-12-2023",
+            "01-07-2023"
+          ],
+          "correcta": 3,
+          "explicacion": "Propone el primer día del mes siguiente; se puede cambiar."
+        },
+        {
+          "pregunta": "¿Por qué la factura crea varios componentes?",
+          "opciones": [
+            "Porque se ha contabilizado dos veces",
+            "Porque cada línea crea su componente según la familia de su artículo",
+            "Porque tiene dos pedidos",
+            "Porque el albarán se duplicó"
+          ],
+          "correcta": 1,
+          "explicacion": "Una línea, un componente."
+        }
+      ],
+      "checklist": [
+        "Abres la factura FACT0000044 y su Docflow.",
+        "Sigues el circuito SFOR → PSER/PACT → AACT → FACT.",
+        "Compruebas que la factura está en estado Validado.",
+        "Pulsas Contabilizar y ves la banda «EN CONTABILIDAD».",
+        "Abres la pestaña Componentes.",
+        "En el componente compruebas bien, elemento e inicio de depreciación."
+      ],
+      "problemas": [
+        {
+          "problema": "La pestaña Componentes no aparece después de validar.",
+          "solucion": "Es normal con la tipología en «En contabilización»: contabiliza la factura."
+        },
+        {
+          "problema": "No puedes contabilizar la factura.",
+          "solucion": "Comprueba que esté validada; la validación va antes."
+        },
+        {
+          "problema": "La fecha de inicio de amortización no es la de la factura.",
+          "solucion": "El ERP propone el primer día del mes siguiente; cámbiala con Fecha inicio depreciación si hace falta."
+        }
+      ]
+    },
+    {
+      "id": "icon-activos-2",
+      "numero": 7,
+      "titulo": "Amortizar: valores, contabilización y cambios",
+      "objetivo": "Sabrás leer los valores de amortización de un elemento y de sus componentes, contabilizar y descontabilizar las amortizaciones de un periodo y usar los procesos de traspaso, cambio de amortización y división.",
+      "concepto": "Cada componente tiene sus valores (sistema, porcentaje, años, valor de inventario y residual) y su cuadro de amortizaciones, que reparte el importe por periodos. Mientras no se contabilizan, las cuotas del cuadro están en estado Normal; el proceso de contabilización genera el asiento del periodo y las pasa a Contabilizado.\n\nAdemás, un activo puede cambiar de vida: pasar a otro bien o proyecto (traspaso), cambiar de ritmo de amortización (cambio de amortización) o partirse en varios (división).",
+      "duracionMin": 30,
+      "secciones": [
+        {
+          "id": "icon-activos-2-sistemas",
+          "titulo": "Valores de amortización de elementos y componentes",
+          "paraQueSirve": "Leer los datos que deciden cuánto se amortiza cada periodo.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Elementos"
+          ],
+          "explicacion": [
+            "Sistema: el juego de valores con el que se amortiza. En la demo casi todo usa el sistema A; tener varios sistemas permite llevar en paralelo, por ejemplo, una amortización contable y otra fiscal.",
+            "Sistema amortización: L lineal (la misma cuota cada año) o D decreciente (más al principio), además de los sistemas especiales que defina la empresa.",
+            "% Amortización y Años: el ritmo. Los años salen del porcentaje redondeando al alza: con un 32 %, 100 / 32 = 3,1 → 4 años.",
+            "Valor inventario (coste), Valor residual, Amortización acumulada y Valor neto (inventario − acumulada). La Amortización inicial del elemento suma la de sus componentes: sirve para dar de alta activos que ya venían parcialmente amortizados.",
+            "Ejemplo: componente de 600 € al 20 % lineal (5 años) → 120 € al año."
+          ],
+          "campos": [
+            {
+              "campo": "Sistema",
+              "significado": "Juego de valores.",
+              "ejemplo": "A"
+            },
+            {
+              "campo": "Sistema amortización",
+              "significado": "L lineal o D decreciente.",
+              "ejemplo": "L"
+            },
+            {
+              "campo": "% Amortización",
+              "significado": "Porcentaje anual sobre el coste.",
+              "ejemplo": "32,000"
+            },
+            {
+              "campo": "Años",
+              "significado": "Años de amortización.",
+              "ejemplo": "4"
+            },
+            {
+              "campo": "Amortización inicial",
+              "significado": "Amortización que ya traía el activo al darlo de alta.",
+              "ejemplo": "0,00"
+            },
+            {
+              "campo": "Valor inventario / residual / neto",
+              "significado": "Coste, valor final esperado y valor contable actual.",
+              "ejemplo": "600,00 / 0,00 / 594,43"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre los Valores de los elementos de un elemento del bien ES2130.",
+              "detalle": "Comprueba sistema A, sistema de amortización L, 32 % y 4 años.",
+              "imagen": "icon-activos-007.webp"
+            },
+            {
+              "texto": "Calcula la cuota anual de un componente de 600 € al 20 % lineal.",
+              "detalle": "600 × 20 % = 120 € al año."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El porcentaje debe estar dentro de los límites del código fiscal del elemento: el ERP no acepta valores fuera del mínimo y el máximo."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-2-contabilizacion",
+          "titulo": "Contabilizar y descontabilizar amortizaciones",
+          "paraQueSirve": "Generar los asientos de amortización de un periodo y deshacerlos si hace falta.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Procesos"
+          ],
+          "explicacion": [
+            "El proceso de contabilización de amortizaciones genera el asiento de las cuotas pendientes del periodo, para los proyectos y sistemas que elijas. Cargo en la cuenta de dotación (gasto) y abono en la de amortización acumulada.",
+            "Contabilizar pasa las cuotas del cuadro a estado Contabilizado. Descontabilizar genera el asiento inverso y las devuelve a Normal.",
+            "La imputación a centros de coste se hace según la imputación programada o, si no la hay, a la cuenta de explotación y el centro del elemento.",
+            "Ejemplo de asiento: componente de 4.000 € al 33 % → 110 € al mes: debe la cuenta de dotación a la amortización (68x) 110 € / haber la de amortización acumulada (28x) 110 €.",
+            "El ejercicio contable debe estar dividido en periodos (meses); si no, el proceso no puede repartir las cuotas."
+          ],
+          "campos": [
+            {
+              "campo": "Periodo",
+              "significado": "Periodo que se amortiza.",
+              "ejemplo": "Octubre 2020"
+            },
+            {
+              "campo": "Proyecto",
+              "significado": "Proyecto o proyectos a contabilizar.",
+              "ejemplo": "Todos"
+            },
+            {
+              "campo": "Sistemas",
+              "significado": "Sistemas de amortización a contabilizar.",
+              "ejemplo": "A"
+            },
+            {
+              "campo": "Estado de la cuota",
+              "significado": "Normal (pendiente) o Contabilizado.",
+              "ejemplo": "Contabilizado"
+            },
+            {
+              "campo": "Importe amortización",
+              "significado": "Cuota del periodo.",
+              "ejemplo": "163,93"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre el resultado del proceso de contabilización de amortizaciones.",
+              "detalle": "Cada fila es un componente con su periodo (fecha inicial y final), porcentaje, importe y estado Contabilizado; abajo, el total por empresa.",
+              "imagen": "icon-activos-008.webp"
+            },
+            {
+              "texto": "Abre el cuadro de amortizaciones de un componente y distingue las cuotas en estado Normal de las Contabilizado."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "El proceso de contabilización no arranca y avisa de los periodos."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Comprueba que el ejercicio contable está dividido en periodos contables."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-2-traspasos-cambios",
+          "titulo": "Traspasos, cambio de amortización y división",
+          "paraQueSirve": "Saber qué proceso usar cuando un activo cambia de categoría, de ritmo o se reparte.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Procesos"
+          ],
+          "explicacion": [
+            "Traspaso de elementos: mueve uno o varios elementos a otro bien, otras cuentas, otro proyecto o sección, otra cuenta de explotación u otro centro de coste. Genera apuntes contables en la fecha del proceso (por eso existe la cuenta puente de traspasos).",
+            "Cambio de amortización: cambia el sistema o el porcentaje de los componentes seleccionados, dentro de los límites fiscales. No genera asientos, pero recalcula el cuadro a partir de la fecha del proceso.",
+            "División de un elemento: lo parte en varios y reparte en proporción el valor de inventario, la amortización acumulada y el valor neto. Se indica el tipo (por porcentaje o por importe), el número de divisiones, el valor y la serie de los nuevos elementos (por defecto AUTO).",
+            "Ejemplo de división de la captura: el elemento OPT000003 de 36.000 € se divide y nace OPT000101 con 1.800 € (un 5 %); el original queda en 34.200 €."
+          ],
+          "campos": [
+            {
+              "campo": "Bien destino",
+              "significado": "Bien al que se traspasan los elementos.",
+              "ejemplo": "ES2140, Utillaje"
+            },
+            {
+              "campo": "Fecha proceso",
+              "significado": "Fecha de los apuntes del traspaso.",
+              "ejemplo": "27-10-2020"
+            },
+            {
+              "campo": "Proyecto / sección / centro / cuenta explotación destino",
+              "significado": "Nueva imputación del elemento.",
+              "ejemplo": "Opcionales"
+            },
+            {
+              "campo": "Tipo de división",
+              "significado": "Por porcentaje o por importe.",
+              "ejemplo": "Por porcentaje"
+            },
+            {
+              "campo": "Número de divisiones / Valor",
+              "significado": "Cuántos elementos nuevos y de qué tamaño.",
+              "ejemplo": "1 / 5 %"
+            },
+            {
+              "campo": "Serie",
+              "significado": "Serie de los nuevos elementos.",
+              "ejemplo": "AUTO"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre el proceso de traspasos de elementos de inmovilizado.",
+              "detalle": "Elige el bien destino, la fecha y, si hace falta, la nueva imputación; selecciona los elementos y pulsa Traspasar elementos.",
+              "imagen": "icon-activos-009.webp"
+            },
+            {
+              "texto": "Abre el cambio de amortización de componentes y localiza un componente.",
+              "detalle": "La lista se agrupa por empresa, bien y elemento.",
+              "imagen": "icon-activos-010.webp"
+            },
+            {
+              "texto": "Revisa el resultado de una división.",
+              "detalle": "36.000 € originales → 34.200 € en el original y 1.800 € en el nuevo elemento.",
+              "imagen": "icon-activos-011.webp"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Traspasar genera apuntes; cambiar la amortización no. Si dudas de qué proceso usar, piensa si cambia la contabilidad (cuentas, proyecto) o solo el ritmo."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué valores admite el campo Sistema amortización?",
+          "opciones": [
+            "Solo L lineal",
+            "A, C y H",
+            "L lineal y D decreciente, además de los sistemas especiales de la empresa",
+            "Solo D decreciente"
+          ],
+          "correcta": 2,
+          "explicacion": "A, C o H son valores del campo Sistema, que es el juego de valores, no el método."
+        },
+        {
+          "pregunta": "¿Qué hace Descontabilizar en las amortizaciones?",
+          "opciones": [
+            "Genera el asiento inverso y devuelve las cuotas a estado Normal",
+            "Borra el componente",
+            "Cambia el porcentaje",
+            "Traspasa el elemento"
+          ],
+          "correcta": 0,
+          "explicacion": "Deshace la contabilización del periodo."
+        },
+        {
+          "pregunta": "Un componente de 4.000 € se amortiza al 33 % anual. ¿Cuál es la cuota mensual aproximada?",
+          "opciones": [
+            "110 €",
+            "1.320 €",
+            "33 €",
+            "330 €"
+          ],
+          "correcta": 0,
+          "explicacion": "4.000 × 33 % = 1.320 € al año; 1.320 / 12 = 110 € al mes."
+        },
+        {
+          "pregunta": "¿Qué proceso cambia el porcentaje de amortización de unos componentes sin generar asientos?",
+          "opciones": [
+            "El traspaso de elementos",
+            "La división de un elemento",
+            "El cambio de amortización",
+            "La baja parcial"
+          ],
+          "correcta": 2,
+          "explicacion": "Recalcula el cuadro desde la fecha del proceso, sin apuntes."
+        },
+        {
+          "pregunta": "Divides un elemento de 36.000 € y el nuevo elemento recibe 1.800 €. ¿Con cuánto queda el original?",
+          "opciones": [
+            "36.000 €",
+            "34.200 €",
+            "1.800 €",
+            "37.800 €"
+          ],
+          "correcta": 1,
+          "explicacion": "36.000 − 1.800 = 34.200 €."
+        }
+      ],
+      "checklist": [
+        "Abres los valores de un elemento y localizas sistema, sistema de amortización, porcentaje y años.",
+        "Calculas una cuota anual y una mensual.",
+        "Revisas el resultado de la contabilización de amortizaciones y su estado Contabilizado.",
+        "Explicas la diferencia entre Contabilizar y Descontabilizar.",
+        "Localizas el proceso de traspasos y sus campos de destino.",
+        "Explicas qué proceso usar para cambiar el ritmo y cuál para partir un elemento."
+      ],
+      "problemas": [
+        {
+          "problema": "El proceso de contabilización no arranca y avisa de los periodos.",
+          "solucion": "El ejercicio contable debe estar dividido en periodos contables."
+        },
+        {
+          "problema": "El ERP no acepta un porcentaje al cambiar la amortización.",
+          "solucion": "Está fuera de los límites del código fiscal; ajústalo."
+        },
+        {
+          "problema": "Tras una división no aparecen los nuevos elementos.",
+          "solucion": "Revisa tipo de división, número, valor y serie (por defecto AUTO)."
+        },
+        {
+          "problema": "Esperabas un asiento tras el cambio de amortización.",
+          "solucion": "Es normal que no lo haya: el cambio de amortización solo recalcula el cuadro."
+        }
+      ]
+    },
+    {
+      "id": "icon-activos-3",
+      "numero": 8,
+      "titulo": "Bajas, ventas e informes",
+      "objetivo": "Sabrás dar de baja, total o parcialmente, o vender un componente, distinguir la desactivación y el fuera de servicio, y consultar los informes de activos.",
+      "concepto": "Todo activo acaba saliendo del inventario: se tira, se vende o se retira una parte. Esas acciones se hacen desde la ficha del componente, con los botones de su pie, y generan los asientos que viste en el ejercicio 1: primero la amortización pendiente hasta la fecha y después la cancelación del coste y de la amortización acumulada, con el beneficio o la pérdida que corresponda.\n\nTerminas con los informes, que no modifican nada: sirven para comprobar valores y situación.",
+      "duracionMin": 25,
+      "secciones": [
+        {
+          "id": "icon-activos-2-bajas-ventas",
+          "titulo": "Baja total, baja parcial, venta y desactivación",
+          "paraQueSirve": "Elegir la acción correcta para cada salida de un activo y saber qué asientos genera.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Componentes"
+          ],
+          "explicacion": [
+            "Baja: retira el componente entero. Pide fecha de baja, motivo y sistema. Contabiliza la amortización pendiente hasta la fecha y cancela el valor de inventario y la amortización acumulada; el valor neto que quede va a pérdidas (671).",
+            "Baja parcial: retira una parte del valor; pide además el importe. Contabiliza la amortización pendiente y divide el componente en dos: la parte que se da de baja y la que sigue.",
+            "Venta: como la baja, pero con el importe de venta y la cuenta donde se carga el cobro. El resultado es precio de venta − valor neto: beneficio (771, o 770 si es intangible) o pérdida (671 o 670).",
+            "Desactivar: marca el componente como inactivo temporalmente, sin sacarlo del inventario. No genera apuntes.",
+            "Fuera de servicio: marca el activo como retirado de uso. La documentación indica que puede generar un apunte contra pérdidas (671), salvo en las puestas en funcionamiento; compruébalo en tu instalación antes de usarlo.",
+            "Ejemplo de venta de la captura: aspiradora industrial de 600 € al 20 %, con 5,57 € amortizados a la fecha (valor neto 594,43 €), vendida por 450 € → pérdida de 144,43 €."
+          ],
+          "campos": [
+            {
+              "campo": "Fecha baja",
+              "significado": "Fecha de la baja o la venta.",
+              "ejemplo": "04-11-2020"
+            },
+            {
+              "campo": "Motivo",
+              "significado": "Causa de la baja.",
+              "ejemplo": "Venta"
+            },
+            {
+              "campo": "Sistema",
+              "significado": "Sistema de valores afectado.",
+              "ejemplo": "A"
+            },
+            {
+              "campo": "Importe",
+              "significado": "Importe de venta o de la baja parcial.",
+              "ejemplo": "450"
+            },
+            {
+              "campo": "Cuenta",
+              "significado": "Cuenta donde se registra el importe de la venta.",
+              "ejemplo": "La que indique la empresa"
+            },
+            {
+              "campo": "Valor neto",
+              "significado": "Valor de inventario − amortización acumulada.",
+              "ejemplo": "594,43"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre un componente y localiza los botones del pie: Baja, Baja parcial, Venta, Desactivar, Fuera de servicio y Recalcular amortizaciones.",
+              "detalle": "En la captura, la ventana de Baja parcial pide fecha, motivo, sistema e importe.",
+              "imagen": "icon-activos-012.webp"
+            },
+            {
+              "texto": "Revisa una baja total.",
+              "detalle": "Programa de 4.000 € al 33 % dado de baja el 04-11-2020 con el motivo «Deprecated».",
+              "imagen": "icon-activos-013.webp"
+            },
+            {
+              "texto": "Revisa la venta de la aspiradora.",
+              "detalle": "Valor neto 594,43 €, venta por 450 €: pérdida de 144,43 €.",
+              "imagen": "icon-activos-014.webp"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Los asientos de baja y venta siguen las normas de registro y valoración del Plan General de Contabilidad: primero la amortización pendiente, después la cancelación y el resultado."
+            }
+          ]
+        },
+        {
+          "id": "icon-activos-2-informes",
+          "titulo": "Informes de activos",
+          "paraQueSirve": "Consultar valores, amortizaciones y situación sin modificar nada.",
+          "ruta": [
+            "Finanzas",
+            "Activos permanentes",
+            "Informes"
+          ],
+          "explicacion": [
+            "Hay informes de comprobación, de amortización, de situación, de control de integridad y de análisis de desviaciones.",
+            "Los de comprobación muestran valor de inventario, residual, neto, amortización acumulada y estado, agrupados por bien, elemento, componente o proyecto, y permiten bajar al nivel siguiente.",
+            "Ejemplo de la captura: amortizaciones de inmovilizado por proyectos de la empresa CAN, proyecto 28 Madrid, bien ES2160 Mobiliario, con un total de 11.166,67 €.",
+            "Los informes son solo de consulta: no se puede insertar, modificar ni borrar desde ellos."
+          ],
+          "campos": [
+            {
+              "campo": "Empresa / Proyecto",
+              "significado": "Agrupación del informe.",
+              "ejemplo": "CAN / 28 Madrid"
+            },
+            {
+              "campo": "Bien / Elemento",
+              "significado": "Nivel de detalle.",
+              "ejemplo": "ES2160 / CAN000069"
+            },
+            {
+              "campo": "Sistema amortización",
+              "significado": "L o D.",
+              "ejemplo": "L"
+            },
+            {
+              "campo": "Amortización",
+              "significado": "Importe del periodo consultado.",
+              "ejemplo": "1.666,67"
+            },
+            {
+              "campo": "Mínimo / Máximo",
+              "significado": "Límites fiscales del periodo.",
+              "ejemplo": "1.666,67 / 1.666,67"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Activos permanentes › Informes y lanza el informe de amortizaciones por proyectos.",
+              "detalle": "Comprueba los totales por bien, sistema, proyecto y empresa.",
+              "imagen": "icon-activos-015.webp"
+            },
+            {
+              "texto": "Localiza un elemento con sistema de amortización D y compara su cuota con la de los elementos L."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Antes de cerrar el ejercicio, un informe de comprobación por bien es la forma rápida de ver si algún activo tiene valores raros."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué acción retira el activo del inventario y registra el precio cobrado?",
+          "opciones": [
+            "Desactivar",
+            "Baja parcial",
+            "Recalcular amortizaciones",
+            "Venta"
+          ],
+          "correcta": 3,
+          "explicacion": "La venta compara precio y valor neto y registra beneficio o pérdida."
+        },
+        {
+          "pregunta": "Una aspiradora con valor neto de 594,43 € se vende por 450 €. ¿Qué resultado hay?",
+          "opciones": [
+            "Beneficio de 144,43 €",
+            "Pérdida de 144,43 €",
+            "Pérdida de 450 €",
+            "Ningún resultado"
+          ],
+          "correcta": 1,
+          "explicacion": "450 − 594,43 = −144,43 € (cuenta 671)."
+        },
+        {
+          "pregunta": "¿Qué acción no genera apuntes contables?",
+          "opciones": [
+            "Baja",
+            "Venta",
+            "Baja parcial",
+            "Desactivar"
+          ],
+          "correcta": 3,
+          "explicacion": "Solo marca el componente como inactivo temporalmente."
+        },
+        {
+          "pregunta": "¿Qué hace la baja parcial con el componente?",
+          "opciones": [
+            "Lo divide en dos: la parte que se da de baja y la que sigue",
+            "Lo borra entero",
+            "Lo traspasa a otro bien",
+            "Lo desactiva"
+          ],
+          "correcta": 0,
+          "explicacion": "Antes contabiliza la amortización pendiente hasta la fecha."
+        },
+        {
+          "pregunta": "¿Qué se puede hacer desde los informes de activos?",
+          "opciones": [
+            "Dar de baja activos",
+            "Cambiar porcentajes",
+            "Consultar valores y situación, sin modificar nada",
+            "Crear elementos"
+          ],
+          "correcta": 2,
+          "explicacion": "Son solo de consulta."
+        }
+      ],
+      "checklist": [
+        "Localizas en un componente los botones Baja, Baja parcial, Venta, Desactivar y Fuera de servicio.",
+        "Explicas qué pide la ventana de Baja parcial.",
+        "Calculas el resultado de la venta de la aspiradora.",
+        "Explicas la diferencia entre Baja y Desactivar.",
+        "Lanzas el informe de amortizaciones por proyectos y localizas sus totales."
+      ],
+      "problemas": [
+        {
+          "problema": "Quieres marcar un activo como inactivo unos meses sin darlo de baja.",
+          "solucion": "Usa Desactivar: no genera apuntes y el activo sigue en el inventario. Consulta con el responsable contable si debe seguir amortizándose."
+        },
+        {
+          "problema": "El resultado de la venta no es el que esperabas.",
+          "solucion": "Recuerda que antes se contabiliza la amortización pendiente hasta la fecha: el valor neto de la venta es el de ese día."
+        },
+        {
+          "problema": "No puedes modificar datos desde un informe.",
+          "solucion": "Es normal: los informes son de consulta. Abre el componente para cambiarlo."
+        }
+      ]
     }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Qué estructura jerárquica sigue el inmovilizado en Finanzas?",
-     "opciones": [
-      "Bien → Elemento → Componente",
-      "Componente → Elemento → Bien",
-      "Bien → Componente → Elemento",
-      "Elemento → Bien → Componente"
-     ],
-     "correcta": 0,
-     "explicacion": "El bien engloba elementos y cada elemento contiene componentes."
-    },
-    {
-     "pregunta": "¿Cuál de estos grupos es informativo en el bien y se propone en altas de elementos?",
-     "opciones": [
-      "Grupo fiscal",
-      "Grupo contable del bien",
-      "Grupo inmovilizado",
-      "Grupo contable del elemento"
-     ],
-     "correcta": 1,
-     "explicacion": "La ficha indica que el grupo contable asociado a bienes es informativo y su código se propone en altas de elementos."
-    },
-    {
-     "pregunta": "¿Qué limitación impone la tabla oficial de amortizaciones fiscales?",
-     "opciones": [
-      "Obliga a amortizar en un sistema concreto",
-      "Limita el número de elementos",
-      "Limita los valores de amortización según porcentajes mínimo y máximo",
-      "Fija la vida útil en años"
-     ],
-     "correcta": 2,
-     "explicacion": "El sistema limita los valores según los porcentajes mínimo y máximo informados en la tabla."
-    },
-    {
-     "pregunta": "¿Dónde se define la información contable general y de costes del activo?",
-     "opciones": [
-      "En el bien",
-      "En la configuración de grupos",
-      "En el componente",
-      "En el elemento"
-     ],
-     "correcta": 3,
-     "explicacion": "El elemento concentra la práctica totalidad de la información contable y de costes."
-    },
-    {
-     "pregunta": "¿Qué relación hay entre bienes y elementos de inmovilizado?",
-     "opciones": [
-      "Un bien puede tener muchos elementos, pero cada elemento pertenece a un solo bien",
-      "Un elemento puede pertenecer a varios bienes",
-      "Cada bien tiene exactamente un elemento",
-      "Bienes y elementos no están relacionados"
-     ],
-     "correcta": 0,
-     "explicacion": "Se pueden crear muchos elementos para un bien, pero un elemento no puede pertenecer a varios bienes."
-    }
-   ],
-   "checklist": [
-    "Abre la configuración de grupos de inmovilizado y comprueba que existen grupos definidos.",
-    "Localiza la pantalla de bienes y comprueba que el campo «Grupo contable» aparece en el formulario.",
-    "En la pantalla de elementos, verifica que existe el campo «Presupuesto» y lee su descripción.",
-    "Navega a la configuración de cuentas contables de inmovilizado y anota los grupos contables disponibles.",
-    "Revisa la tabla oficial de amortizaciones fiscales y localiza los porcentajes mínimo y máximo para un grupo fiscal.",
-    "Abre un formulario de componente y observa las pestañas o bloques que muestra.",
-    "Abre un bien y comprueba que tiene varios elementos asociados y que cada elemento pertenece solo a ese bien.",
-    "Localiza el campo «Localización» en la pantalla de elementos y comprueba que referencia a la tabla de localizaciones físicas.",
-    "Verifica que en la definición de bien existe el campo «Serie inmovilizado».",
-    "Consulta la visión general de activos y confirma que muestra la jerarquía bien-elemento-componente."
-   ],
-   "problemas": [
-    {
-     "problema": "No aparece el grupo contable en el alta del elemento.",
-     "solucion": "Revisa la configuración de grupos de cuentas contables de inmovilizado; el grupo contable del bien se propone por defecto."
-    },
-    {
-     "problema": "El sistema no deja introducir un porcentaje de amortización fuera de rango.",
-     "solucion": "Consulta la tabla oficial de amortizaciones fiscales; el sistema limita los valores según los porcentajes mínimo y máximo informados."
-    },
-    {
-     "problema": "Quieres asignar un elemento a varios bienes.",
-     "solucion": "No es posible: un elemento no puede pertenecer a varios bienes. Debes crear bienes separados y asignar cada elemento a uno."
-    },
-    {
-     "problema": "No encuentras el maestro de series de inmovilizado.",
-     "solucion": "La documentación no describe un maestro de series en estas páginas; solo se referencia el campo «Serie inmovilizado» en el bien."
-    },
-    {
-     "problema": "Confundes las cuentas contables con el grupo fiscal.",
-     "solucion": "El grupo contable contiene cuentas; el grupo fiscal contiene porcentaje o años de depreciación."
-    },
-    {
-     "problema": "No encuentras el componente dentro de Activos permanentes.",
-     "solucion": "Baja por la jerarquía: del bien al elemento y del elemento al componente."
-    },
-    {
-     "problema": "La fecha de inicio de depreciación no coincide con la fecha de compra.",
-     "solucion": "Es una propuesta del sistema. Puedes modificarla manualmente desde el componente."
-    },
-    {
-     "problema": "Aparecen dos fichas de activo para la misma operación: el bien y la instalación.",
-     "solucion": "Revisa la familia del servicio de instalación. En estándar, si tiene su propia parametrización, crea su propia ficha; la variante particular puede vincular líneas para consolidar."
-    },
-    {
-     "problema": "Solo ves totales y no consigues llegar al detalle.",
-     "solucion": "Baja de elemento a componente. El detalle de adquisición y amortización está en el componente."
-    }
-   ]
-  },
-  {
-   "id": "icon-activos-2",
-   "numero": 2,
-   "titulo": "Amortizaciones, cambios y bajas",
-   "objetivo": "Tendrás claro cómo se registran las amortizaciones, se contabilizan, se traspasan y se dan de baja los activos.",
-   "concepto": "La amortización distribuye el gasto de los activos permanentes. Además de calcularla, se contabiliza, se puede cambiar el sistema, traspasar elementos, dividirlos y gestionar bajas y ventas, todo con informes de soporte.",
-   "duracionMin": 30,
-   "secciones": [
-    {
-     "id": "icon-activos-2-sistemas",
-     "titulo": "Sistemas de amortización y valores económicos",
-     "paraQueSirve": "Define los sistemas de amortización y los valores económicos por elemento para calcular el gasto periódico.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "La amortización es la distribución del gasto de los activos permanentes. Los sistemas de amortización se registran por elemento en la pantalla de valores por elemento.",
-      "El campo «Sistema» admite los valores L (Lineal) y D (Decreciente), además de cualquier otro sistema definido por el usuario. El % Amortización y el % Años se utilizan para el cálculo.",
-      "La columna «Amortización inicial» acumula automáticamente la suma de los importes de su homónima en valores de componentes.",
-      "Por dentro: la tabla es cinmeval, relacionada con valores de componentes y el histórico de amortizaciones."
-     ],
-     "campos": [
-      {
-       "campo": "Sistema",
-       "significado": "Sistema de amortización; puede ser L (Lineal), D (Decreciente) u otro definido por el usuario.",
-       "ejemplo": "L o D"
-      },
-      {
-       "campo": "% Amortización",
-       "significado": "La documentación no desarrolla el significado de este campo; se muestra en la pantalla.",
-       "ejemplo": "porcentaje numérico"
-      },
-      {
-       "campo": "% Años",
-       "significado": "Valor por defecto que se propone en altas de componentes; valor entero resultado de una fórmula.",
-       "ejemplo": "número entero"
-      },
-      {
-       "campo": "Amortización inicial",
-       "significado": "Acumula automáticamente la suma de importes de su homónima en valores de componentes.",
-       "ejemplo": "importe acumulado"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la pantalla de valores por elemento y fíjate en las columnas de sistema y porcentajes.",
-       "imagen": "icon-activos-007.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La documentación no detalla la fórmula de cálculo del % Años."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-2-contabilizacion",
-     "titulo": "Contabilización de amortizaciones",
-     "paraQueSirve": "Genera los asientos contables de las amortizaciones pendientes y permite descontabilizar.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "El proceso de contabilización genera asientos de las amortizaciones correspondientes al período, proyecto y sistemas contables solicitados.",
-      "La acción Contabilizar cambia el histórico del cuadro de amortizaciones a «Contabilizado». La acción Descontabilizar genera desamortizaciones (asiento inverso) y devuelve el estado a «Normal».",
-      "El ejercicio contable del histórico debe estar desagrupado en períodos contables. Los movimientos a centros de coste se generan según la imputación programada o directamente a la cuenta de explotación y centro del elemento.",
-      "Por dentro: se actualiza cinamor y el histórico de amortizaciones."
-     ],
-     "campos": [
-      {
-       "campo": "Período",
-       "significado": "Período contable sobre el que se amortiza.",
-       "ejemplo": "mes/año"
-      },
-      {
-       "campo": "Proyecto",
-       "significado": "Proyecto contable al que se imputa la amortización.",
-       "ejemplo": "código de proyecto"
-      },
-      {
-       "campo": "Sistemas contables",
-       "significado": "Sistemas contables solicitados para la contabilización.",
-       "ejemplo": "código de sistema"
-      },
-      {
-       "campo": "Centro de coste",
-       "significado": "Centro de coste al que se imputa el movimiento.",
-       "ejemplo": "código de centro"
-      },
-      {
-       "campo": "Cuenta contable",
-       "significado": "Cuenta contable usada en el asiento de amortización.",
-       "ejemplo": "código de cuenta"
-      },
-      {
-       "campo": "Cuenta de explotación",
-       "significado": "Cuenta de explotación del elemento.",
-       "ejemplo": "código de cuenta"
-      },
-      {
-       "campo": "Ejercicio contable",
-       "significado": "Ejercicio que debe estar desagrupado en períodos.",
-       "ejemplo": "año contable"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre el proceso de contabilización de amortizaciones y fíjate en los parámetros de período, proyecto y sistemas contables.",
-       "imagen": "icon-activos-008.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "El ejercicio contable debe estar desagrupado en períodos contables."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-2-traspasos-cambios",
-     "titulo": "Traspasos, cambios de amortización y división",
-     "paraQueSirve": "Permite mover elementos entre bienes, cambiar el sistema de amortización de componentes y dividir elementos.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "El traspaso de elementos permite cambiar códigos de bien, cuentas de inmovilizado, proyecto, sección, cuenta de explotación y centro de coste. Genera apuntes contables en la fecha de ejecución.",
-      "El cambio de amortización modifica el sistema de amortización de componentes seleccionadas dentro de los márgenes fiscales. No genera asientos, pero puede cambiar el histórico si la fecha proceso no coincide con la finalización del período.",
-      "La división reparte un elemento en varios, distribuyendo valor de adquisición, amortización acumulada e importes netos proporcionalmente. Requiere serial, tipo de división (por porcentaje o importe), número de divisiones, valor y serie (por defecto «AUTO»).",
-      "Por dentro: tablas cinmtras_pcs, cinmcval_camsisamo, y proceso de división."
-     ],
-     "campos": [
-      {
-       "campo": "Serial",
-       "significado": "Identificador del elemento a dividir.",
-       "ejemplo": "código de elemento"
-      },
-      {
-       "campo": "Tipo de división",
-       "significado": "Por porcentaje o importe.",
-       "ejemplo": "Por porcentaje"
-      },
-      {
-       "campo": "Número de divisiones",
-       "significado": "Cantidad de elementos resultantes.",
-       "ejemplo": "2"
-      },
-      {
-       "campo": "Valor porcentual o absoluto",
-       "significado": "Importe a mover en cada división.",
-       "ejemplo": "10% o 1000 €"
-      },
-      {
-       "campo": "Serie",
-       "significado": "Serie para codificar nuevos elementos; por defecto «AUTO».",
-       "ejemplo": "AUTO"
-      },
-      {
-       "campo": "Importe de adquisición anterior",
-       "significado": "Valor original antes de dividir.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Importe final",
-       "significado": "Valor tras aplicar divisiones.",
-       "ejemplo": "importe"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre el proceso de traspaso de elementos y revisa qué códigos permite cambiar.",
-       "imagen": "icon-activos-009.webp"
-      },
-      {
-       "texto": "En el cambio de amortización, localiza la nota que indica que no genera asientos.",
-       "imagen": "icon-activos-010.webp"
-      },
-      {
-       "texto": "Consulta el formulario de división y comprueba los campos requeridos.",
-       "imagen": "icon-activos-011.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "El cambio de amortización no genera asientos contables."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-2-bajas-ventas",
-     "titulo": "Bajas, ventas y desactivaciones",
-     "paraQueSirve": "Gestiona la salida de activos: baja parcial, total, venta, desactivación temporal y fuera de servicio.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes"
-     ],
-     "explicacion": [
-      "Desde el detalle de componentes, en la parte inferior se muestra el detalle de valores de amortización; ahí puedes realizar baja total, parcial o venta.",
-      "Baja parcial: genera dos apuntes para amortización pendiente, si existe amortización pendiente hasta la fecha, y divide el componente en dos. Baja total: genera dos apuntes de amortización pendiente, si existe amortización pendiente hasta la fecha, y tres apuntes para retroceder valor de adquisición y amortización acumulada. Venta: contabiliza amortización pendiente, si existe amortización pendiente hasta la fecha, la venta en cuenta indicada y la diferencia entre venta y VNC como beneficio o pérdida.",
-      "La desactivación temporal no genera apuntes contables. Fuera de servicio genera un apunte contra Pérdidas procedentes del inmovilizado (671), salvo puestas en funcionamiento, que no generan apuntes.",
-      "Los asientos se generan según las Normas de Registro y Valoración (NRV)."
-     ],
-     "campos": [
-      {
-       "campo": "Baja total",
-       "significado": "Retiro completo del componente.",
-       "ejemplo": "acción"
-      },
-      {
-       "campo": "Baja parcial",
-       "significado": "Retiro de parte del valor del componente.",
-       "ejemplo": "acción"
-      },
-      {
-       "campo": "Venta",
-       "significado": "Enajenación del componente.",
-       "ejemplo": "acción"
-      },
-      {
-       "campo": "Amortización pendiente",
-       "significado": "Amortización aún no contabilizada hasta la fecha.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Valor de inventario",
-       "significado": "Valor registrado del componente.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Valor de baja",
-       "significado": "Importe que se da de baja.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "VNC",
-       "significado": "Valor neto contable (valor de inventario menos amortización acumulada).",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Cuenta contable indicada",
-       "significado": "Cuenta para contabilizar la venta.",
-       "ejemplo": "código de cuenta"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "En el detalle de componentes, localiza la zona inferior para realizar bajas y ventas.",
-       "imagen": "icon-activos-012.webp"
-      },
-      {
-       "texto": "Revisa el resultado de una baja total y los apuntes generados.",
-       "imagen": "icon-activos-013.webp"
-      },
-      {
-       "texto": "Consulta el proceso de venta y su contabilización.",
-       "imagen": "icon-activos-014.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Los asientos de baja y venta se generan según las Normas de Registro y Valoración (NRV)."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-2-informes",
-     "titulo": "Informes de activos",
-     "paraQueSirve": "Ofrece informes de comprobación, amortización, situación y análisis de desviaciones.",
-     "ruta": [
-      "Finanzas",
-      "Activos permanentes",
-      "Amortizaciones"
-     ],
-     "explicacion": [
-      "El sistema proporciona informes estándar de comprobación, amortización, situación, control de integridad y análisis de desviaciones.",
-      "Los informes de comprobación muestran valores de inventario, residual, neto, amortización acumulada y estado, agrupados por bien, elemento, componente o proyecto, y permiten navegar al siguiente estrato.",
-      "Los informes de situación muestran el estado de amortizaciones.",
-      "No se requiere intervención manual: no es posible insertar, modificar o borrar registros."
-     ],
-     "campos": [
-      {
-       "campo": "Valores de inventario",
-       "significado": "Valor registrado del activo.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Residual",
-       "significado": "Valor residual del activo.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Neto",
-       "significado": "Valor neto contable.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Amortización acumulada",
-       "significado": "Suma de amortizaciones registradas.",
-       "ejemplo": "importe"
-      },
-      {
-       "campo": "Estado",
-       "significado": "Situación del activo (activo, amortizado, etc.).",
-       "ejemplo": "estado"
-      },
-      {
-       "campo": "Sistemas contables",
-       "significado": "Sistema contable asociado.",
-       "ejemplo": "código de sistema"
-      },
-      {
-       "campo": "Bien/elemento/componente",
-       "significado": "Estrato sobre el que se agrupa el informe.",
-       "ejemplo": "nivel jerárquico"
-      },
-      {
-       "campo": "Proyecto",
-       "significado": "Proyecto contable asociado.",
-       "ejemplo": "código de proyecto"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre el informe de situación actual y revisa las columnas de valores.",
-       "imagen": "icon-activos-015.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Los informes no permiten insertar, modificar ni borrar registros."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "Además de los que defina el usuario, ¿qué sistemas de amortización admite el campo Sistema de los valores de un elemento?",
-     "opciones": [
-      "L Lineal, D Decreciente y S Sin amortización",
-      "L Lineal y D Decreciente",
-      "Solo L Lineal",
-      "Solo D Decreciente"
-     ],
-     "correcta": 1,
-     "explicacion": "El campo Sistema admite L Lineal y D Decreciente (coeficiente fijo), además de cualquier sistema definido por el usuario."
-    },
-    {
-     "pregunta": "¿Qué acción genera un asiento de signo inverso?",
-     "opciones": [
-      "Traspasar",
-      "Cambiar amortización",
-      "Descontabilizar",
-      "Contabilizar"
-     ],
-     "correcta": 2,
-     "explicacion": "Descontabilizar genera las desamortizaciones correspondientes y un asiento de signo inverso."
-    },
-    {
-     "pregunta": "¿Qué proceso permite cambiar el sistema de amortización de componentes?",
-     "opciones": [
-      "División de elemento",
-      "Baja parcial",
-      "Traspaso de elementos",
-      "Cambio de amortización"
-     ],
-     "correcta": 3,
-     "explicacion": "El proceso de cambio de amortización modifica el criterio de amortización de componentes seleccionadas."
-    },
-    {
-     "pregunta": "¿Qué procesos generan asientos según las Normas de Registro y Valoración?",
-     "opciones": [
-      "Baja parcial, baja total y venta",
-      "Solo baja total",
-      "Solo venta",
-      "Desactivación temporal y fuera de servicio"
-     ],
-     "correcta": 0,
-     "explicacion": "Bajas total, parcial y venta generan asientos contables según NRV."
-    },
-    {
-     "pregunta": "¿Qué proceso no genera apuntes contables?",
-     "opciones": [
-      "Traspaso de elementos",
-      "Desactivación temporal",
-      "Baja total",
-      "Venta"
-     ],
-     "correcta": 1,
-     "explicacion": "La desactivación temporal no genera apuntes contables."
-    }
-   ],
-   "checklist": [
-    "Abre la pantalla de valores por elemento y comprueba que el campo «Sistema» admite los valores L y D.",
-    "Localiza la columna «Amortización inicial» y lee su descripción.",
-    "Abre el proceso de contabilización de amortizaciones y verifica que pide período, proyecto y sistemas contables.",
-    "Abre el proceso de contabilización de amortizaciones y localiza las acciones Contabilizar y Descontabilizar.",
-    "Revisa el proceso de traspaso y anota qué códigos permite cambiar.",
-    "En el cambio de amortización, localiza la nota que indica que no genera asientos.",
-    "Abre el formulario de división y comprueba que pide serial, tipo, número, valor y serie (por defecto «AUTO»).",
-    "En la pantalla de componentes, busca el detalle inferior donde se realizan bajas y ventas.",
-    "Verifica que la baja parcial genera dos apuntes de amortización pendiente.",
-    "Consulta el informe de situación actual y localiza la agrupación por bien, elemento, componente o proyecto."
-   ],
-   "problemas": [
-    {
-     "problema": "El proceso de contabilización no arranca y muestra error sobre períodos.",
-     "solucion": "Verifica que el ejercicio contable del histórico esté desagrupado en períodos contables."
-    },
-    {
-     "problema": "Al intentar cambiar el sistema de amortización, el sistema no permite porcentajes fuera de rango.",
-     "solucion": "Ajusta los valores dentro de los márgenes mínimo y máximo de la tabla fiscal."
-    },
-    {
-     "problema": "Tras una división, no aparecen los nuevos elementos.",
-     "solucion": "Comprueba los campos requeridos: serial, tipo de división, número, valor y serie (por defecto «AUTO»)."
-    },
-    {
-     "problema": "Quieres dar de baja un componente temporalmente sin contabilizar.",
-     "solucion": "Usa la desactivación temporal; no genera apuntes contables."
-    }
-   ]
-  },
-  {
-   "id": "icon-activos-v-1",
-   "numero": 3,
-   "titulo": "Revisar la pestaña Contabilización de una tipología de albarán",
-   "objetivo": "Localizarás la pestaña Contabilización de una tipología de albarán, distinguirás sus tipos de asiento y comprobarás que el indicador «Generar inmovilizado» está en «No generar».",
-   "concepto": "La pestaña «Contabilización» de una tipología decide la huella contable de los documentos que usan esa tipología. En los albaranes de compra ahí se revisan los asientos de suministros, los asientos propios del albarán, los asientos no facturados y la provisión de servicios, junto con los datos contables.\n\nEl indicador «Generar inmovilizado» es distinto de los tipos de asiento: no describe un apunte contable, sino que conecta la tipología con las fichas de activos permanentes de Finanzas. En una tipología de albarán este indicador suele aparecer en «No generar».\n\nAl recorrer la pestaña entiendes qué hay configurado y por qué un albarán puede contabilizar sin crear fichas de inmovilizado.",
-   "duracionMin": 10,
-   "secciones": [
-    {
-     "id": "icon-activos-v-1-contabilizacion",
-     "titulo": "Abrir la pestaña Contabilización",
-     "paraQueSirve": "Da acceso a la configuración contable de la tipología, distinta de los datos logísticos del documento.",
-     "ruta": [
-      "Compras",
-      "Maestros",
-      "Documentos",
-      "Albaranes"
-     ],
-     "explicacion": [
-      "Desde Maestros de compras abres una tipología de albarán y localizas la pestaña «Contabilización».",
-      "La pestaña agrupa los tipos de asiento que puede generar el albarán y los datos contables que los acompañan."
-     ],
-     "campos": [
-      {
-       "campo": "Tipología de albarán",
-       "significado": "Configuración maestra que da comportamiento a los albaranes de compra.",
-       "ejemplo": "Albarán de compra estándar"
-      },
-      {
-       "campo": "Pestaña Contabilización",
-       "significado": "Pestaña de la tipología donde se define su huella contable.",
-       "ejemplo": "Se abre desde la ficha de la tipología"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Entra en Compras › Maestros › Documentos › Albaranes."
-      },
-      {
-       "texto": "Abre una tipología de albarán de la lista."
-      },
-      {
-       "texto": "Localiza la pestaña «Contabilización» y ábrela.",
-       "detalle": "No la confundas con las pestañas de líneas o de datos generales.",
-       "imagen": "v-asientos-001.jpg"
-      },
-      {
-       "texto": "Observa los bloques de asientos y de datos contables.",
-       "imagen": "v-asientos-001.jpg"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La configuración contable de una tipología se revisa antes de poner documentos reales. Cada documento que use la tipología hereda lo que aquí se defina."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-1-asientos-contables",
-     "titulo": "Tipos de asiento del albarán",
-     "paraQueSirve": "Diferenciar el asiento de suministros, el de albaranes, los no facturados y la provisión, para saber qué huella generará el documento.",
-     "ruta": null,
-     "explicacion": [
-      "El bloque de asientos fija qué asiento contable se utiliza en cada operación del albarán.",
-      "Los avisos de no facturados y provisiones permiten reconocer contablemente operaciones que todavía no se han facturado o que necesitan una provisión de gasto."
-     ],
-     "campos": [
-      {
-       "campo": "Asiento suministros",
-       "significado": "Asiento contable asociado a la operación de suministro o recepción.",
-       "ejemplo": "Asiento de suministros"
-      },
-      {
-       "campo": "Asiento albaranes",
-       "significado": "Asiento contable propio del albarán.",
-       "ejemplo": "Asiento de albaranes"
-      },
-      {
-       "campo": "Asientos no facturados",
-       "significado": "Asiento para reconocer operaciones no facturadas.",
-       "ejemplo": "Asiento de albaranes no facturados"
-      },
-      {
-       "campo": "Asiento provisiones",
-       "significado": "Asiento para dotar la provisión de servicios o de gastos pendientes.",
-       "ejemplo": "Asiento de provisiones"
-      },
-      {
-       "campo": "Provisión",
-       "significado": "Marca que activa la generación del asiento de provisión.",
-       "ejemplo": "Activada o desactivada"
-      },
-      {
-       "campo": "Datos contables",
-       "significado": "Bloque con los datos contables que heredan los asientos generados desde la tipología.",
-       "ejemplo": "Cuadro de datos contables del albarán"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Revisa el campo «Asiento suministros» y el campo «Asiento albaranes».",
-       "imagen": "v-asientos-001.jpg"
-      },
-      {
-       "texto": "Localiza «Asientos no facturados» y lee su descripción."
-      },
-      {
-       "texto": "Comprueba si la marca «Provisión» está activada."
-      },
-      {
-       "texto": "Fíjate en el bloque de datos contables que acompaña a los asientos."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Si buscas el asiento de la factura dentro de la tipología de albarán, no lo encontrarás: cada tipología define su propia huella contable y la factura tiene la suya."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Revisa la pestaña Contabilización de la tipología de albarán para albaranes y no facturados, y deja la revisión de la factura para su tipología específica."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-1-indicador-inmovilizado",
-     "titulo": "Indicador Generar inmovilizado",
-     "paraQueSirve": "Conecta la tipología con los activos permanentes de Finanzas. En un albarán, lo normal es que esté en «No generar».",
-     "ruta": null,
-     "explicacion": [
-      "El indicador «Generar inmovilizado» no es un tipo de asiento: sirve para crear fichas auxiliares de activo cuando se cumplen los requisitos.",
-      "En la tipología de albarán revisada en esta práctica el valor es «No generar», así que el albarán puede contabilizar sin crear componentes ni elementos."
-     ],
-     "campos": [
-      {
-       "campo": "Generar inmovilizado",
-       "significado": "Indicador que decide si el documento crea ficha de activo y en qué momento.",
-       "ejemplo": "No generar"
-      },
-      {
-       "campo": "No generar",
-       "significado": "Valor del indicador que no crea fichas de inmovilizado.",
-       "ejemplo": "Configuración de esta tipología de albarán"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Dentro de la pestaña «Contabilización», localiza «Generar inmovilizado».",
-       "imagen": "v-asientos-001.jpg",
-       "hotspot": {
-        "x": 40,
-        "y": 35,
-        "w": 14,
-        "h": 5,
-        "etiqueta": "Generar inmovilizado"
-       }
-      },
-      {
-       "texto": "Comprueba el valor mostrado.",
-       "detalle": "Debe verse «No generar».",
-       "imagen": "v-asientos-001.jpg"
-      },
-      {
-       "texto": "Anota que, con ese valor, el albarán no crea fichas de activo."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Que esté en «No generar» no es un error del albarán: es la configuración esperada cuando la creación de inmovilizado se gestiona en la factura."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Dónde se define la huella contable de una tipología de albarán?",
-     "opciones": [
-      "En la pestaña Líneas del albarán",
-      "En la pestaña Contabilización de la tipología",
-      "En la ficha del proveedor",
-      "En el diario contable"
-     ],
-     "correcta": 1,
-     "explicacion": "La pestaña Contabilización de la tipología agrupa los tipos de asiento y los datos contables."
-    },
-    {
-     "pregunta": "¿Qué hace el indicador «Generar inmovilizado»?",
-     "opciones": [
-      "Define el asiento de suministros",
-      "Crea automáticamente una factura",
-      "Conecta la tipología con los activos permanentes de Finanzas",
-      "Anula la provisión de servicios"
-     ],
-     "correcta": 2,
-     "explicacion": "El indicador controla la creación de fichas de activo en Finanzas."
-    },
-    {
-     "pregunta": "En una tipología de albarán sin activación de inmovilizado, ¿qué valor aparece?",
-     "opciones": [
-      "En validación",
-      "En contabilización",
-      "No generar",
-      "Genera siempre"
-     ],
-     "correcta": 2,
-     "explicacion": "El valor «No generar» indica que no se crean fichas de inmovilizado desde esa tipología."
-    },
-    {
-     "pregunta": "¿Qué tipo de asiento se revisa para operaciones no facturadas?",
-     "opciones": [
-      "Asiento de suministros",
-      "Asiento de provisiones",
-      "Asiento de albaranes",
-      "Asientos no facturados"
-     ],
-     "correcta": 3,
-     "explicacion": "Los asientos no facturados reconocen contablemente operaciones pendientes de factura."
-    },
-    {
-     "pregunta": "Si una tipología no tiene ningún tipo de asiento configurado, ¿qué ocurre al contabilizar?",
-     "opciones": [
-      "No deja contabilizar",
-      "La tipología no aporta su asiento automático desde esa configuración",
-      "Crea una ficha de activo",
-      "Siempre genera un asiento de gasto"
-     ],
-     "correcta": 1,
-     "explicacion": "La tipología es la que define qué asiento debe generarse; sin configuración no aporta su huella contable automática."
-    }
-   ],
-   "checklist": [
-    "Abres Compras › Maestros › Documentos › Albaranes.",
-    "Abres una tipología de albarán.",
-    "Localizas y abres la pestaña «Contabilización».",
-    "Identificas «Asiento suministros» y «Asiento albaranes».",
-    "Identificas «Asientos no facturados» y «Asiento provisiones».",
-    "Compruebas la marca «Provisión».",
-    "Compruebas que «Generar inmovilizado» está en «No generar»."
-   ],
-   "problemas": [
-    {
-     "problema": "No encuentras dónde se configuran los tipos de asiento del albarán.",
-     "solucion": "Entra en la tipología de albarán y abre la pestaña «Contabilización»; no se configura desde las líneas del documento."
-    },
-    {
-     "problema": "Crees que la tipología de albarán debería generar una ficha de activo y no lo hace.",
-     "solucion": "Revisa el indicador «Generar inmovilizado». En esta tipología está en «No generar», por lo que solo contabiliza sin crear ficha de inmovilizado."
-    }
-   ]
-  },
-  {
-   "id": "icon-activos-v-2",
-   "numero": 4,
-   "titulo": "Configurar la generación de inmovilizado en una factura",
-   "objetivo": "Abrirás la tipología de factura de activos, revisarás su pestaña Contabilización y entenderás las opciones «No generar», «En validación» y «En contabilización».",
-   "concepto": "La tipología de factura es otro maestro de compras en el que se define la huella contable. En la tipología destinada a facturas de activos, el indicador «Generar inmovilizado» decide si la factura crea fichas de activo y en qué momento del circuito lo hace.\n\nLas opciones del indicador son tres: no generar, generar al validar o generar al contabilizar. La elección ordena cuándo aparecen las fichas de Finanzas respecto al estado del documento: provisional, validado o contabilizado.\n\nEn esta práctica localizas el indicador y revisas una tipología configurada para generar inmovilizado al contabilizar.",
-   "duracionMin": 10,
-   "secciones": [
-    {
-     "id": "icon-activos-v-2-tipologia-factura",
-     "titulo": "Abrir la tipología de factura de activos",
-     "paraQueSirve": "Permite localizar la configuración contable de la factura, separada de la configuración del albarán.",
-     "ruta": [
-      "Compras",
-      "Maestros",
-      "Documentos",
-      "Tipos de facturas"
-     ],
-     "explicacion": [
-      "La tipología de factura se encuentra en el maestro de tipos de facturas de compras.",
-      "En el ejemplo se usa la tipología FACT «Factura activos fijos», que es la que concentra la generación de inmovilizado."
-     ],
-     "campos": [
-      {
-       "campo": "Tipo de factura",
-       "significado": "Código de la tipología de factura.",
-       "ejemplo": "FACT"
-      },
-      {
-       "campo": "Descripción",
-       "significado": "Nombre visible de la tipología.",
-       "ejemplo": "Factura activos fijos"
-      },
-      {
-       "campo": "Pestaña Contabilización",
-       "significado": "Pestaña de la tipología donde se revisa la huella contable.",
-       "ejemplo": "Contabilización de FACT"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Entra en Compras › Maestros › Documentos › Tipos de facturas."
-      },
-      {
-       "texto": "Abre la tipología FACT «Factura activos fijos»."
-      },
-      {
-       "texto": "Accede a la pestaña «Contabilización».",
-       "imagen": "v-asientos-002.jpg"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "No uses la tipología de albarán para revisar la creación de inmovilizado de una factura; cada documento tiene su propio maestro y su propia pestaña de contabilización."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-2-opciones-indicador",
-     "titulo": "Opciones del indicador Generar inmovilizado",
-     "paraQueSirve": "Elegir cuándo la factura crea las fichas de activo: al validar o al contabilizar.",
-     "ruta": null,
-     "explicacion": [
-      "El indicador «Generar inmovilizado» conecta la factura con Finanzas.",
-      "Puede tener tres valores: «No generar», «En validación» o «En contabilización».",
-      "En la tipología FACT del ejemplo está configurado para generar inmovilizado al contabilizar."
-     ],
-     "campos": [
-      {
-       "campo": "Generar inmovilizado",
-       "significado": "Indicador que controla si se crean fichas de activo y en qué momento.",
-       "ejemplo": "En contabilización"
-      },
-      {
-       "campo": "No generar",
-       "significado": "No crea ninguna ficha de inmovilizado.",
-       "ejemplo": "Facturas sin activo"
-      },
-      {
-       "campo": "En validación",
-       "significado": "Genera la ficha cuando la factura se valida.",
-       "ejemplo": "Validación de la factura"
-      },
-      {
-       "campo": "En contabilización",
-       "significado": "Genera la ficha cuando la factura se contabiliza.",
-       "ejemplo": "Configuración de FACT"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Localiza el campo «Generar inmovilizado» dentro de la pestaña Contabilización.",
-       "imagen": "v-asientos-002.jpg",
-       "hotspot": {
-        "x": 30,
-        "y": 34,
-        "w": 24,
-        "h": 5,
-        "etiqueta": "Generación inmovilizado"
-       }
-      },
-      {
-       "texto": "Despliega las opciones y observa «No generar», «En validación» y «En contabilización».",
-       "imagen": "v-asientos-002.jpg"
-      },
-      {
-       "texto": "Comprueba que la tipología FACT está en «En contabilización»."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Si dejas el indicador en «No generar», la factura contabiliza normalmente pero no crea componentes ni elementos."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Activa el indicador y elige «En validación» o «En contabilización» según cuándo quieras generar la ficha."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-2-circuito-estados",
-     "titulo": "Circuito provisional, validada y contabilizada",
-     "paraQueSirve": "Relaciona las opciones del indicador con los estados del documento para saber cuándo se activa la generación de inmovilizado.",
-     "ruta": null,
-     "explicacion": [
-      "El circuito normal de una factura es: nace provisional, se valida y después se contabiliza.",
-      "Si el indicador está en «En validación», la ficha se crea al validar. Si está en «En contabilización», se crea al contabilizar.",
-      "Esto permite decidir si el activo aparece antes o después del apunte contable definitivo."
-     ],
-     "campos": [
-      {
-       "campo": "Provisional",
-       "significado": "Estado inicial del documento, todavía modificable.",
-       "ejemplo": "Factura recién creada"
-      },
-      {
-       "campo": "Validada",
-       "significado": "Estado en el que el documento ya está revisado y listo para contabilizar.",
-       "ejemplo": "Factura validada"
-      },
-      {
-       "campo": "Contabilizada",
-       "significado": "Estado final del circuito contable.",
-       "ejemplo": "Factura contabilizada"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Fíjate en el orden del circuito: provisional → validada → contabilizada.",
-       "imagen": "v-asientos-004.jpg"
-      },
-      {
-       "texto": "Relaciona «En validación» con el momento en que la factura se valida."
-      },
-      {
-       "texto": "Relaciona «En contabilización» con el momento en que la factura se contabiliza."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Con la opción «En contabilización», la factura validada todavía no crea fichas: hay que contabilizarla para que aparezcan."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Cuáles son las opciones del indicador «Generar inmovilizado»?",
-     "opciones": [
-      "No generar, En validación o En contabilización",
-      "Solo Sí o No",
-      "Provisional o definitivo",
-      "Contabilizado o anulado"
-     ],
-     "correcta": 0,
-     "explicacion": "El indicador permite no generar o generar en validación o en contabilización."
-    },
-    {
-     "pregunta": "Si el indicador está en «En contabilización», ¿cuándo se crea la ficha?",
-     "opciones": [
-      "Al validar",
-      "Al contabilizar",
-      "Al crear",
-      "Al imprimir"
-     ],
-     "correcta": 1,
-     "explicacion": "La opción «En contabilización» crea la ficha al contabilizar la factura."
-    },
-    {
-     "pregunta": "¿Qué estado se alcanza justo después de validar?",
-     "opciones": [
-      "Contabilizado",
-      "Provisional",
-      "Validado",
-      "Anulado"
-     ],
-     "correcta": 2,
-     "explicacion": "El documento pasa de provisional a validado y después puede contabilizarse."
-    },
-    {
-     "pregunta": "Si eliges «En validación», la ficha de activo se crea...",
-     "opciones": [
-      "Después de contabilizar",
-      "Al validar",
-      "Al enviar al proveedor",
-      "Al cerrar el ejercicio"
-     ],
-     "correcta": 1,
-     "explicacion": "La opción «En validación» adelanta la creación al momento de validar."
-    },
-    {
-     "pregunta": "El circuito normal provisional → validada → contabilizada permite...",
-     "opciones": [
-      "Saltarse la validación",
-      "Revisar la validación antes de contabilizar",
-      "Evitar el asiento",
-      "Contabilizar siempre dos veces"
-     ],
-     "correcta": 1,
-     "explicacion": "El circuito separa la revisión, la validación y el contabilizado."
-    }
-   ],
-   "checklist": [
-    "Abres Compras › Maestros › Documentos › Tipos de facturas.",
-    "Abres la tipología FACT «Factura activos fijos».",
-    "Entras en la pestaña «Contabilización».",
-    "Localizas el indicador «Generar inmovilizado».",
-    "Compruebas las opciones No generar, En validación y En contabilización.",
-    "Verificas que FACT está en «En contabilización».",
-    "Relacionas cada opción con su estado del circuito."
-   ],
-   "problemas": [
-    {
-     "problema": "La factura contabiliza pero no crea ninguna ficha de activo.",
-     "solucion": "Revisa la tipología de factura: si el indicador «Generar inmovilizado» está en «No generar», actívalo y elige «En validación» o «En contabilización»."
-    },
-    {
-     "problema": "No sabes si la ficha se creará al validar o al contabilizar.",
-     "solucion": "Mira el valor del indicador en la tipología. En el ejemplo FACT está en «En contabilización», por lo que la ficha aparecerá al contabilizar."
-    }
-   ]
-  },
-  {
-   "id": "icon-activos-v-3",
-   "numero": 5,
-   "titulo": "Contabilizar una factura de activos y ver sus componentes",
-   "objetivo": "Recorrerás el circuito documental de una factura de activos, la contabilizarás y comprobarás que se habilita la pestaña Componentes.",
-   "concepto": "La factura de activos no nace aislada. En el Docflow se ve el circuito completo: solicitud, pedido, albarán y factura. Cada documento mantiene su trazabilidad, de modo que al abrir la factura puedes recorrer los pasos anteriores.\n\nCuando la factura está validada, ya puede contabilizarse. Al pulsar «Contabilizar», la factura pasa al estado «EN CONTABILIDAD» y, si la tipología está configurada con «Generar inmovilizado», se habilita la pestaña «Componentes».\n\nLa pestaña Componentes redirige al módulo de activos permanentes y muestra la ficha generada automáticamente.",
-   "duracionMin": 12,
-   "secciones": [
-    {
-     "id": "icon-activos-v-3-circuito-docflow",
-     "titulo": "Circuito documental de la factura de activos",
-     "paraQueSirve": "Ver la trazabilidad desde la solicitud hasta la factura antes de contabilizar.",
-     "ruta": null,
-     "explicacion": [
-      "El circuito documental enlaza los distintos documentos de compras.",
-      "En el ejemplo se observa solicitud, pedido, albarán y factura, con sus tipos documentales."
-     ],
-     "campos": [
-      {
-       "campo": "Solicitud",
-       "significado": "Origen de la petición de compra.",
-       "ejemplo": "SFOR"
-      },
-      {
-       "campo": "Pedido",
-       "significado": "Documento de pedido derivado de la solicitud.",
-       "ejemplo": "PACT/PSER"
-      },
-      {
-       "campo": "Albarán",
-       "significado": "Documento de recepción de los bienes.",
-       "ejemplo": "AACT"
-      },
-      {
-       "campo": "Factura",
-       "significado": "Documento final de facturación del circuito.",
-       "ejemplo": "FACT"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la factura de activos del circuito."
-      },
-      {
-       "texto": "Localiza el Docflow o bloque de trazabilidad documental.",
-       "imagen": "v-asientos-003.jpg"
-      },
-      {
-       "texto": "Revisa el orden: solicitud → pedido → albarán → factura."
-      },
-      {
-       "texto": "Confirma que la factura corresponde a la tipología FACT."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "El circuito ayuda a entender que la factura viene precedida por un pedido y un albarán, pero la generación de inmovilizado se evalúa al validar o contabilizar la factura."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-3-validar-contabilizar",
-     "titulo": "Validar y contabilizar la factura",
-     "paraQueSirve": "Ejecutar el contabilizado de una factura validada y comprobar el cambio de estado.",
-     "ruta": null,
-     "explicacion": [
-      "La factura de activos del ejemplo ya está validada, por lo que puede contabilizarse.",
-      "Al pulsar «Contabilizar», el documento queda en estado «EN CONTABILIDAD»."
-     ],
-     "campos": [
-      {
-       "campo": "Estado",
-       "significado": "Situación actual del documento.",
-       "ejemplo": "Validada previamente"
-      },
-      {
-       "campo": "Botón Contabilizar",
-       "significado": "Acción que ejecuta el contabilizado.",
-       "ejemplo": "Contabilizar"
-      },
-      {
-       "campo": "EN CONTABILIDAD",
-       "significado": "Estado que indica que el documento ya se ha contabilizado.",
-       "ejemplo": "Estado tras contabilizar"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Verifica que la factura está validada.",
-       "imagen": "v-asientos-004.jpg"
-      },
-      {
-       "texto": "Pulsa el botón «Contabilizar».",
-       "imagen": "v-asientos-004.jpg",
-       "hotspot": {
-        "x": 29,
-        "y": 96.5,
-        "w": 4,
-        "h": 3,
-        "etiqueta": "Contabilizar"
-       }
-      },
-      {
-       "texto": "Comprueba que el estado pasa a «EN CONTABILIDAD».",
-       "imagen": "v-asientos-005.jpg",
-       "hotspot": {
-        "x": 17.6,
-        "y": 36,
-        "w": 80,
-        "h": 3.4,
-        "etiqueta": "EN CONTABILIDAD"
-       }
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Si la factura no está validada no llega al punto de contabilizar."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Revisa la validación previa de la factura y vuelve a pulsar «Contabilizar»."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-3-pestana-componentes",
-     "titulo": "Pestaña Componentes habilitada",
-     "paraQueSirve": "Comprobar que la contabilización creó la relación con los activos permanentes.",
-     "ruta": null,
-     "explicacion": [
-      "Después de contabilizar, la pestaña «Componentes» queda habilitada.",
-      "Desde ahí el sistema redirige a Activos permanentes y muestra el componente generado."
-     ],
-     "campos": [
-      {
-       "campo": "Componentes",
-       "significado": "Pestaña de la factura que enlaza con la ficha de activo generada.",
-       "ejemplo": "Habilitada tras contabilizar"
-      },
-      {
-       "campo": "Componente generado",
-       "significado": "Ficha de activo creada automáticamente.",
-       "ejemplo": "Componente visible desde Activos permanentes"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Después de contabilizar, abre la pestaña «Componentes».",
-       "imagen": "v-asientos-005.jpg",
-       "hotspot": {
-        "x": 45.6,
-        "y": 14,
-        "w": 5,
-        "h": 2.4,
-        "etiqueta": "Componentes"
-       }
-      },
-      {
-       "texto": "Observa que el sistema redirige al módulo de activos permanentes."
-      },
-      {
-       "texto": "Comprueba que se ha creado la ficha del componente.",
-       "imagen": "v-asientos-006.jpg"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Antes de contabilizar, la pestaña «Componentes» no está habilitada. Su aparición confirma que la integración con Finanzas se ha ejecutado."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Qué tipo de documento inicia el circuito documental de la factura de activos?",
-     "opciones": [
-      "Pedido",
-      "Albarán",
-      "Factura",
-      "Solicitud (SFOR)"
-     ],
-     "correcta": 3,
-     "explicacion": "El circuito comienza con la solicitud y continúa con pedido, albarán y factura."
-    },
-    {
-     "pregunta": "¿Qué estado tiene la factura antes de pulsar «Contabilizar» en el ejemplo?",
-     "opciones": [
-      "En contabilidad",
-      "Validada",
-      "Provisional",
-      "Anulada"
-     ],
-     "correcta": 1,
-     "explicacion": "La factura está validada y preparada para contabilizar."
-    },
-    {
-     "pregunta": "Después de contabilizar, ¿qué estado indica el documento?",
-     "opciones": [
-      "PROVISIONAL",
-      "EN CONTABILIDAD",
-      "CERRADO",
-      "PAGADO"
-     ],
-     "correcta": 1,
-     "explicacion": "El estado «EN CONTABILIDAD» aparece tras ejecutar el contabilizado."
-    },
-    {
-     "pregunta": "¿Qué pestaña se habilita al contabilizar?",
-     "opciones": [
-      "Líneas",
-      "Cobros",
-      "Componentes",
-      "Movimientos"
-     ],
-     "correcta": 2,
-     "explicacion": "La pestaña «Componentes» se habilita cuando la integración con activos permanentes se ejecuta."
-    },
-    {
-     "pregunta": "La pestaña Componentes redirige a...",
-     "opciones": [
-      "El maestro de proveedores",
-      "Activos permanentes de Finanzas",
-      "El listado de pedidos",
-      "El diario contable"
-     ],
-     "correcta": 1,
-     "explicacion": "La pestaña lleva a la ficha de activo generada en Activos permanentes."
-    }
-   ],
-   "checklist": [
-    "Abres una factura de activos del circuito.",
-    "Compruebas el orden solicitud → pedido → albarán → factura.",
-    "Verificas que la factura está validada.",
-    "Pulsas «Contabilizar».",
-    "Confirmas que el estado es «EN CONTABILIDAD».",
-    "Abres la pestaña «Componentes».",
-    "Compruebas que se ha creado la ficha del componente."
-   ],
-   "problemas": [
-    {
-     "problema": "La pestaña «Componentes» no aparece después de validar.",
-     "solucion": "Es normal si la tipología está en «En contabilización». Contabiliza la factura y la pestaña se habilitará."
-    },
-    {
-     "problema": "No puedes contabilizar la factura.",
-     "solucion": "Revisa que la factura esté validada. La validación es previa al contabilizado."
-    }
-   ]
-  },
-  {
-   "id": "icon-activos-v-4",
-   "numero": 6,
-   "titulo": "Parametrizar la familia de un artículo para inmovilizado",
-   "objetivo": "Abrirás un artículo de ejemplo, localizarás en su familia el apartado «Parámetros de inmovilizado» y comprobarás que el código de bien y la serie son obligatorios.",
-   "concepto": "No basta con que la tipología de factura tenga activado «Generar inmovilizado». El artículo que se factura también tiene que estar preparado, porque la ficha de activo se crea a partir de la familia del artículo.\n\nEn el maestro de familias, dentro del apartado «Parámetros de inmovilizado», se configuran el código de bien y la serie. Esos dos datos son obligatorios para que la factura pueda crear la ficha de activo.\n\nSi la familia no tiene esa parametrización completa, la factura contabiliza pero no se crea ninguna ficha de Finanzas.",
-   "duracionMin": 10,
-   "secciones": [
-    {
-     "id": "icon-activos-v-4-abrir-articulo-familia",
-     "titulo": "Abrir el artículo y su familia",
-     "paraQueSirve": "Localizar el artículo de la factura y llegar a la familia que define sus parámetros de inmovilizado.",
-     "ruta": null,
-     "explicacion": [
-      "Se parte del artículo utilizado en la factura de activos.",
-      "Desde el artículo se abre la familia para revisar su configuración."
-     ],
-     "campos": [
-      {
-       "campo": "Artículo",
-       "significado": "Producto o bien que se está facturando.",
-       "ejemplo": "Ascensor"
-      },
-      {
-       "campo": "Familia",
-       "significado": "Agrupación maestra del artículo que hereda los parámetros generales.",
-       "ejemplo": "Familia del ascensor"
-      },
-      {
-       "campo": "Parámetros de inmovilizado",
-       "significado": "Apartado de la familia que guarda la configuración de Finanzas.",
-       "ejemplo": "Ubicado en la ficha de la familia"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre el artículo utilizado en la factura de activos.",
-       "imagen": "v-asientos-007.jpg"
-      },
-      {
-       "texto": "Localiza el artículo de ejemplo.",
-       "detalle": "En esta práctica es un ascensor."
-      },
-      {
-       "texto": "Abre la familia del artículo."
-      },
-      {
-       "texto": "Localiza el apartado «Parámetros de inmovilizado».",
-       "imagen": "v-asientos-008.jpg",
-       "hotspot": {
-        "x": 33,
-        "y": 45.5,
-        "w": 25,
-        "h": 13,
-        "etiqueta": "Parámetros inmovilizado"
-       }
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La familia concentra la configuración. Si varias referencias comparten familia, heredan los mismos parámetros de inmovilizado."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-4-codigo-bien-serie",
-     "titulo": "Código de bien y serie obligatorios",
-     "paraQueSirve": "Identificar los dos campos mínimos que permiten crear la ficha de activo.",
-     "ruta": null,
-     "explicacion": [
-      "Dentro de «Parámetros de inmovilizado» se revisan el código de bien y la serie.",
-      "Son obligatorios: si uno de los dos falta, la factura contabiliza pero no se crea la ficha."
-     ],
-     "campos": [
-      {
-       "campo": "Código de bien",
-       "significado": "Bien al que debe asociarse la ficha de activo.",
-       "ejemplo": "Bien de ascensores"
-      },
-      {
-       "campo": "Serie",
-       "significado": "Serie que se asigna dentro del bien.",
-       "ejemplo": "Serie de activo configurada"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Dentro de «Parámetros de inmovilizado», localiza «Código de bien».",
-       "imagen": "v-asientos-008.jpg",
-       "hotspot": {
-        "x": 33,
-        "y": 45.5,
-        "w": 25,
-        "h": 13,
-        "etiqueta": "Parámetros inmovilizado"
-       }
-      },
-      {
-       "texto": "Localiza el campo «Serie».",
-       "imagen": "v-asientos-009.jpg"
-      },
-      {
-       "texto": "Comprueba que ambos están informados."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "problema",
-       "texto": "Si falta el código de bien o la serie, no se crea la ficha de activo."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Completa los dos datos en la familia del artículo antes de contabilizar la factura."
-      }
-     ]
-    },
-    {
-     "id": "icon-activos-v-4-requisito-creacion",
-     "titulo": "Requisito conjunto para crear ficha",
-     "paraQueSirve": "Relacionar la parametrización de la familia con la activación de la tipología.",
-     "ruta": null,
-     "explicacion": [
-      "Para crear una ficha de activo se necesitan dos configuraciones: tipología con «Generar inmovilizado» y familia del artículo con código de bien y serie.",
-      "Si falla cualquiera de las dos, la contabilización no genera componentes ni elementos."
-     ],
-     "campos": [
-      {
-       "campo": "Tipología con Generar inmovilizado",
-       "significado": "Primera condición que activa la integración.",
-       "ejemplo": "FACT en «En contabilización»"
-      },
-      {
-       "campo": "Familia parametrizada",
-       "significado": "Segunda condición que aporta bien y serie.",
-       "ejemplo": "Familia del ascensor con bien y serie"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Confirma que la tipología de factura está activada para generar inmovilizado.",
-       "imagen": "v-asientos-008.jpg"
-      },
-      {
-       "texto": "Confirma que la familia del artículo tiene código de bien y serie."
-      },
-      {
-       "texto": "Con las dos condiciones juntas, contabiliza la factura de prueba."
-      },
-      {
-       "texto": "Comprueba que ahora sí se genera la ficha de activo."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Las dos condiciones se revisan en sitios distintos: la tipología en Compras y la familia en el maestro de artículos."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Dónde se configuran los parámetros de inmovilizado del artículo?",
-     "opciones": [
-      "En la factura",
-      "En la familia del artículo",
-      "En la tipología de albarán",
-      "En el grupo contable"
-     ],
-     "correcta": 1,
-     "explicacion": "La familia del artículo guarda el apartado «Parámetros de inmovilizado»."
-    },
-    {
-     "pregunta": "¿Cuáles son los dos datos obligatorios para crear ficha?",
-     "opciones": [
-      "Precio y proveedor",
-      "Cuenta contable y grupo fiscal",
-      "Código de bien y serie",
-      "Depreciación y moneda"
-     ],
-     "correcta": 2,
-     "explicacion": "El código de bien y la serie son los campos obligatorios de la familia."
-    },
-    {
-     "pregunta": "Si la familia no tiene el apartado «Parámetros de inmovilizado» completo, ¿qué ocurre al contabilizar?",
-     "opciones": [
-      "Da error de cuentas",
-      "Contabiliza y no crea ficha de activo",
-      "Crea un bien sin componente",
-      "Asigna una serie por defecto"
-     ],
-     "correcta": 1,
-     "explicacion": "Sin bien o serie no se crea la ficha de activo; la factura contabiliza con normalidad."
-    },
-    {
-     "pregunta": "El artículo de ejemplo es...",
-     "opciones": [
-      "Una impresora",
-      "Un vehículo",
-      "Un ascensor",
-      "Un ordenador"
-     ],
-     "correcta": 3,
-     "explicacion": "El análisis usa un ascensor como artículo de ejemplo."
-    },
-    {
-     "pregunta": "Para que la ficha se cree hacen falta...",
-     "opciones": [
-      "Solo la tipología",
-      "Solo la familia",
-      "La tipología y la familia parametrizadas",
-      "El grupo contable y la moneda"
-     ],
-     "correcta": 2,
-     "explicacion": "Se necesitan la tipología con «Generar inmovilizado» y la familia con código de bien y serie."
-    }
-   ],
-   "checklist": [
-    "Abres el artículo utilizado en la factura de activos.",
-    "Compruebas que el artículo de ejemplo es un ascensor.",
-    "Abres la familia del artículo.",
-    "Localizas el apartado «Parámetros de inmovilizado».",
-    "Compruebas que el código de bien está informado.",
-    "Compruebas que la serie está informada.",
-    "Verificas que también está activa la tipología con «Generar inmovilizado»."
-   ],
-   "problemas": [
-    {
-     "problema": "La factura contabiliza pero no crea ninguna ficha de activo.",
-     "solucion": "Revisa la familia del artículo y completa «Código de bien» y «Serie» en «Parámetros de inmovilizado»."
-    },
-    {
-     "problema": "No sabes si el fallo está en la tipología o en la familia.",
-     "solucion": "Revisa las dos condiciones: tipología con «Generar inmovilizado» activo y familia con código de bien y serie."
-    }
-   ]
-  }
- ]
+  ]
 }

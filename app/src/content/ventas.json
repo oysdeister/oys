@@ -20,7 +20,7 @@
       "explicacion": [
         "Una venta pasa por varios documentos encadenados: la oferta (lo que proponemos al cliente), el pedido (lo que el cliente nos compra), el albarán (la mercancía que sale del almacén) y la factura (lo que le cobramos). Cada documento nace del anterior copiando sus líneas, y así el ERP sabe en todo momento qué falta por servir y qué falta por facturar. Al contabilizar la factura se genera el asiento (cliente, IVA y ventas) y el vencimiento que entra en la cartera de cobros.",
         "El comportamiento de cada documento lo decide su tipología (el «tipo de documento»): de qué documento viene, si copia las líneas, qué serie lo numera, si mueve stock y con qué plantilla se contabiliza. Por eso cada ejercicio empieza creando las tipologías y después los documentos.",
-        "Ejercicio GV 1: Albarán > Factura, contabilizando los dos. Ejercicio GV 2: Oferta > Pedido > Albarán > Factura, contabilizando solo la factura."
+        "Ejercicio 1: Albarán > Factura, contabilizando los dos. Ejercicio 2: Oferta > Pedido > Albarán > Factura, contabilizando solo la factura."
       ],
       "campos": [],
       "pasos": [],
@@ -36,7 +36,8 @@
         "Las tipologías se abren en modo ficha con el primer registro (o en modo lista, según la pantalla). Para crear una: botón rojo «Nuevo» arriba a la derecha > «Nuevo» (formulario en blanco) o «Nuevo como» (copia del registro que se está viendo).",
         "En las listas de documentos, «Nuevo» abre el formulario en una ventana que se guarda con «Guardar» abajo a la derecha. Los cambios en una ficha se guardan con el icono del disquete de la barra superior.",
         "Los botones de acción (Validar, Contabilizar, Anular…) están en la barra superior de la ficha, y las pestañas del registro (Líneas, Vencimientos…) arriba, en horizontal.",
-        "Los campos con lista (cliente, artículo, plantilla…) son de autocompletar: se escribe el código y se elige la fila. Si después no aparece la descripción debajo del campo, se sale del campo con Tab."
+        "Los campos con lista (cliente, artículo, plantilla…) son de autocompletar: se escribe el código y se elige la fila. Si después no aparece la descripción debajo del campo, se sale del campo con Tab.",
+        "Los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos."
       ],
       "campos": [],
       "pasos": [],
@@ -58,7 +59,7 @@
       "numero": 1,
       "titulo": "Circuito de ventas Albarán-Factura",
       "objetivo": "Tendrás un albarán de ventas y su factura creados, contabilizados y con su vencimiento en cartera.",
-      "concepto": "Un circuito de ventas simple tiene dos documentos: el albarán, que registra la mercancía que sale del almacén, y la factura, que recoge ese albarán y es el documento fiscal con el que se cobra. Cada uno se comporta según su tipología, que dice de dónde viene, qué serie usa y con qué plantilla se contabiliza.\n\nEn este ejercicio se contabilizan los dos documentos: el albarán reconoce la venta como pendiente de facturar (cuenta 43090) y la factura genera el asiento definitivo con cliente, IVA y ventas y crea el vencimiento de cobro. Entender qué plantilla contable corresponde a cada documento evita los errores más habituales.",
+      "concepto": "Un circuito de ventas simple tiene dos documentos: el albarán, que registra la mercancía que sale del almacén, y la factura, que recoge ese albarán y es el documento fiscal con el que se cobra. Cada uno se comporta según su tipología, que dice de dónde viene, qué serie usa y con qué plantilla se contabiliza.\n\nEn este ejercicio se contabilizan los dos documentos: el albarán reconoce la venta como pendiente de facturar (cuenta 43090) y la factura genera el asiento definitivo con cliente, IVA y ventas y crea el vencimiento de cobro. Entender qué plantilla contable corresponde a cada documento evita los errores más habituales.\n\nLos números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
       "duracionMin": 60,
       "secciones": [
         {
@@ -124,7 +125,7 @@
             },
             {
               "campo": "Tipo factura",
-              "significado": "Tipología de factura que se propone al generar la factura desde el albarán.",
+              "significado": "Tipología de factura que se propone al generar la factura desde el albarán. En este ejercicio no influye, porque la factura la creas tú con F{INI}.",
               "ejemplo": "FV Factura de Ventas"
             },
             {
@@ -211,7 +212,7 @@
               }
             },
             {
-              "texto": "En la pestaña Valoración elige Normal, Tarifa, CLI y Precio.",
+              "texto": "En la pestaña Valoración elige Normal, Tarifa, CLI y Precio, y deja Evolución riesgo con el valor propuesto (Evolución).",
               "detalle": "Son los cinco campos obligatorios de la pestaña (asterisco rojo).",
               "imagen": "ventas-d-150.webp",
               "hotspot": {
@@ -244,7 +245,7 @@
               "imagen": "ventas-d-152.webp"
             },
             {
-              "texto": "Fíjate en el error que sale si se crea con «Nuevo como» sobre AV y se vacía la Tabla origen.",
+              "texto": "Si la creaste con «Nuevo como» sobre AV y vaciaste la Tabla origen, al guardar verás este error.",
               "detalle": "Al guardar aparece «El indicativo de actualización de tabla origen sólo puede informarse cuando la tabla origen está informada…». Con la Tabla origen vacía, Copiar líneas y Actualizar origen deben quedar sin valor.",
               "imagen": "ventas-d-153.webp"
             }
@@ -252,7 +253,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "No hay que crear una serie de justificantes nueva (la pantalla cserjush no existe en la base TUTORIAL). Se reutiliza el numerador existente AV."
+              "texto": "No hay que crear una serie nueva: se reutiliza el numerador existente AV."
             },
             {
               "tipo": "problema",
@@ -279,7 +280,7 @@
         {
           "id": "ventas-1-tipologia-factura",
           "titulo": "Tipología de factura F{INI}",
-          "paraQueSirve": "La tipología de factura dice de qué documentos se alimenta la factura (aquí, de albaranes), qué albaranes puede recoger y con qué plantilla se contabiliza. Al contabilizar, la plantilla genera el asiento (43000.00000 Clientes (euros), 47000.00000 IVA y 70000.00000 Ventas mercancías; en la demo el IVA repercutido va a la 47000.00000, que en pantalla se llama «Hacienda Pública, deudora por IVA») y la factura crea los vencimientos que pasan a la cartera de cobros.",
+          "paraQueSirve": "La tipología de factura dice de qué documentos se alimenta la factura (aquí, de albaranes), qué albaranes puede recoger y con qué plantilla se contabiliza. Al contabilizar, la plantilla genera el asiento (43000.00000 Clientes (euros), 47000.00000 IVA y 70000.00000 Ventas mercancías; el IVA repercutido es el que cobras al cliente y debes ingresar a Hacienda; en la demo va a la 47000.00000, que en pantalla se llama «Hacienda Pública, deudora por IVA») y la factura crea los vencimientos que pasan a la cartera de cobros.",
           "ruta": [
             "Gestión",
             "Ventas",
@@ -368,7 +369,7 @@
             },
             {
               "texto": "Escribe en Condición selección: tipdoc IN ('A{INI}','A{INI}2').",
-              "detalle": "Esta condición hace que, al conformar, solo salgan tus albaranes A{INI} (este ejercicio) y A{INI}2 (GV 2), y no los de otros compañeros que trabajan en la misma base.",
+              "detalle": "Esta condición hace que, al conformar, solo salgan tus albaranes A{INI} (este ejercicio) y A{INI}2 (ejercicio 2), y no los de otros compañeros que trabajan en la misma base.",
               "imagen": "ventas-d-154.webp",
               "hotspot": {
                 "x": 48.5,
@@ -390,7 +391,7 @@
         {
           "id": "ventas-1-cliente",
           "titulo": "El tercero como cliente",
-          "paraQueSirve": "Para vender a un tercero, este tiene que estar dado de alta como cliente. La ficha de cliente guarda las condiciones comerciales: tipo de cliente, comercial, divisa, cómo se agrupan los albaranes al facturar y la tarifa de precios. Los documentos de venta copian estos datos al elegir el cliente.",
+          "paraQueSirve": "Para vender a un tercero, este tiene que estar dado de alta como cliente. Ya lo hiciste en Maestros con {INI}1; ahora das de alta como cliente al tercero T{INI} que creaste en Compras como proveedor: un mismo tercero puede ser cliente y proveedor a la vez. La ficha de cliente guarda las condiciones comerciales (tipo de cliente, comercial, divisa, cómo se agrupan los albaranes al facturar y la tarifa) y los documentos de venta las copian al elegir el cliente.",
           "ruta": [
             "Gestión",
             "Maestros",
@@ -710,12 +711,12 @@
               "texto": "Si sale un error, resuélvelo como se indica en los avisos y vuelve a pulsar «Contabilizar > Aceptar»."
             },
             {
-              "texto": "Fíjate en el error 1: CUENTA DEL TERCERO [T{INI}] NO INFORMADA.",
+              "texto": "Si sale el error 1, «CUENTA DEL TERCERO [T{INI}] NO INFORMADA», el tercero no tiene relación contable de cliente.",
               "detalle": "El tercero no tiene relación contable de cliente, así que el ERP no sabe a qué cuenta 43000.00000 cargar.",
               "imagen": "ventas-d-160.webp"
             },
             {
-              "texto": "Resuélvelo en Terceros (ctercero) > T{INI} > pestaña Relaciones > «Añadir relación»: Tipo tercero Cliente, Tipo relación CLI Clientes, Plan contable PGE 2008 y Cuenta 43000.00000.",
+              "texto": "En ese caso, ve a Terceros (ctercero) > T{INI} > pestaña Relaciones > «Añadir relación»: Tipo tercero Cliente, Tipo relación CLI Clientes, Plan contable PGE 2008 y Cuenta 43000.00000.",
               "detalle": "Elige la cuenta del desplegable y guarda.",
               "imagen": "ventas-d-161.webp",
               "hotspot": {
@@ -727,12 +728,12 @@
               }
             },
             {
-              "texto": "Fíjate en el error 2: EXPRESIÓN:[cabecera.impant] NO CONTEMPLADA PARA EVALUAR IMPORTE.",
+              "texto": "Si sale el error 2, «EXPRESIÓN:[cabecera.impant] NO CONTEMPLADA PARA EVALUAR IMPORTE», la tipología tiene la plantilla FV en lugar de AV.",
               "detalle": "La plantilla FV es de facturas: usa el importe de anticipos de la cabecera de la factura, que un albarán no tiene.",
               "imagen": "ventas-d-162.webp"
             },
             {
-              "texto": "Resuélvelo en la tipología A{INI}, pestaña Contabilización: pon AV en «Asiento expediciones» y «Asiento albaranes» y guarda con el disquete.",
+              "texto": "En ese caso, en la tipología A{INI}, pestaña Contabilización, pon AV en «Asiento expediciones» y «Asiento albaranes» y guarda con el disquete.",
               "detalle": "La plantilla AV «ALBARAN DE VENTA» existe en Contabilidad > Asientos programables (gconasih). Fíjate en sus líneas: 43090 «Ventas pendiente de factura» por el total contra ventas según los datos contables del artículo.",
               "imagen": "ventas-d-151.webp"
             },
@@ -765,7 +766,7 @@
             },
             {
               "tipo": "nota",
-              "texto": "Qué has conseguido: tipología de albarán A{INI} (sin origen, salida de almacén, asiento AV) y tipología de factura F{INI} (origen albaranes, asiento FV); cliente T{INI} en el Maestro de clientes y relación contable CLI 43000.00000 en el tercero; albarán 0AV000001: 10 × 20,00 = 200,00, validado y contabilizado. Comprobación: en Gestión > Ventas > Albaranes el 0AV000001 sale con Situación Pendiente (de facturar) y fecha de contabilización."
+              "texto": "Qué has conseguido: tipología de albarán A{INI} (sin origen, salida de almacén, asiento AV) y tipología de factura F{INI} (origen albaranes, asiento FV); cliente T{INI} en el Maestro de clientes y relación contable CLI 43000.00000 en el tercero; tu albarán (en el ejemplo, 0AV000001): 10 × 20,00 = 200,00, validado y contabilizado. Comprobación: en Gestión > Ventas > Albaranes tu albarán sale con Situación Pendiente (de facturar) y fecha de contabilización."
             }
           ]
         },
@@ -781,7 +782,7 @@
           ],
           "explicacion": [
             "La opción de conformar albaranes no es un botón ni una pestaña: está en el desplegable junto al título de la factura, junto con «Desconformar Albaranes de ventas».",
-            "El albarán ya se contabilizó (ventas contra 43090) y la factura usa FV (ventas contra 43000.00000), así que la venta queda registrada dos veces. En un circuito real con albarán contabilizado, la factura debería usar una plantilla que salde la 43090 (en Asientos programables existe FVOA «Factura venta origen albarán cont. total»). Aquí se mantiene FV para seguir el ejercicio original."
+            "El albarán ya se contabilizó (ventas contra 43090) y la factura usa FV (ventas contra 43000.00000), así que la venta queda registrada dos veces. En un circuito real con albarán contabilizado, la factura debería usar una plantilla que salde la 43090 (en Asientos programables existe FVOA «Factura venta origen albarán cont. total»). Aquí se mantiene FV para que veas completo el asiento de una factura de venta."
           ],
           "campos": [
             {
@@ -858,8 +859,8 @@
               }
             },
             {
-              "texto": "Marca el albarán 0AV000001 (abajo se ven sus líneas), pulsa «Conformar» y «Aceptar».",
-              "detalle": "Solo sale el albarán A{INI} 0AV000001 gracias a la condición de selección de F{INI}.",
+              "texto": "Marca tu albarán (abajo se ven sus líneas), pulsa «Conformar» y «Aceptar».",
+              "detalle": "Solo salen tus albaranes A{INI} gracias a la condición de selección de F{INI}.",
               "imagen": "ventas-d-167.webp",
               "hotspot": {
                 "x": 83.3,
@@ -990,14 +991,14 @@
         "En la pestaña Contabilización de A{INI} están AV en los dos asientos y «Datos contables» activado.",
         "La tipología F{INI} tiene Tabla origen Expediciones, Copiar líneas «Sí», Actualización «Sumando» y la condición tipdoc IN ('A{INI}','A{INI}2').",
         "El cliente T{INI} aparece en el Maestro de clientes con Tipo cliente 0 GENERAL y Divisa EUR.",
-        "El albarán 0AV000001 tiene una línea del artículo 13500620 con 10 × 20,00 = 200,00 de importe neto.",
-        "El albarán 0AV000001 está Validado y, tras contabilizar, muestra la Fecha contabilización y el botón «Descontabilizar».",
+        "Tu albarán tiene una línea del artículo 13500620 con 10 × 20,00 = 200,00 de importe neto.",
+        "El albarán está Validado y, tras contabilizar, muestra la Fecha contabilización y el botón «Descontabilizar».",
         "El tercero T{INI} tiene la relación CLI con la cuenta 43000.00000 en el plan PGE 2008.",
-        "La factura 0FV000001 (F{INI}) tiene la línea conformada del albarán 0AV000001.",
+        "La factura F{INI} tiene la línea conformada de tu albarán.",
         "La prevista de asiento muestra 43000.00000 Debe 242,00, 47000.00000 Haber 42,00 y 70000.00000 Haber 200,00.",
-        "La factura 0FV000001 aparece con Situación Contabilizada.",
+        "La factura aparece con Situación Contabilizada.",
         "La pestaña Vencimientos de la factura muestra un efecto EF de 242,00.",
-        "En la lista de albaranes el 0AV000001 pasa a Situación Facturado."
+        "En la lista de albaranes, tu albarán pasa a Situación Facturado."
       ],
       "problemas": [
         {
@@ -1027,7 +1028,7 @@
       "numero": 2,
       "titulo": "Circuito de ventas Oferta-Pedido-Albarán-Factura",
       "objetivo": "Tendrás la cadena completa oferta, pedido, albarán y factura, enlazada y con solo la factura contabilizada.",
-      "concepto": "El circuito completo de venta empieza con la oferta, que es la propuesta de precio al cliente. Si la acepta, se convierte en pedido; el almacén sirve el pedido con un albarán y, por último, el albarán se factura. Cada documento nace del anterior copiando sus líneas, y por eso cada tipología tiene como origen la anterior.\n\nEn este circuito no se contabilizan ni la oferta, ni el pedido, ni el albarán: la venta se registra en contabilidad solo al contabilizar la factura, que genera el asiento con cliente, IVA y ventas y el vencimiento de cobro. Seguir la cadena de orígenes permite saber en cada momento qué falta por servir y por facturar.",
+      "concepto": "El circuito completo de venta empieza con la oferta, que es la propuesta de precio al cliente. Si la acepta, se convierte en pedido; el almacén sirve el pedido con un albarán y, por último, el albarán se factura. Cada documento nace del anterior copiando sus líneas, y por eso cada tipología tiene como origen la anterior.\n\nEn este circuito no se contabilizan ni la oferta, ni el pedido, ni el albarán: la venta se registra en contabilidad solo al contabilizar la factura, que genera el asiento con cliente, IVA y ventas y el vencimiento de cobro. Seguir la cadena de orígenes permite saber en cada momento qué falta por servir y por facturar.\n\nLos números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
       "duracionMin": 75,
       "secciones": [
         {
@@ -1042,7 +1043,7 @@
             "Ofertas (objeto gvenofed)"
           ],
           "explicacion": [
-            "En este circuito NO se contabilizan los albaranes, SÍ las facturas. Cada paso tiene su tipología, distinta de las del GV 1 (salvo la factura, que se reutiliza), y cada tipología tiene como origen la anterior para que la cadena quede unida.",
+            "En este circuito NO se contabilizan los albaranes, SÍ las facturas. Cada paso tiene su tipología, distinta de las del ejercicio 1 (salvo la factura, que se reutiliza), y cada tipología tiene como origen la anterior para que la cadena quede unida.",
             "No hay que crear una serie de justificantes para ofertas: se usa el numerador OV. La vigencia no se define en la serie, sino en cada oferta (Inicio vigencia y Fin vigencia)."
           ],
           "campos": [
@@ -1162,7 +1163,7 @@
             },
             {
               "campo": "Albarán ventas (Destinos)",
-              "significado": "Tipología de albarán que se propone al servir el pedido.",
+              "significado": "Tipología de albarán que se propone al servir el pedido. Se deja la AV heredada de POF: el albarán lo crearás tú eligiendo A{INI}2.",
               "ejemplo": "AV"
             },
             {
@@ -1233,7 +1234,7 @@
             "Albaranes (objeto gvenmovd)"
           ],
           "explicacion": [
-            "Como este albarán sí tiene origen, aquí «Nuevo como» sobre AV funciona sin el error que aparece en el GV 1."
+            "Como este albarán sí tiene origen, aquí «Nuevo como» sobre AV funciona sin el error que aparece en el ejercicio 1."
           ],
           "campos": [
             {
@@ -1313,12 +1314,25 @@
           "id": "ventas-2-tipologia-factura",
           "titulo": "Tipología de factura",
           "paraQueSirve": "En este circuito no se crea una tipología de factura nueva: se reutiliza la del ejercicio anterior, porque tiene el mismo origen y la misma plantilla contable.",
-          "ruta": null,
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Maestros",
+            "Documentos",
+            "Facturas (objeto gvenfacd)"
+          ],
           "explicacion": [
-            "Se reutiliza la tipología F{INI} del GV 1: tiene el mismo origen (albaranes), contabiliza con FV y su condición de selección tipdoc IN ('A{INI}','A{INI}2') ya admite el albarán A{INI}2."
+            "Se reutiliza la tipología F{INI} del ejercicio 1: tiene el mismo origen (albaranes), contabiliza con FV y su condición de selección tipdoc IN ('A{INI}','A{INI}2') ya admite el albarán A{INI}2."
           ],
           "campos": [],
-          "pasos": [],
+          "pasos": [
+            {
+              "texto": "Abre la tipología F{INI} y comprueba que la Condición selección incluye tu albarán del ejercicio 2: tipdoc IN ('A{INI}','A{INI}2')."
+            },
+            {
+              "texto": "No cambies nada más: F{INI} ya tiene Tabla origen Expediciones, Copiar líneas «Sí», Sumando y Tipo asiento FV."
+            }
+          ],
           "avisos": []
         },
         {
@@ -1511,7 +1525,7 @@
             {
               "campo": "Origen",
               "significado": "Oferta de la que viene. Solo se ofrecen ofertas validadas y vigentes del cliente.",
-              "ejemplo": "0OV000001"
+              "ejemplo": "Tu oferta (en el ejemplo, 0OV000001)"
             },
             {
               "campo": "Cliente / Dirección *",
@@ -1552,7 +1566,7 @@
               "texto": "Elige Tipo documento P{INI} y comprueba el Almacén CENTRAL."
             },
             {
-              "texto": "Elige primero el Origen 0OV000001 y después el Cliente T{INI} con dirección 0.",
+              "texto": "Elige primero el Origen (tu oferta validada) y después el Cliente T{INI} con dirección 0.",
               "detalle": "El Agente A01 se trae de la oferta. Al elegir el Origen se vacía el Cliente: por eso se pone después.",
               "imagen": "ventas-d-181.webp",
               "hotspot": {
@@ -1564,7 +1578,7 @@
               }
             },
             {
-              "texto": "Pulsa «Guardar»: pedido 0PV000002. La pestaña Líneas ya trae la línea de la oferta.",
+              "texto": "Pulsa «Guardar» (en el ejemplo, pedido 0PV000002). La pestaña Líneas ya trae la línea de la oferta.",
               "detalle": "La línea se copia sola (5 × 22,00 = 110,00) porque P{INI} tiene Copiar línea origen «Sí».",
               "imagen": "ventas-d-182.webp"
             },
@@ -1615,7 +1629,7 @@
             {
               "campo": "Origen",
               "significado": "Pedido que se sirve.",
-              "ejemplo": "0PV000002"
+              "ejemplo": "Tu pedido (en el ejemplo, 0PV000002)"
             },
             {
               "campo": "Cliente / Dirección *",
@@ -1633,7 +1647,7 @@
               "texto": "Abre la ruta Gestión > Ventas > Albaranes > Registro y pulsa «Nuevo»."
             },
             {
-              "texto": "Elige Tipo documento A{INI}2, el Origen 0PV000002 y después el Cliente T{INI} con dirección 0.",
+              "texto": "Elige Tipo documento A{INI}2, el Origen (tu pedido) y después el Cliente T{INI} con dirección 0.",
               "imagen": "ventas-d-183.webp",
               "hotspot": {
                 "x": 60.6,
@@ -1644,7 +1658,7 @@
               }
             },
             {
-              "texto": "Pulsa «Guardar»: albarán 0AV000002. La pestaña Líneas trae la línea del pedido."
+              "texto": "Pulsa «Guardar» (en el ejemplo, albarán 0AV000002). La pestaña Líneas trae la línea del pedido."
             },
             {
               "texto": "Revisa el importe neto de la línea.",
@@ -1683,7 +1697,7 @@
         {
           "id": "ventas-2-factura",
           "titulo": "Factura: conformar y contabilizar",
-          "paraQueSirve": "Igual que en el GV 1: la factura recoge el albarán pendiente y, al contabilizarla, registra la venta y el IVA y crea el vencimiento. Es el único asiento del circuito, porque ni la oferta, ni el pedido, ni este albarán contabilizan.",
+          "paraQueSirve": "Igual que en el ejercicio 1: la factura recoge el albarán pendiente y, al contabilizarla, registra la venta y el IVA y crea el vencimiento. Es el único asiento del circuito, porque ni la oferta, ni el pedido, ni este albarán contabilizan.",
           "ruta": [
             "Gestión",
             "Ventas",
@@ -1691,13 +1705,13 @@
             "Registro (objeto gvenfach)"
           ],
           "explicacion": [
-            "Los campos son los mismos que en el GV 1 (Factura de ventas: conformar y contabilizar): Tipo documento F{INI}, Cliente T{INI}, dirección 0 (si no se rellena sola, sal del campo Cliente con Tab).",
+            "Los campos son los mismos que en el ejercicio 1 (Factura de ventas: conformar y contabilizar): Tipo documento F{INI}, Cliente T{INI}, dirección 0 (si no se rellena sola, sal del campo Cliente con Tab).",
             "Lo habitual es que la tipología de factura solo muestre albaranes validados y pendientes de facturar: los albaranes ya facturados no vuelven a salir en la ventana de conformar."
           ],
           "campos": [
             {
               "campo": "Tipo documento *",
-              "significado": "Tipología de la factura (la misma F{INI} del GV 1).",
+              "significado": "Tipología de la factura (la misma F{INI} del ejercicio 1).",
               "ejemplo": "F{INI}"
             },
             {
@@ -1714,8 +1728,8 @@
               "texto": "Abre el desplegable (⌄) junto al título > «Albaranes de ventas a conformar»."
             },
             {
-              "texto": "Marca el albarán 0AV000002, pulsa «Conformar» y «Aceptar».",
-              "detalle": "Sale el A{INI}2 0AV000002 y ya no el 0AV000001, que está facturado.",
+              "texto": "Marca tu albarán A{INI}2, pulsa «Conformar» y «Aceptar».",
+              "detalle": "Sale el albarán del ejercicio 2 y ya no el del ejercicio 1, que está facturado.",
               "imagen": "ventas-d-187.webp",
               "hotspot": {
                 "x": 83.3,
@@ -1736,7 +1750,7 @@
               "imagen": "ventas-d-189.webp"
             },
             {
-              "texto": "Abre la lista de pedidos y comprueba la situación del 0PV000002.",
+              "texto": "Abre la lista de pedidos y comprueba la situación de tu pedido.",
               "detalle": "Queda en situación «Servido o Facturado».",
               "imagen": "ventas-d-190.webp"
             }
@@ -1744,7 +1758,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "La relación de cliente 43000.00000 ya se añadió en el GV 1, la empresa 0 y el ejercicio 2026 ya existen en TUTORIAL, y el asiento cuadra porque la cuenta del tercero es la 43000.00000."
+              "texto": "La relación de cliente 43000.00000 ya se añadió en el ejercicio 1, la empresa 0 y el ejercicio 2026 ya existen en TUTORIAL, y el asiento cuadra porque la cuenta del tercero es la 43000.00000."
             },
             {
               "tipo": "solucion",
@@ -1818,15 +1832,16 @@
         "La tipología O{INI} está guardada con serie OV, Tabla origen vacía y Copiar línea origen sin marcar.",
         "La tipología P{INI} tiene Tabla origen Oferta, Copiar línea origen «Sí», Actualización «Sumando», destino Albarán AV y Relación cliente CLI.",
         "La tipología A{INI}2 tiene Tabla origen «Pedidos de venta», Copiar líneas «Sí», Actualizar origen «Sumando» y los dos asientos vacíos.",
-        "La oferta 0OV000001 tiene vigencia del 12-11-2026 al 31-12-2026 y el Agente A01.",
+        "La tipología F{INI} incluye A{INI}2 en su Condición selección.",
+        "Tu oferta tiene vigencia hasta el 31-12-2026 y el Agente A01.",
         "La línea de la oferta es 13500620, cantidad 5, precio 22,00 e importe neto 110,00, y la oferta está validada.",
-        "El pedido 0PV000002 tiene como Origen la oferta 0OV000001 y el Agente A01.",
+        "Tu pedido tiene como Origen tu oferta y el Agente A01.",
         "El pedido trae la línea de la oferta copiada (5 × 22,00 = 110,00) y está validado.",
-        "El albarán 0AV000002 tiene como Origen el pedido 0PV000002 y su línea muestra importe neto 110,00 (no 2,50).",
-        "El albarán 0AV000002 está validado y no muestra el botón Contabilizar.",
-        "En la ventana de conformar sale el 0AV000002 y ya no el 0AV000001.",
-        "El asiento de la factura 0FV000002 tiene 43000.00000 Debe 133,10, 47000.00000 IVA 23,10 y 70000.00000 Ventas 110,00, con cuadre 0,00.",
-        "En la lista de pedidos, el 0PV000002 está en situación «Servido o Facturado»."
+        "Tu albarán A{INI}2 tiene como Origen tu pedido y su línea muestra importe neto 110,00 (no 2,50).",
+        "El albarán A{INI}2 está validado y no muestra el botón Contabilizar.",
+        "En la ventana de conformar sale tu albarán A{INI}2 y ya no el del ejercicio 1.",
+        "El asiento de la factura tiene 43000.00000 Debe 133,10, 47000.00000 IVA 23,10 y 70000.00000 Ventas 110,00, con cuadre 0,00.",
+        "En la lista de pedidos, tu pedido está en situación «Servido o Facturado»."
       ],
       "problemas": [
         {

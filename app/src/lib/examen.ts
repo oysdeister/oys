@@ -12,7 +12,7 @@
 */
 import { useSyncExternalStore } from 'react';
 import { avisarCambio } from './sync';
-import { MODULOS, ORDEN, esFinanzas } from '../content';
+import { META, MODULOS, ORDEN, esFinanzas } from '../content';
 import type { Pregunta } from '../types';
 import { conIni, num2, redondea } from './texto';
 
@@ -897,7 +897,7 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   });
 }
 
-const META_CORTO: Record<string, string> = { maestros: 'Maestros', parametrizacion: 'Parametrización', compras: 'Compras', ventas: 'Ventas', asientos: 'Asientos', carteras: 'Carteras', tesoreria: 'Tesorería', 'icon-contabilidad': 'Contabilidad general', 'icon-cartera': 'Cobros y pagos', 'icon-impuestos': 'Impuestos', 'icon-activos': 'Activos fijos' };
+const META_CORTO: Record<string, string> = Object.fromEntries(Object.entries(META).map(([k, v]) => [k, v.corto]));
 
 /** ¿Ha contestado del todo? (las de ordenar y relacionar pueden quedarse a medias) */
 export function respondida(q: PreguntaExamen, r: RespuestaTeoria | undefined): boolean {
