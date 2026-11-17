@@ -6,6 +6,27 @@ import { Icon } from '../Icon';
 
 export const URL_DEMO = 'https://nextdemo.geasa.eu';
 
+/** El ERP no deja meterse en un iframe (X-Frame-Options sameorigin). En su lugar abre una ventana
+    que ocupa los dos tercios derechos de la pantalla y deja la plataforma visible en el tercio izquierdo. */
+export function abrirErpDividido() {
+  const s = window.screen as Screen & { availLeft?: number; availTop?: number };
+  const izq = s.availLeft ?? 0;
+  const arriba = s.availTop ?? 0;
+  const ancho = s.availWidth;
+  const alto = s.availHeight;
+  const tercio = Math.round(ancho / 3);
+  const w = window.open(URL_DEMO, 'axional-erp', `popup=yes,left=${izq + tercio},top=${arriba},width=${ancho - tercio},height=${alto}`);
+  try {
+    // Si la ventana ya existía, la recoloca
+    w?.moveTo(izq + tercio, arriba);
+    w?.resizeTo(ancho - tercio, alto);
+    w?.focus();
+  } catch {
+    /* otro origen: el navegador puede no dejar moverla */
+  }
+  return !!w;
+}
+
 export function DemoReal({ ej, ini }: { ej: Ejercicio; ini: string }) {
   const reducir = useReducedMotion();
   const p = useProgreso();
@@ -23,10 +44,17 @@ export function DemoReal({ ej, ini }: { ej: Ejercicio; ini: string }) {
           <h2>Ahora en el ERP de verdad</h2>
           <ol className="demo-ol">
             <li>
-              Abre la demo en otra pestaña:{' '}
-              <a className="demo-link" href={URL_DEMO} target="_blank" rel="noopener noreferrer">
-                nextdemo.geasa.eu
-              </a>
+              Abre la demo en pantalla dividida: el ERP ocupa los dos tercios de la derecha y esta página queda a la izquierda con la lista.{' '}
+              <button type="button" className="btn demo-dividir" onClick={() => abrirErpDividido()}>
+                Abrir el ERP al lado
+              </button>{' '}
+              <span className="small muted">
+                (o en otra pestaña:{' '}
+                <a className="demo-link" href={URL_DEMO} target="_blank" rel="noopener noreferrer">
+                  nextdemo.geasa.eu
+                </a>
+                ). Pon esta ventana en la mitad izquierda de la pantalla para verlas a la vez.
+              </span>
             </li>
             <li>
               Entra en la base <b>TUTORIAL</b> con el usuario que te haya dado tu formador.
