@@ -20,11 +20,16 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
   - Por eso se compacta: los pasos y la checklist se guardan como máscaras de bits y se quitan los textos. Así ocupa unos 3 KB con todo completado.
   - Del examen solo se guarda el último aprobado, sin las preguntas, que se regeneran a partir del código.
   - Si alguna vez el progreso pasa de 7 KB, se descartan primero las insignias vistas y luego las respuestas de teoría.
-- **Qué se sincroniza:** pasos, guiado, test y checklist de cada ejercicio, simuladores superados, rondas del Taller, notas de las prácticas del ERP, examen aprobado (con su validación) e insignias vistas.
-- **Qué no se sincroniza:**
-  - Los datos del ERP de práctica (`oys-erp-sim-v1`): son la base de datos de juguete, no progreso.
-  - Un examen a medias: si se cambia de dispositivo a mitad, se empieza otro.
-  - El tema claro u oscuro y la barra lateral plegada.
+- **Qué se sincroniza:**
+  - pasos, guiado, test y checklist de cada ejercicio;
+  - simuladores superados y rondas del Taller;
+  - notas de las prácticas del ERP;
+  - examen aprobado (con su validación) y **examen a medias** (fase, respuestas de teoría y de práctica; las preguntas se regeneran desde el código);
+  - insignias vistas;
+  - preferencias: tema claro u oscuro y barra lateral plegada (se aplican en un navegador nuevo; si el navegador ya tiene las suyas, mandan las suyas).
+- **Qué no se sincroniza:** los datos que el alumno crea en el ERP de práctica (`oys-erp-sim-v1`). Solo los datos de partida ya ocupan varios KB y crecen con cada documento, así que no caben en los 8 KB de Clerk; harían falta un almacén aparte (por ejemplo, Supabase). La nota de cada práctica sí se guarda.
+- **Examen a medias:** si se termina o se descarta en un dispositivo, los demás ya no lo recuperan. Las respuestas se guardan como lista para que no se mezclen con las de un examen anterior.
+- **Carga:** la app no se pinta hasta fusionar el progreso de la cuenta (se ve «Cargando tu progreso…» un momento).
 - **Fusión:** al entrar, se junta el progreso local con el de la cuenta y siempre gana el mayor avance:
   - pasos y checklist: se suman los de los dos lados;
   - tests y notas: la mejor nota;

@@ -73,7 +73,7 @@ function datosDeCuenta(user: Usuario) {
 /** Progreso guardado en la cuenta (o null si no hay o no es válido). */
 function remotoDe(user: Usuario): ProgresoC | null {
   const v = user.unsafeMetadata?.oys;
-  return esProgresoC(v) ? { ...v, x: v.x ?? null } : null;
+  return esProgresoC(v) ? { ...v, x: v.x ?? null, xa: v.xa ?? null, xf: v.xf ?? null, pf: v.pf ?? {} } : null;
 }
 
 async function subir(user: Usuario, pc: ProgresoC) {

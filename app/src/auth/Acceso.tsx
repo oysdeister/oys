@@ -82,6 +82,17 @@ function SoloOys({ children }: { children: ReactNode }) {
 
 function Sincronizado({ children }: { children: ReactNode }) {
   const estado = useSincronizarProgreso();
+  // Hasta fusionar el progreso de la cuenta no se pinta la app (evita ver un momento datos o preferencias de otro navegador).
+  if (estado === 'cargando')
+    return (
+      <div className="acc">
+        <div className="acc-in acc-solo">
+          <div className="acc-cargando" role="status">
+            <span className="acc-spinner" aria-hidden="true" /> Cargando tu progreso…
+          </div>
+        </div>
+      </div>
+    );
   return <EstadoCtx.Provider value={estado}>{children}</EstadoCtx.Provider>;
 }
 

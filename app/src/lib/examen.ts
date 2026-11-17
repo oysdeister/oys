@@ -1200,6 +1200,8 @@ export function recargarExamen() {
 }
 
 export const CLAVE_EXAMEN = CLAVE;
+/** Último examen a medias descartado: [código, inicio] */
+export const CLAVE_DESCARTE = 'oys-examen-descartado';
 
 export function useExamen(): Almacen {
   return useSyncExternalStore(
@@ -1261,6 +1263,12 @@ export const examen = {
     guardar({ actual: act, aprobado: apr });
   },
   descartar() {
+    // Marca el descartado para que la copia de la cuenta no lo vuelva a traer
+    try {
+      if (almacen.actual) localStorage.setItem(CLAVE_DESCARTE, JSON.stringify([almacen.actual.codigo, almacen.actual.inicio]));
+    } catch {
+      /* sin almacenamiento */
+    }
     guardar({ ...almacen, actual: null });
   },
 };
