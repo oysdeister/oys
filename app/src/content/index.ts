@@ -3,8 +3,15 @@ import type { Ejercicio, Modulo } from '../types';
 // Cada manual convertido vive en src/content/<slug>.json (mismo esquema, ver types.ts)
 const ficheros = import.meta.glob<{ default: Modulo }>('./*.json', { eager: true });
 
-/** Orden pedagógico: maestros → parametrización → compras → ventas → asientos → carteras */
-export const ORDEN = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'carteras'] as const;
+/**
+ * Orden pedagógico: maestros → parametrización → compras → ventas → asientos → carteras,
+ * y después los módulos de finanzas sacados de la documentación oficial (ids icon-*).
+ * icon-tesoreria.json existe pero va FUERA de ORDEN: sus ejercicios se fusionarán en tesoreria.json.
+ */
+export const ORDEN = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'carteras', 'icon-contabilidad', 'icon-cartera', 'icon-impuestos', 'icon-activos'] as const;
+
+/** Módulos de finanzas (documentación oficial de Finanzas) */
+export const esFinanzas = (id: string) => id.startsWith('icon-');
 
 export const MODULOS: Modulo[] = ORDEN.map((id) => ficheros[`./${id}.json`]?.default).filter(Boolean) as Modulo[];
 
@@ -37,4 +44,8 @@ export const META: Record<string, { color: string; icono: string; corto: string 
   ventas: { color: '#e0708a', icono: 'ventas', corto: 'Ventas' },
   asientos: { color: '#8a7be0', icono: 'asiento', corto: 'Asientos' },
   carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Carteras' },
+  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad general' },
+  'icon-cartera': { color: '#2fae8f', icono: 'cobros', corto: 'Cobros y pagos' },
+  'icon-impuestos': { color: '#d9824b', icono: 'impuestos', corto: 'Impuestos' },
+  'icon-activos': { color: '#b06fc4', icono: 'activos', corto: 'Activos fijos' },
 };

@@ -280,7 +280,7 @@ export function CertificadoSVG({ nombre, codigo, fecha, nota, estado, validacion
           Practicante certificado en Deister Axional
         </text>
         <text x={CX} y={510} textAnchor="middle" fontSize="16" fill={GRIS}>
-          compras, ventas, maestros, asientos, parametrización contable y carteras
+          compras, ventas, maestros, asientos, parametrización, carteras y finanzas
         </text>
       </motion.g>
 

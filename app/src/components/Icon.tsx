@@ -26,6 +26,10 @@ const P: Record<string, string> = {
   desplegar: 'M13 17l5-5-5-5M6 17l5-5-5-5',
   cerrar: 'M6 6l12 12M18 6 6 18',
   chevron: 'M9 6l6 6-6 6',
+  libro: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 21V5M8 7h7M8 11h7',
+  cobros: 'M7 7h11l-3-3M17 17H6l3 3M12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z',
+  impuestos: 'M19 5 5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm9 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+  activos: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6M9 10h.01M15 10h.01',
 };
 
 export function Icon({ name, size = 22, stroke = 2 }: { name: string; size?: number; stroke?: number }) {

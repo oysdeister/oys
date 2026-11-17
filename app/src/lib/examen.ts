@@ -11,7 +11,7 @@
     herramienta interna y la comprobación real la hace el examinador en Axional.
 */
 import { useSyncExternalStore } from 'react';
-import { MODULOS } from '../content';
+import { MODULOS, ORDEN, esFinanzas } from '../content';
 import type { Pregunta } from '../types';
 import { conIni, num2, redondea } from './texto';
 
@@ -184,11 +184,14 @@ export const IVA = 0.21;
 export const PESO_TEORIA = 0.3;
 export const PESO_PRACTICA = 0.7;
 export const APROBADO_EXAMEN = 0.8;
-export const MIN_TEORIA = 40;
+export const MIN_TEORIA = 45;
 /** Encargos de la práctica (8 en Axional + 1 de rutas de menú) */
 export const NUM_TAREAS = 9;
-/** Reparto de la teoría: un test y un clic por módulo, un vídeo por capítulo y el resto */
-export const REPARTO = { test: 6, clic: 6, video: 10, orden: 2, relacion: 2, dato: 2, criterio: 2 } as const;
+/**
+ * Reparto de la teoría: un test por módulo (6 de los manuales + 4 de finanzas), un clic por módulo
+ * de los manuales (los de finanzas no tienen zonas marcadas), un vídeo por capítulo y el resto.
+ */
+export const REPARTO = { test: 10, clic: 6, video: 10, orden: 2, relacion: 2, dato: 2, criterio: 2 } as const;
 export const NUM_TEORIA = Object.values(REPARTO).reduce((s, n) => s + n, 0);
 /** Margen (en % de la captura) alrededor de la zona correcta en las preguntas de clic */
 export const MARGEN_CLIC = 2.5;
@@ -208,6 +211,8 @@ function rutasDeMenu() {
   const out: { titulo: string; ruta: string[] }[] = [];
   const vistos = new Set<string>();
   for (const m of MODULOS) {
+    // Las rutas de finanzas salen del árbol de la documentación, no de un menú comprobado en la demo
+    if (esFinanzas(m.id)) continue;
     for (const e of m.ejercicios) {
       for (const s of e.secciones) {
         const r = s.ruta;
@@ -730,7 +735,7 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
 
   // Ordenar: un circuito del vídeo y otro de un manual
   const cv = r.pick(CIRCUITOS_VIDEO);
-  const mods = MODULOS.filter((m) => m.circuito.length >= 4 && m.circuito.length <= 7);
+  const mods = MODULOS.filter((m) => !esFinanzas(m.id) && m.circuito.length >= 4 && m.circuito.length <= 7);
   const cm = r.pick(mods);
   // En la versión nueva del ERP no hay paso «Conformar»: no se pide ordenarlo.
   const pasosCm = cm.circuito.filter((x) => !/conformar/i.test(x));
@@ -807,7 +812,7 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   });
 }
 
-const META_CORTO: Record<string, string> = { maestros: 'Maestros', parametrizacion: 'Parametrización', compras: 'Compras', ventas: 'Ventas', asientos: 'Asientos', carteras: 'Carteras' };
+const META_CORTO: Record<string, string> = { maestros: 'Maestros', parametrizacion: 'Parametrización', compras: 'Compras', ventas: 'Ventas', asientos: 'Asientos', carteras: 'Carteras', 'icon-contabilidad': 'Contabilidad general', 'icon-cartera': 'Cobros y pagos', 'icon-impuestos': 'Impuestos', 'icon-activos': 'Activos fijos' };
 
 /** ¿Ha contestado del todo? (las de ordenar y relacionar pueden quedarse a medias) */
 export function respondida(q: PreguntaExamen, r: RespuestaTeoria | undefined): boolean {
@@ -913,7 +918,7 @@ export function desgloseTeoria(teoria: PreguntaExamen[], resp: RespuestaTeoria[]
   const orden = (b: BloqueTeoria) => (b.clase === 'modulo' ? ORDEN_MOD.indexOf(b.clave) : b.clase === 'video' ? 100 + Number(b.clave.slice(3)) : 200);
   return [...mapa.values()].sort((a, b) => orden(a) - orden(b));
 }
-const ORDEN_MOD = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'carteras'];
+const ORDEN_MOD: string[] = [...ORDEN];
 
 /* ---------------------------------------------------------------- corrección */
 

@@ -1,0 +1,1122 @@
+{
+ "id": "icon-cartera",
+ "titulo": "Cobros y pagos",
+ "sesion": "",
+ "resumen": "Configuras los estados, acciones y enlaces contables de la cartera. Entiendes cómo un cambio de estado genera asiento y qué actualiza en efectos, histórico y tesorería, incluyendo el avance y retroceso de remesas. Exploras procesos avanzados y aprendes a razonar la cartera a una fecha pasada con el histórico y las tablas documentadas.",
+ "circuito": [
+  "Factura",
+  "Efecto pendiente",
+  "Gestión o remesa",
+  "Cierre",
+  "Asiento",
+  "Histórico"
+ ],
+ "ejercicios": [
+  {
+   "id": "icon-cartera-1",
+   "numero": 1,
+   "titulo": "Parametrización de la cartera: estados, acciones y enlaces contables",
+   "objetivo": "Tendrás localizados los maestros de cartera: estados, acciones y asientos programables, y entenderás su papel en el circuito.",
+   "concepto": "La cartera de cobros y pagos se apoya en maestros de configuración. Primero ves la visión general del módulo y qué datos muestra de cada efecto. Después defines estados de cartera y revisas las acciones con sus asientos programables y enlaces contables.\n\nCada pieza encaja: el estado de un efecto determina si se puede modificar; las acciones indican qué cambios de estado se permiten y si generan asiento; los asientos programables usan enlaces contables y fórmulas como 0 para movimientos de tesorería sin apunte.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-cartera-1-vision",
+     "titulo": "Visión general de la cartera",
+     "paraQueSirve": "Te sitúa en el mantenimiento conjunto de carteras de efectos a cobrar y a pagar y en qué datos puedes consultar de cada efecto.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Visión general"
+     ],
+     "explicacion": [
+      "La pantalla «Visión general» permite ver la cartera de efectos a cobrar y a pagar. Las operaciones que realices sobre la cartera modifican el estado de los efectos: pendientes, remesados, cobrados o pagados.",
+      "En la lista de efectos aparece un campo de remesa que indica si el efecto está remesado y, en caso afirmativo, el número de remesa. Dependiendo del estado, las opciones de baja o modificación pueden quedar desactivadas según el maestro de estados de efectos."
+     ],
+     "campos": [
+      {
+       "campo": "Remesa",
+       "significado": "Indica si el efecto está remesado y el número de remesa.",
+       "ejemplo": "Pendiente, remesado, cobrado o pagado"
+      },
+      {
+       "campo": "Tercero",
+       "significado": "Código, nombre e identificador del tercero.",
+       "ejemplo": "código del tercero"
+      },
+      {
+       "campo": "Fechas de antigüedad de la deuda y de vencimiento",
+       "significado": "Cuándo se emitió la deuda y cuándo vence.",
+       "ejemplo": "fecha de vencimiento"
+      },
+      {
+       "campo": "Importe en moneda local",
+       "significado": "Importe del efecto en la moneda de la empresa.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "Importe en divisas",
+       "significado": "Importe en la moneda original si es distinta.",
+       "ejemplo": "importe en divisa"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta bancaria propia asociada al efecto.",
+       "ejemplo": "cuenta financiera"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y observa la lista de efectos",
+       "detalle": "Localiza los campos «Remesa», «Tercero», «Fechas de antigüedad de la deuda y de vencimiento», «Importe en moneda local», «Importe en divisas» y «Cuenta financiera»."
+      },
+      {
+       "texto": "Fíjate en el campo «Remesa»",
+       "detalle": "Comprueba que indica si el efecto está remesado y su número de remesa."
+      },
+      {
+       "texto": "Revisa el estado de un efecto",
+       "detalle": "Observa si es pendiente, remesado, cobrado o pagado, y si las opciones de baja o modificación están activas."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Dependiendo del estado del efecto, las opciones de baja o modificación pueden quedar desactivadas según el maestro de estados de efectos."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-1-estados",
+     "titulo": "Estados de cartera",
+     "paraQueSirve": "Define los estados posibles de la cartera y sus reglas, como si la deuda está pendiente, lista para pago o bloqueada.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Configuración"
+     ],
+     "explicacion": [
+      "En «Configuración» se definen los estados de cartera de cobros y pagos. Cada estado tiene un estado inicial y puede indicar si la deuda está pendiente, lista para pago o bloqueada, entre otras reglas.",
+      "Los campos de un estado incluyen el estado inicial, si genera interés o comisión, si se factura, si forma parte del riesgo, la domiciliación, la fecha de operación, los días post-pago y los días de decalaje.",
+      "Por dentro: la documentación no nombra tablas de base de datos en esta sección de configuración, solo los maestros funcionales."
+     ],
+     "campos": [
+      {
+       "campo": "Estado inicial",
+       "significado": "Estado con el que nace el efecto.",
+       "ejemplo": "Pendiente"
+      },
+      {
+       "campo": "Riesgo",
+       "significado": "Si el efecto forma parte del riesgo.",
+       "ejemplo": "Sí o No"
+      },
+      {
+       "campo": "Domiciliación",
+       "significado": "N no requiere domiciliación, T requiere la del tercero, E requiere la de la empresa.",
+       "ejemplo": "N, T, E"
+      },
+      {
+       "campo": "Fecha operación",
+       "significado": "E fecha emisión, V fecha vencimiento, P fecha media ponderada.",
+       "ejemplo": "V"
+      },
+      {
+       "campo": "Días post-pago",
+       "significado": "Días posteriores al pago para considerar el efecto como pagado.",
+       "ejemplo": "número de días"
+      },
+      {
+       "campo": "Días decalaje",
+       "significado": "Días de decalaje entre la fecha de operación y la fecha de efecto.",
+       "ejemplo": "número de días"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Configuración» y localiza los estados de cartera de cobros y pagos",
+       "detalle": "Mira la captura de estados de pago para ver los campos de estado inicial, interés, comisión, facturar, riesgo, domiciliación, fecha operación, días post-pago y días decalaje.",
+       "imagen": "icon-cartera-001.webp"
+      },
+      {
+       "texto": "Revisa las reglas de un estado",
+       "detalle": "Comprueba si indica que la deuda está pendiente, lista para pago o bloqueada."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Los procesos de contabilización cancelarán la transacción si el tipo de efecto requiere la domiciliación bancaria del tercero y esta no se informa."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-1-acciones",
+     "titulo": "Acciones y enlaces contables",
+     "paraQueSirve": "Configura las acciones de cartera y sus asientos programables, incluyendo la fórmula 0 para movimientos de tesorería sin apunte.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Configuración"
+     ],
+     "explicacion": [
+      "Las acciones de cartera definen qué cambios de estado se permiten y si el cierre genera asiento contable. Si la acción tiene un código de asiento cefeacti.codast, el cierre usará una plantilla contable asociada al enlace cefeplah.",
+      "Los asientos programables tienen campos como Orden, Agrupar (No, Sí, Tercero, Único), Genera referencias, Proyecto y Sección, Cuenta contable, Posición, Signo y Tipo cuenta.",
+      "Las fórmulas de importe permiten calcular el apunte a partir de cefectos.import, cefectos.gastos, cefectos.impiva, cefectos.impret y combinaciones. La fórmula 0 indica que no se genera apunte contable alguno, sino un movimiento de tesorería.",
+      "Por dentro: la plantilla contable asociada a cefeplah.codpla tiene hasta seis hojas, desde capuntes10 hasta capuntes60. La hoja capuntes40 se reserva a los gastos bancarios y solo se evalúa si la gestión tiene gastos. El campo actlog controla si se guarda el libro Excel generado: 0 no guarda, 1 guarda, 2 es modo de prueba y no genera asiento."
+     ],
+     "campos": [
+      {
+       "campo": "Acción (cefeacti)",
+       "significado": "Define el cambio de estado y si tiene asiento contable.",
+       "ejemplo": "código de acción"
+      },
+      {
+       "campo": "Enlace contable (cefeplah)",
+       "significado": "Plantilla contable asociada para generar el asiento.",
+       "ejemplo": "código de plantilla"
+      },
+      {
+       "campo": "Agrupar",
+       "significado": "Cómo se agrupan los apuntes: No, Sí, Tercero, Único.",
+       "ejemplo": "Tercero"
+      },
+      {
+       "campo": "Fórmula",
+       "significado": "Cálculo del importe del apunte; 0 es movimiento de tesorería sin apunte.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Actlog",
+       "significado": "0 genera asiento sin guardar libro; 1 genera y guarda; 2 solo guarda libro y no genera asiento.",
+       "ejemplo": "0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Configuración» y localiza las acciones de cobro y pago",
+       "detalle": "Observa los circuitos administrativos y las acciones disponibles.",
+       "imagen": "icon-cartera-002.webp"
+      },
+      {
+       "texto": "Consulta un asiento programable",
+       "detalle": "Comprueba los campos Orden, Agrupar, Genera referencias, Proyecto, Sección, Cuenta contable, Posición, Signo y Tipo cuenta.",
+       "imagen": "icon-cartera-003.webp"
+      },
+      {
+       "texto": "Localiza la fórmula 0",
+       "detalle": "Confirma que su descripción es «No genera apunte contable alguno, sino un movimiento de tesorería»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La hoja capuntes40 de la plantilla contable solo se evalúa si la gestión tiene gastos bancarios."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué indica el campo de remesa en la visión general de cartera?",
+     "opciones": [
+      "Si el efecto está remesado y el número de remesa",
+      "El estado contable del efecto",
+      "La cuenta bancaria del tercero",
+      "El número de factura origen del efecto"
+     ],
+     "correcta": 0,
+     "explicacion": "El campo de remesa indica si el efecto está remesado y, en caso afirmativo, el número de remesa."
+    },
+    {
+     "pregunta": "En un estado de cartera, el estado inicial...",
+     "opciones": [
+      "Indica que el efecto está caducado",
+      "Es el estado con el que nace el efecto",
+      "Solo se usa en efectos de pago",
+      "Impide modificar el efecto"
+     ],
+     "correcta": 1,
+     "explicacion": "El estado inicial es el estado con el que nace el efecto."
+    },
+    {
+     "pregunta": "En asientos programables, la fórmula 0...",
+     "opciones": [
+      "Anula el asiento",
+      "Genera un apunte contable de importe cero",
+      "No genera apunte contable alguno, sino un movimiento de tesorería",
+      "Solo genera gastos bancarios"
+     ],
+     "correcta": 2,
+     "explicacion": "La fórmula 0 indica que no se genera apunte contable alguno, sino un movimiento de tesorería."
+    },
+    {
+     "pregunta": "¿Cuáles son las opciones del campo Agrupar en asientos programables?",
+     "opciones": [
+      "Sí, No, Empresa, Banco",
+      "Individual, Masivo, Manual, Automático",
+      "Debe, Haber, Signo, Posición",
+      "No, Sí, Tercero, Único"
+     ],
+     "correcta": 3,
+     "explicacion": "Las opciones de Agrupar son No, Sí, Tercero y Único."
+    },
+    {
+     "pregunta": "¿Qué hoja de la plantilla contable se reserva a los gastos bancarios?",
+     "opciones": [
+      "capuntes40",
+      "capuntes10",
+      "capuntes60",
+      "capuntes20"
+     ],
+     "correcta": 0,
+     "explicacion": "La hoja capuntes40 se reserva a los gastos bancarios y solo se evalúa si la gestión tiene gastos."
+    }
+   ],
+   "checklist": [
+    "Abre «Visión general» y localiza el campo «Remesa».",
+    "Abre «Configuración» y comprueba que existe el maestro de estados de cartera de cobros y pagos.",
+    "Localiza en un estado los campos «Estado inicial» y «Riesgo».",
+    "Abre un asiento programable y verifica que existe la fórmula «0».",
+    "Comprueba que las opciones de «Agrupar» incluyen No, Sí, Tercero, Único.",
+    "Localiza la hoja capuntes40 en un enlace contable.",
+    "Consulta una acción de cartera y anota el estado inicial y final.",
+    "Verifica que el campo actlog permite 0, 1 y 2."
+   ],
+   "problemas": [
+    {
+     "problema": "Un efecto no se puede modificar porque su estado lo desactiva.",
+     "solucion": "Revisa el maestro de estados de efectos: dependiendo del estado, las opciones de baja o modificación pueden quedar desactivadas."
+    },
+    {
+     "problema": "Una acción no debe generar apunte contable pero sí mover tesorería.",
+     "solucion": "Usa la fórmula 0 en el asiento programable de la acción."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-2",
+   "numero": 2,
+   "titulo": "Cambio de estado que genera asiento",
+   "objetivo": "Entenderás cómo una gestión de cartera cambia el estado de los efectos y, si la acción tiene asiento programable, genera contabilidad; y qué ocurre al avanzar y retroceder una remesa.",
+   "concepto": "Las gestiones agrupan efectos para aplicarles una acción de cartera. La cabecera vive en cefecges_pcs y el detalle en cefecges_det. Al cerrar, el sistema valida y, si la acción tiene asiento, genera la contabilidad a partir de una plantilla Excel.\n\nEl cierre también actualiza cefectos, escribe histórico en cefechis y crea movimientos de tesorería cuando corresponde. En remesas, evolucionar y retroceder estado tiene un efecto contable que depende de si el periodo está abierto o cerrado.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "icon-cartera-2-cabecera",
+     "titulo": "Cabecera y detalle de gestión",
+     "paraQueSirve": "Organiza y ejecuta operaciones sobre un conjunto de efectos, agrupándolos según acción, empresa, dimensiones contables y criterios de gestión.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Gestiones",
+      "Gestiones sobre la cartera de efectos"
+     ],
+     "explicacion": [
+      "La cabecera de gestión se guarda en cefecges_pcs. Sus campos principales incluyen pcs_seqno, pcs_desc, pcs_empcode, pcs_proyec, pcs_seccio, pcs_clase, pcs_accion, pcs_fecven, pcs_fecaux, pcs_tipefe, pcs_ctafin, pcs_codper, pcs_numban, pcs_moneda, pcs_cambio, pcs_import, pcs_gasto1, pcs_gasto2, pcs_impban, pcs_fecpro y pcs_estado.",
+      "El detalle se guarda en cefecges_det y contiene las deudas incorporadas. La incorporación masiva se hace con cefecges_pcsAgregarCefectos y la desagregación con cefecges_pcsDesAgregarCefectos.",
+      "El selector de efectos en modo inserción limita inicialmente a un máximo de 1.000 efectos. Sin condición de selección evita devolver registros con condición equivalente a 1=0.",
+      "Los filtros de incorporación incluyen venini, venfin, codper, tipefe, estado, refban, ctafin, tipdoc, numges y numero (solo desagregación).",
+      "Por dentro: la cabecera cefecges_pcs admite pcs_estado A (abierta) y C (cerrada). Una gestión abierta no puede mantener un fichero bancario asociado. pcs_tipgen distingue automática, manual o asíncrona."
+     ],
+     "campos": [
+      {
+       "campo": "pcs_estado",
+       "significado": "Estado de la gestión: A abierta o C cerrada.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "pcs_accion",
+       "significado": "Acción de cartera a ejecutar.",
+       "ejemplo": "código de acción"
+      },
+      {
+       "campo": "pcs_fecpro",
+       "significado": "Fecha de proceso y de registro contable.",
+       "ejemplo": "fecha de hoy"
+      },
+      {
+       "campo": "pcs_tipgen",
+       "significado": "Origen de generación: 0 automática, 1 manual, 2 asíncrona.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "venini",
+       "significado": "Fecha inicial del filtro de incorporación.",
+       "ejemplo": "01/01/2024"
+      },
+      {
+       "campo": "venfin",
+       "significado": "Fecha final del filtro de incorporación.",
+       "ejemplo": "31/12/2024"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la pantalla «Gestiones sobre la cartera de efectos»",
+       "detalle": "Observa el registro de gestión de cartera con los campos de cabecera.",
+       "imagen": "icon-cartera-004.webp"
+      },
+      {
+       "texto": "Fíjate en el campo pcs_estado",
+       "detalle": "Comprueba que solo admite A o C."
+      },
+      {
+       "texto": "Consulta el selector de efectos",
+       "detalle": "Revisa los filtros venini y venfin y la limitación a 1.000 efectos en modo inserción.",
+       "imagen": "icon-cartera-005.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La incorporación masiva está condicionada a reglas de la acción: divisa homogénea, grupos de efectos e importe mínimo por grupo."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-2-cierre",
+     "titulo": "Cierre y generación de asiento",
+     "paraQueSirve": "Ejecuta el cambio de estado con el botón «Cerrar» y, si la acción tiene asiento programable, genera la contabilidad desde la plantilla asociada.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Gestiones",
+      "Gestiones sobre la cartera de efectos"
+     ],
+     "explicacion": [
+      "El cierre de una gestión se ejecuta con la función cefecges_estado_ava, que es la misma que ejecuta el botón «Cerrar» del mantenimiento de gestiones.",
+      "Si la acción tiene un código de asiento cefeacti.codast, el cierre llama a cefecges_pcs_wb_account. Esa función genera el asiento a partir de una plantilla Excel asociada al enlace contable cefeplah.codpla.",
+      "La plantilla tiene hasta seis hojas, desde capuntes10 hasta capuntes60. La hoja capuntes40 se reserva a los gastos bancarios y solo se evalúa si la gestión tiene gastos.",
+      "El asiento se crea con origen cefecges_pcs y como identificador de origen el número de gestión. El campo actlog de la plantilla controla: 0 genera asiento y no guarda registro; 1 genera asiento y guarda el libro Excel; 2 es modo de prueba, guarda el libro y no genera asiento, devolviendo -2.",
+      "Por dentro: el botón «Cerrar» invoca cefecges_estado_ava, que valida y ejecuta todo el flujo."
+     ],
+     "campos": [
+      {
+       "campo": "cefeacti.codast",
+       "significado": "Código de asiento de la acción.",
+       "ejemplo": "código de asiento"
+      },
+      {
+       "campo": "cefeplah.codpla",
+       "significado": "Código del enlace contable con la plantilla.",
+       "ejemplo": "código de plantilla"
+      },
+      {
+       "campo": "capuntes40",
+       "significado": "Hoja de la plantilla reservada a gastos bancarios.",
+       "ejemplo": "hoja de gastos"
+      },
+      {
+       "campo": "actlog",
+       "significado": "0 no guarda libro, 1 guarda, 2 prueba sin asiento.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Origen",
+       "significado": "Origen del asiento generado.",
+       "ejemplo": "cefecges_pcs"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Localiza el botón «Cerrar» en la pantalla de gestiones",
+       "detalle": "Revisa qué función ejecuta y qué valida."
+      },
+      {
+       "texto": "Comprueba si la acción tiene cefeacti.codast",
+       "detalle": "Si no tiene código de asiento, el cierre no generará contabilidad."
+      },
+      {
+       "texto": "Revisa la hoja capuntes40 en un enlace contable",
+       "detalle": "Solo se evalúa si hay gastos bancarios informados."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El modo actlog 2 es de prueba: guarda el libro Excel y no genera asiento, devolviendo -2."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-2-actualizacion",
+     "titulo": "Qué actualiza el cierre: cefectos, cefechis y tesorería",
+     "paraQueSirve": "Conoce todos los cambios que produce el cierre sobre la cartera, el histórico y la tesorería.",
+     "ruta": null,
+     "explicacion": [
+      "El cierre actualiza en cefectos los siguientes campos: estado con cefeacti.estfin; tipefe con cefeacti.efefin si está informado; caduca con cefecest.caduca; cuenta según cefeplah; numges; openum y opeant; feccam; feccon solo si hay asiento o tesorería; e import, cambio, camope y difcam solo si la acción calcula diferencias de cambio y la divisa difiere de la de la empresa.",
+      "Cada modificación genera una línea en el histórico cefechis. Ese histórico permite la reapertura de la gestión.",
+      "Si el estado final de la acción requiere tesorería, el cierre crea movimientos en taptcuen y líneas de flujo en taptfluj. Si no se crea ninguna línea, lanza el error literal cefecges_estado_ava_05.",
+      "Por dentro: cefectos.feccon se actualiza con la fecha de proceso solo si hay asiento o tesorería. El histórico cefechis guarda una línea por cada modificación."
+     ],
+     "campos": [
+      {
+       "campo": "cefectos.estado",
+       "significado": "Nuevo estado del efecto.",
+       "ejemplo": "Cobrado"
+      },
+      {
+       "campo": "cefectos.feccon",
+       "significado": "Fecha de proceso; solo se actualiza si hay asiento o tesorería.",
+       "ejemplo": "fecha de cierre"
+      },
+      {
+       "campo": "cefechis",
+       "significado": "Histórico de efectos; una línea por modificación.",
+       "ejemplo": "línea de histórico"
+      },
+      {
+       "campo": "taptcuen",
+       "significado": "Movimientos de tesorería creados.",
+       "ejemplo": "movimiento"
+      },
+      {
+       "campo": "taptfluj",
+       "significado": "Líneas de flujo de tesorería.",
+       "ejemplo": "línea de flujo"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Consulta un efecto tras un cierre",
+       "detalle": "Comprueba que cefectos.estado ha cambiado al estado final de la acción."
+      },
+      {
+       "texto": "Revisa el histórico cefechis",
+       "detalle": "Verifica que existe una línea por cada modificación del efecto."
+      },
+      {
+       "texto": "Si la acción genera tesorería, localiza taptcuen y taptfluj",
+       "detalle": "Comprueba que se han creado movimientos y líneas de flujo."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "cefectos.feccon no se actualiza si no hay asiento ni tesorería."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-2-errores",
+     "titulo": "Errores literales del cierre",
+     "paraQueSirve": "Reconoce los mensajes de error del cierre y sus causas para corregir la gestión.",
+     "ruta": null,
+     "explicacion": [
+      "El cierre puede lanzar varios códigos de error literales. Los más relevantes son: cefecges_estado_ava_02 acción exige cuenta financiera y la gestión no la tiene; _05 movimiento de tesorería sin líneas de flujo; _06 diferencias de cambio sin asiento contable; _08 hay gastos y no hay banco informado; _10 deuda con documentos destino; _11 tesorería a retroceder contabilizada, conciliada o auditada; _12 marcar deuda como propuesta sin remesa; _13 serie numérica superada y no hay otra disponible.",
+      "También existe _01 gestión ya cerrada, _03 no existe serie numérica activa, _04 falta operación deudora o acreedora, _09 estado de la deuda no es origen válido.",
+      "Por dentro: estos errores los devuelve la función cefecges_estado_ava al validar las condiciones antes de actualizar datos."
+     ],
+     "campos": [
+      {
+       "campo": "cefecges_estado_ava_02",
+       "significado": "Acción exige cuenta financiera y la gestión no la tiene.",
+       "ejemplo": "gestion sin ctafin"
+      },
+      {
+       "campo": "cefecges_estado_ava_06",
+       "significado": "Diferencias de cambio sin asiento contable.",
+       "ejemplo": "difcam sin codast"
+      },
+      {
+       "campo": "cefecges_estado_ava_08",
+       "significado": "Hay gastos y no hay banco informado.",
+       "ejemplo": "gastos sin banco"
+      },
+      {
+       "campo": "cefecges_estado_ava_11",
+       "significado": "Tesorería a retroceder contabilizada, conciliada o auditada.",
+       "ejemplo": "retroceso no permitido"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Ante un error, lee el código literal",
+       "detalle": "Por ejemplo, cefecges_estado_ava_02 indica que falta cuenta financiera."
+      },
+      {
+       "texto": "Corrige la causa y vuelve a pulsar «Cerrar»",
+       "detalle": "Si es _08, informa banco en la gestión."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "El error _05 se produce si la acción requiere tesorería pero no se crea ninguna línea de flujo."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-2-remesas",
+     "titulo": "Remesas: avanzar y retroceder estado",
+     "paraQueSirve": "Comprende qué hace cada botón de avance y retroceso en remesas y su efecto contable según el periodo.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Remesas",
+      "Visión general"
+     ],
+     "explicacion": [
+      "En remesas, al pulsar «Evolucionar estado» se ejecuta el cambio de estado para cada efecto de la remesa, generando, si corresponde, la contabilización y/o notificación a tesorería.",
+      "Al pulsar «Retroceder estado», si los efectos generaron apuntes contables, se anulan si el periodo contable aún está abierto; si el periodo ya fue cerrado, se genera un asiento para la compensación contable del asiento producido en el último avance.",
+      "El retroceso se cancela si la tesorería ya está conciliada con extracto bancario.",
+      "Por dentro: las tablas implicadas son cremesas y cefectos. En remesas abiertas se puede desagregar; eliminar solo si no hay efectos asociados."
+     ],
+     "campos": [
+      {
+       "campo": "cremesas.estrem",
+       "significado": "Estado de la remesa: A abierta o C cerrada.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "Evolucionar estado",
+       "significado": "Ejecuta el cambio de estado para cada efecto.",
+       "ejemplo": "botón"
+      },
+      {
+       "campo": "Retroceder estado",
+       "significado": "Anula asientos si periodo abierto o genera compensación si cerrado.",
+       "ejemplo": "botón"
+      },
+      {
+       "campo": "Periodo contable",
+       "significado": "Abierto permite anular; cerrado genera asiento de compensación.",
+       "ejemplo": "abierto o cerrado"
+      },
+      {
+       "campo": "Tesorería conciliada",
+       "significado": "Si está conciliada, el retroceso se cancela.",
+       "ejemplo": "sí o no"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la visión general de remesas",
+       "detalle": "Localiza los botones «Evolucionar estado» y «Retroceder estado».",
+       "imagen": "icon-cartera-006.webp"
+      },
+      {
+       "texto": "Fíjate en el campo estrem",
+       "detalle": "Comprueba que solo admite A o C."
+      },
+      {
+       "texto": "Revisa qué pasa al retroceder según el periodo contable",
+       "detalle": "Si el periodo está abierto se anulan asientos; si cerrado, se genera asiento de compensación."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El retroceso se cancela si la tesorería ya está conciliada con extracto bancario."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué botón ejecuta el cierre de una gestión de cartera?",
+     "opciones": [
+      "Evolucionar estado",
+      "Cerrar",
+      "Abrir",
+      "Guardar"
+     ],
+     "correcta": 1,
+     "explicacion": "El cierre se ejecuta con el botón «Cerrar», que llama a la función cefecges_estado_ava."
+    },
+    {
+     "pregunta": "¿Cuándo genera asiento el cierre de una gestión?",
+     "opciones": [
+      "Cuando hay diferencias de cambio",
+      "Cuando hay tesorería",
+      "Cuando la acción tiene un código de asiento cefeacti.codast",
+      "Siempre que la gestión esté cerrada"
+     ],
+     "correcta": 2,
+     "explicacion": "El asiento se genera si la acción tiene cefeacti.codast y una plantilla contable asociada."
+    },
+    {
+     "pregunta": "¿Qué hoja de la plantilla contable se reserva a los gastos bancarios?",
+     "opciones": [
+      "capuntes60",
+      "capuntes20",
+      "capuntes10",
+      "capuntes40"
+     ],
+     "correcta": 3,
+     "explicacion": "La hoja capuntes40 se reserva a los gastos bancarios y solo se evalúa si la gestión tiene gastos."
+    },
+    {
+     "pregunta": "¿Cuándo se actualiza cefectos.feccon en el cierre?",
+     "opciones": [
+      "Solo si hay asiento o tesorería",
+      "Nunca",
+      "Siempre",
+      "Solo si hay gastos"
+     ],
+     "correcta": 0,
+     "explicacion": "cefectos.feccon se actualiza con la fecha de proceso solo si hay asiento o tesorería."
+    },
+    {
+     "pregunta": "Al retroceder una remesa con el periodo contable ya cerrado, ¿qué ocurre?",
+     "opciones": [
+      "Se anulan los asientos sin más",
+      "Se genera un asiento de compensación contable",
+      "Se elimina la remesa",
+      "No se permite retroceder"
+     ],
+     "correcta": 1,
+     "explicacion": "Si el periodo contable está cerrado, al retroceder se genera un asiento para la compensación contable del asiento producido en el último avance."
+    }
+   ],
+   "checklist": [
+    "Abre «Gestiones sobre la cartera de efectos» y localiza la cabecera cefecges_pcs con campo pcs_estado.",
+    "Comprueba que pcs_estado solo admite A y C.",
+    "Usa el selector de efectos y verifica que limita a 1.000 efectos en inserción.",
+    "Localiza el botón «Cerrar» y anota la función que ejecuta.",
+    "Revisa si una acción tiene cefeacti.codast.",
+    "Localiza la hoja capuntes40 en un enlace contable.",
+    "Comprueba que el error cefecges_estado_ava_06 aparece con diferencias de cambio sin asiento.",
+    "Abre «Visión general» de remesas y localiza los botones «Evolucionar estado» y «Retroceder estado».",
+    "Verifica que cremesas.estrem admite A y C.",
+    "Anota qué ocurre al retroceder con periodo cerrado."
+   ],
+   "problemas": [
+    {
+     "problema": "Al cerrar una gestión aparece el error cefecges_estado_ava_02.",
+     "solucion": "La acción exige cuenta financiera y la gestión no la tiene; informa la cuenta financiera en la cabecera."
+    },
+    {
+     "problema": "El cierre lanza cefecges_estado_ava_06.",
+     "solucion": "Hay diferencias de cambio sin asiento contable; elige una acción que genere asiento o elimina las diferencias de cambio."
+    },
+    {
+     "problema": "Aparece cefecges_estado_ava_08.",
+     "solucion": "Hay gastos y no hay banco informado; indica el banco en la gestión."
+    },
+    {
+     "problema": "No se puede retroceder una gestión que ya movió tesorería.",
+     "solucion": "El error cefecges_estado_ava_11 indica tesorería contabilizada, conciliada o auditada; no es reversible en ese estado."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-3",
+   "numero": 3,
+   "titulo": "Procesos avanzados y cuadre de la cartera a una fecha pasada",
+   "objetivo": "Conocerás anticipos, reclasificaciones, cambios de titularidad, alinear vencimientos, recobros y sabrás razonar la cartera a una fecha pasada con el histórico.",
+   "concepto": "Estos procesos cubren situaciones especiales: cobros anticipados, reestructuración de deudas, embargos, agrupación de vencimientos y reclamaciones. Todos dejan trazabilidad y algunos generan asientos.\n\nAdemás, aprendes que no existe una consulta específica de cartera a fecha pasada documentada, pero puedes reconstruir la situación usando cefectos, cefechis, cefecges_pcs y cefecges_det, sin inventar SQL ni pantallas.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "icon-cartera-3-anticipos",
+     "titulo": "Anticipos",
+     "paraQueSirve": "Registra cobros o pagos anticipados sin factura previa mediante dos efectos especulares.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Procesos",
+      "Anticipos"
+     ],
+     "explicacion": [
+      "El proceso de anticipos crea dos efectos: numefe = 1 positivo y numefe = 2 negativo. El positivo materializa el cobro o pago inmediato y su liquidación genera el asiento contable correspondiente; el negativo queda pendiente de aplicarse contra la factura futura.",
+      "El anticipo se registra en cefectos_anticipo_gen con campos como seqno, clase, tercero, cuenta, fecha, fecven, docser, empcode, proyec, seccio, tipefe, sistem, moneda, cambio, camope, impdiv, codper, numban, tipdoc, numero1, numero2 y notas.",
+      "La reversión solo es posible si ninguno de los dos efectos ha evolucionado: ambos deben tener opeant = 0. La acción «Crear anticipo» solo se activa cuando numero1 y numero2 están vacíos. «Retroceder anticipo» o «Eliminar Efectos» permiten revertir.",
+      "Por dentro: cefectos_anticipo_gen genera filas en cefectos. El campo camope: 0 multiplica tipo de cambio, 1 divide. domban = 'T' exige domiciliación bancaria. La reversión elimina físicamente las filas de cefectos, pero queda constancia en el histórico cefechis."
+     ],
+     "campos": [
+      {
+       "campo": "numefe",
+       "significado": "1 efecto positivo; 2 efecto negativo.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "opeant",
+       "significado": "0 no ha evolucionado y permite reversión; distinto de 0 bloquea.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "camope",
+       "significado": "0 multiplica tipo de cambio; 1 divide.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "domban",
+       "significado": "T exige domiciliación bancaria.",
+       "ejemplo": "T"
+      },
+      {
+       "campo": "numero1 y numero2",
+       "significado": "Seriales de efectos generados; vacíos antes de crear.",
+       "ejemplo": "vacío"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Anticipos» y observa el formulario",
+       "detalle": "Fíjate en los campos clase, tercero, fecha, vencimiento, moneda, cambio, operador, importe en divisa, proyecto, sección, tipo de efecto y sistema contable.",
+       "imagen": "icon-cartera-007.webp"
+      },
+      {
+       "texto": "Localiza los botones «Crear anticipo» y «Retroceder anticipo»",
+       "detalle": "Comprueba que solo se activan según el estado de numero1 y numero2.",
+       "imagen": "icon-cartera-008.webp"
+      },
+      {
+       "texto": "Revisa las condiciones de reversión",
+       "detalle": "Solo es posible si ambos efectos tienen opeant = 0."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "La reversión queda bloqueada si alguno de los dos efectos tiene opeant distinto de 0."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-3-reclasificaciones",
+     "titulo": "Reclasificaciones e inversión",
+     "paraQueSirve": "Fusiona, divide, netea o recompone deudas manteniendo el cuadre económico y generando, si procede, asiento de compensación.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Procesos",
+      "Reclasificaciones"
+     ],
+     "explicacion": [
+      "La reclasificación usa cefecrec_pcs, cefecrec_ori y cefecrec_des. Toda reclasificación caduca las deudas origen y las sustituye por una o varias deudas destino.",
+      "El cierre valida que exista al menos un origen y un destino, que la suma de importes en moneda local sea exactamente cero, que todos los orígenes pertenezcan a una única empresa y que la empresa tenga informados los estados de reclasificación. Genera un asiento con un apunte por cada origen y una contrapartida por cada destino, agrupando por sistema contable, moneda y tipo de cambio.",
+      "La cabecera queda enlazada al asiento mediante pcs_loteid. Para revertir, el periodo contable del asiento original debe permanecer abierto; si falla alguna validación, se cancela por completo.",
+      "La inversión de reclasificación crea una nueva cabecera inversa con pcs_estado = A, pcs_seqno = 0, pcs_seqori referenciando al proceso original y pcs_loteid nulo. No elimina ni modifica la reclasificación original.",
+      "Por dentro: las reclasificaciones usan cefechis para recuperar el estado contable anterior de los orígenes en la reversión. La inversión se ejecuta en una transacción beginWork/commitWork con rollbackWork si falla."
+     ],
+     "campos": [
+      {
+       "campo": "pcs_estado",
+       "significado": "A abierta o C cerrada.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "des_import",
+       "significado": "Importe del efecto destino.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "ori_numero",
+       "significado": "Número del efecto origen.",
+       "ejemplo": "número"
+      },
+      {
+       "campo": "pcs_seqori",
+       "significado": "En inversión, referencia al proceso invertido.",
+       "ejemplo": "seqno original"
+      },
+      {
+       "campo": "pcs_loteid",
+       "significado": "Enlace al asiento generado.",
+       "ejemplo": "identificador"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Reclasificaciones» y observa la cabecera y sus orígenes/destinos",
+       "detalle": "Fíjate en cefecrec_pcs, cefecrec_ori y cefecrec_des."
+      },
+      {
+       "texto": "Revisa las validaciones de cierre",
+       "detalle": "Comprueba que la suma de importes en moneda local debe ser exactamente cero."
+      },
+      {
+       "texto": "Consulta la pantalla de inversión de reclasificación",
+       "detalle": "Observa que crea nueva cabecera con pcs_seqori y pcs_loteid nulo."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "La reversión falla si el periodo contable del asiento original está cerrado; se cancela por completo antes de modificar datos."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-3-titularidad-alinear",
+     "titulo": "Cambios de titularidad y alinear vencimientos",
+     "paraQueSirve": "Reasigna deudas de pago a otro tercero y agrupa vencimientos de un mismo tercero.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Procesos",
+      "Cambios de titularidad"
+     ],
+     "explicacion": [
+      "El cambio de titularidad reasigna deudas a pagar desde un tercero titular hacia un sustituto, típicamente por embargo. Usa las tablas cefetith y cefetitl. Solo opera sobre efectos de pago clase = P.",
+      "Campos importantes: porcen entre 1 y 100, priori 0 es prioridad preferente, impmax e impacu. El destinatario debe ser distinto del titular. Si el importe de la línea supera el efecto original se rechaza; si difiere, se escinde en dos partes.",
+      "Alinear vencimientos agrupa, para un mismo tercero, efectos pendientes de cobro o pago y les asigna una fecha de vencimiento común. Selecciona facturas y abonos susceptibles de compensarse, genera una gestión de cartera por grupo y la avanza automáticamente. Es reversible abriendo y eliminando la gestión generada.",
+      "Por dentro: alinear vencimientos usa cefecges_pcs y cefecges_det con campos como pcs_tipgen y pcs_camope. Los parámetros incluyen EMPCODE, PROYEC, SECCIO, FVEMAX, CLASE, ACCION, TIPEFE y COND."
+     ],
+     "campos": [
+      {
+       "campo": "estado",
+       "significado": "A abierta o C cerrada en cefetith.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "contab",
+       "significado": "N pendiente o S contabilizada en cefetitl.",
+       "ejemplo": "N"
+      },
+      {
+       "campo": "porcen",
+       "significado": "Porcentaje entre 1 y 100.",
+       "ejemplo": "100"
+      },
+      {
+       "campo": "priori",
+       "significado": "0 es prioridad preferente.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "FVEMAX",
+       "significado": "Fecha límite de vencimiento en alinear vencimientos.",
+       "ejemplo": "31/12/2024"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Cambios de titularidad» y observa la cabecera y líneas",
+       "detalle": "Fíjate en cefetith y cefetitl y en que solo opera sobre clase P."
+      },
+      {
+       "texto": "Revisa las validaciones de importe",
+       "detalle": "Comprueba que si el importe de la línea difiere del total del efecto, se escinde en dos partes."
+      },
+      {
+       "texto": "Abre «Alinear vencimientos»",
+       "detalle": "Observa los parámetros EMPCODE, PROYEC, SECCIO, FVEMAX, CLASE, ACCION y TIPEFE."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "En cambio de titularidad, si el importe de la línea difiere del total del efecto, se escinde en dos partes."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-3-recobros",
+     "titulo": "Gestión de recobros",
+     "paraQueSirve": "Gestiona reclamaciones de cobro, conflictos y agenda de gestiones.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y pagos",
+      "Gestión de Recobros"
+     ],
+     "explicacion": [
+      "La página «Gestión de Recobros» controla facturas pendientes, conflictos y agenda de gestiones. Los estados de gestión son abierto o cerrado; los conflictos de efecto pueden ser No conflicto, Pendiente o Solucionado.",
+      "Los campos incluyen Empresa, Estado, Gestor, Fecha próxima gestión, Cliente, Primera gestión, Última gestión, Conflictos y Agenda.",
+      "En los maestros de Recobros se definen Medios de comunicación, Grupo de clientes y Relaciones entre gestores y clientes.",
+      "Reglas: un cliente solo puede tener un gestor; un gestor puede tener varios clientes. Una gestión solo puede ser modificada por el usuario que la creó durante el día de creación; las gestiones anteriores a hoy no se pueden modificar.",
+      "Por dentro: la documentación no nombra tablas de base de datos para recobros."
+     ],
+     "campos": [
+      {
+       "campo": "Estado",
+       "significado": "Abierto o cerrado.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Gestor",
+       "significado": "Usuario asignado al cliente.",
+       "ejemplo": "código de gestor"
+      },
+      {
+       "campo": "Cliente",
+       "significado": "Tercero cliente.",
+       "ejemplo": "código"
+      },
+      {
+       "campo": "Conflicto",
+       "significado": "No conflicto, Pendiente o Solucionado.",
+       "ejemplo": "Pendiente"
+      },
+      {
+       "campo": "Tipo gestión",
+       "significado": "Tipo de anotación en agenda.",
+       "ejemplo": "llamada"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Gestión de Recobros» y observa los campos obligatorios",
+       "detalle": "Fíjate en empresa, estado, gestor y cliente.",
+       "imagen": "icon-cartera-009.webp"
+      },
+      {
+       "texto": "Revisa los estados de conflicto",
+       "detalle": "Comprueba que son No conflicto, Pendiente y Solucionado."
+      },
+      {
+       "texto": "Consulta los maestros de recobros",
+       "detalle": "Localiza Medios de comunicación, Grupo de clientes y Relaciones entre gestores y clientes."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Una gestión solo puede ser modificada por el usuario que la creó durante el día de creación; las gestiones anteriores a hoy no son modificables."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-3-cuadre",
+     "titulo": "Cuadrar la cartera a una fecha pasada (p. ej. 31-12)",
+     "paraQueSirve": "Te explica cómo razonar la situación de la cartera a una fecha pasada usando el histórico y las tablas documentadas, sin informes específicos.",
+     "ruta": null,
+     "explicacion": [
+      "La documentación no describe un informe específico de cartera a fecha histórica ni un cuadre cartera-contabilidad. No hay una pantalla que reconstruya estados a una fecha concreta.",
+      "Lo que sí consta: cada modificación de una deuda en el cierre de gestiones genera una línea en cefechis, y ese histórico permite reaperturas. En anticipos, la reversión elimina filas de cefectos pero queda constancia en cefechis. En reclasificaciones, la reversión recupera el estado contable anterior desde cefechis.",
+      "Para razonar la situación a 31-12 puedes apoyarte en: cefectos con sus campos estado y feccon; cefechis como histórico de modificaciones; cefecges_pcs.pcs_fecpro como fecha de ejecución y registro contable, con un índice por empresa, fecha y estado; cefecges_det que conserva valores previos como det_cuenta, det_cambio, det_import, det_gasban, det_gastos, etc.; y los asientos generados con origen cefecges_pcs.",
+      "No inventes consultas SQL ni pantallas: la documentación no las proporciona.",
+      "Por dentro: cefecges_pcs dispone del índice i_cefecges_pcs2 por pcs_empcode, pcs_fecpro, pcs_estado, orientado a consulta por empresa, fecha de proceso y estado. cefecges_det guarda los valores previos de cada efecto antes de la operación."
+     ],
+     "campos": [
+      {
+       "campo": "cefectos.estado",
+       "significado": "Estado actual del efecto.",
+       "ejemplo": "Pendiente, remesado, cobrado o pagado"
+      },
+      {
+       "campo": "cefectos.feccon",
+       "significado": "Fecha de proceso; se actualiza solo si hay asiento o tesorería.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "cefechis",
+       "significado": "Histórico de efectos; una línea por modificación.",
+       "ejemplo": "línea"
+      },
+      {
+       "campo": "cefecges_pcs.pcs_fecpro",
+       "significado": "Fecha de ejecución y registro contable del proceso.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "cefecges_det",
+       "significado": "Detalle con valores previos: det_import, det_cuenta, det_cambio, etc.",
+       "ejemplo": "valores previos"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Consulta cefectos para ver el estado actual y la fecha de conformación",
+       "detalle": "Ten en cuenta que feccon solo está actualizada si hubo asiento o tesorería."
+      },
+      {
+       "texto": "Revisa cefechis para reconstruir cambios",
+       "detalle": "Cada modificación de una deuda genera una línea."
+      },
+      {
+       "texto": "Localiza cefecges_pcs y su índice por empresa, fecha y estado",
+       "detalle": "Úsalo para ubicar procesos ejecutados en una fecha."
+      },
+      {
+       "texto": "Examina cefecges_det para ver los valores previos de cada efecto",
+       "detalle": "Así puedes comparar antes y después de la operación."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no describe un informe específico de cartera a fecha ni de cuadre cartera-contabilidad; lo que tienes son las tablas y los hechos indicados."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "En anticipos, ¿qué efecto materializa el cobro o pago inmediato?",
+     "opciones": [
+      "Ninguno",
+      "El efecto con numefe = 2",
+      "El efecto con numefe = 1",
+      "Ambos"
+     ],
+     "correcta": 2,
+     "explicacion": "El efecto positivo numefe = 1 materializa el cobro o pago inmediato."
+    },
+    {
+     "pregunta": "En reclasificaciones, ¿qué exige el cierre respecto a los importes?",
+     "opciones": [
+      "Que origen sea mayor que destino",
+      "Que todos sean en divisa",
+      "Que haya más destinos que orígenes",
+      "Que la suma de importes en moneda local de origen y destino sea exactamente cero"
+     ],
+     "correcta": 3,
+     "explicacion": "El cierre exige que la suma de importes en moneda local de origen y destino sea exactamente cero."
+    },
+    {
+     "pregunta": "¿Sobre qué clase de efectos opera el cambio de titularidad?",
+     "opciones": [
+      "Pagos (P)",
+      "Factoring",
+      "Cobros (C)",
+      "Ambas"
+     ],
+     "correcta": 0,
+     "explicacion": "El cambio de titularidad solo opera sobre efectos de pago (clase = P)."
+    },
+    {
+     "pregunta": "En alinear vencimientos, ¿qué genera el sistema?",
+     "opciones": [
+      "Una remesa",
+      "Una gestión de cartera por grupo y la avanza automáticamente",
+      "Un anticipo",
+      "Una reclasificación"
+     ],
+     "correcta": 1,
+     "explicacion": "Alinear vencimientos genera una gestión de cartera por grupo y la avanza automáticamente."
+    },
+    {
+     "pregunta": "¿Qué tabla conserva los valores previos de cada efecto en el detalle de gestión?",
+     "opciones": [
+      "cefechis",
+      "cefectos",
+      "cefecges_det",
+      "cefecges_pcs"
+     ],
+     "correcta": 2,
+     "explicacion": "cefecges_det guarda campos como det_import, det_cuenta, det_cambio, valores previos a la operación."
+    }
+   ],
+   "checklist": [
+    "Abre «Anticipos» y comprueba que existen campos numero1 y numero2.",
+    "Verifica que la reversión de un anticipo exige que ambos efectos tengan opeant = 0.",
+    "Abre «Reclasificaciones» y localiza la validación de suma de importes cero.",
+    "En «Inversión de reclasificación», comprueba que se crea una nueva cabecera con pcs_seqori.",
+    "Abre «Cambios de titularidad» y comprueba que solo opera sobre clase P.",
+    "En «Alinear vencimientos», comprueba que se genera una gestión con pcs_tipgen 0.",
+    "Abre «Gestión de Recobros» y comprueba los estados de conflicto No conflicto, Pendiente, Solucionado.",
+    "Consulta la tabla cefechis y comprueba que hay histórico de efectos.",
+    "Localiza en cefecges_pcs el campo pcs_fecpro.",
+    "Revisa cefecges_det y anota los campos det_import, det_cuenta."
+   ],
+   "problemas": [
+    {
+     "problema": "No se puede revertir una reclasificación porque el periodo contable del asiento original está cerrado.",
+     "solucion": "La reversión exige periodo contable abierto; si falla, se cancela por completo antes de modificar datos."
+    },
+    {
+     "problema": "En cambio de titularidad se rechaza una línea porque el importe supera el efecto original.",
+     "solucion": "Ajusta el importe de la línea; si difiere del total del efecto, el sistema lo escinde en dos partes."
+    },
+    {
+     "problema": "No se puede modificar una gestión de recobros creada ayer.",
+     "solucion": "Solo el usuario que la creó puede modificarla durante el día de creación; las gestiones anteriores no son modificables."
+    }
+   ]
+  }
+ ]
+}

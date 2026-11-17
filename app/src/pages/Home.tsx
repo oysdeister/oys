@@ -232,7 +232,7 @@ function Orbita({ p }: { p: Progreso }) {
         }}
         onClickCapture={clicCaptura}
         role="group"
-        aria-label="Los seis módulos de la formación"
+        aria-label="Los módulos de la formación"
       >
         {geo && (
           <motion.div className="po-stage" style={{ rotateX: rotX, rotateY: rotY }}>

@@ -135,7 +135,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
           <h2>Cómo funciona</h2>
           <ol className="ex-reglas">
             <li>
-              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de más de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
+              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de más de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales y los módulos de finanzas. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
             </li>
             <li>
               <b>Práctica.</b> {NUM_TAREAS} encargos encadenados que haces de verdad en la demo de Axional (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
@@ -171,7 +171,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
                 </p>
               ) : listo ? (
                 <div className="callout solucion">
-                  <b>Tienes los seis módulos completados</b>
+                  <b>Tienes todos los módulos completados</b>
                   Puedes empezar cuando quieras.
                 </div>
               ) : (

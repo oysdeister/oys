@@ -1,0 +1,1730 @@
+{
+ "id": "icon-impuestos",
+ "titulo": "Impuestos",
+ "sesion": "",
+ "resumen": "Recorres los maestros que determinan el IVA de una línea: zonas fiscales, claves, clases, tipos y reglas. Compruebas cómo se genera y consulta el registro fiscal, con el IVA, la prorrata y la inversión del sujeto pasivo. Terminas con los procesos de impuestos, la liquidación y una mención breve al E-Reporting/SII/VERIFACTU.",
+ "circuito": [
+  "Zona fiscal",
+  "Clave fiscal",
+  "Tipo de impuesto",
+  "Línea del documento",
+  "Registro fiscal",
+  "Declaración"
+ ],
+ "ejercicios": [
+  {
+   "id": "icon-impuestos-1",
+   "numero": 1,
+   "titulo": "De dónde sale el impuesto de una línea",
+   "objetivo": "Tendrás identificados los maestros que intervienen en la cadena fiscal y sabrás qué aporta cada uno para que una línea calcule su operación y tipo de impuesto.",
+   "concepto": "El IVA de una línea no sale de un único campo: el motor fiscal combina zona fiscal de la empresa, zona fiscal del tercero, clave impositiva del artículo, clave fiscal del tercero y, si existe, clave fiscal del documento. Con esas entradas, las reglas de aplicación devuelven una operación fiscal y un tipo de impuesto.\n\nEn este ejercicio repasas los maestros en orden lógico: zonas, clases, tipos, operaciones, claves, reglas y los maestros de agencia y periodos. Al final podrás seguir el camino desde la zona hasta el impuesto calculado.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "icon-impuestos-1-zonas",
+     "titulo": "Zonas fiscales y ámbito territorial",
+     "paraQueSirve": "La zona fiscal sitúa territorialmente a la empresa y al tercero, y aporta al motor fiscal el contexto de país, INTRASTAT y territorio común del impuesto.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Maestros Impuestos",
+      "Zonas fiscales"
+     ],
+     "explicacion": [
+      "La zona fiscal es una pieza base: el motor la usa para saber si una operación es interior, intracomunitaria o con un territorio con régimen específico. Se asigna a la empresa y al tercero, y también puede aparecer en excepciones por artículo y zona.",
+      "Por dentro: la pantalla mantiene la tabla ctax_zone y enlaza con ctiponac para el país. El campo zone_intrast indica si la zona se declara en INTRASTAT (0 no, 1 sí) y zone_taiter marca el territorio común del impuesto; es obligatorio, tiene valor predeterminado 1 y no tiene catálogo cerrado."
+     ],
+     "campos": [
+      {
+       "campo": "Código zone_code",
+       "significado": "Clave primaria de la zona fiscal.",
+       "ejemplo": "ESCO"
+      },
+      {
+       "campo": "Descripción zone_name",
+       "significado": "Texto descriptivo de la zona.",
+       "ejemplo": "Territorio común"
+      },
+      {
+       "campo": "País zone_codnac",
+       "significado": "País asociado a la zona, referenciado en ctiponac.",
+       "ejemplo": "código de país"
+      },
+      {
+       "campo": "Zona auxiliar zone_codaux",
+       "significado": "Código auxiliar para integraciones o agrupaciones.",
+       "ejemplo": "código auxiliar"
+      },
+      {
+       "campo": "INTRASTAT zone_intrast",
+       "significado": "0 no se declara en INTRASTAT, 1 sí se declara.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Territorio común zone_taiter",
+       "significado": "Marca si es territorio común del impuesto; obligatorio, sin catálogo cerrado.",
+       "ejemplo": "1"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y mira la lista de zonas fiscales",
+       "detalle": "Identifica al menos una zona de cada ámbito: interior, intracomunitario y exportación.",
+       "imagen": "icon-impuestos-001.webp"
+      },
+      {
+       "texto": "Abre una zona existente y comprueba los campos zone_code, zone_codnac, zone_intrast y zone_taiter",
+       "detalle": "Fíjate en que zone_taiter suele estar a 1."
+      },
+      {
+       "texto": "Localiza la zona ESCO o la que use tu empresa como zona fiscal propia",
+       "detalle": "Anota su código; lo verás después en la cadena del impuesto."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "zone_taiter es obligatorio y no tiene un catálogo cerrado; el valor 1 es el predeterminado para territorio común."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-1-clases-tipos",
+     "titulo": "Clases y tipos de impuestos",
+     "paraQueSirve": "Las clases agrupan familias fiscales como IVA, IRPF, IGIC o IPSI, y los tipos definen porcentaje, base de cálculo, deducibilidad, prorrata y cuentas contables.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Maestros Impuestos",
+      "Clases de impuestos"
+     ],
+     "explicacion": [
+      "Una clase de impuesto dice si es IVA, retención, detracción, equivalencia, especiales, medioambientales u otros. Tiene tipo N, R, D, E, S, M o X, un orden de precedencia de 1 a 4 y un tipo de cálculo individual, máximo, mínimo o promedio.",
+      "El tipo de impuesto añade el porcentaje concreto y la base de cálculo: importe neto, margen comercial, margen global, importe con impuestos, sobre cantidad o fijo por unidad. También decide si aplica deducción o prorrata y qué códigos de integración usa.",
+      "Por dentro: la clase se guarda en ctax_class y el tipo en ctax_type; este último referencia cuentas de cctanemh y otros ctax_type para ISP o validación posterior. type_porcen debe estar entre -100 y 100, type_bascal solo admite 0, 1, 2, 3, 5 y 6, y type_status solo A o C."
+     ],
+     "campos": [
+      {
+       "campo": "Clase de impuesto",
+       "significado": "Código de la familia fiscal.",
+       "ejemplo": "IVA"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Texto visible en listas y formularios.",
+       "ejemplo": "Impuesto sobre el Valor Añadido"
+      },
+      {
+       "campo": "Tipo de impuesto",
+       "significado": "Categoría N, R, D, E, S, M o X.",
+       "ejemplo": "N"
+      },
+      {
+       "campo": "Orden de precedencia",
+       "significado": "Nivel 1 a 4; un valor inferior se procesa antes.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Código ctax_type",
+       "significado": "Clave primaria del tipo de impuesto.",
+       "ejemplo": "ESG"
+      },
+      {
+       "campo": "Porcentaje type_porcen",
+       "significado": "Tanto por ciento del impuesto, entre -100 y 100.",
+       "ejemplo": "21"
+      },
+      {
+       "campo": "Base de cálculo type_bascal",
+       "significado": "0 importe neto, 1 margen comercial, 2 margen global, 3 importe con impuestos, 5 sobre cantidad, 6 fijo por unidad.",
+       "ejemplo": "0"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y fíjate en la lista de clases de impuestos",
+       "detalle": "Identifica las clases de IVA, retención y otras familias.",
+       "imagen": "icon-impuestos-002.webp"
+      },
+      {
+       "texto": "Abre Tipos de impuestos y localiza un tipo de IVA general",
+       "detalle": "Comprueba type_porcen, type_bascal y type_status.",
+       "imagen": "icon-impuestos-003.webp"
+      },
+      {
+       "texto": "Compara un tipo normal y un tipo de retención",
+       "detalle": "Fíjate en que el tipo de retención suele tener type_porcen negativo y base de cálculo distinta."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La precedencia de clase se define en niveles 1 a 4; un valor inferior se procesa antes, pero la documentación no muestra mensajes de error literales."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-1-operaciones",
+     "titulo": "Operaciones impositivas",
+     "paraQueSirve": "La operación impositiva define el tratamiento fiscal de la operación mercantil: sujeción, ISP, retenciones, libro fiscal, claves de declaración y e-Reporting.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Maestros Impuestos",
+      "Operaciones Impositivas"
+     ],
+     "explicacion": [
+      "Una operación dice si está sujeta, no sujeta o sujeta con porcentaje de la operación destino; si lleva retención o ISP; si es grupo IVA o triangular; y a qué libro y diario contable se asocia.",
+      "Por dentro: se guarda en ctax_operation y referencia ctax_class, ctax_book, ctax_operkey y cdiarios. Tiene autorreferencias para ISP recibida/emitida y operación destino. La sujeción solo admite 0, 1 o 2; retención, ISP, grupo IVA y triangular solo 0 o 1."
+     ],
+     "campos": [
+      {
+       "campo": "Código",
+       "significado": "Clave de la operación impositiva.",
+       "ejemplo": "CLBC"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Texto de la operación.",
+       "ejemplo": "Compra local bienes"
+      },
+      {
+       "campo": "Clase",
+       "significado": "Clase de impuesto asociada.",
+       "ejemplo": "IVA"
+      },
+      {
+       "campo": "Naturaleza",
+       "significado": "Naturaleza de la operación; valores no listados en la ficha.",
+       "ejemplo": "Operación sujeta"
+      },
+      {
+       "campo": "Sujeta",
+       "significado": "0 no sujeta, 1 sujeta, 2 sujeta con porcentaje de operación destino.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Retención",
+       "significado": "0 no lleva retención, 1 sí lleva.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "ISP",
+       "significado": "0 no es inversión del sujeto pasivo, 1 sí lo es.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Grupo IVA",
+       "significado": "0 no es grupo IVA, 1 sí lo es.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Operación triangular",
+       "significado": "0 no es triangular, 1 sí lo es.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Operación destino",
+       "significado": "Operación relacionada para sujeción con porcentaje.",
+       "ejemplo": "Código de otra operación"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y mira una operación de compra local",
+       "detalle": "Comprueba Sujeta = 1, Retención = 0, ISP = 0.",
+       "imagen": "icon-impuestos-004.webp"
+      },
+      {
+       "texto": "Abre una operación con ISP y comprueba Operación ISP recibida y emitida",
+       "detalle": "Las dos deben informarse conjuntamente y la operación debe tener ISP = 1."
+      },
+      {
+       "texto": "Verifica una operación triangular",
+       "detalle": "Comprueba que Operación triangular solo admite 0 y 1."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las operaciones ISP recibida y emitida se informan conjuntamente y requieren oper_isp = 1. La documentación no muestra mensajes de error literales."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-1-claves",
+     "titulo": "Claves fiscales: artículo, tercero, documento, tipología y zona-artículo",
+     "paraQueSirve": "Las claves clasifican el artículo, el tercero o el documento y alimentan el motor fiscal; no calculan el impuesto por sí solas.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Maestros Impuestos",
+      "Claves impositivas de artículo"
+     ],
+     "explicacion": [
+      "La clave impositiva del artículo clasifica su naturaleza fiscal: bien, servicio, inversión, alquiler, suplido, seguros u otros. Admite hasta 6 caracteres y el código no calcula el impuesto; solo alimenta al motor.",
+      "La clave fiscal por tercero identifica el régimen del cliente o proveedor, como RECC, RREQ, REBU o REAGYP. La clave fiscal por documento define el régimen del documento y su mapeo; la clave por tipologías caracteriza compras y ventas según país.",
+      "La excepción por zona fiscal y artículo particulariza la clave según la zona; usa jerarquía R01-R06 y vigencia. Se guarda en ctax_artkey_zone y relaciona zona, artículo y clave.",
+      "Por dentro: ctax_artkey, ctax_terkey, ctax_dockey, ctax_clasif y ctax_artkey_zone son las tablas; ctax_artkey_zone enlaza con ctax_zone, ctax_artkey y garticul de forma condicional. zone_artk_vigfin debe ser mayor o igual que zone_artk_vigini."
+     ],
+     "campos": [
+      {
+       "campo": "Clave fiscal artk_code",
+       "significado": "Código de hasta 6 caracteres.",
+       "ejemplo": "BOR"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Texto de la clave.",
+       "ejemplo": "Bien ordinario"
+      },
+      {
+       "campo": "Estado artk_estado",
+       "significado": "A Activo, C Cerrado.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "Naturaleza artk_nature",
+       "significado": "B Bien, S Servicio, I Inversión, R Alquiler, O Suplido, P Seguros, X Otros.",
+       "ejemplo": "B"
+      },
+      {
+       "campo": "Clave fiscal auxiliar artk_codaux",
+       "significado": "Código auxiliar para mapeos.",
+       "ejemplo": "código auxiliar"
+      },
+      {
+       "campo": "Mapeo fiscal artk_taxmap",
+       "significado": "Valor de mapeo fiscal.",
+       "ejemplo": "código de mapeo"
+      },
+      {
+       "campo": "Zona fiscal zone_artk_taxzon",
+       "significado": "Zona para la excepción artículo-zona.",
+       "ejemplo": "ESCO"
+      },
+      {
+       "campo": "Artículo zone_artk_codart",
+       "significado": "Código del artículo excepcionado.",
+       "ejemplo": "código de artículo"
+      },
+      {
+       "campo": "Clave fiscal zone_artk_taxkey",
+       "significado": "Clave fiscal alternativa para zona y artículo.",
+       "ejemplo": "RGEN"
+      },
+      {
+       "campo": "Inicio vigencia zone_artk_vigini",
+       "significado": "Fecha desde la que aplica la excepción.",
+       "ejemplo": "fecha"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y localiza una clave de artículo BOR o SOR",
+       "detalle": "Comprueba artk_code, artk_nature y artk_estado.",
+       "imagen": "icon-impuestos-005.webp"
+      },
+      {
+       "texto": "Abre Clave fiscal por tercero y comprueba los regímenes RECC, RREQ, REBU o REAGYP",
+       "detalle": "Localiza un tercero con régimen de criterio de caja o recargo de equivalencia."
+      },
+      {
+       "texto": "Abre Clave fiscal por zona fiscal y artículo y revisa una excepción con jerarquía R01-R06",
+       "detalle": "Comprueba que zone_artk_vigfin sea mayor o igual que zone_artk_vigini."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No hay restricción que impida solapes de vigencia en ctax_artkey_zone; si hay dos excepciones con distinta clave y fechas solapadas, revisa la jerarquía R01-R06 para evitar ambigüedad."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-1-reglas-agencia",
+     "titulo": "Reglas de aplicación y maestros de agencia, periodos y excepciones",
+     "paraQueSirve": "Las reglas centralizan los criterios de entrada y devuelven operación y tipo de impuesto; los maestros de agencia y periodos completan la configuración tributaria y de envío.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Maestros Impuestos",
+      "Reglas de Aplicación de Impuestos"
+     ],
+     "explicacion": [
+      "La regla fiscal es el motor central: recibe zona fiscal de empresa, zona fiscal del tercero, clave fiscal del artículo, clave fiscal del tercero, clase de impuesto y país, y devuelve operación fiscal y tipo de impuesto para compras y ventas.",
+      "Existen excepciones condicionales: impuesto por tercero sustituye operación o impuesto para un tercero y periodo; grupos fiscales definen tratamiento para operaciones entre grupo, emisor y receptor; y la excepción por zona y artículo ya vista particulariza la clave.",
+      "La agencia tributaria guarda los parámetros de SII, TicketBAI, Zuzendu, Veri*Factu y SIF; la relación empresa-agencia centraliza identificación fiscal y obligaciones de e-Reporting; los periodos fiscales y tributarios organizan liquidaciones.",
+      "Por dentro: ctax_rule referencia ctax_zone, ctax_terkey, ctax_artkey, ctax_operation, ctax_type, ctiponac, ctax_class, ctax_prorrata, ctax_grpfis, ctax_tershift y ctax_artkey_zone. Además intervienen ctax_agencia, ctax_period, ctax_agencia_periodo y ctax_agencia_empresa. En ctax_rule, rule_priori mayor indica mayor precedencia y los bloques de compras o ventas deben informarse completos o vacíos."
+     ],
+     "campos": [
+      {
+       "campo": "rule_seqno",
+       "significado": "Identificador interno de la regla.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "rule_codnac",
+       "significado": "País de la regla.",
+       "ejemplo": "código de país"
+      },
+      {
+       "campo": "rule_taxclass",
+       "significado": "Clase de impuesto de la regla.",
+       "ejemplo": "IVA"
+      },
+      {
+       "campo": "rule_fecini",
+       "significado": "Fecha inicio de vigencia.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "rule_priori",
+       "significado": "Prioridad; a mayor valor, mayor precedencia.",
+       "ejemplo": "10"
+      },
+      {
+       "campo": "rule_status",
+       "significado": "A Activo o C Cerrado/Bloqueado.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "rule_zonemp",
+       "significado": "Zona fiscal de la empresa.",
+       "ejemplo": "ESCO"
+      },
+      {
+       "campo": "rule_zonter",
+       "significado": "Zona fiscal del tercero.",
+       "ejemplo": "INT"
+      },
+      {
+       "campo": "rule_keyter",
+       "significado": "Clave fiscal del tercero.",
+       "ejemplo": "RGEN"
+      },
+      {
+       "campo": "rule_keyart",
+       "significado": "Clave fiscal del artículo.",
+       "ejemplo": "BOR"
+      },
+      {
+       "campo": "rule_out_oper",
+       "significado": "Operación fiscal de salida.",
+       "ejemplo": "CLBC"
+      },
+      {
+       "campo": "rule_out_taxcode",
+       "significado": "Tipo de impuesto de salida.",
+       "ejemplo": "ESG"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Reglas de Aplicación y localiza una regla con entrada y salida",
+       "detalle": "Fíjate en rule_zonemp, rule_zonter, rule_keyter, rule_keyart y en rule_out_oper/rule_out_taxcode."
+      },
+      {
+       "texto": "Abre Impuesto por tercero y revisa una sustitución de operación o impuesto",
+       "detalle": "Comprueba que Operación Origen y Operación Destino se informan conjuntamente.",
+       "imagen": "icon-impuestos-006.webp"
+      },
+      {
+       "texto": "Abre Grupos fiscales y comprueba emisor, receptor y porcentaje de base",
+       "detalle": "Recuerda que emisor y receptor deben ser distintos y la base está entre 0 y 100.",
+       "imagen": "icon-impuestos-007.webp"
+      },
+      {
+       "texto": "Abre Periodos fiscales y anota el código peri_taxref de un período",
+       "detalle": "Los valores admitidos son 01-12, 1T-4T y 0A."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En ctax_rule, un bloque de compras o ventas debe estar completo o vacío; no se permite informar solo una parte."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué entradas combina el motor fiscal para devolver una operación y un tipo de impuesto?",
+     "opciones": [
+      "Zona fiscal de empresa, zona fiscal del tercero, clave fiscal del artículo, clave fiscal del tercero y regla fiscal aplicable",
+      "Solo la zona fiscal del tercero y el libro de facturas",
+      "Solo la clave fiscal del artículo y el porcentaje de IVA",
+      "Solo el tipo de impuesto y la cuenta contable"
+     ],
+     "correcta": 0,
+     "explicacion": "La cadena documentada combina zona empresa, zona tercero, clave artículo, clave tercero y regla fiscal para obtener operación y tipo."
+    },
+    {
+     "pregunta": "En ctax_operation, el campo Sujeta admite:",
+     "opciones": [
+      "Solo 1 y 2",
+      "0 no sujeta, 1 sujeta, 2 sujeta con porcentaje de operación destino",
+      "0, 1, 2 y 3",
+      "Solo 0 y 1"
+     ],
+     "correcta": 1,
+     "explicacion": "La sujeción solo admite 0, 1 y 2 según la documentación."
+    },
+    {
+     "pregunta": "¿Entre qué valores debe estar type_porcen en ctax_type?",
+     "opciones": [
+      "Entre -10 y 10",
+      "Entre 0 y 21",
+      "Entre -100 y 100",
+      "Entre 0 y 100"
+     ],
+     "correcta": 2,
+     "explicacion": "La restricción c_ctax_type1 exige type_porcen entre -100 y 100."
+    },
+    {
+     "pregunta": "En ctax_zone, zone_intrast solo admite:",
+     "opciones": [
+      "A y C",
+      "S y N",
+      "0, 1 y 2",
+      "0 y 1"
+     ],
+     "correcta": 3,
+     "explicacion": "La restricción c_ctax_zone1 limita zone_intrast a 0 no se declara o 1 sí se declara."
+    },
+    {
+     "pregunta": "En ctax_rule, a mayor rule_priori:",
+     "opciones": [
+      "Mayor precedencia de la regla",
+      "Solo aplica si la regla está cerrada",
+      "No influye en el orden",
+      "Menor precedencia de la regla"
+     ],
+     "correcta": 0,
+     "explicacion": "El dato literal indica que a mayor rule_priori, mayor precedencia."
+    }
+   ],
+   "checklist": [
+    "Abre Zonas fiscales y comprueba que existe una zona con zone_intrast 0 o 1 y zone_taiter 1.",
+    "Abre Clases de impuestos y localiza una clase de tipo N con orden de precedencia entre 1 y 4.",
+    "Abre Tipos de impuestos y comprueba un tipo con type_porcen entre -100 y 100 y type_bascal 0, 1, 2, 3, 5 o 6.",
+    "Abre Operaciones Impositivas y comprueba una operación con Sujeta 0, 1 o 2 y triangular 0 o 1.",
+    "Abre Claves impositivas de artículo y localiza artk_code de hasta 6 caracteres y naturaleza B, S, I, R, O, P o X.",
+    "Abre Clave fiscal por tercero y localiza un régimen como RECC, RREQ, REBU o REAGYP.",
+    "Abre Clave fiscal por zona fiscal y artículo y comprueba la jerarquía R01-R06 y que zone_artk_vigfin >= zone_artk_vigini.",
+    "Abre Impuesto por tercero y comprueba que Operación Origen y Operación Destino se informan conjuntamente.",
+    "Abre Reglas de Aplicación y comprueba una regla con bloque compras o ventas completo o vacío.",
+    "Abre Periodos fiscales y comprueba códigos peri_taxref 01-12, 1T-4T y 0A."
+   ],
+   "problemas": [
+    {
+     "problema": "Al guardar una zona fiscal con zone_intrast distinto de 0 o 1, la base de datos lo rechaza.",
+     "solucion": "Usa solo 0 para no declarar en INTRASTAT o 1 para declarar."
+    },
+    {
+     "problema": "Al guardar una operación impositiva, la pareja ISP recibida y emitida no se acepta si la operación no tiene ISP = 1.",
+     "solucion": "Marca ISP = 1 e informa las dos operaciones ISP conjuntamente."
+    },
+    {
+     "problema": "Al guardar un tipo de impuesto, type_bascal con valor 4 no se acepta.",
+     "solucion": "Usa una base de cálculo válida: 0, 1, 2, 3, 5 o 6."
+    },
+    {
+     "problema": "En ctax_artkey_zone se pueden solapar vigencias con distinta clave y generar ambigüedad.",
+     "solucion": "Revisa las fechas y la jerarquía R01-R06; documenta el motivo en zone_artk_descri."
+    }
+   ]
+  },
+  {
+   "id": "icon-impuestos-2",
+   "numero": 2,
+   "titulo": "Registro fiscal, tipos y reglas de IVA",
+   "objetivo": "Tendrás identificado cómo se genera el registro fiscal, qué tablas lo componen y cómo se tratan el IVA y la inversión del sujeto pasivo.",
+   "concepto": "Los documentos con impacto fiscal generan un registro fiscal que centraliza cabecera y líneas. En él se reflejan naturaleza de compra o venta, tipo de documento, rectificaciones y estado de e-Reporting.\n\nAdemás verás ejemplos de registros fiscales de operaciones locales, intracomunitarias y con regímenes especiales, y repasarás el IVA con sus tipos y la inversión del sujeto pasivo.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "icon-impuestos-2-registro",
+     "titulo": "Registro fiscal y tablas ctax_move_head / ctax_move_line",
+     "paraQueSirve": "El registro fiscal centraliza los movimientos con impacto fiscal para su consulta, validación y envío telemático.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Registro Fiscal"
+     ],
+     "explicacion": [
+      "Cada documento con impacto fiscal genera una cabecera en ctax_move_head y al menos una línea en ctax_move_line. La cabecera guarda naturaleza de factura, tipo de documento, libro, fechas, zonas y referencias al asiento contable.",
+      "El registro admite rectificaciones: taxh_tiprec puede ser 0 no es rectificación, 1 anulador, 2 sustitutiva o 3 diferencias. También controla el tipo de cambio con taxh_camope 0 dividir o 1 multiplicar.",
+      "Por dentro: ctax_move_head se relaciona con capuntes, ctax_book, cterdire, cefectos y ctercero, y tiene autorreferencia por taxh_seqori. La restricción c_ctax_move_head2 exige taxh_fecha >= taxh_fecdoc."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_seqno",
+       "significado": "Identificador del registro fiscal.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "taxh_apteid",
+       "significado": "Referencia al asiento contable.",
+       "ejemplo": "asiento"
+      },
+      {
+       "campo": "taxh_seqori",
+       "significado": "Registro original para rectificaciones.",
+       "ejemplo": "secuencia origen"
+      },
+      {
+       "campo": "taxh_loteid",
+       "significado": "Lote de proceso, si existe.",
+       "ejemplo": "lote"
+      },
+      {
+       "campo": "taxh_natfac",
+       "significado": "C Compras o V Ventas.",
+       "ejemplo": "C"
+      },
+      {
+       "campo": "taxh_tipdoc",
+       "significado": "Tipo de documento, por defecto F1.",
+       "ejemplo": "F1"
+      },
+      {
+       "campo": "taxh_book",
+       "significado": "Libro fiscal al que pertenece.",
+       "ejemplo": "E"
+      },
+      {
+       "campo": "taxh_fecha",
+       "significado": "Fecha del registro fiscal.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "taxh_fecdoc",
+       "significado": "Fecha del documento original.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "taxh_zondel",
+       "significado": "Zona fiscal de entrega/empresa.",
+       "ejemplo": "ESCO"
+      },
+      {
+       "campo": "taxh_zonter",
+       "significado": "Zona fiscal del tercero.",
+       "ejemplo": "INT"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y mira un registro fiscal",
+       "detalle": "Fíjate en la cabecera y en los campos taxh_natfac, taxh_tipdoc y taxh_book.",
+       "imagen": "icon-impuestos-008.webp"
+      },
+      {
+       "texto": "Comprueba que taxh_fecha es mayor o igual que taxh_fecdoc",
+       "detalle": "La restricción c_ctax_move_head2 lo exige."
+      },
+      {
+       "texto": "Si el registro es una rectificación, localiza taxh_tiprec y taxh_seqori",
+       "detalle": "Valores posibles 0, 1, 2 y 3."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "taxh_tipdoc tiene valor por defecto F1; otros tipos se ven en E-Reporting."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-2-ejemplos",
+     "titulo": "Ejemplos de registros fiscales",
+     "paraQueSirve": "La página muestra ejemplos de facturas de compras, ventas, intracomunitarias, exportaciones y territorios con régimen específico.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Ejemplos de registros fiscales"
+     ],
+     "explicacion": [
+      "Los ejemplos siguen la secuencia Proveedor, Acreedor, Empresa, Motor Fiscal y Contabilidad. Utilizan zonas como ESCO, EUR, INT, ESCN, ESCE y ESML, y operaciones como CLBC, CLSC, CUBC, SLBC, SLSC, SUBC, EXBC y EXSC.",
+      "Los impuestos incluidos son ESG, ESR, UEG, UER y EVG; también se citan IGIC e IPSI como impuestos locales."
+     ],
+     "campos": [
+      {
+       "campo": "Zona Fiscal Empresa",
+       "significado": "Zona fiscal de la empresa en el ejemplo.",
+       "ejemplo": "ESCO"
+      },
+      {
+       "campo": "Zona Fiscal Tercero",
+       "significado": "Zona fiscal del tercero en el ejemplo.",
+       "ejemplo": "INT"
+      },
+      {
+       "campo": "Clave Fiscal Empresa",
+       "significado": "Clave fiscal de la empresa.",
+       "ejemplo": "RGEN"
+      },
+      {
+       "campo": "Clave Fiscal Tercero",
+       "significado": "Clave fiscal del tercero.",
+       "ejemplo": "RGEN"
+      },
+      {
+       "campo": "Operación",
+       "significado": "Operación impositiva que se aplica.",
+       "ejemplo": "CLBC"
+      },
+      {
+       "campo": "Tipo IVA",
+       "significado": "Tipo de impuesto aplicado.",
+       "ejemplo": "ESG"
+      },
+      {
+       "campo": "Cuenta",
+       "significado": "Cuenta contable de la línea.",
+       "ejemplo": "cuenta"
+      },
+      {
+       "campo": "Contrapartida",
+       "significado": "Cuenta de contrapartida.",
+       "ejemplo": "contrapartida"
+      },
+      {
+       "campo": "Debe",
+       "significado": "Importe al debe.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "Haber",
+       "significado": "Importe al haber.",
+       "ejemplo": "importe"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y observa un ejemplo de compra intracomunitaria",
+       "detalle": "Localiza zonas EUR/INT y operación CUBC o SUBC.",
+       "imagen": "icon-impuestos-009.webp"
+      },
+      {
+       "texto": "Compara un ejemplo de exportación con una operación interior",
+       "detalle": "Fíjate en las zonas y en los tipos de impuesto usados."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No se documentan botones ni validaciones propias; la página es descriptiva con capturas del registro fiscal."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-2-iva",
+     "titulo": "IVA: tipos y reglas",
+     "paraQueSirve": "El IVA general es 21 %, el reducido 10 % y el superreducido 4 %. Las operaciones se clasifican por naturaleza C compras o V ventas; para compras los importes se multiplican por -1.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "IVA",
+      "Impuestos IVA"
+     ],
+     "explicacion": [
+      "El IVA se articula desde la información fiscal de operaciones, movimientos fiscales y configuración de cada modelo tributario.",
+      "La estructura fiscal relaciona cabecera y líneas mediante taxh_seqno = taxl_seqno. El importe fiscal de una línea se calcula como taxl_basimp + taxl_basnimp + taxl_cuoded + taxl_cuonded.",
+      "Por dentro: además de ctax_move_head y ctax_move_line intervienen ctax_operation, ctax_form_oper, ctax_form_line, ctax_form_group, ctax_form_chapter, @tmp_1 y ctax_form_answer."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_empcode",
+       "significado": "Empresa del registro fiscal.",
+       "ejemplo": "código de empresa"
+      },
+      {
+       "campo": "taxh_fecha",
+       "significado": "Fecha del movimiento.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "taxh_ejefis",
+       "significado": "Ejercicio fiscal.",
+       "ejemplo": "ejercicio"
+      },
+      {
+       "campo": "taxh_perfis",
+       "significado": "Periodo fiscal.",
+       "ejemplo": "periodo"
+      },
+      {
+       "campo": "taxh_tercer",
+       "significado": "Tercero de la operación.",
+       "ejemplo": "código de tercero"
+      },
+      {
+       "campo": "taxh_natfac",
+       "significado": "C Compras o V Ventas.",
+       "ejemplo": "V"
+      },
+      {
+       "campo": "taxl_oper",
+       "significado": "Operación fiscal de la línea.",
+       "ejemplo": "CLBC"
+      },
+      {
+       "campo": "taxl_code",
+       "significado": "Tipo de impuesto de la línea.",
+       "ejemplo": "ESG"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la página de IVA y localiza los tipos de IVA",
+       "detalle": "Comprueba los porcentajes 21 %, 10 % y 4 %.",
+       "imagen": "icon-impuestos-010.webp"
+      },
+      {
+       "texto": "Comprueba la fórmula del importe fiscal en una línea",
+       "detalle": "taxl_basimp + taxl_basnimp + taxl_cuoded + taxl_cuonded."
+      },
+      {
+       "texto": "Verifica que en naturaleza C los importes se multiplican por -1",
+       "detalle": "Abre una compra y mira el signo en las cuotas."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La relación entre cabecera y línea usa taxh_seqno = taxl_seqno; si no coinciden, el registro está incompleto."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-2-isp",
+     "titulo": "Inversión del sujeto pasivo (ISP)",
+     "paraQueSirve": "En el ISP el destinatario declara el IVA y se generan simultáneamente IVA devengado y soportado.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "IVA",
+      "Impuesto ISP"
+     ],
+     "explicacion": [
+      "La inversión del sujeto pasivo se configura en la operación fiscal con oper_isp, oper_in_oper y oper_out_oper. En determinadas configuraciones el impuesto del documento inicial puede tener porcentaje efectivo 0 %.",
+      "El registro fiscal conserva taxh_natfac, taxh_tipdoc, zonas y periodos; la línea derivada se relaciona con la original mediante taxl_linori.",
+      "Por dentro: ctax_move_head y ctax_move_line guardan los movimientos; los campos oper_isp, oper_in_oper y oper_out_oper pertenecen a ctax_operation."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_seqno",
+       "significado": "Identificador del registro.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "taxh_natfac",
+       "significado": "C Compras o V Ventas.",
+       "ejemplo": "C"
+      },
+      {
+       "campo": "taxh_tipdoc",
+       "significado": "Tipo de documento.",
+       "ejemplo": "F1"
+      },
+      {
+       "campo": "taxh_ejefis",
+       "significado": "Ejercicio fiscal.",
+       "ejemplo": "ejercicio"
+      },
+      {
+       "campo": "taxh_perfis",
+       "significado": "Periodo fiscal.",
+       "ejemplo": "periodo"
+      },
+      {
+       "campo": "taxh_zondel",
+       "significado": "Zona fiscal de la empresa.",
+       "ejemplo": "ESCO"
+      },
+      {
+       "campo": "taxh_zonter",
+       "significado": "Zona fiscal del tercero.",
+       "ejemplo": "INT"
+      },
+      {
+       "campo": "oper_isp",
+       "significado": "Indica si la operación es ISP (0/1).",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "oper_in_oper",
+       "significado": "Operación ISP recibida.",
+       "ejemplo": "código de operación"
+      },
+      {
+       "campo": "oper_out_oper",
+       "significado": "Operación ISP emitida.",
+       "ejemplo": "código de operación"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre una operación con ISP y comprueba oper_isp = 1",
+       "detalle": "Revisa oper_in_oper y oper_out_oper; deben estar informadas."
+      },
+      {
+       "texto": "Simula una factura de compra con esa operación",
+       "detalle": "Observa si el impuesto inicial sale a 0 % y se generan las cuotas derivadas."
+      },
+      {
+       "texto": "Consulta el registro fiscal para ver taxl_linori en las líneas derivadas",
+       "detalle": "La línea derivada apunta a la línea original."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si la regla identifica ISP pero no existe información fiscal necesaria para generar las cuotas derivadas, el tratamiento no podrá completarse correctamente."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "En ctax_move_head, taxh_tiprec admite los valores:",
+     "opciones": [
+      "A Activa y C Cerrada",
+      "0 no es rectificación, 1 anulador, 2 sustitutiva, 3 diferencias",
+      "Solo 1 y 2",
+      "Solo 0 y 1"
+     ],
+     "correcta": 1,
+     "explicacion": "La restricción c_ctax_move_head19 limita taxh_tiprec a 0, 1, 2 y 3."
+    },
+    {
+     "pregunta": "¿Qué exige la restricción c_ctax_move_head2?",
+     "opciones": [
+      "taxh_fecha <= taxh_fecdoc",
+      "taxh_tipdoc = F1",
+      "taxh_fecha >= taxh_fecdoc",
+      "taxh_natfac = taxh_natfac"
+     ],
+     "correcta": 2,
+     "explicacion": "La fecha del registro fiscal debe ser igual o posterior a la fecha del documento."
+    },
+    {
+     "pregunta": "El importe fiscal de una línea en IVA se calcula como:",
+     "opciones": [
+      "taxl_basimp + taxl_basnimp",
+      "taxl_basimp - taxl_cuoded",
+      "taxl_cuoded + taxl_cuonded",
+      "taxl_basimp + taxl_basnimp + taxl_cuoded + taxl_cuonded"
+     ],
+     "correcta": 3,
+     "explicacion": "La documentación indica la fórmula completa con bases y cuotas deducibles y no deducibles."
+    },
+    {
+     "pregunta": "Los campos oper_isp, oper_in_oper y oper_out_oper pertenecen a:",
+     "opciones": [
+      "ctax_operation",
+      "ctax_move_head",
+      "ctax_prorrata",
+      "ctax_move_line"
+     ],
+     "correcta": 0,
+     "explicacion": "Son campos de la operación fiscal ctax_operation, según la documentación."
+    },
+    {
+     "pregunta": "En el IVA, para las facturas de naturaleza C los importes se:",
+     "opciones": [
+      "Se suman sin cambio",
+      "Multiplican por -1",
+      "Se redondean al alza",
+      "Dividen por 100"
+     ],
+     "correcta": 1,
+     "explicacion": "La documentación indica que en naturaleza C los importes se invierten con signo negativo."
+    }
+   ],
+   "checklist": [
+    "Abre Registro Fiscal y comprueba un registro con taxh_natfac C o V.",
+    "Localiza en un registro el campo taxh_tipdoc y comprueba su valor por defecto F1.",
+    "Abre Ejemplos de registros fiscales y localiza una operación intracomunitaria con zonas EUR/INT.",
+    "Abre Impuestos IVA y comprueba los tipos de IVA 21 %, 10 % y 4 %.",
+    "En un registro fiscal, comprueba que taxh_fecha >= taxh_fecdoc.",
+    "Abre la pantalla de IVA y localiza la fórmula importe fiscal = basimp + basnimp + cuoded + cuonded.",
+    "En Registro Fiscal, comprueba que taxh_tiprec admite 0, 1, 2 y 3.",
+    "Abre Impuesto ISP y localiza una operación con oper_isp = 1.",
+    "En un registro ISP, comprueba taxl_linori en las líneas derivadas.",
+    "Abre una factura de compra y verifica que los importes se muestran en negativo."
+   ],
+   "problemas": [
+    {
+     "problema": "Al consultar un registro fiscal, la fecha de operación es anterior a la fecha de documento y no se guarda.",
+     "solucion": "Ajusta taxh_fecha para que sea mayor o igual que taxh_fecdoc."
+    },
+    {
+     "problema": "En una operación ISP, no se generan las cuotas derivadas de IVA devengado y soportado.",
+     "solucion": "Comprueba oper_isp = 1 y que exista información fiscal suficiente; revisa oper_in_oper y oper_out_oper."
+    },
+    {
+     "problema": "Al calcular el importe fiscal de una línea, olvidas sumar bases no imponibles.",
+     "solucion": "Usa la fórmula completa: taxl_basimp + taxl_basnimp + taxl_cuoded + taxl_cuonded."
+    },
+    {
+     "problema": "En una factura de compra, los importes aparecen en positivo.",
+     "solucion": "Verifica que la naturaleza sea C y que el sistema aplique el signo negativo correspondiente."
+    }
+   ]
+  },
+  {
+   "id": "icon-impuestos-3",
+   "numero": 3,
+   "titulo": "Liquidación y regularización",
+   "objetivo": "Tendrás identificados los procesos de impuestos, los modelos de liquidación y la regularización de la prorrata, con una mención al E-Reporting/SII.",
+   "concepto": "Los procesos de impuestos permiten generar autofacturas/ISP, validar movimientos, retroceder, cargar desde Excel y enviar SII de facturas y pagos. Las claves en declaraciones organizan claves y subclaves para modelos y e-Reporting.\n\nPara terminar, repasas la liquidación del IVA con los modelos 303, 390 y 349, la prorrata y su regularización, y una mención breve al E-Reporting/SII/VERIFACTU.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-impuestos-3-modelos",
+     "titulo": "Modelos de liquidación: 303, 390 y 349",
+     "paraQueSirve": "El IVA se liquida mediante los modelos 303, 390 y 349, con periodicidades mensual/trimestral, anual y mensual/trimestral respectivamente.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "IVA",
+      "Impuestos IVA"
+     ],
+     "explicacion": [
+      "El Modelo 303 es la autoliquidación del IVA, con periodicidad mensual o trimestral. El Modelo 390 es el resumen anual del IVA y el Modelo 349 declara las operaciones intracomunitarias.",
+      "La generación del Modelo 303 utiliza la configuración del formulario ES303 y una tabla temporal @tmp_1; relaciona taxl_oper con ctax_form_oper.formo_opeimp y comprueba formo_taxtype con taxl_code. Para el Modelo 390 se usa ES390 y las tablas ctax_form_oper, ctax_form_line, ctax_form_group y ctax_form_chapter.",
+      "El Modelo 303 contempla empresas exoneradas del 390 mediante ctax_form_answer y la respuesta EXO390 = 1 asociada al formulario ES303.",
+      "Por dentro: además de ctax_move_head y ctax_move_line intervienen ctax_operation, ctax_form_oper, ctax_form_line, ctax_form_group, ctax_form_chapter, @tmp_1 y ctax_form_answer."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_empcode",
+       "significado": "Empresa del registro fiscal.",
+       "ejemplo": "código de empresa"
+      },
+      {
+       "campo": "taxh_ejefis",
+       "significado": "Ejercicio fiscal.",
+       "ejemplo": "ejercicio"
+      },
+      {
+       "campo": "taxh_perfis",
+       "significado": "Periodo fiscal.",
+       "ejemplo": "periodo"
+      },
+      {
+       "campo": "taxh_natfac",
+       "significado": "C Compras o V Ventas.",
+       "ejemplo": "V"
+      },
+      {
+       "campo": "taxl_oper",
+       "significado": "Operación fiscal de la línea.",
+       "ejemplo": "CLBC"
+      },
+      {
+       "campo": "taxl_code",
+       "significado": "Tipo de impuesto de la línea.",
+       "ejemplo": "ESG"
+      },
+      {
+       "campo": "taxl_type",
+       "significado": "Tipo de impuesto N, R, E, D, M, S o X.",
+       "ejemplo": "N"
+      },
+      {
+       "campo": "taxl_valida",
+       "significado": "Indicador de línea válida.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "taxl_basimp",
+       "significado": "Base imponible.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxl_cuoded",
+       "significado": "Cuota deducible.",
+       "ejemplo": "importe"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la página de IVA y localiza los modelos 303, 390 y 349",
+       "detalle": "Comprueba la periodicidad de cada uno.",
+       "imagen": "icon-impuestos-010.webp"
+      },
+      {
+       "texto": "En el Modelo 303, revisa la configuración ES303 y la tabla @tmp_1",
+       "detalle": "Fíjate en la relación de taxl_oper con formo_opeimp."
+      },
+      {
+       "texto": "Comprueba la exoneración del 390 si existe EXO390 = 1 en ES303",
+       "detalle": "Verifica en ctax_form_answer."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Para facturas de naturaleza C los importes se multiplican por -1 en la liquidación."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-3-claves",
+     "titulo": "Claves en declaraciones",
+     "paraQueSirve": "Define claves, subclaves y desgloses para identificar operaciones en declaraciones periódicas y e-Reporting.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Maestros Impuestos",
+      "Claves de operaciones fiscales"
+     ],
+     "explicacion": [
+      "Cada clave pertenece a una clase de impuesto y a un modelo/libro/declaración. Tipo 0 son declaraciones periódicas y Tipo 1 e-Reporting. Naturaleza factura puede ser C compras, V ventas o vacío.",
+      "El desglose de subclave exige informar subclave; el orden de precedencia debe ser mayor que 0; el indicador estándar es 0 No o 1 Sí.",
+      "Por dentro: la tabla es ctax_operkey y referencia ctax_class y ctax_form_head. La clave primaria es opek_class + opek_code."
+     ],
+     "campos": [
+      {
+       "campo": "Código",
+       "significado": "Código de la clave.",
+       "ejemplo": "01"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Texto descriptivo.",
+       "ejemplo": "Operación interior"
+      },
+      {
+       "campo": "Clase de impuesto",
+       "significado": "Clase fiscal asociada.",
+       "ejemplo": "IVA"
+      },
+      {
+       "campo": "Modelo/Libro/Declaración",
+       "significado": "Formulario o libro al que aplica.",
+       "ejemplo": "303"
+      },
+      {
+       "campo": "Naturaleza factura",
+       "significado": "C compras, V ventas o vacío.",
+       "ejemplo": "C"
+      },
+      {
+       "campo": "Clave",
+       "significado": "Clave principal de la operación.",
+       "ejemplo": "clave"
+      },
+      {
+       "campo": "Subclave",
+       "significado": "Subclave asociada; obligatoria si hay desglose.",
+       "ejemplo": "subclave"
+      },
+      {
+       "campo": "Desglose de subclave",
+       "significado": "Indica si se desglosa por subclave.",
+       "ejemplo": "Sí"
+      },
+      {
+       "campo": "Orden de precedencia",
+       "significado": "Orden estrictamente mayor que 0.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Tipo",
+       "significado": "0 declaraciones periódicas, 1 e-Reporting.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Indicador estándar",
+       "significado": "0 No, 1 Sí.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Estado",
+       "significado": "A Abierta o C Cerrada.",
+       "ejemplo": "A"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y filtra por un modelo, por ejemplo 303",
+       "detalle": "Fíjate en las claves y subclaves del modelo.",
+       "imagen": "icon-impuestos-011.webp"
+      },
+      {
+       "texto": "Comprueba una clave de e-Reporting con Tipo 1",
+       "detalle": "Localiza naturaleza factura C o V y desglose de subclave."
+      },
+      {
+       "texto": "Verifica que el orden de precedencia es mayor que 0",
+       "detalle": "Si es 0, la clave no se procesará correctamente."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El desglose exige subclave informada; la naturaleza factura solo admite C, V o vacío."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-3-prorrata",
+     "titulo": "Prorrata y regularización",
+     "paraQueSirve": "La prorrata determina la parte deducible del IVA soportado cuando hay actividades con y sin derecho a deducción, y su regularización ajusta la deducción al final del ejercicio.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "IVA",
+      "Prorrata"
+     ],
+     "explicacion": [
+      "La prorrata puede ser general o especial. Un ejemplo documentado: base 1.000 €, IVA 21 %, cuota 210 €, prorrata 80 %, IVA deducible 168 € e IVA no deducible 42 €.",
+      "El maestro de prorrata por empresa y actividad permite definir porcentaje provisional y definitivo por empresa, proyecto, sección y CNAE. pror_porcen está entre 0 y 100; si se informa pror_cnae debe existir proyecto o sección.",
+      "La regularización de prorrata compara el porcentaje definitivo con el utilizado durante el período, identifica cuotas afectadas, ajusta la parte deducible/no deducible y refleja el efecto contable. tax_porpro conserva el criterio aplicado.",
+      "Por dentro: los campos fiscales incluyen tax_porcen, tax_porded, tax_porpro, tax_ctapro, tax_cuoded, tax_cuonded, tax_basimp y tax_basnimp. El maestro usa ctax_prorrata con cempresa, cproyect y cseccion."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa pror_empcode",
+       "significado": "Empresa a la que aplica la prorrata.",
+       "ejemplo": "código de empresa"
+      },
+      {
+       "campo": "Proyecto pror_proyec",
+       "significado": "Proyecto opcional de segmentación.",
+       "ejemplo": "código de proyecto"
+      },
+      {
+       "campo": "Sección pror_seccio",
+       "significado": "Sección opcional de segmentación.",
+       "ejemplo": "código de sección"
+      },
+      {
+       "campo": "CNAE pror_cnae",
+       "significado": "Actividad CNAE; exige proyecto o sección si se informa.",
+       "ejemplo": "código CNAE"
+      },
+      {
+       "campo": "Fecha inicio pror_fecini",
+       "significado": "Inicio de vigencia.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "Fecha fin pror_fecfin",
+       "significado": "Fin de vigencia, mayor o igual que inicio.",
+       "ejemplo": "fecha"
+      },
+      {
+       "campo": "Porcentaje pror_porcen",
+       "significado": "Porcentaje de prorrata entre 0 y 100.",
+       "ejemplo": "80"
+      },
+      {
+       "campo": "Porcentaje definitivo pror_pordef",
+       "significado": "Porcentaje definitivo opcional.",
+       "ejemplo": "90"
+      },
+      {
+       "campo": "Cuenta prorrata pror_ctagas",
+       "significado": "Cuenta contable de la prorrata.",
+       "ejemplo": "cuenta"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el maestro de prorrata por empresa y actividad",
+       "detalle": "Comprueba que pror_porcen está entre 0 y 100.",
+       "imagen": "icon-impuestos-012.webp"
+      },
+      {
+       "texto": "Si hay una línea con CNAE, verifica que tiene proyecto o sección",
+       "detalle": "La restricción c_ctax_prorrata3 lo exige."
+      },
+      {
+       "texto": "Revisa el ejemplo de la página Prorrata",
+       "detalle": "Calcula IVA deducible y no deducible para base 1.000 y prorrata 80 %."
+      },
+      {
+       "texto": "Consulta la regularización de prorrata",
+       "detalle": "Compara el porcentaje definitivo con el provisional y observa el ajuste contable."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La prorrata no modifica el porcentaje de IVA de la operación; puede combinarse con otras restricciones de deducibilidad y el porcentaje final puede ser inferior."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-3-procesos",
+     "titulo": "Procesos de impuestos",
+     "paraQueSirve": "Centraliza los procesos masivos de autofacturas/ISP, validación, retroceso, carga Excel y SII Facturas/Pagos.",
+     "ruta": [
+      "Finanzas",
+      "Impuestos",
+      "Procesos",
+      "Gestión y procesamiento de Impuestos"
+     ],
+     "explicacion": [
+      "La Gestión y procesamiento de Impuestos comprende procesos para gestionar el ciclo de vida de la información fiscal: generación, validación, retroceso, carga y comunicación electrónica.",
+      "Los procesos usan parámetros como FECINI, FECFIN, FECCON, JUSSER y COND para autofacturas/ISP; FECVAL y CADUCA para validación. El retroceso trabaja por movimiento con transacción beginWork/commitWork/rollbackWork.",
+      "La carga Excel se registra en ctax_move_load; load_status 0 pendiente, 1 cargado, y los errores quedan en load_err_message. El envío SII usa taxh_ereport = 1 para Facturas y taxh_ereport = 2 para Pagos.",
+      "Por dentro: además de ctax_move_head y ctax_move_line intervienen casientos, ctax_move_load y ctax_ereport. Hay procedimientos como ctax_move_gen_selfbill, ctax_move_validation y ctax_move_head_enviar_sii_facturas."
+     ],
+     "campos": [
+      {
+       "campo": "seqno",
+       "significado": "Identificador de la carga.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "load_exc_name",
+       "significado": "Nombre del archivo Excel.",
+       "ejemplo": "archivo.xlsx"
+      },
+      {
+       "campo": "load_exc_type",
+       "significado": "Tipo de contenido del Excel.",
+       "ejemplo": "tipo"
+      },
+      {
+       "campo": "load_status",
+       "significado": "0 Pendiente, 1 Cargado, 2/3 permitidos sin documentar.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "load_comment",
+       "significado": "Comentario de la carga.",
+       "ejemplo": "comentario"
+      },
+      {
+       "campo": "load_err_message",
+       "significado": "Mensaje de error si lo hay.",
+       "ejemplo": "mensaje"
+      },
+      {
+       "campo": "load_proc_time",
+       "significado": "Tiempo de procesamiento.",
+       "ejemplo": "segundos"
+      },
+      {
+       "campo": "empcode",
+       "significado": "Empresa de la carga.",
+       "ejemplo": "código de empresa"
+      },
+      {
+       "campo": "formh_code",
+       "significado": "Modelo o formulario asociado.",
+       "ejemplo": "código"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y localiza los bloques de autofacturas/ISP, validación, retroceso, Excel y SII",
+       "detalle": "Identifica los parámetros FECINI, FECFIN, FECVAL y CADUCA."
+      },
+      {
+       "texto": "Ejecuta una validación con un rango de fechas",
+       "detalle": "Observa cómo se recuperan los asientos en casientos."
+      },
+      {
+       "texto": "Consulta una carga Excel y comprueba load_status y load_err_message",
+       "detalle": "Si está en error, revisa el mensaje."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En SII Facturas/Pagos revisa tipcom y msgerr; en cargas Excel revisa load_status y load_err_message."
+      },
+      {
+       "tipo": "nota",
+       "texto": "La documentación menciona E-Reporting, SII y VERIFACTU; el mapeo E-REPORTING SII - VERIFACTU se configura en ctax_erep_map con tax_map_erep 1 SIF, 2 SII."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "El Modelo 303 es:",
+     "opciones": [
+      "La declaración de operaciones intracomunitarias",
+      "El resumen anual del IVA",
+      "La autoliquidación del IVA, con periodicidad mensual/trimestral",
+      "El suministro de información de registros de facturación"
+     ],
+     "correcta": 2,
+     "explicacion": "El Modelo 303 es la autoliquidación del IVA, mensual/trimestral."
+    },
+    {
+     "pregunta": "En ctax_operkey, Tipo 1 significa:",
+     "opciones": [
+      "Solo ventas",
+      "Declaraciones periódicas",
+      "Solo compras",
+      "E-Reporting"
+     ],
+     "correcta": 3,
+     "explicacion": "Tipo 0 son declaraciones periódicas y Tipo 1 e-Reporting."
+    },
+    {
+     "pregunta": "En la prorrata, pror_porcen debe estar:",
+     "opciones": [
+      "Entre 0 y 100",
+      "Entre 1 y 4",
+      "Entre 0 y 21",
+      "Entre -100 y 100"
+     ],
+     "correcta": 0,
+     "explicacion": "La restricción c_ctax_prorrata1 exige pror_porcen entre 0 y 100."
+    },
+    {
+     "pregunta": "En procesos, taxh_ereport = 2 identifica:",
+     "opciones": [
+      "SIF",
+      "SII Pagos",
+      "SAFT-PT",
+      "SII Facturas"
+     ],
+     "correcta": 1,
+     "explicacion": "La documentación asigna taxh_ereport 1 a SII Facturas y 2 a SII Pagos."
+    },
+    {
+     "pregunta": "El ciclo de Gestión y procesamiento de Impuestos se resume como:",
+     "opciones": [
+      "Retroceso → generación → comunicación",
+      "Comunicación → validación → generación",
+      "Generación → validación → retroceso → comunicación",
+      "Validación → comunicación → retroceso"
+     ],
+     "correcta": 2,
+     "explicacion": "El ciclo documentado es generación → validación → retroceso → comunicación."
+    }
+   ],
+   "checklist": [
+    "Abre Gestión y procesamiento de impuestos y localiza los procesos de autofacturas/ISP, validación, retroceso, Excel y SII.",
+    "En carga Excel, comprueba load_status 0 Pendiente o 1 Cargado.",
+    "Abre Claves de operaciones fiscales y filtra por Tipo 0 para declaraciones periódicas.",
+    "Comprueba que una clave de declaración tiene orden > 0 y desglose con subclave.",
+    "Abre Impuestos IVA y localiza los modelos 303, 390 y 349.",
+    "Abre Prorrata y comprueba el ejemplo de prorrata con 80 %.",
+    "Abre Prorrata de Impuestos por Empresa y Actividad y comprueba pror_porcen entre 0 y 100.",
+    "En Registro Fiscal, comprueba taxh_ereport 1 para SII Facturas y 2 para SII Pagos.",
+    "Abre la configuración del Modelo 303 y verifica ES303 y @tmp_1.",
+    "Revisa si existe EXO390 = 1 en ctax_form_answer para el 303."
+   ],
+   "problemas": [
+    {
+     "problema": "En el envío SII Facturas no se envían registros.",
+     "solucion": "Revisa taxh_ereport = 1 y consulta los campos tipcom y msgerr."
+    },
+    {
+     "problema": "En una carga Excel aparece load_status con error.",
+     "solucion": "Consulta load_err_message para ver el motivo del error."
+    },
+    {
+     "problema": "En claves de operaciones fiscales, no se puede desglosar sin subclave.",
+     "solucion": "Informa el campo subclave y el desglose correspondiente."
+    },
+    {
+     "problema": "Al regularizar la prorrata, el porcentaje definitivo no coincide con el provisional.",
+     "solucion": "Compara tax_porpro con el definitivo y revisa el ajuste contable en tax_ctapro."
+    }
+   ]
+  },
+  {
+   "id": "icon-impuestos-4",
+   "numero": 4,
+   "titulo": "Integridad de los impuestos",
+   "objetivo": "Tendrás identificado el proceso Control, Justificación e Incidencias de Impuestos, qué comprueba y qué incidencias puede detectar.",
+   "concepto": "El proceso Control, Justificación e Incidencias de Impuestos agrupa funcionalidades para comprobar la coherencia de los registros fiscales, justificar su naturaleza contable y detectar inconsistencias fiscales y contables. Se apoya en las estructuras ctax_move_head, ctax_move_line, capuntes y casientos.\n\nEn este ejercicio repasas las áreas de comprobación y las incidencias literales que puedes localizar y analizar.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-impuestos-4-control",
+     "titulo": "Control, Justificación e Incidencias de Impuestos",
+     "paraQueSirve": "Agrupa funcionalidades para comprobar la coherencia de los registros fiscales, justificar su naturaleza contable y detectar inconsistencias fiscales/contables.",
+     "ruta": null,
+     "explicacion": [
+      "El proceso se apoya principalmente en las estructuras literales ctax_move_head, ctax_move_line, capuntes y casientos. Comprueba, entre otras áreas, justificación mediante enlaces, justificación mediante asientos, identificación fiscal, importes de facturas, reglas fiscales, duplicados y comprobación cabecera-detalle.",
+      "La documentación no describe un botón/menú concreto de lanzamiento; lo presenta como un conjunto de funcionalidades/procesos de control, revisión y auditoría. El resultado no constituye por sí mismo una corrección automática de los registros; sirve para localizar y analizar diferencias o incumplimientos."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_apteid",
+       "significado": "Referencia al apunte contable en ctax_move_head.",
+       "ejemplo": "asiento"
+      },
+      {
+       "campo": "taxl_basimp",
+       "significado": "Base imponible en la línea fiscal.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxl_code",
+       "significado": "Código del impuesto en la línea.",
+       "ejemplo": "ESG"
+      },
+      {
+       "campo": "taxl_porcen",
+       "significado": "Porcentaje del impuesto.",
+       "ejemplo": "21"
+      },
+      {
+       "campo": "taxl_porpro",
+       "significado": "Porcentaje de prorrata.",
+       "ejemplo": "80"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Localiza en la documentación el proceso Control, Justificación e Incidencias de Impuestos",
+       "detalle": "No se documenta un botón concreto de lanzamiento; son funcionalidades de control y auditoría."
+      },
+      {
+       "texto": "Anota las tablas principales: ctax_move_head, ctax_move_line, capuntes y casientos",
+       "detalle": "Estas estructuras sustentan las comprobaciones."
+      },
+      {
+       "texto": "Revisa las áreas de comprobación",
+       "detalle": "Justificación mediante enlaces y asientos, identificación fiscal, importes, reglas, duplicados y cabecera-detalle."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no aporta capturas de esta página."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-4-justificacion",
+     "titulo": "Justificación e identificación fiscal",
+     "paraQueSirve": "La justificación verifica que los registros fiscales estén respaldados por apuntes contables y la identificación fiscal detecta inconsistencias en CIF/NIF y nombres.",
+     "ruta": null,
+     "explicacion": [
+      "La justificación mediante enlaces parte de los registros fiscales asociados a un apunte contable mediante taxh_apteid; usa de ctax_move_head y ctax_move_line datos como taxl_basimp, taxl_code, taxl_porcen y taxl_porpro.",
+      "La justificación mediante asientos analiza globalmente los asientos contables, agrupa apuntes por empresa, fecha, asiento y cuenta, calcula la cuota por diferencia entre debe y haber y aplica la comprobación icon_chk_costes.",
+      "En identificación fiscal detecta las incidencias literales «CIF INCONSISTENTE» y «NOMBRES DISTINTOS CON EL MISMO CIF/NIF»."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_apteid",
+       "significado": "Apunte contable vinculado al registro fiscal.",
+       "ejemplo": "asiento"
+      },
+      {
+       "campo": "taxl_basimp",
+       "significado": "Base imponible de la línea fiscal.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxl_code",
+       "significado": "Código del impuesto.",
+       "ejemplo": "ESG"
+      },
+      {
+       "campo": "taxl_porcen",
+       "significado": "Porcentaje del impuesto.",
+       "ejemplo": "21"
+      },
+      {
+       "campo": "taxl_porpro",
+       "significado": "Porcentaje de prorrata.",
+       "ejemplo": "80"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Revisa la justificación mediante enlaces",
+       "detalle": "Comprueba que cada registro fiscal tenga taxh_apteid vinculado a un apunte."
+      },
+      {
+       "texto": "Revisa la justificación mediante asientos",
+       "detalle": "Calcula la cuota por diferencia entre debe y haber y aplica icon_chk_costes."
+      },
+      {
+       "texto": "En identificación fiscal, busca las incidencias «CIF INCONSISTENTE» y «NOMBRES DISTINTOS CON EL MISMO CIF/NIF»",
+       "detalle": "Estas incidencias aparecen en los resultados del control."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si el control devuelve «CIF INCONSISTENTE», revisa el CIF en la ficha del tercero."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Si devuelve «NOMBRES DISTINTOS CON EL MISMO CIF/NIF», verifica los terceros duplicados."
+      }
+     ]
+    },
+    {
+     "id": "icon-impuestos-4-importes-reglas",
+     "titulo": "Importes, reglas, duplicados y cabecera-detalle",
+     "paraQueSirve": "Comprueba la consistencia de importes en moneda local y divisa, la aplicación de reglas fiscales, posibles duplicados y la coherencia entre cabecera y líneas.",
+     "ruta": null,
+     "explicacion": [
+      "En importes de facturas compara taxh_import con la suma de líneas y genera «ERROR EN MONEDA LOCAL»; en divisa compara taxh_impdiv y genera «ERROR EN DIVISA».",
+      "En reglas fiscales devuelve contadores e indicadores de detalle para códigos 06 a 17, incluyendo documento rectificado/fecha, libro registro, número de registros, documentos T/A/S/DUA/DIVA, zonas fiscales, TAI, tipo de cambio y CIF empresa/tercero.",
+      "En duplicados agrupa por empresa, año fiscal, naturaleza de la factura, número de documento y CIF/NIF del tercero; devuelve «posible documento duplicado» y excluye autofacturación mediante operaciones fiscales configuradas.",
+      "En cabecera-detalle compara taxh_import con bases/cuotas de ctax_move_line en moneda local y taxh_impdiv en divisa; incorpora empresa y zonas fiscales para revisión."
+     ],
+     "campos": [
+      {
+       "campo": "taxh_import",
+       "significado": "Importe total en moneda local.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxh_impdiv",
+       "significado": "Importe total en divisa.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxl_basimp",
+       "significado": "Base imponible en línea.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxl_cuoded",
+       "significado": "Cuota deducible en línea.",
+       "ejemplo": "importe"
+      },
+      {
+       "campo": "taxl_cuonded",
+       "significado": "Cuota no deducible en línea.",
+       "ejemplo": "importe"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Revisa la comprobación de importes de facturas",
+       "detalle": "Compara taxh_import con la suma de líneas y observa si surge «ERROR EN MONEDA LOCAL» o «ERROR EN DIVISA»."
+      },
+      {
+       "texto": "Revisa la comprobación de reglas fiscales",
+       "detalle": "Consulta los indicadores de detalle para códigos 06 a 17."
+      },
+      {
+       "texto": "Revisa la comprobación de duplicados",
+       "detalle": "Agrupa por empresa, año, naturaleza, número de documento y CIF/NIF del tercero."
+      },
+      {
+       "texto": "Revisa la comprobación cabecera-detalle",
+       "detalle": "Compara taxh_import con las bases y cuotas de las líneas."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si aparece «ERROR EN MONEDA LOCAL», revisa taxh_import frente a la suma de líneas."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Si aparece «ERROR EN DIVISA», revisa taxh_impdiv en operaciones con moneda extranjera."
+      },
+      {
+       "tipo": "nota",
+       "texto": "El control de duplicados devuelve «posible documento duplicado» y excluye autofacturación mediante operaciones fiscales configuradas."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿En qué tablas se apoya principalmente el proceso Control, Justificación e Incidencias de Impuestos?",
+     "opciones": [
+      "ctax_rule, ctax_type, ctax_zone",
+      "ctax_erep_map, ctax_move_load, ctax_ereport",
+      "ctax_prorrata, ctax_form_oper, ctax_form_line",
+      "ctax_move_head, ctax_move_line, capuntes y casientos"
+     ],
+     "correcta": 3,
+     "explicacion": "La documentación cita esas cuatro estructuras como base del proceso."
+    },
+    {
+     "pregunta": "¿Qué incidencia detecta la identificación fiscal?",
+     "opciones": [
+      "CIF INCONSISTENTE y NOMBRES DISTINTOS CON EL MISMO CIF/NIF",
+      "ERROR EN MONEDA LOCAL y ERROR EN DIVISA",
+      "POSIBLE DOCUMENTO DUPLICADO",
+      "REGLA FISCAL INCORRECTA"
+     ],
+     "correcta": 0,
+     "explicacion": "La identificación fiscal detecta esas dos incidencias literales."
+    },
+    {
+     "pregunta": "¿Qué mensaje genera la comprobación de importes en moneda local?",
+     "opciones": [
+      "ERROR EN DIVISA",
+      "ERROR EN MONEDA LOCAL",
+      "CIF INCONSISTENTE",
+      "POSIBLE DOCUMENTO DUPLICADO"
+     ],
+     "correcta": 1,
+     "explicacion": "La comprobación de importes compara taxh_import y genera ese mensaje."
+    },
+    {
+     "pregunta": "¿Cómo agrupa el control de duplicados?",
+     "opciones": [
+      "Por operación fiscal y tipo de impuesto",
+      "Por tercero y cuenta contable",
+      "Por empresa, año fiscal, naturaleza de la factura, número de documento y CIF/NIF del tercero",
+      "Por empresa y fecha"
+     ],
+     "correcta": 2,
+     "explicacion": "El control de duplicados usa esas cinco claves de agrupación."
+    },
+    {
+     "pregunta": "El resultado del control de integridad:",
+     "opciones": [
+      "No requiere revisión posterior",
+      "Solo se ejecuta en el cierre anual",
+      "Corrige automáticamente los errores detectados",
+      "No constituye por sí mismo una corrección automática de los registros"
+     ],
+     "correcta": 3,
+     "explicacion": "La documentación indica que sirve para localizar y analizar diferencias, no corrige automáticamente."
+    }
+   ],
+   "checklist": [
+    "Abre la documentación del proceso Control, Justificación e Incidencias de Impuestos.",
+    "Comprueba que las tablas ctax_move_head, ctax_move_line, capuntes y casientos están involucradas.",
+    "Localiza un registro fiscal con taxh_apteid vinculado a un apunte contable.",
+    "Verifica la justificación mediante asientos calculando la cuota por diferencia entre debe y haber.",
+    "Busca incidencias «CIF INCONSISTENTE» en el control de identificación fiscal.",
+    "Busca incidencias «NOMBRES DISTINTOS CON EL MISMO CIF/NIF».",
+    "Comprueba si hay «ERROR EN MONEDA LOCAL» comparando taxh_import con la suma de líneas.",
+    "Comprueba si hay «ERROR EN DIVISA» comparando taxh_impdiv.",
+    "Revisa los indicadores de reglas fiscales para códigos 06 a 17.",
+    "Busca «posible documento duplicado» y revisa la agrupación.",
+    "Compara taxh_import con bases y cuotas de líneas en cabecera-detalle."
+   ],
+   "problemas": [
+    {
+     "problema": "El control de identificación fiscal devuelve «CIF INCONSISTENTE».",
+     "solucion": "Revisa el CIF en la ficha del tercero y corrígelo en el maestro correspondiente."
+    },
+    {
+     "problema": "El control de importes devuelve «ERROR EN MONEDA LOCAL».",
+     "solucion": "Compara taxh_import con la suma de bases y cuotas de las líneas; ajusta las diferencias."
+    },
+    {
+     "problema": "El control de duplicados muestra «posible documento duplicado».",
+     "solucion": "Revisa empresa, año fiscal, naturaleza, número de documento y CIF/NIF del tercero; analiza si es el mismo documento o uno distinto."
+    },
+    {
+     "problema": "No se encuentra un botón concreto para lanzar el control.",
+     "solucion": "Consulta la documentación de funcionalidades; se trata de un conjunto de procesos de control y auditoría, no de un único botón."
+    }
+   ]
+  }
+ ]
+}

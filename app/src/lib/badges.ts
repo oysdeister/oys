@@ -29,7 +29,7 @@ export const INSIGNIAS: Insignia[] = [
     color: META[m.id]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => modCompleto(p, m.id),
   })),
-  { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa los seis módulos.', color: '#1f2738', ganada: (p) => MODULOS.length > 0 && MODULOS.every((m) => modCompleto(p, m.id)) },
+  { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa todos los módulos.', color: '#1f2738', ganada: (p) => MODULOS.length > 0 && MODULOS.every((m) => modCompleto(p, m.id)) },
 ];
 
 export function insigniasGanadas(p: Progreso) {
