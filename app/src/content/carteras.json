@@ -2,14 +2,15 @@
  "id": "carteras",
  "titulo": "Carteras de cobro y pago",
  "sesion": "",
- "resumen": "Aprendes cómo se gestiona la cartera de efectos: defines plazos de pago, tipos de efecto y las condiciones de un tercero, registras una factura de compra que genera efectos de pago, das de alta bancos propios y cobras efectos de venta de forma individual y con una remesa al banco, viendo cada cambio de estado y su asiento.",
+ "resumen": "Aprendes cómo funciona la cartera de efectos, la lista de todo lo que la empresa tiene pendiente de cobrar o de pagar: defines el plazo de pago y el tipo de efecto de un tercero, registras una factura de compra que genera sus efectos de pago, das de alta un banco y una caja propios, cobras efectos de venta uno a uno y en remesa, y ves cómo un pago o una remesa pasan a tesorería. Es la base de los módulos Tesorería y Cobros y pagos.",
  "circuito": [
   "Plazo de pago y tipo de efecto",
   "Condiciones del tercero",
   "Factura y efectos en cartera",
   "Banco propio",
   "Cobro individual o remesa",
-  "Asiento contable"
+  "Asiento contable",
+  "Movimiento de tesorería"
  ],
  "navegacion": [
   {
@@ -18,9 +19,24 @@
    "paraQueSirve": "Entender qué es un efecto y por qué la tesorería trabaja sobre la cartera.",
    "ruta": null,
    "explicacion": [
-    "Cada factura que se contabiliza deja uno o varios vencimientos: lo que nos tienen que pagar (cartera de cobros) o lo que tenemos que pagar (cartera de pagos). Cada vencimiento es un «efecto» con su tipo (recibo, transferencia, cheque…), su fecha y su estado (pendiente, propuesto, ordenado, cobrado…).",
-    "Tesorería trabaja sobre la cartera: agrupa efectos en remesas para enviarlos al banco, los cobra o paga uno a uno y, en cada cambio de estado, el ERP genera el asiento contable correspondiente.",
-    "Los ejercicios siguen este orden: Ejercicio 1 (plazo de pago, tipo de efecto, condiciones del tercero y factura de compra que genera los efectos), Ejercicio 3 (bancos propios: una cuenta bancaria y una caja de efectivo), Ejercicio 5 (circuito de cobros: artículo financiero, factura de venta, cobro individual de un efecto y cobro de varios efectos con una remesa) y Ejercicio 7 (de la cartera a la tesorería: cómo un pago o una remesa crea su movimiento de tesorería y qué es el campo Conciliado)."
+    "Cuando una factura se contabiliza, el ERP apunta cuándo y cómo se cobrará o se pagará. Cada uno de esos pagos o cobros pendientes es un «efecto». Ejemplo: una factura de compra de 121 € que se paga en tres veces deja tres efectos de 48,40, 24,20 y 48,40 €, cada uno con su fecha de vencimiento (el día en que toca pagarlo).",
+    "La «cartera» es la lista de todos los efectos: la cartera de cobros (lo que nos deben los clientes) y la de pagos (lo que debemos a los proveedores). Cada efecto tiene un tipo (recibo, transferencia, cheque…), un vencimiento y un estado (PE pendiente, PR propuesto, OC ordenado, CO cobrado, PA pagado…).",
+    "Para mover un efecto de estado se usa una «acción»: se puede aplicar a un efecto suelto, a un grupo de efectos con una «gestión», o a varios efectos que se envían juntos al banco en una «remesa». En cada cambio de estado el ERP genera el asiento contable que toque y, si la acción lo indica, un movimiento de tesorería (la anotación de dinero que entra o sale del banco).",
+    "Los ejercicios siguen este orden: 1) plazo de pago, tipo de efecto, condiciones del tercero y factura de compra que genera los efectos; 2) bancos propios: una cuenta bancaria y una caja de efectivo; 3) circuito de cobros: factura de venta, cobro individual de un efecto y cobro de varios efectos con una remesa; 4) de la cartera a la tesorería: cómo un pago o una remesa crean su movimiento de tesorería."
+   ],
+   "campos": [],
+   "pasos": [],
+   "avisos": []
+  },
+  {
+   "id": "carteras-nav-contabilidad",
+   "titulo": "Lo mínimo de contabilidad para este módulo",
+   "paraQueSirve": "Entender las cuentas, el debe y el haber que verás en los asientos de la cartera.",
+   "ruta": null,
+   "explicacion": [
+    "Cada importe se anota en dos cuentas a la vez: una al debe (columna izquierda) y otra al haber (columna derecha), y las dos columnas suman siempre lo mismo. Ese apunte doble es el «asiento».",
+    "Las cuentas siguen el Plan General Contable (en el ERP, plan PGE 2008) y el primer dígito dice su familia: 4 terceros (400 proveedores: lo que debes; 430 clientes: lo que te deben), 5 dinero (570 caja, 572 bancos), 6 gastos, 7 ingresos. Ejemplo: cobras 242 € de un cliente → 572 Bancos al debe (entra dinero) y 430 Clientes al haber (ya no te lo debe).",
+    "El IVA es el impuesto que se suma a la base de la factura (200 + 21 % = 242). Centro de coste y cuenta de explotación son la «analítica»: etiquetan un gasto o un ingreso por departamento o actividad. Todo esto lo verás a fondo en Contabilidad general."
    ],
    "campos": [],
    "pasos": [],
@@ -36,7 +52,7 @@
     "Las listas tienen un botón rojo arriba a la derecha («Añadir …» o «Nuevo») que abre el alta en una ventana; se guarda con «Guardar» abajo a la derecha. En las fichas, «Nuevo» ofrece «Nuevo registro» (en blanco) o «Nuevo como» (copia del registro que se está viendo).",
     "Los campos con lista (tercero, cuenta, plazo…) son de autocompletar: se escribe el código, se espera a que salga la lista y se elige la fila. Si después no aparece la descripción debajo del campo, se sale del campo con Tab: muchos valores relacionados (dirección, plazo, cuenta) se rellenan al salir.",
     "Las pestañas del registro están arriba, en horizontal, y los botones de acción (Validar, Contabilizar, Evolucionar estado…) en la barra superior. El desplegable (⌄) junto al título lleva a los documentos relacionados: asientos, cartera de efectos, registros fiscales.",
-    "Los campos obligatorios llevan un asterisco rojo en la etiqueta y sin ellos no deja guardar. Muchos campos tienen una longitud máxima: si te pasas, el campo se pone en rojo con «Demasiado largo» y el contador de caracteres (por ejemplo 4 / 3).",
+    "Los campos obligatorios llevan un asterisco rojo en la etiqueta y sin ellos no deja guardar (en las tablas de campos de este manual, el * también marca un campo obligatorio). Muchos campos tienen una longitud máxima: si te pasas, el campo se pone en rojo con «Demasiado largo» y el contador de caracteres (por ejemplo 4 / 3).",
     "En los ejemplos, las iniciales del alumno se escriben {INI} (plazo {INI}1, tipo de efecto T{INI}, tercero T{INI} «Tercero Carteras», banco BBVA_{INI}…): sustitúyelas por tus iniciales."
    ],
    "campos": [],
@@ -55,7 +71,7 @@
    "numero": 1,
    "titulo": "Plazo de pago, tipo de efecto y condiciones del tercero",
    "objetivo": "Tendrás definido un plazo de pago a 120 días en tres vencimientos, un tipo de efecto de pago, un tercero que los usa y una factura de compra contabilizada con sus tres efectos en la cartera de pagos.",
-   "concepto": "Cada vencimiento de una factura es un efecto de la cartera. Para que la factura genere los efectos correctos hacen falta tres piezas: el plazo de pago (cuántos vencimientos y qué porcentaje cada uno), el tipo de efecto (instrumento: transferencia, recibo…) y las condiciones de pago o cobro del tercero, que unen ambas.\n\nEn este ejercicio defines un plazo a 120 días en tres vencimientos (40 % - 20 % - 40 %), un tipo de efecto de pago por transferencia y un tercero que los usa. Al registrar una factura de compra comprobarás que recupera esas condiciones y genera tres efectos en la cartera de pagos.",
+   "concepto": "Un efecto es cada pago o cobro pendiente que deja una factura; la cartera es la lista de todos ellos. Para que una factura genere los efectos correctos hacen falta tres piezas: el plazo de pago (en cuántas veces se paga, a cuántos días y qué porcentaje cada vez), el tipo de efecto (el medio de pago: transferencia, recibo…) y las condiciones de pago o cobro del tercero, que unen ambas.\n\nEn este ejercicio defines un plazo a 120 días en tres vencimientos (40 % - 20 % - 40 %), un tipo de efecto de pago por transferencia y un tercero que los usa. Al registrar una factura de compra de 121,00 € comprobarás que recupera esas condiciones y genera tres efectos en la cartera de pagos.",
    "duracionMin": 60,
    "secciones": [
     {
@@ -81,7 +97,7 @@
       {
        "campo": "Descripción plazo *",
        "significado": "Texto que se ve en las listas.",
-       "ejemplo": "3 plazos 40-20-40 en 120 dias {INI}"
+       "ejemplo": "3 plazos 40-20-40 en 120 días {INI}"
       },
       {
        "campo": "Unidad tiempo",
@@ -116,7 +132,7 @@
       },
       {
        "texto": "Escribe el Plazo pago {INI}1 y la descripción",
-       "detalle": "Descripción de ejemplo: «3 plazos 40-20-40 en 120 dias {INI}».",
+       "detalle": "Descripción de ejemplo: «3 plazos 40-20-40 en 120 días {INI}».",
        "imagen": "carteras-d-230.webp",
        "hotspot": {
         "x": 22.1,
@@ -181,7 +197,7 @@
       "Tipos"
      ],
      "explicacion": [
-      "Objeto ctipoefe. El estado inicial no se crea desde el tipo de efecto: se elige de la lista de estados existentes (PE Pendiente). Los estados están en Finanzas › Cobros y Pagos › Maestros › Efectos › Estados (cefecest)."
+      "Objeto ctipoefe. El estado inicial no se crea aquí: se elige de la lista de estados que ya existen (PE Pendiente). Los estados están en Finanzas › Cobros y Pagos › Maestros › Efectos › Estados (cefecest). «Domiciliación bancaria» indica si el efecto necesita una cuenta bancaria (IBAN): la del tercero, para cargarle un recibo, o la de la empresa."
      ],
      "campos": [
       {
@@ -221,7 +237,7 @@
       },
       {
        "campo": "Riesgo / Interés / Comisión impag. / Factura demora *",
-       "significado": "Control de riesgo comercial y cargos si el efecto queda impagado.",
+       "significado": "El riesgo es lo que un cliente nos debe en total; sirve para no venderle más si supera su límite. Interés, comisión y factura de demora son cargos si el efecto queda impagado.",
        "ejemplo": "Riesgo marcado, 0, 0, sin marcar"
       },
       {
@@ -351,7 +367,7 @@
       },
       {
        "campo": "Condiciones de cobro › Tipo efecto / Estado efecto / Plazo pago *",
-       "significado": "Cómo y cuándo se le cobra como cliente (se usa en el ejercicio 5).",
+       "significado": "Cómo y cuándo se le cobra como cliente (se usa en el ejercicio 3).",
        "ejemplo": "RC Recibo / PE / 30D"
       }
      ],
@@ -381,7 +397,7 @@
        }
       },
       {
-       "texto": "En «Direcciones» añade la dirección 0 con el código postal 08001 y la calle",
+       "texto": "En «Direcciones» añade la dirección 0 con el código postal 08001 y la calle Carrer de Pelai 2",
        "imagen": "carteras-d-242.webp",
        "hotspot": {
         "x": 35.0,
@@ -405,7 +421,7 @@
       },
       {
        "texto": "En «Condiciones de cobro» pulsa «Añadir cobro», elige RC, estado PE y plazo 30D y guarda",
-       "detalle": "La captura muestra la pestaña Condiciones de pago con la línea ya guardada.",
+       "detalle": "Es la condición que copiarán las facturas de venta del ejercicio 3. La captura muestra la pestaña Condiciones de pago con la línea ya guardada.",
        "imagen": "carteras-d-244.webp",
        "hotspot": {
         "x": 25.7,
@@ -680,10 +696,10 @@
   },
   {
    "id": "carteras-3",
-   "numero": 3,
+   "numero": 2,
    "titulo": "Bancos propios",
    "objetivo": "Tendrás dada de alta una cuenta corriente (BBVA_{INI}) y una caja de efectivo (CAJA_{INI}) con su entidad financiera y agrupación de cuentas.",
-   "concepto": "Los bancos propios (cuentas financieras) son las cuentas de la empresa contra las que se cobran y pagan los efectos y las que llevan las remesas al banco. Cada una apunta a una cuenta contable de tesorería (572 para un banco, 570 para una caja) y a un tercero «entidad financiera» con su dirección, que hay que crear antes.\n\nEn este ejercicio defines la cuenta corriente BBVA_{INI} y la caja CAJA_{INI}. En un caso real el IBAN lo introduce la persona responsable; aquí el banco se deja vacío.",
+   "concepto": "Un banco propio (en el ERP, «cuenta financiera») es una cuenta de la empresa: una cuenta corriente en un banco o una caja de efectivo. Es la cuenta contra la que se cobran y pagan los efectos y la que lleva las remesas al banco. Cada una apunta a una cuenta contable de tesorería (572 para un banco, 570 para una caja) y a un tercero «entidad financiera» con su dirección, que hay que crear antes.\n\nEn este ejercicio defines la cuenta corriente BBVA_{INI} y la caja CAJA_{INI}. En un caso real el IBAN lo introduce la persona responsable; aquí el banco se deja vacío.",
    "duracionMin": 35,
    "secciones": [
     {
@@ -960,10 +976,10 @@
     {
      "pregunta": "¿Qué hay que crear antes que el banco propio?",
      "opciones": [
-      "La remesa",
-      "El tercero entidad financiera con su dirección",
-      "El plazo de pago",
-      "La factura de venta"
+      "La remesa bancaria de efectos de cobro",
+      "El tercero entidad financiera y su dirección",
+      "El plazo de pago acordado con el cliente",
+      "La factura de venta emitida al cliente"
      ],
      "correcta": 1,
      "explicacion": "Cada banco propio está ligado a un tercero «entidad financiera» con su dirección."
@@ -982,10 +998,10 @@
     {
      "pregunta": "Si se informa el Banco pero no el número de cuenta, ¿qué ocurre al guardar?",
      "opciones": [
-      "Se guarda sin más",
-      "Sale el error «Entidad y cuenta bancaria, ambos nulos o no nulos»",
-      "Se pone la cuenta 57200 sola",
-      "Se crea una caja"
+      "Se guarda sin realizar ninguna validación adicional",
+      "Error: entidad y cuenta bancaria, ambos nulos o no nulos",
+      "Se asigna automáticamente la cuenta contable 57200",
+      "Se crea una caja auxiliar vinculada al banco"
      ],
      "correcta": 1,
      "explicacion": "O se informan los dos (banco y cuenta o IBAN) o ninguno."
@@ -1036,10 +1052,10 @@
   },
   {
    "id": "carteras-5",
-   "numero": 5,
+   "numero": 3,
    "titulo": "Circuito de cobros",
    "objetivo": "Habrás cobrado un efecto de forma individual (de PE a CO) y otros dos juntos con una remesa enviada al banco BBVA_{INI}, con sus asientos.",
-   "concepto": "El cobro de una factura de venta sigue un ciclo de estados del efecto: nace Pendiente (PE) y termina Cobrado (CO). Se puede cobrar de uno en uno con una gestión sobre efectos (acción COBD Cobro directo) o agrupar varios efectos en una remesa que se presenta al banco y recorre PE › PR (propuesto) › OC (ordenado) › CO. En cada cambio de estado el ERP genera el asiento contable.\n\nEn este ejercicio montas el circuito completo: un artículo financiero, una factura de venta al tercero T{INI}, el cobro individual de su efecto y el cobro de varios efectos juntos mediante una remesa al banco BBVA_{INI}.",
+   "concepto": "El cobro de una factura de venta sigue un ciclo de estados del efecto: nace Pendiente (PE) y termina Cobrado (CO). Hay dos formas de cobrar. Una gestión sobre efectos es un documento que reúne uno o varios efectos y les aplica una acción, aquí COBD Cobro directo (por ejemplo, el cliente te paga por transferencia una factura suelta). Una remesa agrupa varios efectos de cobro para presentarlos juntos al banco (en una remesa de recibos, el banco los carga a los clientes; en una de transferencias, el banco controla las que llegan): recorre PE › PR (propuesto) › OC (ordenado, enviado al banco) › CO. En cada cambio de estado el ERP genera el asiento contable.\n\nEn este ejercicio montas el circuito completo: un artículo financiero, una factura de venta al tercero T{INI}, el cobro individual de su efecto y el cobro de dos efectos juntos mediante una remesa al banco BBVA_{INI}.",
    "duracionMin": 75,
    "secciones": [
     {
@@ -1089,13 +1105,13 @@
       "Artículos"
      ],
      "explicacion": [
-      "Objeto carticul. El tercero T{INI} ya tiene la relación de cliente CLI (43000) y la condición de cobro RC / PE / 30D creadas en la sección «Tercero T{INI} y sus condiciones de pago y cobro»."
+      "Objeto carticul. El tercero T{INI} ya tiene la relación de cliente CLI (43000) y la condición de cobro RC / PE / 30D que creaste en el ejercicio 1."
      ],
      "campos": [
       {
        "campo": "Artículo / Descripción *",
        "significado": "Código y nombre.",
-       "ejemplo": "{INI}1 / Servicios de asesoria {INI}"
+       "ejemplo": "{INI}1 / Servicios de asesoría {INI}"
       },
       {
        "campo": "Unidad medida / Estado *",
@@ -1401,7 +1417,7 @@
     {
      "id": "carteras-5-remesa-banco",
      "titulo": "Preparar el banco: línea financiera y remesas por cuenta",
-     "paraQueSirve": "Una remesa agrupa varios efectos de cobro para presentarlos juntos al banco. Su tipo decide el circuito: al agregar los efectos pasan a PR (propuesto), al ordenarla a OC (ordenado) y al confirmar el cobro a CO, con el asiento del banco. Antes hay que preparar el banco: una línea financiera y los tipos de remesa que admite («Remesas por cuenta»).",
+     "paraQueSirve": "Antes de remesar hay que preparar el banco. La línea financiera es el contrato que la empresa firma con el banco para que le gestione los cobros (con un límite de importe). «Remesas por cuenta» dice qué tipos de remesa admite esa cuenta: si no hay ninguno, al crear la remesa no podrás elegir tipo.",
      "ruta": [
       "Finanzas",
       "Cobros y Pagos",
@@ -1412,7 +1428,8 @@
       "Líneas financieras / Remesas por cuenta"
      ],
      "explicacion": [
-      "Se trabaja desde las pestañas «Líneas financieras» y «Remesas por cuenta» de la ficha del banco BBVA_{INI}. Los tipos de remesa de efectos (cremesad) tienen cada uno su serie (RM), clase y acción inicial."
+      "Se trabaja desde las pestañas «Líneas financieras» y «Remesas por cuenta» de la ficha del banco BBVA_{INI}. Los tipos de remesa de efectos (cremesad) tienen cada uno su serie (RM), clase y acción inicial.",
+      "Cómo leer el código de un tipo de remesa: 1.ª letra C = cobro, P = pago; SCT = transferencia SEPA, SDD = recibo domiciliado SEPA, CHE = cheque; última letra T = con tesorería (crea movimiento de tesorería), S = sin tesorería (confirma con el asiento del banco). Así, CSCTS = cobro por transferencia sin tesorería y PSCTT = pago por transferencia con tesorería."
      ],
      "campos": [
       {
@@ -1522,9 +1539,7 @@
       "Registro de remesas"
      ],
      "explicacion": [
-      "Objeto cremesas. «Evolucionar estado» recorre la secuencia proponer › ordenar › confirmar; «Retroceder» deshace el último paso. Los efectos se añaden desde la pestaña «Selección de efectos», no con un botón fijo.",
-      "En la base TUTORIAL la plantilla contable de la confirmación lleva la contrapartida a la 23000.00000; en una base bien parametrizada será la cuenta del cliente o de efectos en gestión de cobro (430 / 431).",
-      "«Copiar» en una factura de venta abre un diálogo con «Facturas» y «Cadencia mensual»: crea tantas facturas provisionales como se indique, una por mes. Abre una pestaña nueva con el resultado, así que puede parecer que no ha hecho nada: compruébalo en la lista de facturas."
+      "Objeto cremesas. «Evolucionar estado» recorre la secuencia proponer › ordenar › confirmar; «Retroceder» deshace el último paso. Los efectos se añaden desde la pestaña «Selección de efectos», no con un botón fijo."
      ],
      "campos": [
       {
@@ -1545,7 +1560,7 @@
       {
        "campo": "Justificante / Acción *",
        "significado": "Se rellenan solos con el tipo: serie RM y acción inicial.",
-       "ejemplo": "RM026-000002 / RCSCTP"
+       "ejemplo": "Serie RM / RCSCTP"
       },
       {
        "campo": "Importe máximo / Total remesa *",
@@ -1555,7 +1570,7 @@
      ],
      "pasos": [
       {
-       "texto": "Crea otra factura de venta a T{INI} con «Nuevo › Nuevo como» desde la FVN026-000001, cambia el Plazo pago a T2D, añade la línea {INI}1 y contabilízala",
+       "texto": "Crea otra factura de venta a T{INI} con «Nuevo › Nuevo como» desde la FVN026-000001, cambia el Plazo pago a T2D (dos plazos), añade la línea {INI}1 y contabilízala",
        "detalle": "FVN026-000002 genera 2 efectos de 121,00. En la captura la factura ya está contabilizada; tú crea la tuya y pulsa Contabilizar.",
        "imagen": "carteras-d-283.webp"
       },
@@ -1619,7 +1634,7 @@
       },
       {
        "texto": "Mira la pestaña «Apuntes» de la remesa con el asiento del cobro",
-       "detalle": "Tres apuntes: 57200.00000 Bancos al debe y, al haber, una línea 23000.00000 por cada efecto de FVN026-000002. En la captura no se ven los importes.",
+       "detalle": "Tres apuntes: 57200.00000 Bancos al debe y, al haber, una línea 23000.00000 por cada efecto de FVN026-000002: 242,00 al debe y 121,00 + 121,00 al haber.",
        "imagen": "carteras-d-290.webp",
        "hotspot": {
         "x": 13.1,
@@ -1638,11 +1653,6 @@
        "texto": "Fíjate en que el tipo de la remesa no se puede cambiar una vez guardada",
        "detalle": "Sale «No se permite cambiar el tipo de la remesa».",
        "imagen": "carteras-d-292.webp"
-      },
-      {
-       "texto": "Comprueba la lista de facturas de venta de T{INI}",
-       "detalle": "Aparecen las dos contabilizadas y las dos copias provisionales creadas con «Copiar».",
-       "imagen": "carteras-d-293.webp"
       }
      ],
      "avisos": [
@@ -1665,10 +1675,6 @@
       {
        "tipo": "nota",
        "texto": "En la base TUTORIAL la plantilla contable de la confirmación lleva la contrapartida a la 23000.00000; en una base bien parametrizada será la cuenta del cliente o de efectos en gestión de cobro (430 / 431)."
-      },
-      {
-       "tipo": "nota",
-       "texto": "«Copiar» en una factura de venta crea facturas provisionales, una por mes, y abre una pestaña nueva: compruébalo en la lista de facturas."
       }
      ]
     }
@@ -1710,10 +1716,10 @@
     {
      "pregunta": "¿Por qué el Tipo remesa sale vacío en una remesa nueva?",
      "opciones": [
-      "Porque falta la factura",
-      "Porque la cuenta financiera no tiene definidas sus «Remesas por cuenta»",
-      "Porque el tercero no está validado",
-      "Porque la fecha es futura"
+      "Porque falta la factura de venta correspondiente",
+      "Porque la cuenta no tiene definidas remesas por cuenta",
+      "Porque el tercero no está validado correctamente",
+      "Porque la fecha de emisión de la remesa es futura"
      ],
      "correcta": 1,
      "explicacion": "Hay que añadir en el banco los tipos de remesa que vaya a usar."
@@ -1731,18 +1737,18 @@
     }
    ],
    "checklist": [
-    "Los estados (cefecest) y las acciones (cefeacti) existen: reconoces PE, PR, OC, CO y la acción COBD Cobro directo.",
-    "Existe el artículo {INI}1 (Servicios de asesoria {INI}), tipo fiscal Servicio, clave SOG, precio de venta 200 y mnemotécnicos 62300 / 70500.",
+    "Has localizado en Estados (cefecest) PE, PR, OC y CO, y en Relación de acciones (cefeacti) la acción COBD Cobro directo.",
+    "Existe el artículo {INI}1 (Servicios de asesoría {INI}), tipo fiscal Servicio, clave SOG, precio de venta 200 y mnemotécnicos 62300 / 70500.",
     "La factura de venta FVN026-000001 a T{INI} está contabilizada y tiene un vencimiento RC / PE de 242,00.",
     "La línea de la factura usa la cuenta 70500.00000 con centro de coste y cuenta de explotación 0.",
     "La gestión sobre efectos (clase Cobrar, acción COBD, cuenta BBVA_{INI}, perceptor T{INI}) cobra el efecto de 242,00 y este pasa a CO.",
     "El asiento del cobro CA026-000001 tiene 57200.00000 al debe y 43000.00000 al haber por 242,00.",
     "BBVA_{INI} tiene la línea financiera {INI}1 (CONTRATO-{INI}-001, 01-11-2026 a 31-12-2027, 100.000) y la remesa por cuenta CSCTS.",
     "La factura FVN026-000002 con plazo T2D genera 2 efectos de 121,00.",
-    "La remesa RM026-000002 (CSCTS) agrupa los dos efectos: PE › PR con total 242,00.",
+    "Tu remesa CSCTS agrupa los dos efectos: PE › PR con total 242,00.",
     "Tras «Evolucionar estado» dos veces, los efectos pasan a OC y luego a CO.",
     "La pestaña Apuntes de la remesa muestra el asiento con 57200.00000 Bancos al debe y una línea por efecto al haber.",
-    "Entiendes por qué la remesa CSDDS falla al ordenar sin domiciliación bancaria."
+    "Has visto por qué la remesa CSDDS falla al ordenar (paso 9): el recibo domiciliado necesita el IBAN del cliente."
    ],
    "problemas": [
     {
@@ -1773,16 +1779,16 @@
   },
   {
    "id": "carteras-7",
-   "numero": 7,
+   "numero": 4,
    "titulo": "De la cartera a la tesorería",
    "objetivo": "Sabrás cómo un efecto de pago o una remesa con tesorería se convierten en movimiento de tesorería y dónde se decide su operación financiera.",
-   "concepto": "En Axional, un efecto de pago pendiente se convierte en movimiento de tesorería cuando lo evolucionas con la acción «Pago a tesorería» (o con la acción equivalente de una remesa con tesorería). Al aceptar, el efecto pasa a Ordenado y se generan una gestión y un movimiento de tesorería con la cuenta financiera, el importe del efecto y la operación financiera que indique la configuración de la acción. En el ejemplo de la demo, la acción de pago usa la operación PMICDT «Pagos emitidos transferencias de crédito» y deja la remesa CONTABILIZADO.\n\nEl movimiento de tesorería incluye los flujos que luego se contabilizan: cada flujo tiene su cuenta contable y el efecto relacionado. Qué es el movimiento y cómo se concilia con el banco lo ves en Tesorería, ejercicios 3 y 5. Recuerda que las remesas «sin Tesorería» (s/Tes) no crean movimiento de tesorería, solo las «c/Tes».",
+   "concepto": "Un movimiento de tesorería es la anotación de una entrada o salida real de dinero en un banco propio; más tarde se compara con lo que dice el banco (conciliación). Un efecto de pago pendiente se convierte en movimiento de tesorería cuando lo evolucionas con la acción PTES «Pago a tesorería» o cuando ordenas una remesa «con tesorería» (c/Tes). Al aceptar, el efecto pasa a Ordenado y se generan una gestión y un movimiento de tesorería con la cuenta financiera, el importe del efecto y la operación financiera que indique la acción (en la demo, PMICDT «Pagos emitidos transferencias de crédito»).\n\nLas remesas «sin tesorería» (s/Tes), como la del ejercicio 3, no crean movimiento: confirman el cobro o el pago directamente con el asiento del banco. Este ejercicio usa capturas de la demo de Deister (empresa TRI): ahí los códigos de banco y de tercero son distintos de los tuyos. Qué es el movimiento y cómo se concilia con el banco lo ves en Tesorería, ejercicios 3 y 5.",
    "duracionMin": 30,
    "secciones": [
     {
      "id": "carteras-7-efecto",
      "titulo": "Del efecto al movimiento de tesorería",
-     "paraQueSirve": "Esta sección te muestra cómo la acción PTES convierte un efecto de pago en movimiento de tesorería, y dónde se decide su operación financiera.",
+     "paraQueSirve": "Ves cómo la acción PTES convierte un efecto de pago en movimiento de tesorería y dónde se decide su operación financiera.",
      "ruta": [
       "Finanzas",
       "Cobros y Pagos",
@@ -1791,23 +1797,23 @@
      ],
      "explicacion": [
       "Cuando evolucionas un efecto de pago pendiente con la acción PTES «Pago a tesorería» (o con la acción de ordenar de una remesa con tesorería), el efecto pasa a Ordenado y se genera un movimiento de tesorería. Ese movimiento se alimenta con la cuenta financiera elegida, el importe del efecto y la operación financiera que determina la configuración de la acción.",
-      "La operación la decide la acción: en sus enlaces contables (bloque Tesorería) hay una fila por clase y tipo de efecto con la operación y la acción posterior."
+      "La operación la decide la acción: en sus enlaces contables (bloque Tesorería) hay una fila por clase y tipo de efecto con la operación financiera y la acción que se aplicará después (confirmar el pago cuando llegue el extracto)."
      ],
      "campos": [
       {
        "campo": "Acción",
        "significado": "Acción de evolución del efecto; según su configuración determina la operación financiera y si genera tesorería.",
-       "ejemplo": "PTES «Pago a tesorería» o «Pago transferencias, ordenar (c/Tes)»."
+       "ejemplo": "PTES «Pago a tesorería»"
       },
       {
        "campo": "Cuenta financiera",
        "significado": "Cuenta bancaria que se usará en el movimiento de tesorería generado.",
-       "ejemplo": "BBVACCTRI en la demo de Deister."
+       "ejemplo": "BBVACCTRI (demo de Deister)"
       },
       {
        "campo": "Estado del efecto",
        "significado": "Situación del efecto; al ejecutar la acción pasa de Pendiente a Ordenado.",
-       "ejemplo": "Pendiente → Ordenado."
+       "ejemplo": "Pendiente → Ordenado"
       }
      ],
      "pasos": [
@@ -1829,7 +1835,7 @@
       },
       {
        "texto": "Abre la acción PTES y localiza en sus enlaces contables la fila de Transferencia",
-       "detalle": "Ruta: Finanzas › Cobros y Pagos › Maestros › Efectos › Acciones. En la demo, operación PMICDT y acción posterior «Confirmación pago por bancos (c/Tes)».",
+       "detalle": "Ruta: Finanzas › Cobros y Pagos › Maestros › Acciones › Relación de acciones. En la demo, operación PMICDT y acción posterior «Confirmación pago por bancos (c/Tes)».",
        "imagen": "carteras-tes-05.jpg",
        "hotspot": {
         "x": 4,
@@ -1841,6 +1847,10 @@
       }
      ],
      "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Este ejercicio es de observación: las capturas son de la demo TRI. Si lo reproduces en tu base, hazlo con un efecto de pago PE tuyo y la cuenta BBVA_{INI}."
+      },
       {
        "tipo": "problema",
        "texto": "Al aceptar el pago a tesorería aparece «Cannot insert a null into column (taptcuen.fecval)»: el movimiento se ha quedado sin fecha valor."
@@ -1866,8 +1876,8 @@
       "Registro de remesas"
      ],
      "explicacion": [
-      "Una remesa de tipo PSCTT «Pago transferencias (con Tesorería)» selecciona efectos con IBAN definido y, al evolucionar su estado, se ordena, se contabiliza y genera el movimiento de tesorería del total.",
-      "El movimiento lleva la operación PMICDT, el flujo «Transferencia por operaciones mercantiles», la cuenta del proveedor (40100.00003 en la demo) y el efecto relacionado. Desde el desplegable del título de la remesa o del efecto llegas a su Tesorería."
+      "Una remesa de tipo PSCTT «Pago transferencias (con Tesorería)» solo admite efectos de terceros con IBAN informado (el banco necesita saber a qué cuenta transferir). Al evolucionarla se ordena, se contabiliza y genera el movimiento de tesorería del total.",
+      "El movimiento lleva la operación PMICDT, el flujo «Transferencia por operaciones mercantiles», la cuenta de proveedores por efectos a pagar (40100.00003 en la demo) y el efecto relacionado. Desde el desplegable del título de la remesa o del efecto llegas a su Tesorería."
      ],
      "campos": [
       {
@@ -1941,7 +1951,7 @@
       },
       {
        "texto": "Abre la tesorería de la remesa y mira el flujo: cuenta, importe y efecto",
-       "detalle": "Operación PMICDT, cuenta 40100.00003, importe 8.080,15 y el efecto relacionado.",
+       "detalle": "Operación PMICDT, cuenta 40100.00003 (proveedores, efectos a pagar), importe 8.080,15 y el efecto relacionado.",
        "imagen": "carteras-tes-02.jpg",
        "hotspot": {
         "x": 0.5,
@@ -2015,10 +2025,10 @@
     }
    ],
    "checklist": [
-    "Desde un efecto de pago pendiente, usa «Evolucionar estado» y elige PTES «Pago a tesorería».",
-    "Verifica que el efecto pasa a Ordenado y que nace su movimiento de tesorería.",
-    "Abre la acción PTES y localiza en sus enlaces contables la fila de Transferencia → PMICDT.",
-    "Crea una remesa PSCTT, agrega un efecto con IBAN, ordénala con «Pago transferencias, ordenar (c/Tes)» y abre su tesorería."
+    "Desde un efecto de pago pendiente, «Evolucionar estado» con PTES «Pago a tesorería» deja el efecto Ordenado y crea su movimiento de tesorería (o lo has visto en las capturas).",
+    "Has localizado en la acción PTES, enlaces contables, la fila de Transferencia con la operación PMICDT.",
+    "Distingues una remesa c/Tes (genera movimiento de tesorería) de una s/Tes (no lo genera).",
+    "Has abierto la tesorería de una remesa PSCTT y has visto su flujo: cuenta, importe y efecto relacionado."
    ],
    "problemas": [
     {
