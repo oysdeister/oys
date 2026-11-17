@@ -9,7 +9,8 @@ import { avanceGlobal, avanceModulo } from '../../lib/avance';
 const PRACTICA = [
   { to: '/erp', label: 'ERP de práctica', icon: 'compras' },
   { to: '/taller', label: 'Taller', icon: 'taller' },
-  { to: '/video', label: 'Vídeo', icon: 'video' },
+  { to: '/video', label: 'Vídeos', icon: 'video' },
+  { to: '/glosario', label: 'Glosario', icon: 'libro' },
   { to: '/examen', label: 'Examen', icon: 'examen' },
   { to: '/logros', label: 'Logros', icon: 'logros' },
 ];

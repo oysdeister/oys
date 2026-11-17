@@ -4,11 +4,12 @@ import type { Ejercicio, Modulo } from '../types';
 const ficheros = import.meta.glob<{ default: Modulo }>('./*.json', { eager: true });
 
 /**
- * Orden pedagógico: maestros → parametrización → compras → ventas → asientos → carteras → tesorería,
- * y después los módulos de finanzas sacados de la documentación oficial (ids icon-*).
- * Los ejercicios de tesorería de la documentación oficial ya están fundidos en tesoreria.json.
+ * Orden pedagógico para un junior: primero los datos maestros y la parametrización; luego el circuito
+ * comercial (compras → ventas); después la contabilidad (asientos → contabilidad general); la cartera y
+ * el banco (cartera de efectos → cobros y pagos → tesorería) y, al final, impuestos y activos fijos.
+ * Los ids icon-* son internos (vienen de la documentación oficial de Finanzas): el alumno nunca los ve.
  */
-export const ORDEN = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'carteras', 'tesoreria', 'icon-contabilidad', 'icon-cartera', 'icon-impuestos', 'icon-activos'] as const;
+export const ORDEN = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'icon-contabilidad', 'carteras', 'icon-cartera', 'tesoreria', 'icon-impuestos', 'icon-activos'] as const;
 
 /** Módulos de finanzas (documentación oficial de Finanzas) */
 export const esFinanzas = (id: string) => id.startsWith('icon-');
@@ -36,16 +37,16 @@ export function imgSrc(modulo: string, fichero: string) {
   return `${import.meta.env.BASE_URL}img/${modulo}/${fichero}`;
 }
 
-/** Metadatos visuales por módulo */
+/** Metadatos visuales por módulo; «corto» es el nombre que ve el alumno en menú, ruta y planetas */
 export const META: Record<string, { color: string; icono: string; corto: string }> = {
-  maestros: { color: '#4fbfa5', icono: 'maestros', corto: 'Maestros' },
+  maestros: { color: '#4fbfa5', icono: 'maestros', corto: 'Datos maestros' },
   parametrizacion: { color: '#6c8fd6', icono: 'engranaje', corto: 'Parametrización' },
   compras: { color: '#f2a93b', icono: 'compras', corto: 'Compras' },
   ventas: { color: '#e0708a', icono: 'ventas', corto: 'Ventas' },
-  asientos: { color: '#8a7be0', icono: 'asiento', corto: 'Asientos' },
-  carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Carteras' },
-  tesoreria: { color: '#8bc34a', icono: 'banco', corto: 'Tesorería' },
-  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad' },
+  asientos: { color: '#8a7be0', icono: 'asiento', corto: 'Asientos manuales' },
+  carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Cartera de efectos' },
+  tesoreria: { color: '#8bc34a', icono: 'banco', corto: 'Tesorería y bancos' },
+  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad general' },
   'icon-cartera': { color: '#2fae8f', icono: 'cobros', corto: 'Cobros y pagos' },
   'icon-impuestos': { color: '#d9824b', icono: 'impuestos', corto: 'Impuestos' },
   'icon-activos': { color: '#b06fc4', icono: 'activos', corto: 'Activos fijos' },

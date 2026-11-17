@@ -19,6 +19,7 @@ import Certificado from './pages/Certificado';
 import Examinador from './pages/Examinador';
 import Video from './pages/Video';
 import ErpPractica from './pages/ErpPractica';
+import Glosario from './pages/Glosario';
 
 function useTema() {
   const [oscuro, setOscuro] = useState(() => document.documentElement.dataset.theme === 'dark');
@@ -110,6 +111,7 @@ function Rutas() {
           <Route path="/taller/:sim" element={<Taller />} />
           <Route path="/video" element={<Video />} />
           <Route path="/video/:cap" element={<Video />} />
+          <Route path="/glosario" element={<Glosario />} />
           <Route path="/logros" element={<Logros />} />
           <Route path="/examen" element={<Examen />} />
           <Route path="/certificado" element={<Certificado />} />

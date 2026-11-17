@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Glosa } from '../Glosario';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import type { Hotspot, Seccion } from '../../types';
@@ -115,7 +116,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
                 {e && <span className="cc-n" aria-hidden="true">{i + 1}</span>}
                 {t(c.campo)}
               </td>
-              <td>{t(c.significado)}</td>
+              <td><Glosa>{t(c.significado)}</Glosa></td>
               <td>{c.ejemplo ? <code>{t(c.ejemplo)}</code> : null}</td>
             </tr>
           );

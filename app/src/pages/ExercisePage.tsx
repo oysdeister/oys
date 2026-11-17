@@ -1,4 +1,5 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react';
+import { Glosa } from '../components/Glosario';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
 import { META, getEjercicio, todosEjercicios } from '../content';
@@ -119,10 +120,10 @@ export default function ExercisePage() {
               <Link to={`/modulo/${modulo.id}`} className="ex-back">
                 <Icon name="atras" size={16} /> {modulo.titulo}
               </Link>
-              <span aria-hidden="true">·</span> Ejercicio {ej.numero} de {modulo.ejercicios.length}
+              <span aria-hidden="true" className="ex-sep">·</span> Ejercicio {ej.numero} de {modulo.ejercicios.length}
             </p>
             <h1>{conIni(ej.titulo, ini)}</h1>
-            <p className="lead">{conIni(ej.objetivo, ini)}</p>
+            <p className="lead"><Glosa>{conIni(ej.objetivo, ini)}</Glosa></p>
             <div className="ex-chips">
               <span className="chip">
                 <Icon name="reloj" size={14} /> {ej.duracionMin} min

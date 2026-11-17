@@ -16,7 +16,8 @@ interface Miga {
 const SECCIONES: Record<string, string> = {
   erp: 'ERP de práctica',
   taller: 'Taller',
-  video: 'Vídeo',
+  video: 'Vídeos',
+  glosario: 'Glosario',
   logros: 'Logros',
   examen: 'Examen',
   certificado: 'Certificado',

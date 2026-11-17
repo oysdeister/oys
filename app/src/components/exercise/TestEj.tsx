@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Glosa } from '../Glosario';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import type { Ejercicio } from '../../types';
@@ -113,7 +114,7 @@ export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (t
           exit={reducir ? { opacity: 0 } : { opacity: 0, x: -30 }}
           transition={{ duration: 0.25 }}
         >
-          <h3 className="test-preg">{t(q.pregunta)}</h3>
+          <h3 className="test-preg"><Glosa>{t(q.pregunta)}</Glosa></h3>
           <div role="radiogroup" aria-label="Opciones">
             {ordenes[i].map((k, n) => {
               const clase = elegida === null ? '' : k === q.correcta ? ' right' : k === elegida ? ' wrong' : ' dim';
@@ -138,7 +139,7 @@ export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (t
             {elegida !== null && (
               <motion.div className={`callout ${acerto ? 'solucion' : 'problema'}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} aria-live="polite">
                 <b>{acerto ? 'Correcto' : 'No es esa'}</b>
-                {t(q.explicacion)}
+                <Glosa>{t(q.explicacion)}</Glosa>
               </motion.div>
             )}
           </AnimatePresence>
