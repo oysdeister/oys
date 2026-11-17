@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { avisarCambio } from '../lib/sync';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Link } from 'react-router-dom';
@@ -89,7 +90,7 @@ export function confeti(reducido: boolean, fuerte = true, color?: string) {
 
 /* ---------- Avance por rondas (solo para la portada del Taller) ---------- */
 
-const CLAVE_AVANCE = 'oys-taller-avance-v1';
+export const CLAVE_AVANCE = 'oys-taller-avance-v1';
 
 /** Rondas superadas como máximo en cada simulador (vive en este navegador) */
 export function leeAvanceTaller(): Record<string, number> {
@@ -109,6 +110,7 @@ function guardaAvanceTaller(id: string, rondas: number) {
     const a = leeAvanceTaller();
     if ((a[id] ?? 0) >= rondas) return;
     localStorage.setItem(CLAVE_AVANCE, JSON.stringify({ ...a, [id]: rondas }));
+    avisarCambio();
   } catch {
     /* sin almacenamiento: no pasa nada */
   }

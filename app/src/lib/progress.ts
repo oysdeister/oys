@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { sync } from './sync';
+import { avisarCambio } from './sync';
 
 export interface EstadoEjercicio {
   /** Pasos guiados completados (índice global del paso dentro del ejercicio) */
@@ -50,8 +50,16 @@ function guardar(p: Progreso) {
     /* almacenamiento bloqueado: el progreso dura lo que dure la pestaña */
   }
   oyentes.forEach((f) => f());
-  if (estado.alumno.id) void sync.subir(estado);
+  avisarCambio();
 }
+
+/** Vuelve a leer localStorage (tras fusionar con el progreso de la cuenta) y repinta. */
+export function recargarProgreso() {
+  estado = leer();
+  oyentes.forEach((f) => f());
+}
+
+export const CLAVE_PROGRESO = CLAVE;
 
 export function useProgreso(): Progreso {
   return useSyncExternalStore(

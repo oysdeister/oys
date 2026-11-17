@@ -1,5 +1,6 @@
 /* Prácticas transaccionales: enunciado + comprobaciones automáticas sobre los datos del ERP de práctica. */
 import { useSyncExternalStore } from 'react';
+import { avisarCambio } from '../lib/sync';
 import { type Db, type Pantalla, baseDe, facturaDeAlbaran, lineasFactura, situacionPedido, stock, totales } from './modelo';
 
 export interface Comprobacion {
@@ -205,4 +206,13 @@ export function registrarNota(id: string, nota: number) {
     /* sin almacenamiento */
   }
   oy.forEach((f) => f());
+  avisarCambio();
 }
+
+/** Vuelve a leer localStorage (tras fusionar con el progreso de la cuenta) y repinta. */
+export function recargarNotas() {
+  notas = leerNotas();
+  oy.forEach((f) => f());
+}
+
+export { CLAVE_NOTAS };

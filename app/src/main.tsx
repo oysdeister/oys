@@ -4,9 +4,12 @@ import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/instrument-sans';
 import './styles.css';
 import App from './App';
+import { Acceso } from './auth/Acceso';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Acceso>
+      <App />
+    </Acceso>
   </StrictMode>,
 );

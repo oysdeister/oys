@@ -8,6 +8,7 @@ import { BottomNav } from './components/shell/BottomNav';
 import { Espacio } from './components/shell/Espacio';
 import { Onboarding } from './components/Onboarding';
 import { useProgreso } from './lib/progress';
+import { CLERK_ACTIVO } from './auth/Acceso';
 import { INSIGNIAS, insigniasGanadas } from './lib/badges';
 import Home from './pages/Home';
 import ModulePage from './pages/ModulePage';
@@ -148,7 +149,7 @@ function Marco() {
           <div className="wrap">
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo.png`} alt="O&S Consultores" className="logo-claro" />
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="O&S Consultores" className="logo-oscuro" />
-            <span>Ejercicios sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). Tu progreso se guarda en este navegador.</span>
+            <span>Ejercicios sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
           </div>
         </footer>
       </div>

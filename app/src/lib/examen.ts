@@ -11,6 +11,7 @@
     herramienta interna y la comprobación real la hace el examinador en Axional.
 */
 import { useSyncExternalStore } from 'react';
+import { avisarCambio } from './sync';
 import { MODULOS, ORDEN, esFinanzas } from '../content';
 import type { Pregunta } from '../types';
 import { conIni, num2, redondea } from './texto';
@@ -1189,7 +1190,16 @@ function guardar(a: Almacen) {
     /* sin almacenamiento: dura lo que la pestaña */
   }
   oyentes.forEach((f) => f());
+  avisarCambio();
 }
+
+/** Vuelve a leer localStorage (tras fusionar con el progreso de la cuenta) y repinta. */
+export function recargarExamen() {
+  almacen = leer();
+  oyentes.forEach((f) => f());
+}
+
+export const CLAVE_EXAMEN = CLAVE;
 
 export function useExamen(): Almacen {
   return useSyncExternalStore(
