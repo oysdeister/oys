@@ -18,6 +18,7 @@ import Examen from './pages/Examen';
 import Certificado from './pages/Certificado';
 import Examinador from './pages/Examinador';
 import Video from './pages/Video';
+import ErpPractica from './pages/ErpPractica';
 
 function useTema() {
   const [oscuro, setOscuro] = useState(() => document.documentElement.dataset.theme === 'dark');
@@ -104,6 +105,7 @@ function Rutas() {
           <Route path="/" element={<Home />} />
           <Route path="/modulo/:id" element={<ModulePage />} />
           <Route path="/ejercicio/:id" element={<ExercisePage />} />
+          <Route path="/erp" element={<ErpPractica />} />
           <Route path="/taller" element={<Taller />} />
           <Route path="/taller/:sim" element={<Taller />} />
           <Route path="/video" element={<Video />} />

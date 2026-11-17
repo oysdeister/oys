@@ -15,6 +15,8 @@ import { DeMemoria } from '../components/exercise/DeMemoria';
 import { TestEj } from '../components/exercise/TestEj';
 import { DemoReal } from '../components/exercise/DemoReal';
 import { Problemas } from '../components/exercise/Problemas';
+import { Practicar } from '../erp/Practicar';
+import { PRACTICAS_POR_EJERCICIO, useNotas } from '../erp/practicas';
 import { estadoDe } from '../components/exercise/util';
 import './aprender.css';
 import './pulido.css';
@@ -24,6 +26,7 @@ const TABS = [
   { id: 'guiado', label: 'Guiado' },
   { id: 'memoria', label: 'De memoria' },
   { id: 'test', label: 'Test' },
+  { id: 'erp', label: 'Practica en el ERP' },
   { id: 'demo', label: 'En la demo real' },
   { id: 'problemas', label: 'Problemas' },
 ] as const;
@@ -33,6 +36,7 @@ export default function ExercisePage() {
   const [sp, setSp] = useSearchParams();
   const reducir = useReducedMotion();
   const p = useProgreso();
+  const notasErp = useNotas();
   const tabsRef = useRef<HTMLDivElement>(null);
   const hallado = getEjercicio(id);
   const tabActual = sp.get('tab') ?? 'concepto';
@@ -65,8 +69,10 @@ export default function ExercisePage() {
   const todos = todosEjercicios();
   const pos = todos.findIndex((x) => x.ejercicio.id === ej.id);
   const sig = todos[pos + 1];
+  const practicasEj = PRACTICAS_POR_EJERCICIO[ej.id] ?? [];
+  const tabs = TABS.filter((x) => x.id !== 'erp' || practicasEj.length > 0);
   const tabParam = sp.get('tab');
-  const tab = TABS.some((x) => x.id === tabParam) ? (tabParam as string) : 'concepto';
+  const tab = tabs.some((x) => x.id === tabParam) ? (tabParam as string) : 'concepto';
 
   const ir = (t: string) => {
     setSp(t === 'concepto' ? {} : { tab: t }, { replace: true });
@@ -80,20 +86,21 @@ export default function ExercisePage() {
   const hechoTab: Record<string, boolean> = {
     guiado: !!e?.guiado,
     test: (e?.test ?? 0) >= APROBADO,
+    erp: practicasEj.length > 0 && practicasEj.every((x) => (notasErp[x]?.nota ?? 0) >= 1),
     demo: ej.checklist.length > 0 && (e?.demo.length ?? 0) >= ej.checklist.length,
   };
 
   const onTeclaTabs = (ev: KeyboardEvent<HTMLDivElement>) => {
-    const k = TABS.findIndex((x) => x.id === tab);
+    const k = tabs.findIndex((x) => x.id === tab);
     let n = -1;
-    if (ev.key === 'ArrowRight') n = (k + 1) % TABS.length;
-    else if (ev.key === 'ArrowLeft') n = (k - 1 + TABS.length) % TABS.length;
+    if (ev.key === 'ArrowRight') n = (k + 1) % tabs.length;
+    else if (ev.key === 'ArrowLeft') n = (k - 1 + tabs.length) % tabs.length;
     else if (ev.key === 'Home') n = 0;
-    else if (ev.key === 'End') n = TABS.length - 1;
+    else if (ev.key === 'End') n = tabs.length - 1;
     if (n < 0) return;
     ev.preventDefault();
     ev.stopPropagation();
-    ir(TABS[n].id);
+    ir(tabs[n].id);
     const btn = tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role=tab]')[n];
     btn?.focus();
     btn?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
@@ -152,7 +159,7 @@ export default function ExercisePage() {
 
       <div ref={tabsRef} className="tabs ex-tabs" role="tablist" aria-label="Partes del ejercicio" onKeyDown={onTeclaTabs}>
         <LayoutGroup id={`tabs-${ej.id}`}>
-          {TABS.map((x) => {
+          {tabs.map((x) => {
             const sel = x.id === tab;
             return (
               <button
@@ -195,6 +202,7 @@ export default function ExercisePage() {
           {tab === 'guiado' && <Guiado ej={ej} modulo={modulo.id} ini={ini} onIr={ir} />}
           {tab === 'memoria' && <DeMemoria ej={ej} modulo={modulo.id} ini={ini} />}
           {tab === 'test' && <TestEj ej={ej} ini={ini} onIr={ir} />}
+          {tab === 'erp' && <Practicar ids={practicasEj} ini={ini} />}
           {tab === 'demo' && <DemoReal ej={ej} ini={ini} />}
           {tab === 'problemas' && <Problemas ej={ej} ini={ini} />}
         </motion.section>

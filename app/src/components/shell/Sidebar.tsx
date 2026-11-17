@@ -7,6 +7,7 @@ import { useProgreso } from '../../lib/progress';
 import { avanceGlobal, avanceModulo } from '../../lib/avance';
 
 const PRACTICA = [
+  { to: '/erp', label: 'ERP de práctica', icon: 'compras' },
   { to: '/taller', label: 'Taller', icon: 'taller' },
   { to: '/video', label: 'Vídeo', icon: 'video' },
   { to: '/examen', label: 'Examen', icon: 'examen' },
