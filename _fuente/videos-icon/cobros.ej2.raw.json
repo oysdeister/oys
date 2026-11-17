@@ -1,0 +1,541 @@
+[
+  {
+    "id": "cobros-pagos-cobros-4",
+    "numero": 4,
+    "titulo": "La acción PEFE en el maestro de acciones",
+    "objetivo": "Localizar la acción PEFE en el maestro de acciones y leer su configuración sin modificarla: estado final, efecto final, asiento, plantilla y estados de origen.",
+    "concepto": "El botón «Pago directo en efectivo» que aparece en la cartera de efectos no es un botón suelto: sale de una acción configurada en Finanzas › Cobros y Pagos › Maestros › Acciones. La acción PEFE describe qué pasa con el efecto, qué asiento se genera y qué campos se piden al ejecutarla.\n\nEsta acción está pensada para efectos que están en estado PE (Pendiente) y tipo TF (Transferencia). Al ejecutarla, el efecto pasa a tipo EF (Al contado) y estado PA (Pagado), con caducidad Sí.\n\nEn este ejercicio solo vas a localizarla y leerla. No cambies ningún valor de la acción en la demo.",
+    "duracionMin": 25,
+    "secciones": [
+      {
+        "id": "cobros-pagos-cobros-4-accion",
+        "titulo": "La acción PEFE en el maestro",
+        "paraQueSirve": "Localizar la acción que genera el botón de pago y ver su configuración de evolución, asiento y campos editables.",
+        "ruta": [
+          "Finanzas",
+          "Cobros y Pagos",
+          "Maestros",
+          "Acciones",
+          "Relación de acciones"
+        ],
+        "explicacion": [
+          "La pantalla «Acciones sobre efectos» lista las acciones de cobros y pagos. Filtra por clase Pago y código PEFE para abrir la acción.",
+          "PEFE se llama «Pago, directo en efectivo». Su evolución deja el efecto en estado PA (Pagado) y tipo EF (Al contado), con caducidad Sí. Genera asiento PAGD y usa la plantilla de enlaces contables cefectos_p_pagd.",
+          "En el bloque «Información general» se ve si la acción es individual, de remesa o de gestión. En «Gestión de efectos» están los campos editables que se piden al ejecutar: vencimiento, importe, domiciliación, referencia, cuenta financiera, notas, tipo efecto y gastos."
+        ],
+        "campos": [
+          {
+            "campo": "Acción",
+            "significado": "Código de la acción en el maestro.",
+            "ejemplo": "PEFE"
+          },
+          {
+            "campo": "Descripción",
+            "significado": "Texto que se muestra en el botón de la cartera.",
+            "ejemplo": "Pago, directo en efectivo"
+          },
+          {
+            "campo": "Estado final",
+            "significado": "Estado al que pasa el efecto cuando se ejecuta la acción.",
+            "ejemplo": "PA (Pagado)"
+          },
+          {
+            "campo": "Efecto final",
+            "significado": "Tipo de efecto que tendrá el documento.",
+            "ejemplo": "EF (Al contado)"
+          },
+          {
+            "campo": "Asiento",
+            "significado": "Código del enlace contable que genera la acción.",
+            "ejemplo": "PAGD"
+          },
+          {
+            "campo": "Plantilla",
+            "significado": "Plantilla de enlaces contables asociada a la acción.",
+            "ejemplo": "cefectos_p_pagd"
+          },
+          {
+            "campo": "Acción individual",
+            "significado": "Indica si se puede lanzar desde el botón de un efecto.",
+            "ejemplo": "Sí"
+          },
+          {
+            "campo": "Acción gestión",
+            "significado": "Indica si se puede usar en una gestión masiva.",
+            "ejemplo": "Sí"
+          },
+          {
+            "campo": "Cuenta financiera",
+            "significado": "Campo editable de la acción; cuenta de tesorería que interviene en el pago.",
+            "ejemplo": "La cuenta financiera de la empresa"
+          },
+          {
+            "campo": "Tipo efecto",
+            "significado": "Campo editable de la acción; tipo de efecto final que propone.",
+            "ejemplo": "EF (Al contado)"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Entra en Finanzas › Cobros y Pagos › Maestros › Acciones › Relación de acciones."
+          },
+          {
+            "texto": "Filtra por clase Pago y código PEFE."
+          },
+          {
+            "texto": "Abre la acción PEFE en modo consulta.",
+            "detalle": "No cambies ningún valor de la acción.",
+            "imagen": "cobros-017.jpg"
+          },
+          {
+            "texto": "Lee el bloque de evolución: Estado final, Efecto final, Asiento y Plantilla."
+          },
+          {
+            "texto": "Revisa los bloques «Información general» y «Gestión de efectos».",
+            "detalle": "Fíjate en qué campos editables pide la acción al ejecutarse."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "Es un ejercicio de consulta: localiza y lee la acción PEFE, no la modifiques."
+          },
+          {
+            "tipo": "problema",
+            "texto": "No ves el botón «Pago directo en efectivo» en la cartera de un efecto."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Revisa la pestaña Estados origen de PEFE: la acción solo parte de PE Pendiente y tipo TF."
+          }
+        ]
+      },
+      {
+        "id": "cobros-pagos-cobros-4-origen",
+        "titulo": "Estados de origen de la acción",
+        "paraQueSirve": "Ver por qué la acción solo se ofrece en efectos concretos: la pestaña Estados origen limita el estado y el tipo de efecto de partida.",
+        "ruta": null,
+        "explicacion": [
+          "La pestaña «Estados origen» de PEFE contiene el estado PE (Pendiente) y el tipo TF (Transferencia).",
+          "Por eso el botón «Pago directo en efectivo» aparece en la cartera solo con efectos TF+PE. Un efecto bloqueado o ya pagado no lo muestra."
+        ],
+        "campos": [
+          {
+            "campo": "Estado origen",
+            "significado": "Estado que debe tener el efecto para ejecutar la acción.",
+            "ejemplo": "PE (Pendiente)"
+          },
+          {
+            "campo": "Tipo efecto",
+            "significado": "Tipo de efecto admitido en el origen.",
+            "ejemplo": "TF (Transferencia)"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Dentro de la acción PEFE, abre la pestaña «Estados origen»."
+          },
+          {
+            "texto": "Comprueba que solo aparece PE Pendiente con tipo Transferencia."
+          },
+          {
+            "texto": "Vuelve a la lista de acciones sin guardar.",
+            "detalle": "Consulta, no cambies la configuración.",
+            "imagen": "cobros-018.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "El efecto bloqueado no sale como pendiente y no ofrece esta acción."
+          },
+          {
+            "tipo": "problema",
+            "texto": "Un efecto en estado BQ Bloqueado no muestra el botón PEFE."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Verifica que el efecto esté en PE Pendiente; es el único estado de origen de esta acción."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿De dónde sale el botón «Pago directo en efectivo» de la cartera?",
+        "opciones": [
+          "De una acción configurada en Cobros y Pagos",
+          "De la ficha del tercero",
+          "Del maestro de bancos",
+          "De la pestaña Vencimientos"
+        ],
+        "correcta": 0,
+        "explicacion": "Los botones de cartera provienen de acciones de cobros y pagos; PEFE es la acción de pago directo."
+      },
+      {
+        "pregunta": "¿Qué estado final deja la acción PEFE?",
+        "opciones": [
+          "PE Pendiente",
+          "EF Al contado",
+          "PA Pagado",
+          "BQ Bloqueado"
+        ],
+        "correcta": 2,
+        "explicacion": "PEFE deja estado final PA (Pagado), efecto final EF (Al contado) y caducidad Sí."
+      },
+      {
+        "pregunta": "¿Qué pestaña de la acción limita desde qué estado y tipo se puede ejecutar?",
+        "opciones": [
+          "Información general",
+          "Gestión de efectos",
+          "Estados origen",
+          "Histórico"
+        ],
+        "correcta": 2,
+        "explicacion": "La pestaña Estados origen define el estado y tipo de efecto desde los que parte la acción."
+      },
+      {
+        "pregunta": "¿Qué estado y tipo de origen admite PEFE?",
+        "opciones": [
+          "PE y TF",
+          "PA y EF",
+          "BQ y TF",
+          "PE y CH"
+        ],
+        "correcta": 0,
+        "explicacion": "PEFE parte del estado PE Pendiente y del tipo TF Transferencia."
+      },
+      {
+        "pregunta": "Además de cambiar el efecto, la acción PEFE genera:",
+        "opciones": [
+          "Solo una nota informativa",
+          "Un asiento contable PAGD",
+          "Un tercero nuevo",
+          "Una factura de compras"
+        ],
+        "correcta": 1,
+        "explicacion": "En la acción se ve Asiento PAGD y plantilla cefectos_p_pagd."
+      }
+    ],
+    "checklist": [
+      "Localizas la ruta Finanzas › Cobros y Pagos › Maestros › Acciones › Relación de acciones.",
+      "Filtra por clase Pago y código PEFE.",
+      "Abre la acción PEFE en modo consulta.",
+      "Compruebas Estado final PA (Pagado) y Efecto final EF (Al contado).",
+      "Compruebas Asiento PAGD y Plantilla cefectos_p_pagd.",
+      "Revisas los bloques «Información general» y «Gestión de efectos».",
+      "Abres la pestaña «Estados origen» y ves PE Pendiente con tipo TF.",
+      "No guardas ningún cambio en la acción."
+    ],
+    "problemas": [
+      {
+        "problema": "No encuentras la acción PEFE en el maestro.",
+        "solucion": "Filtra por clase Pago y código PEFE en Relación de acciones; no cambies la configuración."
+      },
+      {
+        "problema": "El botón «Pago directo en efectivo» no aparece en un efecto.",
+        "solucion": "Revisa que el efecto esté en PE Pendiente y tipo TF, tal como indica la pestaña Estados origen de PEFE."
+      }
+    ]
+  },
+  {
+    "id": "cobros-pagos-cobros-5",
+    "numero": 5,
+    "titulo": "Gestión masiva de efectos",
+    "objetivo": "Crear una gestión masiva de pagos, seleccionar un efecto pendiente, añadirlo a la gestión y cerrar para dejarlo pagado.",
+    "concepto": "La gestión masiva permite trabajar varios efectos a la vez desde «Finanzas › Cobros y Pagos › Gestiones sobre la cartera de efectos». En la cabecera eliges empresa, fecha, clase, acción y moneda.\n\nDespués, en «Selección de efectos», filtras y marcas los efectos pendientes. El botón «Agregar efectos» los pasa a «Efectos relacionados» y al cerrar la gestión se ejecuta la acción sobre todos.\n\nEn el ejemplo se paga de forma masiva una factura de compras contabilizada con tercero a 90 días y transferencia. El efecto queda en EF/PA con caducidad Sí y pierde el botón individual Retroceder.",
+    "duracionMin": 30,
+    "secciones": [
+      {
+        "id": "cobros-pagos-cobros-5-cabecera",
+        "titulo": "Cabecera de la gestión masiva",
+        "paraQueSirve": "Definir el lote de trabajo: empresa, fecha, clase, acción y moneda. Una gestión nueva evita arrastrar selecciones anteriores.",
+        "ruta": [
+          "Finanzas",
+          "Cobros y Pagos",
+          "Gestiones sobre la cartera de efectos"
+        ],
+        "explicacion": [
+          "Desde «Gestiones sobre la cartera de efectos» se crea una gestión nueva. No se reutiliza una gestión antigua para seleccionar: puede arrastrar datos de la selección anterior.",
+          "En la cabecera se elige empresa, fecha de proceso, clase Pago, acción «Pago, directo en efectivo» y la moneda del efecto. La clase y la acción determinan qué efectos se podrán seleccionar."
+        ],
+        "campos": [
+          {
+            "campo": "Empresa",
+            "significado": "Sociedad de los efectos a gestionar.",
+            "ejemplo": "001"
+          },
+          {
+            "campo": "Moneda empresa",
+            "significado": "Moneda local de la empresa.",
+            "ejemplo": "PEN"
+          },
+          {
+            "campo": "Fecha proceso",
+            "significado": "Fecha de la gestión masiva.",
+            "ejemplo": "La fecha de hoy"
+          },
+          {
+            "campo": "Clase",
+            "significado": "Indica si gestionas cobros o pagos.",
+            "ejemplo": "Pago"
+          },
+          {
+            "campo": "Acción",
+            "significado": "Acción que se ejecutará sobre los efectos seleccionados.",
+            "ejemplo": "Pago, directo en efectivo"
+          },
+          {
+            "campo": "Estado",
+            "significado": "Estado de la gestión mientras está abierta.",
+            "ejemplo": "Abierto"
+          },
+          {
+            "campo": "Moneda",
+            "significado": "Divisa de los efectos que vas a seleccionar.",
+            "ejemplo": "USD"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Entra en Finanzas › Cobros y Pagos › Gestiones sobre la cartera de efectos."
+          },
+          {
+            "texto": "Pulsa «Nuevo» para crear una gestión nueva.",
+            "imagen": "cobros-019.jpg"
+          },
+          {
+            "texto": "Rellena empresa, fecha proceso, clase Pago, acción «Pago, directo en efectivo» y moneda USD.",
+            "detalle": "Usa la moneda del efecto; en el ejemplo es USD."
+          },
+          {
+            "texto": "Comprueba que la gestión queda en estado Abierto."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "La moneda de la gestión debe coincidir con la del efecto que vas a seleccionar."
+          },
+          {
+            "tipo": "problema",
+            "texto": "El selector de efectos se queja o falta un dato al reutilizar una gestión."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Crea una gestión nueva desde el botón nuevo antes de seleccionar, para no arrastrar selecciones previas."
+          }
+        ]
+      },
+      {
+        "id": "cobros-pagos-cobros-5-seleccion",
+        "titulo": "Selección de efectos",
+        "paraQueSirve": "Filtrar y marcar los efectos candidatos y añadirlos a la gestión.",
+        "ruta": null,
+        "explicacion": [
+          "En la pestaña «Selección de efectos» se filtra por clase Pago y por el documento del efecto. En el ejemplo se localiza el efecto de la factura de compras contabilizada con tercero a 90 días y transferencia.",
+          "Se marca el efecto pendiente y se pulsa «Agregar efectos». El efecto pasa a «Efectos relacionados», desde donde se cierra la gestión."
+        ],
+        "campos": [
+          {
+            "campo": "Clase",
+            "significado": "Filtro para ver solo cobros o pagos.",
+            "ejemplo": "Pago"
+          },
+          {
+            "campo": "Documento",
+            "significado": "Referencia del documento del efecto; sirve para localizar el efecto.",
+            "ejemplo": "El documento de la factura de compras"
+          },
+          {
+            "campo": "Lista de efectos",
+            "significado": "Efectos pendientes que cumplen el filtro.",
+            "ejemplo": "Un efecto en USD"
+          },
+          {
+            "campo": "Efectos relacionados",
+            "significado": "Efectos añadidos a la gestión.",
+            "ejemplo": "El efecto seleccionado"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre la pestaña «Selección de efectos» de la gestión."
+          },
+          {
+            "texto": "Filtra por clase Pago y localiza el efecto por su documento o importe.",
+            "imagen": "cobros-021.jpg"
+          },
+          {
+            "texto": "Marca el efecto pendiente en la lista."
+          },
+          {
+            "texto": "Pulsa «Agregar efectos»."
+          },
+          {
+            "texto": "Comprueba que el efecto aparece en «Efectos relacionados»."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "Si no ves resultados, revisa los filtros de clase y moneda."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Si el selector arrastra datos de una gestión anterior, crea una gestión nueva."
+          }
+        ]
+      },
+      {
+        "id": "cobros-pagos-cobros-5-cierre",
+        "titulo": "Cerrar la gestión y ver el resultado en cartera",
+        "paraQueSirve": "Ejecutar la acción sobre los efectos añadidos y comprobar el cambio en la cartera.",
+        "ruta": null,
+        "explicacion": [
+          "Con el efecto en «Efectos relacionados», se cierra la gestión y se ejecuta la acción PEFE sobre los efectos añadidos.",
+          "En la cartera de efectos, el documento pasa de TF/PE a EF/PA, con caducidad Sí. No aparece el botón individual «Retroceder» porque el cambio se hizo desde la gestión; para revertirlo hay que abrir la gestión y actualizar desde los efectos.",
+          "Si se intenta cerrar una gestión con varios efectos, el vídeo muestra un error que el formador deja pendiente de revisión en el entorno de desarrollo."
+        ],
+        "campos": [
+          {
+            "campo": "Efectos relacionados",
+            "significado": "Lista de efectos que se cerrarán con la gestión.",
+            "ejemplo": "El efecto seleccionado"
+          },
+          {
+            "campo": "Tipo efecto",
+            "significado": "Tipo de efecto resultante en cartera.",
+            "ejemplo": "EF (Al contado)"
+          },
+          {
+            "campo": "Estado",
+            "significado": "Estado resultante en cartera.",
+            "ejemplo": "PA (Pagado)"
+          },
+          {
+            "campo": "Caducidad",
+            "significado": "Indicador de ciclo terminado.",
+            "ejemplo": "Sí"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre la pestaña o apartado «Efectos relacionados» y verifica el efecto añadido."
+          },
+          {
+            "texto": "Pulsa «Cerrar gestión».",
+            "imagen": "cobros-023.jpg"
+          },
+          {
+            "texto": "Actualiza la cartera de efectos y abre el efecto.",
+            "detalle": "Verás Tipo efecto EF, Estado PA y Caducidad Sí.",
+            "imagen": "cobros-022.jpg"
+          },
+          {
+            "texto": "Comprueba que solo queda «Pago, devolución» y no el botón «Retroceder»."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "problema",
+            "texto": "Al cerrar una gestión con varios efectos, el sistema da problema y no se puede cerrar."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "En el vídeo no se resuelve: el formador indica que lo revisará en el entorno de desarrollo. No fuerces el cierre con varios efectos."
+          },
+          {
+            "tipo": "problema",
+            "texto": "Tras la gestión masiva no aparece «Retroceder» en el efecto."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Abre la gestión y actualiza desde los efectos relacionados; no uses el botón individual."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿Para qué sirve «Gestiones sobre la cartera de efectos»?",
+        "opciones": [
+          "Para procesar varios efectos a la vez",
+          "Para dar de alta un tipo de efecto",
+          "Para consultar solo el histórico",
+          "Para descontabilizar facturas"
+        ],
+        "correcta": 0,
+        "explicacion": "La gestión masiva permite agregar varios efectos y ejecutar una acción sobre ellos."
+      },
+      {
+        "pregunta": "¿Qué acción se elige en la cabecera para pagar como en el vídeo?",
+        "opciones": [
+          "Letra al endoso",
+          "Pago bloquear",
+          "Pagos regularizar",
+          "Pago directo en efectivo"
+        ],
+        "correcta": 3,
+        "explicacion": "Se usa la acción PEFE, «Pago, directo en efectivo»."
+      },
+      {
+        "pregunta": "¿Dónde ves los efectos marcados antes de cerrar la gestión?",
+        "opciones": [
+          "En la cartera de efectos",
+          "En el maestro de acciones",
+          "En «Efectos relacionados»",
+          "En la pestaña Vencimientos"
+        ],
+        "correcta": 2,
+        "explicacion": "Los efectos añadidos con «Agregar efectos» pasan a Efectos relacionados."
+      },
+      {
+        "pregunta": "Tras cerrar la gestión, ¿cómo queda el efecto pagado?",
+        "opciones": [
+          "TF/PE caducidad No",
+          "EF/PA caducidad Sí",
+          "EF/PE caducidad No",
+          "TF/PA caducidad Sí"
+        ],
+        "correcta": 1,
+        "explicacion": "El efecto queda tipo EF, estado PA y caducidad Sí."
+      },
+      {
+        "pregunta": "¿Por qué no hay botón «Retroceder» individual tras pagar de forma masiva?",
+        "opciones": [
+          "Porque el efecto se eliminó",
+          "Porque la acción es de solo lectura",
+          "Porque el cambio se hizo desde la gestión y se revierte allí",
+          "Porque el efecto quedó bloqueado"
+        ],
+        "correcta": 2,
+        "explicacion": "En la gestión masiva no se retrocede desde el efecto individual; hay que abrir la gestión."
+      }
+    ],
+    "checklist": [
+      "Entras en Finanzas › Cobros y Pagos › Gestiones sobre la cartera de efectos.",
+      "Creas una gestión nueva, sin reutilizar una antigua.",
+      "En la cabecera indicas empresa, fecha, clase Pago, acción «Pago, directo en efectivo» y moneda del efecto.",
+      "Abres «Selección de efectos» y filtras por clase Pago/documento.",
+      "Localizas y marcas el efecto pendiente de la factura de compras con transferencia.",
+      "Pulsas «Agregar efectos» y lo ves en «Efectos relacionados».",
+      "Cierras la gestión y actualizas la cartera: el efecto queda EF/PA con caducidad Sí.",
+      "Confirmas que no aparece el botón individual «Retroceder»."
+    ],
+    "problemas": [
+      {
+        "problema": "El selector de efectos se queja o falta un dato al reutilizar una gestión.",
+        "solucion": "Crea una gestión nueva desde el botón nuevo antes de seleccionar; así no arrastras selecciones previas."
+      },
+      {
+        "problema": "No sale el botón individual «Retroceder» después de pagar de forma masiva.",
+        "solucion": "Abre la gestión y actualiza desde los efectos relacionados; no uses el botón Retroceder del efecto individual."
+      },
+      {
+        "problema": "Al cerrar una gestión con varios efectos, el sistema da error y no se puede cerrar.",
+        "solucion": "En el vídeo no se resuelve: el formador indica que lo revisará en el entorno de desarrollo. No fuerces el cierre con varios efectos."
+      }
+    ]
+  }
+]

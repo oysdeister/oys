@@ -1,0 +1,254 @@
+{
+ "id": "facturacion-v-4",
+ "numero": 4,
+ "titulo": "Cuando una factura no contabiliza",
+ "objetivo": "Tendrás identificados los tres motivos que impiden contabilizar o remesar: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.",
+ "concepto": "Una factura puede quedarse sin contabilizar o sin cartera de efectos por tres motivos principales: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.\n\nCon importe total 0 la factura contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos; por eso no se puede remesar ni conciliar.\n\nUn período cerrado impide contabilizar y se corrige usando una fecha en un período abierto. En facturas origen pedido, pasa primero a provisional para cambiar el tipo de efecto y revisa el tipo de asiento.",
+ "duracionMin": 30,
+ "secciones": [
+  {
+   "id": "finanzas-icon-icon11-1-importe-0",
+   "titulo": "Factura con importe total 0",
+   "paraQueSirve": "Evitar el caso en el que una factura contabiliza pero no se puede remesar ni conciliar.",
+   "ruta": null,
+   "explicacion": [
+    "Una factura con importe total 0 contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos.",
+    "Sin efecto de cartera no hay deuda que incluir en una remesa ni que conciliar contra el banco."
+   ],
+   "campos": [
+    {
+     "campo": "Importe total",
+     "significado": "Total de la factura.",
+     "ejemplo": "0,00"
+    },
+    {
+     "campo": "Cartera de efectos",
+     "significado": "Efecto de deuda o cobro generado al contabilizar.",
+     "ejemplo": "No se genera con importe 0"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Revisa el importe total de la factura antes de contabilizar."
+    },
+    {
+     "texto": "Si contabilizas una factura de importe 0, comprueba que no aparece en cartera de efectos."
+    },
+    {
+     "texto": "Corrige la factura para que tenga un importe real antes de querer remesarla."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Si la cartera aparece vacía tras contabilizar, revisa primero si el importe total de la factura es 0."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Corrige la factura con un importe distinto de 0 y vuelve a contabilizar para que se genere su efecto."
+    }
+   ]
+  },
+  {
+   "id": "finanzas-icon-icon11-5-periodos",
+   "titulo": "Períodos contables cerrados",
+   "paraQueSirve": "Revisar el estado de los períodos del ejercicio y usar una fecha contable permitida.",
+   "ruta": [
+    "Finanzas",
+    "Maestros",
+    "Parametrización",
+    "Empresas",
+    "Empresa 0",
+    "Ejercicio"
+   ],
+   "explicacion": [
+    "El ejercicio 2026 tiene 12 períodos contables.",
+    "En la demo, enero-junio estaban Cerrado y julio en adelante Abierto."
+   ],
+   "campos": [
+    {
+     "campo": "Ejercicio",
+     "significado": "Año contable.",
+     "ejemplo": "2026"
+    },
+    {
+     "campo": "Período",
+     "significado": "Mes contable dentro del ejercicio.",
+     "ejemplo": "julio"
+    },
+    {
+     "campo": "Estado del período",
+     "significado": "Abierto o Cerrado.",
+     "ejemplo": "Enero-junio Cerrado; julio en adelante Abierto"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Abre el maestro de empresas y ve a la pestaña «Ejercicio».",
+     "imagen": "icon11-012.jpg"
+    },
+    {
+     "texto": "Revisa el estado de los períodos de 2026.",
+     "detalle": "Enero-junio Cerrado; desde julio Abierto."
+    },
+    {
+     "texto": "Si la factura no contabiliza, comprueba que su fecha no caiga en un período cerrado."
+    },
+    {
+     "texto": "Usa una fecha desde julio en adelante para poder contabilizar."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "No se puede contabilizar una factura fechada en un período cerrado."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Corrige la fecha de la factura a un período abierto. Para abrir meses anteriores habría que borrar el ejercicio y recrearlo después de fijar bien el año de inicio de la empresa."
+    }
+   ]
+  },
+  {
+   "id": "finanzas-icon-icon11-5-origen-pedido",
+   "titulo": "Factura origen pedido y tipo de asiento",
+   "paraQueSirve": "Saber cómo corregir una factura de origen pedido y qué tipo de asiento debe usar.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Facturas",
+    "Facturas"
+   ],
+   "explicacion": [
+    "En una factura de origen pedido, antes de cambiar el tipo de efecto hay que pulsar «Pasar a provisional».",
+    "Si al contabilizar falla, revisa el tipo de documento y el tipo de asiento."
+   ],
+   "campos": [
+    {
+     "campo": "Tipo documento",
+     "significado": "Origen de la factura.",
+     "ejemplo": "FACTURA COMPRA ORIGEN PEDIDO"
+    },
+    {
+     "campo": "Tipo de asiento",
+     "significado": "Plantilla contable usada al contabilizar.",
+     "ejemplo": "EPC en compras; FB en ventas"
+    },
+    {
+     "campo": "Tipo de efecto",
+     "significado": "Forma de pago propuesta para la cartera.",
+     "ejemplo": "TF o cheque"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Localiza en la lista la factura de compra de origen pedido.",
+     "imagen": "icon11-014.jpg"
+    },
+    {
+     "texto": "Abre la factura y observa los botones «Pasar a provisional» y «Contabilizar».",
+     "imagen": "icon11-013.jpg"
+    },
+    {
+     "texto": "Si necesitas cambiar el tipo de efecto, pulsa primero «Pasar a provisional»."
+    },
+    {
+     "texto": "Revisa la pestaña de tipología y confirma el tipo de asiento EPC para compras o FB para ventas."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Si aparece un error de tipo de asiento al contabilizar, suele ser porque el tipo de documento o de asiento no corresponde."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Comprueba que la factura de compra usa EPC y la de venta usa FB antes de contabilizar."
+    }
+   ]
+  }
+ ],
+ "test": [
+  {
+   "pregunta": "¿Qué ocurre si contabilizas una factura con importe total 0?",
+   "opciones": [
+    "No deja contabilizar",
+    "Genera asiento y registro fiscal, pero no cartera de efectos",
+    "Genera cartera de efectos negativa",
+    "Genera una remesa automática"
+   ],
+   "correcta": 1,
+   "explicacion": "La factura contabiliza, pero sin cartera de efectos no se puede remesar ni conciliar."
+  },
+  {
+   "pregunta": "¿Qué meses de 2026 estaban cerrados en la demo?",
+   "opciones": [
+    "Enero-junio",
+    "Julio-diciembre",
+    "Solo enero",
+    "Ninguno"
+   ],
+   "correcta": 0,
+   "explicacion": "Enero-junio estaban Cerrado y julio en adelante Abierto."
+  },
+  {
+   "pregunta": "Antes de cambiar el tipo de efecto en una factura de origen pedido hay que…",
+   "opciones": [
+    "Contabilizar",
+    "Guardar",
+    "Pasar a provisional",
+    "Descontabilizar"
+   ],
+   "correcta": 2,
+   "explicacion": "Primero se pasa a provisional para poder modificar la tipología."
+  },
+  {
+   "pregunta": "En ventas, ¿qué tipo de asiento debe usarse?",
+   "opciones": [
+    "EPC",
+    "PSCTT",
+    "TF",
+    "FB"
+   ],
+   "correcta": 3,
+   "explicacion": "En ventas se usa FB y en compras EPC."
+  },
+  {
+   "pregunta": "¿Por qué una factura de importe 0 no se puede remesar?",
+   "opciones": [
+    "Porque no genera asiento",
+    "Porque no genera cartera de efectos",
+    "Porque no tiene vencimiento",
+    "Porque no tiene proveedor"
+   ],
+   "correcta": 1,
+   "explicacion": "Sin cartera de efectos no hay deuda que incluir en una remesa."
+  }
+ ],
+ "checklist": [
+  "Revisas el importe total antes de contabilizar.",
+  "Compruebas que la fecha cae en un período abierto.",
+  "Pulsas «Pasar a provisional» antes de cambiar el tipo de efecto.",
+  "Confirmas EPC para compras y FB para ventas.",
+  "Compruebas que no aparece cartera con importe 0.",
+  "Corriges fecha o tipo de asiento antes de reintentar."
+ ],
+ "problemas": [
+  {
+   "problema": "Contabilizas una factura y no aparece en la cartera de efectos.",
+   "solucion": "Revisa el importe total: si es 0, no se genera cartera. Corrige el importe y vuelve a contabilizar."
+  },
+  {
+   "problema": "La factura no contabiliza y su fecha es de junio.",
+   "solucion": "El período está cerrado. Cambia la fecha a un período abierto, como julio."
+  },
+  {
+   "problema": "Aparece un error de tipo de asiento al contabilizar.",
+   "solucion": "Comprueba que la factura de compra usa EPC y la de venta usa FB."
+  },
+  {
+   "problema": "No puedes cambiar el tipo de efecto en una factura origen pedido.",
+   "solucion": "Pasa la factura a provisional antes de modificar la tipología."
+  }
+ ]
+}

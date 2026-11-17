@@ -10,11 +10,12 @@ import {
   type CapituloVideo,
   type MomentoVideo,
 } from './videoMapa';
+import { SERIES_FIN, MOMENTOS_SECCION_FIN, MOMENTOS_EJERCICIO_FIN } from './video-finanzas';
 import { SERIES_TESORERIA, MOMENTOS_SECCION_TESORERIA, MOMENTOS_EJERCICIO_TESORERIA } from './video-tesoreria';
 
 export interface SerieVideo {
   id: string;
-  /** «Vídeo de compras», «Sesión ICON 1»… */
+  /** «Vídeo de compras», «Sesión de finanzas 1»… */
   titulo: string;
   /** Texto corto para el botón «Míralo en el vídeo» */
   corto: string;
@@ -30,6 +31,7 @@ export interface SerieVideo {
 export const SERIES: Record<string, SerieVideo> = {
   compras: { id: 'compras', titulo: 'Vídeo de compras', corto: 'Compras', pagina: '/video', capitulos: CAPITULOS },
   ...Object.fromEntries(SERIES_TESORERIA.map((s) => [s.id, s])),
+  ...Object.fromEntries(SERIES_FIN.map((s) => [s.id, s])),
 };
 
 export function serieDe(id?: string): SerieVideo {
@@ -42,8 +44,8 @@ function juntar(...mapas: Record<string, MomentoVideo[]>[]) {
   return r;
 }
 
-const SECCION = juntar(MOM_SEC_COMPRAS, MOMENTOS_SECCION_TESORERIA);
-const EJERCICIO = juntar(MOM_EJ_COMPRAS, MOMENTOS_EJERCICIO_TESORERIA);
+const SECCION = juntar(MOM_SEC_COMPRAS, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
+const EJERCICIO = juntar(MOM_EJ_COMPRAS, MOMENTOS_EJERCICIO_TESORERIA, MOMENTOS_EJERCICIO_FIN);
 
 export function momentosDeSeccion(id: string): MomentoVideo[] {
   return SECCION[id] ?? [];
@@ -56,5 +58,5 @@ export function momentosDeEjercicio(id: string): MomentoVideo[] {
 /** Series que pertenecen a un módulo (para mostrar sus capítulos en la página del módulo) */
 export function seriesDeModulo(modulo: string): SerieVideo[] {
   if (modulo === 'compras') return [SERIES.compras];
-  return SERIES_TESORERIA.filter((s) => s.modulos.includes(modulo));
+  return [...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
 }

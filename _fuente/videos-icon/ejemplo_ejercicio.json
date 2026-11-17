@@ -1,0 +1,444 @@
+{
+  "id": "asientos-2",
+  "numero": 2,
+  "titulo": "Introducir un asiento de dos líneas",
+  "objetivo": "Tendrás un asiento provisional de la empresa 0, diario {INI}, con dos líneas cuadradas (62902 al Debe y 57200 al Haber por 1.000,00).",
+  "concepto": "El asiento tiene dos partes: la cabecera (empresa, fecha, diario, justificante) y las líneas de apuntes (cuenta, Debe o Haber). Se guarda primero la cabecera y después se añaden las líneas desde la pestaña «Líneas de apuntes».\n\nEjemplo del ejercicio: un gasto diverso de 1.000 € pagado por banco, con 62902 al Debe y 57200 al Haber. Un asiento nace «Provisional» y se puede modificar mientras está así.",
+  "duracionMin": 30,
+  "secciones": [
+    {
+      "id": "asientos-2-cabecera",
+      "titulo": "Cabecera del asiento",
+      "paraQueSirve": "La cabecera recoge los datos comunes del asiento: empresa, diario, fecha, justificante y documento. Las líneas los heredan.",
+      "ruta": [
+        "Finanzas",
+        "Contabilidad General",
+        "Diario contable",
+        "Asientos",
+        "Asientos"
+      ],
+      "explicacion": [
+        "En la lista de asientos se pulsa «Nuevo» y se rellena la cabecera. Al guardar, el asiento aparece en la lista con su número (6, automático) y estado Provisional.",
+        "La ficha guardada muestra la banda naranja PROVISIONAL y los botones Recalcular cuadre, Reordenar líneas, Finalizar y Copiar asiento."
+      ],
+      "campos": [
+        {
+          "campo": "Empresa *",
+          "significado": "Sociedad en la que se registra el asiento. Decide el plan contable y los ejercicios disponibles.",
+          "ejemplo": "0 (Deister Software)"
+        },
+        {
+          "campo": "Asiento",
+          "significado": "Número del asiento dentro del ejercicio. Lo pone el ERP al guardar.",
+          "ejemplo": "6 (automático)"
+        },
+        {
+          "campo": "Diario",
+          "significado": "Libro diario del asiento. Por defecto propone DG General.",
+          "ejemplo": "{INI}"
+        },
+        {
+          "campo": "Sistema",
+          "significado": "Sistema contable. En TUTORIAL solo existe A General.",
+          "ejemplo": "A"
+        },
+        {
+          "campo": "Fecha *",
+          "significado": "Fecha contable. De ella salen el ejercicio y el periodo.",
+          "ejemplo": "12-11-2026"
+        },
+        {
+          "campo": "Ejercicio / Período",
+          "significado": "Se calculan solos a partir de la fecha.",
+          "ejemplo": "2026 / 11"
+        },
+        {
+          "campo": "Justificante",
+          "significado": "Numerador de justificantes: al guardar genera el número correlativo del asiento.",
+          "ejemplo": "{INI} (Asientos manuales {INI})"
+        },
+        {
+          "campo": "Documento",
+          "significado": "Referencia libre del documento que justifica el asiento. Se copia a todas las líneas.",
+          "ejemplo": "{INI}-DOC-001"
+        },
+        {
+          "campo": "Notas",
+          "significado": "Texto libre del asiento. Se propone como descripción de las líneas.",
+          "ejemplo": "{INI} Ejercicio 2 entrada de asientos"
+        },
+        {
+          "campo": "Moneda / Cambio / Cálculo *",
+          "significado": "Divisa del asiento y tipo de cambio. En euros, cambio 1.",
+          "ejemplo": "EUR / 1,000000 / Dividir"
+        },
+        {
+          "campo": "Estado *",
+          "significado": "Provisional al crearlo; Contabilizado al finalizarlo.",
+          "ejemplo": "Provisional"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "En la lista de asientos pulsa «Nuevo»."
+        },
+        {
+          "texto": "Elige la Empresa 0 y cambia el Diario a {INI}. Deja la fecha de hoy."
+        },
+        {
+          "texto": "En Justificante elige el numerador {INI}.",
+          "detalle": "Si no existe, créalo con el «+» de la lista (ver la sección siguiente)."
+        },
+        {
+          "texto": "Escribe el Documento {INI}-DOC-001 y unas Notas.",
+          "detalle": "Por ejemplo «{INI} Ejercicio 2 entrada de asientos»."
+        },
+        {
+          "texto": "Pulsa «Guardar».",
+          "detalle": "El asiento aparece en la lista con su número (6) y estado Provisional. Fíjate en la banda naranja PROVISIONAL de la ficha.",
+          "imagen": "asientos-004.jpg",
+          "hotspot": {
+            "x": 88.0,
+            "y": 85.0,
+            "w": 9.1,
+            "h": 3.4,
+            "etiqueta": "Guardar"
+          }
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "La cabecera se guarda una sola vez: empresa, proyecto, sección, diario, justificante y documento se escriben aquí y las líneas los heredan. La línea nueva propone además el importe que falta para cuadrar."
+        }
+      ]
+    },
+    {
+      "id": "asientos-2-numerador",
+      "titulo": "Numerador de justificantes {INI}",
+      "paraQueSirve": "El numerador fabrica el código del justificante (por ejemplo {INI}26-000001) cada vez que se guarda un asiento que lo usa. Así cada asiento manual tiene un número correlativo propio, que es el que se cita en auditorías y en el extracto.",
+      "ruta": [
+        "Campo Justificante del asiento",
+        "«+»",
+        "Numeradores de justificantes contables (cjusnumh)"
+      ],
+      "explicacion": [
+        "Se puede abrir desde el campo Justificante del asiento con el «+», o desde el buscador escribiendo «Numeradores de justificantes contables» (objeto cjusnumh).",
+        "Rotura y Numerador no son valores sino máscaras de formato: #e es la empresa, #yy el año, #d el diario y #n el contador. El resto del texto se copia tal cual. Con Rotura #e#yy hay un contador por empresa y año; con Numerador {INI}#yy-#n y Justificación 6 sale {INI}26-000001.",
+        "El «Detalle serializador» del numerador guarda el último número de cada rotura."
+      ],
+      "campos": [
+        {
+          "campo": "Tabla origen *",
+          "significado": "Documentos que numera.",
+          "ejemplo": "Asientos contables"
+        },
+        {
+          "campo": "Código de numerador *",
+          "significado": "Código que se elige en el campo Justificante.",
+          "ejemplo": "{INI}"
+        },
+        {
+          "campo": "Descripción",
+          "significado": "Nombre visible.",
+          "ejemplo": "Asientos manuales {INI}"
+        },
+        {
+          "campo": "Rotura *",
+          "significado": "MÁSCARA que decide cuándo vuelve a empezar el contador: #e empresa, #yy año, #d diario.",
+          "ejemplo": "#e#yy (un contador por empresa y año)"
+        },
+        {
+          "campo": "Numerador *",
+          "significado": "MÁSCARA del justificante. #n es el contador; el resto se copia tal cual.",
+          "ejemplo": "{INI}#yy-#n ({INI}26-000001)"
+        },
+        {
+          "campo": "Justificación",
+          "significado": "Número de dígitos del contador (rellena con ceros).",
+          "ejemplo": "6"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Desde el campo Justificante del asiento, pulsa el «+» al pie de la lista para crear el numerador.",
+          "detalle": "Se abre la ventana «Numeradores de justificantes contables»."
+        },
+        {
+          "texto": "Rellena Tabla origen «Asientos contables», Código de numerador {INI} y Descripción «Asientos manuales {INI}».",
+          "detalle": "En esta primera alta se escribieron por error valores literales en Rotura (26) y Numerador (0). Fíjate en cómo queda la ventana con esos valores.",
+          "imagen": "asientos-006.jpg",
+          "hotspot": {
+            "x": 62.2,
+            "y": 41.2,
+            "w": 11.5,
+            "h": 7.0,
+            "etiqueta": "Rotura"
+          }
+        },
+        {
+          "texto": "Fíjate en la lista de numeradores: los existentes usan máscaras como #e#yy#d y #d#e#s#yy-#n con justificación 6, y el tuyo ({INI}; en la captura, EA) tiene los literales 26 y 0.",
+          "detalle": "Eso explica que el justificante salga «0».",
+          "imagen": "asientos-007.jpg",
+          "hotspot": {
+            "x": 9.1,
+            "y": 22.4,
+            "w": 55.9,
+            "h": 3.6,
+            "etiqueta": "EA"
+          }
+        },
+        {
+          "texto": "Abre el numerador {INI} en cjusnumh y pon Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6."
+        },
+        {
+          "texto": "Guarda con el disquete.",
+          "detalle": "Sale «Éxito»; el detalle serializador guarda el último número de cada rotura.",
+          "imagen": "asientos-008.jpg",
+          "hotspot": {
+            "x": 85.0,
+            "y": 8.6,
+            "w": 2.6,
+            "h": 3.6,
+            "etiqueta": "Guardar (disquete)"
+          }
+        },
+        {
+          "texto": "Guarda un asiento de prueba con el numerador corregido y fíjate en su justificante.",
+          "detalle": "El asiento 11 ({INI}-DOC-005) recibe el justificante {INI}26-000001.",
+          "imagen": "asientos-009.jpg",
+          "hotspot": {
+            "x": 29.0,
+            "y": 19.2,
+            "w": 8.5,
+            "h": 3.2,
+            "etiqueta": "EA26-000001"
+          }
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "Con Rotura «26» y Numerador «0» el asiento se guarda sin error, pero su justificante sale «0» en todos los asientos. Rotura y Numerador no son valores sino máscaras: un texto sin #n nunca muestra el contador (el contador sí avanza: se ve en «Detalle serializador», último número 2)."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Abre el numerador {INI} en cjusnumh y pon Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6; guarda con el disquete. Los asientos nuevos reciben justificantes {INI}26-000001, {INI}26-000002… (los ya guardados conservan el «0»)."
+        }
+      ]
+    },
+    {
+      "id": "asientos-2-lineas",
+      "titulo": "Líneas de apuntes",
+      "paraQueSirve": "Cada línea es un apunte a una cuenta: importe al Debe o al Haber, con proyecto, sección y dimensiones para el análisis de costes. Las líneas heredan de la cabecera el documento y la descripción, así que solo hay que poner la cuenta y el importe.",
+      "ruta": [
+        "Finanzas",
+        "Contabilidad General",
+        "Diario contable",
+        "Asientos",
+        "Asientos",
+        "Líneas de apuntes"
+      ],
+      "explicacion": [
+        "Las líneas no se repiten datos de cabecera: se escriben una vez en la cabecera y la línea nueva propone además el importe que descuadra. Al escribir un importe en Debe, el Haber queda bloqueado a 0 y al revés.",
+        "El ejemplo del ejercicio: gasto diverso de 1.000 € pagado por banco, 62902 al Debe y 57200 al Haber."
+      ],
+      "campos": [
+        {
+          "campo": "Orden *",
+          "significado": "Número de línea dentro del asiento. Lo propone el ERP.",
+          "ejemplo": "1"
+        },
+        {
+          "campo": "Proyecto *",
+          "significado": "Unidad de negocio de la línea. En TUTORIAL solo existe el 0 GENERAL.",
+          "ejemplo": "0"
+        },
+        {
+          "campo": "Sección *",
+          "significado": "Sección o centro de la línea. Se rellena sola al elegir el proyecto.",
+          "ejemplo": "0 General"
+        },
+        {
+          "campo": "Documento",
+          "significado": "Heredado de la cabecera.",
+          "ejemplo": "{INI}-DOC-001"
+        },
+        {
+          "campo": "Auditado *",
+          "significado": "Marca de revisión del apunte.",
+          "ejemplo": "No"
+        },
+        {
+          "campo": "Plan contable *",
+          "significado": "Plan de cuentas de la empresa.",
+          "ejemplo": "PGE 2008 (ES)"
+        },
+        {
+          "campo": "Cuenta *",
+          "significado": "Cuenta contable del apunte. Debajo se ve su descripción.",
+          "ejemplo": "62902.00000 Gastos diversos"
+        },
+        {
+          "campo": "Debe divisa / Haber divisa *",
+          "significado": "Importe del apunte. Al escribir uno, el otro queda bloqueado a 0.",
+          "ejemplo": "1.000,00 / 0,00"
+        },
+        {
+          "campo": "Descripción",
+          "significado": "Concepto del apunte. Se propone el texto de Notas.",
+          "ejemplo": "{INI} Ejercicio 2 entrada de asientos"
+        },
+        {
+          "campo": "Dimensión 1 / Dimensión 2 *",
+          "significado": "Dimensiones analíticas.",
+          "ejemplo": "0 / 0"
+        },
+        {
+          "campo": "Cantidad 1 / Cantidad 2 *",
+          "significado": "Cantidades estadísticas opcionales.",
+          "ejemplo": "0,00"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "En la ficha del asiento abre la pestaña «Líneas de apuntes» y pulsa «Nuevo».",
+          "imagen": "asientos-005.jpg",
+          "hotspot": {
+            "x": 7.2,
+            "y": 16.2,
+            "w": 11.5,
+            "h": 3.6,
+            "etiqueta": "Líneas de apuntes"
+          }
+        },
+        {
+          "texto": "Escribe el Proyecto 0 y elige la fila.",
+          "detalle": "La Sección pasa a 0."
+        },
+        {
+          "texto": "Escribe la cuenta 62902 y elige 62902.00000.",
+          "imagen": "asientos-010.jpg",
+          "hotspot": {
+            "x": 12.1,
+            "y": 42.8,
+            "w": 18.1,
+            "h": 4.2,
+            "etiqueta": "Cuenta"
+          }
+        },
+        {
+          "texto": "Pon 1000 en Debe divisa y pulsa «Guardar»."
+        },
+        {
+          "texto": "Fíjate en la parte inferior de la línea: Dimensión 1 y Dimensión 2 a 0 (obligatorias) y los datos de control.",
+          "imagen": "asientos-011.jpg",
+          "hotspot": {
+            "x": 49.6,
+            "y": 54.8,
+            "w": 23.5,
+            "h": 4.8,
+            "etiqueta": "Dimensión 1"
+          }
+        },
+        {
+          "texto": "Pulsa otra vez «Nuevo».",
+          "detalle": "La línea 2 ya trae Haber 1.000,00 (el importe que falta para cuadrar)."
+        },
+        {
+          "texto": "Pon Proyecto 0 y la cuenta 57200.00000 Bancos y pulsa «Guardar».",
+          "detalle": "Solo falta la cuenta: el Haber ya viene propuesto.",
+          "imagen": "asientos-012.jpg",
+          "hotspot": {
+            "x": 12.1,
+            "y": 42.8,
+            "w": 18.1,
+            "h": 4.2,
+            "etiqueta": "Cuenta"
+          }
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "Resultado: asiento 6 de la empresa 0, diario {INI}, documento {INI}-DOC-001, Provisional, con 62902.00000 Debe 1.000,00 y 57200.00000 Haber 1.000,00. Compruébalo en la lista de asientos: el 6 sale con diario {INI} y Debe = Haber = 1.000,00."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "¿Qué contiene la cabecera de un asiento?",
+      "opciones": [
+        "Las cuentas y los importes",
+        "Empresa, fecha, diario y justificante, entre otros datos",
+        "Solo el estado Contabilizado",
+        "Únicamente las dimensiones analíticas"
+      ],
+      "correcta": 1,
+      "explicacion": "La cabecera recoge empresa, fecha, diario, justificante, documento y notas; las líneas llevan cuentas e importes."
+    },
+    {
+      "pregunta": "¿Qué son Rotura y Numerador en el numerador de justificantes?",
+      "opciones": [
+        "Importes literales",
+        "Máscaras de formato (#e, #yy, #d, #n…)",
+        "Códigos de cuenta",
+        "Fechas"
+      ],
+      "correcta": 1,
+      "explicacion": "Son máscaras: un texto sin #n nunca muestra el contador."
+    },
+    {
+      "pregunta": "¿Qué justificante genera la máscara {INI}#yy-#n con Justificación 6 en 2026?",
+      "opciones": [
+        "{INI}26-000001",
+        "{INI}-26-1",
+        "0",
+        "26-{INI}"
+      ],
+      "correcta": 0,
+      "explicacion": "Con #yy el año, #n el contador y 6 dígitos sale {INI}26-000001."
+    },
+    {
+      "pregunta": "¿Qué propone el ERP al pulsar «Nuevo» para la línea 2?",
+      "opciones": [
+        "Un Debe de 1.000,00",
+        "El Haber que falta para cuadrar (1.000,00)",
+        "Una cuenta al azar",
+        "Nada"
+      ],
+      "correcta": 1,
+      "explicacion": "La línea nueva propone el importe que descuadra: Haber 1.000,00."
+    },
+    {
+      "pregunta": "¿En qué estado nace un asiento?",
+      "opciones": [
+        "Contabilizado",
+        "Finalizado",
+        "Provisional",
+        "Auditado"
+      ],
+      "correcta": 2,
+      "explicacion": "Nace Provisional y pasa a Contabilizado al finalizarlo."
+    }
+  ],
+  "checklist": [
+    "Pulsas «Nuevo» en la lista de asientos.",
+    "Eliges Empresa 0 y Diario {INI}.",
+    "Eliges el numerador {INI} en Justificante.",
+    "Escribes Documento {INI}-DOC-001 y las Notas.",
+    "Guardas y ves el asiento con estado Provisional (banda naranja).",
+    "El numerador {INI} tiene Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6.",
+    "En «Líneas de apuntes» creas la línea 1: Proyecto 0, cuenta 62902.00000, Debe divisa 1.000,00.",
+    "Creas la línea 2: Proyecto 0, cuenta 57200.00000, Haber 1.000,00.",
+    "En la lista de asientos, el 6 sale con diario {INI} y Debe = Haber = 1.000,00.",
+    "Los asientos nuevos reciben justificantes del tipo {INI}26-000001."
+  ],
+  "problemas": [
+    {
+      "problema": "El asiento se guarda pero el justificante sale «0» en todos los asientos.",
+      "solucion": "Rotura y Numerador son máscaras, no valores. Corrige el numerador {INI}: Rotura #e#yy, Numerador {INI}#yy-#n, Justificación 6. Los ya guardados conservan el «0»."
+    }
+  ]
+}

@@ -291,6 +291,18 @@
     {
      "problema": "Una acción no debe generar apunte contable pero sí mover tesorería.",
      "solucion": "Usa la fórmula 0 en el asiento programable de la acción."
+    },
+    {
+     "problema": "No sé dónde configurar los intereses de un pago a terceros.",
+     "solucion": "Se pueden definir en el maestro de tipos de efecto o en la propia acción. Consúltalo sin cambiar nada en la demo."
+    },
+    {
+     "problema": "No encuentras la acción PEFE en el maestro.",
+     "solucion": "Filtra por clase Pago y código PEFE en Relación de acciones; no cambies la configuración."
+    },
+    {
+     "problema": "El botón «Pago directo en efectivo» no aparece en un efecto.",
+     "solucion": "Revisa que el efecto esté en PE Pendiente y tipo TF, tal como indica la pestaña Estados origen de PEFE."
     }
    ]
   },
@@ -1123,6 +1135,2633 @@
     {
      "problema": "No se puede modificar una gestión de recobros creada ayer.",
      "solucion": "Solo el usuario que la creó puede modificarla durante el día de creación; las gestiones anteriores no son modificables."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-1",
+   "numero": 4,
+   "titulo": "De la factura contabilizada a la cartera de efectos",
+   "objetivo": "Parte de una factura de compras contabilizada, revisa sus datos financieros, abre la cartera de efectos y comprueba la línea creada con su vencimiento.",
+   "concepto": "Al contabilizar una factura de compras, el sistema crea la cartera de efectos a partir de las condiciones del tercero: tipo de efecto, estado inicial y forma de pago. Por eso una factura con transferencia a 90 días genera un efecto de pago en estado Pendiente.\n\nLa pestaña «Cartera de efectos» de la factura lleva a Finanzas › Cobros y Pagos › Movimientos. Ahí se ve la línea del efecto en la tabla cefectos: empresa, fechas, vencimiento, justificante, documento, tercero, tipo de efecto, estado, importes, impuestos y perceptor.\n\nEn el ejemplo del vídeo, una factura del 02-05-2023 con vencimiento a 90 días aparece en cartera con vencimiento 31-07-2023, tipo TF Transferencia, estado PE Pendiente, importe 118,50 USD e importe local 440,70.",
+   "duracionMin": 25,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-1-factura",
+     "titulo": "Factura de compras contabilizada",
+     "paraQueSirve": "Comprueba los datos financieros de la factura: tipo de efecto, forma de pago, moneda e importe. Aquí se ve si heredó las condiciones configuradas en el tercero.",
+     "ruta": null,
+     "explicacion": [
+      "Abre una factura de compras contabilizada. La banda naranja muestra EN CONTABILIDAD.",
+      "En los datos financieros se ven Tipo efecto TF Transferencia y Forma pago 090, la condición de vencimiento a 90 días."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo efecto",
+       "significado": "Medio de pago heredado del tercero.",
+       "ejemplo": "TF Transferencia"
+      },
+      {
+       "campo": "Forma pago",
+       "significado": "Condición de vencimiento en días.",
+       "ejemplo": "090 (Vto. 90 días)"
+      },
+      {
+       "campo": "Moneda / importe",
+       "significado": "Divisa e importe de la factura.",
+       "ejemplo": "USD / 118,50"
+      },
+      {
+       "campo": "Tercero",
+       "significado": "Código del tercero de la factura.",
+       "ejemplo": "00041886 (ejemplo del vídeo)"
+      },
+      {
+       "campo": "Justificante / Documento",
+       "significado": "Códigos del movimiento y de la factura.",
+       "ejemplo": "FFAR0015486 / F001-11902"
+      },
+      {
+       "campo": "Estado contable",
+       "significado": "Indica si la factura está contabilizada.",
+       "ejemplo": "EN CONTABILIDAD"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre una factura de compras contabilizada del tutorial.",
+       "detalle": "En el ejemplo del vídeo el tercero es 00041886, la factura FFAR0015486 y el justificante F001-11902."
+      },
+      {
+       "texto": "Revisa el bloque de datos financieros.",
+       "detalle": "Comprueba Tipo efecto TF y Forma pago 090.",
+       "imagen": "v-cobros-001.jpg"
+      },
+      {
+       "texto": "Observa la banda EN CONTABILIDAD y los botones inferiores Copiar, Descontabilizar, Enviar e-mail."
+      },
+      {
+       "texto": "No descontabilices la factura.",
+       "detalle": "Solo vas a consultar el comportamiento."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No cambies la factura de la demo."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Si la factura no está contabilizada, no verás la pestaña Cartera de efectos."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-1-cartera",
+     "titulo": "Cartera de efectos",
+     "paraQueSirve": "Muestra la línea de cartera creada al contabilizar la factura. Es la pantalla de trabajo de los efectos.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Movimientos"
+     ],
+     "explicacion": [
+      "Desde la pestaña «Cartera de efectos» de la factura se accede a Finanzas › Cobros y Pagos › Movimientos, con la pantalla CARTERA DE EFECTOS.",
+      "La pantalla tiene pestañas Cartera de efectos, Histórico, Asiento origen, Terceros y Perceptor. En la línea se consolidan datos de la factura, importes, impuestos, tipo de efecto y estado."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad en la que se registra el efecto.",
+       "ejemplo": "125"
+      },
+      {
+       "campo": "Fecha factura",
+       "significado": "Fecha del documento de origen.",
+       "ejemplo": "02-05-2023"
+      },
+      {
+       "campo": "Vencimiento",
+       "significado": "Fecha calculada según la forma de pago.",
+       "ejemplo": "31-07-2023"
+      },
+      {
+       "campo": "Justificante / Documento",
+       "significado": "Códigos internos del efecto y de la factura.",
+       "ejemplo": "FFAR0015486 / F001-11902"
+      },
+      {
+       "campo": "Tercero",
+       "significado": "Tercero de la línea de cartera.",
+       "ejemplo": "00041886 (ejemplo del vídeo)"
+      },
+      {
+       "campo": "Tipo efecto / Estado",
+       "significado": "Situación actual del efecto.",
+       "ejemplo": "TF Transferencia / PE Pendiente"
+      },
+      {
+       "campo": "Importe divisa / local",
+       "significado": "Importe en divisa y su equivalente en local.",
+       "ejemplo": "118,50 USD / 440,70"
+      },
+      {
+       "campo": "Impuestos",
+       "significado": "Parte de impuestos asociada al efecto.",
+       "ejemplo": "67,24"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Desde la factura contabilizada pulsa la pestaña «Cartera de efectos»."
+      },
+      {
+       "texto": "Revisa la línea del efecto y localiza las pestañas de la pantalla.",
+       "detalle": "Comprueba justificante, documento, tercero, tipo de efecto, estado, importes y perceptor.",
+       "imagen": "v-cobros-011.jpg"
+      },
+      {
+       "texto": "Abre la pestaña «Asiento origen» y observa su contenido."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La tabla que consolida la cartera es cefectos."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Si la pestaña Cartera de efectos no aparece, revisa que la factura esté contabilizada."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-1-vencimientos",
+     "titulo": "Vencimientos de la factura",
+     "paraQueSirve": "Comprueba cómo se calcula el vencimiento a partir de la fecha de factura y los días de la forma de pago.",
+     "ruta": null,
+     "explicacion": [
+      "Dentro de la factura, la subpestaña «Vencimientos» muestra la línea de vencimiento con tipo de efecto, importe local, importe divisa e IVA.",
+      "Con fecha de factura 02-05-2023 y 90 días de pago, el sistema calcula el vencimiento 31-07-2023."
+     ],
+     "campos": [
+      {
+       "campo": "Fecha factura",
+       "significado": "Fecha de partida para calcular el vencimiento.",
+       "ejemplo": "02-05-2023"
+      },
+      {
+       "campo": "Vencimiento",
+       "significado": "Fecha en la que vence el efecto.",
+       "ejemplo": "31-07-2023"
+      },
+      {
+       "campo": "Tipo efecto",
+       "significado": "Medio de pago de la línea de vencimiento.",
+       "ejemplo": "TF Transferencia"
+      },
+      {
+       "campo": "Importe local / divisa",
+       "significado": "Importes a pagar en moneda local y divisa.",
+       "ejemplo": "440,70 / 118,500"
+      },
+      {
+       "campo": "IVA",
+       "significado": "Parte de impuestos del vencimiento.",
+       "ejemplo": "67,24"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En la factura abre la subpestaña «Vencimientos»."
+      },
+      {
+       "texto": "Comprueba la fecha de vencimiento calculada y los importes.",
+       "detalle": "La factura del 02-05-2023 a 90 días vence el 31-07-2023.",
+       "imagen": "v-cobros-012.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si el vencimiento estuviera partido en varias líneas, se crea un efecto por cada vencimiento."
+      },
+      {
+       "tipo": "nota",
+       "texto": "No modifiques la forma de pago aquí; viene configurada desde el tercero."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuándo aparece la pestaña «Cartera de efectos» en la factura?",
+     "opciones": [
+      "Solo al guardar borrador",
+      "Solo al descontabilizar",
+      "Al contabilizar la factura",
+      "Al enviar por correo"
+     ],
+     "correcta": 2,
+     "explicacion": "Al contabilizar se habilitan la cartera de efectos y los apuntes contables."
+    },
+    {
+     "pregunta": "¿Qué tabla consolida la cartera de efectos?",
+     "opciones": [
+      "cefectos",
+      "gcomfach",
+      "cterceros",
+      "cacciones"
+     ],
+     "correcta": 0,
+     "explicacion": "En la cartera se trabaja con la tabla cefectos."
+    },
+    {
+     "pregunta": "La pestaña «Cartera de efectos» de la factura lleva a...",
+     "opciones": [
+      "Datos bancarios",
+      "Finanzas › Cobros y Pagos › Movimientos",
+      "Condiciones comerciales",
+      "Estados iniciales por tipos"
+     ],
+     "correcta": 1,
+     "explicacion": "Redirige a la pantalla CARTERA DE EFECTOS en Movimientos."
+    },
+    {
+     "pregunta": "Con factura del 02-05-2023 y vencimiento a 90 días, ¿qué fecha se calcula?",
+     "opciones": [
+      "31-05-2023",
+      "31-06-2023",
+      "31-07-2022",
+      "31-07-2023"
+     ],
+     "correcta": 3,
+     "explicacion": "02-05-2023 más 90 días da 31-07-2023."
+    },
+    {
+     "pregunta": "¿Qué datos financieros se heredan de las condiciones del tercero al registrar la factura?",
+     "opciones": [
+      "Tipo de efecto y forma de pago",
+      "La cuenta bancaria",
+      "El histórico del efecto",
+      "El maestro de acciones"
+     ],
+     "correcta": 0,
+     "explicacion": "La factura toma del tercero, entre otros, el tipo de efecto y la forma de pago."
+    }
+   ],
+   "checklist": [
+    "Abres una factura de compras contabilizada.",
+    "Ves la banda EN CONTABILIDAD.",
+    "Compruebas Tipo efecto TF y Forma pago 090.",
+    "Abres la pestaña «Cartera de efectos» de la factura.",
+    "Llegas a Finanzas › Cobros y Pagos › Movimientos.",
+    "Revisas la línea: TF/PE, 118,50 USD, 440,70 local y vencimiento 31-07-2023.",
+    "Abres la subpestaña «Vencimientos».",
+    "No descontabilizas la factura."
+   ],
+   "problemas": [
+    {
+     "problema": "No ves la pestaña «Cartera de efectos» en la factura.",
+     "solucion": "Comprueba que la factura esté contabilizada. Al descontabilizar desaparecen la cartera y los apuntes contables."
+    },
+    {
+     "problema": "Al descontabilizar, la factura pierde la cartera de efectos.",
+     "solucion": "Si necesitas trabajar la cartera, vuelve a contabilizar la factura."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-2",
+   "numero": 5,
+   "titulo": "Pago directo en efectivo de un efecto",
+   "objetivo": "Ejecuta la acción Pago directo en efectivo sobre un efecto TF Pendiente, comprueba el cambio a EF Pagado con caducidad Sí y revisa el histórico.",
+   "concepto": "Los botones de la cartera de efectos cambian según el tipo de efecto y su estado. La acción PEFE «Pago directo en efectivo» solo arranca desde estado PE Pendiente y tipo transferencia; por eso el botón se ve con TF+PE.\n\nAl aceptar la ventana de evolución, el efecto pasa de TF/PE/No a EF/PA/Sí: tipo EF Al contado, estado PA Pagado y caducidad Sí. En la cartera quedan solo los botones Retroceder y Pago, devolución.\n\nSi se pulsa Retroceder, el efecto vuelve a TF/PE/No y el histórico guarda tres líneas del mismo efecto: estado inicial, pago realizado y retroceso.",
+   "duracionMin": 25,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-2-boton",
+     "titulo": "Botón de pago directo",
+     "paraQueSirve": "Localiza y ejecuta la acción de pago directo en efectivo desde la ficha del efecto.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Movimientos"
+     ],
+     "explicacion": [
+      "En la línea del efecto TF/PE, la barra de botones muestra varias acciones: Letra al endoso, Ordenar el pago, Pago autorizar, Pago bloquear, Pago directo en efectivo, Pago modificación y Pagos regularizar.",
+      "Al pulsar «Pago directo en efectivo» se abre la ventana «Evolución de estados», con la acción PEFE, fecha de contabilización, vencimiento, tipo de efecto, cuenta financiera, perceptor y domiciliación."
+     ],
+     "campos": [
+      {
+       "campo": "Acción",
+       "significado": "Código de la acción de pago directo en efectivo.",
+       "ejemplo": "PEFE"
+      },
+      {
+       "campo": "Fecha contabilización",
+       "significado": "Fecha en la que se contabiliza el pago.",
+       "ejemplo": "17-05-2023"
+      },
+      {
+       "campo": "Vencimiento",
+       "significado": "Fecha de vencimiento del efecto que se paga.",
+       "ejemplo": "31-07-2023"
+      },
+      {
+       "campo": "Fecha auxiliar",
+       "significado": "Fecha auxiliar visible en la ventana.",
+       "ejemplo": "Según ventana"
+      },
+      {
+       "campo": "Tipo efecto",
+       "significado": "Tipo de efecto final tras la acción.",
+       "ejemplo": "EF"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta de caja o banco de la empresa.",
+       "ejemplo": "PRV00CRP"
+      },
+      {
+       "campo": "Perceptor",
+       "significado": "Tercero que recibe el pago.",
+       "ejemplo": "00041886 (ejemplo del vídeo)"
+      },
+      {
+       "campo": "Domiciliación",
+       "significado": "Campo de domiciliación de la ventana.",
+       "ejemplo": "No activa"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el efecto TF/PE en Finanzas › Cobros y Pagos › Movimientos."
+      },
+      {
+       "texto": "Revisa la barra de botones y localiza «Pago directo en efectivo».",
+       "detalle": "Comprueba que el botón está disponible porque el efecto es TF Transferencia y está PE Pendiente.",
+       "imagen": "v-cobros-013.jpg",
+       "hotspot": {
+        "x": 49,
+        "y": 95.2,
+        "w": 10,
+        "h": 3.6,
+        "etiqueta": "Pago directo en efectivo"
+       }
+      },
+      {
+       "texto": "Pulsa «Pago directo en efectivo»."
+      },
+      {
+       "texto": "Revisa la ventana «Evolución de estados».",
+       "detalle": "Comprueba Acción PEFE, fecha de contabilización, vencimiento, tipo de efecto, cuenta financiera y perceptor.",
+       "imagen": "v-cobros-014.jpg",
+       "hotspot": {
+        "x": 53,
+        "y": 94,
+        "w": 5.2,
+        "h": 3.4,
+        "etiqueta": "Aceptar"
+       }
+      },
+      {
+       "texto": "Acepta para ejecutar el pago."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El botón solo aparece con TF Transferencia y estado PE Pendiente. Si el efecto está BQ Bloqueado no se muestra."
+      },
+      {
+       "tipo": "nota",
+       "texto": "No modifiques la configuración de la acción en la demo."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-2-resultado",
+     "titulo": "Resultado e histórico del pago",
+     "paraQueSirve": "Verifica el nuevo estado del efecto y revisa la trazabilidad del movimiento.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Movimientos"
+     ],
+     "explicacion": [
+      "Después de aceptar, la cartera muestra Tipo efecto EF Al contado, Estado PA Pagado y Caducidad Sí.",
+      "En la pestaña «Histórico de cambios de efectos» se guardan tres líneas del mismo efecto: TF/PE/No, EF/PA/Sí y de nuevo TF/PE/No si se retrocede."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo efecto",
+       "significado": "Tipo de efecto final tras el pago.",
+       "ejemplo": "EF Al contado"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Estado final tras el pago.",
+       "ejemplo": "PA Pagado"
+      },
+      {
+       "campo": "Caducidad",
+       "significado": "Marca que el ciclo está terminado.",
+       "ejemplo": "Sí"
+      },
+      {
+       "campo": "Cambio",
+       "significado": "Tipo de cambio aplicado.",
+       "ejemplo": "3,683"
+      },
+      {
+       "campo": "Botones restantes",
+       "significado": "Acciones disponibles tras pagar.",
+       "ejemplo": "Retroceder y Pago, devolución"
+      },
+      {
+       "campo": "Líneas del histórico",
+       "significado": "Trazabilidad del efecto en tres líneas.",
+       "ejemplo": "TF/PE/No → EF/PA/Sí con cuenta financiera PRV00CRP → TF/PE/No"
+      },
+      {
+       "campo": "Acción anterior / acción actual",
+       "significado": "Información complementaria del histórico.",
+       "ejemplo": "1 / 2"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Revisa el resultado en la cartera de efectos: EF, PA y caducidad Sí.",
+       "detalle": "Comprueba que solo quedan «Retroceder» y «Pago, devolución».",
+       "imagen": "v-cobros-015.jpg"
+      },
+      {
+       "texto": "Abre la pestaña «Histórico» y localiza las tres líneas.",
+       "detalle": "Verás el pase inicial, el pago y, si lo haces, el retroceso.",
+       "imagen": "v-cobros-016.jpg"
+      },
+      {
+       "texto": "Si quieres devolver el efecto a TF/PE, pulsa «Retroceder»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El histórico guarda el pago y el retroceso; no se borra."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Al retroceder, los botones de pago vuelven a estar disponibles."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué acción ejecuta el botón «Pago directo en efectivo»?",
+     "opciones": [
+      "Retroceder",
+      "Ordenar al pago",
+      "PEFE",
+      "Pagar regularizar"
+     ],
+     "correcta": 2,
+     "explicacion": "El botón corresponde a la acción PEFE «Pago, directo en efectivo»."
+    },
+    {
+     "pregunta": "¿Desde qué estado y tipo de efecto puede ejecutarse PEFE?",
+     "opciones": [
+      "TF Transferencia y PE Pendiente",
+      "EF Al contado y PA Pagado",
+      "BQ Bloqueado y PE Pendiente",
+      "CH Cheque y PE Pendiente"
+     ],
+     "correcta": 0,
+     "explicacion": "La acción PEFE parte de estado PE Pendiente y tipo transferencia."
+    },
+    {
+     "pregunta": "Tras ejecutar PEFE, ¿cómo queda el efecto?",
+     "opciones": [
+      "TF/PE/No",
+      "EF/PA/Sí",
+      "EF/PE/No",
+      "TF/PA/Sí"
+     ],
+     "correcta": 1,
+     "explicacion": "Queda en EF Al contado, PA Pagado y caducidad Sí."
+    },
+    {
+     "pregunta": "Después de pagar, ¿qué botones quedan en la cartera?",
+     "opciones": [
+      "Ordenar el pago y Pago bloquear",
+      "Pago autorizar y Pago modificación",
+      "Letra al endoso y Pagos regularizar",
+      "Retroceder y Pago, devolución"
+     ],
+     "correcta": 3,
+     "explicacion": "Solo quedan Retroceder y Pago, devolución."
+    },
+    {
+     "pregunta": "¿Qué muestra el histórico del efecto tras pagar y retroceder?",
+     "opciones": [
+      "Tres líneas del mismo efecto",
+      "Solo la línea inicial",
+      "Solo la línea de pago",
+      "Ninguna línea"
+     ],
+     "correcta": 0,
+     "explicacion": "Se guardan tres líneas: estado inicial, pago y retroceso."
+    }
+   ],
+   "checklist": [
+    "Abres Movimientos y localizas el efecto TF/PE.",
+    "Compruebas que el botón «Pago directo en efectivo» está visible.",
+    "Pulsas el botón y revisas la ventana «Evolución de estados».",
+    "Verificas Acción PEFE, fecha de contabilización y vencimiento.",
+    "Aceptas y ves el efecto EF/PA/Caducidad Sí.",
+    "Compruebas que solo quedan Retroceder y Pago, devolución.",
+    "Abres Histórico y localizas las tres líneas.",
+    "Si retrocedes, el efecto vuelve a TF/PE/No."
+   ],
+   "problemas": [
+    {
+     "problema": "El botón «Pago directo en efectivo» no aparece en el efecto.",
+     "solucion": "Revisa que el tipo de efecto sea TF Transferencia y el estado PE Pendiente. Si está BQ Bloqueado, la acción PEFE no se ofrece."
+    },
+    {
+     "problema": "En la ventana de pago directo se ve una cuenta financiera editable que el formador marcó como configuración incorrecta.",
+     "solucion": "No cambies la configuración de la demo. Limítate a observar el comportamiento y tenlo en cuenta como aviso."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-3",
+   "numero": 6,
+   "titulo": "Gestión masiva de efectos",
+   "objetivo": "Crear una gestión masiva de pagos, seleccionar un efecto pendiente, añadirlo a la gestión y cerrar para dejarlo pagado.",
+   "concepto": "La gestión masiva permite trabajar varios efectos a la vez desde «Finanzas › Cobros y Pagos › Gestiones sobre la cartera de efectos». En la cabecera eliges empresa, fecha, clase, acción y moneda.\n\nDespués, en «Selección de efectos», filtras y marcas los efectos pendientes. El botón «Agregar efectos» los pasa a «Efectos relacionados» y al cerrar la gestión se ejecuta la acción sobre todos.\n\nEn el ejemplo se paga de forma masiva una factura de compras contabilizada con tercero a 90 días y transferencia. El efecto queda en EF/PA con caducidad Sí y pierde el botón individual Retroceder.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-3-cabecera",
+     "titulo": "Cabecera de la gestión masiva",
+     "paraQueSirve": "Definir el lote de trabajo: empresa, fecha, clase, acción y moneda. Una gestión nueva evita arrastrar selecciones anteriores.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Gestiones sobre la cartera de efectos"
+     ],
+     "explicacion": [
+      "Desde «Gestiones sobre la cartera de efectos» se crea una gestión nueva. No se reutiliza una gestión antigua para seleccionar: puede arrastrar datos de la selección anterior.",
+      "En la cabecera se elige empresa, fecha de proceso, clase Pago, acción «Pago, directo en efectivo» y la moneda del efecto. La clase y la acción determinan qué efectos se podrán seleccionar."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad de los efectos a gestionar.",
+       "ejemplo": "001"
+      },
+      {
+       "campo": "Moneda empresa",
+       "significado": "Moneda local de la empresa.",
+       "ejemplo": "PEN"
+      },
+      {
+       "campo": "Fecha proceso",
+       "significado": "Fecha de la gestión masiva.",
+       "ejemplo": "La fecha de hoy"
+      },
+      {
+       "campo": "Clase",
+       "significado": "Indica si gestionas cobros o pagos.",
+       "ejemplo": "Pago"
+      },
+      {
+       "campo": "Acción",
+       "significado": "Acción que se ejecutará sobre los efectos seleccionados.",
+       "ejemplo": "Pago, directo en efectivo"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Estado de la gestión mientras está abierta.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Moneda",
+       "significado": "Divisa de los efectos que vas a seleccionar.",
+       "ejemplo": "USD"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Cobros y Pagos › Gestiones sobre la cartera de efectos."
+      },
+      {
+       "texto": "Pulsa «Nuevo» para crear una gestión nueva.",
+       "imagen": "v-cobros-019.jpg"
+      },
+      {
+       "texto": "Rellena empresa, fecha proceso, clase Pago, acción «Pago, directo en efectivo» y moneda USD.",
+       "detalle": "Usa la moneda del efecto; en el ejemplo es USD."
+      },
+      {
+       "texto": "Comprueba que la gestión queda en estado Abierto."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La moneda de la gestión debe coincidir con la del efecto que vas a seleccionar."
+      },
+      {
+       "tipo": "problema",
+       "texto": "El selector de efectos se queja o falta un dato al reutilizar una gestión."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Crea una gestión nueva desde el botón nuevo antes de seleccionar, para no arrastrar selecciones previas."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-3-seleccion",
+     "titulo": "Selección de efectos",
+     "paraQueSirve": "Filtrar y marcar los efectos candidatos y añadirlos a la gestión.",
+     "ruta": null,
+     "explicacion": [
+      "En la pestaña «Selección de efectos» se filtra por clase Pago y por el documento del efecto. En el ejemplo se localiza el efecto de la factura de compras contabilizada con tercero a 90 días y transferencia.",
+      "Se marca el efecto pendiente y se pulsa «Agregar efectos». El efecto pasa a «Efectos relacionados», desde donde se cierra la gestión."
+     ],
+     "campos": [
+      {
+       "campo": "Clase",
+       "significado": "Filtro para ver solo cobros o pagos.",
+       "ejemplo": "Pago"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Referencia del documento del efecto; sirve para localizar el efecto.",
+       "ejemplo": "El documento de la factura de compras"
+      },
+      {
+       "campo": "Lista de efectos",
+       "significado": "Efectos pendientes que cumplen el filtro.",
+       "ejemplo": "Un efecto en USD"
+      },
+      {
+       "campo": "Efectos relacionados",
+       "significado": "Efectos añadidos a la gestión.",
+       "ejemplo": "El efecto seleccionado"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la pestaña «Selección de efectos» de la gestión."
+      },
+      {
+       "texto": "Filtra por clase Pago y localiza el efecto por su documento o importe.",
+       "imagen": "v-cobros-021.jpg"
+      },
+      {
+       "texto": "Marca el efecto pendiente en la lista."
+      },
+      {
+       "texto": "Pulsa «Agregar efectos»."
+      },
+      {
+       "texto": "Comprueba que el efecto aparece en «Efectos relacionados»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si no ves resultados, revisa los filtros de clase y moneda."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Si el selector arrastra datos de una gestión anterior, crea una gestión nueva."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-3-cierre",
+     "titulo": "Cerrar la gestión y ver el resultado en cartera",
+     "paraQueSirve": "Ejecutar la acción sobre los efectos añadidos y comprobar el cambio en la cartera.",
+     "ruta": null,
+     "explicacion": [
+      "Con el efecto en «Efectos relacionados», se cierra la gestión y se ejecuta la acción PEFE sobre los efectos añadidos.",
+      "En la cartera de efectos, el documento pasa de TF/PE a EF/PA, con caducidad Sí. No aparece el botón individual «Retroceder» porque el cambio se hizo desde la gestión; para revertirlo hay que abrir la gestión y actualizar desde los efectos.",
+      "Si se intenta cerrar una gestión con varios efectos, el vídeo muestra un error que el formador deja pendiente de revisión en el entorno de desarrollo."
+     ],
+     "campos": [
+      {
+       "campo": "Efectos relacionados",
+       "significado": "Lista de efectos que se cerrarán con la gestión.",
+       "ejemplo": "El efecto seleccionado"
+      },
+      {
+       "campo": "Tipo efecto",
+       "significado": "Tipo de efecto resultante en cartera.",
+       "ejemplo": "EF (Al contado)"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Estado resultante en cartera.",
+       "ejemplo": "PA (Pagado)"
+      },
+      {
+       "campo": "Caducidad",
+       "significado": "Indicador de ciclo terminado.",
+       "ejemplo": "Sí"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la pestaña o apartado «Efectos relacionados» y verifica el efecto añadido."
+      },
+      {
+       "texto": "Pulsa «Cerrar gestión».",
+       "imagen": "v-cobros-023.jpg",
+       "hotspot": {
+        "x": 22,
+        "y": 95,
+        "w": 4.6,
+        "h": 3.4,
+        "etiqueta": "Cerrar"
+       }
+      },
+      {
+       "texto": "Actualiza la cartera de efectos y abre el efecto.",
+       "detalle": "Verás Tipo efecto EF, Estado PA y Caducidad Sí.",
+       "imagen": "v-cobros-022.jpg"
+      },
+      {
+       "texto": "Comprueba que solo queda «Pago, devolución» y no el botón «Retroceder»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Al cerrar una gestión con varios efectos, el sistema da problema y no se puede cerrar."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "En el vídeo no se resuelve: el formador indica que lo revisará en el entorno de desarrollo. No fuerces el cierre con varios efectos."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Tras la gestión masiva no aparece «Retroceder» en el efecto."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Abre la gestión y actualiza desde los efectos relacionados; no uses el botón individual."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve «Gestiones sobre la cartera de efectos»?",
+     "opciones": [
+      "Para procesar varios efectos a la vez",
+      "Para dar de alta un tipo de efecto",
+      "Para consultar solo el histórico",
+      "Para descontabilizar facturas"
+     ],
+     "correcta": 0,
+     "explicacion": "La gestión masiva permite agregar varios efectos y ejecutar una acción sobre ellos."
+    },
+    {
+     "pregunta": "¿Qué acción se elige en la cabecera para pagar como en el vídeo?",
+     "opciones": [
+      "Letra al endoso",
+      "Pago bloquear",
+      "Pagos regularizar",
+      "Pago directo en efectivo"
+     ],
+     "correcta": 3,
+     "explicacion": "Se usa la acción PEFE, «Pago, directo en efectivo»."
+    },
+    {
+     "pregunta": "¿Dónde ves los efectos marcados antes de cerrar la gestión?",
+     "opciones": [
+      "En la cartera de efectos",
+      "En el maestro de acciones",
+      "En «Efectos relacionados»",
+      "En la pestaña Vencimientos"
+     ],
+     "correcta": 2,
+     "explicacion": "Los efectos añadidos con «Agregar efectos» pasan a Efectos relacionados."
+    },
+    {
+     "pregunta": "Tras cerrar la gestión, ¿cómo queda el efecto pagado?",
+     "opciones": [
+      "TF/PE caducidad No",
+      "EF/PA caducidad Sí",
+      "EF/PE caducidad No",
+      "TF/PA caducidad Sí"
+     ],
+     "correcta": 1,
+     "explicacion": "El efecto queda tipo EF, estado PA y caducidad Sí."
+    },
+    {
+     "pregunta": "¿Por qué no hay botón «Retroceder» individual tras pagar de forma masiva?",
+     "opciones": [
+      "Porque el efecto se eliminó",
+      "Porque la acción es de solo lectura",
+      "Porque el cambio se hizo desde la gestión y se revierte allí",
+      "Porque el efecto quedó bloqueado"
+     ],
+     "correcta": 2,
+     "explicacion": "En la gestión masiva no se retrocede desde el efecto individual; hay que abrir la gestión."
+    }
+   ],
+   "checklist": [
+    "Entras en Finanzas › Cobros y Pagos › Gestiones sobre la cartera de efectos.",
+    "Creas una gestión nueva, sin reutilizar una antigua.",
+    "En la cabecera indicas empresa, fecha, clase Pago, acción «Pago, directo en efectivo» y moneda del efecto.",
+    "Abres «Selección de efectos» y filtras por clase Pago/documento.",
+    "Localizas y marcas el efecto pendiente de la factura de compras con transferencia.",
+    "Pulsas «Agregar efectos» y lo ves en «Efectos relacionados».",
+    "Cierras la gestión y actualizas la cartera: el efecto queda EF/PA con caducidad Sí.",
+    "Confirmas que no aparece el botón individual «Retroceder»."
+   ],
+   "problemas": [
+    {
+     "problema": "El selector de efectos se queja o falta un dato al reutilizar una gestión.",
+     "solucion": "Crea una gestión nueva desde el botón nuevo antes de seleccionar; así no arrastras selecciones previas."
+    },
+    {
+     "problema": "No sale el botón individual «Retroceder» después de pagar de forma masiva.",
+     "solucion": "Abre la gestión y actualiza desde los efectos relacionados; no uses el botón Retroceder del efecto individual."
+    },
+    {
+     "problema": "Al cerrar una gestión con varios efectos, el sistema da error y no se puede cerrar.",
+     "solucion": "En el vídeo no se resuelve: el formador indica que lo revisará en el entorno de desarrollo. No fuerces el cierre con varios efectos."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-4",
+   "numero": 7,
+   "titulo": "Parametrizar los tipos de remesa de la cuenta financiera",
+   "objetivo": "Tendrás localizada la pestaña «Remesas por cuenta» de la cuenta PRVCC0 y sabrás comprobar que existen los tipos CCHET, CSCTT y PSCTT.",
+   "concepto": "Los tipos de remesa no aparecen de la nada: están parametrizados por empresa, banco propio y cuenta financiera.\n\nSi la pestaña «Remesas por cuenta» está vacía, la remesa no ofrece tipos al crear una nueva.\n\nEn la demo, la cuenta financiera PRVCC0 tiene los tipos CCHET de cobro cheque, CSCTT de cobro transferencia y PSCTT de pago transferencia.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-4-empresa",
+     "titulo": "Abrir la empresa y la cuenta financiera",
+     "paraQueSirve": "Llegar a la pestaña de parametrización de remesas de la cuenta PRVCC0.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Parametrización",
+      "Empresas"
+     ],
+     "explicacion": [
+      "La parametrización de remesas está dentro del maestro de empresas, no en la propia remesa.",
+      "Hay que abrir el banco PRVCC0 y su pestaña «Remesas por cuenta»."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad cuya parametrización se revisa.",
+       "ejemplo": "0 Deister Software"
+      },
+      {
+       "campo": "Bancos propios",
+       "significado": "Pestaña que lista las cuentas financieras propias de la empresa.",
+       "ejemplo": "PRVCC0 Previsiones, c/c Emp 0"
+      },
+      {
+       "campo": "Remesas por cuenta",
+       "significado": "Pestaña de la cuenta financiera con los tipos de remesa disponibles.",
+       "ejemplo": "CCHET, CSCTT, PSCTT"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el maestro de empresas y selecciona la empresa 0 Deister Software."
+      },
+      {
+       "texto": "Ve a la pestaña «Bancos propios» y abre la cuenta financiera PRVCC0.",
+       "detalle": "Es la cuenta de Previsiones, c/c Emp 0."
+      },
+      {
+       "texto": "Pulsa la pestaña «Remesas por cuenta».",
+       "imagen": "v-icon11-006.jpg",
+       "hotspot": {
+        "x": 61.2,
+        "y": 13.6,
+        "w": 7.2,
+        "h": 2.9,
+        "etiqueta": "Remesas por cuenta"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si esta pestaña está vacía, al crear una remesa no aparecerá ningún tipo de remesa en el desplegable."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-4-tipos",
+     "titulo": "Comprobar los tipos de remesa",
+     "paraQueSirve": "Saber qué significan los códigos de remesa y cuál corresponde a pagar una factura de compra.",
+     "ruta": null,
+     "explicacion": [
+      "Los tipos disponibles en PRVCC0 son CCHET, CSCTT y PSCTT.",
+      "Para facturas de compra se usa clase Pagar y tipo PSCTT."
+     ],
+     "campos": [
+      {
+       "campo": "CCHET",
+       "significado": "Cobro mediante cheque.",
+       "ejemplo": "Clase Cobrar"
+      },
+      {
+       "campo": "CSCTT",
+       "significado": "Cobro mediante transferencia.",
+       "ejemplo": "Clase Cobrar"
+      },
+      {
+       "campo": "PSCTT",
+       "significado": "Pago mediante transferencia con Tesorería.",
+       "ejemplo": "Clase Pagar"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Revisa que aparezcan CCHET, CSCTT y PSCTT en la pestaña."
+      },
+      {
+       "texto": "Comprueba que su estado sea Abierto.",
+       "detalle": "Si no estuvieran abiertos, la remesa podría no ofrecerlos."
+      },
+      {
+       "texto": "Anota el tipo PSCTT: es el que se usará en la remesa de pago del efecto de 1.815,00."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "solucion",
+       "texto": "Si la remesa no muestra tipos, vuelve a esta pestaña y verifica que exista al menos el tipo adecuado para pagar o cobrar."
+      },
+      {
+       "tipo": "nota",
+       "texto": "El tipo PSCTT se muestra como «Pago transferencias (con Tesorería)»."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Dónde se parametrizan los tipos de remesa?",
+     "opciones": [
+      "En la factura",
+      "En el maestro de empresas",
+      "En la cartera de efectos",
+      "En el asiento contable"
+     ],
+     "correcta": 1,
+     "explicacion": "Se parametrizan en Maestro de empresas, dentro de la cuenta financiera."
+    },
+    {
+     "pregunta": "¿Qué cuenta financiera se usa en la demo?",
+     "opciones": [
+      "PRVCC0",
+      "PRVCC1",
+      "BANK0",
+      "57200"
+     ],
+     "correcta": 0,
+     "explicacion": "La cuenta financiera de la demo es PRVCC0, Previsiones c/c Emp 0."
+    },
+    {
+     "pregunta": "¿Qué significa PSCTT?",
+     "opciones": [
+      "Pago transferencias con Tesorería",
+      "Pago con cheque",
+      "Cobro transferencia",
+      "Pagaré"
+     ],
+     "correcta": 0,
+     "explicacion": "PSCTT es pago transferencia con Tesorería."
+    },
+    {
+     "pregunta": "Si la pestaña «Remesas por cuenta» está vacía, ¿qué ocurre?",
+     "opciones": [
+      "La remesa ofrece todos los tipos",
+      "Se crean tipos automáticamente",
+      "La remesa no ofrece tipos",
+      "Da error de moneda"
+     ],
+     "correcta": 2,
+     "explicacion": "Sin tipos parametrizados, el desplegable de tipo de remesa aparece vacío."
+    },
+    {
+     "pregunta": "Para remesar una factura de compra se usa la clase…",
+     "opciones": [
+      "Pagar",
+      "Cobrar",
+      "Cheque",
+      "Fiscal"
+     ],
+     "correcta": 0,
+     "explicacion": "Las facturas de compra se pagan, por lo que la clase es Pagar."
+    }
+   ],
+   "checklist": [
+    "Abres el maestro de empresas.",
+    "Seleccionas la empresa 0 Deister Software.",
+    "Vas a la pestaña Bancos propios.",
+    "Abres la cuenta financiera PRVCC0.",
+    "Pulsas la pestaña Remesas por cuenta.",
+    "Verificas CCHET, CSCTT y PSCTT en estado Abierto.",
+    "Identificas PSCTT como tipo para pagar facturas de compra."
+   ],
+   "problemas": [
+    {
+     "problema": "Al crear una remesa, el desplegable de tipo aparece vacío.",
+     "solucion": "Revisa Maestro de empresas › Bancos propios › PRVCC0 › Remesas por cuenta y verifica que existan tipos de remesa abiertos."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-5",
+   "numero": 8,
+   "titulo": "Crear una remesa de pago",
+   "objetivo": "Configurarás las remesas por cuenta, crearás una remesa de pago con clase Pagar y tipo PSCTT y agregarás el efecto 90 a la relación de efectos remesados.",
+   "concepto": "Una remesa sirve para cobrar o pagar facturas. Si la factura es de compra, se usa la clase Pagar; si es de venta, la clase Cobrar.\n\nAntes de crear la remesa hay que configurar en el maestro de empresas, dentro de Bancos propios, la pestaña «Remesas por cuenta» con cobro y pago de tesorería. Después, en Finanzas > Cobros y Pagos > Remesas, se crea la remesa con el tipo coherente al efecto de la factura. En el vídeo se ve un caso típico: la factura tenía tipo de efecto cheque y la remesa era por transferencia, por lo que el efecto no cargaba.\n\nAl guardar la remesa, se abre «Selección de efectos», se filtra por tercero y se pulsa «Agregar efectos» para incluir el efecto en la relación de efectos remesados.",
+   "duracionMin": 25,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-5-remesas-por-cuenta",
+     "titulo": "Configurar remesas por cuenta en el banco propio",
+     "paraQueSirve": "Hacer que el tipo de remesa aparezca al crear una remesa.",
+     "ruta": [
+      "Maestro de empresas",
+      "Bancos propios",
+      "pestaña Remesas por cuenta"
+     ],
+     "explicacion": [
+      "Sin esta configuración, al crear la remesa no aparece el tipo de remesa.",
+      "Se añaden tanto el cobro como el pago con tesorería. En el vídeo se configura Empresa Deister con pago de transferencias con tesorería."
+     ],
+     "campos": [
+      {
+       "campo": "Banco propio",
+       "significado": "Cuenta financiera configurada en C-Empresa.",
+       "ejemplo": "CAIXA13 o CAIXA{INI}"
+      },
+      {
+       "campo": "Remesa con tesorería",
+       "significado": "Tipo de tesorería para cobro o pago.",
+       "ejemplo": "Cobro por transferencia con tesorería y pago con tesorería"
+      },
+      {
+       "campo": "Pestaña Remesas por cuenta",
+       "significado": "Lugar de alta de la configuración.",
+       "ejemplo": "Bancos propios > Remesas por cuenta"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el maestro de empresas y entra en Bancos propios."
+      },
+      {
+       "texto": "Abre la pestaña «Remesas por cuenta» y añade la remesa con tesorería.",
+       "imagen": "v-icon1-018.jpg",
+       "hotspot": {
+        "x": 53.8,
+        "y": 25.5,
+        "w": 19.6,
+        "h": 6,
+        "etiqueta": "Remesa"
+       }
+      },
+      {
+       "texto": "Añade el cobro con tesorería (en el vídeo CSCTT) y el pago con tesorería (PSCTT), guardando cada uno.",
+       "detalle": "Cada alta es una fila nueva de «Remesas por cuenta»: cuenta financiera, remesa y límite de importe."
+      },
+      {
+       "texto": "Comprueba que las remesas por cuenta quedan añadidas.",
+       "imagen": "v-icon1-019.jpg",
+       "hotspot": {
+        "x": 61,
+        "y": 12.6,
+        "w": 7.3,
+        "h": 4.3,
+        "etiqueta": "Remesas por cuenta"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si no configuras «Remesas por cuenta», no aparece el tipo de remesa al crearla."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Vuelve al maestro de empresas > Bancos propios > Remesas por cuenta y añade cobro y pago con tesorería."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-5-crear-remesa",
+     "titulo": "Crear la remesa de pago",
+     "paraQueSirve": "Crear una remesa para pagar facturas de compra.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Remesas",
+      "Registro de remesas"
+     ],
+     "explicacion": [
+      "Se crea la remesa con empresa, cuenta financiera, fecha y clase Pagar o Cobrar.",
+      "El tipo de remesa debe ser coherente con el tipo de efecto de la factura. En el vídeo se usa clase Pagar para una factura de compra."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad que paga o cobra.",
+       "ejemplo": "Deister en el vídeo; usa tu S{INI}"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Banco propio de salida o entrada.",
+       "ejemplo": "CAIXA13 o CAIXA{INI}"
+      },
+      {
+       "campo": "Fecha de remesa",
+       "significado": "Fecha editable del envío.",
+       "ejemplo": "Fecha de hoy"
+      },
+      {
+       "campo": "Clase",
+       "significado": "Pagar para compras; Cobrar para ventas.",
+       "ejemplo": "Pagar"
+      },
+      {
+       "campo": "Tipo de remesa",
+       "significado": "Modalidad de la remesa.",
+       "ejemplo": "Pago por transferencia con tesorería, o cheque"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas > Cobros y Pagos > Remesas."
+      },
+      {
+       "texto": "Crea una remesa nueva y rellena empresa, cuenta financiera y fecha."
+      },
+      {
+       "texto": "Elige la clase Pagar para facturas de compra o Cobrar para ventas.",
+       "imagen": "v-icon1-020.jpg",
+       "hotspot": {
+        "x": 33.4,
+        "y": 66.3,
+        "w": 16.2,
+        "h": 4.5,
+        "etiqueta": "Clase Pagar"
+       }
+      },
+      {
+       "texto": "Elige el tipo de remesa coherente con el efecto de la factura.",
+       "imagen": "v-icon1-023.jpg",
+       "hotspot": {
+        "x": 33.4,
+        "y": 76,
+        "w": 16.8,
+        "h": 4,
+        "etiqueta": "PSCTT"
+       }
+      },
+      {
+       "texto": "Comprueba que el tipo queda como PSCTT «Pago transferencias (con Tesorería)» y que la acción se rellena sola (RPSCTP).",
+       "imagen": "v-icon1-021.jpg",
+       "hotspot": {
+        "x": 33.2,
+        "y": 64.9,
+        "w": 16.3,
+        "h": 6.3,
+        "etiqueta": "Tipo de remesa"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La fecha de la remesa es editable o configurable según tu cierre."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-5-seleccion-efectos",
+     "titulo": "Selección de efectos y coherencia",
+     "paraQueSirve": "Filtrar y cargar el efecto pendiente de la factura en la remesa.",
+     "ruta": [
+      "Remesa de cobros y pagos",
+      "Selección de efectos"
+     ],
+     "explicacion": [
+      "En la selección de efectos se filtra por tercero, vencimiento u otros filtros. El monto pendiente de la cartera de efectos es lo que viaja a la remesa.",
+      "El efecto de la factura debe coincidir con el tipo de remesa. En el vídeo la factura era de tipo efecto cheque y la remesa transferencia; por eso no cargaba."
+     ],
+     "campos": [
+      {
+       "campo": "Tercero",
+       "significado": "Filtro por proveedor o cliente.",
+       "ejemplo": "Sorbitos"
+      },
+      {
+       "campo": "Efecto",
+       "significado": "Documento pendiente de la cartera.",
+       "ejemplo": "TF transferencia o CH cheque"
+      },
+      {
+       "campo": "Cartera de efectos",
+       "significado": "Monto pendiente a remesar.",
+       "ejemplo": "1.058,75"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la remesa y ve a «Selección de efectos»."
+      },
+      {
+       "texto": "Filtra por el tercero de la factura, p. ej. Sorbitos."
+      },
+      {
+       "texto": "Comprueba que carga el efecto pendiente de la factura.",
+       "imagen": "v-icon1-022.jpg",
+       "hotspot": {
+        "x": 21,
+        "y": 71.5,
+        "w": 9,
+        "h": 4.5,
+        "etiqueta": "Filtro por tercero"
+       }
+      },
+      {
+       "texto": "Si no carga, revisa que la factura, la remesa y la configuración de remesas por cuenta tengan el mismo tipo de efecto."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "No cargaba ningún efecto porque la factura tenía tipo de efecto cheque y la remesa estaba como transferencia."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Parametriza igual la factura, la remesa y las remesas por cuenta. Al cambiar el tipo de remesa se puede borrar la información cargada."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-5-agregar",
+     "titulo": "Agregar el efecto pendiente",
+     "paraQueSirve": "Incluir el efecto de la factura FC-012345 en la relación de efectos remesados.",
+     "ruta": null,
+     "explicacion": [
+      "La remesa tiene una pestaña inferior «Selección de efectos» para filtrar y localizar efectos pendientes.",
+      "Al pulsar «Agregar efectos», el efecto pasa a la «Relación de efectos remesados»."
+     ],
+     "campos": [
+      {
+       "campo": "Tercero",
+       "significado": "Proveedor por el que se filtra.",
+       "ejemplo": "00087 LABORATORIOS UNION"
+      },
+      {
+       "campo": "Efecto",
+       "significado": "Identificador del efecto en cartera.",
+       "ejemplo": "90"
+      },
+      {
+       "campo": "Clase",
+       "significado": "Pagar o cobrar.",
+       "ejemplo": "Pagar"
+      },
+      {
+       "campo": "Tipo de efecto",
+       "significado": "Forma de pago del efecto.",
+       "ejemplo": "TF"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Situación del efecto antes de agregarlo.",
+       "ejemplo": "PE"
+      },
+      {
+       "campo": "Importe",
+       "significado": "Importe pendiente del efecto.",
+       "ejemplo": "1.815,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la pestaña «Selección de efectos» de la remesa."
+      },
+      {
+       "texto": "Filtra por Tercero 00087.",
+       "detalle": "Aparecerá el efecto id 90, clase Pagar, tipo TF, estado PE e importe 1.815,00."
+      },
+      {
+       "texto": "Pulsa «Agregar efectos».",
+       "imagen": "v-icon11-007.jpg",
+       "hotspot": {
+        "x": 64.1,
+        "y": 6.9,
+        "w": 5.7,
+        "h": 2.7,
+        "etiqueta": "Agregar efectos"
+       }
+      },
+      {
+       "texto": "Comprueba que el efecto pasa a «Relación de efectos remesados» y que el total de la remesa es 1.815,00.",
+       "imagen": "v-icon11-008.jpg",
+       "hotspot": {
+        "x": 77.7,
+        "y": 6.9,
+        "w": 6.6,
+        "h": 2.7,
+        "etiqueta": "Evolucionar estado"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si no aparece el efecto al filtrar, revisa que la factura esté contabilizada y que no tenga importe 0."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Se pueden agregar varias facturas o terceros a una remesa si comparten el mismo tipo de efecto."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve una remesa?",
+     "opciones": [
+      "Crear facturas",
+      "Parametrizar empresas",
+      "Cobrar o pagar facturas",
+      "Contabilizar asientos"
+     ],
+     "correcta": 2,
+     "explicacion": "La remesa sirve para cobrar o pagar facturas."
+    },
+    {
+     "pregunta": "¿Qué clase de remesa usarías para pagar una factura de compra?",
+     "opciones": [
+      "Pagar",
+      "Cobrar",
+      "Rectificativa",
+      "Sustitutiva"
+     ],
+     "correcta": 0,
+     "explicacion": "Para facturas de compra se usa la clase Pagar; para ventas, Cobrar."
+    },
+    {
+     "pregunta": "¿Dónde se configuran las remesas por cuenta?",
+     "opciones": [
+      "Finanzas > Ventas",
+      "Finanzas > Compras",
+      "C-Empresa > Ejercicio",
+      "Maestro de empresas > Bancos propios > Remesas por cuenta"
+     ],
+     "correcta": 3,
+     "explicacion": "Se configuran en Bancos propios, pestaña Remesas por cuenta."
+    },
+    {
+     "pregunta": "¿Qué botón agrega el efecto a la remesa?",
+     "opciones": [
+      "Nuevo",
+      "Agregar efectos",
+      "Evolucionar estado",
+      "Guardar"
+     ],
+     "correcta": 1,
+     "explicacion": "El botón «Agregar efectos» pasa el efecto a la relación de efectos remesados."
+    },
+    {
+     "pregunta": "¿Qué tipo de remesa se elige para pagar por transferencia?",
+     "opciones": [
+      "CCHET",
+      "CSCTT",
+      "PSCTT",
+      "TF"
+     ],
+     "correcta": 2,
+     "explicacion": "PSCTT es pago transferencia con Tesorería."
+    },
+    {
+     "pregunta": "¿Qué ocurre si mezclas efectos de distinto tipo en la misma remesa?",
+     "opciones": [
+      "No pasa nada",
+      "Se convierten en un solo efecto",
+      "Se compensan",
+      "No podrá evolucionar bien"
+     ],
+     "correcta": 3,
+     "explicacion": "Todos los efectos de la remesa deben compartir el mismo tipo."
+    }
+   ],
+   "checklist": [
+    "Configuras en Maestro de empresas > Bancos propios > Remesas por cuenta el cobro con tesorería.",
+    "Configuras también el pago con tesorería.",
+    "Abres Finanzas > Cobros y Pagos > Remesas.",
+    "Pulsas Nuevo y rellenas empresa, cuenta financiera, fecha y clase Pagar.",
+    "Eliges el tipo de remesa PSCTT «Pago transferencias (con Tesorería)».",
+    "Guardas la remesa y anotas el número generado.",
+    "Abres «Selección de efectos» y filtras por el tercero.",
+    "Agregas el efecto 90 y compruebas el total en «Relación de efectos remesados»."
+   ],
+   "problemas": [
+    {
+     "problema": "No aparece el tipo de remesa al crearla.",
+     "solucion": "Configura en Bancos propios > Remesas por cuenta el cobro y el pago con tesorería."
+    },
+    {
+     "problema": "El efecto no cargaba porque la factura era de tipo cheque y la remesa de transferencia.",
+     "solucion": "Usa el mismo tipo de efecto en la factura, la remesa y la configuración de remesas por cuenta; si cambias el tipo, vuelve a cargar los efectos."
+    },
+    {
+     "problema": "No aparece el efecto 90 al filtrar por tercero.",
+     "solucion": "Revisa que la factura FC-012345 esté contabilizada y que su importe no sea 0."
+    },
+    {
+     "problema": "Al cambiar el tipo de remesa se borró la información cargada.",
+     "solucion": "Configura bien antes de seleccionar efectos; si cambias el tipo, revisa y recarga la relación de efectos remesados."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-6",
+   "numero": 9,
+   "titulo": "Evolucionar la remesa y revisar asiento y tesorería",
+   "objetivo": "Tendrás la remesa RM026-000018 evolucionada a CONTABILIZADO, con su asiento contable generado y su movimiento de tesorería de pago por -1.815,00.",
+   "concepto": "Evolucionar el estado de la remesa genera la tesorería y el asiento contable del pago.\n\nEn la demo, el asiento lleva la cuenta 40000.00087 al Debe y la cuenta 10000.00087 al Haber por 1.815,00.\n\nEl movimiento de tesorería sale con posición Salida e importe -1.815,00 porque es un pago. Después se cruzará con el extracto bancario en la conciliación.",
+   "duracionMin": 35,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-6-evolucionar",
+     "titulo": "Evolucionar el estado de la remesa",
+     "paraQueSirve": "Pasar la remesa de Abierto a CONTABILIZADO y provocar la generación de asiento y tesorería.",
+     "ruta": null,
+     "explicacion": [
+      "La evolución se hace desde la remesa con los efectos ya agregados.",
+      "La remesa pasa a Cerrado/CONTABILIZADO y muestra una banda morada."
+     ],
+     "campos": [
+      {
+       "campo": "Estado anterior",
+       "significado": "Situación antes de evolucionar.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Estado posterior",
+       "significado": "Situación después de evolucionar.",
+       "ejemplo": "Cerrado/CONTABILIZADO"
+      },
+      {
+       "campo": "Pestañas posteriores",
+       "significado": "Pestañas visibles tras evolucionar.",
+       "ejemplo": "Información, Gestión remesas, Apuntes"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En la remesa RM026-000018, con el efecto en Relación de efectos remesados, pulsa «Evolucionar estado».",
+       "imagen": "v-icon11-008.jpg",
+       "hotspot": {
+        "x": 77.7,
+        "y": 6.9,
+        "w": 6.6,
+        "h": 2.7,
+        "etiqueta": "Evolucionar estado"
+       }
+      },
+      {
+       "texto": "Observa el cambio de estado a CONTABILIZADO.",
+       "detalle": "Verás la banda morada y las pestañas Información, Gestión remesas y Apuntes.",
+       "imagen": "v-icon11-011.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El botón «Retroceder» permite deshacer la evolución."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-6-asiento-tesoreria",
+     "titulo": "Revisar asiento y tesorería generados",
+     "paraQueSirve": "Comprobar que la remesa ha generado correctamente el asiento contable y el movimiento de tesorería.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Ops. corto plazo"
+     ],
+     "explicacion": [
+      "El asiento generado es de tipo AC y estado Contabilizado.",
+      "La tesorería se encuentra en Movimientos de tesorería › PMICDT y muestra la salida de dinero."
+     ],
+     "campos": [
+      {
+       "campo": "Cuenta Debe",
+       "significado": "Cuenta cargada en el asiento.",
+       "ejemplo": "40000.00087 LABORATORIOS UNION"
+      },
+      {
+       "campo": "Cuenta Haber",
+       "significado": "Cuenta abonada en el asiento.",
+       "ejemplo": "10000.00087"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Texto descriptivo de la línea de asiento.",
+       "ejemplo": "Efecto ordenado de LABORATORIOS UNION"
+      },
+      {
+       "campo": "Importe asiento",
+       "significado": "Importe contable de cada línea.",
+       "ejemplo": "1.815,00"
+      },
+      {
+       "campo": "Tesorería",
+       "significado": "Movimiento financiero generado por el pago.",
+       "ejemplo": "MOVIMIENTOS DE TESORERÍA › PMICDT"
+      },
+      {
+       "campo": "Posición",
+       "significado": "Indica si entra o sale dinero.",
+       "ejemplo": "Salida"
+      },
+      {
+       "campo": "Importe tesorería",
+       "significado": "Importe del movimiento. Negativo si es pago.",
+       "ejemplo": "-1.815,00"
+      },
+      {
+       "campo": "Fecha operación",
+       "significado": "Fecha financiera del movimiento.",
+       "ejemplo": "25-07-2026"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el asiento contable generado por la remesa.",
+       "detalle": "Es un ASIENTO CONTABLE tipo AC, estado Contabilizado.",
+       "imagen": "v-icon11-009.jpg"
+      },
+      {
+       "texto": "Comprueba las dos líneas: 40000.00087 al Debe 1.815,00 y 10000.00087 al Haber 1.815,00.",
+       "detalle": "La descripción es «Efecto ordenado de LABORATORIOS UNION»."
+      },
+      {
+       "texto": "Abre la tesorería desde Finanzas › Tesorería › Ops. corto plazo.",
+       "detalle": "Busca el movimiento PMICDT."
+      },
+      {
+       "texto": "Revisa el movimiento de tesorería.",
+       "detalle": "Cuenta financiera PRVCC0, posición Salida, importe -1.815,00, fecha operación 25-07-2026 y operación PMICDT.",
+       "imagen": "v-icon11-010.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El importe negativo de tesorería confirma que es un pago."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-6-extracto",
+     "titulo": "Qué viene después: extracto y conciliación",
+     "paraQueSirve": "Entender el siguiente paso del circuito después de generar la tesorería.",
+     "ruta": null,
+     "explicacion": [
+      "La tesorería generada por la remesa se cruzará después con el extracto bancario.",
+      "La conciliación compara la contabilidad interna de la empresa con el extracto del banco."
+     ],
+     "campos": [
+      {
+       "campo": "Extracto bancario",
+       "significado": "Estado de cuenta del banco con ingresos y salidas.",
+       "ejemplo": "Extracto del banco de PRVCC0"
+      },
+      {
+       "campo": "Conciliación bancaria",
+       "significado": "Comparación entre tesorería/contabilidad interna y extracto bancario.",
+       "ejemplo": "Cuadre del pago de 1.815,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Recuerda el circuito: factura → contabilizar → asiento, cartera y fiscales → remesa → extracto → conciliación."
+      },
+      {
+       "texto": "Cuando llegue el extracto, localiza la salida de 1.815,00."
+      },
+      {
+       "texto": "Compara esa salida con el movimiento de tesorería PMICDT."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La conciliación asegura que la contabilidad interna y el banco coinciden."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué botón evoluciona la remesa?",
+     "opciones": [
+      "Evolucionar estado",
+      "Agregar efectos",
+      "Guardar",
+      "Contabilizar"
+     ],
+     "correcta": 0,
+     "explicacion": "El botón «Evolucionar estado» genera asiento y tesorería."
+    },
+    {
+     "pregunta": "Tras evolucionar, la remesa pasa a…",
+     "opciones": [
+      "Abierto",
+      "Provisional",
+      "Cerrado/CONTABILIZADO",
+      "Anulado"
+     ],
+     "correcta": 2,
+     "explicacion": "La remesa pasa a Cerrado/CONTABILIZADO con banda morada."
+    },
+    {
+     "pregunta": "¿Qué asiento se genera al evolucionar?",
+     "opciones": [
+      "40000.00087 al Debe y 10000.00087 al Haber",
+      "10000.00087 al Debe y 40000.00087 al Haber",
+      "57200 al Debe y 40000 al Haber",
+      "40000 al Debe y 62902 al Haber"
+     ],
+     "correcta": 0,
+     "explicacion": "El asiento tiene 40000.00087 al Debe y 10000.00087 al Haber por 1.815,00."
+    },
+    {
+     "pregunta": "¿Qué importe muestra la tesorería del pago?",
+     "opciones": [
+      "1.815,00",
+      "-1.815,00",
+      "0,00",
+      "25.000,00"
+     ],
+     "correcta": 1,
+     "explicacion": "Al ser una salida de dinero, el importe es -1.815,00."
+    },
+    {
+     "pregunta": "¿Qué se hace después con la tesorería?",
+     "opciones": [
+      "Se archiva sin más",
+      "Se borra",
+      "Se convierte en factura",
+      "Se cruza con el extracto y se concilia"
+     ],
+     "correcta": 3,
+     "explicacion": "La tesorería se compara con el extracto bancario en la conciliación."
+    }
+   ],
+   "checklist": [
+    "Pulsas «Evolucionar estado» en la remesa.",
+    "Ves la banda morada CONTABILIZADO.",
+    "Localizas el asiento AC contabilizado.",
+    "Compruebas 40000.00087 al Debe por 1.815,00.",
+    "Compruebas 10000.00087 al Haber por 1.815,00.",
+    "Abres el movimiento de tesorería PMICDT.",
+    "Verificas importe -1.815,00 y posición Salida.",
+    "Recuerdas que después toca extracto y conciliación."
+   ],
+   "problemas": [
+    {
+     "problema": "Tras evolucionar no encuentras el asiento.",
+     "solucion": "Busca los asientos contables tipo AC generados por la remesa; deben estar contabilizados."
+    },
+    {
+     "problema": "Evolucionaste la remesa por error.",
+     "solucion": "Usa el botón «Retroceder» para deshacer la evolución."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-7",
+   "numero": 10,
+   "titulo": "Cuando un efecto no se puede remesar",
+   "objetivo": "Tendrás identificados los bloqueos que impiden remesar un efecto: domiciliación bancaria no informada y mezcla de tipos de efecto en una misma remesa.",
+   "concepto": "Un efecto no se puede remesar cuando la parametrización previa no acompaña.\n\nSi el tercero no tiene domiciliaciones bancarias parametrizadas, aparece el error «DOMICILIACIÓN BANCARIA NO INFORMADA». En la demo se evita usando forma de pago cheque.\n\nAdemás, una remesa no admite mezclar efectos de distinto tipo. Todos los efectos deben ser del mismo tipo: todo TF o todo cheque.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-7-domiciliacion",
+     "titulo": "Domiciliación bancaria no informada",
+     "paraQueSirve": "Detectar el error de domiciliación bancaria y usar una forma de pago que no lo requiera.",
+     "ruta": null,
+     "explicacion": [
+      "El error «DOMICILIACIÓN BANCARIA NO INFORMADA» aparece cuando las domiciliaciones del tercero no están parametrizadas.",
+      "En la demo se evitó usando forma de pago cheque."
+     ],
+     "campos": [
+      {
+       "campo": "Domiciliación bancaria",
+       "significado": "Datos bancarios del tercero para pagos automatizados.",
+       "ejemplo": "No informada en el tercero 00087"
+      },
+      {
+       "campo": "Forma de pago",
+       "significado": "Forma usada para evitar el error de domiciliación.",
+       "ejemplo": "Cheque"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Si al contabilizar aparece «DOMICILIACIÓN BANCARIA NO INFORMADA», revisa los datos bancarios del tercero.",
+       "imagen": "v-icon11-015.jpg"
+      },
+      {
+       "texto": "Como alternativa, crea la factura con forma de pago cheque."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La domiciliación bancaria es una parametrización del tercero, no de la remesa."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-7-tipos-efecto",
+     "titulo": "Tipos de efecto incompatibles",
+     "paraQueSirve": "Evitar mezclar tipos de efecto en una misma remesa.",
+     "ruta": null,
+     "explicacion": [
+      "En una misma remesa no pueden mezclarse efectos de distinto tipo.",
+      "Todos los efectos deben compartir tipo: todo TF o todo cheque."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de efecto en remesa",
+       "significado": "Debe ser el mismo en todos los efectos de la remesa.",
+       "ejemplo": "Todo TF o todo cheque"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Antes de agregar efectos a una remesa, comprueba que todos tengan el mismo tipo de efecto."
+      },
+      {
+       "texto": "No mezcles cheque con TF en la misma remesa."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Mezclar efectos de distinto tipo en la misma remesa impide evolucionar correctamente."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Usa el mismo tipo de efecto en toda la remesa. Se pueden incluir varias facturas o terceros si comparten tipo."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué indica el error «DOMICILIACIÓN BANCARIA NO INFORMADA»?",
+     "opciones": [
+      "El banco propio no existe",
+      "La fecha de factura es inválida",
+      "La remesa no tiene efectos",
+      "El tercero no tiene domiciliaciones parametrizadas"
+     ],
+     "correcta": 3,
+     "explicacion": "El error aparece por datos bancarios del tercero no parametrizados."
+    },
+    {
+     "pregunta": "¿Qué forma de pago se usó en la demo para evitar el error de domiciliación?",
+     "opciones": [
+      "Cheque",
+      "Transferencia",
+      "Pagaré",
+      "Efectivo"
+     ],
+     "correcta": 0,
+     "explicacion": "La demo evita el error usando forma de pago cheque."
+    },
+    {
+     "pregunta": "¿Qué ocurre si mezclas cheque y TF en la misma remesa?",
+     "opciones": [
+      "Se convierten en TF",
+      "La remesa no evoluciona bien",
+      "Se generan dos remesas",
+      "Se compensan"
+     ],
+     "correcta": 1,
+     "explicacion": "Los efectos de la remesa deben compartir el mismo tipo de efecto."
+    },
+    {
+     "pregunta": "¿De dónde es la domiciliación bancaria?",
+     "opciones": [
+      "De la remesa",
+      "Del tipo de efecto",
+      "Del tercero",
+      "De la factura"
+     ],
+     "correcta": 2,
+     "explicacion": "La domiciliación bancaria es una parametrización del tercero, no de la remesa."
+    }
+   ],
+   "checklist": [
+    "Identificas el error de domiciliación bancaria no informada.",
+    "Revisas los datos bancarios del tercero antes de contabilizar.",
+    "Usas forma de pago cheque si no hay domiciliación parametrizada.",
+    "Compruebas que no se mezclen cheque y TF en la misma remesa.",
+    "Verificas que todos los efectos de la remesa tengan el mismo tipo.",
+    "Confirmas que la domiciliación bancaria es una parametrización del tercero."
+   ],
+   "problemas": [
+    {
+     "problema": "Aparece el error «DOMICILIACIÓN BANCARIA NO INFORMADA».",
+     "solucion": "Parametriza las domiciliaciones del tercero o usa forma de pago cheque."
+    },
+    {
+     "problema": "La remesa no evoluciona tras agregar varios efectos.",
+     "solucion": "Comprueba que todos los efectos tengan el mismo tipo de efecto: todo TF o todo cheque."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-8",
+   "numero": 11,
+   "titulo": "Comprender extracto, conciliación y circuito de tesorería",
+   "objetivo": "Distinguirás qué emite el banco y qué hace la empresa, y ordenarás remesa, extracto bancario y conciliación antes de operar.",
+   "concepto": "El extracto bancario es el documento oficial emitido por el banco que detalla los movimientos de entrada y salida de la cuenta.\n\nLa conciliación bancaria es la comparación que hace la empresa entre sus registros financieros y el extracto del banco para comprobar que los saldos coinciden.\n\nEl circuito de tesorería que vas a practicar sigue este orden: primero tienes una remesa, después creas el extracto bancario y finalmente concilias y contabilizas.",
+   "duracionMin": 20,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-8-conceptos",
+     "titulo": "Extracto y conciliación",
+     "paraQueSirve": "Fija qué es cada documento y quién lo emite para no confundir el extracto con la conciliación.",
+     "ruta": null,
+     "explicacion": [
+      "El extracto bancario es un documento del banco: detalla los movimientos de la cuenta y lo emite el banco.",
+      "La conciliación bancaria la realiza la empresa: compara la contabilidad contra el extracto para verificar que los saldos cuadran.",
+      "No son lo mismo: el extracto muestra movimientos; la conciliación compara esos movimientos con los registros de la empresa."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Identifica qué documento emite el banco y qué tarea hace la empresa."
+      },
+      {
+       "texto": "Piensa en un extracto como una foto de los movimientos de la cuenta."
+      },
+      {
+       "texto": "Piensa en la conciliación como la comprobación entre contabilidad y extracto."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Usa esta separación: extracto, documento del banco; conciliación, tarea de la empresa."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-8-circuito",
+     "titulo": "Circuito de tesorería",
+     "paraQueSirve": "Ordena las pantallas de tesorería para no saltarte pasos entre la remesa, el extracto y la conciliación.",
+     "ruta": null,
+     "explicacion": [
+      "El circuito de trabajo es: remesa → extracto bancario → conciliación bancaria.",
+      "La conciliación es el último paso del circuito: solo se concilia después de tener el extracto y la tesorería pendiente.",
+      "En las prácticas vas a partir de una remesa ya creada y te centrarás en el extracto y la conciliación."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Localiza o crea la remesa de partida.",
+       "imagen": "v-icon2-001.jpg"
+      },
+      {
+       "texto": "Crea el extracto bancario con los datos de la remesa."
+      },
+      {
+       "texto": "Entra en la conciliación bancaria para comparar extracto y tesorería."
+      },
+      {
+       "texto": "Después de conciliar, contabiliza para generar los asientos."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No saltes del extracto a contabilizar sin conciliar: el circuito pasa por la conciliación."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué es un extracto bancario?",
+     "opciones": [
+      "Un libro contable obligatorio de la empresa",
+      "Un documento emitido por la empresa para el banco",
+      "Un documento oficial del banco que detalla movimientos de la cuenta",
+      "Un informe de impuestos mensual"
+     ],
+     "correcta": 2,
+     "explicacion": "El extracto lo emite el banco y detalla las entradas y salidas de la cuenta."
+    },
+    {
+     "pregunta": "¿Quién emite el extracto y quién realiza la conciliación?",
+     "opciones": [
+      "El banco emite el extracto; la empresa realiza la conciliación",
+      "La empresa emite el extracto; el banco realiza la conciliación",
+      "Ambos los emite el banco",
+      "Ambos los realiza la empresa"
+     ],
+     "correcta": 0,
+     "explicacion": "El extracto es del banco y la conciliación es una tarea de la empresa."
+    },
+    {
+     "pregunta": "¿Cuál es el orden del circuito de tesorería?",
+     "opciones": [
+      "Conciliación → extracto → remesa",
+      "Remesa → extracto bancario → conciliación bancaria",
+      "Extracto → conciliación → remesa",
+      "Remesa → conciliación → extracto"
+     ],
+     "correcta": 1,
+     "explicacion": "Primero se parte de la remesa, después se crea el extracto y finalmente se concilia."
+    },
+    {
+     "pregunta": "¿Qué es la conciliación bancaria?",
+     "opciones": [
+      "Un documento oficial del banco",
+      "Una comparación entre los registros de la empresa y el extracto del banco",
+      "Un listado de facturas emitidas",
+      "Un impuesto sobre la cuenta"
+     ],
+     "correcta": 1,
+     "explicacion": "La empresa compara su contabilidad con el extracto para comprobar que los saldos coinciden."
+    },
+    {
+     "pregunta": "¿Qué diferencia hay entre extracto y conciliación?",
+     "opciones": [
+      "Son el mismo documento",
+      "El extracto muestra movimientos; la conciliación compara contabilidad y extracto",
+      "La conciliación muestra movimientos; el extracto compara contabilidad",
+      "Ninguna"
+     ],
+     "correcta": 1,
+     "explicacion": "El extracto es la foto de movimientos y la conciliación es la comparación con los registros de la empresa."
+    }
+   ],
+   "checklist": [
+    "Sabes que el extracto lo emite el banco.",
+    "Sabes que la conciliación la hace la empresa.",
+    "Recuerdas que el extracto muestra movimientos y la conciliación compara.",
+    "Ordenas el circuito como remesa → extracto → conciliación.",
+    "Identificas que la conciliación es el último paso del circuito.",
+    "No confundes contabilizar con conciliar."
+   ],
+   "problemas": [
+    {
+     "problema": "Crees que extracto y conciliación son lo mismo.",
+     "solucion": "Recuerda: el extracto es un documento del banco; la conciliación es la comparación que hace la empresa."
+    },
+    {
+     "problema": "Intentas contabilizar directamente después del extracto sin pasar por la conciliación.",
+     "solucion": "Sigue el circuito: remesa → extracto → conciliación → contabilización."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-9",
+   "numero": 12,
+   "titulo": "Crear el extracto bancario de una remesa de pagar",
+   "objetivo": "Tendrás creado un extracto bancario de 1524,60 en positivo para una remesa de pagar, con concepto común 04 y concepto propio 13.",
+   "concepto": "El extracto se da de alta en Finanzas › Tesorería › Extractos bancarios y movimientos. Ahí seleccionas la empresa y dejas la cuenta financiera que se carga automáticamente.\n\nEn el caso de pagar, el importe se escribe en positivo. Aunque para la empresa sea una salida, en el extracto razonas desde la perspectiva del banco: para el banco ese dinero es una entrada.\n\nEn este ejercicio usas una fecha de operación 24-06, concepto común 04 y concepto propio 13.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-9-alta-extracto",
+     "titulo": "Alta del extracto de pago",
+     "paraQueSirve": "Crea un extracto que refleje la remesa de pagar con importe positivo y con los conceptos indicados.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Extractos bancarios y movimientos"
+     ],
+     "explicacion": [
+      "Entra en la ventana de extractos bancarios y movimientos y selecciona la empresa Deister.",
+      "La cuenta financiera se carga automáticamente a partir de la empresa.",
+      "Indica que la remesa es de pagar. El importe de 1524,60 va en positivo porque el extracto se mira desde el banco."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad para la que se crea el extracto.",
+       "ejemplo": "Deister"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta de tesorería asociada a la empresa.",
+       "ejemplo": "Se carga automáticamente"
+      },
+      {
+       "campo": "Fecha de operación",
+       "significado": "Día en que se registra la operación.",
+       "ejemplo": "24-06"
+      },
+      {
+       "campo": "Concepto común",
+       "significado": "Clasificación general del movimiento.",
+       "ejemplo": "04"
+      },
+      {
+       "campo": "Concepto propio",
+       "significado": "Clasificación propia de la operación.",
+       "ejemplo": "13"
+      },
+      {
+       "campo": "Importe",
+       "significado": "Cantidad del extracto. En remesa de pago va en positivo.",
+       "ejemplo": "1524,60"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Tesorería › Extractos bancarios y movimientos.",
+       "imagen": "v-icon2-002.jpg"
+      },
+      {
+       "texto": "Selecciona la empresa Deister.",
+       "detalle": "La cuenta financiera se carga automáticamente.",
+       "imagen": "v-icon2-003.jpg"
+      },
+      {
+       "texto": "Deja la fecha de operación 24-06."
+      },
+      {
+       "texto": "Pon concepto común 04.",
+       "imagen": "v-icon2-004.jpg"
+      },
+      {
+       "texto": "Pon concepto propio 13."
+      },
+      {
+       "texto": "Escribe el importe 1524,60 en positivo.",
+       "imagen": "v-icon2-005.jpg"
+      },
+      {
+       "texto": "Pulsa «Guardar».",
+       "detalle": "El extracto queda visible con 1524,60 positivo.",
+       "imagen": "v-icon2-006.jpg"
+      },
+      {
+       "texto": "No uses el botón de conciliación automática en este ejercicio."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El concepto común 04 corresponde a transferencias, giros y otras operaciones."
+      },
+      {
+       "tipo": "nota",
+       "texto": "El signo positivo viene de la perspectiva del banco: el pago es entrada de dinero para el banco."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuál es la ruta para crear el extracto?",
+     "opciones": [
+      "Finanzas › Contabilidad General › Asientos",
+      "Finanzas › Tesorería › Conciliación bancaria",
+      "Finanzas › Tesorería › Extractos bancarios y movimientos",
+      "Finanzas › Cartera › Remesas"
+     ],
+     "correcta": 2,
+     "explicacion": "El extracto se crea en Finanzas › Tesorería › Extractos bancarios y movimientos."
+    },
+    {
+     "pregunta": "¿Qué concepto común se usa para transferencias, giros y otras operaciones?",
+     "opciones": [
+      "13",
+      "03",
+      "04",
+      "5082"
+     ],
+     "correcta": 2,
+     "explicacion": "El análisis indica que el concepto común 04 se usa para transferencias, giros y otros pasos."
+    },
+    {
+     "pregunta": "¿Con qué signo se registra una remesa de pagar en el extracto?",
+     "opciones": [
+      "Negativo, porque la empresa paga",
+      "Positivo, porque para el banco es entrada de dinero",
+      "Siempre cero",
+      "No importa el signo"
+     ],
+     "correcta": 1,
+     "explicacion": "En el extracto se mira desde el banco: el pago es una entrada para el banco, por eso va en positivo."
+    },
+    {
+     "pregunta": "¿Qué concepto propio se usa en el ejemplo de pagar?",
+     "opciones": [
+      "03",
+      "04",
+      "13",
+      "Ninguno"
+     ],
+     "correcta": 2,
+     "explicacion": "En el ejemplo de pagar se indica concepto propio 13."
+    },
+    {
+     "pregunta": "¿Qué haces después de rellenar los campos del extracto?",
+     "opciones": [
+      "Pulsas «Conciliar tesorería»",
+      "Pulsas «Guardar»",
+      "Boras la remesa",
+      "Contabilizas directamente"
+     ],
+     "correcta": 1,
+     "explicacion": "Se pulsa «Guardar» para generar el extracto y dejarlo visible."
+    }
+   ],
+   "checklist": [
+    "Entras en Finanzas › Tesorería › Extractos bancarios y movimientos.",
+    "Seleccionas la empresa Deister.",
+    "Compruebas que la cuenta financiera se cargó automáticamente.",
+    "Dejas la fecha de operación 24-06.",
+    "Pones concepto común 04.",
+    "Pones concepto propio 13.",
+    "Escribes el importe 1524,60 en positivo.",
+    "Guardas y localizas el extracto con 1524,60 positivo."
+   ],
+   "problemas": [
+    {
+     "problema": "No entiendes por qué un pago va en positivo.",
+     "solucion": "Piensa desde la perspectiva del banco: cuando la empresa paga, para el banco es una entrada de dinero, por eso se registra en positivo."
+    },
+    {
+     "problema": "No se carga la cuenta financiera.",
+     "solucion": "Comprueba que has seleccionado correctamente la empresa Deister; la cuenta asociada se carga automáticamente."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-10",
+   "numero": 13,
+   "titulo": "Conciliar y contabilizar una remesa de pago",
+   "objetivo": "Tendrás conciliada la tesorería con el extracto de 1524,60 y contabilizados los apuntes generados.",
+   "concepto": "La conciliación bancaria está en Finanzas › Tesorería › Conciliación bancaria. Se filtran empresa, cuenta y fechas para ver las partidas pendientes.\n\nAl pulsar «Ejecutar» comparas dos columnas: extracto pendiente y tesorería pendiente. Después usas «Conciliar tesorería» para casar el importe.\n\nLa acción no termina al conciliar: debes entrar al importe conciliado y pulsar «Contabilizar» para que se generen los asientos contables neteados.",
+   "duracionMin": 35,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-10-filtros",
+     "titulo": "Filtros y ejecución",
+     "paraQueSirve": "Reduce la conciliación a la empresa, cuenta y fechas correctas antes de comparar extracto y tesorería.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Conciliación bancaria"
+     ],
+     "explicacion": [
+      "Abre la conciliación bancaria desde el menú de Finanzas › Tesorería.",
+      "Usa los filtros para dejar visibles las partidas pendientes de la empresa y cuenta deseadas.",
+      "Pulsa «Ejecutar» para abrir la ventana con las columnas de extracto pendiente y tesorería pendiente."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad que se concilia.",
+       "ejemplo": "Deister"
+      },
+      {
+       "campo": "Cuenta",
+       "significado": "Cuenta financiera a revisar. Puedes usar asterisco para ver todas.",
+       "ejemplo": "*"
+      },
+      {
+       "campo": "Fecha inicio",
+       "significado": "Desde cuándo se filtran las partidas.",
+       "ejemplo": "1 de enero"
+      },
+      {
+       "campo": "Fecha fin",
+       "significado": "Hasta cuándo se filtran las partidas.",
+       "ejemplo": "Hoy o fin de junio"
+      },
+      {
+       "campo": "Extracto pendiente",
+       "significado": "Columna con importes del extracto aún no casados.",
+       "ejemplo": "1524,60"
+      },
+      {
+       "campo": "Tesorería pendiente",
+       "significado": "Columna con importes de tesorería aún no casados.",
+       "ejemplo": "1524,60"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Tesorería › Conciliación bancaria.",
+       "imagen": "v-icon2-007.jpg"
+      },
+      {
+       "texto": "Filtra por empresa Deister."
+      },
+      {
+       "texto": "En cuenta escribe un asterisco para ver todas las cuentas.",
+       "detalle": "Si solo hay una cuenta, aparecerá la de la empresa."
+      },
+      {
+       "texto": "Pon fecha inicio 1 de enero y fecha fin hoy o fin de junio."
+      },
+      {
+       "texto": "Pulsa «Ejecutar».",
+       "imagen": "v-icon2-007.jpg"
+      },
+      {
+       "texto": "Comprueba las columnas extracto pendiente y tesorería pendiente con 1524,60.",
+       "imagen": "v-icon2-008.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El asterisco en el campo cuenta sirve para no depender de escribir un código concreto."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-10-conciliar-contabilizar",
+     "titulo": "Conciliar tesorería y contabilizar",
+     "paraQueSirve": "Casa el extracto con la tesorería y deja generados los asientos contables para cerrar la operación.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Conciliación bancaria"
+     ],
+     "explicacion": [
+      "Después de ejecutar, se comparan las cantidades pendientes. Si coinciden, puedes pulsar «Conciliar tesorería».",
+      "Una vez conciliado, el importe aparece en extracto conciliado y tesorería conciliada.",
+      "Siempre hay que entrar al importe y pulsar «Contabilizar» para generar los apuntes contables neteados."
+     ],
+     "campos": [
+      {
+       "campo": "Conciliar tesorería",
+       "significado": "Acción que casa el extracto pendiente con la tesorería pendiente.",
+       "ejemplo": "Operación con éxito"
+      },
+      {
+       "campo": "Extracto conciliado",
+       "significado": "Pestaña que muestra el extracto casado.",
+       "ejemplo": "1524,60"
+      },
+      {
+       "campo": "Tesorería conciliada",
+       "significado": "Pestaña que muestra la tesorería casada.",
+       "ejemplo": "1524,60"
+      },
+      {
+       "campo": "Contabilizar",
+       "significado": "Acción que genera los asientos contables.",
+       "ejemplo": "Apuntes en Debe y Haber neteados"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Pulsa «Conciliar tesorería».",
+       "detalle": "Debe salir una operación con éxito.",
+       "imagen": "v-icon2-009.jpg"
+      },
+      {
+       "texto": "Abre la pestaña «Extracto conciliado» y verifica el importe 1524,60.",
+       "imagen": "v-icon2-010.jpg"
+      },
+      {
+       "texto": "Abre la pestaña «Tesorería conciliada» y verifica que coincide."
+      },
+      {
+       "texto": "Entra en el importe conciliado."
+      },
+      {
+       "texto": "Pulsa «Contabilizar».",
+       "imagen": "v-icon2-011.jpg"
+      },
+      {
+       "texto": "Revisa los apuntes contables: deben aparecer Debe y Haber neteados.",
+       "imagen": "v-icon2-011.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Conciliar no es el final: si no pulsas «Contabilizar», no se generan asientos."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Entra al importe y pulsa «Contabilizar». Verás la fecha de contabilización y los apuntes."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuál es la ruta de conciliación bancaria?",
+     "opciones": [
+      "Finanzas › Tesorería › Extractos bancarios y movimientos",
+      "Finanzas › Tesorería › Conciliación bancaria",
+      "Finanzas › Contabilidad General › Asientos",
+      "Finanzas › Cartera › Efectos"
+     ],
+     "correcta": 1,
+     "explicacion": "La conciliación está en Finanzas › Tesorería › Conciliación bancaria."
+    },
+    {
+     "pregunta": "¿Qué pones en el campo cuenta para ver todas las cuentas?",
+     "opciones": [
+      "La fecha",
+      "El importe cero",
+      "Un asterisco",
+      "El código de empresa"
+     ],
+     "correcta": 2,
+     "explicacion": "El asterisco permite ver todas las cuentas disponibles."
+    },
+    {
+     "pregunta": "¿Qué columnas comparas al ejecutar?",
+     "opciones": [
+      "Extracto pendiente y tesorería pendiente",
+      "Facturas y recibos",
+      "Debe y Haber",
+      "Anticipo y remesa"
+     ],
+     "correcta": 0,
+     "explicacion": "Se comparan extracto pendiente y tesorería pendiente."
+    },
+    {
+     "pregunta": "¿Qué acción es obligatoria después de conciliar?",
+     "opciones": [
+      "Borrar el extracto",
+      "Conciliar automáticamente",
+      "Crear otra remesa",
+      "Contabilizar"
+     ],
+     "correcta": 3,
+     "explicacion": "Hay que pulsar «Contabilizar» para generar los asientos contables."
+    },
+    {
+     "pregunta": "¿Dónde verificas que el importe ha quedado casado?",
+     "opciones": [
+      "En el extracto bancario",
+      "En extracto conciliado y tesorería conciliada",
+      "En la pantalla de remesas",
+      "No se puede verificar"
+     ],
+     "correcta": 1,
+     "explicacion": "Después de conciliar, el importe aparece en las pestañas conciliado y tesorería conciliada."
+    }
+   ],
+   "checklist": [
+    "Entras en Finanzas › Tesorería › Conciliación bancaria.",
+    "Filtra por empresa Deister y pon asterisco o la cuenta.",
+    "Filtra desde 1 de enero hasta hoy o fin de junio.",
+    "Pulsas «Ejecutar» y comparas extracto pendiente con tesorería pendiente.",
+    "Pulsas «Conciliar tesorería» y ves éxito.",
+    "Verificas extracto conciliado y tesorería conciliada.",
+    "Entras al importe y pulsas «Contabilizar».",
+    "Confirmas que aparecen apuntes neteados."
+   ],
+   "problemas": [
+    {
+     "problema": "La tesorería conciliada no muestra fecha de contabilización.",
+     "solucion": "No has pulsado «Contabilizar». Entra al importe y pulsa «Contabilizar» para generar los asientos."
+    },
+    {
+     "problema": "No ves la partida de la empresa en la ventana de conciliación.",
+     "solucion": "Revisa los filtros: empresa, cuenta, fecha inicio y fecha fin. Vuelve a pulsar «Ejecutar»."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-11",
+   "numero": 14,
+   "titulo": "Caso de cobrar y anticipo en finanzas",
+   "objetivo": "Tendrás creado un extracto de cobro de 5082 en negativo y comprenderás que un anticipo genera dos efectos, dos remesas y dos extractos.",
+   "concepto": "En un extracto, los cobros se registran en negativo porque sigues la perspectiva del banco: lo que para la empresa es entrada, para el banco es salida de dinero.\n\nEn el caso de cobrar usas concepto común 04, concepto propio 13 e importe 5082 en negativo. Después, para cerrar el circuito, concilia y contabiliza igual que en el caso de pago.\n\nEl anticipo en finanzas no genera factura. Genera dos efectos, dos remesas y dos extractos, uno positivo y otro negativo.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-11-extracto-cobro",
+     "titulo": "Extracto de cobro en negativo",
+     "paraQueSirve": "Crea un extracto de cobro y aplica la lógica de signos desde la perspectiva del banco.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Extractos bancarios y movimientos"
+     ],
+     "explicacion": [
+      "En esta operación de cobro, la remesa de clase cobrar se transforma en un extracto de 5082 en negativo.",
+      "El signo negativo no es un error: es la forma de representar que para el banco el dinero sale.",
+      "Después de guardar, puedes continuar con la conciliación y contabilización aplicando los pasos que ya practicaste."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad para la que se crea el extracto.",
+       "ejemplo": "Deister"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta de tesorería asociada.",
+       "ejemplo": "Se carga automáticamente"
+      },
+      {
+       "campo": "Concepto común",
+       "significado": "Clasificación general del movimiento.",
+       "ejemplo": "04"
+      },
+      {
+       "campo": "Concepto propio",
+       "significado": "Clasificación propia del cobro.",
+       "ejemplo": "13"
+      },
+      {
+       "campo": "Importe",
+       "significado": "Cantidad del extracto. En cobro va en negativo.",
+       "ejemplo": "5082 en negativo"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Tesorería › Extractos bancarios y movimientos."
+      },
+      {
+       "texto": "Selecciona la empresa Deister.",
+       "imagen": "v-icon2-013.jpg"
+      },
+      {
+       "texto": "Pon concepto común 04."
+      },
+      {
+       "texto": "Pon concepto propio 13.",
+       "imagen": "v-icon2-014.jpg"
+      },
+      {
+       "texto": "Escribe el importe 5082 en negativo.",
+       "imagen": "v-icon2-015.jpg"
+      },
+      {
+       "texto": "Guarda el extracto."
+      },
+      {
+       "texto": "Verifica que el extracto queda visible con 5082 negativo.",
+       "imagen": "v-icon2-015.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No cambies el signo a positivo: en el extracto, el cobro va en negativo porque el banco ve salida de dinero."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-11-anticipo",
+     "titulo": "Anticipo en finanzas",
+     "paraQueSirve": "Entiende el resultado esperado de un anticipo en finanzas y no esperes una factura.",
+     "ruta": null,
+     "explicacion": [
+      "Un anticipo en finanzas no genera factura.",
+      "Genera dos efectos, dos remesas y dos extractos.",
+      "Uno de los extractos va en positivo y el otro en negativo."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Identifica el anticipo como operación de finanzas."
+      },
+      {
+       "texto": "Comprueba que no esperas una factura."
+      },
+      {
+       "texto": "Prepara los dos efectos."
+      },
+      {
+       "texto": "Genera dos remesas."
+      },
+      {
+       "texto": "Genera dos extractos, uno positivo y otro negativo."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No trates el anticipo como una venta normal con factura."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Con qué signo se registra una remesa de cobrar en el extracto?",
+     "opciones": [
+      "Positivo, porque es un cobro para la empresa",
+      "Negativo, porque para el banco es salida de dinero",
+      "Positivo, porque el banco recibe dinero",
+      "Cero"
+     ],
+     "correcta": 1,
+     "explicacion": "En el extracto se mira desde el banco: un cobro para la empresa es salida de dinero para el banco."
+    },
+    {
+     "pregunta": "¿Qué concepto propio se usa en el ejemplo de cobrar?",
+     "opciones": [
+      "04",
+      "03",
+      "13",
+      "Ninguno"
+     ],
+     "correcta": 2,
+     "explicacion": "En el vídeo, el extracto de cobrar también lleva concepto propio 13 (transferencia)."
+    },
+    {
+     "pregunta": "¿Qué importe se usa en el caso de cobrar?",
+     "opciones": [
+      "1524,60 positivo",
+      "5082 en positivo",
+      "5082 en negativo",
+      "1524,60 en negativo"
+     ],
+     "correcta": 2,
+     "explicacion": "El caso de cobrar usa 5082 en negativo."
+    },
+    {
+     "pregunta": "Según lo explicado, ¿qué genera un anticipo en finanzas?",
+     "opciones": [
+      "Una factura y un extracto",
+      "Dos efectos, dos remesas y dos extractos, sin factura",
+      "Solo una remesa de cobro",
+      "No afecta a tesorería"
+     ],
+     "correcta": 1,
+     "explicacion": "El anticipo no genera factura: genera dos efectos, dos remesas y dos extractos."
+    },
+    {
+     "pregunta": "¿Por qué el cobro va en negativo en el extracto?",
+     "opciones": [
+      "Porque la empresa lo contabiliza como gasto",
+      "Porque el sistema solo admite negativos",
+      "Porque desde el banco el dinero sale",
+      "Porque se netea contra un pago"
+     ],
+     "correcta": 2,
+     "explicacion": "La perspectiva del banco explica el signo: el banco ve salida de dinero."
+    }
+   ],
+   "checklist": [
+    "Entras en Finanzas › Tesorería › Extractos bancarios y movimientos.",
+    "Seleccionas la empresa Deister.",
+    "Pones concepto común 04.",
+    "Pones concepto propio 13.",
+    "Escribes 5082 en negativo.",
+    "Guardas y confirmas el extracto en negativo.",
+    "Recuerdas que un anticipo no genera factura.",
+    "Sabes que el anticipo genera dos efectos, dos remesas y dos extractos."
+   ],
+   "problemas": [
+    {
+     "problema": "Te confundes con el signo negativo del cobro.",
+     "solucion": "Cambia la perspectiva: un cobro para la empresa es salida de dinero para el banco, por eso va en negativo."
+    },
+    {
+     "problema": "Esperas que el anticipo genere una factura.",
+     "solucion": "En finanzas, el anticipo no genera factura: genera dos efectos, dos remesas y dos extractos."
     }
    ]
   }

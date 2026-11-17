@@ -393,6 +393,26 @@
     {
      "problema": "No encuentras el maestro de series de inmovilizado.",
      "solucion": "La documentación no describe un maestro de series en estas páginas; solo se referencia el campo «Serie inmovilizado» en el bien."
+    },
+    {
+     "problema": "Confundes las cuentas contables con el grupo fiscal.",
+     "solucion": "El grupo contable contiene cuentas; el grupo fiscal contiene porcentaje o años de depreciación."
+    },
+    {
+     "problema": "No encuentras el componente dentro de Activos permanentes.",
+     "solucion": "Baja por la jerarquía: del bien al elemento y del elemento al componente."
+    },
+    {
+     "problema": "La fecha de inicio de depreciación no coincide con la fecha de compra.",
+     "solucion": "Es una propuesta del sistema. Puedes modificarla manualmente desde el componente."
+    },
+    {
+     "problema": "Aparecen dos fichas de activo para la misma operación: el bien y la instalación.",
+     "solucion": "Revisa la familia del servicio de instalación. En estándar, si tiene su propia parametrización, crea su propia ficha; la variante particular puede vincular líneas para consolidar."
+    },
+    {
+     "problema": "Solo ves totales y no consigues llegar al detalle.",
+     "solucion": "Baja de elemento a componente. El detalle de adquisición y amortización está en el componente."
     }
    ]
   },
@@ -822,6 +842,993 @@
     {
      "problema": "Quieres dar de baja un componente temporalmente sin contabilizar.",
      "solucion": "Usa la desactivación temporal; no genera apuntes contables."
+    }
+   ]
+  },
+  {
+   "id": "icon-activos-v-1",
+   "numero": 3,
+   "titulo": "Revisar la pestaña Contabilización de una tipología de albarán",
+   "objetivo": "Localizarás la pestaña Contabilización de una tipología de albarán, distinguirás sus tipos de asiento y comprobarás que el indicador «Generar inmovilizado» está en «No generar».",
+   "concepto": "La pestaña «Contabilización» de una tipología decide la huella contable de los documentos que usan esa tipología. En los albaranes de compra ahí se revisan los asientos de suministros, los asientos propios del albarán, los asientos no facturados y la provisión de servicios, junto con los datos contables.\n\nEl indicador «Generar inmovilizado» es distinto de los tipos de asiento: no describe un apunte contable, sino que conecta la tipología con las fichas de activos permanentes de Finanzas. En una tipología de albarán este indicador suele aparecer en «No generar».\n\nAl recorrer la pestaña entiendes qué hay configurado y por qué un albarán puede contabilizar sin crear fichas de inmovilizado.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "icon-activos-v-1-contabilizacion",
+     "titulo": "Abrir la pestaña Contabilización",
+     "paraQueSirve": "Da acceso a la configuración contable de la tipología, distinta de los datos logísticos del documento.",
+     "ruta": [
+      "Compras",
+      "Maestros",
+      "Documentos",
+      "Albaranes"
+     ],
+     "explicacion": [
+      "Desde Maestros de compras abres una tipología de albarán y localizas la pestaña «Contabilización».",
+      "La pestaña agrupa los tipos de asiento que puede generar el albarán y los datos contables que los acompañan."
+     ],
+     "campos": [
+      {
+       "campo": "Tipología de albarán",
+       "significado": "Configuración maestra que da comportamiento a los albaranes de compra.",
+       "ejemplo": "Albarán de compra estándar"
+      },
+      {
+       "campo": "Pestaña Contabilización",
+       "significado": "Pestaña de la tipología donde se define su huella contable.",
+       "ejemplo": "Se abre desde la ficha de la tipología"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Compras › Maestros › Documentos › Albaranes."
+      },
+      {
+       "texto": "Abre una tipología de albarán de la lista."
+      },
+      {
+       "texto": "Localiza la pestaña «Contabilización» y ábrela.",
+       "detalle": "No la confundas con las pestañas de líneas o de datos generales.",
+       "imagen": "v-asientos-001.jpg"
+      },
+      {
+       "texto": "Observa los bloques de asientos y de datos contables.",
+       "imagen": "v-asientos-001.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La configuración contable de una tipología se revisa antes de poner documentos reales. Cada documento que use la tipología hereda lo que aquí se defina."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-1-asientos-contables",
+     "titulo": "Tipos de asiento del albarán",
+     "paraQueSirve": "Diferenciar el asiento de suministros, el de albaranes, los no facturados y la provisión, para saber qué huella generará el documento.",
+     "ruta": null,
+     "explicacion": [
+      "El bloque de asientos fija qué asiento contable se utiliza en cada operación del albarán.",
+      "Los avisos de no facturados y provisiones permiten reconocer contablemente operaciones que todavía no se han facturado o que necesitan una provisión de gasto."
+     ],
+     "campos": [
+      {
+       "campo": "Asiento suministros",
+       "significado": "Asiento contable asociado a la operación de suministro o recepción.",
+       "ejemplo": "Asiento de suministros"
+      },
+      {
+       "campo": "Asiento albaranes",
+       "significado": "Asiento contable propio del albarán.",
+       "ejemplo": "Asiento de albaranes"
+      },
+      {
+       "campo": "Asientos no facturados",
+       "significado": "Asiento para reconocer operaciones no facturadas.",
+       "ejemplo": "Asiento de albaranes no facturados"
+      },
+      {
+       "campo": "Asiento provisiones",
+       "significado": "Asiento para dotar la provisión de servicios o de gastos pendientes.",
+       "ejemplo": "Asiento de provisiones"
+      },
+      {
+       "campo": "Provisión",
+       "significado": "Marca que activa la generación del asiento de provisión.",
+       "ejemplo": "Activada o desactivada"
+      },
+      {
+       "campo": "Datos contables",
+       "significado": "Bloque con los datos contables que heredan los asientos generados desde la tipología.",
+       "ejemplo": "Cuadro de datos contables del albarán"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Revisa el campo «Asiento suministros» y el campo «Asiento albaranes».",
+       "imagen": "v-asientos-001.jpg"
+      },
+      {
+       "texto": "Localiza «Asientos no facturados» y lee su descripción."
+      },
+      {
+       "texto": "Comprueba si la marca «Provisión» está activada."
+      },
+      {
+       "texto": "Fíjate en el bloque de datos contables que acompaña a los asientos."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si buscas el asiento de la factura dentro de la tipología de albarán, no lo encontrarás: cada tipología define su propia huella contable y la factura tiene la suya."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Revisa la pestaña Contabilización de la tipología de albarán para albaranes y no facturados, y deja la revisión de la factura para su tipología específica."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-1-indicador-inmovilizado",
+     "titulo": "Indicador Generar inmovilizado",
+     "paraQueSirve": "Conecta la tipología con los activos permanentes de Finanzas. En un albarán, lo normal es que esté en «No generar».",
+     "ruta": null,
+     "explicacion": [
+      "El indicador «Generar inmovilizado» no es un tipo de asiento: sirve para crear fichas auxiliares de activo cuando se cumplen los requisitos.",
+      "En la tipología de albarán revisada en esta práctica el valor es «No generar», así que el albarán puede contabilizar sin crear componentes ni elementos."
+     ],
+     "campos": [
+      {
+       "campo": "Generar inmovilizado",
+       "significado": "Indicador que decide si el documento crea ficha de activo y en qué momento.",
+       "ejemplo": "No generar"
+      },
+      {
+       "campo": "No generar",
+       "significado": "Valor del indicador que no crea fichas de inmovilizado.",
+       "ejemplo": "Configuración de esta tipología de albarán"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Dentro de la pestaña «Contabilización», localiza «Generar inmovilizado».",
+       "imagen": "v-asientos-001.jpg",
+       "hotspot": {
+        "x": 40,
+        "y": 35,
+        "w": 14,
+        "h": 5,
+        "etiqueta": "Generar inmovilizado"
+       }
+      },
+      {
+       "texto": "Comprueba el valor mostrado.",
+       "detalle": "Debe verse «No generar».",
+       "imagen": "v-asientos-001.jpg"
+      },
+      {
+       "texto": "Anota que, con ese valor, el albarán no crea fichas de activo."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Que esté en «No generar» no es un error del albarán: es la configuración esperada cuando la creación de inmovilizado se gestiona en la factura."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Dónde se define la huella contable de una tipología de albarán?",
+     "opciones": [
+      "En la pestaña Líneas del albarán",
+      "En la pestaña Contabilización de la tipología",
+      "En la ficha del proveedor",
+      "En el diario contable"
+     ],
+     "correcta": 1,
+     "explicacion": "La pestaña Contabilización de la tipología agrupa los tipos de asiento y los datos contables."
+    },
+    {
+     "pregunta": "¿Qué hace el indicador «Generar inmovilizado»?",
+     "opciones": [
+      "Define el asiento de suministros",
+      "Crea automáticamente una factura",
+      "Conecta la tipología con los activos permanentes de Finanzas",
+      "Anula la provisión de servicios"
+     ],
+     "correcta": 2,
+     "explicacion": "El indicador controla la creación de fichas de activo en Finanzas."
+    },
+    {
+     "pregunta": "En una tipología de albarán sin activación de inmovilizado, ¿qué valor aparece?",
+     "opciones": [
+      "En validación",
+      "En contabilización",
+      "No generar",
+      "Genera siempre"
+     ],
+     "correcta": 2,
+     "explicacion": "El valor «No generar» indica que no se crean fichas de inmovilizado desde esa tipología."
+    },
+    {
+     "pregunta": "¿Qué tipo de asiento se revisa para operaciones no facturadas?",
+     "opciones": [
+      "Asiento de suministros",
+      "Asiento de provisiones",
+      "Asiento de albaranes",
+      "Asientos no facturados"
+     ],
+     "correcta": 3,
+     "explicacion": "Los asientos no facturados reconocen contablemente operaciones pendientes de factura."
+    },
+    {
+     "pregunta": "Si una tipología no tiene ningún tipo de asiento configurado, ¿qué ocurre al contabilizar?",
+     "opciones": [
+      "No deja contabilizar",
+      "La tipología no aporta su asiento automático desde esa configuración",
+      "Crea una ficha de activo",
+      "Siempre genera un asiento de gasto"
+     ],
+     "correcta": 1,
+     "explicacion": "La tipología es la que define qué asiento debe generarse; sin configuración no aporta su huella contable automática."
+    }
+   ],
+   "checklist": [
+    "Abres Compras › Maestros › Documentos › Albaranes.",
+    "Abres una tipología de albarán.",
+    "Localizas y abres la pestaña «Contabilización».",
+    "Identificas «Asiento suministros» y «Asiento albaranes».",
+    "Identificas «Asientos no facturados» y «Asiento provisiones».",
+    "Compruebas la marca «Provisión».",
+    "Compruebas que «Generar inmovilizado» está en «No generar»."
+   ],
+   "problemas": [
+    {
+     "problema": "No encuentras dónde se configuran los tipos de asiento del albarán.",
+     "solucion": "Entra en la tipología de albarán y abre la pestaña «Contabilización»; no se configura desde las líneas del documento."
+    },
+    {
+     "problema": "Crees que la tipología de albarán debería generar una ficha de activo y no lo hace.",
+     "solucion": "Revisa el indicador «Generar inmovilizado». En esta tipología está en «No generar», por lo que solo contabiliza sin crear ficha de inmovilizado."
+    }
+   ]
+  },
+  {
+   "id": "icon-activos-v-2",
+   "numero": 4,
+   "titulo": "Configurar la generación de inmovilizado en una factura",
+   "objetivo": "Abrirás la tipología de factura de activos, revisarás su pestaña Contabilización y entenderás las opciones «No generar», «En validación» y «En contabilización».",
+   "concepto": "La tipología de factura es otro maestro de compras en el que se define la huella contable. En la tipología destinada a facturas de activos, el indicador «Generar inmovilizado» decide si la factura crea fichas de activo y en qué momento del circuito lo hace.\n\nLas opciones del indicador son tres: no generar, generar al validar o generar al contabilizar. La elección ordena cuándo aparecen las fichas de Finanzas respecto al estado del documento: provisional, validado o contabilizado.\n\nEn esta práctica localizas el indicador y revisas una tipología configurada para generar inmovilizado al contabilizar.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "icon-activos-v-2-tipologia-factura",
+     "titulo": "Abrir la tipología de factura de activos",
+     "paraQueSirve": "Permite localizar la configuración contable de la factura, separada de la configuración del albarán.",
+     "ruta": [
+      "Compras",
+      "Maestros",
+      "Documentos",
+      "Tipos de facturas"
+     ],
+     "explicacion": [
+      "La tipología de factura se encuentra en el maestro de tipos de facturas de compras.",
+      "En el ejemplo se usa la tipología FACT «Factura activos fijos», que es la que concentra la generación de inmovilizado."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo de factura",
+       "significado": "Código de la tipología de factura.",
+       "ejemplo": "FACT"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Nombre visible de la tipología.",
+       "ejemplo": "Factura activos fijos"
+      },
+      {
+       "campo": "Pestaña Contabilización",
+       "significado": "Pestaña de la tipología donde se revisa la huella contable.",
+       "ejemplo": "Contabilización de FACT"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Compras › Maestros › Documentos › Tipos de facturas."
+      },
+      {
+       "texto": "Abre la tipología FACT «Factura activos fijos»."
+      },
+      {
+       "texto": "Accede a la pestaña «Contabilización».",
+       "imagen": "v-asientos-002.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No uses la tipología de albarán para revisar la creación de inmovilizado de una factura; cada documento tiene su propio maestro y su propia pestaña de contabilización."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-2-opciones-indicador",
+     "titulo": "Opciones del indicador Generar inmovilizado",
+     "paraQueSirve": "Elegir cuándo la factura crea las fichas de activo: al validar o al contabilizar.",
+     "ruta": null,
+     "explicacion": [
+      "El indicador «Generar inmovilizado» conecta la factura con Finanzas.",
+      "Puede tener tres valores: «No generar», «En validación» o «En contabilización».",
+      "En la tipología FACT del ejemplo está configurado para generar inmovilizado al contabilizar."
+     ],
+     "campos": [
+      {
+       "campo": "Generar inmovilizado",
+       "significado": "Indicador que controla si se crean fichas de activo y en qué momento.",
+       "ejemplo": "En contabilización"
+      },
+      {
+       "campo": "No generar",
+       "significado": "No crea ninguna ficha de inmovilizado.",
+       "ejemplo": "Facturas sin activo"
+      },
+      {
+       "campo": "En validación",
+       "significado": "Genera la ficha cuando la factura se valida.",
+       "ejemplo": "Validación de la factura"
+      },
+      {
+       "campo": "En contabilización",
+       "significado": "Genera la ficha cuando la factura se contabiliza.",
+       "ejemplo": "Configuración de FACT"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Localiza el campo «Generar inmovilizado» dentro de la pestaña Contabilización.",
+       "imagen": "v-asientos-002.jpg",
+       "hotspot": {
+        "x": 30,
+        "y": 34,
+        "w": 24,
+        "h": 5,
+        "etiqueta": "Generación inmovilizado"
+       }
+      },
+      {
+       "texto": "Despliega las opciones y observa «No generar», «En validación» y «En contabilización».",
+       "imagen": "v-asientos-002.jpg"
+      },
+      {
+       "texto": "Comprueba que la tipología FACT está en «En contabilización»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si dejas el indicador en «No generar», la factura contabiliza normalmente pero no crea componentes ni elementos."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Activa el indicador y elige «En validación» o «En contabilización» según cuándo quieras generar la ficha."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-2-circuito-estados",
+     "titulo": "Circuito provisional, validada y contabilizada",
+     "paraQueSirve": "Relaciona las opciones del indicador con los estados del documento para saber cuándo se activa la generación de inmovilizado.",
+     "ruta": null,
+     "explicacion": [
+      "El circuito normal de una factura es: nace provisional, se valida y después se contabiliza.",
+      "Si el indicador está en «En validación», la ficha se crea al validar. Si está en «En contabilización», se crea al contabilizar.",
+      "Esto permite decidir si el activo aparece antes o después del apunte contable definitivo."
+     ],
+     "campos": [
+      {
+       "campo": "Provisional",
+       "significado": "Estado inicial del documento, todavía modificable.",
+       "ejemplo": "Factura recién creada"
+      },
+      {
+       "campo": "Validada",
+       "significado": "Estado en el que el documento ya está revisado y listo para contabilizar.",
+       "ejemplo": "Factura validada"
+      },
+      {
+       "campo": "Contabilizada",
+       "significado": "Estado final del circuito contable.",
+       "ejemplo": "Factura contabilizada"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Fíjate en el orden del circuito: provisional → validada → contabilizada.",
+       "imagen": "v-asientos-004.jpg"
+      },
+      {
+       "texto": "Relaciona «En validación» con el momento en que la factura se valida."
+      },
+      {
+       "texto": "Relaciona «En contabilización» con el momento en que la factura se contabiliza."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Con la opción «En contabilización», la factura validada todavía no crea fichas: hay que contabilizarla para que aparezcan."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuáles son las opciones del indicador «Generar inmovilizado»?",
+     "opciones": [
+      "No generar, En validación o En contabilización",
+      "Solo Sí o No",
+      "Provisional o definitivo",
+      "Contabilizado o anulado"
+     ],
+     "correcta": 0,
+     "explicacion": "El indicador permite no generar o generar en validación o en contabilización."
+    },
+    {
+     "pregunta": "Si el indicador está en «En contabilización», ¿cuándo se crea la ficha?",
+     "opciones": [
+      "Al validar",
+      "Al contabilizar",
+      "Al crear",
+      "Al imprimir"
+     ],
+     "correcta": 1,
+     "explicacion": "La opción «En contabilización» crea la ficha al contabilizar la factura."
+    },
+    {
+     "pregunta": "¿Qué estado se alcanza justo después de validar?",
+     "opciones": [
+      "Contabilizado",
+      "Provisional",
+      "Validado",
+      "Anulado"
+     ],
+     "correcta": 2,
+     "explicacion": "El documento pasa de provisional a validado y después puede contabilizarse."
+    },
+    {
+     "pregunta": "Si eliges «En validación», la ficha de activo se crea...",
+     "opciones": [
+      "Después de contabilizar",
+      "Al validar",
+      "Al enviar al proveedor",
+      "Al cerrar el ejercicio"
+     ],
+     "correcta": 1,
+     "explicacion": "La opción «En validación» adelanta la creación al momento de validar."
+    },
+    {
+     "pregunta": "El circuito normal provisional → validada → contabilizada permite...",
+     "opciones": [
+      "Saltarse la validación",
+      "Revisar la validación antes de contabilizar",
+      "Evitar el asiento",
+      "Contabilizar siempre dos veces"
+     ],
+     "correcta": 1,
+     "explicacion": "El circuito separa la revisión, la validación y el contabilizado."
+    }
+   ],
+   "checklist": [
+    "Abres Compras › Maestros › Documentos › Tipos de facturas.",
+    "Abres la tipología FACT «Factura activos fijos».",
+    "Entras en la pestaña «Contabilización».",
+    "Localizas el indicador «Generar inmovilizado».",
+    "Compruebas las opciones No generar, En validación y En contabilización.",
+    "Verificas que FACT está en «En contabilización».",
+    "Relacionas cada opción con su estado del circuito."
+   ],
+   "problemas": [
+    {
+     "problema": "La factura contabiliza pero no crea ninguna ficha de activo.",
+     "solucion": "Revisa la tipología de factura: si el indicador «Generar inmovilizado» está en «No generar», actívalo y elige «En validación» o «En contabilización»."
+    },
+    {
+     "problema": "No sabes si la ficha se creará al validar o al contabilizar.",
+     "solucion": "Mira el valor del indicador en la tipología. En el ejemplo FACT está en «En contabilización», por lo que la ficha aparecerá al contabilizar."
+    }
+   ]
+  },
+  {
+   "id": "icon-activos-v-3",
+   "numero": 5,
+   "titulo": "Contabilizar una factura de activos y ver sus componentes",
+   "objetivo": "Recorrerás el circuito documental de una factura de activos, la contabilizarás y comprobarás que se habilita la pestaña Componentes.",
+   "concepto": "La factura de activos no nace aislada. En el Docflow se ve el circuito completo: solicitud, pedido, albarán y factura. Cada documento mantiene su trazabilidad, de modo que al abrir la factura puedes recorrer los pasos anteriores.\n\nCuando la factura está validada, ya puede contabilizarse. Al pulsar «Contabilizar», la factura pasa al estado «EN CONTABILIDAD» y, si la tipología está configurada con «Generar inmovilizado», se habilita la pestaña «Componentes».\n\nLa pestaña Componentes redirige al módulo de activos permanentes y muestra la ficha generada automáticamente.",
+   "duracionMin": 12,
+   "secciones": [
+    {
+     "id": "icon-activos-v-3-circuito-docflow",
+     "titulo": "Circuito documental de la factura de activos",
+     "paraQueSirve": "Ver la trazabilidad desde la solicitud hasta la factura antes de contabilizar.",
+     "ruta": null,
+     "explicacion": [
+      "El circuito documental enlaza los distintos documentos de compras.",
+      "En el ejemplo se observa solicitud, pedido, albarán y factura, con sus tipos documentales."
+     ],
+     "campos": [
+      {
+       "campo": "Solicitud",
+       "significado": "Origen de la petición de compra.",
+       "ejemplo": "SFOR"
+      },
+      {
+       "campo": "Pedido",
+       "significado": "Documento de pedido derivado de la solicitud.",
+       "ejemplo": "PACT/PSER"
+      },
+      {
+       "campo": "Albarán",
+       "significado": "Documento de recepción de los bienes.",
+       "ejemplo": "AACT"
+      },
+      {
+       "campo": "Factura",
+       "significado": "Documento final de facturación del circuito.",
+       "ejemplo": "FACT"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la factura de activos del circuito."
+      },
+      {
+       "texto": "Localiza el Docflow o bloque de trazabilidad documental.",
+       "imagen": "v-asientos-003.jpg"
+      },
+      {
+       "texto": "Revisa el orden: solicitud → pedido → albarán → factura."
+      },
+      {
+       "texto": "Confirma que la factura corresponde a la tipología FACT."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El circuito ayuda a entender que la factura viene precedida por un pedido y un albarán, pero la generación de inmovilizado se evalúa al validar o contabilizar la factura."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-3-validar-contabilizar",
+     "titulo": "Validar y contabilizar la factura",
+     "paraQueSirve": "Ejecutar el contabilizado de una factura validada y comprobar el cambio de estado.",
+     "ruta": null,
+     "explicacion": [
+      "La factura de activos del ejemplo ya está validada, por lo que puede contabilizarse.",
+      "Al pulsar «Contabilizar», el documento queda en estado «EN CONTABILIDAD»."
+     ],
+     "campos": [
+      {
+       "campo": "Estado",
+       "significado": "Situación actual del documento.",
+       "ejemplo": "Validada previamente"
+      },
+      {
+       "campo": "Botón Contabilizar",
+       "significado": "Acción que ejecuta el contabilizado.",
+       "ejemplo": "Contabilizar"
+      },
+      {
+       "campo": "EN CONTABILIDAD",
+       "significado": "Estado que indica que el documento ya se ha contabilizado.",
+       "ejemplo": "Estado tras contabilizar"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Verifica que la factura está validada.",
+       "imagen": "v-asientos-004.jpg"
+      },
+      {
+       "texto": "Pulsa el botón «Contabilizar».",
+       "imagen": "v-asientos-004.jpg",
+       "hotspot": {
+        "x": 29,
+        "y": 96.5,
+        "w": 4,
+        "h": 3,
+        "etiqueta": "Contabilizar"
+       }
+      },
+      {
+       "texto": "Comprueba que el estado pasa a «EN CONTABILIDAD».",
+       "imagen": "v-asientos-005.jpg",
+       "hotspot": {
+        "x": 17.6,
+        "y": 36,
+        "w": 80,
+        "h": 3.4,
+        "etiqueta": "EN CONTABILIDAD"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si la factura no está validada no llega al punto de contabilizar."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Revisa la validación previa de la factura y vuelve a pulsar «Contabilizar»."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-3-pestana-componentes",
+     "titulo": "Pestaña Componentes habilitada",
+     "paraQueSirve": "Comprobar que la contabilización creó la relación con los activos permanentes.",
+     "ruta": null,
+     "explicacion": [
+      "Después de contabilizar, la pestaña «Componentes» queda habilitada.",
+      "Desde ahí el sistema redirige a Activos permanentes y muestra el componente generado."
+     ],
+     "campos": [
+      {
+       "campo": "Componentes",
+       "significado": "Pestaña de la factura que enlaza con la ficha de activo generada.",
+       "ejemplo": "Habilitada tras contabilizar"
+      },
+      {
+       "campo": "Componente generado",
+       "significado": "Ficha de activo creada automáticamente.",
+       "ejemplo": "Componente visible desde Activos permanentes"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Después de contabilizar, abre la pestaña «Componentes».",
+       "imagen": "v-asientos-005.jpg",
+       "hotspot": {
+        "x": 45.6,
+        "y": 14,
+        "w": 5,
+        "h": 2.4,
+        "etiqueta": "Componentes"
+       }
+      },
+      {
+       "texto": "Observa que el sistema redirige al módulo de activos permanentes."
+      },
+      {
+       "texto": "Comprueba que se ha creado la ficha del componente.",
+       "imagen": "v-asientos-006.jpg"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Antes de contabilizar, la pestaña «Componentes» no está habilitada. Su aparición confirma que la integración con Finanzas se ha ejecutado."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué tipo de documento inicia el circuito documental de la factura de activos?",
+     "opciones": [
+      "Pedido",
+      "Albarán",
+      "Factura",
+      "Solicitud (SFOR)"
+     ],
+     "correcta": 3,
+     "explicacion": "El circuito comienza con la solicitud y continúa con pedido, albarán y factura."
+    },
+    {
+     "pregunta": "¿Qué estado tiene la factura antes de pulsar «Contabilizar» en el ejemplo?",
+     "opciones": [
+      "En contabilidad",
+      "Validada",
+      "Provisional",
+      "Anulada"
+     ],
+     "correcta": 1,
+     "explicacion": "La factura está validada y preparada para contabilizar."
+    },
+    {
+     "pregunta": "Después de contabilizar, ¿qué estado indica el documento?",
+     "opciones": [
+      "PROVISIONAL",
+      "EN CONTABILIDAD",
+      "CERRADO",
+      "PAGADO"
+     ],
+     "correcta": 1,
+     "explicacion": "El estado «EN CONTABILIDAD» aparece tras ejecutar el contabilizado."
+    },
+    {
+     "pregunta": "¿Qué pestaña se habilita al contabilizar?",
+     "opciones": [
+      "Líneas",
+      "Cobros",
+      "Componentes",
+      "Movimientos"
+     ],
+     "correcta": 2,
+     "explicacion": "La pestaña «Componentes» se habilita cuando la integración con activos permanentes se ejecuta."
+    },
+    {
+     "pregunta": "La pestaña Componentes redirige a...",
+     "opciones": [
+      "El maestro de proveedores",
+      "Activos permanentes de Finanzas",
+      "El listado de pedidos",
+      "El diario contable"
+     ],
+     "correcta": 1,
+     "explicacion": "La pestaña lleva a la ficha de activo generada en Activos permanentes."
+    }
+   ],
+   "checklist": [
+    "Abres una factura de activos del circuito.",
+    "Compruebas el orden solicitud → pedido → albarán → factura.",
+    "Verificas que la factura está validada.",
+    "Pulsas «Contabilizar».",
+    "Confirmas que el estado es «EN CONTABILIDAD».",
+    "Abres la pestaña «Componentes».",
+    "Compruebas que se ha creado la ficha del componente."
+   ],
+   "problemas": [
+    {
+     "problema": "La pestaña «Componentes» no aparece después de validar.",
+     "solucion": "Es normal si la tipología está en «En contabilización». Contabiliza la factura y la pestaña se habilitará."
+    },
+    {
+     "problema": "No puedes contabilizar la factura.",
+     "solucion": "Revisa que la factura esté validada. La validación es previa al contabilizado."
+    }
+   ]
+  },
+  {
+   "id": "icon-activos-v-4",
+   "numero": 6,
+   "titulo": "Parametrizar la familia de un artículo para inmovilizado",
+   "objetivo": "Abrirás un artículo de ejemplo, localizarás en su familia el apartado «Parámetros de inmovilizado» y comprobarás que el código de bien y la serie son obligatorios.",
+   "concepto": "No basta con que la tipología de factura tenga activado «Generar inmovilizado». El artículo que se factura también tiene que estar preparado, porque la ficha de activo se crea a partir de la familia del artículo.\n\nEn el maestro de familias, dentro del apartado «Parámetros de inmovilizado», se configuran el código de bien y la serie. Esos dos datos son obligatorios para que la factura pueda crear la ficha de activo.\n\nSi la familia no tiene esa parametrización completa, la factura contabiliza pero no se crea ninguna ficha de Finanzas.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "icon-activos-v-4-abrir-articulo-familia",
+     "titulo": "Abrir el artículo y su familia",
+     "paraQueSirve": "Localizar el artículo de la factura y llegar a la familia que define sus parámetros de inmovilizado.",
+     "ruta": null,
+     "explicacion": [
+      "Se parte del artículo utilizado en la factura de activos.",
+      "Desde el artículo se abre la familia para revisar su configuración."
+     ],
+     "campos": [
+      {
+       "campo": "Artículo",
+       "significado": "Producto o bien que se está facturando.",
+       "ejemplo": "Ascensor"
+      },
+      {
+       "campo": "Familia",
+       "significado": "Agrupación maestra del artículo que hereda los parámetros generales.",
+       "ejemplo": "Familia del ascensor"
+      },
+      {
+       "campo": "Parámetros de inmovilizado",
+       "significado": "Apartado de la familia que guarda la configuración de Finanzas.",
+       "ejemplo": "Ubicado en la ficha de la familia"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el artículo utilizado en la factura de activos.",
+       "imagen": "v-asientos-007.jpg"
+      },
+      {
+       "texto": "Localiza el artículo de ejemplo.",
+       "detalle": "En esta práctica es un ascensor."
+      },
+      {
+       "texto": "Abre la familia del artículo."
+      },
+      {
+       "texto": "Localiza el apartado «Parámetros de inmovilizado».",
+       "imagen": "v-asientos-008.jpg",
+       "hotspot": {
+        "x": 33,
+        "y": 45.5,
+        "w": 25,
+        "h": 13,
+        "etiqueta": "Parámetros inmovilizado"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La familia concentra la configuración. Si varias referencias comparten familia, heredan los mismos parámetros de inmovilizado."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-4-codigo-bien-serie",
+     "titulo": "Código de bien y serie obligatorios",
+     "paraQueSirve": "Identificar los dos campos mínimos que permiten crear la ficha de activo.",
+     "ruta": null,
+     "explicacion": [
+      "Dentro de «Parámetros de inmovilizado» se revisan el código de bien y la serie.",
+      "Son obligatorios: si uno de los dos falta, la factura contabiliza pero no se crea la ficha."
+     ],
+     "campos": [
+      {
+       "campo": "Código de bien",
+       "significado": "Bien al que debe asociarse la ficha de activo.",
+       "ejemplo": "Bien de ascensores"
+      },
+      {
+       "campo": "Serie",
+       "significado": "Serie que se asigna dentro del bien.",
+       "ejemplo": "Serie de activo configurada"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Dentro de «Parámetros de inmovilizado», localiza «Código de bien».",
+       "imagen": "v-asientos-008.jpg",
+       "hotspot": {
+        "x": 33,
+        "y": 45.5,
+        "w": 25,
+        "h": 13,
+        "etiqueta": "Parámetros inmovilizado"
+       }
+      },
+      {
+       "texto": "Localiza el campo «Serie».",
+       "imagen": "v-asientos-009.jpg"
+      },
+      {
+       "texto": "Comprueba que ambos están informados."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si falta el código de bien o la serie, no se crea la ficha de activo."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Completa los dos datos en la familia del artículo antes de contabilizar la factura."
+      }
+     ]
+    },
+    {
+     "id": "icon-activos-v-4-requisito-creacion",
+     "titulo": "Requisito conjunto para crear ficha",
+     "paraQueSirve": "Relacionar la parametrización de la familia con la activación de la tipología.",
+     "ruta": null,
+     "explicacion": [
+      "Para crear una ficha de activo se necesitan dos configuraciones: tipología con «Generar inmovilizado» y familia del artículo con código de bien y serie.",
+      "Si falla cualquiera de las dos, la contabilización no genera componentes ni elementos."
+     ],
+     "campos": [
+      {
+       "campo": "Tipología con Generar inmovilizado",
+       "significado": "Primera condición que activa la integración.",
+       "ejemplo": "FACT en «En contabilización»"
+      },
+      {
+       "campo": "Familia parametrizada",
+       "significado": "Segunda condición que aporta bien y serie.",
+       "ejemplo": "Familia del ascensor con bien y serie"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Confirma que la tipología de factura está activada para generar inmovilizado.",
+       "imagen": "v-asientos-008.jpg"
+      },
+      {
+       "texto": "Confirma que la familia del artículo tiene código de bien y serie."
+      },
+      {
+       "texto": "Con las dos condiciones juntas, contabiliza la factura de prueba."
+      },
+      {
+       "texto": "Comprueba que ahora sí se genera la ficha de activo."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las dos condiciones se revisan en sitios distintos: la tipología en Compras y la familia en el maestro de artículos."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Dónde se configuran los parámetros de inmovilizado del artículo?",
+     "opciones": [
+      "En la factura",
+      "En la familia del artículo",
+      "En la tipología de albarán",
+      "En el grupo contable"
+     ],
+     "correcta": 1,
+     "explicacion": "La familia del artículo guarda el apartado «Parámetros de inmovilizado»."
+    },
+    {
+     "pregunta": "¿Cuáles son los dos datos obligatorios para crear ficha?",
+     "opciones": [
+      "Precio y proveedor",
+      "Cuenta contable y grupo fiscal",
+      "Código de bien y serie",
+      "Depreciación y moneda"
+     ],
+     "correcta": 2,
+     "explicacion": "El código de bien y la serie son los campos obligatorios de la familia."
+    },
+    {
+     "pregunta": "Si la familia no tiene el apartado «Parámetros de inmovilizado» completo, ¿qué ocurre al contabilizar?",
+     "opciones": [
+      "Da error de cuentas",
+      "Contabiliza y no crea ficha de activo",
+      "Crea un bien sin componente",
+      "Asigna una serie por defecto"
+     ],
+     "correcta": 1,
+     "explicacion": "Sin bien o serie no se crea la ficha de activo; la factura contabiliza con normalidad."
+    },
+    {
+     "pregunta": "El artículo de ejemplo es...",
+     "opciones": [
+      "Una impresora",
+      "Un vehículo",
+      "Un ascensor",
+      "Un ordenador"
+     ],
+     "correcta": 3,
+     "explicacion": "El análisis usa un ascensor como artículo de ejemplo."
+    },
+    {
+     "pregunta": "Para que la ficha se cree hacen falta...",
+     "opciones": [
+      "Solo la tipología",
+      "Solo la familia",
+      "La tipología y la familia parametrizadas",
+      "El grupo contable y la moneda"
+     ],
+     "correcta": 2,
+     "explicacion": "Se necesitan la tipología con «Generar inmovilizado» y la familia con código de bien y serie."
+    }
+   ],
+   "checklist": [
+    "Abres el artículo utilizado en la factura de activos.",
+    "Compruebas que el artículo de ejemplo es un ascensor.",
+    "Abres la familia del artículo.",
+    "Localizas el apartado «Parámetros de inmovilizado».",
+    "Compruebas que el código de bien está informado.",
+    "Compruebas que la serie está informada.",
+    "Verificas que también está activa la tipología con «Generar inmovilizado»."
+   ],
+   "problemas": [
+    {
+     "problema": "La factura contabiliza pero no crea ninguna ficha de activo.",
+     "solucion": "Revisa la familia del artículo y completa «Código de bien» y «Serie» en «Parámetros de inmovilizado»."
+    },
+    {
+     "problema": "No sabes si el fallo está en la tipología o en la familia.",
+     "solucion": "Revisa las dos condiciones: tipología con «Generar inmovilizado» activo y familia con código de bien y serie."
     }
    ]
   }

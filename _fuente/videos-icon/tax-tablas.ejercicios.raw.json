@@ -1,0 +1,1369 @@
+[
+  {
+    "id": "impuestos-tax-tablas-1",
+    "numero": 1,
+    "titulo": "Mapa de los maestros TAX, registro fiscal, periodos y agencias",
+    "objetivo": "Tendrás una vista clara de dónde se guarda el detalle fiscal, cómo se relacionan periodos contables y fiscales con agencias, y qué maestros alimentan el cálculo TAX.",
+    "concepto": "Las facturas guardan impuestos en cabecera y en línea. En cabecera puede haber impuestos ilimitados; en cada línea se soportan hasta 4 impuestos. Las referencias catastrales se guardan aparte.\n\nEl ejercicio contable se separa del periodo fiscal. La agencia tributaria se relaciona con empresas y con periodos tributarios que se cierran por fecha fin.\n\nLos orígenes del dato fiscal son variados: interfases, autofactura, post-validación, tesorería, duplicar asiento, albaranes, entrada rápida, facturas contables o de gestión y POS. El mapa de maestros gira alrededor de CTAX.",
+    "duracionMin": 15,
+    "secciones": [
+      {
+        "id": "impuestos-tax-tablas-1-registro-fiscal",
+        "titulo": "El registro fiscal del documento",
+        "paraQueSirve": "Entender dónde viven los impuestos de un comprobante y por qué no se tratan como una única tabla.",
+        "ruta": null,
+        "explicacion": [
+          "La diapositiva muestra las tablas de registro fiscal: ctax_move_head, ctax_move_line y ctax_move_refcat.",
+          "Las facturas relacionan sus cabeceras y líneas con el detalle TAX; en cabecera el detalle es ilimitado y en línea soporta hasta cuatro impuestos.",
+          "Las referencias catastrales se guardan aparte para los impuestos que las necesitan."
+        ],
+        "campos": [
+          {
+            "campo": "ctax_move_head",
+            "significado": "Cabecera fiscal del documento",
+            "ejemplo": "Impuestos ilimitados en cabecera"
+          },
+          {
+            "campo": "ctax_move_line",
+            "significado": "Línea fiscal con detalle por concepto",
+            "ejemplo": "Hasta 4 impuestos por línea"
+          },
+          {
+            "campo": "ctax_move_refcat",
+            "significado": "Referencias catastrales del documento",
+            "ejemplo": "Guardadas aparte"
+          },
+          {
+            "campo": "cvenfach",
+            "significado": "Facturas de venta",
+            "ejemplo": "Documento de venta"
+          },
+          {
+            "campo": "cvenfach_tax",
+            "significado": "Detalle fiscal de facturas de venta",
+            "ejemplo": "Impuestos asociados"
+          },
+          {
+            "campo": "ctax_invoice_refcat",
+            "significado": "Referencias catastrales de factura",
+            "ejemplo": "Datos catastrales separados"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Observa la diapositiva REGISTRO y localiza las tablas ctax_move_head, ctax_move_line y ctax_move_refcat.",
+            "detalle": "La diapositiva también muestra cvenfach, cvenfach_tax y ctax_invoice_refcat.",
+            "imagen": "tax-tablas-001.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "El detalle de impuestos no es un simple campo en la factura: se relaciona por cabecera, por línea y con referencias catastrales aparte."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-1-periodos-agencias",
+        "titulo": "Periodos fiscales y agencias tributarias",
+        "paraQueSirve": "Separar el ciclo contable del fiscal y situar las agencias con sus periodos tributarios.",
+        "ruta": null,
+        "explicacion": [
+          "El ejercicio contable se relaciona con periodos contables y con periodos fiscales (ctax_period).",
+          "La agencia tributaria (ctax_agencia) se vincula a empresas mediante ctax_agencia_empresa y tiene periodos tributarios propios.",
+          "La fecha fin de un periodo tributario sirve para cerrar el periodo y evitar movimientos posteriores."
+        ],
+        "campos": [
+          {
+            "campo": "ctax_period",
+            "significado": "Periodo fiscal del ejercicio",
+            "ejemplo": "Periodo fiscal de la diapositiva"
+          },
+          {
+            "campo": "ctax_agencia",
+            "significado": "Agencia tributaria",
+            "ejemplo": "Agencia de la sociedad"
+          },
+          {
+            "campo": "ctax_agencia_empresa",
+            "significado": "Relación entre empresa y agencia",
+            "ejemplo": "Empresas por agencia"
+          },
+          {
+            "campo": "ctax_agencia_periodo",
+            "significado": "Periodo tributario de la agencia",
+            "ejemplo": "Fecha inicio y fecha fin"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Observa la diapositiva de ejercicio, periodos y agencias.",
+            "detalle": "La relación mostrada es Ejercicio → Períodos contables y Períodos fiscales, y Agencia Tributaria → Empresas x Agencia y Períodos Tributarios.",
+            "imagen": "tax-tablas-002.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "El periodo fiscal suele ser mensual natural y no tiene por qué coincidir con el ciclo contable."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-1-origenes-maestros",
+        "titulo": "Orígenes de registros fiscales y mapa de maestros",
+        "paraQueSirve": "Conocer qué módulos alimentan CTAX y qué tablas maestras hay para parametrizarlo.",
+        "ruta": null,
+        "explicacion": [
+          "Los registros fiscales pueden venir de interfase, autofactura, post-validación, tesorería, duplicado de asiento, albaranes, entrada rápida, facturas contables de compra o venta, facturas de gestión y POS.",
+          "Los maestros TAX incluyen periodos, operaciones, impuestos, clases, claves de artículo, tercero y documento, zonas fiscales, reglas, libros y declaraciones, agencias fiscales, bienes inmuebles, grupo IVA, por tercero, prorrata, partidas estadísticas, naturaleza, unidades suplementarias, régimen estatal, intrastat y puertos o aeropuertos."
+        ],
+        "campos": [
+          {
+            "campo": "ctax_operation",
+            "significado": "Operación impositiva",
+            "ejemplo": "Compra local de bienes corrientes"
+          },
+          {
+            "campo": "ctax_type",
+            "significado": "Tipo de impuesto",
+            "ejemplo": "ES, IVA 21 % General"
+          },
+          {
+            "campo": "ctax_class",
+            "significado": "Clase de impuesto",
+            "ejemplo": "Impuesto sobre el valor añadido"
+          },
+          {
+            "campo": "ctax_artkey",
+            "significado": "Clave fiscal por artículo",
+            "ejemplo": "BOG"
+          },
+          {
+            "campo": "ctax_terkey",
+            "significado": "Clave fiscal por tercero",
+            "ejemplo": "RGEN"
+          },
+          {
+            "campo": "ctax_dockey",
+            "significado": "Clave fiscal por documento",
+            "ejemplo": "Clave de documento"
+          },
+          {
+            "campo": "ctax_zone",
+            "significado": "Zona fiscal",
+            "ejemplo": "ESAR, ESCO, ESIC"
+          },
+          {
+            "campo": "ctax_rule",
+            "significado": "Regla de asignación de impuestos",
+            "ejemplo": "1137, 2586, 1477, 1479"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Observa la diapositiva de orígenes de registros fiscales.",
+            "detalle": "Interfase, Autofactura, Post-validación, Tesorería, Duplicar asiento, Albaranes, Entrada rápida, FC contab., FV contab., FC gestión, FV gestión y POS aparecen alrededor de CTAX.",
+            "imagen": "tax-tablas-003.jpg"
+          },
+          {
+            "texto": "Observa la diapositiva MAESTROS del módulo TAX.",
+            "detalle": "Aparecen Periodos, Operaciones, Impuestos, Clases, Claves de artículo, tercero y documento, Zonas fiscales, Reglas, Libros y declaraciones, Agencias fiscales y otros maestros.",
+            "imagen": "tax-tablas-004.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "No necesitas memorizar todas las tablas: la regla ctax_rule concentra la lógica de cálculo que luego se usa en facturas."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿Cómo se almacenan las referencias catastrales?",
+        "opciones": [
+          "En la cabecera de factura",
+          "Aparte, en tablas de referencias catastrales",
+          "Solo en la línea",
+          "No se almacenan"
+        ],
+        "correcta": 1,
+        "explicacion": "Las referencias catastrales se guardan aparte, como muestra la diapositiva con ctax_move_refcat y ctax_invoice_refcat."
+      },
+      {
+        "pregunta": "¿Qué tabla representa el periodo fiscal?",
+        "opciones": [
+          "ctax_period",
+          "ctax_agencia",
+          "ctax_rule",
+          "ctax_type"
+        ],
+        "correcta": 0,
+        "explicacion": "ctax_period es el periodo fiscal del módulo TAX; no hay que confundirlo con el periodo contable."
+      },
+      {
+        "pregunta": "¿Cuál de estas es la tabla maestra principal de cálculo de impuestos?",
+        "opciones": [
+          "ctax_move_line",
+          "ctax_agencia_empresa",
+          "ctax_rule",
+          "ctax_dockey"
+        ],
+        "correcta": 2,
+        "explicacion": "ctax_rule concentra las condiciones y los tipos de impuesto que se aplican."
+      },
+      {
+        "pregunta": "¿Qué documentos aparecen alrededor de CTAX en los orígenes?",
+        "opciones": [
+          "Solo facturas de venta",
+          "Solo asientos contables",
+          "Solo POS",
+          "Interfase, autofactura, tesorería, FC gestión, FV gestión y POS, entre otros"
+        ],
+        "correcta": 3,
+        "explicacion": "La diapositiva de orígenes muestra múltiples fuentes, entre ellas interfase, autofactura, tesorería, facturación y POS."
+      },
+      {
+        "pregunta": "¿Cuántos impuestos soporta la cabecera del documento?",
+        "opciones": [
+          "Ilimitados",
+          "Hasta 4",
+          "Hasta 2",
+          "Hasta 1"
+        ],
+        "correcta": 0,
+        "explicacion": "En cabecera el detalle es ilimitado; en línea se soportan hasta 4 impuestos."
+      }
+    ],
+    "checklist": [
+      "Localizas en la diapositiva REGISTRO las tablas de cabecera, línea y referencias catastrales.",
+      "Distingues cabecera ilimitada frente a línea con hasta 4 impuestos.",
+      "Relacionas Ejercicio con periodos contables y ctax_period.",
+      "Localizas ctax_agencia, ctax_agencia_empresa y ctax_agencia_periodo.",
+      "Identificas al menos tres orígenes de CTAX: interfase, tesorería y facturación de gestión o contable.",
+      "Localizas en el mapa de maestros ctax_rule, ctax_type, ctax_zone y claves de artículo, tercero y documento."
+    ],
+    "problemas": [
+      {
+        "problema": "Ves impuestos por línea y por cabecera y no sabes qué diferencia hay.",
+        "solucion": "La cabecera guarda el detalle general e ilimitado; la línea guarda el detalle concreto del concepto, con hasta 4 impuestos."
+      },
+      {
+        "problema": "Confundes periodo contable y periodo fiscal.",
+        "solucion": "El periodo contable sigue el ciclo contable; el periodo fiscal suele ser mensual natural y vive en ctax_period."
+      },
+      {
+        "problema": "No encuentras la tabla que decide el cálculo del impuesto.",
+        "solucion": "Es ctax_rule, la regla de asignación de impuestos, no ctax_type ni ctax_period."
+      }
+    ]
+  },
+  {
+    "id": "impuestos-tax-tablas-2",
+    "numero": 2,
+    "titulo": "Reglas de asignación (ctax_rule): la tabla maestra que decide el impuesto",
+    "objetivo": "Sabrás consultar reglas de impuestos, interpretar sus condiciones y verificar qué operación y tipo devuelven.",
+    "concepto": "La regla de asignación es la tabla maestra del cálculo TAX. No se graba a mano un IVA en cada factura; el ERP cruza las condiciones de la factura y busca la regla que coincida.\n\nLas condiciones de la regla son zona de empresa, zona del tercero, tipo de CIF, clave del tercero, clave del artículo, clave de documento y prorrata. Si todo coincide, se aplica la operación y el tipo de impuesto configurados.\n\nEl ejemplo de la sesión es la regla 1137: combina zona empresa ESIC y zona tercero ESCO, con clave tercero REMI y clave artículo BOE, y devuelve AIEME en compras y ventas.",
+    "duracionMin": 12,
+    "secciones": [
+      {
+        "id": "impuestos-tax-tablas-2-consulta-reglas",
+        "titulo": "Consulta de reglas de aplicación",
+        "paraQueSirve": "Disponer de los filtros para encontrar la regla exacta que se está aplicando en un documento.",
+        "ruta": [
+          "Finanzas",
+          "Impuestos",
+          "Maestros",
+          "Reglas de asignación"
+        ],
+        "explicacion": [
+          "La pantalla «Reglas de aplicación de impuestos» se abre en modo consulta.",
+          "Tiene filtros de Id, País, Clase impuesto, Zona empresa, Zona tercero, Tipo CIF, Clave tercero, Clave artículo, Clave documento, Fecha inicio, Prioridad, Operación y Tipo impuesto.",
+          "El botón «Ejecutar consulta» lanza la búsqueda."
+        ],
+        "campos": [
+          {
+            "campo": "Id",
+            "significado": "Identificador de regla",
+            "ejemplo": "1137"
+          },
+          {
+            "campo": "Zona empresa",
+            "significado": "Zona impositiva de la empresa",
+            "ejemplo": "España Islas Canarias ESIC"
+          },
+          {
+            "campo": "Zona tercero",
+            "significado": "Zona impositiva del tercero",
+            "ejemplo": "España continental ESCO"
+          },
+          {
+            "campo": "Clave tercero",
+            "significado": "Clave fiscal por tercero",
+            "ejemplo": "REMI"
+          },
+          {
+            "campo": "Clave artículo",
+            "significado": "Clave fiscal por artículo",
+            "ejemplo": "BOE"
+          },
+          {
+            "campo": "Fecha inicio",
+            "significado": "Vigencia de la regla",
+            "ejemplo": "01-01-2017"
+          },
+          {
+            "campo": "Prioridad",
+            "significado": "Orden de evaluación",
+            "ejemplo": "0"
+          },
+          {
+            "campo": "Operación",
+            "significado": "Operación impositiva",
+            "ejemplo": "CAIEM"
+          },
+          {
+            "campo": "Tipo impuesto",
+            "significado": "Tipo de impuesto",
+            "ejemplo": "AIEME"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre Finanzas › Impuestos › Maestros › Reglas de asignación y observa la ventana de consulta.",
+            "detalle": "Se ven los filtros de Id, País, Clase impuesto, Zona empresa, Zona tercero, Tipo CIF, Clave tercero, Clave artículo, Clave documento, Fecha inicio, Prioridad, Operación, Tipo impuesto y el botón «Ejecutar consulta».",
+            "imagen": "tax-tablas-005.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "Los filtros reflejan las mismas condiciones que luego guarda cada regla."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-2-anatomia-regla",
+        "titulo": "Anatomía de una regla: la 1137",
+        "paraQueSirve": "Saber qué bloques componen una regla y qué información se debe revisar para entender por qué aplica.",
+        "ruta": [
+          "Finanzas",
+          "Impuestos",
+          "Maestros",
+          "Reglas de asignación"
+        ],
+        "explicacion": [
+          "La regla 1137 se abre desde la consulta y muestra tres bloques: Identificación, Condiciones de aplicación e Impuestos.",
+          "En Identificación están el Id 1137, la fecha inicio 01-01-2017, la prioridad 0 y el estado Abierto.",
+          "En Condiciones de aplicación se combinan zona empresa España Islas Canarias ESIC, zona tercero España continental ESCO, clave tercero REMI y clave artículo BOE, además de Tipo CIF, Clave documento y prorrata.",
+          "La regla devuelve en compras la operación CAIEM y el tipo AIEME; en ventas la operación VAIEM y el mismo tipo AIEME."
+        ],
+        "campos": [
+          {
+            "campo": "Id",
+            "significado": "Identificador de la regla",
+            "ejemplo": "1137"
+          },
+          {
+            "campo": "Fecha inicio",
+            "significado": "Vigencia inicial",
+            "ejemplo": "01-01-2017"
+          },
+          {
+            "campo": "Prioridad",
+            "significado": "Orden de evaluación",
+            "ejemplo": "0"
+          },
+          {
+            "campo": "Estado",
+            "significado": "Situación Abierto o Cerrado",
+            "ejemplo": "Abierto"
+          },
+          {
+            "campo": "Zona empresa",
+            "significado": "Condición de zona empresarial",
+            "ejemplo": "España Islas Canarias ESIC"
+          },
+          {
+            "campo": "Zona tercero",
+            "significado": "Condición de zona del tercero",
+            "ejemplo": "España continental ESCO"
+          },
+          {
+            "campo": "Clave tercero",
+            "significado": "Condición de clave fiscal de tercero",
+            "ejemplo": "REMI"
+          },
+          {
+            "campo": "Clave artículo",
+            "significado": "Condición de clave fiscal de artículo",
+            "ejemplo": "BOE (Bienes a tipo exento)"
+          },
+          {
+            "campo": "Impuesto de compras",
+            "significado": "Operación y tipo para compras",
+            "ejemplo": "Operación CAIEM y tipo AIEME"
+          },
+          {
+            "campo": "Impuesto de ventas",
+            "significado": "Operación y tipo para ventas",
+            "ejemplo": "Operación VAIEM y tipo AIEME"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre la regla 1137 y localiza sus bloques.",
+            "detalle": "En la captura se ve Id 1137, Clase impuesto, Fecha inicio 01-01-2017, Prioridad 0 y Estado Abierto. En condiciones: Zona empresa España Islas Canarias ESIC, Zona tercero España continental ESCO, Clave tercero REMI, Clave artículo BOE «Bienes a tipo exento», Tipo CIF, Clave documento y Prorrata. En impuestos: Compras Operación CAIEM y Tipo AIEME «AIEM 0% Exento»; Ventas Operación VAIEM y Tipo AIEME.",
+            "imagen": "tax-tablas-006.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "Una regla solo aplica cuando todas sus condiciones coinciden con los datos del documento."
+          },
+          {
+            "tipo": "problema",
+            "texto": "Una regla parece correcta pero no se usa porque falla una condición aunque todas las demás coincidan."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Revisa zona empresa, zona tercero, clave tercero, clave artículo, tipo CIF, clave documento y prorrata; la que no coincida rompe la aplicación."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿Cuál es la función de ctax_rule?",
+        "opciones": [
+          "Es una tabla de periodos",
+          "Concentra las condiciones y el tipo de impuesto a aplicar",
+          "Es un tipo de asiento",
+          "Guarda direcciones de terceros"
+        ],
+        "correcta": 1,
+        "explicacion": "ctax_rule es la regla de asignación: decide qué impuesto se aplica según las condiciones."
+      },
+      {
+        "pregunta": "En la consulta de reglas, ¿qué botón lanza la búsqueda?",
+        "opciones": [
+          "Ejecutar consulta",
+          "Guardar",
+          "Validar",
+          "Nuevo registro"
+        ],
+        "correcta": 0,
+        "explicacion": "El botón «Ejecutar consulta» es el que lanza la búsqueda en la pantalla de reglas."
+      },
+      {
+        "pregunta": "¿Qué combinación muestran las condiciones de la regla 1137?",
+        "opciones": [
+          "ESAR + ESAR + BOG",
+          "ESAR + ESCO + BOG",
+          "ESIC + ESCO + REMI + BOE",
+          "ESIC + ESAR + SOR"
+        ],
+        "correcta": 2,
+        "explicacion": "La regla 1137 combina zona empresa ESIC, zona tercero ESCO, clave tercero REMI y clave artículo BOE."
+      },
+      {
+        "pregunta": "¿Qué tipo de impuesto devuelve la regla 1137 en compras?",
+        "opciones": [
+          "AIEME",
+          "ES, IVA 21 % General",
+          "ES IVA 10 % reducido",
+          "Ninguno"
+        ],
+        "correcta": 0,
+        "explicacion": "En compras devuelve el tipo AIEME «AIEM 0% Exento» con operación CAIEM."
+      },
+      {
+        "pregunta": "¿En qué bloque de la regla está la prioridad?",
+        "opciones": [
+          "Condiciones de aplicación",
+          "Impuesto de compras",
+          "Impuesto de ventas",
+          "Identificación"
+        ],
+        "correcta": 3,
+        "explicacion": "La prioridad está en el bloque Identificación de la regla."
+      }
+    ],
+    "checklist": [
+      "Abres el menú Finanzas › Impuestos › Maestros › Reglas de asignación.",
+      "Usas el filtro Id y pulsas Ejecutar consulta.",
+      "Localizas la regla 1137.",
+      "Distingues los bloques Identificación, Condiciones de aplicación e Impuestos.",
+      "Compruebas fecha inicio 01-01-2017, prioridad 0 y estado Abierto.",
+      "Compruebas zona empresa ESIC, zona tercero ESCO, clave tercero REMI y clave artículo BOE.",
+      "Verificas impuesto de compras CAIEM-AIEME y de ventas VAIEM-AIEME."
+    ],
+    "problemas": [
+      {
+        "problema": "No sabes si una regla es la correcta.",
+        "solucion": "Compara todas las condiciones de la regla con los datos de empresa, tercero y artículo del documento."
+      },
+      {
+        "problema": "Hay muchas reglas en la consulta.",
+        "solucion": "Filtra por Id, Zona empresa, Zona tercero, Clave artículo u Operación y pulsa Ejecutar consulta."
+      },
+      {
+        "problema": "No aparece la regla 1137.",
+        "solucion": "Usa el filtro Id con 1137 y Ejecutar consulta."
+      }
+    ]
+  },
+  {
+    "id": "impuestos-tax-tablas-3",
+    "numero": 3,
+    "titulo": "Caracterizar fiscalmente empresa, tercero y artículo",
+    "objetivo": "Comprobarás que empresa, tercero y artículo guardan los datos fiscales que ctax_rule necesita para decidir el impuesto.",
+    "concepto": "La regla de impuestos no funciona sola: la empresa debe tener su zona impositiva, el tercero debe tener su clave y su zona fiscal, y el artículo debe tener su clave fiscal.\n\nEn la empresa ALA Triatlón la zona impositiva es España Arabia (ESAR). El tercero Telefónica España es NIF-Empresa, país España, estado Activo, con clave fiscal de tercero RGEN y tipo Proveedores; su zona impositiva se asigna desde Direcciones.\n\nEl artículo Material deportivo tiene clave fiscal BOG y tipo fiscal Bien. Después, una factura con ALA, Telefónica y Material deportivo podrá combinar ESAR + ESAR + BOG para localizar la regla 2586.",
+    "duracionMin": 14,
+    "secciones": [
+      {
+        "id": "impuestos-tax-tablas-3-empresa",
+        "titulo": "Empresa: identificación fiscal y zona impositiva",
+        "paraQueSirve": "La empresa guarda el tercero asociado, el RUC/CID y la zona fiscal que es una de las condiciones de la regla.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Parametrización",
+          "Empresas"
+        ],
+        "explicacion": [
+          "La empresa ALA Triatlón, en la pestaña Identificación fiscal, tiene vinculado su tercero, el RUC/CID y la zona impositiva.",
+          "En el ejemplo la zona impositiva es España Arabia (ESAR).",
+          "Es uno de los dos lados de la zona que se cruza en la regla: empresa y tercero."
+        ],
+        "campos": [
+          {
+            "campo": "Tercero",
+            "significado": "Tercero asociado a la empresa",
+            "ejemplo": "ALA Triatlón"
+          },
+          {
+            "campo": "RUC/CID",
+            "significado": "Identificador fiscal de la sociedad",
+            "ejemplo": "Dato de empresa omitido por privacidad"
+          },
+          {
+            "campo": "Zona impositiva",
+            "significado": "Zona fiscal de la empresa",
+            "ejemplo": "España Arabia (ESAR)"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre la pestaña Identificación fiscal de la empresa ALA Triatlón y localiza RUC/CID y zona impositiva.",
+            "detalle": "La zona impositiva en el ejemplo es España Arabia (ESAR)."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "No se usa captura de empresa para no exponer datos personales."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-3-tercero",
+        "titulo": "Tercero: ficha y clave fiscal de tercero",
+        "paraQueSirve": "Comprobar los campos generales de un tercero y saber que la zona impositiva se asigna en Direcciones.",
+        "ruta": [
+          "Finanzas",
+          "Maestros",
+          "Terceros",
+          "Registro terceros"
+        ],
+        "explicacion": [
+          "El tercero 00003 TELEFONICA DE ESPAÑA S.A. muestra pestañas de formulario principal, relaciones, direcciones, datos bancarios y condiciones comerciales.",
+          "En la ficha se ven Tipo ID fiscal NIF-Empresa, País emisor España, Identificación fiscal, Estado Activo, Clave fiscal de tercero RGEN y Tipo Proveedores.",
+          "La zona impositiva del tercero se asigna dentro de Direcciones; en el ejemplo inicial es España Arabia (ESAR)."
+        ],
+        "campos": [
+          {
+            "campo": "Tipo ID fiscal",
+            "significado": "Documento de identificación fiscal",
+            "ejemplo": "NIF-Empresa"
+          },
+          {
+            "campo": "País emisor",
+            "significado": "País que emite la identificación",
+            "ejemplo": "España"
+          },
+          {
+            "campo": "Estado",
+            "significado": "Situación del tercero",
+            "ejemplo": "Activo"
+          },
+          {
+            "campo": "Clave fiscal de tercero",
+            "significado": "Clave que usa la regla ctax_rule",
+            "ejemplo": "Régimen general (RGEN)"
+          },
+          {
+            "campo": "Tipo tercero",
+            "significado": "Clasificación del tercero",
+            "ejemplo": "Proveedores"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre el maestro de terceros y localiza la ficha del tercero 00003 TELEFONICA DE ESPAÑA S.A.",
+            "detalle": "La captura muestra pestañas Formulario principal, Relaciones, Direcciones (1), Datos bancarios y Condiciones comerciales. Están visibles Tipo ID fiscal NIF-Empresa, País emisor España, Identificación fiscal, Estado Activo, Clave fiscal de tercero RGEN y Tipo Proveedores.",
+            "imagen": "tax-tablas-007.jpg"
+          },
+          {
+            "texto": "Abre Direcciones y localiza la zona impositiva del tercero."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "La zona impositiva se configura por dirección, no como un único campo de la cabecera del tercero."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-3-articulo",
+        "titulo": "Artículo: clave fiscal y tipo fiscal",
+        "paraQueSirve": "Comprobar que el artículo lleva una clave fiscal que la regla utiliza para decidir el impuesto.",
+        "ruta": [
+          "Finanzas",
+          "Facturación",
+          "Maestros",
+          "Artículos"
+        ],
+        "explicacion": [
+          "El artículo 002 Material deportivo muestra el campo Clave fiscal art. en su ficha.",
+          "El desplegable incluye BOG «Bienes a tipo general», BOGISP «Bienes a tipo general. Local ISP» y BOGNQ «Bienes a tipo general, sin recargo».",
+          "También tiene Tipo fiscal Bien."
+        ],
+        "campos": [
+          {
+            "campo": "Clave fiscal art.",
+            "significado": "Clave que usa la regla para decidir el impuesto",
+            "ejemplo": "BOG (Bienes a tipo general)"
+          },
+          {
+            "campo": "Tipo fiscal",
+            "significado": "Naturaleza fiscal del artículo",
+            "ejemplo": "Bien"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre el maestro de artículos y localiza el artículo 002 Material deportivo.",
+            "detalle": "La captura muestra el campo «Clave fiscal art.» con el desplegable abierto y la clave BOG «Bienes a tipo general» visible. También se ve Tipo fiscal Bien.",
+            "imagen": "tax-tablas-008.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "El desplegable contiene variantes de la clave general: BOGISP para local ISP y BOGNQ sin recargo."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿Dónde guarda la empresa su zona impositiva?",
+        "opciones": [
+          "En el maestro de artículos",
+          "En Identificación fiscal",
+          "En la lista de asientos",
+          "En la pestaña de impuestos del documento"
+        ],
+        "correcta": 1,
+        "explicacion": "La zona impositiva de la empresa se guarda en la pestaña Identificación fiscal."
+      },
+      {
+        "pregunta": "¿Dónde se asigna la zona impositiva del tercero?",
+        "opciones": [
+          "En la cabecera de la ficha",
+          "En Datos contables",
+          "En Direcciones",
+          "En Clave fiscal de tercero"
+        ],
+        "correcta": 2,
+        "explicacion": "La zona impositiva del tercero se asigna dentro de Direcciones."
+      },
+      {
+        "pregunta": "¿Qué clave fiscal de tercero tiene Telefónica España?",
+        "opciones": [
+          "RGEN",
+          "BOG",
+          "SOR",
+          "BOE"
+        ],
+        "correcta": 0,
+        "explicacion": "Telefónica España tiene clave fiscal de tercero RGEN, Régimen general."
+      },
+      {
+        "pregunta": "¿Qué clave fiscal tiene el artículo Material deportivo?",
+        "opciones": [
+          "BOGISP",
+          "BOG",
+          "RGEN",
+          "SOR"
+        ],
+        "correcta": 1,
+        "explicacion": "Material deportivo usa BOG «Bienes a tipo general»."
+      },
+      {
+        "pregunta": "¿Cuál es la zona impositiva inicial de ALA Triatlón?",
+        "opciones": [
+          "España continental ESCO",
+          "España Islas Canarias ESIC",
+          "España Arabia ESAR",
+          "Perú Amazonía"
+        ],
+        "correcta": 2,
+        "explicacion": "En la identificación fiscal de ALA Triatlón la zona es España Arabia ESAR."
+      }
+    ],
+    "checklist": [
+      "Abres Empresas y localizas la pestaña Identificación fiscal.",
+      "Compruebas ALA Triatlón con zona España Arabia (ESAR).",
+      "Abres el tercero 00003 y compruebas Tipo ID fiscal NIF-Empresa, País España y Estado Activo.",
+      "Compruebas Clave fiscal de tercero RGEN y Tipo Proveedores.",
+      "En Direcciones del tercero localizas la zona impositiva ESAR.",
+      "Abres el artículo 002 Material deportivo y compruebas Clave fiscal art. BOG.",
+      "Compruebas Tipo fiscal Bien."
+    ],
+    "problemas": [
+      {
+        "problema": "No ves la zona impositiva del tercero en la cabecera.",
+        "solucion": "La zona impositiva está en la subtabla de Direcciones del tercero, no en la cabecera de la ficha."
+      },
+      {
+        "problema": "No sabes qué clave fiscal de artículo usar.",
+        "solucion": "Revisa el maestro de artículos; en el ejemplo, Material deportivo usa BOG."
+      },
+      {
+        "problema": "La combinación no cuadra con la regla esperada.",
+        "solucion": "Repasa la empresa, el tercero y el artículo: zona y claves deben coincidir con las condiciones de la regla."
+      }
+    ]
+  },
+  {
+    "id": "impuestos-tax-tablas-4",
+    "numero": 4,
+    "titulo": "De la factura de compra a la regla 2586",
+    "objetivo": "Leerás una factura de compra, su detalle de impuestos, la regla 2586 que lo calculó y el tipo de impuesto ESG.",
+    "concepto": "La factura de compras FCALA23-000015 es de tipo FC, empresa Triathlon ALA S.L., proveedor Telefónica España y base 800 EUR. Al validarla, el sistema crea el detalle de impuestos.\n\nLa pestaña Impuestos por documento muestra la operación Compra local de bienes corrientes, el tipo ES, IVA 21 % General, base 800,00, cuota deducible 168,00 y total 968,00. La fila guarda el ID de la regla, en este caso 2586.\n\nEsa regla 2586 cruza zona empresa ESAR, zona tercero ESAR y clave artículo BOG. En compras devuelve CLBC + ESG; en ventas devuelve Venta local de bienes corrientes + ESG.",
+    "duracionMin": 16,
+    "secciones": [
+      {
+        "id": "impuestos-tax-tablas-4-factura-impuestos",
+        "titulo": "Factura de compra y pestaña de impuestos",
+        "paraQueSirve": "Localizar la factura, ver sus pestañas y leer el resultado fiscal calculado.",
+        "ruta": [
+          "Finanzas",
+          "Facturación",
+          "Compras",
+          "Registro"
+        ],
+        "explicacion": [
+          "La factura FCALA23-000015 es de tipo FC, empresa Triathlon [ALA] S.L., proveedor TELEFONICA DE ESPAÑA S.A. y 800 EUR.",
+          "En la parte inferior están las pestañas Detalle, Referencia catastral, Impuestos por documento, Archivo documental y Vencimientos.",
+          "La pestaña Impuestos por documento muestra una fila con operación, impuesto, base, porcentaje, cuota, total, regla y envío telemático."
+        ],
+        "campos": [
+          {
+            "campo": "Orden",
+            "significado": "Número de fila de impuesto",
+            "ejemplo": "1"
+          },
+          {
+            "campo": "Operación",
+            "significado": "Operación fiscal para la declaración",
+            "ejemplo": "Compra local de bienes corrientes"
+          },
+          {
+            "campo": "Impuesto",
+            "significado": "Tipo de impuesto calculado",
+            "ejemplo": "ES, IVA 21 % General"
+          },
+          {
+            "campo": "Base imponible",
+            "significado": "Importe neto sobre el que se calcula",
+            "ejemplo": "800,00"
+          },
+          {
+            "campo": "Porcentaje",
+            "significado": "Tipo aplicado",
+            "ejemplo": "21,00"
+          },
+          {
+            "campo": "Cuota deducible",
+            "significado": "IVA soportado deducible",
+            "ejemplo": "168,00"
+          },
+          {
+            "campo": "Total",
+            "significado": "Base más cuota",
+            "ejemplo": "968,00 €"
+          },
+          {
+            "campo": "Regla",
+            "significado": "ID de regla ctax_rule aplicada",
+            "ejemplo": "2586"
+          },
+          {
+            "campo": "Envío telemático",
+            "significado": "Flujo telemático de la fila",
+            "ejemplo": "SII Facturas"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre Finanzas › Facturación › Compras › Registro y localiza la factura FCALA23-000015.",
+            "detalle": "La captura muestra tipo FC, empresa Triathlon [ALA] S.L., proveedor TELEFONICA DE ESPAÑA S.A., 800 EUR y las pestañas inferiores Detalle, Referencia catastral, Impuestos por documento, Archivo documental y Vencimientos.",
+            "imagen": "tax-tablas-009.jpg"
+          },
+          {
+            "texto": "Abre la pestaña «Impuestos por documento».",
+            "detalle": "La captura muestra Orden 1, Operación «Compra local de bienes corrientes», Impuesto «ES, IVA 21 % General», Base imponible 800,00, Porcentaje 21,00, Cuota deducible 168,00, Total 968,00 €, Regla 2586 y Envío telemático SII Facturas.",
+            "imagen": "tax-tablas-010.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "El impuesto de esta pestaña se calcula al validar: no se teclea a mano en la factura."
+          },
+          {
+            "tipo": "nota",
+            "texto": "Si repites la lectura en tu demo y creas una factura de prueba, identifica tus notas con {INI}."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-4-regla-2586",
+        "titulo": "La regla 2586: combinación ESAR + ESAR + BOG",
+        "paraQueSirve": "Entender qué condiciones dieron como resultado el IVA general del 21%.",
+        "ruta": [
+          "Finanzas",
+          "Impuestos",
+          "Maestros",
+          "Reglas de asignación"
+        ],
+        "explicacion": [
+          "La regla 2586 es de la clase Impuesto sobre el valor añadido y tiene fecha inicio 01-01-2017.",
+          "Sus condiciones son zona empresa España Arabia (ESAR), zona tercero España Arabia (ESAR) y clave artículo Bienes a tipo general (BOG).",
+          "En compras devuelve la operación Compra local de bienes corrientes (CLBC) y el tipo ES, IVA 21 % General (ESG).",
+          "En ventas devuelve la operación Venta local de bienes corrientes y el mismo tipo ESG."
+        ],
+        "campos": [
+          {
+            "campo": "Clase impuesto",
+            "significado": "Clase del impuesto",
+            "ejemplo": "Impuesto sobre el valor añadido"
+          },
+          {
+            "campo": "Fecha inicio",
+            "significado": "Vigencia de la regla",
+            "ejemplo": "01-01-2017"
+          },
+          {
+            "campo": "Zona empresa",
+            "significado": "Condición de zona de empresa",
+            "ejemplo": "España Arabia (ESAR)"
+          },
+          {
+            "campo": "Zona tercero",
+            "significado": "Condición de zona del tercero",
+            "ejemplo": "España Arabia (ESAR)"
+          },
+          {
+            "campo": "Clave artículo",
+            "significado": "Condición de clave fiscal de artículo",
+            "ejemplo": "Bienes a tipo general (BOG)"
+          },
+          {
+            "campo": "Impuesto de compras",
+            "significado": "Operación y tipo en compras",
+            "ejemplo": "Compra local de bienes corrientes (CLBC) / ESG"
+          },
+          {
+            "campo": "Impuesto de ventas",
+            "significado": "Operación y tipo en ventas",
+            "ejemplo": "Venta local de bienes corrientes / ESG"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre la regla 2586 desde la pestaña de impuestos o desde Reglas de asignación.",
+            "detalle": "La captura muestra Impuesto sobre el valor añadido, Fecha inicio 01-01-2017, Zona empresa España Arabia (ESAR), Zona tercero España Arabia (ESAR), Clave artículo «Bienes a tipo general» (BOG), Impuesto de compras con operación «Compra local de bienes corrientes» (CLBC) y tipo «ES, IVA 21 % General» (ESG); Impuesto de ventas con «Venta local de bienes corrientes» y mismo tipo.",
+            "imagen": "tax-tablas-011.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "La combinación ESAR + ESAR + BOG es exacta; si cambia cualquiera de los tres valores, puede aplicar otra regla."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-4-tipo-impuesto",
+        "titulo": "Tipo de impuesto ESG: porcentaje y cuentas",
+        "paraQueSirve": "Comprobar el porcentaje, la base de cálculo y los mnemotécnicos contables del tipo usado.",
+        "ruta": [
+          "Finanzas",
+          "Impuestos",
+          "Maestros",
+          "Tipos de impuestos"
+        ],
+        "explicacion": [
+          "El tipo ES, IVA 21 % General tiene código ESG y clase Impuesto sobre el valor añadido.",
+          "La base de cálculo es Importe neto y el porcentaje es 21,000.",
+          "Están marcados Aplicar deducción y Aplicar prorrata.",
+          "El bloque de cuentas muestra mnemotécnicos de compras/ventas/abonos, por ejemplo ESG-IVA-SV."
+        ],
+        "campos": [
+          {
+            "campo": "Código",
+            "significado": "Código del tipo de impuesto",
+            "ejemplo": "ESG"
+          },
+          {
+            "campo": "Clase",
+            "significado": "Clase del impuesto",
+            "ejemplo": "Impuesto sobre el valor añadido"
+          },
+          {
+            "campo": "Base cálculo",
+            "significado": "Sobre qué importe se calcula",
+            "ejemplo": "Importe neto"
+          },
+          {
+            "campo": "% Impuesto",
+            "significado": "Porcentaje aplicable",
+            "ejemplo": "21,000"
+          },
+          {
+            "campo": "Aplicar deducción",
+            "significado": "Permite deducción",
+            "ejemplo": "Sí"
+          },
+          {
+            "campo": "Aplicar prorrata",
+            "significado": "Permite prorrata",
+            "ejemplo": "Sí"
+          },
+          {
+            "campo": "Cuentas",
+            "significado": "Mnemotécnicos contables",
+            "ejemplo": "ESG-IVA-SV"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre Finanzas › Impuestos › Maestros › Tipos de impuestos y localiza el código ESG.",
+            "detalle": "La captura muestra el tipo «ES, IVA 21 % General», código ESG, clase «Impuesto sobre el valor añadido», Base cálculo «Importe neto», % Impuesto 21,000, Aplicar deducción, Aplicar prorrata y el bloque Cuentas con mnemotécnicos de compras/ventas/abonos como ESG-IVA-SV.",
+            "imagen": "tax-tablas-012.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "La base de cálculo Importe neto es la que permite obtener 800 × 21% = 168,00."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿Qué factura se usa para comprobar la regla 2586?",
+        "opciones": [
+          "FCALA23-000015",
+          "FCALA23-000016",
+          "FC000001",
+          "ALA-000015"
+        ],
+        "correcta": 0,
+        "explicacion": "Es la factura de compras FCALA23-000015, con base 800 EUR."
+      },
+      {
+        "pregunta": "¿Qué combinación activa la regla 2586?",
+        "opciones": [
+          "ESAR + ESCO + BOG",
+          "ESAR + ESAR + BOG",
+          "ESIC + ESCO + BOE",
+          "ESAR + ESAR + SOR"
+        ],
+        "correcta": 1,
+        "explicacion": "La regla 2586 es zona empresa ESAR, zona tercero ESAR y clave artículo BOG."
+      },
+      {
+        "pregunta": "¿Cuánto IVA resulta de 800,00 de base imponible al 21%?",
+        "opciones": [
+          "252,00",
+          "160,00",
+          "168,00",
+          "800,00"
+        ],
+        "correcta": 2,
+        "explicacion": "800 × 21% = 168,00; el total es 968,00."
+      },
+      {
+        "pregunta": "¿Qué tipo de impuesto devuelve la regla 2586 en compras?",
+        "opciones": [
+          "ES IVA 10 % reducido",
+          "ES, IVA 21 % General",
+          "AIEME",
+          "Retención"
+        ],
+        "correcta": 1,
+        "explicacion": "En compras devuelve el tipo ES, IVA 21 % General, código ESG."
+      },
+      {
+        "pregunta": "¿Cuál es la base de cálculo del impuesto ESG?",
+        "opciones": [
+          "Importe con impuestos previos",
+          "Importe total",
+          "Importe neto",
+          "Base de retención"
+        ],
+        "correcta": 2,
+        "explicacion": "El tipo ESG usa Base cálculo «Importe neto» y aplica 21,000."
+      }
+    ],
+    "checklist": [
+      "Abres Facturas de compras y localizas FCALA23-000015.",
+      "Verificas tipo FC, empresa ALA, proveedor Telefónica y 800 EUR.",
+      "Abres Impuestos por documento y compruebas base 800, cuota 168, total 968.",
+      "Localizas Regla 2586 en la fila.",
+      "Abres la regla 2586 y compruebas ESAR + ESAR + BOG.",
+      "Abres Tipos de impuestos y compruebas código ESG, 21% e Importe neto.",
+      "Si creas una factura de prueba, usas {INI} en notas o referencias."
+    ],
+    "problemas": [
+      {
+        "problema": "No veo la fila de impuestos.",
+        "solucion": "Abre la pestaña «Impuestos por documento» de la factura de compras."
+      },
+      {
+        "problema": "El total no te cuadra.",
+        "solucion": "Revisa base imponible 800,00, porcentaje 21,00 y cuota deducible 168,00."
+      },
+      {
+        "problema": "No entiendes de dónde sale el 21%.",
+        "solucion": "Sale del tipo ESG; comprueba en Tipos de impuestos el porcentaje y la base de cálculo."
+      }
+    ]
+  },
+  {
+    "id": "impuestos-tax-tablas-5",
+    "numero": 5,
+    "titulo": "Probar las reglas: cambiar la zona del tercero, regla que falta y varias claves en una factura",
+    "objetivo": "Crearás una factura de prueba y comprobarás que al cambiar la zona del tercero o la clave del artículo cambia la regla aplicada.",
+    "concepto": "El formador cambia la zona impositiva del tercero Telefónica en Direcciones de España Arabia (ESAR) a España continental (ESCO). Después crea una factura de compra de ALA con Telefónica y un artículo Material deportivo.\n\nAl validar, la regla aplicada es 1477, porque la combinación ESAR + ESCO + BOG ya existe. La fila de impuestos muestra Compra local de bienes corrientes, ES IVA 21 % General, base 1.200, cuota 252 y total 1.452.\n\nAl añadir una segunda línea con clave fiscal de servicio SOR, el sistema usa otra regla: 1479 con ESAR + ESCO + SOR, operación CLSC y tipo ES IVA 10 % reducido. Cada línea guarda su cálculo y la cabecera suma; si hay la misma combinación, se agrupa.",
+    "duracionMin": 20,
+    "secciones": [
+      {
+        "id": "impuestos-tax-tablas-5-preparar-prueba",
+        "titulo": "Cambiar la zona del tercero y crear la factura",
+        "paraQueSirve": "Preparar el escenario para que una factura aplique una regla distinta a la original.",
+        "ruta": null,
+        "explicacion": [
+          "En el tercero Telefónica España se cambia la zona impositiva de Direcciones a España continental (ESCO) y se guarda.",
+          "Para crear una factura en la versión Nexo hay que estar en modo lista; el botón de nuevo registro solo se habilita ahí.",
+          "La factura de prueba es tipo FC, empresa Triathlon ALA S.L., fecha contable 30-04-2023 y proveedor Telefónica.",
+          "Se añade una línea con el artículo Material deportivo, cantidad 1 y precio 1.200."
+        ],
+        "campos": [
+          {
+            "campo": "Tipo documento",
+            "significado": "Tipo de factura",
+            "ejemplo": "Fact. de compras (FC)"
+          },
+          {
+            "campo": "Empresa",
+            "significado": "Sociedad de la factura",
+            "ejemplo": "Triathlon [ALA] S.L."
+          },
+          {
+            "campo": "Fecha contable",
+            "significado": "Fecha del comprobante",
+            "ejemplo": "30-04-2023"
+          },
+          {
+            "campo": "Proveedor",
+            "significado": "Tercero proveedor",
+            "ejemplo": "TELEFONICA DE ESPAÑA S.A."
+          },
+          {
+            "campo": "Artículo",
+            "significado": "Artículo de la línea",
+            "ejemplo": "Material deportivo"
+          },
+          {
+            "campo": "Cantidad",
+            "significado": "Unidades",
+            "ejemplo": "1"
+          },
+          {
+            "campo": "Precio",
+            "significado": "Importe unitario",
+            "ejemplo": "1.200"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre el tercero Telefónica España, entra en Direcciones y cambia su zona impositiva a España continental (ESCO). Guarda."
+          },
+          {
+            "texto": "Entra en Finanzas › Facturación › Compras › Registro, sitúate en modo lista y pulsa Nuevo registro.",
+            "detalle": "La captura de la factura nueva muestra tipo documento Fact. de compras (FC), empresa Triathlon [ALA] S.L., fecha contable 30-04-2023, proveedor TELEFONICA DE ESPAÑA S.A. y los botones Activar, Validar, Copiar y Enviar e-mail.",
+            "imagen": "tax-tablas-013.jpg"
+          },
+          {
+            "texto": "Añade la línea del artículo Material deportivo con cantidad 1 y precio 1.200.",
+            "detalle": "La captura muestra una línea con artículo «Material deportivo», cantidad 1 y precio 1.200.",
+            "imagen": "tax-tablas-014.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "problema",
+            "texto": "No aparece el botón de nuevo registro."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Pasa a modo lista; el botón de nuevo registro se habilita en modo lista."
+          },
+          {
+            "tipo": "nota",
+            "texto": "Usa {INI} en las notas o referencias libres de tu factura de prueba para identificar tu trabajo."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-5-validar-bog",
+        "titulo": "Validar con BOG y leer la regla 1477",
+        "paraQueSirve": "Comprobar el resultado de la factura y entender el cambio de regla con la nueva zona del tercero.",
+        "ruta": [
+          "Finanzas",
+          "Facturación",
+          "Compras",
+          "Registro"
+        ],
+        "explicacion": [
+          "Al validar la factura con Material deportivo, la pestaña Impuestos por documento muestra operación Compra local de bienes corrientes y tipo ES IVA 21 % General.",
+          "La base es 1.200,00, la cuota 252,00 y el total 1.452,00 €.",
+          "La regla aplicada es 1477 porque el tercero ya no tiene zona ESAR sino ESCO.",
+          "Si no existe regla para la combinación detectada, el sistema da error y pide dar de alta un registro en Reglas de asignación."
+        ],
+        "campos": [
+          {
+            "campo": "Operación",
+            "significado": "Operación fiscal de la fila",
+            "ejemplo": "Compra local de bienes corrientes"
+          },
+          {
+            "campo": "Impuesto",
+            "significado": "Tipo de impuesto",
+            "ejemplo": "ES IVA 21 % General"
+          },
+          {
+            "campo": "Base",
+            "significado": "Importe neto",
+            "ejemplo": "1.200,00"
+          },
+          {
+            "campo": "Cuota",
+            "significado": "Importe de IVA",
+            "ejemplo": "252,00"
+          },
+          {
+            "campo": "Total",
+            "significado": "Base más cuota",
+            "ejemplo": "1.452,00 €"
+          },
+          {
+            "campo": "Regla",
+            "significado": "ID de regla aplicada",
+            "ejemplo": "1477"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Valida la factura y abre la pestaña Impuestos por documento.",
+            "detalle": "La captura muestra Compra local de bienes corrientes, ES IVA 21 % General, base 1.200,00, cuota 252,00, total 1.452,00 € y regla 1477.",
+            "imagen": "tax-tablas-015.jpg"
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "problema",
+            "texto": "Al validar, el sistema dice que no existe regla para la combinación."
+          },
+          {
+            "tipo": "solucion",
+            "texto": "Abre Reglas de asignación y crea el registro para la combinación detectada."
+          },
+          {
+            "tipo": "nota",
+            "texto": "La regla 1477 ya existía; por eso la validación no dio error."
+          }
+        ]
+      },
+      {
+        "id": "impuestos-tax-tablas-5-segunda-linea",
+        "titulo": "Segunda línea con clave SOR y regla 1479",
+        "paraQueSirve": "Probar que un mismo documento puede usar varias reglas según la clave fiscal de cada artículo.",
+        "ruta": null,
+        "explicacion": [
+          "Se añade una segunda línea con el artículo 4 «Trabajos realizados por otras empresas», de 800 y clave SOR.",
+          "La regla 1479 combina zona empresa España Arabia (ESAR), zona tercero España continental (ESCO) y clave artículo Servicios a tipo reducido (SOR).",
+          "En compras devuelve la operación Compra local de servicios corrientes (CLSC) y el tipo ES IVA 10 % reducido (ESR).",
+          "Los impuestos se guardan por línea; la fila del documento muestra la regla de cada línea y la cabecera suma. Mismas claves se suman en una sola fila."
+        ],
+        "campos": [
+          {
+            "campo": "Zona empresa",
+            "significado": "Zona de la empresa",
+            "ejemplo": "España Arabia (ESAR)"
+          },
+          {
+            "campo": "Zona tercero",
+            "significado": "Zona del tercero",
+            "ejemplo": "España continental (ESCO)"
+          },
+          {
+            "campo": "Clave artículo",
+            "significado": "Clave fiscal del artículo",
+            "ejemplo": "Servicios a tipo reducido (SOR)"
+          },
+          {
+            "campo": "Operación",
+            "significado": "Operación fiscal de compra",
+            "ejemplo": "Compra local de servicios corrientes (CLSC)"
+          },
+          {
+            "campo": "Tipo impuesto",
+            "significado": "Tipo resultante",
+            "ejemplo": "ES IVA 10 % reducido (ESR)"
+          }
+        ],
+        "pasos": [
+          {
+            "texto": "Abre la regla 1479 en Reglas de asignación y comprueba sus condiciones.",
+            "detalle": "La captura muestra Zona empresa España Arabia (ESAR), Zona tercero España continental (ESCO), Clave artículo «Servicios a tipo reducido» (SOR), Compra local de servicios corrientes (CLSC) y tipo «ES, IVA 10 % reducido» (ESR).",
+            "imagen": "tax-tablas-016.jpg"
+          },
+          {
+            "texto": "En la factura añade la segunda línea con artículo 4 «Trabajos realizados por otras empresas», 800.",
+            "detalle": "La captura muestra la segunda línea en Datos contables/Impuestos de la línea con la operación Compra local de servicios corrientes, tipo ES IVA 10 % reducido y regla 1479.",
+            "imagen": "tax-tablas-017.jpg"
+          },
+          {
+            "texto": "Valida y comprueba que en cabecera aparecen sumadas las filas de las dos reglas."
+          }
+        ],
+        "avisos": [
+          {
+            "tipo": "nota",
+            "texto": "No se trata de duplicados: se genera una fila por cada combinación distinta de regla."
+          },
+          {
+            "tipo": "nota",
+            "texto": "Si dos líneas comparten la misma combinación, se agrupan en una única fila de impuestos."
+          }
+        ]
+      }
+    ],
+    "test": [
+      {
+        "pregunta": "¿Por qué la nueva factura aplica la regla 1477 y no la 2586?",
+        "opciones": [
+          "Porque cambió el artículo",
+          "Porque la empresa cambió de zona",
+          "Porque la zona del tercero cambió a ESCO",
+          "Porque el tipo de factura cambió a FC"
+        ],
+        "correcta": 2,
+        "explicacion": "El tercero pasó de zona ESAR a ESCO; por eso la regla ya no es 2586 sino 1477."
+      },
+      {
+        "pregunta": "¿Qué combinación activa la regla 1479?",
+        "opciones": [
+          "ESAR + ESAR + BOG",
+          "ESAR + ESCO + SOR",
+          "ESIC + ESCO + BOE",
+          "ESAR + ESCO + BOG"
+        ],
+        "correcta": 1,
+        "explicacion": "La regla 1479 es ESAR + ESCO + SOR, servicios a tipo reducido."
+      },
+      {
+        "pregunta": "¿Qué ocurre si no existe regla para la combinación al validar?",
+        "opciones": [
+          "Aplica una regla por defecto",
+          "Guarda sin impuestos",
+          "Cambia automáticamente la zona",
+          "Da error y pide crear el registro"
+        ],
+        "correcta": 3,
+        "explicacion": "El sistema arroja error y pide crear el registro de regla con las combinaciones detectadas."
+      },
+      {
+        "pregunta": "¿Cuánto IVA calcula la base de 1.200 al 21%?",
+        "opciones": [
+          "252,00",
+          "168,00",
+          "210,00",
+          "1.200,00"
+        ],
+        "correcta": 0,
+        "explicacion": "1.200 × 21% = 252,00; total 1.452,00."
+      },
+      {
+        "pregunta": "¿Cómo se muestran dos artículos con claves fiscales distintas en el mismo documento?",
+        "opciones": [
+          "Como una única fila sumada",
+          "En filas separadas por regla",
+          "Como un error",
+          "No se pueden incluir"
+        ],
+        "correcta": 1,
+        "explicacion": "Cada combinación distinta de regla genera su propia fila; la cabecera suma."
+      }
+    ],
+    "checklist": [
+      "Cambias la zona del tercero Telefónica a ESCO y guardas.",
+      "En modo lista creas una factura FC de ALA con proveedor Telefónica y usas {INI} en notas.",
+      "Añades línea Material deportivo cantidad 1 y precio 1.200.",
+      "Validas y compruebas regla 1477, base 1.200, cuota 252 y total 1.452.",
+      "Confirmas que ya no se usa 2586 por el cambio de zona.",
+      "Añades segunda línea con artículo 4 Trabajos realizados por otras empresas, 800 y clave SOR.",
+      "Compruebas regla 1479 y que cabecera suma las líneas."
+    ],
+    "problemas": [
+      {
+        "problema": "No aparece Nuevo registro.",
+        "solucion": "Sitúate en modo lista; en la versión Nexo es ahí donde se habilita el botón."
+      },
+      {
+        "problema": "Al validar da error de regla no encontrada.",
+        "solucion": "Abre Reglas de asignación y crea el registro para la combinación detectada."
+      },
+      {
+        "problema": "No entiendes por qué ya no se usa la regla 2586.",
+        "solucion": "La zona del tercero pasó de ESAR a ESCO; la regla 2586 exige ESAR."
+      },
+      {
+        "problema": "Parece un duplicado ver dos reglas en la misma factura.",
+        "solucion": "No es duplicado: son dos reglas para claves fiscales distintas, BOG y SOR."
+      }
+    ]
+  }
+]

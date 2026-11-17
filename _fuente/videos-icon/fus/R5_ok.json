@@ -1,0 +1,146 @@
+{
+ "id": "cobros-pagos-v-5",
+ "numero": 5,
+ "titulo": "Cuando un efecto no se puede remesar",
+ "objetivo": "Tendrás identificados los bloqueos que impiden remesar un efecto: domiciliación bancaria no informada y mezcla de tipos de efecto en una misma remesa.",
+ "concepto": "Un efecto no se puede remesar cuando la parametrización previa no acompaña.\n\nSi el tercero no tiene domiciliaciones bancarias parametrizadas, aparece el error «DOMICILIACIÓN BANCARIA NO INFORMADA». En la demo se evita usando forma de pago cheque.\n\nAdemás, una remesa no admite mezclar efectos de distinto tipo. Todos los efectos deben ser del mismo tipo: todo TF o todo cheque.",
+ "duracionMin": 30,
+ "secciones": [
+  {
+   "id": "cobros-pagos-v-5-domiciliacion",
+   "titulo": "Domiciliación bancaria no informada",
+   "paraQueSirve": "Detectar el error de domiciliación bancaria y usar una forma de pago que no lo requiera.",
+   "ruta": null,
+   "explicacion": [
+    "El error «DOMICILIACIÓN BANCARIA NO INFORMADA» aparece cuando las domiciliaciones del tercero no están parametrizadas.",
+    "En la demo se evitó usando forma de pago cheque."
+   ],
+   "campos": [
+    {
+     "campo": "Domiciliación bancaria",
+     "significado": "Datos bancarios del tercero para pagos automatizados.",
+     "ejemplo": "No informada en el tercero 00087"
+    },
+    {
+     "campo": "Forma de pago",
+     "significado": "Forma usada para evitar el error de domiciliación.",
+     "ejemplo": "Cheque"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Si al contabilizar aparece «DOMICILIACIÓN BANCARIA NO INFORMADA», revisa los datos bancarios del tercero.",
+     "imagen": "icon11-015.jpg"
+    },
+    {
+     "texto": "Como alternativa, crea la factura con forma de pago cheque."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "La domiciliación bancaria es una parametrización del tercero, no de la remesa."
+    }
+   ]
+  },
+  {
+   "id": "cobros-pagos-v-5-tipos-efecto",
+   "titulo": "Tipos de efecto incompatibles",
+   "paraQueSirve": "Evitar mezclar tipos de efecto en una misma remesa.",
+   "ruta": null,
+   "explicacion": [
+    "En una misma remesa no pueden mezclarse efectos de distinto tipo.",
+    "Todos los efectos deben compartir tipo: todo TF o todo cheque."
+   ],
+   "campos": [
+    {
+     "campo": "Tipo de efecto en remesa",
+     "significado": "Debe ser el mismo en todos los efectos de la remesa.",
+     "ejemplo": "Todo TF o todo cheque"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Antes de agregar efectos a una remesa, comprueba que todos tengan el mismo tipo de efecto."
+    },
+    {
+     "texto": "No mezcles cheque con TF en la misma remesa."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Mezclar efectos de distinto tipo en la misma remesa impide evolucionar correctamente."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Usa el mismo tipo de efecto en toda la remesa. Se pueden incluir varias facturas o terceros si comparten tipo."
+    }
+   ]
+  }
+ ],
+ "test": [
+  {
+   "pregunta": "¿Qué indica el error «DOMICILIACIÓN BANCARIA NO INFORMADA»?",
+   "opciones": [
+    "El banco propio no existe",
+    "La fecha de factura es inválida",
+    "La remesa no tiene efectos",
+    "El tercero no tiene domiciliaciones parametrizadas"
+   ],
+   "correcta": 3,
+   "explicacion": "El error aparece por datos bancarios del tercero no parametrizados."
+  },
+  {
+   "pregunta": "¿Qué forma de pago se usó en la demo para evitar el error de domiciliación?",
+   "opciones": [
+    "Cheque",
+    "Transferencia",
+    "Pagaré",
+    "Efectivo"
+   ],
+   "correcta": 0,
+   "explicacion": "La demo evita el error usando forma de pago cheque."
+  },
+  {
+   "pregunta": "¿Qué ocurre si mezclas cheque y TF en la misma remesa?",
+   "opciones": [
+    "Se convierten en TF",
+    "La remesa no evoluciona bien",
+    "Se generan dos remesas",
+    "Se compensan"
+   ],
+   "correcta": 1,
+   "explicacion": "Los efectos de la remesa deben compartir el mismo tipo de efecto."
+  },
+  {
+   "pregunta": "¿De dónde es la domiciliación bancaria?",
+   "opciones": [
+    "De la remesa",
+    "Del tipo de efecto",
+    "Del tercero",
+    "De la factura"
+   ],
+   "correcta": 2,
+   "explicacion": "La domiciliación bancaria es una parametrización del tercero, no de la remesa."
+  }
+ ],
+ "checklist": [
+  "Identificas el error de domiciliación bancaria no informada.",
+  "Revisas los datos bancarios del tercero antes de contabilizar.",
+  "Usas forma de pago cheque si no hay domiciliación parametrizada.",
+  "Compruebas que no se mezclen cheque y TF en la misma remesa.",
+  "Verificas que todos los efectos de la remesa tengan el mismo tipo.",
+  "Confirmas que la domiciliación bancaria es una parametrización del tercero."
+ ],
+ "problemas": [
+  {
+   "problema": "Aparece el error «DOMICILIACIÓN BANCARIA NO INFORMADA».",
+   "solucion": "Parametriza las domiciliaciones del tercero o usa forma de pago cheque."
+  },
+  {
+   "problema": "La remesa no evoluciona tras agregar varios efectos.",
+   "solucion": "Comprueba que todos los efectos tengan el mismo tipo de efecto: todo TF o todo cheque."
+  }
+ ]
+}
