@@ -135,7 +135,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
           <h2>Cómo funciona</h2>
           <ol className="ex-reglas">
             <li>
-              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de más de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales y los módulos de finanzas. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
+              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de más de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales, tesorería y los módulos de finanzas. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
             </li>
             <li>
               <b>Práctica.</b> {NUM_TAREAS} encargos encadenados que haces de verdad en la demo de Axional (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
@@ -235,7 +235,7 @@ const TIPOS_PORTADA: { tipo: TipoPregunta | 'video'; n: number; titulo: string; 
   { tipo: 'orden', n: REPARTO.orden, titulo: 'Ordenar', texto: 'Pon en orden los pasos de un circuito.', icono: 'grip' },
   { tipo: 'relacion', n: REPARTO.relacion, titulo: 'Relacionar', texto: 'Une cuentas, documentos y estados.', icono: 'flecha' },
   { tipo: 'dato', n: REPARTO.dato, titulo: 'Completar', texto: 'Calcula un importe o escribe la cuenta.', icono: 'asiento' },
-  { tipo: 'test', n: REPARTO.test + REPARTO.criterio, titulo: 'Test y criterio', texto: 'De los manuales y «¿qué pasa si…?».', icono: 'cerebro' },
+  { tipo: 'test', n: REPARTO.test + REPARTO.criterio + REPARTO.tesoreria, titulo: 'Test y criterio', texto: 'De los manuales, tesorería incluida, y «¿qué pasa si…?».', icono: 'cerebro' },
 ];
 
 function TiposPregunta() {

@@ -20,7 +20,7 @@
    "explicacion": [
     "Cada factura que se contabiliza deja uno o varios vencimientos: lo que nos tienen que pagar (cartera de cobros) o lo que tenemos que pagar (cartera de pagos). Cada vencimiento es un «efecto» con su tipo (recibo, transferencia, cheque…), su fecha y su estado (pendiente, propuesto, ordenado, cobrado…).",
     "Tesorería trabaja sobre la cartera: agrupa efectos en remesas para enviarlos al banco, los cobra o paga uno a uno y, en cada cambio de estado, el ERP genera el asiento contable correspondiente.",
-    "Los ejercicios siguen este orden: Ejercicio 1 (plazo de pago, tipo de efecto, condiciones del tercero y factura de compra que genera los efectos), Ejercicio 3 (bancos propios: una cuenta bancaria y una caja de efectivo) y Ejercicio 5 (circuito de cobros: artículo financiero, factura de venta, cobro individual de un efecto y cobro de varios efectos con una remesa)."
+    "Los ejercicios siguen este orden: Ejercicio 1 (plazo de pago, tipo de efecto, condiciones del tercero y factura de compra que genera los efectos), Ejercicio 3 (bancos propios: una cuenta bancaria y una caja de efectivo), Ejercicio 5 (circuito de cobros: artículo financiero, factura de venta, cobro individual de un efecto y cobro de varios efectos con una remesa) y Ejercicio 7 (de la cartera a la tesorería: cómo un pago o una remesa crea su movimiento de tesorería y qué es el campo Conciliado)."
    ],
    "campos": [],
    "pasos": [],
@@ -1768,6 +1768,270 @@
     {
      "problema": "Al intentar cambiar el tipo de una remesa ya creada sale «No se permite cambiar el tipo de la remesa».",
      "solucion": "Crea una remesa nueva con el tipo correcto."
+    }
+   ]
+  },
+  {
+   "id": "carteras-7",
+   "numero": 7,
+   "titulo": "De la cartera a la tesorería",
+   "objetivo": "Sabrás cómo un efecto de pago o una remesa con tesorería se convierten en movimiento de tesorería y dónde se decide su operación financiera.",
+   "concepto": "En Axional, un efecto de pago pendiente se convierte en movimiento de tesorería cuando lo evolucionas con la acción «Pago a tesorería» (o con la acción equivalente de una remesa con tesorería). Al aceptar, el efecto pasa a Ordenado y se generan una gestión y un movimiento de tesorería con la cuenta financiera, el importe del efecto y la operación financiera que indique la configuración de la acción. En el ejemplo de la demo, la acción de pago usa la operación PMICDT «Pagos emitidos transferencias de crédito» y deja la remesa CONTABILIZADO.\n\nEl movimiento de tesorería incluye los flujos que luego se contabilizan: cada flujo tiene su cuenta contable y el efecto relacionado. Qué es el movimiento y cómo se concilia con el banco lo ves en Tesorería, ejercicios 3 y 5. Recuerda que las remesas «sin Tesorería» (s/Tes) no crean movimiento de tesorería, solo las «c/Tes».",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "carteras-7-efecto",
+     "titulo": "Del efecto al movimiento de tesorería",
+     "paraQueSirve": "Esta sección te muestra cómo la acción PTES convierte un efecto de pago en movimiento de tesorería, y dónde se decide su operación financiera.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Efectos",
+      "Cartera de efectos"
+     ],
+     "explicacion": [
+      "Cuando evolucionas un efecto de pago pendiente con la acción PTES «Pago a tesorería» (o con la acción de ordenar de una remesa con tesorería), el efecto pasa a Ordenado y se genera un movimiento de tesorería. Ese movimiento se alimenta con la cuenta financiera elegida, el importe del efecto y la operación financiera que determina la configuración de la acción.",
+      "La operación la decide la acción: en sus enlaces contables (bloque Tesorería) hay una fila por clase y tipo de efecto con la operación y la acción posterior."
+     ],
+     "campos": [
+      {
+       "campo": "Acción",
+       "significado": "Acción de evolución del efecto; según su configuración determina la operación financiera y si genera tesorería.",
+       "ejemplo": "PTES «Pago a tesorería» o «Pago transferencias, ordenar (c/Tes)»."
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta bancaria que se usará en el movimiento de tesorería generado.",
+       "ejemplo": "BBVACCTRI en la demo de Deister."
+      },
+      {
+       "campo": "Estado del efecto",
+       "significado": "Situación del efecto; al ejecutar la acción pasa de Pendiente a Ordenado.",
+       "ejemplo": "Pendiente → Ordenado."
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En un efecto de pago pendiente pulsa «Evolucionar estado» y elige PTES «Pago a tesorería»",
+       "detalle": "Captura de la demo de Deister.",
+       "imagen": "carteras-tes-01.jpg",
+       "hotspot": {
+        "x": 36,
+        "y": 55.5,
+        "w": 29.5,
+        "h": 4.5,
+        "etiqueta": "PTES"
+       }
+      },
+      {
+       "texto": "Elige la cuenta financiera, revisa las fechas y acepta",
+       "detalle": "El efecto pasa a Ordenado y nace su movimiento de tesorería."
+      },
+      {
+       "texto": "Abre la acción PTES y localiza en sus enlaces contables la fila de Transferencia",
+       "detalle": "Ruta: Finanzas › Cobros y Pagos › Maestros › Efectos › Acciones. En la demo, operación PMICDT y acción posterior «Confirmación pago por bancos (c/Tes)».",
+       "imagen": "carteras-tes-05.jpg",
+       "hotspot": {
+        "x": 4,
+        "y": 77.5,
+        "w": 95,
+        "h": 5.5,
+        "etiqueta": "Transferencia → PMICDT"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Al aceptar el pago a tesorería aparece «Cannot insert a null into column (taptcuen.fecval)»: el movimiento se ha quedado sin fecha valor."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Revisa las fechas del diálogo de «Evolucionar estado» (el movimiento de tesorería necesita fecha valor) y repite la acción."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Qué es el movimiento de tesorería, su campo Conciliado y cómo se concilia con el banco lo ves en Tesorería, ejercicios 3 y 5."
+      }
+     ]
+    },
+    {
+     "id": "carteras-7-remesa",
+     "titulo": "De la remesa con tesorería al movimiento",
+     "paraQueSirve": "Ves cómo una remesa de pagos con tesorería genera, al ordenarla, el movimiento de tesorería del total.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Remesas",
+      "Registro de remesas"
+     ],
+     "explicacion": [
+      "Una remesa de tipo PSCTT «Pago transferencias (con Tesorería)» selecciona efectos con IBAN definido y, al evolucionar su estado, se ordena, se contabiliza y genera el movimiento de tesorería del total.",
+      "El movimiento lleva la operación PMICDT, el flujo «Transferencia por operaciones mercantiles», la cuenta del proveedor (40100.00003 en la demo) y el efecto relacionado. Desde el desplegable del título de la remesa o del efecto llegas a su Tesorería."
+     ],
+     "campos": [
+      {
+       "campo": "Clase",
+       "significado": "Cobrar o Pagar.",
+       "ejemplo": "Pagar"
+      },
+      {
+       "campo": "Tipo remesa",
+       "significado": "Tipo de remesa con o sin tesorería.",
+       "ejemplo": "PSCTT «Pago transferencias (con Tesorería)»"
+      },
+      {
+       "campo": "Acción",
+       "significado": "Acción de evolución que ordena la remesa.",
+       "ejemplo": "Pago transferencias, ordenar (c/Tes)"
+      },
+      {
+       "campo": "Total remesa",
+       "significado": "Importe total de la remesa.",
+       "ejemplo": "8.080,15 en la demo"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Pulsa «Nuevo»: empresa, cuenta financiera, fechas y Clase «Pagar»",
+       "imagen": "carteras-tes-06.jpg",
+       "hotspot": {
+        "x": 28.5,
+        "y": 37,
+        "w": 14,
+        "h": 7,
+        "etiqueta": "Cuenta financiera"
+       }
+      },
+      {
+       "texto": "Elige un Tipo remesa con tesorería y guarda",
+       "detalle": "En la demo, PSCTT «Pago transferencias (con Tesorería)».",
+       "imagen": "carteras-tes-06.jpg",
+       "hotspot": {
+        "x": 59.5,
+        "y": 51,
+        "w": 29,
+        "h": 5.5,
+        "etiqueta": "PSCTT"
+       }
+      },
+      {
+       "texto": "En «Selección de efectos» marca el efecto y pulsa «Agregar efectos»",
+       "detalle": "La remesa solo acepta deudas con IBAN definido.",
+       "imagen": "carteras-tes-07.jpg",
+       "hotspot": {
+        "x": 86.5,
+        "y": 49.5,
+        "w": 12.5,
+        "h": 4.5,
+        "etiqueta": "Agregar efectos"
+       }
+      },
+      {
+       "texto": "Pulsa «Evolucionar estado» y acepta «Pago transferencias, ordenar (c/Tes)»",
+       "detalle": "La remesa queda Cerrada y CONTABILIZADO, y el efecto Ordenado.",
+       "imagen": "carteras-tes-04.jpg",
+       "hotspot": {
+        "x": 57.5,
+        "y": 52.5,
+        "w": 28.5,
+        "h": 7,
+        "etiqueta": "Acción c/Tes"
+       }
+      },
+      {
+       "texto": "Abre la tesorería de la remesa y mira el flujo: cuenta, importe y efecto",
+       "detalle": "Operación PMICDT, cuenta 40100.00003, importe 8.080,15 y el efecto relacionado.",
+       "imagen": "carteras-tes-02.jpg",
+       "hotspot": {
+        "x": 0.5,
+        "y": 77.5,
+        "w": 98,
+        "h": 5.5,
+        "etiqueta": "Flujo con el efecto"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "No puedes agregar el efecto a la remesa."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "La remesa solo acepta deudas con IBAN definido: completa la cuenta bancaria del tercero."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Una remesa sin tesorería (s/Tes) no crea movimiento: confirma el pago directamente con el asiento del banco."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué ocurre al evolucionar un efecto de pago pendiente con la acción «Pago a tesorería»?",
+     "opciones": [
+      "El efecto pasa a Ordenado y se genera un movimiento de tesorería.",
+      "El efecto se elimina y no se genera nada.",
+      "Solo se crea un asiento contable sin movimiento.",
+      "El efecto queda Pendiente y se crea una remesa."
+     ],
+     "correcta": 0,
+     "explicacion": "Al aceptar, el efecto pasa a Ordenado y se generan una gestión y un movimiento de tesorería con la cuenta financiera, el importe y la operación financiera configurada."
+    },
+    {
+     "pregunta": "En la configuración de la acción para clase Pagar y tipo Transferencia, ¿qué operación se utiliza?",
+     "opciones": [
+      "PSCTT «Pago transferencias (con Tesorería)»",
+      "PMICDT «Pagos emitidos transferencias de crédito»",
+      "CSCTS «Cobro sin Tesorería»",
+      "PMICHQ (cheques)"
+     ],
+     "correcta": 1,
+     "explicacion": "En los enlaces contables de la acción, la fila de clase Pagar y tipo Transferencia usa PMICDT «Pagos emitidos transferencias de crédito»."
+    },
+    {
+     "pregunta": "No puedes agregar un efecto a una remesa PSCTT. ¿Qué compruebas primero?",
+     "opciones": [
+      "Que el tercero tenga IBAN definido",
+      "Que el efecto esté conciliado",
+      "Que la factura no esté contabilizada",
+      "Que la remesa sea de cobro"
+     ],
+     "correcta": 0,
+     "explicacion": "La remesa solo acepta deudas con IBAN definido."
+    },
+    {
+     "pregunta": "En una remesa «sin Tesorería» (s/Tes), ¿qué sucede al evolucionar?",
+     "opciones": [
+      "Se crea un movimiento de tesorería.",
+      "Se crean dos movimientos.",
+      "Se crea una gestión y un movimiento.",
+      "No se crea movimiento de tesorería."
+     ],
+     "correcta": 3,
+     "explicacion": "Las remesas s/Tes confirman el cobro directamente con el asiento del banco, sin crear movimiento de tesorería; solo las c/Tes lo crean."
+    }
+   ],
+   "checklist": [
+    "Desde un efecto de pago pendiente, usa «Evolucionar estado» y elige PTES «Pago a tesorería».",
+    "Verifica que el efecto pasa a Ordenado y que nace su movimiento de tesorería.",
+    "Abre la acción PTES y localiza en sus enlaces contables la fila de Transferencia → PMICDT.",
+    "Crea una remesa PSCTT, agrega un efecto con IBAN, ordénala con «Pago transferencias, ordenar (c/Tes)» y abre su tesorería."
+   ],
+   "problemas": [
+    {
+     "problema": "Al evolucionar un efecto con «Pago a tesorería» aparece «Cannot insert a null into column (taptcuen.fecval)».",
+     "solucion": "Revisa las fechas del diálogo de «Evolucionar estado» y repite la acción."
+    },
+    {
+     "problema": "No aparece el movimiento de tesorería tras evolucionar una remesa.",
+     "solucion": "Revisa que la remesa sea «con Tesorería» (c/Tes); las s/Tes no generan movimiento."
+    },
+    {
+     "problema": "No puedes agregar el efecto a la remesa.",
+     "solucion": "Comprueba que el tercero tiene su cuenta bancaria con IBAN; la remesa solo acepta deudas con IBAN definido."
     }
    ]
   }

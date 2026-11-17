@@ -3,10 +3,12 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import { CAPITULOS, MOMENTOS_SECCION, type CapituloVideo } from '../content/videoMapa';
 import { META, todosEjercicios } from '../content';
+import { serieDe } from '../content/videoSeries';
 import { mmss } from '../lib/config';
 import { baseUrl, conIni } from '../lib/texto';
 import { useProgreso } from '../lib/progress';
 import { Icon } from '../components/Icon';
+import { CapitulosSerie } from '../components/video';
 import './video.css';
 
 const TOTAL = CAPITULOS.reduce((a, c) => a + c.duracion, 0);
@@ -455,6 +457,18 @@ export default function Video() {
           </h2>
           <IndiceCapitulos actual={c?.n} />
         </section>
+
+        {!c && (
+          <section className="vd-index vd-otras" aria-labelledby="vd-tes-t">
+            <h2 id="vd-tes-t" className="vd-h2">
+              Tesorería: las dos sesiones de formación
+            </h2>
+            <div className="ax-banner vd-otras-in">
+              <CapitulosSerie serie="tesoreria-1" intro={serieDe('tesoreria-1').intro} />
+              <CapitulosSerie serie="tesoreria-2" intro={serieDe('tesoreria-2').intro} />
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

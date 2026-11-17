@@ -9,7 +9,7 @@ import { Icon } from '../Icon';
 import { Captura, CajaHotspot, Fallos, type Marca } from './Captura';
 import { RutaMenu } from './SeccionVista';
 import { COLORES_MARCA, dentro, pasosPlanos, useMedia } from './util';
-import { momentosDeSeccion } from '../../content/videoMapa';
+import { momentosDeSeccion } from '../../content/videoSeries';
 import { Momentos } from './VideoMomento';
 
 type Fase = 'jugando' | 'acierto';

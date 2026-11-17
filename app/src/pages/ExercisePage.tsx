@@ -5,7 +5,7 @@ import { META, getEjercicio, todosEjercicios } from '../content';
 import { APROBADO, avanceEjercicio, useProgreso } from '../lib/progress';
 import { conIni } from '../lib/texto';
 import { CAPITULOS_VIDEO, VIDEO_POR_EJERCICIO } from '../lib/config';
-import { momentosDeEjercicio } from '../content/videoMapa';
+import { momentosDeEjercicio } from '../content/videoSeries';
 import { Momentos } from '../components/exercise/VideoMomento';
 import { Anillo } from '../components/exercise/Anillo';
 import { Icon } from '../components/Icon';

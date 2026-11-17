@@ -8,7 +8,7 @@ import { parrafos } from './util';
 import { IDEAS_VIDEO } from './videoIdeas';
 import { Link } from 'react-router-dom';
 import { CAPITULOS_VIDEO, VIDEO_POR_EJERCICIO } from '../../lib/config';
-import { momentosDeSeccion } from '../../content/videoMapa';
+import { momentosDeSeccion } from '../../content/videoSeries';
 import { Momentos } from './VideoMomento';
 import { Icon } from '../Icon';
 

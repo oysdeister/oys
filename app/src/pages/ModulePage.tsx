@@ -5,8 +5,8 @@ import { META, MODULOS, getModulo } from '../content';
 import { avanceEjercicio, ejercicioCompletado, useProgreso } from '../lib/progress';
 import { avanceModulo } from '../lib/avance';
 import { conIni } from '../lib/texto';
-import { CapitulosCompras } from '../components/video';
-import { CAPITULOS } from '../content/videoMapa';
+import { CapitulosSerie } from '../components/video';
+import { seriesDeModulo } from '../content/videoSeries';
 import { SIMS } from '../sims/registro';
 import { Icon } from '../components/Icon';
 import { SeccionVista } from '../components/exercise/SeccionVista';
@@ -324,7 +324,8 @@ export default function ModulePage() {
   const hechos = modulo.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
   const pendiente = modulo.ejercicios.find((e) => !ejercicioCompletado(p.ejercicios[e.id]));
   const siguiente = pendiente ?? modulo.ejercicios[0];
-  const verVideo = modulo.id === 'compras';
+  const series = seriesDeModulo(modulo.id);
+  const verVideo = series.length > 0;
   const sims = SIMS.filter((s) => s.modulo === modulo.id);
   const idx = MODULOS.findIndex((m) => m.id === modulo.id);
   const sigMod = MODULOS[idx + 1];
@@ -443,7 +444,14 @@ export default function ModulePage() {
       {verVideo && (
         <section className="mod-sec pm-video" aria-label="Vídeo del módulo">
           <div className="ax-banner pm-video-in">
-            <CapitulosCompras titulo={`Vídeo del módulo: ${CAPITULOS.length} capítulos`} />
+            {series.map((sv) => (
+              <CapitulosSerie
+                key={sv.id}
+                serie={sv.id}
+                titulo={series.length > 1 ? sv.titulo : `Vídeo del módulo: ${sv.capitulos.length} capítulos`}
+                intro={sv.intro}
+              />
+            ))}
           </div>
         </section>
       )}

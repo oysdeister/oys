@@ -127,6 +127,24 @@ export const FICHAS: Record<string, FichaModulo> = {
       { t: 'Asiento', d: 'Cada cambio de estado deja su asiento contable.', ej: 'Efecto en CO = cobrado' },
     ],
   },
+  tesoreria: {
+    frase: 'El dinero que entra y sale del banco: lo registras en tesorería y lo casas con el extracto que manda el banco.',
+    recorrido: 'Del banco propio a la conciliación',
+    aprendes: [
+      'Preparar el banco propio, una operación financiera y su flujo con cuenta contable.',
+      'Crear un movimiento de tesorería a mano, revisar sus flujos y contabilizarlo.',
+      'Cargar un extracto N43, dar de alta sus conceptos y conciliarlo a mano o de forma automática.',
+      'Llevar las cajas de efectivo, la financiación y las líneas financieras, la cartera de valores, los avales y los informes de posición.',
+    ],
+    circuito: [
+      { t: 'Banco propio', d: 'La cuenta del banco, con su cuenta contable, formato de extracto y comisiones.', ej: 'BBVA_{INI} · 57200 · AEB43' },
+      { t: 'Operación y flujo', d: 'Qué tipo de movimiento es (entrada o salida) y a qué cuenta va.', ej: 'Operación {INI}COM + flujo {INI}COM' },
+      { t: 'Movimiento', d: 'Cada entrada o salida real de dinero: manual, desde un efecto o desde una remesa.', ej: 'PTES · remesa PSCTT' },
+      { t: 'Extracto N43', d: 'El fichero del banco se carga en el almacén y se convierte en movimientos de extracto.', ej: 'Almacén ficheros › Cargar extracto bancario' },
+      { t: 'Conceptos', d: 'Los códigos del banco: comunes de la AEB y propios de cada banco.', ej: 'Concepto común 02 · concepto propio 002' },
+      { t: 'Conciliación', d: 'Casas extracto y tesorería, uno a uno o de forma automática.', ej: 'Conciliar · Generar · Conciliar Efectos' },
+    ],
+  },
   'icon-contabilidad': {
     frase: 'Entiendes el diario, los periodos y las plantillas, y localizas los procesos de cierre, balances y consolidación.',
     recorrido: 'Del diario a la consolidación',

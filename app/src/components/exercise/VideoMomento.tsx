@@ -7,7 +7,7 @@ export function Momentos({ lista, compacto = false }: { lista: MomentoVideo[]; c
   return (
     <div className={`vm-list${compacto ? ' sm' : ''}`}>
       {lista.map((m, i) => (
-        <BotonMomento key={`${m.capitulo}-${m.t}-${i}`} m={m} />
+        <BotonMomento key={`${m.serie ?? 'c'}-${m.capitulo}-${m.t}-${i}`} m={m} />
       ))}
     </div>
   );

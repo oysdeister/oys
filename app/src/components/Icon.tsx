@@ -5,6 +5,7 @@ const P: Record<string, string> = {
   ventas: 'M4 20V10m6 10V4m6 16v-7m6 7H2',
   asiento: 'M4 4h16v16H4zM12 4v16M4 9h16',
   cartera: 'M3 7h18v12H3zM3 7l3-3h12l3 3M16 13h2',
+  banco: 'M12 3l9 5H3zM5 10v8m4.67-8v8m4.66-8v8M19 10v8M3 21h18',
   inicio: 'M3 11l9-7 9 7v9h-6v-6H9v6H3z',
   taller: 'M14 6l4 4-8 8H6v-4zM13 7l4 4',
   logros: 'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm-3.5 4.5L12 15l3.5 4.5M8 21l1-3m7 3-1-3',

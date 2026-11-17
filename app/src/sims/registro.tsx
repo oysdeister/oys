@@ -5,6 +5,7 @@ import SimCircuito from './Circuito';
 import SimDocflow from './Docflow';
 import SimFactura from './Factura';
 import SimCartera from './Cartera';
+import SimConcilia from './Concilia';
 
 export interface SimInfo {
   id: string;
@@ -97,11 +98,25 @@ const dCartera = (
   </svg>
 );
 
+const dConcilia = (
+  <svg viewBox="0 0 120 80" aria-hidden="true">
+    {[0, 1, 2].map((i) => (
+      <g key={i}>
+        <rect x="8" y={12 + i * 20} width="38" height="14" rx="4" fill="var(--sheet)" stroke="var(--ink)" strokeWidth="2" />
+        <rect x="74" y={12 + i * 20} width="38" height="14" rx="4" fill="var(--sheet)" stroke="var(--ink)" strokeWidth="2" />
+      </g>
+    ))}
+    <path d="M46 19 C 60 19, 60 39, 74 39 M46 39 C 60 39, 60 19, 74 19" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="tl-mini-flujo" strokeDasharray="4 4" />
+    <path d="M46 59h28" stroke="var(--ink-3)" strokeWidth="2" strokeDasharray="2 4" />
+  </svg>
+);
+
 export const SIMS: SimInfo[] = [
-  { id: 'asiento', titulo: 'Cuadra el asiento', resumen: 'Rellena importes, elige cuentas y lados, y encuentra el error que deja el Cuadre en 500,00.', modulo: 'asientos', rondas: 5, color: '#8a7be0', Componente: SimAsiento, dibujo: dBalanza },
+  { id: 'asiento', titulo: 'Cuadra el asiento', resumen: 'Rellena importes, elige cuentas y lados, encuentra el error que deja el Cuadre en 500,00 y cuadra el asiento de un pago por tesorería con comisión.', modulo: 'asientos', rondas: 6, color: '#8a7be0', Componente: SimAsiento, dibujo: dBalanza },
   { id: 'numerador', titulo: 'Construye la máscara', resumen: 'Monta con fichas la rotura y la máscara del numerador hasta que salgan DISPC000001 y el número fiscal FC026-000001. Y descifra el error «Sin máscara».', modulo: 'parametrizacion', rondas: 6, color: '#6c8fd6', Componente: SimNumerador, dibujo: dTeclas },
   { id: 'circuito', titulo: 'Ordena el circuito', resumen: 'Pon en orden oferta, pedido, albarán, factura y asiento, y la vida de un efecto. Luego di qué hace cada paso.', modulo: 'compras', rondas: 4, color: '#f2a93b', Componente: SimCircuito, dibujo: dCircuito },
   { id: 'docflow', titulo: 'Lee el Docflow', resumen: 'Contesta tocando el diagrama: de qué albarán viene la factura, qué estado tiene el pedido, cuánto se debe.', modulo: 'compras', rondas: 3, color: '#3fa7c9', Componente: SimDocflow, dibujo: dDocflow },
   { id: 'factura', titulo: 'Base, IVA y total', resumen: 'Calcula el pie de facturas reales y de otras con descuento y tipos de IVA del 21, 10 y 4 %.', modulo: 'ventas', rondas: 5, color: '#e0708a', Componente: SimFactura, dibujo: dFactura },
+  { id: 'concilia', titulo: 'Concilia el extracto', resumen: 'Casa las líneas del extracto N43 con los movimientos de tesorería: importe, documento, float de días, primer registro, comisión separada y lo que no concilia.', modulo: 'tesoreria', rondas: 4, color: '#1f8fb3', Componente: SimConcilia, dibujo: dConcilia },
   { id: 'cartera', titulo: 'Sigue el efecto', resumen: 'Pon el sello del estado (PE, PR, OC, CO, PA, DV) según lo que le pasa a un efecto de cartera.', modulo: 'carteras', rondas: 4, color: '#2a9c83', Componente: SimCartera, dibujo: dCartera },
 ];

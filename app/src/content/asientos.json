@@ -2213,6 +2213,231 @@
     "En el extracto de la 62902 el movimiento del 01-12-2026 es de 1.500,00."
    ],
    "problemas": []
+  },
+  {
+   "id": "asientos-14",
+   "numero": 14,
+   "titulo": "El asiento de un movimiento de tesorería",
+   "objetivo": "Sabrás qué asiento deja un movimiento de tesorería: banco contra la cuenta del flujo, y cómo se trata la comisión bancaria.",
+   "concepto": "Cuando contabilizas un movimiento de tesorería, el asiento enfrenta la cuenta del banco propio (la de cbancpro) contra las cuentas contables de los flujos. En una salida, la cuenta del flujo va al Debe y el banco al Haber; en una entrada es al revés, y siempre Debe = Haber. Por ejemplo, el pago de una remesa con flujo en la cuenta 40100.00003 (proveedor) salda la deuda contra el banco por el importe del flujo.\n\nLa comisión bancaria se trata aparte: si en la comisión del banco propio está informada «Operación comisión», se genera un movimiento y un asiento adicionales para la comisión; si no, la comisión es un flujo más dentro del mismo movimiento y del mismo asiento. Cada flujo debe tener cuenta contable, porque sin ella el movimiento no se puede contabilizar.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "asientos-14-movimiento",
+     "titulo": "Banco contra la cuenta del flujo",
+     "paraQueSirve": "Esta sección te enseña a leer los flujos de un movimiento de tesorería y a prever el asiento que se generará al contabilizar.",
+     "ruta": [
+      "Buscador",
+      "Movimientos de tesorería (taptcuen)"
+     ],
+     "explicacion": [
+      "El movimiento de tesorería (taptcuen) tiene un botón «Contabilizar» arriba y una pestaña Flujos con Flujo, Cuenta contable, Descripción cuenta, Importe flujo y Efecto. Al contabilizar, la cuenta del banco propio (la de cbancpro, p. ej. 57200.00000) se enfrenta a las cuentas de los flujos. En una salida, la cuenta del flujo va al Debe y el banco al Haber; en una entrada, al revés. Debe = Haber.",
+      "En el pago de la remesa de la demo, el flujo lleva la cuenta del proveedor 40100.00003, así que el asiento salda la deuda con el proveedor contra el banco por 8.080,15 (40100.00003 al Debe, banco al Haber)."
+     ],
+     "campos": [
+      {
+       "campo": "Cuenta del banco",
+       "significado": "Cuenta contable del banco propio (cbancpro) que se utiliza en el asiento.",
+       "ejemplo": "57200.00000 en los ejemplos de la demo."
+      },
+      {
+       "campo": "Cuenta del flujo",
+       "significado": "Cuenta contable del flujo (proveedor, cliente, etc.) que determina la contrapartida.",
+       "ejemplo": "40100.00003 (TELEFONICA DE ESPAÑA S.A.) en el pago de la remesa."
+      },
+      {
+       "campo": "Importe flujo",
+       "significado": "Importe del flujo que va al Debe o al Haber según la posición.",
+       "ejemplo": "8.080,15 en la remesa de la demo."
+      },
+      {
+       "campo": "Posición",
+       "significado": "Indica si es salida o entrada; determina qué cuenta va al Debe y cuál al Haber.",
+       "ejemplo": "Salida: cuenta del flujo al Debe, banco al Haber."
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre un movimiento de tesorería y mira la pestaña Flujos",
+       "detalle": "Cada flujo lleva su cuenta contable.",
+       "imagen": "asientos-tes-01.jpg",
+       "hotspot": {
+        "x": 0.5,
+        "y": 81.5,
+        "w": 45.5,
+        "h": 18,
+        "etiqueta": "Flujos"
+       }
+      },
+      {
+       "texto": "Fíjate en la cuenta del flujo del pago de una remesa",
+       "detalle": "En la demo, 40100.00003 por 8.080,15: es la cuenta del proveedor.",
+       "imagen": "asientos-tes-02.jpg",
+       "hotspot": {
+        "x": 30.5,
+        "y": 77.5,
+        "w": 7.5,
+        "h": 5.5,
+        "etiqueta": "Cuenta contable"
+       }
+      },
+      {
+       "texto": "Pulsa «Contabilizar» y escribe el asiento esperado",
+       "detalle": "Salida: cuenta del flujo al Debe, banco al Haber; Debe = Haber.",
+       "imagen": "asientos-tes-01.jpg",
+       "hotspot": {
+        "x": 39.5,
+        "y": 0.8,
+        "w": 6.8,
+        "h": 3.3,
+        "etiqueta": "Contabilizar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El flujo debe tener cuenta contable (es una cuenta mnemotécnica traducida a la cuenta real de cada plan contable); sin ella el movimiento no se puede contabilizar."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Al contabilizar el movimiento, el asiento no cuadra."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Revisa que Debe = Haber y que cada flujo tenga su cuenta contable; en salida, flujo al Debe y banco al Haber."
+      }
+     ]
+    },
+    {
+     "id": "asientos-14-comision",
+     "titulo": "La comisión bancaria, aparte",
+     "paraQueSirve": "Esta sección explica cómo la configuración de la comisión del banco propio decide si la comisión va en el mismo asiento o en uno aparte.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Auxiliares",
+      "Bancos propios",
+      "Comisiones"
+     ],
+     "explicacion": [
+      "La comisión la configuras en el banco propio (Tesorería, ejercicio 1); aquí ves qué asiento deja. Si en la comisión se informa «Operación comisión», la comisión genera un registro adicional en tesorería: otro movimiento y otro asiento. Si no, va como un flujo más del mismo movimiento y del mismo asiento.",
+      "El flujo de comisión debe tener su cuenta contable (en el PGC español suele ser una 626 «Servicios bancarios y similares», como orientación). Sin cuenta contable, el movimiento no se puede contabilizar."
+     ],
+     "campos": [
+      {
+       "campo": "Flujo de comisión",
+       "significado": "Tipo de flujo para la comisión bancaria; puede ser un flujo más del mismo movimiento o uno aparte si se define operación.",
+       "ejemplo": "Flujo de tipo Comisión con cuenta 626 (orientación)."
+      },
+      {
+       "campo": "Operación comisión",
+       "significado": "Campo en la comisión del banco propio; si está informado, la comisión genera otro movimiento y asiento.",
+       "ejemplo": "Informada → otro movimiento; vacía → flujo en el mismo asiento."
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Mira en la comisión del banco si está informada «Operación comisión»",
+       "detalle": "Informada: otro movimiento y otro asiento. Vacía: un flujo más en el mismo asiento.",
+       "imagen": "asientos-tes-03.jpg",
+       "hotspot": {
+        "x": 25,
+        "y": 35,
+        "w": 24,
+        "h": 11,
+        "etiqueta": "Operación comisión"
+       }
+      },
+      {
+       "texto": "Escribe el asiento de un pago con comisión en el mismo movimiento",
+       "detalle": "Cuenta del flujo del pago y cuenta del flujo de comisión al Debe; banco al Haber por la suma."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si en la comisión del banco propio se informa «Operación comisión», la comisión genera un registro adicional en tesorería (otro movimiento y otro asiento)."
+      },
+      {
+       "tipo": "problema",
+       "texto": "No sabes si la comisión va en el mismo asiento o en otro."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Mira el campo «Operación comisión»: si está informado, es otro movimiento; si está vacío, es un flujo más del mismo asiento."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "En un movimiento de tesorería de salida, ¿qué cuentas van al Debe y al Haber?",
+     "opciones": [
+      "Cuenta del flujo al Haber, banco al Debe.",
+      "Cuenta del flujo al Debe, banco al Haber.",
+      "Ambas al Debe.",
+      "Ambas al Haber."
+     ],
+     "correcta": 1,
+     "explicacion": "En una salida, la cuenta del flujo va al Debe y el banco al Haber; en una entrada es al revés."
+    },
+    {
+     "pregunta": "¿Qué es imprescindible para que un movimiento de tesorería se pueda contabilizar?",
+     "opciones": [
+      "Que el flujo tenga cuenta contable.",
+      "Que tenga referencia bancaria.",
+      "Que esté conciliado.",
+      "Que tenga operación comisión."
+     ],
+     "correcta": 0,
+     "explicacion": "El flujo debe tener cuenta contable; sin ella el movimiento no se puede contabilizar."
+    },
+    {
+     "pregunta": "En el pago de la remesa de la demo, ¿qué cuenta se utiliza para el proveedor?",
+     "opciones": [
+      "57200.00000",
+      "3386952",
+      "40100.00003",
+      "626"
+     ],
+     "correcta": 2,
+     "explicacion": "El flujo lleva la cuenta 40100.00003 (TELEFONICA DE ESPAÑA S.A.), que es la cuenta del proveedor."
+    },
+    {
+     "pregunta": "Si en la comisión del banco propio se informa «Operación comisión», ¿qué ocurre?",
+     "opciones": [
+      "La comisión se ignora.",
+      "La comisión va como flujo en el mismo asiento.",
+      "Se genera un movimiento y un asiento adicionales para la comisión.",
+      "No se puede contabilizar."
+     ],
+     "correcta": 2,
+     "explicacion": "Con «Operación comisión» informada, la comisión genera otro movimiento y otro asiento; si no, es un flujo más del mismo asiento."
+    }
+   ],
+   "checklist": [
+    "Abre un movimiento de tesorería y revisa la pestaña Flujos para ver las cuentas contables.",
+    "Verifica que la cuenta del flujo del pago corresponda al proveedor (en la demo 40100.00003).",
+    "En tu movimiento manual del módulo Tesorería pulsa «Contabilizar» y comprueba que el asiento cuadra: flujo al Debe, banco al Haber, Debe = Haber.",
+    "En las comisiones de bancos propios, localiza si «Operación comisión» está informada.",
+    "Comprueba si la comisión aparece como un flujo más o como un movimiento aparte según ese campo."
+   ],
+   "problemas": [
+    {
+     "problema": "El movimiento no se contabiliza y no aparece error claro.",
+     "solucion": "Revisa que todos los flujos tengan cuenta contable; sin ella no se puede contabilizar."
+    },
+    {
+     "problema": "Al contabilizar un pago con comisión, no sabes cómo cuadrar el asiento.",
+     "solucion": "Si la comisión va en el mismo movimiento, suma al Debe la cuenta del flujo del pago y la cuenta del flujo de comisión; el banco va al Haber por la suma total."
+    },
+    {
+     "problema": "Aparece un movimiento de tesorería adicional inesperado al contabilizar.",
+     "solucion": "Puede deberse a que «Operación comisión» está informada, generando otro movimiento y asiento para la comisión."
+    }
+   ]
   }
  ],
  "datosSimulador": {

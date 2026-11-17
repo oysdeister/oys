@@ -189,9 +189,10 @@ export const MIN_TEORIA = 45;
 export const NUM_TAREAS = 9;
 /**
  * Reparto de la teoría: un test por módulo (6 de los manuales + 4 de finanzas), un clic por módulo
- * de los manuales (los de finanzas no tienen zonas marcadas), un vídeo por capítulo y el resto.
+ * de los manuales (los de finanzas no tienen zonas marcadas), un vídeo por capítulo, dos de tesorería
+ * en su propio cupo y el resto.
  */
-export const REPARTO = { test: 10, clic: 6, video: 10, orden: 2, relacion: 2, dato: 2, criterio: 2 } as const;
+export const REPARTO = { test: 10, clic: 6, video: 8, orden: 2, relacion: 2, dato: 2, criterio: 2, tesoreria: 2 } as const;
 export const NUM_TEORIA = Object.values(REPARTO).reduce((s, n) => s + n, 0);
 /** Margen (en % de la captura) alrededor de la zona correcta en las preguntas de clic */
 export const MARGEN_CLIC = 2.5;
@@ -200,7 +201,7 @@ export const bancoTeoria = () => ({
   tests: MODULOS.reduce((s, m) => s + m.ejercicios.reduce((t, e) => t + e.test.filter((q) => apta(q)).length, 0), 0),
   clic: MODULOS.reduce((s, m) => s + pasosClic(m.id).length, 0),
   video: VIDEO.length,
-  criterio: CRITERIO.length,
+  criterio: CRITERIO.length + TESORERIA.length,
   otras: CIRCUITOS_VIDEO.length + MODULOS.length + RELACIONES.length + 6,
 });
 
@@ -525,6 +526,25 @@ const CRITERIO: Pregunta[] = [
   { pregunta: 'En la pestaña Tarifas del proveedor, ¿a qué apuntas?', opciones: ['A una tarifa concreta', 'A un grupo de precios, que decide qué lista aplica', 'A un artículo', 'A una cuenta contable'], correcta: 1, explicacion: 'El proveedor apunta a un grupo de precios (por ejemplo 00001, que lleva a la lista COM).' },
 ];
 
+/* Tesorería: bancos propios, operaciones, flujos, extracto N43 y conciliación (sesiones I y II de formación) */
+const TESORERIA: Pregunta[] = [
+  { pregunta: '¿Qué tres cosas necesita como mínimo un movimiento de tesorería?', opciones: ['Banco propio, operación financiera y flujo con cuenta contable', 'Factura, albarán y pedido', 'Cliente, artículo y tarifa', 'Diario, periodo y asiento'], correcta: 0, explicacion: 'El movimiento va siempre contra una cuenta financiera (banco propio), con una operación financiera y al menos un flujo que lleva la cuenta contable.' },
+  { pregunta: 'En los parámetros de conciliación de una operación, la referencia está en «No considerar». ¿Cómo busca la pareja?', opciones: ['Por el número de documento', 'Solo por el importe', 'Por la descripción del extracto', 'No concilia nunca'], correcta: 1, explicacion: '«No considerar» quiere decir que no mira la referencia: busca por importe (y posición, dentro del float de fechas).' },
+  { pregunta: 'La operación tiene la referencia en «Documento». ¿Qué tiene que coincidir?', opciones: ['La fecha valor', 'El número de operación del extracto con el documento del movimiento', 'El concepto común', 'La cuenta contable del flujo'], correcta: 1, explicacion: 'Con «Documento» concilia por el número de operación: la referencia que trae el banco tiene que estar en el movimiento de tesorería.' },
+  { pregunta: 'Pagas el miércoles y el banco lo carga el jueves. ¿Qué parámetro hace que concilien?', opciones: ['Primer registro', 'El float de fecha de operación de 1 día', 'Operación comisión', 'El tipo de conciliación «por día»'], correcta: 1, explicacion: 'El float da un margen de días, adelante y atrás, alrededor de la fecha: con 1 día casa el jueves con el miércoles.' },
+  { pregunta: 'Tienes un pago de 100,00 en tesorería y tres cargos de 100,00 iguales en el extracto. La operación tiene «Primer registro». ¿Qué pasa?', opciones: ['No concilia ninguno', 'Concilia el movimiento con el primer cargo que encuentra', 'Concilia los tres', 'Suma los tres cargos'], correcta: 1, explicacion: 'Con «Primer registro», si hay varias líneas iguales se queda con la primera; las otras siguen pendientes.' },
+  { pregunta: 'En la comisión por transferencia del banco propio está informada la «Operación comisión». ¿Qué genera cada pago?', opciones: ['Un movimiento con dos flujos', 'Dos movimientos de tesorería: el importe y la comisión', 'Un asiento sin tesorería', 'Nada: la comisión la pone el extracto'], correcta: 1, explicacion: 'Con «Operación comisión» informada, la comisión va aparte: dos movimientos de tesorería: uno por el importe y otro solo por la comisión.' },
+  { pregunta: 'Al cargar un extracto N43 da error porque un concepto no está en la tabla. ¿Qué falta?', opciones: ['El concepto propio del banco en Conceptos propios', 'Un flujo financiero', 'El numerador de cheques', 'La fecha de vencimiento de la cuenta'], correcta: 0, explicacion: 'Cada banco trae sus conceptos propios en el fichero: tienen que estar dados de alta en Conceptos propios para que la carga no falle.' },
+  { pregunta: 'En el extracto hay un cargo de 42,35 y su extorno de +42,35. ¿Qué haces?', opciones: ['Generar un movimiento por cada uno', 'Seleccionar los dos y «Cancelar extractos»', 'Conciliarlos con un cobro', 'Borrar el extracto'], correcta: 1, explicacion: 'Un cargo y su extorno del mismo importe se anulan: se cancelan entre ellos desde el extracto, sin pasar por tesorería.' },
+  { pregunta: 'El banco cobra una comisión que no está en tesorería. ¿Qué botón de la conciliación individual la crea y la deja conciliada?', opciones: ['Conciliar', 'Generar', 'Cancelar extractos', 'Desconciliar'], correcta: 1, explicacion: '«Generar» crea el movimiento de tesorería con la operación y el flujo de comisión que elijas, ya conciliado con la línea.' },
+  { pregunta: 'Una factura está en cartera y no se mandó a tesorería, pero el pago ya sale en el extracto. ¿Qué usas?', opciones: ['Conciliar efectos', 'Cancelar extractos', 'Nueva carga', 'Parámetros de tesorería'], correcta: 0, explicacion: 'Con «Conciliar efectos» eliges el efecto y la línea del extracto: genera la gestión y el movimiento de tesorería ya conciliado.' },
+  { pregunta: 'Quieres que la conciliación automática integre el concepto propio 313 «Intereses, comisiones y custodia». ¿Qué necesita?', opciones: ['Nada, lo hace siempre', 'Que el concepto propio tenga una operación financiera (de salida) configurada', 'Que la cuenta sea de ahorro', 'Un asiento manual previo'], correcta: 1, explicacion: 'Sin operación enlazada al concepto propio, la línea no tiene pareja; con una operación de salida configurada, el proceso crea el movimiento y concilia.' },
+  { pregunta: 'En Conceptos propios, ¿qué hace el tipo de conciliación «por día»?', opciones: ['Concilia cada línea por separado', 'Suma las líneas del mismo concepto del día y genera un solo movimiento', 'Solo concilia los lunes', 'Cambia la fecha valor'], correcta: 1, explicacion: '«Individual» va línea a línea; «por día» junta, por ejemplo, cinco salidas de 100 con el mismo concepto en un solo movimiento de 500.' },
+  { pregunta: '¿Qué estructura tiene un fichero de extracto norma 43?', opciones: ['Cabecera con la cuenta, los movimientos en medio y al final los saldos', 'Solo los asientos contables del mes', 'Solo las remesas de cobro y pago', 'El balance de la empresa'], correcta: 0, explicacion: 'El encabezado da la cuenta, las transacciones van en medio y al final están los saldos; al cargarlo se validan las fechas y que el saldo inicial siga al final del extracto anterior.' },
+  { pregunta: '¿Para qué sirven los conceptos comunes?', opciones: ['Son códigos estándar de operaciones bancarias que ayudan a identificar un movimiento del extracto como entrada o salida', 'Son los códigos que trae cada banco en su fichero', 'Son los flujos financieros', 'Son las comisiones de la cuenta'], correcta: 0, explicacion: 'Los conceptos comunes son la codificación estándar de la banca española; los propios son los de cada banco.' },
+  { pregunta: 'Quieres mandar a tesorería un solo efecto pendiente, sin remesa. ¿Qué haces?', opciones: ['Evolucionar el estado del efecto con la acción «Pago a tesorería» (PTES)', 'Cargar el extracto y cancelarlo', 'Contabilizar otra vez la factura', 'Darlo de alta en Conceptos propios'], correcta: 0, explicacion: 'Desde el efecto, «Evolucionar estado» con una acción que genera tesorería: el efecto pasa a Ordenado y nace el movimiento, según el enlace contable de cartera.' },
+  { pregunta: 'Contabilizas un pago por tesorería a un proveedor con su comisión. ¿Qué cuenta va al Haber?', opciones: ['40000 Proveedores', '62600 Servicios bancarios', '57200 Bancos', '43000 Clientes'], correcta: 2, explicacion: 'El banco (la cuenta contable de la cuenta financiera) baja por el Haber; el proveedor y la comisión van al Debe.' },
+];
 
 /* Preguntas sacadas del vídeo tutorial de compras (guiones v2, capítulos 1 a 10) */
 const VIDEO: (Pregunta & { cap: number; t: number })[] = [
@@ -585,6 +605,14 @@ const CIRCUITOS_VIDEO: { cap: number; pregunta: string; pasos: string[]; explica
   },
 ];
 
+/* Circuito de tesorería para ordenar (no sale del vídeo de compras: lleva su propio origen) */
+const CIRCUITO_TESORERIA = {
+  origen: 'tesoreria',
+  pregunta: 'Ordena el circuito de tesorería, de la cartera a la conciliación.',
+  pasos: ['Contabilizar la factura: nace el efecto en cartera', 'Remesar el efecto y evolucionar el estado', 'Se genera el movimiento de tesorería', 'Cargar el extracto N43 del banco', 'Conciliar el extracto con la tesorería'],
+  explicacion: 'Del mundo de cobros y pagos (efecto, remesa, tesorería) al del banco (extracto) y, en medio, la conciliación.',
+};
+
 /* Parejas para relacionar */
 const RELACIONES: { origen: string; pregunta: string; titulos: [string, string]; pares: [string, string][]; explicacion: string }[] = [
   {
@@ -639,6 +667,19 @@ const RELACIONES: { origen: string; pregunta: string; titulos: [string, string];
     ],
     explicacion: 'Validar no sirve el pedido: pasa a Parcial o a Servido al generar sus albaranes.',
   },
+  {
+    origen: 'tesoreria',
+    pregunta: 'Une cada concepto de tesorería con la pantalla donde se configura o se trabaja.',
+    titulos: ['Concepto', 'Pantalla'],
+    pares: [
+      ['Cuenta financiera, IBAN y formato de extracto', 'Bancos propios'],
+      ['Posición, interface y parámetros de conciliación', 'Operaciones financieras'],
+      ['Tipo de flujo y cuenta contable', 'Flujos financieros'],
+      ['Códigos del banco en el fichero N43', 'Conceptos propios'],
+      ['Emparejar extracto y movimientos', 'Conciliación individual'],
+    ],
+    explicacion: 'Bancos propios, operaciones y flujos montan el movimiento; los conceptos propios traducen el extracto, y la conciliación los une.',
+  },
 ];
 
 /* Pasos de los manuales con captura y zona marcada que sirven para «¿dónde harías clic?» */
@@ -681,12 +722,25 @@ function generarDatos(r: ReturnType<typeof rng>): { importe: PreguntaDato[]; cue
     { tipo: 'dato', formato: 'importe', origen: 'carteras', pregunta: 'La factura vence en tres plazos, a 40, 80 y 120 días, con el 40 %, el 20 % y el 40 %. ¿De cuánto es el primer efecto?', datos: [{ k: 'Total factura', v: `${p2(t3)} €` }], esperado: ef, placeholder: '0,00', explicacion: `Cada efecto lleva su porcentaje del total: 40 % de ${p2(t3)} = ${p2(ef)}.` },
     { tipo: 'dato', formato: 'importe', origen: 'maestros', pregunta: 'La lista de precios da este precio con un descuento 1 del 10 %. ¿Cuál es el importe neto de la línea?', datos: [{ k: 'Cantidad', v: `${q} UNI` }, { k: 'Precio', v: `${p2(pr)} €` }, { k: 'Descuento 1', v: '10 %' }], esperado: neto, placeholder: '0,00', explicacion: `${q} × ${p2(pr)} = ${p2(redondea(q * pr))}; menos el 10 %: ${p2(neto)}.` },
   ];
+  const pago = redondea(r.int(300, 2400) + cent());
+  const comi = r.pick([2.5, 3.5, 4.75, 6]);
+  importe.push({
+    tipo: 'dato',
+    formato: 'importe',
+    origen: 'tesoreria',
+    pregunta: 'Pagas por transferencia con la comisión en su propio flujo. ¿Qué importe sale del banco (Haber de la 57200)?',
+    datos: [{ k: 'Pago al proveedor', v: `${p2(pago)} €` }, { k: 'Comisión', v: `${p2(comi)} €` }],
+    esperado: redondea(pago + comi),
+    placeholder: '0,00',
+    explicacion: `Del banco sale el pago más la comisión: ${p2(pago)} + ${p2(comi)} = ${p2(redondea(pago + comi))}.`,
+  });
   const cuenta: PreguntaDato[] = [
     { tipo: 'dato', formato: 'cuenta', origen: 'compras', pregunta: 'Contabilizas el albarán de compra. ¿Qué cuenta va al Haber?', esperado: '40090', placeholder: '00000', explicacion: 'El albarán lleva la 60000 al Debe contra la 40090 Compras pendiente de factura.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'ventas', pregunta: 'Contabilizas una factura de venta. ¿En qué cuenta va el IVA repercutido?', esperado: '47000', placeholder: '00000', explicacion: 'La factura de venta lleva 43000 al Debe y 47000 y 70000 al Haber.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'carteras', pregunta: 'Cobras un efecto por banco con COBD. ¿Qué cuenta va al Debe?', esperado: '57200', placeholder: '00000', explicacion: 'El cobro lleva Bancos 57200 al Debe y Clientes 43000 al Haber.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'parametrizacion', pregunta: 'Registras una factura de compra con IVA. ¿En qué cuenta va el IVA soportado?', esperado: '47200', placeholder: '00000', explicacion: 'El IVA de las compras va al Debe de la 47200.' },
   ];
+  cuenta.push({ tipo: 'dato', formato: 'cuenta', origen: 'tesoreria', pregunta: 'El flujo de comisión de un movimiento de tesorería lleva la cuenta de servicios bancarios. ¿Cuál es?', esperado: '62600', placeholder: '00000', explicacion: 'Las comisiones bancarias van a la 62600 Servicios bancarios y similares, al Debe, contra el banco 57200.' });
   return { importe, cuenta };
 }
 
@@ -704,8 +758,8 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   const r = rng(hash32(`${codigo}|teoria`));
   const elegidas: PreguntaExamen[] = [];
 
-  // 1 test y 1 clic por módulo
-  for (const m of MODULOS) {
+  // 1 test y 1 clic por módulo (tesorería va aparte, en su propio cupo)
+  for (const m of MODULOS.filter((x) => x.id !== 'tesoreria')) {
     const tests = r.shuffle(m.ejercicios.flatMap((e) => e.test).filter(apta));
     if (tests[0]) elegidas.push({ ...tests[0], origen: m.id });
     const pasos = pasosClic(m.id);
@@ -726,21 +780,23 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
     }
   }
 
-  // 1 pregunta por capítulo del vídeo
-  const caps = Array.from(new Set(VIDEO.map((v) => v.cap))).sort((a, b) => a - b);
-  for (const c of caps.slice(0, REPARTO.video)) {
+  // 1 pregunta por capítulo del vídeo (si hay más capítulos que cupo, se sortean)
+  const todosCaps = Array.from(new Set(VIDEO.map((v) => v.cap)));
+  const caps = r.shuffle(todosCaps).slice(0, REPARTO.video).sort((a, b) => a - b);
+  for (const c of caps) {
     const { cap, t, ...q } = r.pick(VIDEO.filter((v) => v.cap === c));
     elegidas.push({ ...q, origen: `vídeo cap. ${cap}`, video: { cap, t } });
   }
 
   // Ordenar: un circuito del vídeo y otro de un manual
-  const cv = r.pick(CIRCUITOS_VIDEO);
+  const cvs = [...CIRCUITOS_VIDEO.map((c) => ({ origen: `vídeo cap. ${c.cap}`, pregunta: c.pregunta, pasos: c.pasos, explicacion: c.explicacion })), CIRCUITO_TESORERIA];
+  const cv = r.pick(cvs);
   const mods = MODULOS.filter((m) => !esFinanzas(m.id) && m.circuito.length >= 4 && m.circuito.length <= 7);
   const cm = r.pick(mods);
   // En la versión nueva del ERP no hay paso «Conformar»: no se pide ordenarlo.
   const pasosCm = cm.circuito.filter((x) => !/conformar/i.test(x));
   for (const c of [
-    { origen: `vídeo cap. ${cv.cap}`, pregunta: cv.pregunta, pasos: cv.pasos, explicacion: cv.explicacion },
+    cv,
     { origen: cm.id, pregunta: `Ordena el circuito de ${(META_CORTO[cm.id] ?? cm.titulo).toLowerCase()} que has practicado en el manual.`, pasos: pasosCm, explicacion: `El orden del manual: ${pasosCm.join(' › ')}.` },
   ].slice(0, REPARTO.orden)) {
     const orden = desordena(r, c.pasos.length);
@@ -772,6 +828,34 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
 
   // Criterio y, si algún banco se queda corto, más tests
   for (const q of r.shuffle(CRITERIO).slice(0, REPARTO.criterio)) elegidas.push({ ...q, origen: 'criterio' });
+
+  // Tesorería: un «¿dónde harías clic?» de su manual (si tiene capturas marcadas) y el resto, test de su banco y de sus ejercicios
+  const modTes = MODULOS.find((m) => m.id === 'tesoreria');
+  const pasosTes = pasosClic('tesoreria');
+  let cupoTes = REPARTO.tesoreria;
+  if (pasosTes.length && cupoTes > 1) {
+    const p = r.pick(pasosTes);
+    elegidas.push({
+      tipo: 'clic',
+      origen: 'tesoreria',
+      modulo: 'tesoreria',
+      pantalla: p.pantalla,
+      pregunta: `¿Dónde tocas «${p.etiqueta.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+Es igual a.*$/i, '').trim()}»?`,
+      paso: p.texto,
+      imagen: p.imagen,
+      zona: p.zona,
+      etiqueta: p.etiqueta,
+      explicacion: `Es «${p.etiqueta}».${p.detalle ? ` ${p.detalle}` : ''}`,
+    });
+    cupoTes--;
+  }
+  const bancoTes = r.shuffle([...TESORERIA, ...(modTes?.ejercicios.flatMap((e) => e.test).filter(apta) ?? [])]);
+  for (const q of bancoTes) {
+    if (cupoTes <= 0) break;
+    if (elegidas.some((e) => e.pregunta === q.pregunta)) continue;
+    elegidas.push({ ...q, origen: 'tesoreria' });
+    cupoTes--;
+  }
   const resto = r.shuffle(MODULOS.flatMap((m) => m.ejercicios.flatMap((e) => e.test).filter(apta).map((q) => ({ ...q, origen: m.id }))));
   while (elegidas.length < NUM_TEORIA && resto.length) {
     const q = resto.shift()!;
@@ -812,7 +896,7 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   });
 }
 
-const META_CORTO: Record<string, string> = { maestros: 'Maestros', parametrizacion: 'Parametrización', compras: 'Compras', ventas: 'Ventas', asientos: 'Asientos', carteras: 'Carteras', 'icon-contabilidad': 'Contabilidad general', 'icon-cartera': 'Cobros y pagos', 'icon-impuestos': 'Impuestos', 'icon-activos': 'Activos fijos' };
+const META_CORTO: Record<string, string> = { maestros: 'Maestros', parametrizacion: 'Parametrización', compras: 'Compras', ventas: 'Ventas', asientos: 'Asientos', carteras: 'Carteras', tesoreria: 'Tesorería', 'icon-contabilidad': 'Contabilidad general', 'icon-cartera': 'Cobros y pagos', 'icon-impuestos': 'Impuestos', 'icon-activos': 'Activos fijos' };
 
 /** ¿Ha contestado del todo? (las de ordenar y relacionar pueden quedarse a medias) */
 export function respondida(q: PreguntaExamen, r: RespuestaTeoria | undefined): boolean {

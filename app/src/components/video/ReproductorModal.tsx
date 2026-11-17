@@ -2,13 +2,16 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { CAPITULOS, type MomentoVideo } from '../../content/videoMapa';
+import type { MomentoVideo } from '../../content/videoMapa';
+import { serieDe } from '../../content/videoSeries';
 import { mmss } from '../../lib/config';
 import { baseUrl } from '../../lib/texto';
 import { Icon } from '../Icon';
 import './video-modal.css';
 
 export interface ReproductorModalProps {
+  /** Serie de vídeo (videoSeries.ts); por defecto, compras */
+  serie?: string;
   /** Capítulo (1-10) que se abre */
   capitulo: number;
   /** Segundo dentro del clip del capítulo en que empieza */
@@ -22,11 +25,14 @@ export interface ReproductorModalProps {
  * Clip de un capítulo en una ventana modal sobre la página actual, con su índice de escenas.
  * Esc o un toque fuera la cierran. En móvil ocupa toda la pantalla.
  */
-export function ReproductorModal({ capitulo, t = 0, abierto, onCerrar }: ReproductorModalProps) {
+export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: ReproductorModalProps) {
+  const sv = serieDe(serie);
+  const CAPITULOS = sv.capitulos;
   const reducir = !!useReducedMotion();
   const [n, setN] = useState(capitulo);
   const [inicio, setInicio] = useState(t);
   const [ahora, setAhora] = useState(t);
+  const [fallo, setFallo] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
   const cerrar = useRef<HTMLButtonElement>(null);
   const caja = useRef<HTMLDivElement>(null);
@@ -127,6 +133,7 @@ export function ReproductorModal({ capitulo, t = 0, abierto, onCerrar }: Reprodu
     setInicio(0);
     setAhora(0);
   };
+  useEffect(() => setFallo(false), [n, sv.id, abierto]);
   const prev = CAPITULOS.find((x) => x.n === n - 1), next = CAPITULOS.find((x) => x.n === n + 1);
 
   return createPortal(
@@ -160,7 +167,7 @@ export function ReproductorModal({ capitulo, t = 0, abierto, onCerrar }: Reprodu
               </span>
               <div className="vm-cab-txt">
                 <p className="vm-kicker">
-                  Vídeo de compras · capítulo {c.n} de {CAPITULOS.length}
+                  {sv.titulo} · capítulo {c.n} de {CAPITULOS.length}
                 </p>
                 <h2 id="vm-titulo">{c.titulo}</h2>
               </div>
@@ -173,13 +180,14 @@ export function ReproductorModal({ capitulo, t = 0, abierto, onCerrar }: Reprodu
               <div className="vm-pantalla">
                 {c.url ? (
                   <video
-                    key={c.n}
+                    key={`${sv.id}-${c.n}`}
                     ref={video}
                     src={c.url}
                     poster={c.poster ? baseUrl(c.poster) : undefined}
                     controls
                     playsInline
                     preload="metadata"
+                    onError={() => setFallo(true)}
                     onLoadedMetadata={(e) => aplicarSalto(e.currentTarget)}
                     onLoadedData={(e) => aplicarSalto(e.currentTarget)}
                     onCanPlay={(e) => aplicarSalto(e.currentTarget)}
@@ -197,6 +205,12 @@ export function ReproductorModal({ capitulo, t = 0, abierto, onCerrar }: Reprodu
                 ) : (
                   <p className="vm-nopub">
                     <Icon name="aviso" /> Este capítulo aún no está publicado.
+                  </p>
+                )}
+                {fallo && c.url && (
+                  <p className="vm-nopub vm-fallo" role="status">
+                    <Icon name="aviso" /> No se ha podido cargar el clip. Búscalo en la grabación: {sv.original ? sv.corto : sv.titulo} ·{' '}
+                    {mmss(c.inicio + ahora)} — {c.escenas[escena]?.titulo ?? c.titulo}
                   </p>
                 )}
               </div>
@@ -230,9 +244,11 @@ export function ReproductorModal({ capitulo, t = 0, abierto, onCerrar }: Reprodu
                   Siguiente <Icon name="flecha" />
                 </button>
               </div>
-              <Link className="vm-pagina" to={`/video/${c.n}?t=${Math.floor(ahora)}`} onClick={onCerrar}>
-                Abrir en la página del vídeo
-              </Link>
+              {sv.pagina && (
+                <Link className="vm-pagina" to={`${sv.pagina}/${c.n}?t=${Math.floor(ahora)}`} onClick={onCerrar}>
+                  Abrir en la página del vídeo
+                </Link>
+              )}
             </footer>
           </motion.div>
         </motion.div>
@@ -254,11 +270,13 @@ export function BotonMomento({ m, className }: { m: MomentoVideo; className?: st
         <span className="vm-boton-txt">
           <strong>Míralo en el vídeo</strong>
           <span>
-            cap. {m.capitulo}, {mmss(m.tCap)} — {m.titulo}
+            {m.serie && serieDe(m.serie).original
+              ? `${serieDe(m.serie).corto} · ${mmss(m.t)} — ${m.titulo}`
+              : `${m.serie ? `${serieDe(m.serie).corto} · ` : ''}cap. ${m.capitulo}, ${mmss(m.tCap)} — ${m.titulo}`}
           </span>
         </span>
       </button>
-      <ReproductorModal capitulo={m.capitulo} t={m.tCap} abierto={abierto} onCerrar={() => setAbierto(false)} />
+      <ReproductorModal serie={m.serie} capitulo={m.capitulo} t={m.tCap} abierto={abierto} onCerrar={() => setAbierto(false)} />
     </>
   );
 }

@@ -1,25 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { CAPITULOS } from '../../content/videoMapa';
+import { serieDe } from '../../content/videoSeries';
 import { mmss } from '../../lib/config';
 import { baseUrl } from '../../lib/texto';
 import { Icon } from '../Icon';
 import { ReproductorModal } from './ReproductorModal';
 import './video-modal.css';
 
-/** Los 10 capítulos del vídeo de compras: al tocar uno se reproduce en una ventana sobre la página. */
-export function CapitulosCompras({ titulo = 'El vídeo de compras, por capítulos' }: { titulo?: string }) {
+/** Capítulos de un vídeo (por defecto, compras): al tocar uno se reproduce en una ventana sobre la página. */
+export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titulo?: string; intro?: string }) {
+  const sv = serieDe(serie);
+  const CAPITULOS = sv.capitulos;
+  const hid = `vc-titulo-${sv.id}`;
   const reducir = !!useReducedMotion();
   const [cap, setCap] = useState<number | null>(null);
   const [ultimo, setUltimo] = useState(1);
   const total = Math.round(CAPITULOS.reduce((a, c) => a + c.duracion, 0) / 60);
   return (
-    <section className="vc" aria-labelledby="vc-titulo">
+    <section className="vc" aria-labelledby={hid}>
       <div className="vc-cab">
-        <h2 id="vc-titulo">{titulo}</h2>
+        <h2 id={hid}>{titulo ?? `${sv.titulo}, por capítulos`}</h2>
+        {intro && <p className="vc-intro">{intro}</p>}
         <p className="muted small">
-          {total} minutos en {CAPITULOS.length} capítulos. Toca uno para verlo aquí mismo. <Link to="/video">Ver la página del vídeo</Link>
+          {total} minutos en {CAPITULOS.length} capítulos. Toca uno para verlo aquí mismo.{' '}
+          {sv.pagina && <Link to={sv.pagina}>Ver la página del vídeo</Link>}
         </p>
       </div>
       <ol className="vc-lista">
@@ -60,7 +65,12 @@ export function CapitulosCompras({ titulo = 'El vídeo de compras, por capítulo
           </motion.li>
         ))}
       </ol>
-      <ReproductorModal capitulo={cap ?? ultimo} t={0} abierto={cap !== null} onCerrar={() => setCap(null)} />
+      <ReproductorModal serie={sv.id} capitulo={cap ?? ultimo} t={0} abierto={cap !== null} onCerrar={() => setCap(null)} />
     </section>
   );
+}
+
+/** El vídeo de compras (alias histórico) */
+export function CapitulosCompras({ titulo = 'El vídeo de compras, por capítulos' }: { titulo?: string }) {
+  return <CapitulosSerie titulo={titulo} />;
 }

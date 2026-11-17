@@ -3,6 +3,8 @@
  * Lo mantiene el agente del vídeo; los componentes de ejercicio solo lo leen.
  */
 export interface MomentoVideo {
+  /** Serie de vídeo (ver videoSeries.ts); sin ella es el vídeo de compras */
+  serie?: string;
   capitulo: number;      // 1-10
   t: number;             // segundo dentro del vídeo completo
   tCap: number;          // segundo dentro del clip del capítulo

@@ -38,6 +38,7 @@ const CUENTAS: Record<string, string> = {
   '62900.00000': 'Otros servicios',
   '62902.00000': 'Gastos diversos',
   '62903.00000': 'Correos y mensajería',
+  '62600.00000': 'Servicios bancarios y similares',
 };
 
 /** Lee las líneas de un asiento de los JSON (descarta las que no traen cuenta) */
@@ -114,6 +115,15 @@ function construirRondas(ini: string): Ronda[] {
     { cuenta: '57200.00000', nombre: CUENTAS['57200.00000'], lado: 'H', importe: total, pide: 'importe' },
   ];
 
+  // 6 · Movimiento de tesorería: pago por transferencia con comisión
+  const pago = azar(600, 3200) + elige([0, 0.15, 0.4, 0.75]);
+  const comision = elige([2.5, 3.5, 4.75, 6]);
+  const r6: Linea[] = [
+    { cuenta: '40000.00000', nombre: CUENTAS['40000.00000'], lado: 'D', importe: pago, pide: 'lado', pista: 'El flujo del pago lleva la cuenta del proveedor: le pagas, tu deuda baja, así que va al Debe.' },
+    { cuenta: '62600.00000', nombre: CUENTAS['62600.00000'], lado: 'D', importe: comision, pide: 'cuenta', pista: 'La comisión es un gasto bancario: el flujo de comisión lleva la 62600, Servicios bancarios.' },
+    { cuenta: '57200.00000', nombre: CUENTAS['57200.00000'], lado: 'H', importe: Math.round((pago + comision) * 100) / 100, pide: 'importe', pista: 'Del banco sale el pago más la comisión.' },
+  ];
+
   return [
     {
       titulo: 'Asiento 6 (EA-DOC-001)',
@@ -149,6 +159,16 @@ function construirRondas(ini: string): Ronda[] {
       texto: `Pagas por banco una factura de ${CUENTAS[gasto].toLowerCase()} de ${f2(base)} + IVA 21 %. Calcula el IVA y lo que sale del banco.`,
       ayuda: 'IVA = base × 21 / 100, redondeado a 2 decimales. Lo que sale del banco es base + IVA.',
       lineas: r5,
+      modo: 'normal',
+    },
+    {
+      titulo: 'Movimiento de tesorería con comisión',
+      texto: conIni(
+        `Contabilizas el movimiento de tesorería de la cuenta BBVACCTRI: pago por transferencia (operación PMICDT) de ${f2(pago)} a T{INI} Proveedor, con una comisión de ${f2(comision)} en su propio flujo. El banco es la cuenta contable de la cuenta financiera; cada flujo pone la suya.`,
+        ini,
+      ),
+      ayuda: 'El banco (57200) va contra las cuentas de los flujos: el pago al proveedor y la comisión. Pagas: el banco baja por el Haber y lo que sale va al Debe.',
+      lineas: r6,
       modo: 'normal',
     },
   ];
@@ -377,7 +397,7 @@ function RondaAsiento({ ronda, sim }: { ronda: Ronda; sim: Sim }) {
 
 export default function SimAsiento() {
   const ini = useIni();
-  const sim = useSim('asiento', 5);
+  const sim = useSim('asiento', 6);
   const rondas = useMemo(() => construirRondas(ini), [ini, sim.partida]); // eslint-disable-line react-hooks/exhaustive-deps
   const ronda = rondas[sim.ronda] ?? rondas[0];
   return (

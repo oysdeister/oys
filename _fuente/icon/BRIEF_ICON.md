@@ -21,7 +21,7 @@ Módulos nuevos en `app/src/content/icon-<x>.json` con el esquema de `_fuente/ES
 1. `icon-parametrizacion` — Visión general de ICON, orden de carga de tablas (empresas, plan contable, terceros, diarios, tipos de efecto, bancos, impuestos…), escenarios solo/integrado con IGES, tipologías de documentos IGES que contabilizan.
 2. `icon-contabilidad` — Contabilidad general: diario contable, asientos, procesos periódicos, cierre/apertura, balances.
 3. `icon-cartera` — Cuentas a cobrar y a pagar: efectos, gestiones, remesas, procesos, recobros, cambio de estado → asiento, cuadre de cartera a fecha pasada.
-4. `icon-tesoreria` — Tesorería y Caja: bancos, extractos, conciliación, cajas, informes de posición.
+4. `icon-tesoreria` — Tesorería y Caja: bancos, extractos, conciliación, cajas, informes de posición. (Fundido en `tesoreria.json` como ejercicios 6 a 8.)
 5. `icon-impuestos` — IVA, procesos de impuestos, maestros de impuestos (SII como mención si sale).
 6. `icon-activos` — Activos permanentes (amortizaciones).
 
