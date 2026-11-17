@@ -3,7 +3,7 @@
  * Sin VITE_CLERK_PUBLISHABLE_KEY la app funciona como antes, sin login y con el progreso solo en el navegador.
  */
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import { ClerkLoaded, ClerkLoading, ClerkProvider, Show, SignIn, SignUp } from '@clerk/react';
+import { ClerkLoaded, ClerkLoading, ClerkProvider, Show, SignIn, SignUp, useClerk, useUser } from '@clerk/react';
 import { esES } from '@clerk/localizations';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Espacio } from '../components/shell/Espacio';
@@ -42,6 +42,43 @@ export const APARIENCIA = {
 
 const EstadoCtx = createContext<EstadoSync | null>(null);
 export const useEstadoSync = () => useContext(EstadoCtx);
+
+/** Dominio de correo con acceso (VITE_DOMINIO_PERMITIDO; vacío = cualquiera) y correos sueltos de excepción (VITE_CORREOS_EXTRA, separados por comas). */
+const DOMINIO = ((import.meta.env.VITE_DOMINIO_PERMITIDO as string | undefined) ?? 'oysconsultores.com').trim().toLowerCase();
+const EXTRA = ((import.meta.env.VITE_CORREOS_EXTRA as string | undefined) ?? '')
+  .split(',')
+  .map((c) => c.trim().toLowerCase())
+  .filter(Boolean);
+
+function correoPermitido(correo: string) {
+  const c = correo.toLowerCase();
+  return !DOMINIO || c.endsWith(`@${DOMINIO}`) || EXTRA.includes(c);
+}
+
+/** Solo deja pasar cuentas con algún correo verificado del dominio de O&S (o de la lista de excepciones). */
+function SoloOys({ children }: { children: ReactNode }) {
+  const { user } = useUser();
+  const { signOut } = useClerk();
+  if (!user) return null;
+  const correos = user.emailAddresses.filter((e) => e.verification?.status === 'verified').map((e) => e.emailAddress);
+  if (correos.some(correoPermitido)) return <>{children}</>;
+  return (
+    <div className="acc">
+      <Espacio />
+      <div className="acc-in acc-solo">
+        <div className="acc-copy">
+          <h1>Solo cuentas de O&amp;S</h1>
+          <p className="acc-lead">
+            Has entrado con {correos[0] ?? 'una cuenta'}, pero esta plataforma es solo para correos @{DOMINIO}. Sal y entra con tu cuenta de empresa.
+          </p>
+          <button type="button" className="acc-salir acc-salir-grande" onClick={() => void signOut()}>
+            Salir y entrar con otra cuenta
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Sincronizado({ children }: { children: ReactNode }) {
   const estado = useSincronizarProgreso();
@@ -104,7 +141,9 @@ export function Acceso({ children }: { children: ReactNode }) {
         <PantallaEntrada />
       </Show>
       <Show when="signed-in">
-        <Sincronizado>{children}</Sincronizado>
+        <SoloOys>
+          <Sincronizado>{children}</Sincronizado>
+        </SoloOys>
       </Show>
     </ClerkProvider>
   );

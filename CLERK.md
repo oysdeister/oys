@@ -31,6 +31,7 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
   - simuladores y guiado: cuenta como hecho si está hecho en cualquiera de los dos;
   - examen: gana el validado; si los dos lo están o ninguno, la nota más alta.
   - El progreso que ya hubiera en un navegador antes de Clerk se suma a la primera cuenta que entre en él.
+- **Solo correos de O&S:** aunque alguien tenga cuenta (por ejemplo, invitado por error o con un Google personal), la app solo se abre si la cuenta tiene un correo verificado `@oysconsultores.com`. Si no, ve «Solo cuentas de O&S» y un botón para salir. El dominio se cambia con `VITE_DOMINIO_PERMITIDO` (vacío = cualquiera) y se pueden añadir correos sueltos con `VITE_CORREOS_EXTRA` (separados por comas), como variables de repositorio `DOMINIO_PERMITIDO` y `CORREOS_EXTRA`. Es un filtro de la interfaz, igual que el login. En Clerk, el equivalente automático es **Allowlist**, que es de pago (Pro).
 - **Datos del alumno:** al entrar por primera vez ya no se pide nombre, iniciales ni usuario. Salen de la cuenta: nombre completo o, si no lo hay, la parte del correo antes de la `@`; las iniciales de ese nombre; y el usuario a partir del correo. Las iniciales se usan en los códigos de los ejercicios (por ejemplo, `TSB`).
 - **Guardado:** se guarda 2 segundos después del último cambio, al ocultar la pestaña y al pulsar **Salir**.
   - Sin conexión, todo sigue funcionando en local. Lo pendiente se sube al volver la red o en la siguiente visita.
