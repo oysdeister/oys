@@ -3,7 +3,9 @@
 import { useSyncExternalStore } from 'react';
 
 export type EstadoDoc = 'Provisional' | 'Validado';
-export type Pantalla = 'inicio' | 'terceros' | 'proveedores' | 'articulos' | 'pedidos' | 'albaranes' | 'facturas' | 'stock' | 'docflow';
+export type PantallaFija = 'inicio' | 'terceros' | 'proveedores' | 'articulos' | 'pedidos' | 'albaranes' | 'facturas' | 'stock' | 'docflow' | 'asientos' | 'efectos' | 'remesas' | 'extractos' | 'conciliacion';
+/** Pantallas propias del circuito o `obj:<código>` para cualquier otra pantalla del catálogo de Axional */
+export type Pantalla = PantallaFija | `obj:${string}`;
 
 export interface Direccion {
   tipo: number;
@@ -120,12 +122,91 @@ export interface Db {
   facturas: Factura[];
   contadores: Record<string, number>;
   log: Evento[];
+  asientos: Asiento[];
+  efectos: Efecto[];
+  remesas: Remesa[];
+  extractos: MovBanco[];
+}
+
+/* ------------------------------------------------------------------ finanzas: asientos, cartera, remesas, bancos */
+export interface Apunte {
+  orden: number;
+  cuenta: string;
+  concepto: string;
+  debe: number;
+  haber: number;
+  /** extracto bancario con el que se ha conciliado (solo cuentas 572) */
+  conciliado?: number;
+}
+export interface Asiento {
+  numero: number;
+  fecha: string;
+  diario: string;
+  jusser: string;
+  docser: string;
+  /** MAN manual · FCOA factura de compra · REM remesa */
+  origen: 'MAN' | 'FCOA' | 'REM';
+  /** P Provisional · C Contabilizado (Finalizar) */
+  estado: 'P' | 'C';
+  apuntes: Apunte[];
+  autor: string;
+}
+/** Estados reales de cefecest: PE Pendiente · OP Ordenado (en remesa) · PA Pagado · CO Cobrado */
+export type EstadoEfecto = 'PE' | 'OP' | 'PA' | 'CO';
+export interface Efecto {
+  numero: number;
+  clase: 'P' | 'C';
+  tercero: string;
+  cuenta: string;
+  docser: string;
+  numefe: number;
+  fecha: string;
+  fecven: string;
+  importe: number;
+  tipefe: string;
+  estado: EstadoEfecto;
+  remesa: number | null;
+  autor: string;
+}
+export interface Remesa {
+  numrem: number;
+  clase: 'P' | 'C';
+  /** tipo de remesa (cremesad), p. ej. PSCTT Pago transferencias (con Tesorería) */
+  tipdoc: string;
+  fecrem: string;
+  fecval: string;
+  ctafin: string;
+  /** A Abierto · C Cerrado */
+  estrem: 'A' | 'C';
+  efectos: number[];
+  asiento: number | null;
+  autor: string;
+}
+export interface MovBanco {
+  orden: number;
+  ctafin: string;
+  fecope: string;
+  fecval: string;
+  concom: string;
+  concep: string;
+  docume: string;
+  /** negativo = cargo (pago), positivo = abono (cobro) */
+  importe: number;
+  /** asiento y orden del apunte conciliado */
+  conciliado: { asiento: number; orden: number } | null;
+  autor: string;
 }
 
 const CLAVE = 'oys-erp-sim-v1';
 const IVA = 0.21;
+const eurTxt = (n: number) => n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 export const r2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 export const hoy = () => new Date().toISOString().slice(0, 10);
+export const sumaDias = (iso: string, n: number) => {
+  const d = new Date(`${iso}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+};
 
 /* ------------------------------------------------------------------ datos de partida (base TUTORIAL) */
 function semilla(): Db {
@@ -169,8 +250,16 @@ function semilla(): Db {
     pedidos: [],
     albaranes: [],
     facturas: [],
-    contadores: { PC: 0, AC: 1, FC: 0 }, // el albarán 0AC000001 «ya existe» en la TUTORIAL
+    contadores: { PC: 0, AC: 1, FC: 0, ASI: 100, EFE: 40, REM: 10, EXT: 3 }, // la TUTORIAL ya tiene numeración usada
     log: [],
+    asientos: [],
+    efectos: [],
+    remesas: [],
+    extractos: [
+      { orden: 1, ctafin: 'BBVA_CA', fecope: '2026-11-02', fecval: '2026-11-02', concom: '02', concep: 'TRANSFERENCIA RECIBIDA CLIENTE 00002', docume: '', importe: 1210, conciliado: null, autor: sis },
+      { orden: 2, ctafin: 'BBVA_CA', fecope: '2026-11-05', fecval: '2026-11-05', concom: '03', concep: 'RECIBO SUMINISTRO ELECTRICO', docume: '', importe: -96.8, conciliado: null, autor: sis },
+      { orden: 3, ctafin: 'BBVA_CA', fecope: '2026-11-10', fecval: '2026-11-10', concom: '12', concep: 'COMISION MANTENIMIENTO CUENTA', docume: '', importe: -6, conciliado: null, autor: sis },
+    ],
   };
 }
 
@@ -179,7 +268,8 @@ function leer(): Db {
     const raw = localStorage.getItem(CLAVE);
     if (!raw) return semilla();
     const d = JSON.parse(raw) as Db;
-    return d.version === 1 ? { ...semilla(), ...d } : semilla();
+    const s = semilla();
+    return d.version === 1 ? { ...s, ...d, contadores: { ...s.contadores, ...d.contadores } } : s;
   } catch {
     return semilla();
   }
@@ -460,7 +550,37 @@ export const erp = {
     const t = db.terceros.find((x) => x.codigo === f.proveedor);
     if (si && !t?.relaciones.some((r) => r.codigo === 'PRO')) return err(`No se encuentra la cuenta contable del proveedor: el tercero ${f.proveedor} no tiene la relación PRO (40000.00000). Añádela en Terceros › Relaciones.`);
     const asiento = si ? asientoPrevisto(db, f) : [];
-    guardar(conLog({ ...db, facturas: db.facturas.map((x) => (x.numero === numeroDoc ? { ...x, contabilizada: si, asiento } : x)) }, si ? 'contabilizar' : 'descontabilizar', `factura:${numeroDoc}`, autor));
+    const efs = db.efectos.filter((e) => e.docser === f.numero);
+    if (!si && efs.some((e) => e.estado !== 'PE')) return err(`El efecto ${efs.find((e) => e.estado !== 'PE')!.numero} ya está en una remesa o pagado. Retrocédelo antes de descontabilizar la factura.`);
+    let d: Db = { ...db, facturas: db.facturas.map((x) => (x.numero === numeroDoc ? { ...x, contabilizada: si, asiento } : x)) };
+    if (si) {
+      const nAsi = (d.contadores.ASI ?? 100) + 1;
+      const asi: Asiento = { numero: nAsi, fecha: f.fecha, diario: 'COM', jusser: 'FC', docser: f.numero, origen: 'FCOA', estado: 'C', apuntes: asiento.map((l, i) => ({ orden: i + 1, ...l })), autor };
+      const prov = d.proveedores.find((p) => p.tercero === f.proveedor);
+      const total = asiento.reduce((x, l) => x + l.haber, 0);
+      const dias = prov?.plazoPago === 'CON' ? [0] : prov?.plazoPago === '60D' ? [60] : prov?.plazoPago === '3060' ? [30, 60] : [30];
+      let nEfe = d.contadores.EFE ?? 40;
+      const cta = asiento.find((l) => l.haber > 0)?.cuenta ?? '40000.00000';
+      const nuevos: Efecto[] = dias.map((dd, i) => ({
+        numero: ++nEfe,
+        clase: 'P',
+        tercero: f.proveedor,
+        cuenta: cta,
+        docser: f.numero,
+        numefe: i + 1,
+        fecha: f.fecha,
+        fecven: sumaDias(f.fecha, dd),
+        importe: i === dias.length - 1 ? r2(total - r2(total / dias.length) * (dias.length - 1)) : r2(total / dias.length),
+        tipefe: prov?.tipoEfecto ?? 'TF',
+        estado: 'PE',
+        remesa: null,
+        autor,
+      }));
+      d = { ...d, asientos: [...d.asientos, asi], efectos: [...d.efectos, ...nuevos], contadores: { ...d.contadores, ASI: nAsi, EFE: nEfe } };
+    } else {
+      d = { ...d, asientos: d.asientos.filter((a) => !(a.origen === 'FCOA' && a.docser === f.numero)), efectos: d.efectos.filter((e) => e.docser !== f.numero) };
+    }
+    guardar(conLog(d, si ? 'contabilizar' : 'descontabilizar', `factura:${numeroDoc}`, autor));
     return bien(numeroDoc);
   },
   quitarAlbaranDeFactura(numeroDoc: string, alb: string, autor: string): Res {
@@ -521,4 +641,299 @@ export const CAT = {
     { tipo: 'Proveedor', codigo: 'PRO', cuenta: '40000.00000', t: 'Proveedor · PRO · Proveedores (40000.00000)' },
     { tipo: 'Cliente', codigo: 'CLI', cuenta: '43000.00000', t: 'Cliente · CLI · Clientes (43000.00000)' },
   ] as const,
+};
+
+/* ------------------------------------------------------------------ finanzas: cálculos */
+export const sumaDebe = (a: Asiento) => r2(a.apuntes.reduce((s, x) => s + (x.debe || 0), 0));
+export const sumaHaber = (a: Asiento) => r2(a.apuntes.reduce((s, x) => s + (x.haber || 0), 0));
+export const cuadra = (a: Asiento) => sumaDebe(a) > 0 && Math.abs(sumaDebe(a) - sumaHaber(a)) < 0.005;
+export const importeRemesa = (d: Db, r: Remesa) => r2(r.efectos.reduce((s, n) => s + (d.efectos.find((e) => e.numero === n)?.importe ?? 0), 0));
+/** Cuenta contable de una cuenta financiera (Bancos propios) */
+export const cuentaBanco = (ctafin: string) => CUENTAS_FIN.find((c) => c.ctafin === ctafin)?.cuenta ?? '57200.00000';
+/** Apuntes de bancos (57x) de asientos contabilizados, con su asiento */
+export function apuntesBanco(d: Db, ctafin?: string) {
+  const cta = ctafin ? cuentaBanco(ctafin) : null;
+  return d.asientos
+    .filter((a) => a.estado === 'C')
+    .flatMap((a) => a.apuntes.map((p) => ({ asiento: a, apunte: p })))
+    .filter(({ apunte }) => (cta ? apunte.cuenta === cta : /^57/.test(apunte.cuenta)));
+}
+/** Importe del apunte visto desde el banco: debe = entra dinero (+), haber = sale (−) */
+export const importeBanco = (p: Apunte) => r2((p.debe || 0) - (p.haber || 0));
+export const CUENTAS_FIN = [
+  { ctafin: 'BBVA_CA', nombre: 'BBVA cuenta corriente CA', cuenta: '57200.00000' },
+  { ctafin: 'CAPT_BCO', nombre: 'CAP Tesoreria banco captura', cuenta: '57200.00000' },
+  { ctafin: 'CAJA_CA', nombre: 'Caja efectivo CA', cuenta: '57000.00000' },
+];
+/** Plan contable reducido de la base TUTORIAL (PGE 2008) para validar cuentas */
+export const PLAN: { cuenta: string; nombre: string }[] = [
+  { cuenta: '40000.00000', nombre: 'Proveedores' },
+  { cuenta: '41000.00000', nombre: 'Acreedores por prestaciones de servicios' },
+  { cuenta: '43000.00000', nombre: 'Clientes' },
+  { cuenta: '47200.00021', nombre: 'H.P. IVA soportado 21 %' },
+  { cuenta: '47700.00021', nombre: 'H.P. IVA repercutido 21 %' },
+  { cuenta: '57000.00000', nombre: 'Caja, euros' },
+  { cuenta: '57200.00000', nombre: 'Bancos e instituciones de crédito c/c vista, euros' },
+  { cuenta: '60000.00000', nombre: 'Compras de mercaderías' },
+  { cuenta: '62100.00000', nombre: 'Arrendamientos y cánones' },
+  { cuenta: '62600.00000', nombre: 'Servicios bancarios y similares' },
+  { cuenta: '62800.00000', nombre: 'Suministros' },
+  { cuenta: '64000.00000', nombre: 'Sueldos y salarios' },
+  { cuenta: '70000.00000', nombre: 'Ventas de mercaderías' },
+];
+const cuentaValida = (c: string) => PLAN.some((p) => p.cuenta === c) || /^4[03]000\.\w{5}$/.test(c);
+
+/* ------------------------------------------------------------------ finanzas: acciones */
+export const fin = {
+  /* ---------- asientos (casientos / capuntes) */
+  nuevoAsiento(autor: string): Res {
+    const n = (db.contadores.ASI ?? 100) + 1;
+    const a: Asiento = { numero: n, fecha: hoy(), diario: 'GEN', jusser: 'AS', docser: '', origen: 'MAN', estado: 'P', apuntes: [], autor };
+    guardar(conLog({ ...db, asientos: [...db.asientos, a], contadores: { ...db.contadores, ASI: n } }, 'crear', `asiento:${n}`, autor));
+    return bien(String(n));
+  },
+  guardarAsiento(a: Asiento, autor: string): Res {
+    const prev = db.asientos.find((x) => x.numero === a.numero);
+    if (!prev) return err('No existe el asiento.');
+    if (prev.estado === 'C') return err('El asiento está contabilizado. Pulsa «Abrir a provisional» para modificarlo.');
+    if (prev.origen !== 'MAN') return err(`El asiento procede de ${prev.origen === 'FCOA' ? 'una factura de compra' : 'una remesa'}: se modifica desde el documento de origen.`);
+    for (const p of a.apuntes) {
+      const cta = up(p.cuenta);
+      if (!cuentaValida(cta)) return err(`Línea ${p.orden}: la cuenta ${p.cuenta} no existe en el plan contable PGE 2008.`);
+      if ((p.debe || 0) < 0 || (p.haber || 0) < 0) return err(`Línea ${p.orden}: los importes no pueden ser negativos.`);
+      if ((p.debe || 0) > 0 && (p.haber || 0) > 0) return err(`Línea ${p.orden}: un apunte va al debe o al haber, no a los dos.`);
+      if (!(p.debe || 0) && !(p.haber || 0)) return err(`Línea ${p.orden}: indica el importe al debe o al haber.`);
+    }
+    const apuntes = a.apuntes.map((p, i) => ({ ...p, orden: i + 1, cuenta: up(p.cuenta), debe: r2(p.debe || 0), haber: r2(p.haber || 0) }));
+    guardar(conLog({ ...db, asientos: db.asientos.map((x) => (x.numero === a.numero ? { ...a, apuntes } : x)) }, 'editar', `asiento:${a.numero}`, autor));
+    return bien(String(a.numero));
+  },
+  /** «Finalizar»: comprueba el cuadre y lo deja contabilizado */
+  finalizarAsiento(n: number, autor: string): Res {
+    const a = db.asientos.find((x) => x.numero === n);
+    if (!a) return err('No existe el asiento.');
+    if (a.estado === 'C') return err('El asiento ya está finalizado.');
+    if (a.apuntes.length < 2) return err('Un asiento necesita al menos dos apuntes.');
+    if (!cuadra(a)) return err(`Asiento descuadrado: Debe ${eurTxt(sumaDebe(a))} · Haber ${eurTxt(sumaHaber(a))} · diferencia ${eurTxt(r2(sumaDebe(a) - sumaHaber(a)))}.`);
+    guardar(conLog({ ...db, asientos: db.asientos.map((x) => (x.numero === n ? { ...x, estado: 'C' } : x)) }, 'finalizar', `asiento:${n}`, autor));
+    return bien(String(n));
+  },
+  abrirAsiento(n: number, autor: string): Res {
+    const a = db.asientos.find((x) => x.numero === n);
+    if (!a) return err('No existe el asiento.');
+    if (a.estado === 'P') return err('El asiento ya está en provisional.');
+    if (a.origen !== 'MAN') return err('Los asientos generados por documentos se abren descontabilizando el documento de origen.');
+    if (a.apuntes.some((p) => p.conciliado)) return err('El asiento tiene apuntes conciliados con el extracto bancario. Desconcílialos primero.');
+    guardar(conLog({ ...db, asientos: db.asientos.map((x) => (x.numero === n ? { ...x, estado: 'P' } : x)) }, 'provisional', `asiento:${n}`, autor));
+    return bien(String(n));
+  },
+  copiarAsiento(n: number, autor: string): Res {
+    const a = db.asientos.find((x) => x.numero === n);
+    if (!a) return err('No existe el asiento.');
+    const m = (db.contadores.ASI ?? 100) + 1;
+    const c: Asiento = { ...a, numero: m, fecha: hoy(), origen: 'MAN', estado: 'P', apuntes: a.apuntes.map((p) => ({ ...p, conciliado: undefined })), autor };
+    guardar(conLog({ ...db, asientos: [...db.asientos, c], contadores: { ...db.contadores, ASI: m } }, 'copiar', `asiento:${m}<asiento:${n}`, autor));
+    return bien(String(m));
+  },
+  borrarAsiento(n: number, autor: string): Res {
+    const a = db.asientos.find((x) => x.numero === n);
+    if (!a) return err('No existe el asiento.');
+    if (a.estado === 'C') return err('No se puede borrar un asiento contabilizado.');
+    if (a.origen !== 'MAN') return err('El asiento procede de un documento: no se borra desde aquí.');
+    guardar(conLog({ ...db, asientos: db.asientos.filter((x) => x.numero !== n) }, 'borrar', `asiento:${n}`, autor));
+    return bien(String(n));
+  },
+
+  /* ---------- cartera de efectos (cefectos) */
+  /** «Evolucionar estado» / «Retroceder» manual de un efecto suelto */
+  estadoEfecto(n: number, estado: EstadoEfecto, autor: string): Res {
+    const e = db.efectos.find((x) => x.numero === n);
+    if (!e) return err('No existe el efecto.');
+    if (e.remesa !== null) return err(`El efecto está en la remesa ${e.remesa}. Gestiónalo desde la remesa.`);
+    if (estado === e.estado) return err('El efecto ya está en ese estado.');
+    if (estado === 'OP') return err('El estado «Ordenado» lo pone la remesa al incluir el efecto.');
+    guardar(conLog({ ...db, efectos: db.efectos.map((x) => (x.numero === n ? { ...x, estado } : x)) }, 'evolucionar', `efecto:${n}`, autor));
+    return bien(String(n));
+  },
+
+  /* ---------- remesas (cremesas) */
+  nuevaRemesa(clase: 'P' | 'C', tipdoc: string, ctafin: string, autor: string): Res {
+    if (!ctafin) return err('El campo «Cuenta financiera» es obligatorio.');
+    if (!tipdoc) return err('El campo «Tipo remesa» es obligatorio.');
+    const n = (db.contadores.REM ?? 10) + 1;
+    const r: Remesa = { numrem: n, clase, tipdoc, fecrem: hoy(), fecval: hoy(), ctafin, estrem: 'A', efectos: [], asiento: null, autor };
+    guardar(conLog({ ...db, remesas: [...db.remesas, r], contadores: { ...db.contadores, REM: n } }, 'crear', `remesa:${n}`, autor));
+    return bien(String(n));
+  },
+  guardarRemesa(r: Remesa, autor: string): Res {
+    const prev = db.remesas.find((x) => x.numrem === r.numrem);
+    if (!prev) return err('No existe la remesa.');
+    if (prev.estrem === 'C') return err('La remesa está cerrada. Pulsa «Retroceder» para modificarla.');
+    guardar(conLog({ ...db, remesas: db.remesas.map((x) => (x.numrem === r.numrem ? { ...prev, fecrem: r.fecrem, fecval: r.fecval, ctafin: r.ctafin, tipdoc: r.tipdoc } : x)) }, 'editar', `remesa:${r.numrem}`, autor));
+    return bien(String(r.numrem));
+  },
+  /** Selección de efectos: los incluye en la remesa y pasan a «Ordenado» */
+  incluirEfectos(numrem: number, efectos: number[], autor: string): Res {
+    const r = db.remesas.find((x) => x.numrem === numrem);
+    if (!r) return err('No existe la remesa.');
+    if (r.estrem === 'C') return err('La remesa está cerrada.');
+    if (!efectos.length) return err('Marca al menos un efecto.');
+    for (const n of efectos) {
+      const e = db.efectos.find((x) => x.numero === n);
+      if (!e) return err(`El efecto ${n} no existe.`);
+      if (e.clase !== r.clase) return err(`El efecto ${n} es de ${e.clase === 'P' ? 'pago' : 'cobro'} y la remesa de ${r.clase === 'P' ? 'pagos' : 'cobros'}.`);
+      if (e.estado !== 'PE') return err(`El efecto ${n} no está pendiente.`);
+      if (e.remesa !== null) return err(`El efecto ${n} ya está en la remesa ${e.remesa}.`);
+    }
+    guardar(
+      conLog(
+        { ...db, remesas: db.remesas.map((x) => (x.numrem === numrem ? { ...x, efectos: [...x.efectos, ...efectos] } : x)), efectos: db.efectos.map((e) => (efectos.includes(e.numero) ? { ...e, estado: 'OP', remesa: numrem } : e)) },
+        'incluir',
+        `remesa:${numrem}>${efectos.map((n) => `efecto:${n}`).join(',')}`,
+        autor,
+      ),
+    );
+    return bien(String(numrem));
+  },
+  quitarEfecto(numrem: number, n: number, autor: string): Res {
+    const r = db.remesas.find((x) => x.numrem === numrem);
+    if (!r) return err('No existe la remesa.');
+    if (r.estrem === 'C') return err('La remesa está cerrada. Retrocédela antes de quitar efectos.');
+    guardar(conLog({ ...db, remesas: db.remesas.map((x) => (x.numrem === numrem ? { ...x, efectos: x.efectos.filter((e) => e !== n) } : x)), efectos: db.efectos.map((e) => (e.numero === n ? { ...e, estado: 'PE', remesa: null } : e)) }, 'quitar', `remesa:${numrem}>efecto:${n}`, autor));
+    return bien(String(numrem));
+  },
+  /** «Evolucionar estado» de la remesa: la cierra, paga (o cobra) sus efectos y genera el asiento contra el banco */
+  cerrarRemesa(numrem: number, autor: string): Res {
+    const r = db.remesas.find((x) => x.numrem === numrem);
+    if (!r) return err('No existe la remesa.');
+    if (r.estrem === 'C') return err('La remesa ya está cerrada.');
+    if (!r.efectos.length) return err('La remesa no tiene efectos. Añádelos en «Selección de efectos».');
+    const efs = r.efectos.map((n) => db.efectos.find((e) => e.numero === n)!).filter(Boolean);
+    const total = importeRemesa(db, r);
+    const banco = cuentaBanco(r.ctafin);
+    const nAsi = (db.contadores.ASI ?? 100) + 1;
+    const apuntes: Apunte[] =
+      r.clase === 'P'
+        ? [...efs.map((e, i) => ({ orden: i + 1, cuenta: e.cuenta, concepto: `Pago efecto ${e.numero} ${e.docser}`, debe: e.importe, haber: 0 })), { orden: efs.length + 1, cuenta: banco, concepto: `Remesa de pagos ${numrem}`, debe: 0, haber: total }]
+        : [{ orden: 1, cuenta: banco, concepto: `Remesa de cobros ${numrem}`, debe: total, haber: 0 }, ...efs.map((e, i) => ({ orden: i + 2, cuenta: e.cuenta, concepto: `Cobro efecto ${e.numero} ${e.docser}`, debe: 0, haber: e.importe }))];
+    const asi: Asiento = { numero: nAsi, fecha: r.fecval, diario: 'TES', jusser: 'RM', docser: `REM ${numrem}`, origen: 'REM', estado: 'C', apuntes, autor };
+    const fin_: EstadoEfecto = r.clase === 'P' ? 'PA' : 'CO';
+    guardar(
+      conLog(
+        {
+          ...db,
+          remesas: db.remesas.map((x) => (x.numrem === numrem ? { ...x, estrem: 'C', asiento: nAsi } : x)),
+          efectos: db.efectos.map((e) => (r.efectos.includes(e.numero) ? { ...e, estado: fin_ } : e)),
+          asientos: [...db.asientos, asi],
+          contadores: { ...db.contadores, ASI: nAsi },
+        },
+        'cerrar',
+        `remesa:${numrem}>asiento:${nAsi}`,
+        autor,
+      ),
+    );
+    return bien(String(nAsi));
+  },
+  /** «Retroceder»: reabre la remesa, borra su asiento y deja los efectos en Ordenado */
+  retrocederRemesa(numrem: number, autor: string): Res {
+    const r = db.remesas.find((x) => x.numrem === numrem);
+    if (!r) return err('No existe la remesa.');
+    if (r.estrem === 'A') return err('La remesa ya está abierta.');
+    const a = db.asientos.find((x) => x.numero === r.asiento);
+    if (a?.apuntes.some((p) => p.conciliado)) return err('El asiento de la remesa está conciliado con el extracto bancario. Desconcilia antes de retroceder.');
+    guardar(
+      conLog(
+        { ...db, remesas: db.remesas.map((x) => (x.numrem === numrem ? { ...x, estrem: 'A', asiento: null } : x)), efectos: db.efectos.map((e) => (r.efectos.includes(e.numero) ? { ...e, estado: 'OP' } : e)), asientos: db.asientos.filter((x) => x.numero !== r.asiento) },
+        'retroceder',
+        `remesa:${numrem}`,
+        autor,
+      ),
+    );
+    return bien(String(numrem));
+  },
+  borrarRemesa(numrem: number, autor: string): Res {
+    const r = db.remesas.find((x) => x.numrem === numrem);
+    if (!r) return err('No existe la remesa.');
+    if (r.estrem === 'C') return err('No se puede borrar una remesa cerrada.');
+    guardar(conLog({ ...db, remesas: db.remesas.filter((x) => x.numrem !== numrem), efectos: db.efectos.map((e) => (e.remesa === numrem ? { ...e, estado: 'PE', remesa: null } : e)) }, 'borrar', `remesa:${numrem}`, autor));
+    return bien(String(numrem));
+  },
+
+  /* ---------- extractos bancarios (textract) y conciliación */
+  nuevoMovimiento(m: Omit<MovBanco, 'orden' | 'conciliado' | 'autor'>, autor: string): Res {
+    if (!m.ctafin) return err('El campo «Cuenta financiera» es obligatorio.');
+    if (!m.fecope) return err('El campo «Fecha operación» es obligatorio.');
+    if (!m.importe) return err('El campo «Importe extracto» es obligatorio (negativo si es un cargo).');
+    const n = (db.contadores.EXT ?? 3) + 1;
+    guardar(conLog({ ...db, extractos: [...db.extractos, { ...m, importe: r2(m.importe), orden: n, conciliado: null, autor }], contadores: { ...db.contadores, EXT: n } }, 'crear', `extracto:${n}`, autor));
+    return bien(String(n));
+  },
+  guardarMovimiento(m: MovBanco, autor: string): Res {
+    const prev = db.extractos.find((x) => x.orden === m.orden);
+    if (!prev) return err('No existe el movimiento.');
+    if (prev.conciliado) return err('El movimiento está conciliado. Desconcílialo para modificarlo.');
+    if (prev.autor === 'TUTORIAL') return err('Movimiento importado del fichero del banco (Norma 43): no se modifica.');
+    guardar(conLog({ ...db, extractos: db.extractos.map((x) => (x.orden === m.orden ? { ...m, importe: r2(m.importe) } : x)) }, 'editar', `extracto:${m.orden}`, autor));
+    return bien(String(m.orden));
+  },
+  borrarMovimiento(orden: number, autor: string): Res {
+    const m = db.extractos.find((x) => x.orden === orden);
+    if (!m) return err('No existe el movimiento.');
+    if (m.conciliado) return err('No se puede borrar un movimiento conciliado.');
+    if (m.autor === 'TUTORIAL') return err('Movimiento importado del fichero del banco (Norma 43): no se borra.');
+    guardar(conLog({ ...db, extractos: db.extractos.filter((x) => x.orden !== orden) }, 'borrar', `extracto:${orden}`, autor));
+    return bien(String(orden));
+  },
+  /** Concilia un movimiento del extracto con un apunte de banco del mismo importe */
+  conciliar(orden: number, asiento: number, ordenApunte: number, autor: string): Res {
+    const m = db.extractos.find((x) => x.orden === orden);
+    const a = db.asientos.find((x) => x.numero === asiento);
+    const p = a?.apuntes.find((x) => x.orden === ordenApunte);
+    if (!m) return err('No existe el movimiento del extracto.');
+    if (!a || !p) return err('No existe el apunte contable.');
+    if (m.conciliado) return err(`El movimiento ${orden} ya está conciliado.`);
+    if (p.conciliado) return err(`El apunte ${asiento}/${ordenApunte} ya está conciliado.`);
+    if (a.estado !== 'C') return err('Solo se concilian apuntes de asientos contabilizados.');
+    if (p.cuenta !== cuentaBanco(m.ctafin)) return err(`El apunte es de la cuenta ${p.cuenta} y el extracto de ${m.ctafin} (${cuentaBanco(m.ctafin)}).`);
+    if (Math.abs(importeBanco(p) - m.importe) > 0.005) return err(`Los importes no coinciden: extracto ${eurTxt(m.importe)} · contabilidad ${eurTxt(importeBanco(p))}.`);
+    guardar(
+      conLog(
+        { ...db, extractos: db.extractos.map((x) => (x.orden === orden ? { ...x, conciliado: { asiento, orden: ordenApunte } } : x)), asientos: db.asientos.map((x) => (x.numero === asiento ? { ...x, apuntes: x.apuntes.map((q) => (q.orden === ordenApunte ? { ...q, conciliado: orden } : q)) } : x)) },
+        'conciliar',
+        `extracto:${orden}>asiento:${asiento}`,
+        autor,
+      ),
+    );
+    return bien(String(orden));
+  },
+  desconciliar(orden: number, autor: string): Res {
+    const m = db.extractos.find((x) => x.orden === orden);
+    if (!m) return err('No existe el movimiento.');
+    if (!m.conciliado) return err('El movimiento no está conciliado.');
+    const { asiento, orden: oa } = m.conciliado;
+    guardar(
+      conLog(
+        { ...db, extractos: db.extractos.map((x) => (x.orden === orden ? { ...x, conciliado: null } : x)), asientos: db.asientos.map((x) => (x.numero === asiento ? { ...x, apuntes: x.apuntes.map((q) => (q.orden === oa ? { ...q, conciliado: undefined } : q)) } : x)) },
+        'desconciliar',
+        `extracto:${orden}`,
+        autor,
+      ),
+    );
+    return bien(String(orden));
+  },
+  /** «Conciliar automático»: empareja por cuenta e importe exacto (el primero libre) */
+  conciliarAutomatico(ctafin: string, autor: string): Res {
+    let d = db;
+    let n = 0;
+    for (const m of d.extractos.filter((x) => x.ctafin === ctafin && !x.conciliado)) {
+      const cand = apuntesBanco(d, ctafin).find(({ apunte }) => !apunte.conciliado && Math.abs(importeBanco(apunte) - m.importe) < 0.005);
+      if (!cand) continue;
+      const { asiento: a, apunte: p } = cand;
+      d = { ...d, extractos: d.extractos.map((x) => (x.orden === m.orden ? { ...x, conciliado: { asiento: a.numero, orden: p.orden } } : x)), asientos: d.asientos.map((x) => (x.numero === a.numero ? { ...x, apuntes: x.apuntes.map((q) => (q.orden === p.orden ? { ...q, conciliado: m.orden } : q)) } : x)) };
+      n++;
+    }
+    if (!n) return err('No se ha encontrado ninguna pareja extracto-contabilidad con el mismo importe.');
+    guardar(conLog(d, 'conciliar', `automatico:${ctafin}:${n}`, autor));
+    return bien(String(n));
+  },
 };

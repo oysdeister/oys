@@ -1,45 +1,59 @@
 import { useState } from 'react';
-import { useDb, erp, facturaDeAlbaran, servida, baseDe, type Albaran } from '../modelo';
-import { Lista, Ficha, Pestanas, Rejilla, CampoLectura, CampoFecha, CampoTexto, Lineas, Dialogo, Enlace, Estado, eur, fechaEs, useErp, type Accion } from '../ui';
+import { useDb, erp, facturaDeAlbaran, servida, baseDe, totales, type Albaran } from '../modelo';
+import {
+  Lista,
+  Ficha,
+  Pestanas,
+  Rejilla,
+  CampoLectura,
+  CampoFecha,
+  CampoTexto,
+  Lineas,
+  Dialogo,
+  Enlace,
+  Estado,
+  eur,
+  fechaEs,
+  useErp,
+  Seccion,
+  Totales,
+  type Accion,
+} from '../ui';
+import { useAccionesCatalogo, useEnlacesCatalogo } from '../catalogo/extra';
 
 export default function Albaranes() {
+  const extraAcc = useAccionesCatalogo('gcomalbh');
+  const extraMenu = useEnlacesCatalogo('gcomalbh');
   const db = useDb();
-  const { ini, clave, ir, hacer } = useErp();
+  const { ini, clave, ir, hacer, noDisp } = useErp();
 
   const albaranes = [...db.albaranes].sort((a, b) => b.numero.localeCompare(a.numero));
 
   const cols = [
-    { titulo: 'Número', valor: (a: Albaran) => <span className="mono">{a.numero}</span>, texto: (a: Albaran) => a.numero, ancho: '8em' },
-    { titulo: 'Tipo', valor: (a: Albaran) => a.tipo, texto: (a: Albaran) => a.tipo, ancho: '4em' },
-    { titulo: 'Fecha', valor: (a: Albaran) => fechaEs(a.fecha), texto: (a: Albaran) => a.fecha, ancho: '6em' },
+    { titulo: 'Albarán', valor: (a: Albaran) => <span className="mono">{a.numero}</span>, texto: (a: Albaran) => a.numero, ancho: '8em' },
     {
       titulo: 'Proveedor',
       valor: (a: Albaran) => {
         const t = db.terceros.find((x) => x.codigo === a.proveedor);
-        return <span><span className="mono">{a.proveedor}</span> · {t?.nombre ?? ''}</span>;
+        return (
+          <span>
+            <span className="mono">{a.proveedor}</span> · {t?.nombre ?? ''}
+          </span>
+        );
       },
       texto: (a: Albaran) => a.proveedor,
-      ancho: '20em',
+      ancho: '18em',
     },
-    { titulo: 'Origen', valor: (a: Albaran) => a.origen ? <span className="mono">{a.origen}</span> : '—', texto: (a: Albaran) => a.origen, ancho: '8em' },
-    { titulo: 'Base', valor: (a: Albaran) => eur(baseDe(a.lineas)), texto: (a: Albaran) => eur(baseDe(a.lineas)), num: true, ancho: '8em' },
+    { titulo: 'Tipo documento', valor: () => 'ACPC', texto: () => 'ACPC', ancho: '4em' },
+    { titulo: 'Delegación', valor: () => 'CENTRAL', texto: () => 'CENTRAL', ancho: '8em' },
+    { titulo: 'Departamento', valor: () => 'COMPRAS', texto: () => 'COMPRAS', ancho: '8em' },
+    { titulo: 'Almacén', valor: (a: Albaran) => a.almacen, texto: (a: Albaran) => a.almacen, ancho: '6em' },
+    { titulo: 'Empresa', valor: () => '0', texto: () => '0', ancho: '4em' },
+    { titulo: 'Fecha albarán', valor: (a: Albaran) => fechaEs(a.fecha), texto: (a: Albaran) => a.fecha, ancho: '6em' },
+    { titulo: 'Importe', valor: (a: Albaran) => eur(baseDe(a.lineas)), texto: (a: Albaran) => eur(baseDe(a.lineas)), num: true, ancho: '8em' },
+    { titulo: 'Divisa', valor: () => 'EUR', texto: () => 'EUR', ancho: '4em' },
     { titulo: 'Estado', valor: (a: Albaran) => <Estado valor={a.estado} />, texto: (a: Albaran) => a.estado, ancho: '8em' },
-    {
-      titulo: 'Facturación',
-      valor: (a: Albaran) =>
-        a.estado === 'Validado'
-          ? facturaDeAlbaran(db, a.numero)
-            ? <Estado valor="Facturado" />
-            : <Estado valor="Pendiente de facturar" />
-          : '—',
-      texto: (a: Albaran) =>
-        a.estado === 'Validado'
-          ? facturaDeAlbaran(db, a.numero)
-            ? 'Facturado'
-            : 'Pendiente de facturar'
-          : '',
-      ancho: '12em',
-    },
+    { titulo: 'Estado documento', valor: (a: Albaran) => <Estado valor={a.estado} />, texto: (a: Albaran) => a.estado, ancho: '8em' },
   ];
 
   const lista = (
@@ -73,12 +87,13 @@ export default function Albaranes() {
   const factura = facturaDeAlbaran(db, registro.numero);
 
   const [borrador, setBorrador] = useState<Albaran>(() => ({ ...registro }));
-  const [tab, setTab] = useState('lineas');
+  const [tab, setTab] = useState('cabecera');
   const [showFactura, setShowFactura] = useState(false);
   const [facturaProveedor, setFacturaProveedor] = useState('');
   const [seleccionados, setSeleccionados] = useState<string[]>([]);
 
   const dirty = JSON.stringify(borrador) !== JSON.stringify(registro);
+  const tot = totales(borrador.lineas);
 
   const guardar = () => {
     const r = erp.guardarAlbaran(borrador, ini);
@@ -124,6 +139,8 @@ export default function Albaranes() {
   };
 
   const acciones: Accion[] = [];
+  const menuFicha: Accion[] = [];
+
   if (!isTutorial) {
     if (registro.estado === 'Provisional') {
       acciones.push({ label: 'Guardar', tipo: 'primario', onClick: guardar });
@@ -132,56 +149,47 @@ export default function Albaranes() {
     } else if (registro.estado === 'Validado') {
       if (!factura) {
         acciones.push({ label: 'Generar factura', tipo: 'proceso', onClick: abrirDialogoFactura });
+        acciones.push({ label: 'Contabilizar', onClick: () => noDisp('Contabilizar albarán') });
+        acciones.push({ label: 'No facturable', onClick: () => noDisp('No facturable') });
+        acciones.push({ label: 'Anular', onClick: () => noDisp('Anular albarán') });
       }
       acciones.push({ label: 'Pasar a provisional', tipo: 'normal', onClick: pasarProvisional });
+      if (factura?.contabilizada) {
+        acciones.push({ label: 'Descontabilizar', onClick: () => noDisp('Descontabilizar albarán') });
+      }
     }
-    acciones.push({ label: 'Docflow', tipo: 'normal', onClick: () => ir('docflow', 'albaran:' + registro.numero) });
+
+    menuFicha.push({ label: 'Docflow', onClick: () => ir('docflow', 'albaran:' + registro.numero) });
+    menuFicha.push({ label: 'Suministros', onClick: () => noDisp('Suministros') });
+    if (factura) {
+      menuFicha.push({ label: 'Facturas compras', onClick: () => ir('facturas', factura.numero) });
+    }
+    menuFicha.push({ label: 'Asientos contables', onClick: () => noDisp('Asientos contables') });
   }
 
   const albaranesFacturables = db.albaranes.filter(
-    (a) => a.estado === 'Validado' && a.proveedor === registro.proveedor && !facturaDeAlbaran(db, a.numero)
+    (a) => a.estado === 'Validado' && a.proveedor === registro.proveedor && !facturaDeAlbaran(db, a.numero),
   );
 
   const tabs = [
+    { id: 'cabecera', label: 'Albaranes compras' },
     { id: 'lineas', label: 'Líneas', n: borrador.lineas.length },
-    { id: 'stock', label: 'Efecto en stock' },
+    { id: 'impuestos', label: 'Impuestos' },
+    { id: 'anticipos', label: 'Anticipos' },
+    { id: 'documentos', label: 'Documentos' },
+    { id: 'notas', label: 'Notas' },
   ];
 
   return (
     <>
       <Ficha
-        titulo={registro.numero}
-        sub="Compras › Albaranes · ACPC"
+        titulo={`${registro.numero} [${registro.proveedor}]`}
         estado={registro.estado}
-        acciones={acciones}
+        acciones={[...acciones, ...extraAcc]}
         onVolver={() => ir('albaranes', null)}
+        menu={[...menuFicha, ...extraMenu]}
       >
-        <Rejilla cols={3}>
-          <CampoLectura
-            label="Proveedor"
-            valor={
-              <Enlace pantalla="proveedores" clave={registro.proveedor}>
-                {registro.proveedor} · {db.terceros.find((t) => t.codigo === registro.proveedor)?.nombre ?? ''}
-              </Enlace>
-            }
-          />
-          <CampoLectura
-            label="Origen"
-            valor={registro.origen ? <Enlace pantalla="pedidos" clave={registro.origen}>{registro.origen}</Enlace> : '—'}
-          />
-          <CampoFecha
-            label="Fecha"
-            value={borrador.fecha}
-            onChange={(v) => setBorrador({ ...borrador, fecha: v })}
-            disabled={!editable}
-          />
-          <CampoLectura label="Almacén" valor={registro.almacen} />
-          <CampoLectura label="Movimiento" valor="Entrada · NSAL › DISP" ancho={2} />
-          <CampoLectura
-            label="Factura"
-            valor={factura ? <Enlace pantalla="facturas" clave={factura.numero}>{factura.numero}</Enlace> : 'Pendiente de facturar'}
-          />
-        </Rejilla>
+        <Pestanas tabs={tabs} actual={tab} onCambio={setTab} />
 
         {editable && registro.origen && (
           <p className="erp-nota">
@@ -189,9 +197,189 @@ export default function Albaranes() {
           </p>
         )}
 
-        <Pestanas tabs={tabs} actual={tab} onCambio={setTab} />
+        {tab === 'cabecera' && (
+          <>
+            <Seccion titulo="Unidad de negocio">
+              <Rejilla cols={4}>
+                <CampoLectura label="Tipo documento" valor="ACPC" ayuda="ALBARAN COMPRA ORIGEN PEDIDO" req />
+                <CampoLectura label="Empresa" valor="0" ayuda="Deister Software" req />
+                <CampoLectura label="Almacén" valor={registro.almacen} ayuda="ALMACEN CENTRAL" req />
+                <CampoLectura label="Delegación" valor="CENTRAL" req />
+                <CampoLectura label="Departamento" valor="COMPRAS" req />
+              </Rejilla>
+            </Seccion>
 
-        {tab === 'lineas' ? (
+            <Seccion titulo="Fecha" media>
+              <Rejilla cols={3}>
+                <CampoFecha
+                  label="Fecha albarán"
+                  value={borrador.fecha}
+                  onChange={(v) => setBorrador({ ...borrador, fecha: v })}
+                  disabled={!editable}
+                  req
+                />
+                <CampoLectura label="Fecha proveedor" valor="" req />
+                <CampoLectura label="Fecha contabilización" valor="" />
+              </Rejilla>
+            </Seccion>
+
+            <Seccion
+              media
+              tabs={[
+                {
+                  label: 'Albarán',
+                  contenido: (
+                    <Rejilla cols={2}>
+                      <CampoLectura label="Albarán" valor={registro.numero} req />
+                      <CampoLectura
+                        label="Origen"
+                        valor={registro.origen ? <Enlace pantalla="pedidos" clave={registro.origen}>{registro.origen}</Enlace> : '—'}
+                      />
+                    </Rejilla>
+                  ),
+                },
+                {
+                  label: 'Origen auxiliar',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Origen auxiliar … no disponible en la práctica.</p>,
+                },
+              ]}
+            />
+
+            <Seccion titulo="Estado">
+              <Rejilla cols={3}>
+                <CampoLectura label="Estado documento" valor={<Estado valor={registro.estado} />} req />
+                <CampoLectura label="Estado" valor={<Estado valor={registro.estado} />} req />
+                <CampoLectura label="Validaciones" valor="" />
+              </Rejilla>
+            </Seccion>
+
+            <Seccion
+              media
+              tabs={[
+                {
+                  label: 'Pedido a',
+                  contenido: registro.origen ? (
+                    <Enlace pantalla="pedidos" clave={registro.origen}>
+                      {registro.origen}
+                    </Enlace>
+                  ) : (
+                    '—'
+                  ),
+                },
+                {
+                  label: 'Facturado por',
+                  contenido: factura ? <Enlace pantalla="facturas" clave={factura.numero}>{factura.numero}</Enlace> : '—',
+                },
+              ]}
+            />
+
+            <Seccion
+              media
+              tabs={[
+                {
+                  label: 'Recepcionado en',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Recepcionado en … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Enviado a',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Enviado a … no disponible en la práctica.</p>,
+                },
+              ]}
+            />
+
+            <Seccion
+              media
+              tabs={[
+                {
+                  label: 'Información general',
+                  contenido: (
+                    <Rejilla cols={3}>
+                      <CampoLectura label="Referencia" valor="" />
+                      <CampoLectura label="Clasificación" valor="" />
+                      <CampoLectura label="Fecha no facturado" valor="" />
+                      <CampoLectura label="Fecha recepción" valor="" req />
+                    </Rejilla>
+                  ),
+                },
+                {
+                  label: 'Indicadores',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Indicadores … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Notas',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Notas … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Auxiliares',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Auxiliares … no disponible en la práctica.</p>,
+                },
+              ]}
+            />
+
+            <Seccion
+              media
+              tabs={[
+                {
+                  label: 'Datos financieros',
+                  contenido: (
+                    <Rejilla cols={3}>
+                      <CampoLectura label="Presupuesto" valor="" />
+                      <CampoLectura label="Partida" valor="" />
+                      <CampoLectura label="Tipo efecto" valor="EF" ayuda="Efectivo" req />
+                      <CampoLectura label="Forma pago" valor="30D" ayuda="30 días" req />
+                    </Rejilla>
+                  ),
+                },
+                {
+                  label: 'Datos financieros (2)',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Datos financieros (2) … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Importaciones',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Importaciones … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Impuestos',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Impuestos … no disponible en la práctica.</p>,
+                },
+              ]}
+            />
+
+            <Seccion
+              media
+              tabs={[
+                {
+                  label: 'Descuentos',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Descuentos … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Procesos asociados',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Procesos asociados … no disponible en la práctica.</p>,
+                },
+                {
+                  label: 'Permisos de procesos',
+                  noDisp: true,
+                  contenido: <p className="erp-vacio">Permisos de procesos … no disponible en la práctica.</p>,
+                },
+              ]}
+            />
+
+            <Totales base={tot.base} iva={tot.iva} total={tot.total} />
+          </>
+        )}
+
+        {tab === 'lineas' && (
           <>
             <Lineas
               lineas={borrador.lineas}
@@ -208,44 +396,49 @@ export default function Albaranes() {
                 const serv = servida(db, registro.origen!, l.origenLinea!);
                 const pend = cantidadPedida - serv;
                 return (
-                  <p key={l.n} className="erp-nota">
+                  <p key={l.n}>
                     Pedido {registro.origen} línea {l.origenLinea}: pide {cantidadPedida} · pendiente {pend}
                   </p>
                 );
               })}
-          </>
-        ) : (
-          <div className="erp-seccion">
-            <h3>Efecto en stock</h3>
-            <table className="erp-tabla compacta">
-              <thead>
-                <tr>
-                  <th>Artículo</th>
-                  <th>Cuenta origen</th>
-                  <th>Cuenta destino</th>
-                  <th>Unidades</th>
-                </tr>
-              </thead>
-              <tbody>
-                {borrador.lineas.map((l) => (
-                  <tr key={l.n}>
-                    <td>
-                      <span className="mono">{l.articulo}</span> {l.descripcion}
-                    </td>
-                    <td>NSAL</td>
-                    <td>DISP</td>
-                    <td className="num">{l.cantidad}</td>
+
+            <div className="erp-seccion">
+              <h3>Efecto en stock</h3>
+              <table className="erp-tabla compacta">
+                <thead>
+                  <tr>
+                    <th>Artículo</th>
+                    <th>Cuenta origen</th>
+                    <th>Cuenta destino</th>
+                    <th>Unidades</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <p className="erp-nota">
-              {registro.estado === 'Validado'
-                ? 'Stock actualizado: estas unidades ya están disponibles en el almacén 0.'
-                : 'Al validar entrarán en stock.'}
-            </p>
-          </div>
+                </thead>
+                <tbody>
+                  {borrador.lineas.map((l) => (
+                    <tr key={l.n}>
+                      <td>
+                        <span className="mono">{l.articulo}</span> {l.descripcion}
+                      </td>
+                      <td>NSAL</td>
+                      <td>DISP</td>
+                      <td className="num">{l.cantidad}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p>
+                {registro.estado === 'Validado'
+                  ? 'Stock actualizado: estas unidades ya están disponibles en el almacén 0.'
+                  : 'Al validar entrarán en stock.'}
+              </p>
+            </div>
+          </>
         )}
+
+        {tab === 'impuestos' && <p className="erp-vacio">Impuestos … no disponible en la práctica.</p>}
+        {tab === 'anticipos' && <p className="erp-vacio">Anticipos … no disponible en la práctica.</p>}
+        {tab === 'documentos' && <p className="erp-vacio">Documentos … no disponible en la práctica.</p>}
+        {tab === 'notas' && <p className="erp-vacio">Notas … no disponible en la práctica.</p>}
       </Ficha>
 
       {showFactura && (

@@ -1,194 +1,303 @@
-/* ERP de práctica: aspecto de ERP web denso y sobrio dentro de la plataforma (usa los tokens del tema). */
+/* ERP de práctica: copia del aspecto de Axional VNext (nextdemo, base TUTORIAL), medido con puppeteer el 17-11-2026.
+   Tokens reales: Roboto, barra #00796B de 56 px, fondo #F1F1F1, tarjetas blancas, pestañas #1A237E con subrayado de 2 px,
+   etiquetas de 9-10 px sobre campos subrayados y botones de proceso de colores (Validar #4CAF50, Pasar a provisional #FF9801,
+   Contabilizar #673BB6, Descontabilizar #9C26B0, Anular #9E9E9E, Nuevo #1A237E). Siempre claro, como el ERP real. */
 .erp {
-  --erp-top: #13203a;
-  --erp-acento: var(--arc-deep);
-  --erp-fila: var(--sheet-2);
+  --ax-top: #00796b;
+  --ax-fondo: #f1f1f1;
+  --ax-tarjeta: #fff;
+  --ax-linea: #e0e0e0;
+  --ax-tinta: rgba(0, 0, 0, 0.87);
+  --ax-tinta-2: rgba(0, 0, 0, 0.6);
+  --ax-tinta-3: rgba(0, 0, 0, 0.38);
+  --ax-azul: #1a237e;
+  --ax-link: #3949ab;
+  --ax-verde: #4caf50;
+  --ax-naranja: #ff9801;
+  --ax-violeta: #673bb6;
+  --ax-morado: #9c26b0;
+  --ax-gris: #9e9e9e;
+  --ax-rojo: #e53935;
+  --ax-celeste: #2196f3;
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 520px;
-  background: var(--sheet);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: var(--r-m);
+  background: var(--ax-fondo);
+  color: var(--ax-tinta);
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
   overflow: hidden;
-  font-family: var(--text);
-  font-size: 14px;
-  box-shadow: var(--shadow-lg);
+  font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  color-scheme: light;
+  container-type: inline-size;
+  container-name: erp;
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.5);
 }
-.erp .mono, .erp code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.95em; }
+.erp *, .erp *::before, .erp *::after { box-sizing: border-box; }
+.erp button { font-family: inherit; }
+.erp .mono, .erp code { font-family: inherit; letter-spacing: 0.3px; font-variant-numeric: tabular-nums; }
+.erp :focus-visible { outline: 2px solid var(--ax-naranja); outline-offset: 1px; }
 
-/* barra superior */
-.erp-top { display: flex; align-items: center; gap: 12px; padding: 0 14px; height: 48px; background: var(--erp-top); color: #e8eef7; flex: none; }
-.erp-hamb { display: none; background: none; border: 0; color: inherit; font-size: 20px; cursor: pointer; }
-.erp-logo { display: flex; align-items: center; gap: 8px; background: none; border: 0; color: inherit; font: 700 15px var(--display); cursor: pointer; }
-.erp-logo em { font-style: normal; font-weight: 500; opacity: 0.6; margin-left: 2px; }
-.erp-logo-a { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: var(--grad-arc); color: #0b111c; font-weight: 900; }
-.erp-ctx { display: flex; gap: 6px; margin-left: auto; }
-.erp-ctx span { padding: 3px 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); font-size: 12px; letter-spacing: 0.02em; }
-.erp-user { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--arc); color: #0b111c; font-weight: 800; font-size: 12px; }
+/* ---------------------------------------------------------------- barra superior */
+.erp-top { position: relative; z-index: 20; display: flex; align-items: center; gap: 6px; padding: 0 8px; height: 50px; background: var(--ax-top); color: #fff; flex: none; }
+.erp-top-ico { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; color: #fff; cursor: pointer; }
+.erp-top-ico:hover { background: rgba(255, 255, 255, 0.12); }
+.erp-logo { padding: 0 4px; border: 0; background: none; color: #fff; font-size: 18px; font-weight: 400; letter-spacing: 1.2px; cursor: pointer; }
+.erp-base { font-size: 13px; font-weight: 500; letter-spacing: 1.25px; margin-left: 8px; white-space: nowrap; }
+.erp-top-buscar { position: relative; display: flex; align-items: center; gap: 6px; flex: 0 1 380px; margin: 0 auto; padding: 0 8px 0 12px; height: 32px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 6px; background: rgba(255, 255, 255, 0.14); }
+.erp-top-buscar input { flex: 1; min-width: 0; border: 0; background: none; color: #fff; font: 400 13px Roboto, sans-serif; outline: none; }
+.erp-top-buscar input::placeholder { color: rgba(255, 255, 255, 0.85); }
+.erp-top-buscar kbd { padding: 1px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.18); font: 500 10px Roboto, sans-serif; }
+.erp-top-res { position: absolute; top: 36px; left: 0; right: 0; margin: 0; padding: 4px 0; list-style: none; background: #fff; border-radius: 4px; box-shadow: 0 5px 14px rgba(0, 0, 0, 0.25); }
+.erp-top-res button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 14px; border: 0; background: none; color: var(--ax-tinta); font-size: 13px; text-align: left; cursor: pointer; }
+.erp-top-res button:hover { background: #f5f5f5; }
+.erp-top-res small { margin-left: auto; color: var(--ax-tinta-3); }
+.erp-top-der { display: flex; align-items: center; gap: 2px; }
+.erp-user { display: grid; place-items: center; width: 30px; height: 30px; margin-left: 4px; border-radius: 50%; background: #fff; color: var(--ax-top); font-weight: 700; font-size: 11px; }
 
 .erp-body { position: relative; display: flex; flex: 1; min-height: 0; }
 
-/* menú lateral */
-.erp-menu { width: 190px; flex: none; display: flex; flex-direction: column; padding: 10px 8px; background: var(--sheet-2); border-right: 1px solid var(--line); overflow-y: auto; }
-.erp-menu-grupo { margin: 12px 8px 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
-.erp-menu-item { display: flex; align-items: center; gap: 9px; width: 100%; padding: 7px 10px; border: 0; border-radius: 8px; background: none; color: var(--ink-2); font: 500 13.5px var(--text); text-align: left; cursor: pointer; }
-.erp-menu-item:hover { background: var(--sheet); color: var(--ink); }
-.erp-menu-item.on { background: var(--arc-soft); color: var(--erp-acento); font-weight: 700; box-shadow: inset 3px 0 0 var(--erp-acento); }
-.erp-menu-item.peligro { color: var(--error); }
-.erp-menu-pie { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
+/* ---------------------------------------------------------------- menú lateral (Sidebar) */
+.erp-menu { width: 200px; flex: none; display: flex; flex-direction: column; padding: 8px 0; background: #fff; border-right: 1px solid var(--ax-linea); overflow-y: auto; }
+.erp-menu-grupo { margin: 12px 16px 4px; font-size: 11px; font-weight: 500; letter-spacing: 1.25px; text-transform: uppercase; color: var(--ax-tinta-3); }
+.erp-menu-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 16px; border: 0; background: none; color: var(--ax-tinta-2); font-size: 13px; text-align: left; cursor: pointer; }
+.erp-menu-item:hover { background: #f5f5f5; color: var(--ax-tinta); }
+.erp-menu-item.on { background: #e0f2f1; color: var(--ax-top); font-weight: 500; box-shadow: inset 3px 0 0 var(--ax-top); }
+.erp-menu-item.peligro { color: var(--ax-rojo); }
+.erp-menu-pie { margin-top: auto; padding-top: 8px; border-top: 1px solid var(--ax-linea); }
 .erp-scrim { display: none; }
+.erp-main { flex: 1; min-width: 0; overflow: auto; padding: 0 8px 24px; }
 
-.erp-main { flex: 1; min-width: 0; overflow: auto; padding: 14px 18px 28px; }
-.erp-migas { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 12.5px; color: var(--ink-3); }
-.erp-migas > * + *::before { content: '›'; margin-right: 6px; opacity: 0.6; }
-.erp-migas button { background: none; border: 0; padding: 0; color: var(--erp-acento); font: inherit; cursor: pointer; }
-.erp-migas button:hover { text-decoration: underline; }
+/* ---------------------------------------------------------------- botones */
+.erp-btn { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 9px; border: 0; border-radius: 4px; background: #f5f5f5; color: #000; font-size: 11.5px; font-weight: 500; letter-spacing: 0.9px; white-space: nowrap; cursor: pointer; transition: box-shadow 0.15s, filter 0.15s; }
+.erp-btn:hover:not(:disabled) { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); filter: brightness(1.05); }
+.erp-btn:disabled { background: rgba(0, 0, 0, 0.12) !important; color: rgba(0, 0, 0, 0.26) !important; cursor: not-allowed; }
+.erp-btn.verde { background: var(--ax-verde); color: #fff; }
+.erp-btn.naranja { background: var(--ax-naranja); color: #fff; }
+.erp-btn.violeta { background: var(--ax-violeta); color: #fff; }
+.erp-btn.morado { background: var(--ax-morado); color: #fff; }
+.erp-btn.gris { background: var(--ax-gris); color: #fff; }
+.erp-btn.azul, .erp-btn.primario { background: var(--ax-azul); color: #fff; }
+.erp-btn.neutro, .erp-btn.normal, .erp-btn.proceso { background: #f5f5f5; color: #000; }
+.erp-btn.peligro { background: var(--ax-gris); color: #fff; }
+.erp-ico { display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%; background: none; color: #4a4a4a; cursor: pointer; flex: none; }
+.erp-ico:hover:not(:disabled) { background: rgba(0, 0, 0, 0.06); }
+.erp-ico:disabled { color: rgba(0, 0, 0, 0.26); cursor: default; }
+.erp-ico.activo { color: var(--ax-azul); }
+.erp-ico.azul { color: var(--ax-azul); }
+.erp-sep { width: 1px; height: 18px; margin: 0 4px; background: var(--ax-linea); }
+.erp-chip { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 7px; border: 1px solid var(--ax-linea); border-radius: 4px; background: #fff; color: var(--ax-tinta); font-size: 12px; letter-spacing: 0.8px; cursor: pointer; }
+.erp-chip.on { border-color: var(--ax-azul); color: var(--ax-azul); }
+.erp-x { border: 0; background: none; color: var(--ax-tinta-3); font-size: 18px; cursor: pointer; }
+.erp-enlace { padding: 0; border: 0; background: none; color: var(--ax-link); font: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.erp-enlace:disabled { color: var(--ax-tinta-3); }
+.erp-lnk { color: var(--ax-link); text-decoration: underline; text-underline-offset: 2px; }
 
-/* botones */
-.erp-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); color: var(--ink); font: 600 13px var(--text); cursor: pointer; transition: transform 0.12s, background 0.12s, box-shadow 0.12s; }
-.erp-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 10px -6px rgba(17, 26, 43, 0.4); }
-.erp-btn:active:not(:disabled) { transform: translateY(0); }
-.erp-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.erp-btn.primario { background: var(--erp-acento); border-color: var(--erp-acento); color: #fff; }
-[data-theme='dark'] .erp-btn.primario { color: #0b111c; }
-.erp-btn.proceso { background: var(--signal-soft); border-color: var(--signal); color: var(--ink); }
-.erp-btn.peligro { color: var(--error); border-color: color-mix(in srgb, var(--error) 45%, transparent); }
-.erp-btn:focus-visible, .erp-menu-item:focus-visible, .erp-input:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+/* ---------------------------------------------------------------- cabecera de pantalla: TÍTULO › registro ☆ ⌄ … botones */
+.erp-cab { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; min-height: 50px; padding: 8px 4px; }
+.erp-cab.mini { min-height: 36px; padding: 4px 8px; }
+.erp-cab-tit { display: flex; align-items: center; gap: 6px; min-width: 0; flex-wrap: wrap; }
+.erp-cab-tit h2 { display: flex; align-items: center; gap: 6px; margin: 0; max-width: 34ch; overflow: hidden; font-size: 15px; font-weight: 400; letter-spacing: 1px; white-space: nowrap; text-overflow: ellipsis; color: var(--ax-tinta); }
+.erp-miga { max-width: 22ch; overflow: hidden; padding: 0; border: 0; background: none; color: var(--ax-tinta); font-size: 15px; letter-spacing: 1px; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; }
+.erp-miga:hover { color: var(--ax-azul); text-decoration: underline; }
+.erp-miga-sep { color: var(--ax-tinta-2); font-size: 16px; }
+.erp-cab-sub { color: var(--ax-tinta-2); font-size: 12px; }
+.erp-cab-acc { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px; margin-left: auto; }
+.erp-buscar { display: flex; align-items: center; gap: 4px; height: 24px; padding: 0 6px; border-bottom: 1px solid var(--ax-azul); color: var(--ax-tinta-2); }
+.erp-buscar input { width: 150px; border: 0; background: none; font-size: 12.5px; outline: none; }
+.erp-cuenta { display: inline-grid; place-items: center; min-width: 18px; height: 16px; margin-left: 4px; padding: 0 4px; border-radius: 8px; background: #e8eaf6; color: var(--ax-azul); font-size: 10px; font-weight: 700; }
 
-/* lista */
-.erp-barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-.erp-barra h2, .erp-ficha-tit h2 { margin: 0; display: flex; align-items: center; gap: 8px; font: 700 19px var(--display); letter-spacing: -0.01em; }
-.erp-barra-acc { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.erp-cuenta { display: inline-grid; place-items: center; min-width: 22px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--sheet-2); border: 1px solid var(--line); font: 700 11.5px var(--text); color: var(--ink-3); }
-.erp-buscar { display: flex; align-items: center; gap: 6px; padding: 0 10px; height: 34px; border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); color: var(--ink-3); }
-.erp-buscar input { border: 0; background: none; outline: 0; width: 140px; font: inherit; color: var(--ink); }
-.erp-solo { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+/* menús desplegables (⌄ del título, Acciones ⋮, ⋮) */
+.erp-desp { position: relative; display: inline-flex; }
+.erp-desp-menu { position: absolute; top: calc(100% + 4px); z-index: 25; min-width: 200px; margin: 0; padding: 6px 0; list-style: none; background: #fff; border-radius: 4px; box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12); }
+.erp-desp-menu.izq { left: 0; }
+.erp-desp-menu.der { right: 0; }
+.erp-desp-menu button { display: block; width: 100%; padding: 8px 16px; border: 0; background: none; color: var(--ax-tinta); font-size: 13px; text-align: left; white-space: nowrap; cursor: pointer; }
+.erp-desp-menu button:hover:not(:disabled) { background: #f5f5f5; }
+.erp-desp-menu button:disabled { color: var(--ax-tinta-3); cursor: default; }
 
-.erp-tabla-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
-.erp-tabla { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-.erp-tabla th { position: sticky; top: 0; padding: 8px 10px; background: var(--sheet-2); border-bottom: 1px solid var(--line); text-align: left; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); white-space: nowrap; }
-.erp-tabla td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-.erp-tabla tbody tr:last-child td { border-bottom: 0; }
-.erp-tabla tbody tr[tabindex] { cursor: pointer; transition: background 0.1s; }
-.erp-tabla tbody tr[tabindex]:hover, .erp-tabla tbody tr[tabindex]:focus-visible { background: var(--arc-soft); outline: 0; }
-.erp-tabla tr.mio td:first-child { box-shadow: inset 3px 0 0 var(--signal); }
-.erp-tabla tr.vacia td { padding: 22px; text-align: center; color: var(--ink-3); }
-.erp-tabla .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.erp-tabla .fuerte { font-weight: 700; }
-.erp-tabla .aviso { color: var(--signal); font-weight: 700; }
-.erp-tabla .ok { color: var(--ok); font-weight: 700; }
-.erp-tabla.compacta td, .erp-tabla.compacta th { padding: 6px 8px; }
+/* ---------------------------------------------------------------- tarjetas y listas */
+.erp-tarjeta { background: var(--ax-tarjeta); border: 1px solid #e6e6e6; border-radius: 4px; }
+.erp-lista { display: flex; flex-direction: column; }
+.erp-filtros { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 0 6px; padding: 6px 10px; border-radius: 4px; background: #e8eaf6; font-size: 12px; }
+.erp-filtros-ayuda { color: var(--ax-tinta-2); }
+.erp-tabla-scroll { overflow-x: auto; }
+.erp-tabla { width: 100%; border-collapse: collapse; font-size: 12px; }
+.erp-tabla th { padding: 8px 8px; text-align: left; font-weight: 500; font-size: 12px; line-height: 1.3; color: var(--ax-tinta); border-bottom: 1px solid var(--ax-linea); vertical-align: bottom; cursor: pointer; user-select: none; }
+.erp-tabla thead tr.filtro th { padding: 2px 6px 6px; cursor: default; }
+.erp-tabla td { padding: 5px 8px; border-bottom: 1px solid #eeeeee; white-space: nowrap; }
+.erp-tabla .num { text-align: right; font-variant-numeric: tabular-nums; }
+.erp-tabla .n { width: 34px; text-align: right; padding-right: 4px; }
+.erp-tabla .chk { width: 28px; padding: 0 4px; text-align: center; }
+.erp-tabla input[type='checkbox'] { width: 15px; height: 15px; accent-color: var(--ax-azul); }
+.erp-tabla tbody tr { cursor: pointer; }
+.erp-tabla tbody tr.estatica { cursor: default; }
+.erp-tabla tbody tr:hover:not(.vacia):not(.estatica) { background: #f5f5f5; }
+.erp-tabla tbody tr.mio td:first-child { box-shadow: inset 3px 0 0 var(--ax-naranja); }
+.erp-tabla tr.vacia td { padding: 22px; text-align: center; color: var(--ax-tinta-3); cursor: default; }
+.erp-tabla .fuerte { font-weight: 500; }
+.erp-tabla .aviso { color: #e65100; font-weight: 500; }
+.erp-tabla tr.alta td { border-bottom: 0; }
+.erp-alta-txt { color: var(--ax-tinta-3); }
+.erp-ord { margin-left: 4px; font-size: 9px; color: var(--ax-azul); }
+.erp-pie-lista { margin: 6px 4px 0; color: var(--ax-tinta-2); font-size: 11.5px; text-align: right; }
 
-/* estado */
-.erp-estado { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
-.erp-estado::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-.erp-estado.ok { background: var(--arc-soft); color: var(--ok); }
-.erp-estado.prov { background: var(--signal-soft); color: #9a5d00; }
-[data-theme='dark'] .erp-estado.prov { color: var(--signal); }
-.erp-estado.pend { background: var(--sheet-2); color: var(--ink-3); border: 1px solid var(--line); }
+/* estado: cuadradito o punto de color + texto, como en las listas de Axional */
+.erp-estado { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ax-tinta); white-space: nowrap; }
+.erp-estado i { width: 10px; height: 10px; border-radius: 50%; background: var(--ax-gris); }
+.erp-estado.verde i { background: var(--ax-verde); }
+.erp-estado.azul i { background: var(--ax-celeste); }
+.erp-estado.violeta i { background: #ab47bc; }
+.erp-estado.naranja i { background: var(--ax-naranja); border-radius: 2px; }
+.erp-estado.ambar i { background: #ffc107; }
+.erp-cab-tit .erp-estado { margin-left: 6px; padding: 2px 8px; border-radius: 10px; background: #fff; border: 1px solid var(--ax-linea); }
 
-/* ficha */
-.erp-ficha-cab { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.erp-volver { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border: 1px solid var(--line); border-radius: 50%; background: var(--sheet); color: var(--ink); font-size: 22px; line-height: 1; cursor: pointer; }
-.erp-ficha-tit { flex: 1; min-width: 0; }
-.erp-ficha-tit p { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-3); }
-.erp-acciones { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; margin-bottom: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--sheet-2); }
-.erp-acciones:empty { display: none; }
-.erp-acciones.fin { justify-content: flex-end; border: 0; background: none; padding: 12px 0 0; margin: 0; }
-.erp-ficha-cuerpo { display: flex; flex-direction: column; gap: 14px; }
+/* ---------------------------------------------------------------- ficha */
+.erp-ficha-cuerpo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.erp-ficha-cuerpo > * { grid-column: 1 / -1; min-width: 0; }
+.erp-ficha-cuerpo > .erp-sec.media { grid-column: auto; }
+@container erp (max-width: 860px) {
+  .erp-ficha-cuerpo > .erp-sec.media { grid-column: 1 / -1; }
+}
+/* pestañas superiores del documento */
+.erp-pestanas { display: flex; gap: 0; overflow-x: auto; margin: 0 0 2px; border-bottom: 1px solid transparent; }
+.erp-pestanas button { display: inline-flex; align-items: center; gap: 4px; height: 38px; padding: 0 12px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--ax-tinta-2); font-size: 13px; font-weight: 500; letter-spacing: 1.1px; white-space: nowrap; cursor: pointer; }
+.erp-pestanas button svg { color: #7986cb; }
+.erp-pestanas button:hover { color: var(--ax-tinta); background: rgba(0, 0, 0, 0.03); }
+.erp-pestanas button.on { color: var(--ax-tinta); border-bottom-color: var(--ax-azul); }
+/* secciones-tarjeta con grupo de pestañas en la cabecera */
+.erp-sec { min-width: 0; }
+.erp-sec-cab { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 42px; padding: 0 8px 0 12px; border-bottom: 1px solid #eeeeee; }
+.erp-sec-cab h3 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13.5px; font-weight: 500; letter-spacing: 1.1px; color: var(--ax-tinta); }
+.erp-sec-cab h3 svg { color: #7986cb; }
+.erp-sec-tabs { display: flex; flex-wrap: wrap; gap: 2px 14px; }
+.erp-sec-tabs button { padding: 10px 0; border: 0; background: none; color: rgba(0, 0, 0, 0.5); font-size: 13.5px; font-weight: 500; letter-spacing: 1.1px; cursor: pointer; }
+.erp-sec-tabs button:hover { color: var(--ax-tinta); }
+.erp-sec-tabs button.on { color: var(--ax-tinta); }
+.erp-sec-cuerpo { padding: 10px 12px 12px; }
+.erp-ficha-cuerpo > .erp-lineas, .erp-lineas { display: flex; flex-direction: column; gap: 10px; }
 
-.erp-pestanas { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--line); }
-.erp-pestanas button { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--ink-3); font: 600 13.5px var(--text); white-space: nowrap; cursor: pointer; }
-.erp-pestanas button.on { color: var(--erp-acento); border-bottom-color: var(--erp-acento); }
-
-/* campos */
-.erp-rejilla { display: grid; gap: 12px 14px; }
-.erp-rejilla.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.erp-rejilla.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.erp-rejilla.c4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.erp-campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.erp-campo.a2 { grid-column: span 2; }
-.erp-campo.a3 { grid-column: 1 / -1; }
-.erp-label { font-size: 12px; font-weight: 600; color: var(--ink-3); }
-.erp-label i { margin-left: 3px; color: var(--error); font-style: normal; }
-.erp-input { width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--sheet); color: var(--ink); font: 14px var(--text); }
-.erp-input.mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; text-transform: uppercase; }
+/* ---------------------------------------------------------------- campos «underlined» */
+.erp-rejilla { display: grid; gap: 6px 14px; grid-template-columns: repeat(var(--c, 3), minmax(0, 1fr)); }
+.erp-rejilla.c1 { --c: 1; } .erp-rejilla.c2 { --c: 2; } .erp-rejilla.c3 { --c: 3; } .erp-rejilla.c4 { --c: 4; } .erp-rejilla.c5 { --c: 5; } .erp-rejilla.c6 { --c: 6; }
+@container erp (max-width: 700px) {
+  .erp-rejilla.c3, .erp-rejilla.c4, .erp-rejilla.c5, .erp-rejilla.c6 { --c: 2; }
+}
+@container erp (max-width: 460px) {
+  .erp-rejilla { --c: 1 !important; }
+}
+.erp-campo { display: flex; flex-direction: column; min-width: 0; padding-top: 2px; }
+.erp-campo.a2 { grid-column: span 2; } .erp-campo.a3 { grid-column: span 3; } .erp-campo.a4 { grid-column: span 4; }
+@container erp (max-width: 700px) { .erp-campo.a3, .erp-campo.a4 { grid-column: 1 / -1; } }
+.erp-label { min-height: 13px; font-size: 10px; font-weight: 500; color: var(--ax-tinta-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.erp-label i { margin-left: 1px; color: var(--ax-rojo); font-style: normal; }
+.erp-input { width: 100%; height: 28px; padding: 0 2px; border: 0; border-bottom: 1px solid rgba(0, 0, 0, 0.42); border-radius: 0; background: transparent; color: #000; font: 400 13px Roboto, sans-serif; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.erp-input:hover:not(:disabled) { border-bottom-color: #000; }
+.erp-input:focus { border-bottom-color: var(--ax-azul); box-shadow: 0 1px 0 var(--ax-azul); }
+.erp-input:disabled { color: rgba(0, 0, 0, 0.6); border-bottom-style: dotted; }
 .erp-input.num { text-align: right; font-variant-numeric: tabular-nums; }
-.erp-input:disabled { background: var(--sheet-2); color: var(--ink-2); }
-.erp-input.mini { height: 30px; min-width: 70px; padding: 0 7px; font-size: 13px; }
-.erp-ayuda { font-size: 11.5px; color: var(--ink-3); }
-.erp-campo.lectura .erp-valor { display: flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 2px; font-weight: 600; }
+.erp-input.mono { font-family: Roboto, sans-serif; letter-spacing: 0.3px; }
+select.erp-input { appearance: none; padding-right: 18px; background: linear-gradient(45deg, transparent 50%, #757575 50%) calc(100% - 9px) 12px / 4px 4px no-repeat, linear-gradient(135deg, #757575 50%, transparent 50%) calc(100% - 5px) 12px / 4px 4px no-repeat; }
+.erp-input.mini { height: 24px; font-size: 12px; min-width: 60px; }
+.erp-tabla .erp-input.mini.num { width: 84px; }
+.erp-ayuda { margin-top: 2px; font-size: 10px; color: var(--ax-tinta-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.erp-campo.lectura .erp-valor { display: flex; align-items: center; min-height: 28px; padding: 0 2px; border-bottom: 1px solid rgba(0, 0, 0, 0.12); color: #000; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.erp-campo.lectura .erp-valor.num { justify-content: flex-end; font-variant-numeric: tabular-nums; }
+.erp-campo.check { justify-content: flex-end; }
+.erp-check { display: inline-flex; align-items: center; gap: 8px; min-height: 28px; font-size: 13px; color: var(--ax-tinta); cursor: pointer; }
+.erp-check input { width: 16px; height: 16px; accent-color: var(--ax-azul); }
+.erp-total { color: var(--ax-link); font-weight: 500; }
+.erp-form { display: flex; flex-direction: column; gap: 10px; }
 
-.erp-seccion { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--sheet); }
-.erp-seccion h3 { margin: 0 0 10px; font: 700 14.5px var(--display); }
-.erp-nota { margin: 0 0 10px; padding: 8px 12px; border-left: 3px solid var(--signal); border-radius: 0 8px 8px 0; background: var(--signal-soft); font-size: 13px; color: var(--ink-2); }
-.erp-vacio { padding: 36px 16px; text-align: center; color: var(--ink-3); border: 1px dashed var(--line); border-radius: 12px; }
+/* nota de ayuda de la práctica (no existe en Axional: es la voz del formador) */
+.erp-nota { margin: 0 0 8px; padding: 8px 12px; border-left: 3px solid var(--ax-naranja); border-radius: 0 4px 4px 0; background: #fff8e1; color: #5d4037; font-size: 12.5px; line-height: 1.45; }
+.erp-ficha-cuerpo > .erp-nota { margin: 0; }
+.erp-vacio { padding: 24px; text-align: center; color: var(--ax-tinta-3); }
+.erp-seccion { margin-top: 12px; padding: 10px 12px; background: #fff; border: 1px solid #e6e6e6; border-radius: 4px; }
+.erp-seccion h3 { margin: 0 0 8px; font-size: 13.5px; font-weight: 500; letter-spacing: 1.1px; }
 .erp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.erp-chip { display: inline-block; padding: 2px 8px; border-radius: 6px; background: var(--sheet-2); border: 1px solid var(--line); font-size: 12px; }
-.erp-enlace { padding: 0; border: 0; background: none; color: var(--erp-acento); font: inherit; font-weight: 600; cursor: pointer; text-align: left; }
-.erp-enlace:hover { text-decoration: underline; }
-.erp-x { width: 26px; height: 26px; border: 0; border-radius: 6px; background: none; color: var(--ink-3); font-size: 18px; cursor: pointer; }
-.erp-x:hover { background: var(--error-soft); color: var(--error); }
-.erp-check { display: flex; align-items: center; gap: 8px; padding: 6px 0; cursor: pointer; }
 
-/* líneas y totales */
-.erp-lineas { display: flex; flex-direction: column; gap: 10px; }
-.erp-lineas-pie { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.erp-totales { display: grid; grid-auto-flow: column; gap: 0; margin: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.erp-totales div { padding: 8px 14px; text-align: right; }
-.erp-totales div + div { border-left: 1px solid var(--line); }
-.erp-totales dt { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); }
-.erp-totales dd { margin: 2px 0 0; font: 700 16px var(--display); font-variant-numeric: tabular-nums; }
-.erp-totales .total { background: var(--erp-top); color: #fff; }
-.erp-totales .total dt { color: rgba(255, 255, 255, 0.65); }
+/* ---------------------------------------------------------------- escritorio */
+.erp-escritorio { padding-top: 10px; }
+.erp-bienvenida { padding: 14px 16px; margin-bottom: 10px; background: #fff; border: 1px solid #e6e6e6; border-left: 4px solid var(--ax-top); border-radius: 4px; }
+.erp-bienvenida h2 { margin: 0 0 4px; font-size: 16px; font-weight: 500; letter-spacing: 1px; }
+.erp-bienvenida p { margin: 0; color: var(--ax-tinta-2); font-size: 12.5px; }
+.erp-flujo { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 10px; }
+.erp-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; border: 1px solid #e6e6e6; border-radius: 4px; background: #fff; color: var(--ax-tinta); text-align: left; cursor: pointer; transition: box-shadow 0.15s; }
+.erp-tile:hover { box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); }
+.erp-tile b { font-size: 13.5px; font-weight: 500; letter-spacing: 0.6px; }
+.erp-tile small { color: var(--ax-tinta-2); font-size: 11.5px; }
+.erp-tile-ico { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #e0f2f1; color: var(--ax-top); }
+.erp-actividad { margin: 0; padding: 0; list-style: none; font-size: 12.5px; }
+.erp-actividad li { padding: 5px 0; border-bottom: 1px solid #eee; }
+.erp-actividad time { color: var(--ax-tinta-3); margin-right: 6px; font-variant-numeric: tabular-nums; }
 
-/* escritorio */
-.erp-bienvenida { padding: 18px 20px; border-radius: 12px; background: var(--grad-navy); color: #e8eef7; margin-bottom: 16px; }
-.erp-bienvenida h2 { margin: 0 0 4px; font: 700 20px var(--display); }
-.erp-bienvenida p { margin: 0; opacity: 0.8; font-size: 13.5px; }
-.erp-flujo { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.erp-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--sheet); color: var(--ink); text-align: left; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
-.erp-tile:hover { transform: translateY(-3px); border-color: var(--arc); box-shadow: var(--shadow); }
-.erp-tile b { font: 700 15px var(--display); }
-.erp-tile small { color: var(--ink-3); font-size: 12px; }
-.erp-tile-ico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--arc-soft); color: var(--erp-acento); }
-.erp-actividad { margin: 0; padding: 0; list-style: none; font-size: 13px; }
-.erp-actividad li { padding: 5px 0; border-bottom: 1px dashed var(--line); }
-.erp-actividad time { color: var(--ink-3); margin-right: 6px; font-variant-numeric: tabular-nums; }
+/* ---------------------------------------------------------------- docflow (como el diálogo DOCFLOW real) */
+.erp-df { padding: 18px 12px 12px; background: #fff; border: 1px solid #e6e6e6; border-radius: 4px; }
+.erp-df-tipos { display: flex; justify-content: center; align-items: flex-start; gap: 0; overflow-x: auto; padding-bottom: 18px; }
+.erp-df-tipo { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 120px; }
+.erp-df-circ { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; border: 6px solid var(--ax-celeste); box-shadow: 0 0 0 2px #455a64; font-size: 26px; font-weight: 400; color: #000; background: #fff; }
+.erp-df-circ.verde { border-color: var(--ax-verde); }
+.erp-df-circ.naranja { border-color: var(--ax-naranja); }
+.erp-df-circ.vacio { border-color: #cfd8dc; color: var(--ax-tinta-3); }
+.erp-df-tipo span { font-size: 14px; }
+.erp-df-flecha { flex: 0 0 70px; margin-top: 32px; height: 2px; background: #263238; position: relative; }
+.erp-df-flecha::after { content: '»»'; position: absolute; left: 50%; top: -11px; transform: translateX(-50%); padding: 0 4px; background: #fff; font-size: 16px; letter-spacing: -2px; }
+.erp-df-docs { display: flex; justify-content: center; align-items: flex-start; gap: 0; overflow-x: auto; }
+.erp-df-col { display: flex; flex-direction: column; gap: 10px; min-width: 150px; }
+.erp-df-enlace { flex: 0 0 40px; margin-top: 54px; height: 2px; background: #263238; position: relative; }
+.erp-df-enlace::after { content: ''; position: absolute; right: -2px; top: -5px; border-left: 9px solid #263238; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.erp-df-doc { display: flex; flex-direction: column; gap: 10px; width: 160px; padding: 10px 12px; border: 1px solid #455a64; border-radius: 6px; background: #fff; text-align: left; cursor: pointer; }
+.erp-df-doc:hover { box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); }
+.erp-df-doc.actual { border: 2px solid var(--ax-naranja); }
+.erp-df-doc b { font-size: 15px; font-weight: 400; }
+.erp-df-doc .st { font-size: 13px; color: var(--ax-celeste); }
+.erp-df-doc .st.verde { color: var(--ax-verde); }
+.erp-df-doc .st.naranja { color: var(--ax-naranja); }
+.erp-df-doc .st.violeta { color: #8e24aa; }
+.erp-df-doc small { font-size: 11px; text-transform: uppercase; color: #424242; }
+.erp-df-doc em { font-style: normal; font-size: 12px; color: #424242; }
+.erp-df-zoom { display: flex; justify-content: center; margin-top: 12px; }
+.erp-df-zoom span { padding: 4px 14px; border-radius: 14px; background: #f1f1f1; font-size: 11px; color: var(--ax-tinta-2); }
+.erp-df-hueco { padding: 20px; text-align: center; color: var(--ax-tinta-3); }
 
-/* docflow */
-.erp-docflow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; padding: 10px 0; }
-.erp-df-col { position: relative; display: flex; flex-direction: column; gap: 10px; }
-.erp-df-col + .erp-df-col::before { content: ''; position: absolute; left: -24px; top: 50%; width: 20px; border-top: 2px dashed var(--arc); }
-.erp-df-col h3 { margin: 0; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
-.erp-df-nodo { display: flex; flex-direction: column; gap: 3px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--sheet); color: var(--ink); text-align: left; cursor: pointer; box-shadow: var(--shadow); }
-.erp-df-nodo.actual { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); }
-.erp-df-nodo small { color: var(--ink-3); font-size: 11.5px; }
-.erp-df-nodo b { font-size: 15px; }
-.erp-df-nodo > span { font-size: 12.5px; color: var(--ink-2); }
-.erp-df-pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 8px; margin-top: 4px; }
-.erp-df-pie em { white-space: nowrap; }
-.erp-df-pie em { font-style: normal; font-weight: 700; font-variant-numeric: tabular-nums; }
-.erp-df-hueco { padding: 20px; text-align: center; color: var(--ink-3); border: 1px dashed var(--line); border-radius: 12px; }
+/* ---------------------------------------------------------------- avisos «Éxito / Ver registro» (snackbar) */
+.erp-avisos { position: absolute; bottom: 14px; left: 50%; z-index: 30; display: flex; flex-direction: column; gap: 8px; width: min(440px, calc(100% - 24px)); transform: translateX(-50%); pointer-events: none; }
+.erp-aviso { position: relative; display: flex; align-items: center; gap: 10px; padding: 10px 34px 10px 16px; border-radius: 4px; background: #323232; color: #fff; box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px rgba(0, 0, 0, 0.14); pointer-events: auto; font-size: 13px; }
+.erp-aviso > div { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.erp-aviso b { font-weight: 500; letter-spacing: 0.5px; }
+.erp-aviso.ok { background: var(--ax-verde); }
+.erp-aviso.error { background: #d32f2f; }
+.erp-aviso.info { background: #455a64; }
+.erp-aviso-ver { flex: none; padding: 4px 8px; border: 0; border-radius: 4px; background: rgba(255, 255, 255, 0.18); color: #fff; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
+.erp-aviso-ver:hover { background: rgba(255, 255, 255, 0.3); }
+.erp-aviso-x { position: absolute; top: 4px; right: 8px; border: 0; background: none; font-size: 18px; color: rgba(255, 255, 255, 0.8); cursor: pointer; }
 
-/* avisos */
-.erp-avisos { position: absolute; top: 58px; right: 12px; z-index: 30; display: flex; flex-direction: column; gap: 8px; width: min(360px, calc(100% - 24px)); pointer-events: none; }
-.erp-aviso { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 10px 34px 10px 14px; border-radius: 10px; background: var(--sheet); border: 1px solid var(--line); border-left: 5px solid var(--arc); box-shadow: var(--shadow-lg); font-size: 13px; pointer-events: auto; }
-.erp-aviso.ok { border-left-color: #2fb36a; }
-.erp-aviso.ok b { color: #2fb36a; }
-.erp-aviso.error { border-left-color: var(--error); background: var(--error-soft); }
-.erp-aviso.error b { color: var(--error); }
-.erp-aviso button:not(.erp-aviso-x) { align-self: flex-start; margin-top: 3px; padding: 0; border: 0; background: none; color: var(--erp-acento); font: 700 12.5px var(--text); cursor: pointer; text-decoration: underline; }
-.erp-aviso-x { position: absolute; top: 6px; right: 8px; border: 0; background: none; font-size: 18px; color: var(--ink-3); cursor: pointer; }
+/* ---------------------------------------------------------------- diálogo */
+.erp-modal-fondo { position: absolute; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(33, 33, 33, 0.46); }
+.erp-modal { width: min(560px, 100%); max-height: 100%; overflow: auto; border-radius: 4px; background: var(--ax-fondo); box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14); }
+.erp-modal-cab { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 10px 16px; background: #fff; border-bottom: 1px solid var(--ax-linea); font-size: 15px; }
+.erp-modal h3 { margin: 12px 16px 8px; font-size: 13px; font-weight: 500; letter-spacing: 1.2px; }
+.erp-modal-cuerpo { display: flex; flex-direction: column; gap: 10px; margin: 0 12px; padding: 12px; background: #fff; border-radius: 4px; }
+.erp-modal-pie { display: flex; justify-content: flex-end; gap: 6px; padding: 12px; }
 
-/* diálogo */
-.erp-modal-fondo { position: absolute; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(11, 17, 28, 0.45); backdrop-filter: blur(2px); }
-.erp-modal { width: min(460px, 100%); max-height: 100%; overflow: auto; padding: 18px; border-radius: 14px; background: var(--sheet); box-shadow: var(--shadow-lg); }
-.erp-modal h3 { margin: 0 0 12px; font: 700 17px var(--display); }
-.erp-modal-cuerpo { display: flex; flex-direction: column; gap: 10px; }
+/* ---------------------------------------------------------------- estrecho: menú lateral como cajón */
+@container erp (max-width: 900px) {
+  .erp-menu { position: absolute; z-index: 15; top: 0; bottom: 0; left: 0; transform: translateX(-102%); transition: transform 0.2s; box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2); }
+  .erp.menu-abierto .erp-menu { transform: none; }
+  .erp.menu-abierto .erp-scrim { display: block; position: absolute; inset: 0; z-index: 14; background: rgba(0, 0, 0, 0.3); }
+  .erp-top-buscar { flex-basis: 220px; }
+  .erp-base { display: none; }
+}
+@container erp (min-width: 901px) {
+  .erp.menu-abierto .erp-menu { display: none; }
+}
+@container erp (max-width: 560px) {
+  .erp-top-der .erp-top-ico { display: none; }
+}
 
 /* ---------------------------------------------------------------- espacio de práctica (ERP 2/3 + enunciado 1/3) */
 .pr-espacio { --pr-alto: min(820px, calc(100vh - 120px)); margin-top: 8px; }
@@ -259,3 +368,60 @@
 @media (prefers-reduced-motion: reduce) {
   .erp-btn, .erp-tile, .erp-menu { transition: none; }
 }
+
+/* ------------------------------------------------------------------ menú en árbol (como el lateral de Axional) */
+.erp-menu { width: 260px; }
+.erp-arbol { list-style: none; margin: 0; padding: 0 0 0 12px; }
+.erp-menu > .erp-arbol { padding-left: 6px; }
+.erp-arbol-carpeta, .erp-arbol-hoja { display: flex; align-items: center; gap: 6px; width: 100%; padding: 3px 8px 3px 2px; border: 0; background: none; color: var(--ax-tinta); font: inherit; font-size: 13px; line-height: 1.35; text-align: left; cursor: pointer; border-radius: 3px; }
+.erp-arbol-carpeta svg { color: #757575; flex: none; }
+.erp-arbol-hoja { padding-left: 16px; color: var(--ax-tinta-2); }
+.erp-arbol-hoja svg { color: var(--ax-top); flex: none; }
+.erp-arbol-carpeta:hover, .erp-arbol-hoja:hover { background: #f0f0f0; }
+.erp-arbol-hoja.on { background: #e0f2f1; color: var(--ax-top); font-weight: 500; }
+.erp-arbol-tri { display: inline-block; width: 10px; font-size: 10px; color: #616161; transition: transform 0.15s; }
+.erp-arbol-tri.on { transform: rotate(90deg); }
+.erp-arbol-carga { padding: 8px 16px; color: var(--ax-tinta-3); font-size: 12px; }
+.erp-top-res { max-height: 70vh; overflow-y: auto; }
+.erp-top-res .erp-res-txt { display: flex; flex-direction: column; min-width: 0; }
+.erp-top-res .erp-res-txt b { font-weight: 500; }
+.erp-top-res .erp-res-txt small { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.erp-top-res code { margin-left: auto; color: var(--ax-tinta-3); font-size: 11px; }
+
+/* ------------------------------------------------------------------ pantallas genéricas del catálogo */
+.erp-cargando { padding: 40px; text-align: center; color: var(--ax-tinta-3); }
+.erp-fchips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.erp-fchip { padding: 3px 10px; border: 1px solid #d0d0d0; border-radius: 14px; background: #fff; color: var(--ax-tinta-2); font-size: 12px; cursor: pointer; }
+.erp-fchip.on { border-color: var(--ax-top); background: #e0f2f1; color: var(--ax-top); }
+.erp-cajas { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.erp-caja { min-width: 0; }
+.erp-caja > .erp-sec { margin: 0; }
+.erp-nota { margin: 4px 0; color: var(--ax-tinta-3); font-size: 12px; }
+.erp-grid { width: 100%; border-collapse: collapse; font-size: 12px; }
+.erp-grid th { padding: 6px 8px; border-bottom: 1px solid #e0e0e0; color: var(--ax-tinta-2); font-weight: 500; text-align: left; white-space: nowrap; }
+.erp-grid td { padding: 6px 8px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+.erp-grid tbody tr { cursor: pointer; }
+.erp-grid tbody tr:hover { background: #f7f7f7; }
+.erp-estado-pt { display: inline-flex; align-items: center; gap: 6px; }
+.erp-estado-pt i { width: 9px; height: 9px; border-radius: 2px; }
+.erp-consulta { display: flex; flex-direction: column; gap: 10px; }
+.erp-pie { display: flex; justify-content: flex-end; gap: 8px; padding: 8px 0 0; }
+@container erp (max-width: 860px) {
+  .erp-cajas { grid-template-columns: 1fr; }
+  .erp-caja { grid-column: auto !important; }
+}
+/* conciliación bancaria: barra de selección al pie */
+.erp-pie-concil { flex-wrap: wrap; align-items: center; margin: 8px 0; }
+.erp-pie-concil > span { flex: 1 1 260px; color: var(--ax-tinta-2); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+/* finanzas: banda «FINALIZADO» del asiento y colores reales de los botones de proceso (se identifican por su title) */
+.erp-banda-fin { margin: 0; padding: 4px 8px; border-radius: 6px; background: #673ab7; color: #fff; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; text-align: center; }
+.erp-cab-acc .erp-btn[title^='Evolucionar estado'] { background: var(--ax-verde); color: #fff; }
+.erp-cab-acc .erp-btn[title^='Retroceder'], .erp-cab-acc .erp-btn[title^='Desconciliar'] { background: #272727; color: #fff; }
+.erp-cab-acc .erp-btn[title^='Abrir a provisional'] { background: var(--ax-morado); color: #fff; }
+.erp-cab-acc .erp-btn[title^='Copiar asiento'] { background: #ff5722; color: #fff; }
+.erp-cab-acc .erp-btn[title^='Finalizar'] { background: #673ab7; color: #fff; }
+/* la regla global `.check input` de la web (styles.css) ocultaba la casilla de CampoCheck (label.erp-campo.check) */
+.erp .erp-campo.check input { position: static; opacity: 1; pointer-events: auto; }
+/* conciliación: la descripción se recorta para que el importe se vea en móvil */
+.erp-concil td.desc { max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+@container erp (max-width: 860px) { .erp-concil td.desc { max-width: 110px; } }
