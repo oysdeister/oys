@@ -31,6 +31,7 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
   - simuladores y guiado: cuenta como hecho si está hecho en cualquiera de los dos;
   - examen: gana el validado; si los dos lo están o ninguno, la nota más alta.
   - El progreso que ya hubiera en un navegador antes de Clerk se suma a la primera cuenta que entre en él.
+- **Datos del alumno:** al entrar por primera vez ya no se pide nombre, iniciales ni usuario. Salen de la cuenta: nombre completo o, si no lo hay, la parte del correo antes de la `@`; las iniciales de ese nombre; y el usuario a partir del correo. Las iniciales se usan en los códigos de los ejercicios (por ejemplo, `TSB`).
 - **Guardado:** se guarda 2 segundos después del último cambio, al ocultar la pestaña y al pulsar **Salir**.
   - Sin conexión, todo sigue funcionando en local. Lo pendiente se sube al volver la red o en la siguiente visita.
   - El punto de la barra superior indica el estado: verde, guardado; ámbar, pendiente; rosa, sin conexión.
@@ -44,6 +45,13 @@ Aplicación **OYS** del workspace personal de Clerk (plan **Hobby**), instancia 
 1. **Configure → User & authentication → Access mode → Invite-only.** Nadie se registra por su cuenta; solo entran los invitados. La lista blanca por dominio (`@oysconsultores.com`) es **Allowlist**, que en Clerk es de pago (Pro).
 2. El acceso es con correo y contraseña (contraseña de 15 caracteres como mínimo) y también con Google, pero solo para cuentas ya invitadas.
 3. La publishable key de desarrollo está en `app/.env.local`, que git no sube.
+
+## Prueba hecha (17-11-2026, en local)
+
+1. Entrar con Google: la app abre directamente, sin formulario («Hola, Sergi · SB»).
+2. Marcar 2 de los 12 puntos de la checklist de maestros-1: se guarda en la cuenta (203 bytes).
+3. Pulsar **Salir** y borrar todo el `localStorage`, como en un navegador nuevo.
+4. Volver a entrar: vuelven el alumno y los 2 puntos marcados.
 
 ## Lo que tienes que hacer tú
 

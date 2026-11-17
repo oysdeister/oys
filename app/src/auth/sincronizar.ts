@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useUser } from '@clerk/react';
 import { EVENTO_CAMBIO, sinAvisos } from '../lib/sync';
-import { recargarProgreso } from '../lib/progress';
+import { acciones, getProgreso, limpiaUsuario, recargarProgreso } from '../lib/progress';
 import { recargarExamen } from '../lib/examen';
 import { recargarNotas } from '../erp/practicas';
 import { CLAVES_PROGRESO, ajustar, bytes, escribirLocal, esProgresoC, fusionar, igualSinFecha, leerLocal, type ProgresoC } from './compacto';
@@ -46,8 +46,39 @@ export function borrarProgresoLocal() {
 
 type Usuario = NonNullable<ReturnType<typeof useUser>['user']>;
 
+/** Nombre, iniciales y usuario del alumno a partir de su cuenta: así no se le vuelven a pedir. */
+function datosDeCuenta(user: Usuario) {
+  const correo = user.primaryEmailAddress?.emailAddress ?? '';
+  const local = correo.split('@')[0] ?? '';
+  const desdeCorreo = local
+    .split(/[._-]+/)
+    .filter(Boolean)
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(' ');
+  const nombre = (user.fullName || [user.firstName, user.lastName].filter(Boolean).join(' ') || desdeCorreo || user.username || 'Alumno').trim();
+  const palabras = nombre.split(/\s+/).filter(Boolean);
+  let ini = palabras
+    .slice(0, 3)
+    .map((w) => w[0] ?? '')
+    .join('')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-ZÑ0-9]/g, '');
+  if (ini.length < 2) ini = (nombre.normalize('NFD').replace(/[^A-Za-z]/g, '').slice(0, 2) || 'AL').toUpperCase();
+  const usuario = limpiaUsuario(user.username || local || nombre) || 'alumno';
+  return { nombre, ini: ini.slice(0, 4), usuario: usuario.length >= 3 ? usuario : `${usuario}001`.slice(0, 6) };
+}
+
+/** Progreso guardado en la cuenta (o null si no hay o no es válido). */
+function remotoDe(user: Usuario): ProgresoC | null {
+  const v = user.unsafeMetadata?.oys;
+  return esProgresoC(v) ? { ...v, x: v.x ?? null } : null;
+}
+
 async function subir(user: Usuario, pc: ProgresoC) {
-  await user.update({ unsafeMetadata: { ...user.unsafeMetadata, oys: ajustar(pc) } });
+  // updateMetadata fusiona en profundidad; como el progreso solo crece, no hace falta borrar claves.
+  await user.updateMetadata({ unsafeMetadata: { oys: ajustar(pc) } });
 }
 
 /** Deja una función para forzar la subida antes de salir. */
@@ -77,7 +108,7 @@ export function useSincronizarProgreso(): EstadoSync {
         return;
       }
       const local = leerLocal();
-      const remoto = esProgresoC(user.unsafeMetadata?.oys) ? (user.unsafeMetadata.oys as ProgresoC) : null;
+      const remoto = remotoDe(user);
       if (igualSinFecha(local, remoto)) {
         ls(CLAVE_PENDIENTE, null);
         setEstado('al-dia');
@@ -87,7 +118,7 @@ export function useSincronizarProgreso(): EstadoSync {
       try {
         // Por si otro dispositivo subió mientras tanto: fusiona antes de escribir.
         await user.reload();
-        const ultimo = esProgresoC(user.unsafeMetadata?.oys) ? (user.unsafeMetadata.oys as ProgresoC) : null;
+        const ultimo = remotoDe(user);
         const total = fusionar(leerLocal(), ultimo);
         await subir(user, total);
         if (!igualSinFecha(total, leerLocal())) {
@@ -116,7 +147,7 @@ export function useSincronizarProgreso(): EstadoSync {
     const dueno = ls(CLAVE_DUENO);
     if (dueno && dueno !== user.id) borrarProgresoLocal();
     ls(CLAVE_DUENO, user.id);
-    const remoto = esProgresoC(user.unsafeMetadata?.oys) ? (user.unsafeMetadata.oys as ProgresoC) : null;
+    const remoto = remotoDe(user);
     const local = leerLocal();
     const total = fusionar(local, remoto);
     if (!igualSinFecha(total, local)) {
@@ -124,6 +155,12 @@ export function useSincronizarProgreso(): EstadoSync {
       recargarTodo();
     }
     listo.current = true;
+    // 2) Si aún no hay datos de alumno (primera vez), salen de la cuenta: no se pregunta nada.
+    const al = getProgreso().alumno;
+    if (!al.ini || !al.usuario) {
+      const d = datosDeCuenta(user);
+      acciones.setAlumno(al.nombre || d.nombre, al.ini || d.ini, al.usuario || d.usuario);
+    }
     if (!igualSinFecha(total, remoto) || ls(CLAVE_PENDIENTE)) void empujar();
     else setEstado('al-dia');
 
