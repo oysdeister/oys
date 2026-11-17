@@ -133,7 +133,7 @@ function PantallaEntrada() {
             </div>
           </ClerkLoading>
           <ClerkLoaded>
-            {alta ? <SignUp routing="hash" signInUrl="#" /> : <SignIn routing="hash" withSignUp={false} />}
+            {alta ? <SignUp routing="hash" signInUrl="#" oauthFlow="popup" forceRedirectUrl={URL_APP} /> : <SignIn routing="hash" withSignUp={false} oauthFlow="popup" forceRedirectUrl={URL_APP} signUpForceRedirectUrl={URL_APP} />}
             {alta && (
               <button type="button" className="acc-cambiar" onClick={() => setAlta(false)}>
                 Ya tengo cuenta: entrar
