@@ -4,6 +4,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { Icon } from '../components/Icon';
 import { META } from '../content';
 import { GLOSARIO, MODULOS_GLOSARIO, normaliza } from '../content/glosario';
+import { useProgreso } from '../lib/progress';
+import { conIni } from '../lib/texto';
 import './glosario.css';
 
 const nombreMod = (id: string) => META[id]?.corto ?? 'Curso';
@@ -15,6 +17,7 @@ const inicial = (s: string) => {
 
 /** Página «Glosario»: todos los términos de los módulos, con buscador y filtro por módulo */
 export default function Glosario() {
+  const ini = useProgreso().alumno.ini;
   const [q, setQ] = useState('');
   const [mod, setMod] = useState<string>('');
   const loc = useLocation();
@@ -170,11 +173,11 @@ export default function Glosario() {
                     >
                       <dt>{g.termino}</dt>
                       <dd>
-                        <p>{g.definicion}</p>
+                        <p>{conIni(g.definicion, ini)}</p>
                         {g.ejemplo && (
                           <p className="gls-ej">
                             <span>Ejemplo</span>
-                            {g.ejemplo}
+                            {conIni(g.ejemplo, ini)}
                           </p>
                         )}
                         <p className="gls-mods">

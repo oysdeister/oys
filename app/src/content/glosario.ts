@@ -9,6 +9,8 @@ interface EntradaJson {
   termino?: string;
   definicion?: string;
   ejemplo?: string;
+  /** otras formas en que sale en el texto («Prorrata provisional y definitiva» → «Prorrata») */
+  alias?: string[];
 }
 
 export interface Termino {
@@ -19,6 +21,8 @@ export interface Termino {
   ejemplo?: string;
   /** módulos donde aparece (el primero manda) */
   modulos: string[];
+  /** otras formas que también se resaltan */
+  alias: string[];
 }
 
 const ficheros = import.meta.glob<{ default: unknown }>('./glosario/*.json', { eager: true });
@@ -52,13 +56,15 @@ function cargar(): Termino[] {
       if (!termino || !definicion) continue;
       const clave = claveDe(termino);
       if (!clave) continue;
+      const alias = Array.isArray(e.alias) ? e.alias.filter((a): a is string => typeof a === 'string' && !!a.trim()) : [];
       const previo = porClave.get(clave);
       if (previo) {
+        for (const a of alias) if (!previo.alias.includes(a)) previo.alias.push(a);
         if (!previo.modulos.includes(id)) previo.modulos.push(id);
         if (!previo.ejemplo && e.ejemplo) previo.ejemplo = e.ejemplo.trim();
         continue;
       }
-      porClave.set(clave, { clave, termino, definicion, ejemplo: e.ejemplo?.trim() || undefined, modulos: [id] });
+      porClave.set(clave, { clave, termino, definicion, ejemplo: e.ejemplo?.trim() || undefined, modulos: [id], alias });
     }
   }
   return [...porClave.values()].sort((a, b) => a.termino.localeCompare(b.termino, 'es', { sensitivity: 'base' }));
@@ -74,24 +80,67 @@ export const MODULOS_GLOSARIO: string[] = (ORDEN as readonly string[]).filter((i
 const escapa = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /**
- * Patrón único para todos los términos: el más largo primero, sin distinguir mayúsculas, con
+ * Formas con las que un término puede salir en el texto: el término entero, el término sin el
+ * paréntesis aclaratorio («Empresa (sociedad)» → «Empresa») y cada alternativa separada por « / »
+ * («NIF / Id. fiscal» → «NIF», «Id. fiscal»). Las piezas que empiezan por «de» no van solas.
+ */
+function formasDe(termino: string): string[] {
+  const out = new Set<string>([termino.trim()]);
+  const sinParen = termino.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  if (sinParen) out.add(sinParen);
+  for (const pieza of sinParen.split(/\s+\/\s+/)) {
+    const p = pieza.trim();
+    if (p && !/^de\s/i.test(p)) out.add(p);
+  }
+  return [...out].filter((f) => f.length >= 3);
+}
+
+/** Forma (por su clave) → término. Primero los nombres de los términos y después los alias, para que un alias no tape a otro término */
+const ALIAS = new Map<string, Termino>();
+const registra = (t: Termino, formas: string[]) => {
+  for (const f of formas) {
+    const c = claveDe(f);
+    if (c && !ALIAS.has(c)) ALIAS.set(c, t);
+  }
+};
+for (const t of GLOSARIO) registra(t, formasDe(t.termino));
+for (const t of GLOSARIO) registra(t, t.alias.flatMap(formasDe));
+
+/** Una forma con plural opcional en la primera y en la última palabra («pedido(s) de venta(s)») */
+function patronDe(forma: string): string {
+  const palabras = forma.split(' ');
+  if (palabras.length === 1) return `${escapa(forma)}(?:es|s)?`;
+  const [primera, ...resto] = palabras;
+  return `${escapa(primera)}(?:es|s)? ${escapa(resto.join(' '))}(?:es|s)?`;
+}
+
+/**
+ * Patrón único para todas las formas: la más larga primero, sin distinguir mayúsculas, con
  * plural simple (s / es) y sin cortar palabras (límites Unicode).
- * Los términos de 1–2 letras no se resaltan: darían falsos positivos.
+ * Las formas de 1–2 letras no se resaltan: darían falsos positivos.
  */
 const PATRON: RegExp | null = (() => {
-  const formas = GLOSARIO.filter((t) => t.termino.length >= 3)
-    .map((t) => t.termino)
+  const formas = [...new Set(GLOSARIO.flatMap((t) => [t.termino, ...t.alias].flatMap(formasDe)))]
     .sort((a, b) => b.length - a.length)
-    .map((t) => `${escapa(t)}(?:es|s)?`);
+    .map(patronDe);
   if (!formas.length) return null;
   // Sin lookbehind (Safari < 16.4): el carácter previo va en el grupo 1 y el término en el 2
   return new RegExp(`(^|[^\\p{L}\\p{N}])(${formas.join('|')})(?![\\p{L}\\p{N}])`, 'giu');
 })();
 
-/** Busca el término al que corresponde un trozo de texto encontrado por el patrón */
+/** Busca el término al que corresponde un trozo de texto encontrado por el patrón (quita plurales) */
 function resolver(trozo: string): Termino | undefined {
-  const c = claveDe(trozo);
-  return PORCLAVE.get(c) ?? PORCLAVE.get(c.replace(/-?es$/, '')) ?? PORCLAVE.get(c.replace(/-?s$/, ''));
+  const partes = claveDe(trozo).split('-');
+  const sing = (w: string) => [w, w.replace(/es$/, ''), w.replace(/s$/, '')];
+  const primeras = sing(partes[0]);
+  const ultimas = partes.length > 1 ? sing(partes[partes.length - 1]) : [''];
+  for (const a of primeras)
+    for (const z of ultimas) {
+      const c = partes.length > 1 ? [a, ...partes.slice(1, -1), z].join('-') : a;
+      const t = ALIAS.get(c);
+      if (t) return t;
+    }
+  return undefined;
 }
 
 export type Trozo = string | { texto: string; t: Termino };

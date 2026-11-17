@@ -2,6 +2,8 @@ import { Fragment, useCallback, useEffect, useId, useLayoutEffect, useRef, useSt
 import { createPortal } from 'react-dom';
 import { META } from '../content';
 import { trocear, type Termino } from '../content/glosario';
+import { useProgreso } from '../lib/progress';
+import { conIni } from '../lib/texto';
 import '../pages/glosario.css';
 
 const nombreMod = (id: string) => META[id]?.corto ?? 'Curso';
@@ -26,6 +28,9 @@ export function TerminoGlosario({ t, children }: { t: Termino; children: string 
   const timer = useRef<number | undefined>(undefined);
   const fijado = useRef(false);
   const id = useId();
+  const ini = useProgreso().alumno.ini;
+  const def = conIni(t.definicion, ini);
+  const ej = t.ejemplo ? conIni(t.ejemplo, ini) : '';
 
   const abrir = useCallback((demora = 0) => {
     window.clearTimeout(timer.current);
@@ -107,7 +112,7 @@ export function TerminoGlosario({ t, children }: { t: Termino; children: string 
       </button>
       {/* La definición siempre está en el DOM (oculta) para que el lector la anuncie al enfocar; el tooltip visual va aparte */}
       <span id={id} hidden>
-        {`Glosario: ${t.definicion}${t.ejemplo ? ` Ejemplo: ${t.ejemplo}` : ''}`}
+        {`Glosario: ${def}${ej ? ` Ejemplo: ${ej}` : ''}`}
       </span>
       {abierto &&
         createPortal(
@@ -122,10 +127,10 @@ export function TerminoGlosario({ t, children }: { t: Termino; children: string 
           >
             <span className="gl-pop-k">Glosario</span>
             <b className="gl-pop-t">{t.termino}</b>
-            <span className="gl-pop-d">{t.definicion}</span>
-            {t.ejemplo && (
+            <span className="gl-pop-d">{def}</span>
+            {ej && (
               <span className="gl-pop-e">
-                <i>Ejemplo</i> {t.ejemplo}
+                <i>Ejemplo</i> {ej}
               </span>
             )}
             <span className="gl-pop-m">
