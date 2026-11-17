@@ -12,6 +12,8 @@ import './auth.css';
 
 export const CLAVE_CLERK = (import.meta.env.VITE_CLERK_PUBLISHABLE_KEY as string | undefined)?.trim() || '';
 export const CLERK_ACTIVO = CLAVE_CLERK.startsWith('pk_');
+/** Dirección de la app sin query ni hash (en GitHub Pages, …/oys/): tras Google o tras salir se vuelve aquí y no a la raíz del dominio. */
+const URL_APP = window.location.origin + window.location.pathname;
 
 const NEON = '#4fbfa5';
 
@@ -147,7 +149,14 @@ function PantallaEntrada() {
 export function Acceso({ children }: { children: ReactNode }) {
   if (!CLERK_ACTIVO) return <>{children}</>;
   return (
-    <ClerkProvider publishableKey={CLAVE_CLERK} localization={esES} appearance={APARIENCIA} afterSignOutUrl={window.location.pathname}>
+    <ClerkProvider
+      publishableKey={CLAVE_CLERK}
+      localization={esES}
+      appearance={APARIENCIA}
+      afterSignOutUrl={URL_APP}
+      signInFallbackRedirectUrl={URL_APP}
+      signUpFallbackRedirectUrl={URL_APP}
+    >
       <Show when="signed-out">
         <PantallaEntrada />
       </Show>
