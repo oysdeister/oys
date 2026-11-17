@@ -3,20 +3,24 @@ import { erp, CAT, useDb, type Proveedor } from '../modelo';
 import {
   Lista,
   Ficha,
-  Pestanas,
+  Seccion,
   Rejilla,
   CampoTexto,
   CampoFecha,
   CampoSel,
   CampoLectura,
+  CampoCheck,
   Enlace,
   Estado,
-  fechaEs,
+
   useErp,
   type Accion,
 } from '../ui';
+import { useAccionesCatalogo, useEnlacesCatalogo } from '../catalogo/extra';
 
 export default function Proveedores() {
+  const extraAcc = useAccionesCatalogo('gproveed');
+  const extraMenu = useEnlacesCatalogo('gproveed');
   const { ini, clave, ir, hacer } = useErp();
   const db = useDb();
 
@@ -30,15 +34,18 @@ export default function Proveedores() {
           clave={(p) => p.tercero}
           onAbrir={(p) => ir('proveedores', p.tercero)}
           onNuevo={ini ? () => ir('proveedores', '__nuevo') : undefined}
-          nuevoTexto="Nuevo proveedor"
           marcarMios={(p) => p.autor === ini}
           cols={[
-            { titulo: 'Código', valor: (p) => <span className="mono">{p.tercero}</span>, texto: (p) => p.tercero },
+            { titulo: 'Proveedor', valor: (p) => <span className="mono">{p.tercero}</span>, texto: (p) => p.tercero },
             { titulo: 'Nombre', valor: (p) => db.terceros.find((t) => t.codigo === p.tercero)?.nombre ?? '—', texto: (p) => db.terceros.find((t) => t.codigo === p.tercero)?.nombre ?? '' },
-            { titulo: 'Tipo', valor: (p) => p.tipo, texto: (p) => p.tipo },
-            { titulo: 'Efecto', valor: (p) => CAT.efectos.find((e) => e.v === p.tipoEfecto)?.t ?? p.tipoEfecto, texto: (p) => CAT.efectos.find((e) => e.v === p.tipoEfecto)?.t ?? p.tipoEfecto },
-            { titulo: 'Plazo pago', valor: (p) => CAT.plazos.find((x) => x.v === p.plazoPago)?.t ?? p.plazoPago, texto: (p) => CAT.plazos.find((x) => x.v === p.plazoPago)?.t ?? p.plazoPago },
-            { titulo: 'Fecha baja', valor: (p) => fechaEs(p.fechaBaja), texto: (p) => fechaEs(p.fechaBaja) },
+            { titulo: 'Grupo', valor: () => 'ALL', texto: () => 'ALL' },
+            { titulo: 'Tipo proveedor', valor: (p) => p.tipo, texto: (p) => p.tipo },
+            { titulo: 'Grupo de empresas', valor: () => 'ALL', texto: () => 'ALL' },
+            { titulo: 'Tercero facturación', valor: (p) => p.tercero, texto: (p) => p.tercero },
+            { titulo: 'Dirección facturación', valor: (p) => db.terceros.find((t) => t.codigo === p.tercero)?.direcciones[0]?.direccion ?? '—', texto: (p) => db.terceros.find((t) => t.codigo === p.tercero)?.direcciones[0]?.direccion ?? '' },
+            { titulo: 'Divisa', valor: () => 'EUR', texto: () => 'EUR' },
+            { titulo: 'Descuento comercial 1', valor: () => '0,000', texto: () => '0,000', num: true },
+            { titulo: 'Estado', valor: () => <Estado valor="Activo" />, texto: () => 'Activo' },
           ]}
           vacio="No hay proveedores."
         />
@@ -84,8 +91,6 @@ export default function Proveedores() {
         };
   });
 
-  const [tab, setTab] = useState('general');
-
   const tercero = db.terceros.find((t) => t.codigo === borrador.tercero);
   const opcionesTerceros = db.terceros
     .filter((t) => t.categoria === '002 Proveedores' || t.relaciones.some((r) => r.tipo === 'Proveedor'))
@@ -118,6 +123,7 @@ export default function Proveedores() {
     if (!esAlta) {
       acciones.push({
         label: 'Nuevo pedido',
+        lugar: 'acciones',
         tipo: 'proceso',
         onClick: () => {
           const r = erp.nuevoPedido(codigo, ini);
@@ -133,26 +139,13 @@ export default function Proveedores() {
     }
   }
 
-  const titulo = esAlta
-    ? 'Nuevo proveedor'
-    : `${codigo} · ${db.terceros.find((t) => t.codigo === codigo)?.nombre ?? 'Proveedor'}`;
-  const sub = 'Maestros › Proveedores';
-
+  const titulo = esAlta ? 'Nuevo proveedor' : codigo;
   const relacionesProveedor = tercero?.relaciones.filter((r) => r.tipo === 'Proveedor') ?? [];
 
   return (
-    <Ficha titulo={titulo} sub={sub} acciones={acciones} onVolver={() => ir('proveedores', null)}>
-      <Pestanas
-        tabs={[
-          { id: 'general', label: 'Datos generales' },
-          { id: 'financieros', label: 'Datos financieros' },
-        ]}
-        actual={tab}
-        onCambio={setTab}
-      />
-
-      {tab === 'general' && (
-        <Rejilla cols={3}>
+    <Ficha titulo={titulo} acciones={[...acciones, ...extraAcc]} menu={extraMenu} onVolver={() => ir('proveedores', null)}>
+      <Seccion titulo="Identificación">
+        <Rejilla cols={4}>
           <CampoSel
             label="Tercero"
             req
@@ -161,11 +154,26 @@ export default function Proveedores() {
             opciones={opcionesTerceros}
             vacio="— elige tercero —"
             disabled={!esAlta || isTutorial}
+            ayuda={tercero ? `${tercero.nombre} · ${tercero.nif}` : ''}
           />
-          <CampoLectura label="Id. fiscal" valor={tercero ? tercero.nif : '—'} />
-          <CampoLectura label="Estado" valor={tercero ? <Estado valor={tercero.estado} /> : '—'} />
+          <CampoLectura label="Fecha alta" req valor="" />
+          <CampoLectura label="Estado" req valor={<Estado valor="Activo" />} />
+          <CampoLectura label="Validaciones" valor="0" num />
+          <CampoCheck label="Federación" value={false} disabled={isTutorial} />
+          <CampoFecha
+            label="Fecha baja"
+            value={borrador.fechaBaja}
+            onChange={(v) => setBorrador({ ...borrador, fechaBaja: v })}
+            disabled={isTutorial}
+          />
+          <CampoLectura label="Password web" valor="" />
+          <CampoLectura label="Grupo" valor="ALL" />
+          <CampoLectura label="Cliente" valor="" />
+          <CampoLectura label="Comercial" req valor="" />
+          <CampoLectura label="Grupo de empresas" req valor="ALL" />
           <CampoSel
             label="Tipo proveedor"
+            req
             value={borrador.tipo}
             onChange={(v) => setBorrador({ ...borrador, tipo: v as Proveedor['tipo'] })}
             opciones={[
@@ -174,73 +182,170 @@ export default function Proveedores() {
             ]}
             disabled={isTutorial}
           />
-          <CampoFecha
-            label="Fecha baja"
-            value={borrador.fechaBaja}
-            onChange={(v) => setBorrador({ ...borrador, fechaBaja: v })}
-            disabled={isTutorial}
-          />
-          <CampoTexto
-            label="Central compras"
-            mono
-            value={borrador.centralCompras}
-            onChange={(v) => setBorrador({ ...borrador, centralCompras: v })}
-            disabled={isTutorial}
-          />
-          <CampoTexto
-            label="Central pagos"
-            mono
-            value={borrador.centralPagos}
-            onChange={(v) => setBorrador({ ...borrador, centralPagos: v })}
-            disabled={isTutorial}
-          />
         </Rejilla>
-      )}
+      </Seccion>
 
-      {tab === 'financieros' && (
-        <>
-          <Rejilla cols={3}>
-            <CampoSel
-              label="Tipo efecto"
-              value={borrador.tipoEfecto}
-              onChange={(v) => setBorrador({ ...borrador, tipoEfecto: v })}
-              opciones={CAT.efectos}
-              disabled={isTutorial}
-            />
-            <CampoSel
-              label="Plazo pago"
-              req
-              value={borrador.plazoPago}
-              onChange={(v) => setBorrador({ ...borrador, plazoPago: v })}
-              opciones={CAT.plazos}
-              disabled={isTutorial}
-            />
-          </Rejilla>
-          <section className="erp-seccion">
-            <h3>Relaciones contables del tercero</h3>
-            {tercero ? (
+      <Seccion
+        tabs={[
+          {
+            label: 'Información general',
+            contenido: (
+              <Rejilla cols={4}>
+                <CampoLectura label="Agrupar pedidos" req valor="Tercero y más campos" />
+                <CampoLectura label="Transportista" valor="" />
+                <CampoLectura label="Tipo transporte" valor="" />
+                <CampoLectura label="Medio transporte" valor="" />
+                <CampoLectura label="Sector transporte" valor="" />
+                <CampoLectura label="Plazo entrega" req valor="0" num />
+                <CampoLectura label="Días demora" valor="0,00" num />
+                <CampoLectura label="Tipo días" req valor="Calendario" />
+                <CampoLectura label="Pedidos parciales" valor="" />
+                <CampoLectura label="Depósito" valor="" />
+                <CampoLectura label="Incoterm" valor="" />
+                <CampoLectura label="Calidad" valor="" />
+                <CampoLectura label="Portes" req valor="Debidos" />
+                <CampoLectura label="Redondeo" valor="" />
+                <CampoLectura label="Descuento comercial 1" valor="0,000" num />
+                <CampoLectura label="Descuento comercial 2" valor="0,000" num />
+                <CampoLectura label="Divisa" req valor="EUR" ayuda="Euro" />
+                <CampoLectura label="Mínimo pedido" req valor="0,00" num />
+                <CampoLectura label="Descuento comercial 3" valor="0,000" num />
+                <CampoLectura label="% Pronto pago" valor="0,000" num />
+                <CampoLectura label="Importe tolerancia" valor="" />
+                <CampoLectura label="% tolerancia" valor="" />
+                <CampoLectura label="% Royalty" req valor="0,00" num />
+                <CampoLectura label="Identificador proveedor" valor="" />
+              </Rejilla>
+            ),
+          },
+          {
+            label: 'Facturación',
+            contenido: (
+              <Rejilla cols={4}>
+                <CampoLectura label="Tercero facturación" req valor={borrador.tercero || '—'} ayuda={tercero?.nombre} />
+                <CampoLectura label="Agrupación albaranes" req valor="" />
+                <CampoLectura label="Dirección facturación" valor={tercero?.direcciones[0]?.direccion ?? '—'} />
+                <CampoLectura label="Modo autofacturación" req valor="" />
+              </Rejilla>
+            ),
+          },
+          {
+            label: 'Central de compras',
+            contenido: (
+              <Rejilla cols={4}>
+                <CampoTexto
+                  label="Central compras"
+                  mono
+                  value={borrador.centralCompras}
+                  onChange={(v) => setBorrador({ ...borrador, centralCompras: v })}
+                  disabled={isTutorial}
+                />
+                <CampoLectura label="Proveedor compras" valor={borrador.centralCompras || '—'} ayuda={db.terceros.find((t) => t.codigo === borrador.centralCompras)?.nombre} />
+              </Rejilla>
+            ),
+          },
+          {
+            label: 'Central de pagos',
+            contenido: (
+              <Rejilla cols={4}>
+                <CampoTexto
+                  label="Central pagos"
+                  mono
+                  value={borrador.centralPagos}
+                  onChange={(v) => setBorrador({ ...borrador, centralPagos: v })}
+                  disabled={isTutorial}
+                />
+                <CampoLectura label="Proveedor pagos" valor={borrador.centralPagos || '—'} ayuda={db.terceros.find((t) => t.codigo === borrador.centralPagos)?.nombre} />
+              </Rejilla>
+            ),
+          },
+        ]}
+      />
+
+      <Seccion
+        tabs={[
+          { label: 'Logística', noDisp: true, contenido: null },
+          { label: 'Auxiliares', noDisp: true, contenido: null },
+          { label: 'Impresión', noDisp: true, contenido: null },
+        ]}
+      />
+
+      <Seccion
+        tabs={[
+          {
+            label: 'Datos financieros',
+            contenido: (
               <>
-                {relacionesProveedor.length > 0 ? (
-                  <ul>
-                    {relacionesProveedor.map((r) => (
-                      <li key={r.codigo}>
-                        {r.codigo} · {r.cuenta}
-                      </li>
-                    ))}
-                  </ul>
+                <Rejilla cols={4}>
+                  <CampoSel
+                    label="Tipo efecto"
+                    value={borrador.tipoEfecto}
+                    onChange={(v) => setBorrador({ ...borrador, tipoEfecto: v })}
+                    opciones={CAT.efectos}
+                    disabled={isTutorial}
+                  />
+                  <CampoSel
+                    label="Plazo pago"
+                    req
+                    value={borrador.plazoPago}
+                    onChange={(v) => setBorrador({ ...borrador, plazoPago: v })}
+                    opciones={CAT.plazos}
+                    disabled={isTutorial}
+                  />
+                  <CampoLectura label="Agrupación empresas" req valor="ALL" />
+                  <CampoLectura label="Delegación" valor="CENTRAL" />
+                  <CampoLectura label="Dirección" valor={tercero?.direcciones[0]?.direccion ?? '—'} />
+                  <CampoLectura label="Divisa" req valor="EUR" ayuda="Euro" />
+                  <CampoLectura label="Cambio" req num valor="1,000000" />
+                  <CampoLectura label="% Pronto pago" valor="0,000" num />
+                </Rejilla>
+                {tercero ? (
+                  relacionesProveedor.length > 0 ? (
+                    <Rejilla cols={3}>
+                      {relacionesProveedor.map((r) => (
+                        <CampoLectura
+                          key={`${r.codigo}-${r.cuenta}`}
+                          label={`Relación ${r.codigo}`}
+                          valor={`${r.codigo} · ${r.cuenta}`}
+                          ayuda={`${r.tipo} · ${r.plan}`}
+                        />
+                      ))}
+                    </Rejilla>
+                  ) : (
+                    <p className="erp-nota">No tiene relaciones de tipo Proveedor.</p>
+                  )
                 ) : (
-                  <p className="erp-nota">No tiene relaciones de tipo Proveedor.</p>
+                  <p className="erp-nota">Selecciona un tercero para ver sus relaciones contables.</p>
                 )}
-                <Enlace pantalla="terceros" clave={tercero.codigo}>
-                  Abrir tercero
-                </Enlace>
+                {tercero && (
+                  <Enlace pantalla="terceros" clave={tercero.codigo}>
+                    Abrir tercero
+                  </Enlace>
+                )}
               </>
-            ) : (
-              <p className="erp-nota">Selecciona un tercero para ver sus relaciones contables.</p>
-            )}
-          </section>
-        </>
-      )}
+            ),
+          },
+          { label: 'Tarifas', noDisp: true, contenido: null },
+          { label: 'Transportes', noDisp: true, contenido: null },
+        ]}
+      />
+
+      <Seccion
+        tabs={[
+          { label: 'Destinos', noDisp: true, contenido: null },
+          { label: 'Artículos por proveedor', noDisp: true, contenido: null },
+          { label: 'Almacenes', noDisp: true, contenido: null },
+          { label: 'Notas', noDisp: true, contenido: null },
+        ]}
+      />
+
+      <Seccion
+        tabs={[
+          { label: 'Datos de control', noDisp: true, contenido: null },
+          { label: 'Workflow', noDisp: true, contenido: null },
+          { label: 'Evolución del workflow', noDisp: true, contenido: null },
+        ]}
+      />
     </Ficha>
   );
 }

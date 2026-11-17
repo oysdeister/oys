@@ -1,7 +1,7 @@
 /* Prácticas transaccionales: enunciado + comprobaciones automáticas sobre los datos del ERP de práctica. */
 import { useSyncExternalStore } from 'react';
 import { avisarCambio } from '../lib/sync';
-import { type Db, type Pantalla, baseDe, facturaDeAlbaran, lineasFactura, situacionPedido, stock, totales } from './modelo';
+import { type Db, type Pantalla, cuadra, importeBanco, baseDe, facturaDeAlbaran, lineasFactura, situacionPedido, stock, totales } from './modelo';
 
 export interface Comprobacion {
   texto: string;
@@ -150,6 +150,93 @@ export const PRACTICAS: Practica[] = [
   },
 ];
 
+/* ---------- finanzas */
+const asientoAlquiler = (d: Db, ini: string) =>
+  d.asientos.find((a) => a.autor === ini && a.origen === 'MAN' && a.apuntes.some((p) => p.cuenta === '62100.00000' && casi(p.debe, 500)) && a.apuntes.some((p) => p.cuenta === '57200.00000' && casi(p.haber, 500)));
+const efectosProv = (d: Db, ini: string) => d.efectos.filter((e) => e.tercero === T(ini) && e.clase === 'P');
+const remesaPago = (d: Db, ini: string) => d.remesas.find((r) => r.autor === ini && r.clase === 'P' && r.efectos.some((n) => efectosProv(d, ini).some((e) => e.numero === n)));
+const movPago = (d: Db, ini: string) => {
+  const r = remesaPago(d, ini);
+  const total = r ? r.efectos.reduce((s, n) => s + (d.efectos.find((e) => e.numero === n)?.importe ?? 0), 0) : 0;
+  return d.extractos.find((m) => m.autor === ini && m.ctafin === r?.ctafin && casi(m.importe, -total) && total > 0);
+};
+
+export const PRACTICAS_FINANZAS: Practica[] = [
+  {
+    id: 'erp-asiento',
+    titulo: 'Asiento manual del alquiler',
+    resumen: 'Asiento de dos líneas en el diario general, cuadrado y finalizado.',
+    minutos: 8,
+    pantalla: 'asientos',
+    enunciado: [
+      'Abre Finanzas › Contabilidad General › Diario contable › Asientos › Asientos y pulsa «Nuevo».',
+      'Diario GEN y documento ALQ-{INI}. Añade el apunte 62100.00000 al debe por 500,00 con el concepto «Alquiler {INI}».',
+      'Añade el apunte 57200.00000 al haber por 500,00 con el mismo concepto y guarda.',
+      'Mira la sección Cuadre: la diferencia debe ser 0. Pulsa «Finalizar».',
+      'Prueba a pulsar «Abrir a provisional» y vuelve a «Finalizar»: así se corrige un asiento manual.',
+    ],
+    datos: [
+      { campo: 'Debe', valor: '62100.00000 · 500,00' },
+      { campo: 'Haber', valor: '57200.00000 · 500,00' },
+      { campo: 'Documento', valor: 'ALQ-{INI}' },
+    ],
+    checks: [
+      { texto: 'Hay un asiento manual tuyo con 62100 al debe por 500', puntos: 30, ok: (d, i) => d.asientos.some((a) => a.autor === i && a.origen === 'MAN' && a.apuntes.some((p) => p.cuenta === '62100.00000' && casi(p.debe, 500))), pista: 'Nuevo asiento y apunte con la cuenta 62100.00000 al debe.' },
+      { texto: 'La contrapartida es el banco 57200.00000 al haber', puntos: 25, ok: (d, i) => !!asientoAlquiler(d, i), pista: 'La segunda línea va al haber de 57200.00000 por el mismo importe.' },
+      { texto: 'El asiento cuadra', puntos: 20, ok: (d, i) => { const a = asientoAlquiler(d, i); return !!a && cuadra(a); }, pista: 'La suma del debe tiene que ser igual a la del haber.' },
+      { texto: 'El asiento está finalizado (Contabilizado)', puntos: 25, ok: (d, i) => asientoAlquiler(d, i)?.estado === 'C', pista: 'Pulsa «Finalizar» en la ficha del asiento.' },
+    ],
+  },
+  {
+    id: 'erp-pago',
+    titulo: 'Paga al proveedor con una remesa',
+    resumen: 'De la factura contabilizada al efecto pagado mediante una remesa de transferencias.',
+    minutos: 12,
+    pantalla: 'remesas',
+    enunciado: [
+      'Necesitas la factura de la práctica «Pedido › albarán › factura» contabilizada: al contabilizar, Axional crea el efecto a pagar al proveedor {T}.',
+      'Abre Finanzas › Cobros y Pagos › Cobros y Pagos y localiza el efecto de {T} en estado Pendiente.',
+      'En Remesas › Registro de remesas pulsa «Nuevo»: clase Pagar, tipo PSCTT (pago transferencias con Tesorería) y cuenta financiera BBVA_CA.',
+      'Pestaña Gestión remesas › Selección de efectos: marca el efecto de {T} y pulsa «Añadir seleccionados».',
+      'Pulsa «Evolucionar estado»: la remesa se cierra, el efecto pasa a Pagado y se genera el asiento contra el banco.',
+    ],
+    datos: [
+      { campo: 'Tipo remesa', valor: 'PSCTT' },
+      { campo: 'Cuenta financiera', valor: 'BBVA_CA' },
+      { campo: 'Proveedor', valor: '{T}' },
+    ],
+    checks: [
+      { texto: 'Existe el efecto a pagar de {T} (factura contabilizada)', puntos: 20, ok: (d, i) => efectosProv(d, i).length > 0, pista: 'Contabiliza la factura de compra de {T}: el efecto se crea solo.' },
+      { texto: 'Has creado una remesa de pagos con ese efecto', puntos: 25, ok: (d, i) => !!remesaPago(d, i), pista: 'Remesas › Nuevo (clase Pagar) y añade el efecto en Selección de efectos.' },
+      { texto: 'La remesa es de transferencias PSCTT contra BBVA_CA', puntos: 15, ok: (d, i) => { const r = remesaPago(d, i); return !!r && r.tipdoc === 'PSCTT' && r.ctafin === 'BBVA_CA'; }, pista: 'Tipo remesa PSCTT y cuenta financiera BBVA_CA.' },
+      { texto: 'La remesa está cerrada y su asiento generado', puntos: 20, ok: (d, i) => { const r = remesaPago(d, i); return !!r && r.estrem === 'C' && d.asientos.some((a) => a.numero === r.asiento); }, pista: 'Pulsa «Evolucionar estado» en la remesa.' },
+      { texto: 'El efecto de {T} está Pagado', puntos: 20, ok: (d, i) => efectosProv(d, i).some((e) => e.estado === 'PA'), pista: 'Al cerrar la remesa el efecto pasa a Pagado (PA).' },
+    ],
+  },
+  {
+    id: 'erp-conciliacion',
+    titulo: 'Concilia el pago con el banco',
+    resumen: 'Registra el cargo del extracto bancario y concílialo con el apunte de la remesa.',
+    minutos: 8,
+    pantalla: 'conciliacion',
+    enunciado: [
+      'Primero haz la práctica «Paga al proveedor con una remesa».',
+      'En Finanzas › Tesorería › Extractos bancarios › Movimientos pulsa «Nuevo»: cuenta BBVA_CA, concepto común 04 (transferencias), descripción «TRANSFERENCIA {T}» e importe en negativo (es un cargo) por el total de la remesa.',
+      'Abre Finanzas › Tesorería › Conciliación bancaria con la cuenta BBVA_CA.',
+      'Marca tu movimiento en «Extracto bancario» y el apunte de la remesa en «Apuntes contables»: la diferencia debe ser 0. Pulsa «Conciliar».',
+    ],
+    datos: [
+      { campo: 'Cuenta financiera', valor: 'BBVA_CA' },
+      { campo: 'Importe', valor: '− total de la remesa' },
+    ],
+    checks: [
+      { texto: 'Hay un movimiento tuyo en BBVA_CA por el importe de la remesa (en negativo)', puntos: 40, ok: (d, i) => !!movPago(d, i), pista: 'Extractos bancarios › Nuevo, importe negativo igual al total de la remesa.' },
+      { texto: 'El movimiento está conciliado con el apunte de banco de la remesa', puntos: 60, ok: (d, i) => { const m = movPago(d, i); const r = remesaPago(d, i); if (!m?.conciliado || !r) return false; const a = d.asientos.find((x) => x.numero === m.conciliado!.asiento); const p = a?.apuntes.find((x) => x.orden === m.conciliado!.orden); return a?.numero === r.asiento && !!p && casi(importeBanco(p), m.importe); }, pista: 'Conciliación bancaria: marca un elemento de cada lado y pulsa «Conciliar».' },
+    ],
+  },
+];
+PRACTICAS.push(...PRACTICAS_FINANZAS);
+
 export const getPractica = (id: string) => PRACTICAS.find((p) => p.id === id);
 export const txtIni = (s: string, ini: string) => s.replaceAll('{T}', T(ini)).replaceAll('{ART}', ART(ini)).replaceAll('{INI}', ini);
 
@@ -174,6 +261,12 @@ export const PRACTICAS_POR_EJERCICIO: Record<string, string[]> = {
   'compras-1': ['erp-proveedor', 'erp-articulo'],
   'compras-2': ['erp-circuito'],
   'compras-3': ['erp-circuito', 'erp-parcial'],
+  'asientos-2': ['erp-asiento'],
+  'asientos-6': ['erp-asiento'],
+  'carteras-5': ['erp-pago'],
+  'carteras-7': ['erp-pago'],
+  'tesoreria-4': ['erp-conciliacion'],
+  'tesoreria-5': ['erp-conciliacion'],
 };
 
 /* ------------------------------------------------------------------ mejores notas (localStorage) */

@@ -19,7 +19,7 @@ export default function ErpPractica() {
             <p className="ax-kicker">Practicar y demostrar</p>
             <h1>Transacciona en el ERP</h1>
             <p className="lead">
-              Una réplica del circuito de compras de Axional donde grabas de verdad: tu proveedor, tu artículo, pedidos, albaranes y facturas. La plataforma revisa lo que has hecho y te pone nota al momento.
+              Una réplica de Axional VNext con su menú completo, donde grabas de verdad: tu proveedor y tu artículo, el circuito pedido › albarán › factura, el asiento, el pago por remesa y la conciliación bancaria. La plataforma revisa lo que has hecho y te pone nota al momento.
             </p>
             <div className="ex-chips">
               <span className="chip">{PRACTICAS.length} prácticas</span>
