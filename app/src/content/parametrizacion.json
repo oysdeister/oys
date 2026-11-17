@@ -2,13 +2,15 @@
  "id": "parametrizacion",
  "titulo": "Parametrización de contabilidad",
  "sesion": "",
- "resumen": "Aprendes a montar la estructura contable de una empresa: dar de alta y modificar una cuenta de gastos del grupo 6, crear un grupo auxiliar con sus códigos y asignarlo a la cuenta, y definir la analítica con un proyecto y una sección. Todo ello en la base de pruebas TUTORIAL con códigos formados con tus iniciales.",
+ "resumen": "Aprendes a montar la estructura contable de una empresa: primero ves en qué orden se cargan los maestros de Finanzas; después das de alta y modificas una cuenta de gastos del grupo 6, creas un grupo auxiliar con sus códigos y lo asignas a la cuenta, y defines la analítica con un proyecto y una sección. Terminas viendo cómo las plantillas de contabilización convierten un documento en asiento. Todo en la base de pruebas TUTORIAL con códigos formados con tus iniciales.",
  "circuito": [
+  "Orden de carga",
   "Cuenta contable",
   "Grupo auxiliar",
   "Código auxiliar",
   "Proyecto",
-  "Sección"
+  "Sección",
+  "Plantillas de contabilización"
  ],
  "navegacion": [
   {
@@ -20,6 +22,7 @@
     "Maestros"
    ],
    "explicacion": [
+    "Si nunca has visto contabilidad, quédate con esto: cada operación de la empresa se anota en un asiento, que reparte el importe en dos columnas, el Debe (izquierda) y el Haber (derecha), que siempre suman lo mismo. Cada importe se anota en una cuenta del plan de cuentas, la lista numerada de «cajones» donde se acumulan los importes (62900 otros servicios, 57200 bancos, 70000 ventas…). Ejemplo: pagas 100 € de material de oficina por el banco → Debe 62900 Otros servicios 100 € / Haber 57200 Bancos 100 €. Lo que montas en este módulo (cuentas, auxiliares, proyectos y secciones) son los cajones y las etiquetas que después usarán esos asientos.",
     "Todo lo que se crea en estos ejercicios se usa después en los asientos, las facturas y los informes: una cuenta mal definida obliga a corregir asientos más tarde, así que conviene entender cada campo.",
     "Se entra con el menú lateral (icono ☰ arriba a la izquierda): Finanzas › Maestros › … También puedes usar el buscador superior «Buscar» (Cmd/Ctrl + K) y escribir el nombre de la pantalla.",
     "Unas pantallas se abren en modo lista (cuentas contables) y otras en modo ficha con el primer registro (grupos auxiliares, proyectos, secciones). Para crear un registro, pulsa el botón rojo «Añadir …» arriba a la derecha y elige «Nuevo» (formulario en blanco) o «Nuevo como» (copia del registro que estás viendo).",
@@ -57,11 +60,264 @@
  ],
  "ejercicios": [
   {
-   "id": "parametrizacion-1",
+   "id": "parametrizacion-icon-1",
    "numero": 1,
+   "titulo": "Orden de carga de las tablas de Finanzas",
+   "objetivo": "Tendrás una visión general de las áreas de Finanzas, qué produce contabilizar y el orden lógico de carga de maestros, diferenciando lo explícito de lo deducido.",
+   "concepto": "Axional Finanzas es el núcleo económico-financiero: registra, procesa y presenta la información contable del ciclo de negocio y se nutre de datos de otros módulos. Antes de parametrizar debes decidir el entorno empresarial (unisociedad o multisociedad, multipaís, consolidación, contabilidad de gestión) y después cargas los maestros en un orden lógico: permisos, tercero de empresa, plan contable/PGC, empresa, ejercicio y periodos, cuentas, numeradores, terceros funcionales, tipologías y plantillas de contabilización. Algunas dependencias son explícitas en la documentación y otras se deducen de los campos de cada maestro.\n\nPalabras que salen aquí: el ejercicio es el año contable (2026) y se divide en 12 periodos, uno por mes; una factura del 15-03-2026 cae en el ejercicio 2026, periodo 3. El tercero es la ficha única de un cliente o proveedor. Un numerador es la regla que da número a los documentos: con la máscara {INI}#yy-#n la primera de 2026 sale {INI}26-000001. Una tipología es una clase de documento (factura directa, factura de abono…) y la plantilla de contabilización dice qué asiento genera cada documento: una factura de compra de 100 € + 21 € de IVA → Debe compras 100 y IVA soportado 21, Haber proveedor 121. La consolidación suma las contabilidades de varias empresas de un grupo como si fueran una sola.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "parametrizacion-icon-1-vision-general",
+     "titulo": "Visión general de Finanzas y qué produce contabilizar",
+     "paraQueSirve": "Entender el papel central de Finanzas, sus áreas y los efectos de la contabilización sobre los documentos.",
+     "ruta": [
+      "Finanzas",
+      "Visión general"
+     ],
+     "explicacion": [
+      "Axional Finanzas es un conjunto de utilidades que permiten registrar, procesar y presentar la información económico-financiera del ciclo de negocio. Está compuesto por áreas totalmente integradas entre sí que se nutren de datos de otros módulos y del conjunto de repositorios de datos maestros. Ocupa una posición central respecto a las distintas funcionalidades.",
+      "Áreas documentadas: Costes, Impuestos, Consolidación, Saldos contables, Cartera de cobros y pagos, Tesorería, Activos permanentes, Inversiones, Financiación largo plazo, Caja, Presupuesto económico y Presupuesto financiero.",
+      "Efectos de contabilizar: el documento origen queda marcado como no editable; el documento permite, si se tienen permisos, navegar entre él y los asientos contables generados; y prácticamente todas las áreas permiten revertir las contabilizaciones si las restricciones lo permiten. En cada área o módulo es posible definir distintos tipos de entradas contables."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la ruta «Finanzas» y despliega el menú para ver las áreas listadas"
+      },
+      {
+       "texto": "Identifica al menos tres áreas que se nutren de otros módulos, como Costes, Cartera y Tesorería"
+      },
+      {
+       "texto": "Abre una factura de compra contabilizada (Finanzas › Facturación › Compras › Facturas de compras) y comprueba que ya no se puede editar y que desde su menú llegas a «Asientos contables»"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no muestra campos de pantalla en esta vista general; se trata de una página introductoria."
+      }
+     ]
+    },
+    {
+     "id": "parametrizacion-icon-1-decisiones-previas",
+     "titulo": "Decisiones previas de maestros",
+     "paraQueSirve": "Definir el entorno empresarial antes de tocar los maestros para evitar reprocesos.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Visión general"
+     ],
+     "explicacion": [
+      "La configuración inicial de Axional Finanzas comienza por decisiones que condicionan todo lo demás: ¿trabajarás en una sola sociedad o en varias? ¿En un solo país o en varios? ¿Compartirás datos maestros entre empresas? ¿Necesitas consolidación contable, contabilidad de gestión o una codificación concreta?",
+      "Los maestros se agrupan en cuatro ámbitos: generales (diarios, monedas, calendarios...), terceros, empresas y usuarios. Además, hay workflow y maestros propios de cada área."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Revisa la página de Maestros y localiza los cuatro ámbitos de datos maestros"
+      },
+      {
+       "texto": "Contesta esas preguntas para la base TUTORIAL: abre el Maestro de empresas (cempresa, desde el buscador) y anota cuántas empresas hay y de qué país son",
+       "detalle": "Con eso sabes si la demo es unisociedad o multisociedad y si necesita consolidación."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no detalla formularios aquí; es una página conceptual."
+      }
+     ]
+    },
+    {
+     "id": "parametrizacion-icon-1-orden-carga",
+     "titulo": "Orden de carga: lo explícito y lo deducido",
+     "paraQueSirve": "Conocer la secuencia de maestros y separar las dependencias documentadas de las que se deducen de los campos.",
+     "ruta": null,
+     "explicacion": [
+      "La documentación establece de forma explícita varias dependencias: primero se define la agrupación de permisos, luego los permisos y, si aplica, sus valores. Para dar de alta una empresa, antes debe existir el tercero de la empresa. La empresa debe escoger un plan contable ya dado de alta. Un tercero, aunque esté Activo, no es completamente funcional hasta definir direcciones, relaciones contables, domiciliaciones contables, condiciones de pago y contactos. Para que un ejercicio pueda utilizarse contablemente debe tener sus periodos (contables y de impuestos), que se generan automáticamente al crearlo. Antes de crear cualquier documento de compras o ventas debe existir al menos una tipología. Los numeradores se asignan a los tipos de documento. Para contabilizar se requiere una plantilla por cada origen de impactos.",
+      "De los campos se deducen otras dependencias: la empresa referencia tercero, moneda, idioma y zona impositiva; las cuentas financieras de empresa referencian proyecto, sección, cuenta financiera, banco, entidad, calendario, línea financiera y agrupación de cuentas; el tercero referencia tipo de identificación fiscal, país, idioma, clave fiscal, tipo de tercero, holding, responsable y workflow; las direcciones, datos bancarios, condiciones de pago, mandatos SEPA y contactos referencian sus propios maestros; el ejercicio referencia empresa y usuario; las tipologías referencian tabla origen y numerador; las plantillas referencian etiquetas tabla.campo y hojas destino capuntes, cimpcont, cefectos.",
+      "Orden recomendado de carga: permisos por grupo → tercero de empresa → plan contable/PGC → empresa → ejercicio y periodos → cuentas → numeradores por tipo de documento → terceros funcionales (con auxiliares mínimos) → tipologías → plantillas de contabilización."
+     ],
+     "campos": [
+      {
+       "campo": "Agrupación de permisos",
+       "significado": "primer nivel de permisos; contiene permisos",
+       "ejemplo": "Finanzas"
+      },
+      {
+       "campo": "Empresa",
+       "significado": "código de empresa (máx. 4 caracteres)",
+       "ejemplo": "0 (Deister Software en TUTORIAL)"
+      },
+      {
+       "campo": "Tercero (en empresa)",
+       "significado": "tercero previamente definido que autocompleta datos fiscales",
+       "ejemplo": "el tercero de la propia empresa"
+      },
+      {
+       "campo": "Ejercicio",
+       "significado": "año contable; al crearlo se generan sus periodos",
+       "ejemplo": "2026"
+      },
+      {
+       "campo": "Numerador",
+       "significado": "expresión de máscara de serie y máscara de número",
+       "ejemplo": "{INI}#yy-#n → {INI}26-000001"
+      },
+      {
+       "campo": "Plantilla de contabilización",
+       "significado": "patrón de contabilización por origen",
+       "ejemplo": "una por origen: facturas de compra, de venta, cobros…"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Busca «Permisos» con Cmd/Ctrl + K, abre la pantalla de permisos por grupo de usuarios y localiza una agrupación; fíjate en que primero se define la agrupación",
+       "imagen": "parametrizacion-icon-001.webp"
+      },
+      {
+       "texto": "En planes contables, comprueba que existe el plan español ES «PGE 2008»",
+       "imagen": "parametrizacion-icon-002.webp"
+      },
+      {
+       "texto": "Abre la ficha de empresa y localiza el campo «Tercero»; revisa que debe estar informado con un tercero previo",
+       "imagen": "parametrizacion-icon-003.webp"
+      },
+      {
+       "texto": "Abre un ejercicio y revisa que al crearlo se generan los periodos contables y fiscales",
+       "imagen": "parametrizacion-icon-004.webp"
+      },
+      {
+       "texto": "En plantillas de contabilización, localiza las hojas destino capuntes, cimpcont y cefectos",
+       "imagen": "parametrizacion-icon-005.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las dependencias deducidas de campos no aparecen como secuencia literal en la documentación; se desprenden de las referencias entre maestros."
+      }
+     ]
+    },
+    {
+     "id": "parametrizacion-icon-1-tablas",
+     "titulo": "Tablas literales que intervienen",
+     "paraQueSirve": "Identificar las tablas de base de datos nombradas en la documentación para permisos, numeradores y plantillas.",
+     "ruta": null,
+     "explicacion": [
+      "Por dentro: en permisos se nombran cuserperh, cuserperl, cuserperv, cusergrp, gusergrp, cuserauth y guserauth. En numeradores, las tablas de tipos de factura son gvenfacd para ventas y gcommovd para compras. En plantillas de contabilización se usan etiquetas como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid, y las hojas destino capuntes, cimpcont y cefectos.",
+      "No se nombran tablas físicas para empresa, ejercicio, plan contable o terceros; para tipologías, intervienen las tablas de tipos de documento usadas por numeradores (gvenford, gvenacud, gvenpedd, gvenfacd, gcommovd, etc.), además de permisos y plantillas."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "En permisos por grupo de usuarios, localiza la agrupación, el permiso y sus valores (tablas cuserperh, cuserperl y cuserperv)"
+      },
+      {
+       "texto": "Revisa en numeradores las tablas gvenfacd y gcommovd"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las hojas destino capuntes, cimpcont y cefectos son nombres de hoja por convenio que coinciden con la tabla principal de destino."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué efecto NO produce la contabilización de un documento?",
+     "opciones": [
+      "Elimina el documento origen",
+      "Permite navegar al asiento si hay permisos",
+      "Marca el documento origen como no editable",
+      "Permite revertir en casi todas las áreas"
+     ],
+     "correcta": 0,
+     "explicacion": "La contabilización marca no editable, permite navegar y casi siempre se puede revertir, pero no elimina el documento."
+    },
+    {
+     "pregunta": "¿Cuál es el primer paso para definir permisos por grupo de usuarios?",
+     "opciones": [
+      "Asignar al grupo de usuarios",
+      "Definir la agrupación de permisos",
+      "Definir el permiso",
+      "Asignar valores"
+     ],
+     "correcta": 1,
+     "explicacion": "Primero se define la agrupación; luego los permisos y, si aplica, sus valores."
+    },
+    {
+     "pregunta": "¿Qué debe existir antes de dar de alta una empresa?",
+     "opciones": [
+      "Un ejercicio",
+      "Un numerador",
+      "El tercero de la empresa y el plan contable",
+      "Un asiento de apertura"
+     ],
+     "correcta": 2,
+     "explicacion": "Primero se da de alta la empresa como tercero, y la empresa elige un plan contable que ya debe existir."
+    },
+    {
+     "pregunta": "¿Qué se genera automáticamente al crear el primer ejercicio?",
+     "opciones": [
+      "Las cuentas contables",
+      "Los numeradores",
+      "Los asientos de apertura",
+      "Doce periodos contables y doce periodos de impuestos"
+     ],
+     "correcta": 3,
+     "explicacion": "Al crear el primer ejercicio se generan doce periodos contables y doce periodos de impuestos."
+    },
+    {
+     "pregunta": "¿Cómo se relacionan las tres entidades con las que se define un permiso?",
+     "opciones": [
+      "Los permisos pertenecen a una agrupación y los valores pertenecen a un permiso",
+      "Los valores pertenecen a una agrupación y las agrupaciones a un permiso",
+      "Las agrupaciones pertenecen a un grupo de usuarios y no tienen permisos",
+      "Todo permiso necesita valores, aunque sea de tipo Verdadero/Falso"
+     ],
+     "correcta": 0,
+     "explicacion": "Agrupación de permisos, Permisos y Valores están relacionados jerárquicamente; los permisos de tipo Verdadero/Falso no necesitan valores."
+    }
+   ],
+   "checklist": [
+    "Abre «Finanzas» y localiza al menos cinco áreas del menú (Costes, Impuestos, Cartera, Tesorería, Caja).",
+    "Abre la página de Maestros y anota los cuatro ámbitos de datos maestros.",
+    "En permisos por grupo, abre una agrupación y comprueba que está definida antes que los permisos.",
+    "Dentro de esa agrupación, localiza un permiso con valores.",
+    "Abre la ficha de una empresa y comprueba que el campo «Tercero» está informado.",
+    "Abre la pantalla de ejercicios y localiza un ejercicio; revisa sus periodos contables y fiscales.",
+    "En planes contables, comprueba que existe el plan ES «PGE 2008».",
+    "En cuentas contables, busca una cuenta de tercero y anota si fue generada automáticamente.",
+    "En numeradores de documentos, localiza la tabla de tipos de factura de venta y su numerador asignado.",
+    "En el maestro de terceros, abre un tercero activo y revisa sus auxiliares mínimos: direcciones, relaciones contables, condiciones de pago y contactos.",
+    "En tipologías de documento de gestión, abre una tipología con origen y revisa «Tabla origen».",
+    "En plantillas de contabilización, abre un modelo XLS y localiza las hojas destino capuntes, cimpcont y cefectos."
+   ],
+   "problemas": [
+    {
+     "problema": "Al intentar dar de alta una empresa, no autocompleta los datos fiscales.",
+     "solucion": "Verifica que el tercero de la empresa existe previamente en el maestro de terceros y que lo seleccionas correctamente."
+    },
+    {
+     "problema": "Al crear un ejercicio, no se generan los periodos.",
+     "solucion": "Comprueba que estás creando el primer ejercicio; si es posterior, los periodos se copian del anterior. Revisa la tabla de periodos contables."
+    },
+    {
+     "problema": "La serie de numerador incluye #d pero el número no, y hay duplicados.",
+     "solucion": "Añade #d también a la máscara de número o elimina #d de la serie para evitar contadores independientes."
+    }
+   ]
+  },
+  {
+   "id": "parametrizacion-1",
+   "numero": 2,
    "titulo": "Dar de alta una cuenta del grupo 6 «Gastos varios»",
    "objetivo": "Tendrás creada la cuenta 62999.00000 «Gastos varios {INI}» en el plan PGE 2008, de tipo Costes.",
-   "concepto": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia cuando se quiere ver por separado un tipo de gasto en el balance de sumas y saldos y en la cuenta de resultados. A partir de ese momento se puede usar en asientos, facturas de compra y plantillas contables.\n\nEn la base TUTORIAL hay dos planes contables: «PG Andorra 2012» y el español «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000). Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar.",
+   "concepto": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia cuando se quiere ver por separado un tipo de gasto en el balance de sumas y saldos (la lista de todas las cuentas con lo anotado en el Debe, en el Haber y la diferencia o saldo) y en la cuenta de resultados (ingresos menos gastos: 10.000 € de ventas − 7.000 € de gastos = 3.000 € de beneficio). A partir de ese momento se puede usar en asientos, facturas de compra y plantillas contables.\n\nEn la base TUTORIAL hay dos planes contables: «PG Andorra 2012» y el español «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000). Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar.",
    "duracionMin": 15,
    "secciones": [
     {
@@ -88,7 +344,7 @@
       },
       {
        "campo": "Posición *",
-       "significado": "Saldo habitual de la cuenta. Un gasto se carga en el Debe.",
+       "significado": "Lado en el que la cuenta suele acumular importe (su saldo habitual). Un gasto se anota en el Debe: si pagas 100 € de luz, 100 € van al Debe de la cuenta de gasto.",
        "ejemplo": "Debe"
       },
       {
@@ -113,7 +369,7 @@
       },
       {
        "campo": "Grupo auxiliar",
-       "significado": "Grupo de códigos auxiliares que pedirá la cuenta al contabilizar. Se rellena en el ejercicio 4.",
+       "significado": "Grupo de códigos auxiliares que pedirá la cuenta al contabilizar. Se rellena en el ejercicio 5.",
        "ejemplo": "(vacío por ahora)"
       },
       {
@@ -138,7 +394,7 @@
       },
       {
        "campo": "Periodificable *",
-       "significado": "Si los importes de la cuenta se pueden repartir entre varios periodos. Para gastos varios, No.",
+       "significado": "Si los importes de la cuenta se pueden repartir entre varios periodos (periodificar): un seguro anual de 1.200 € pagado en enero se lleva a gasto a 100 € por mes. Para gastos varios, No.",
        "ejemplo": "No"
       }
      ],
@@ -223,8 +479,8 @@
        "imagen": "parametrizacion-d-125.webp"
       },
       {
-       "texto": "Fíjate en el error típico: con «PGE» escrito a mano el plan no es válido y el campo se marca «Error en la validación»",
-       "detalle": "Se evita escribiendo el código ES.",
+       "texto": "Error típico: si en Plan contable escribes «PGE» a mano, el plan no es válido y el campo se marca «Error en la validación»",
+       "detalle": "Así se ve en la captura. Se evita escribiendo el código ES y eligiendo la fila de la lista.",
        "imagen": "parametrizacion-d-126.webp"
       }
      ],
@@ -326,7 +582,7 @@
   },
   {
    "id": "parametrizacion-2",
-   "numero": 2,
+   "numero": 3,
    "titulo": "Cambiar la descripción de la cuenta",
    "objetivo": "La cuenta 62999.00000 se llamará «Gastos varios {INI} Administración».",
    "concepto": "La descripción de una cuenta se puede cambiar en cualquier momento, incluso si ya tiene apuntes: es solo el texto que sale en los listados. Lo que no se cambia así es el código: para renumerar una cuenta con movimientos hay una pantalla específica, Finanzas › Maestros › Cuentas contables › Cambio código de cuenta.",
@@ -452,10 +708,10 @@
   },
   {
    "id": "parametrizacion-3",
-   "numero": 3,
+   "numero": 4,
    "titulo": "Crear un grupo auxiliar «Empleados» con José Gómez",
    "objetivo": "Tendrás el grupo auxiliar {INI}EMP «EMPLEADOS {INI}» con el código auxiliar {INI}0001 «José Gómez» abierto.",
-   "concepto": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Por ejemplo, con el grupo «Empleados» la misma cuenta de gastos puede llevar cada apunte asignado a un empleado concreto, y después sacar el saldo por empleado.\n\nPrimero se crea el grupo y sus códigos; después se asigna a las cuentas (ejercicio 4).",
+   "concepto": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Por ejemplo, con el grupo «Empleados» la misma cuenta de gastos puede llevar cada apunte asignado a un empleado concreto, y después sacar el saldo por empleado.\n\nPrimero se crea el grupo y sus códigos; después se asigna a las cuentas (ejercicio 5).",
    "duracionMin": 15,
    "secciones": [
     {
@@ -685,7 +941,7 @@
   },
   {
    "id": "parametrizacion-4",
-   "numero": 4,
+   "numero": 5,
    "titulo": "Asignar el grupo auxiliar a la cuenta",
    "objetivo": "La cuenta 62999.00000 tendrá asignado el grupo auxiliar {INI}EMP.",
    "concepto": "Al asignar el grupo auxiliar a la cuenta, cada apunte que se haga en ella podrá llevar uno de los códigos del grupo ({INI}0001 José Gómez…). Así el mayor de la cuenta se puede consultar por empleado sin abrir una subcuenta para cada uno.",
@@ -819,7 +1075,7 @@
   },
   {
    "id": "parametrizacion-5",
-   "numero": 5,
+   "numero": 6,
    "titulo": "Crear un proyecto «División 1»",
    "objetivo": "Tendrás el proyecto {INI}1 «División 1 {INI}» creado y abierto, con la sección 0 de momento.",
    "concepto": "Proyectos y secciones son la analítica de la contabilidad: cada apunte de una cuenta de costes se asigna a un proyecto (por ejemplo una división o una obra) y a una sección (un departamento), y así se obtiene la cuenta de resultados por división o por departamento. El proyecto puede llevar una sección por defecto, que se propone al contabilizar.",
@@ -994,7 +1250,7 @@
   },
   {
    "id": "parametrizacion-6",
-   "numero": 6,
+   "numero": 7,
    "titulo": "Crear una sección «Administración»",
    "objetivo": "Tendrás la sección {INI}ADM «Administración {INI}» creada y asignada como sección por defecto del proyecto {INI}1.",
    "concepto": "La sección representa un departamento o centro de coste (Administración, Comercial, Taller…). Junto con el proyecto permite ver los gastos por departamento. Se crea una vez y se puede usar en cualquier proyecto; aquí además se asigna como sección por defecto del proyecto {INI}1.",
@@ -1103,7 +1359,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "Datos creados en TUTORIAL en todo el tema: cuenta ES 62999.00000, grupo auxiliar {INI}EMP con {INI}0001, proyecto {INI}1 y sección {INI}ADM. No se ha modificado ningún registro existente."
+       "texto": "Datos creados en TUTORIAL en todo el tema: cuenta ES 62999.00000, grupo auxiliar {INI}EMP con {INI}0001, proyecto {INI}1 y sección {INI}ADM. No has tocado ningún registro de la demo que no sea tuyo."
       }
      ]
     }
@@ -1179,263 +1435,11 @@
    "problemas": []
   },
   {
-   "id": "parametrizacion-icon-1",
-   "numero": 7,
-   "titulo": "Orden de carga de las tablas de Finanzas",
-   "objetivo": "Tendrás una visión general de las áreas de Finanzas, qué produce contabilizar y el orden lógico de carga de maestros, diferenciando lo explícito de lo deducido.",
-   "concepto": "Axional Finanzas es el núcleo económico-financiero: registra, procesa y presenta la información contable del ciclo de negocio y se nutre de datos de otros módulos. Antes de parametrizar debes decidir el entorno empresarial (unisociedad o multisociedad, multipaís, consolidación, contabilidad de gestión) y después cargas los maestros en un orden lógico: permisos, tercero de empresa, plan contable/PGC, empresa, ejercicio y periodos, cuentas, numeradores, terceros funcionales, tipologías y plantillas de contabilización. Algunas dependencias son explícitas en la documentación y otras se deducen de los campos de cada maestro.",
-   "duracionMin": 40,
-   "secciones": [
-    {
-     "id": "parametrizacion-icon-1-vision-general",
-     "titulo": "Visión general de Finanzas y qué produce contabilizar",
-     "paraQueSirve": "Entender el papel central de Finanzas, sus áreas y los efectos de la contabilización sobre los documentos.",
-     "ruta": [
-      "Finanzas",
-      "Visión general"
-     ],
-     "explicacion": [
-      "Axional Finanzas es un conjunto de utilidades que permiten registrar, procesar y presentar la información económico-financiera del ciclo de negocio. Está compuesto por áreas totalmente integradas entre sí que se nutren de datos de otros módulos y del conjunto de repositorios de datos maestros. Ocupa una posición central respecto a las distintas funcionalidades.",
-      "Áreas documentadas: Costes, Impuestos, Consolidación, Saldos contables, Cartera de cobros y pagos, Tesorería, Activos permanentes, Inversiones, Financiación largo plazo, Caja, Presupuesto económico y Presupuesto financiero.",
-      "Efectos de contabilizar: el documento origen queda marcado como no editable; el documento permite, si se tienen permisos, navegar entre él y los asientos contables generados; y prácticamente todas las áreas permiten revertir las contabilizaciones si las restricciones lo permiten. En cada área o módulo es posible definir distintos tipos de entradas contables."
-     ],
-     "campos": [],
-     "pasos": [
-      {
-       "texto": "Abre la ruta «Finanzas» y despliega el menú para ver las áreas listadas"
-      },
-      {
-       "texto": "Identifica al menos tres áreas que se nutren de otros módulos, como Costes, Cartera y Tesorería"
-      },
-      {
-       "texto": "Abre un documento ya contabilizado y comprueba que no es editable y que puedes navegar a su asiento"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La documentación no muestra campos de pantalla en esta vista general; se trata de una página introductoria."
-      }
-     ]
-    },
-    {
-     "id": "parametrizacion-icon-1-decisiones-previas",
-     "titulo": "Decisiones previas de maestros",
-     "paraQueSirve": "Definir el entorno empresarial antes de tocar los maestros para evitar reprocesos.",
-     "ruta": [
-      "Finanzas",
-      "Maestros",
-      "Visión general"
-     ],
-     "explicacion": [
-      "La configuración inicial de Axional Finanzas comienza por decisiones que condicionan todo lo demás: ¿trabajarás en una sola sociedad o en varias? ¿En un solo país o en varios? ¿Compartirás datos maestros entre empresas? ¿Necesitas consolidación contable, contabilidad de gestión o una codificación concreta?",
-      "Los maestros se agrupan en cuatro ámbitos: generales (diarios, monedas, calendarios...), terceros, empresas y usuarios. Además, hay workflow y maestros propios de cada área."
-     ],
-     "campos": [],
-     "pasos": [
-      {
-       "texto": "Revisa la página de Maestros y localiza los cuatro ámbitos de datos maestros"
-      },
-      {
-       "texto": "Decide con tu equipo el modelo de sociedad y país antes de crear registros"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La documentación no detalla formularios aquí; es una página conceptual."
-      }
-     ]
-    },
-    {
-     "id": "parametrizacion-icon-1-orden-carga",
-     "titulo": "Orden de carga: lo explícito y lo deducido",
-     "paraQueSirve": "Conocer la secuencia de maestros y separar las dependencias documentadas de las que se deducen de los campos.",
-     "ruta": null,
-     "explicacion": [
-      "La documentación establece de forma explícita varias dependencias: primero se define la agrupación de permisos, luego los permisos y, si aplica, sus valores. Para dar de alta una empresa, antes debe existir el tercero de la empresa. La empresa debe escoger un plan contable ya dado de alta. Un tercero, aunque esté Activo, no es completamente funcional hasta definir direcciones, relaciones contables, domiciliaciones contables, condiciones de pago y contactos. Para que un ejercicio pueda utilizarse contablemente debe tener registros de periodificación, que se generan automáticamente al crearlo. Antes de crear cualquier documento de compras o ventas debe existir al menos una tipología. Los numeradores se asignan a los tipos de documento. Para contabilizar se requiere una plantilla por cada origen de impactos.",
-      "De los campos se deducen otras dependencias: la empresa referencia tercero, moneda, idioma y zona impositiva; las cuentas financieras de empresa referencian proyecto, sección, cuenta financiera, banco, entidad, calendario, línea financiera y agrupación de cuentas; el tercero referencia tipo de identificación fiscal, país, idioma, clave fiscal, tipo de tercero, holding, responsable y workflow; las direcciones, datos bancarios, condiciones de pago, mandatos SEPA y contactos referencian sus propios maestros; el ejercicio referencia empresa y usuario; las tipologías referencian tabla origen y numerador; las plantillas referencian etiquetas tabla.campo y hojas destino capuntes, cimpcont, cefectos.",
-      "Orden recomendado de carga: permisos por grupo → tercero de empresa → plan contable/PGC → empresa → ejercicio y periodos → cuentas → numeradores por tipo de documento → terceros funcionales (con auxiliares mínimos) → tipologías → plantillas de contabilización."
-     ],
-     "campos": [
-      {
-       "campo": "Agrupación de permisos",
-       "significado": "primer nivel de permisos; contiene permisos",
-       "ejemplo": "Finanzas"
-      },
-      {
-       "campo": "Empresa",
-       "significado": "código de empresa (máx. 4 caracteres)",
-       "ejemplo": "0001"
-      },
-      {
-       "campo": "Tercero (en empresa)",
-       "significado": "tercero previamente definido que autocompleta datos fiscales",
-       "ejemplo": "código del tercero"
-      },
-      {
-       "campo": "Ejercicio",
-       "significado": "código de ejercicio",
-       "ejemplo": "2025"
-      },
-      {
-       "campo": "Numerador",
-       "significado": "expresión de máscara de serie y máscara de número",
-       "ejemplo": "#s-#n"
-      },
-      {
-       "campo": "Plantilla de contabilización",
-       "significado": "patrón de contabilización por origen",
-       "ejemplo": "PLANTILLA_VE"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre la ruta de permisos por grupo de usuarios y localiza una agrupación; fíjate en que primero se define la agrupación",
-       "imagen": "parametrizacion-icon-001.webp"
-      },
-      {
-       "texto": "En planes contables, comprueba que existe el PGC por defecto",
-       "imagen": "parametrizacion-icon-002.webp"
-      },
-      {
-       "texto": "Abre la ficha de empresa y localiza el campo «Tercero»; revisa que debe estar informado con un tercero previo",
-       "imagen": "parametrizacion-icon-003.webp"
-      },
-      {
-       "texto": "Abre un ejercicio y revisa que al crearlo se generan los periodos contables y fiscales",
-       "imagen": "parametrizacion-icon-004.webp"
-      },
-      {
-       "texto": "En plantillas de contabilización, localiza las hojas destino capuntes, cimpcont y cefectos",
-       "imagen": "parametrizacion-icon-005.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Las dependencias deducidas de campos no aparecen como secuencia literal en la documentación; se desprenden de las referencias entre maestros."
-      }
-     ]
-    },
-    {
-     "id": "parametrizacion-icon-1-tablas",
-     "titulo": "Tablas literales que intervienen",
-     "paraQueSirve": "Identificar las tablas de base de datos nombradas en la documentación para permisos, numeradores y plantillas.",
-     "ruta": null,
-     "explicacion": [
-      "Por dentro: en permisos se nombran cuserperh, cuserperl, cuserperv, cusergrp, gusergrp, cuserauth y guserauth. En numeradores, las tablas de tipos de factura son gvenfacd para ventas y gcommovd para compras. En plantillas de contabilización se usan etiquetas como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid, y las hojas destino capuntes, cimpcont y cefectos.",
-      "No se nombran tablas físicas para empresa, ejercicio, plan contable o terceros; para tipologías, intervienen las tablas de tipos de documento usadas por numeradores (gvenford, gvenacud, gvenpedd, gvenfacd, gcommovd, etc.), además de permisos y plantillas."
-     ],
-     "campos": [],
-     "pasos": [
-      {
-       "texto": "En permisos por grupo de usuarios, localiza la agrupación, el permiso y sus valores (tablas cuserperh, cuserperl y cuserperv)"
-      },
-      {
-       "texto": "Revisa en numeradores las tablas gvenfacd y gcommovd"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Las hojas destino capuntes, cimpcont y cefectos son nombres de hoja por convenio que coinciden con la tabla principal de destino."
-      }
-     ]
-    }
-   ],
-   "test": [
-    {
-     "pregunta": "¿Qué efecto NO produce la contabilización de un documento?",
-     "opciones": [
-      "Elimina el documento origen",
-      "Permite navegar al asiento si hay permisos",
-      "Marca el documento origen como no editable",
-      "Permite revertir en casi todas las áreas"
-     ],
-     "correcta": 0,
-     "explicacion": "La contabilización marca no editable, permite navegar y casi siempre se puede revertir, pero no elimina el documento."
-    },
-    {
-     "pregunta": "¿Cuál es el primer paso para definir permisos por grupo de usuarios?",
-     "opciones": [
-      "Asignar al grupo de usuarios",
-      "Definir la agrupación de permisos",
-      "Definir el permiso",
-      "Asignar valores"
-     ],
-     "correcta": 1,
-     "explicacion": "Primero se define la agrupación; luego los permisos y, si aplica, sus valores."
-    },
-    {
-     "pregunta": "¿Qué debe existir antes de dar de alta una empresa?",
-     "opciones": [
-      "Un plan contable",
-      "Un ejercicio",
-      "El tercero de la empresa",
-      "Un numerador"
-     ],
-     "correcta": 2,
-     "explicacion": "La documentación dice que para dar de alta una empresa, primero hay que dar de alta la empresa como tercero."
-    },
-    {
-     "pregunta": "¿Qué se genera automáticamente al crear el primer ejercicio?",
-     "opciones": [
-      "Las cuentas contables",
-      "Los numeradores",
-      "Los asientos de apertura",
-      "Doce registros en periodos contables y periodos de impuestos"
-     ],
-     "correcta": 3,
-     "explicacion": "Al crear el primer ejercicio se generan doce registros en periodos contables y periodos de impuestos."
-    },
-    {
-     "pregunta": "¿Cómo se relacionan las tres entidades con las que se define un permiso?",
-     "opciones": [
-      "Los permisos pertenecen a una agrupación y los valores pertenecen a un permiso",
-      "Los valores pertenecen a una agrupación y las agrupaciones a un permiso",
-      "Las agrupaciones pertenecen a un grupo de usuarios y no tienen permisos",
-      "Todo permiso necesita valores, aunque sea de tipo Verdadero/Falso"
-     ],
-     "correcta": 0,
-     "explicacion": "Agrupación de permisos, Permisos y Valores están relacionados jerárquicamente; los permisos de tipo Verdadero/Falso no necesitan valores."
-    }
-   ],
-   "checklist": [
-    "Abre «Finanzas» y localiza al menos cinco áreas del menú (Costes, Impuestos, Cartera, Tesorería, Caja).",
-    "Abre la página de Maestros y anota los cuatro ámbitos de datos maestros.",
-    "En permisos por grupo, abre una agrupación y comprueba que está definida antes que los permisos.",
-    "Dentro de esa agrupación, localiza un permiso con valores.",
-    "Abre la ficha de una empresa y comprueba que el campo «Tercero» está informado.",
-    "Abre la pantalla de ejercicios y localiza un ejercicio; revisa sus periodos contables y fiscales.",
-    "En planes contables, comprueba que existe el PGC por defecto.",
-    "En cuentas contables, busca una cuenta de tercero y anota si fue generada automáticamente.",
-    "En numeradores de documentos, localiza la tabla de tipos de factura de venta y su numerador asignado.",
-    "En el maestro de terceros, abre un tercero activo y revisa sus auxiliares mínimos.",
-    "En tipologías de documento de gestión, abre una tipología con origen y revisa «Tabla origen».",
-    "En plantillas de contabilización, abre un modelo XLS y localiza las hojas destino capuntes, cimpcont y cefectos."
-   ],
-   "problemas": [
-    {
-     "problema": "Al intentar dar de alta una empresa, no autocompleta los datos fiscales.",
-     "solucion": "Verifica que el tercero de la empresa existe previamente en el maestro de terceros y que lo seleccionas correctamente."
-    },
-    {
-     "problema": "Al crear un ejercicio, no se generan los periodos.",
-     "solucion": "Comprueba que estás creando el primer ejercicio; si es posterior, los periodos se copian del anterior. Revisa la tabla de periodos contables."
-    },
-    {
-     "problema": "La serie de numerador incluye #d pero el número no, y hay duplicados.",
-     "solucion": "Añade #d también a la máscara de número o elimina #d de la serie para evitar contadores independientes."
-    }
-   ]
-  },
-  {
    "id": "parametrizacion-icon-2",
    "numero": 8,
    "titulo": "Dos escenarios: Finanzas sola o integrada con los documentos de gestión",
-   "objetivo": "Distinguirás cómo contabiliza Finanzas cuando registras facturas directamente en Finanzas o cuando los documentos vienen de compras y ventas (IGES), y conocerás plantillas y permisos.",
-   "concepto": "En el escenario solo, registras facturas de ventas y de compras directamente en Finanzas; al contabilizar generan asiento, cartera de efectos y registro fiscal. En el escenario integrado, los documentos de compras y ventas (pedidos, albaranes, facturas) se gestionan en los documentos de gestión (IGES) y se vinculan mediante tipologías y circuitos; para contabilizarlos se usan plantillas de contabilización definidas por origen. El permiso «Contabilizar» con valores Real y Diferido controla cuándo y cómo se contabiliza.",
+   "objetivo": "Distinguirás cómo contabiliza Finanzas cuando registras facturas directamente en Finanzas o cuando vienen de compras y ventas (IGES), y conocerás las plantillas de contabilización y el permiso «Contabilizar».",
+   "concepto": "En el escenario solo, registras facturas de ventas y de compras directamente en Finanzas; al contabilizar generan asiento, cartera de efectos (lo pendiente de cobrar o pagar, con su vencimiento) y registro fiscal (el IVA que luego se declara). En el escenario integrado, los pedidos, albaranes y facturas se gestionan en los documentos de gestión (IGES), que ves en los módulos de Compras y Ventas; para contabilizarlos se usan plantillas de contabilización definidas por origen. El permiso «Contabilizar» con valores Real y Diferido controla cuándo y cómo se contabiliza.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -1450,7 +1454,7 @@
      "explicacion": [
       "Facturas de ventas: el sistema funciona como entrada de facturas convencional con cabecera y líneas. Al validar se calculan importes, impuestos, vencimientos y se valida workflow. Al contabilizar, toda factura genera un asiento contable, su cartera de efectos y registros fiscales de forma automática. Los asientos se contabilizan en el diario de ventas, código VE por defecto. La fecha contable no debe ser menor a la fecha de facturación; no se puede contabilizar una factura no emitida.",
       "Facturas de compras: ruta Finanzas / Facturación / Compras / Factura de compra. Estados Provisional, Bloqueado, Validada. Al contabilizar, genera asiento, cartera de efectos y documento fiscal automático, dependiendo de la configuración de la cuenta contable. El asiento tendrá la fecha especificada en el campo fecha contable de la cabecera.",
-      "En ambos casos, para contabilizar es necesario que estén definidos los valores defecto de usuarios, donde se indica si la generación de asientos es en tiempo real o en borrador, y se debe definir la plantilla de contabilización en la tipología del documento."
+      "En ambos casos, para contabilizar es necesario que estén definidos los valores defecto de usuarios, donde se indica si la generación de asientos es en tiempo real o en borrador, y se debe definir la plantilla de contabilización en la tipología del documento. La práctica completa de una factura directa (FC y FB) está en el módulo Contabilidad general."
      ],
      "campos": [
       {
@@ -1461,22 +1465,22 @@
       {
        "campo": "Fecha factura",
        "significado": "fecha de emisión",
-       "ejemplo": "01/02/2025"
+       "ejemplo": "01-02-2026"
       },
       {
        "campo": "Fecha contable",
        "significado": "fecha del asiento",
-       "ejemplo": "01/02/2025"
+       "ejemplo": "01-02-2026"
       },
       {
        "campo": "Cliente / Proveedor",
        "significado": "código del tercero",
-       "ejemplo": "43000001"
+       "ejemplo": "código del tercero, p. ej. 00003"
       },
       {
        "campo": "Artículo",
        "significado": "artículo del maestro",
-       "ejemplo": "ART001"
+       "ejemplo": "código del artículo"
       },
       {
        "campo": "Diario",
@@ -1486,7 +1490,7 @@
       {
        "campo": "Plantilla",
        "significado": "plantilla de contabilización",
-       "ejemplo": "PLANTILLA_VE"
+       "ejemplo": "la indicada en la tipología del documento"
       },
       {
        "campo": "Estado",
@@ -1500,7 +1504,7 @@
        "imagen": "parametrizacion-icon-006.webp"
       },
       {
-       "texto": "Revisa la pantalla de validación y localiza qué cálculos se ejecutan",
+       "texto": "Fíjate en la captura de validación: al validar, el ERP calcula importes, impuestos y vencimientos y comprueba el workflow",
        "imagen": "parametrizacion-icon-007.webp"
       },
       {
@@ -1516,87 +1520,6 @@
       {
        "tipo": "nota",
        "texto": "En ventas, el diario por defecto es VE; en compras no se documenta un diario por defecto."
-      }
-     ]
-    },
-    {
-     "id": "parametrizacion-icon-2-escenario-integrado-documentos-gestion",
-     "titulo": "Escenario integrado: documentos de gestión (IGES) y sus circuitos",
-     "paraQueSirve": "Conocer los documentos de compras y ventas, sus tipologías y cómo se enlazan en circuitos.",
-     "ruta": [
-      "Finanzas",
-      "Maestros",
-      "Documentos (IGES)"
-     ],
-     "explicacion": [
-      "Los documentos de gestión incluyen concursos (solo compras), ofertas, formularios, solicitudes (solo compras), acuerdos, planes de recepción o de entrega, pedidos, albaranes y facturas. Cada documento puede tener distintas tipologías; ejemplos de factura: factura directa, factura de abono, factura con IVA incluido.",
-      "Se pueden definir circuitos de distinta complejidad, por ejemplo Pedido → Albarán → Factura, Oferta → Pedido → Albarán → Factura, o Pedido de compra → Pedido de venta → Albarán de venta → Albarán de compra → Factura de venta → Factura de compra. El ciclo básico de compras exige tipologías: pedido de compra directo, albarán con origen pedido y factura con origen albarán; el de ventas es análogo.",
-      "En las tipologías, el bloque de documento origen se controla con «Tabla origen» (Ninguna si no hay origen), «Actualización tabla origen» (Restando, Sumando, No; NULL si Tabla origen = Ninguna) y «Copiar líneas» (Sí, Validar, No; NULL si Tabla origen = Ninguna). Por ejemplo, un albarán con origen pedido estándar no abono usa Sumando."
-     ],
-     "campos": [
-      {
-       "campo": "Tabla origen",
-       "significado": "Ninguna si no hay documento origen",
-       "ejemplo": "Ninguna"
-      },
-      {
-       "campo": "Actualización tabla origen",
-       "significado": "Restando, Sumando, No; NULL si Tabla origen = Ninguna",
-       "ejemplo": "Sumando"
-      },
-      {
-       "campo": "Copiar líneas",
-       "significado": "Sí, Validar, No; NULL si Tabla origen = Ninguna",
-       "ejemplo": "Sí"
-      },
-      {
-       "campo": "Tipo de documento",
-       "significado": "pedido, albarán, factura...",
-       "ejemplo": "Factura"
-      },
-      {
-       "campo": "Proveedor (pedido)",
-       "significado": "código de proveedor",
-       "ejemplo": "43000002"
-      },
-      {
-       "campo": "Artículo",
-       "significado": "código de artículo",
-       "ejemplo": "ART001"
-      },
-      {
-       "campo": "Cantidad",
-       "significado": "cantidad",
-       "ejemplo": "10"
-      },
-      {
-       "campo": "Conformar albarán (factura)",
-       "significado": "opción para conformar albaranes",
-       "ejemplo": "Sí"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre una tipología de pedido de compra y localiza el campo «Tabla origen»",
-       "imagen": "parametrizacion-icon-010.webp"
-      },
-      {
-       "texto": "Abre la cabecera de un pedido de compra directo y revisa los campos",
-       "imagen": "parametrizacion-icon-011.webp"
-      },
-      {
-       "texto": "Abre un albarán con origen pedido y comprueba «Actualización tabla origen» = Sumando",
-       "imagen": "parametrizacion-icon-012.webp"
-      },
-      {
-       "texto": "Abre una factura con origen albarán y localiza la pestaña «Albaranes compras conformar»",
-       "imagen": "parametrizacion-icon-013.webp"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "La documentación de estas páginas no detalla qué tipología genera qué asiento ni qué plantilla concreta se asocia a cada documento; solo describe tipologías, vínculos y circuitos. La contabilización se trata en la página de plantillas."
       }
      ]
     },
@@ -1628,7 +1551,7 @@
       {
        "campo": "Etiqueta origen",
        "significado": "tabla.campo",
-       "ejemplo": "ccomfach.fecfac"
+       "ejemplo": "ccomfach.fecfac (fecha de la factura de compra)"
       },
       {
        "campo": "Permiso",
@@ -1699,17 +1622,6 @@
      "explicacion": "Los asientos de ventas se contabilizan en el diario de ventas con código VE."
     },
     {
-     "pregunta": "En una tipología de documento de gestión con origen pedido, ¿qué valor de «Actualización tabla origen» corresponde a un albarán estándar no abono?",
-     "opciones": [
-      "Ninguna",
-      "Restando",
-      "No",
-      "Sumando"
-     ],
-     "correcta": 3,
-     "explicacion": "El albarán estándar con origen pedido usa Sumando."
-    },
-    {
      "pregunta": "¿Qué hoja destino se utiliza para registrar los asientos contables en una plantilla de contabilización?",
      "opciones": [
       "capuntes",
@@ -1736,13 +1648,10 @@
     "Abre una factura de venta en Finanzas y comprueba que el diario por defecto es VE.",
     "Localiza el botón de contabilización en factura de venta y revisa qué genera.",
     "Abre una factura de compra y localiza el botón de contabilización.",
-    "En tipologías de documentos de gestión, abre una tipología de albarán con origen pedido y comprueba «Actualización tabla origen» = Sumando.",
-    "Identifica en el sistema un circuito básico de compras: pedido directo, albarán con origen pedido y factura con origen albarán.",
-    "En una factura con origen albarán, localiza la pestaña «Albaranes compras conformar» y revisa el botón «Conformar».",
     "Abre el gestor de plantillas hoja de cálculo y localiza una plantilla con hojas destino capuntes, cimpcont y cefectos.",
     "Dentro de una plantilla, identifica una etiqueta de origen como ccomfach.fecfac.",
     "En permisos por grupo de usuarios, localiza el permiso «Contabilizar» y sus valores Real y Diferido.",
-    "En permisos por grupo de usuarios, comprueba que un permiso de tipo Verdadero/Falso (por ejemplo, Contabilizar en la agrupación Albaranes) no tiene valores definidos."
+    "En permisos por grupo de usuarios, comprueba que un permiso de tipo Verdadero/Falso no tiene valores definidos."
    ],
    "problemas": [
     {
@@ -1751,7 +1660,7 @@
     },
     {
      "problema": "La contabilización de un documento de gestión no se realiza o no genera asiento.",
-     "solucion": "Comprueba que existe una plantilla de contabilización definida para ese origen y que está asociada a la tipología del documento; la documentación no detalla la asociación automática."
+     "solucion": "Comprueba que existe una plantilla de contabilización para ese origen y que está indicada en la tipología del documento."
     },
     {
      "problema": "El asiento se genera en área diferida cuando esperabas real.",
