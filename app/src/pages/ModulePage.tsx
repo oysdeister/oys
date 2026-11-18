@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { META, MODULOS, getModulo } from '../content';
@@ -221,14 +221,12 @@ function Desplegable({ titulo, n, children, abiertoIni = false }: { titulo: stri
   const reducir = useReducedMotion();
   return (
     <div className={`fold${abierto ? ' open' : ''}`}>
-      <button className="fold-head" aria-expanded={abierto} onClick={() => setAbierto((a) => !a)}>
+      <button type="button" className="fold-head" aria-expanded={abierto} onClick={() => setAbierto((a) => !a)}>
         <span className="fold-t">
           <span className="fold-n" aria-hidden="true">{String(n).padStart(2, '0')}</span>
           <span>{titulo}</span>
         </span>
-        <motion.span className="fold-ico" animate={{ rotate: abierto ? 45 : 0 }} aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
-        </motion.span>
+        <span className="ctl-chev" aria-hidden="true" />
       </button>
       <AnimatePresence initial={false}>
         {abierto && (
@@ -263,11 +261,27 @@ function CabSec({ id, n, kicker, titulo, texto }: { id?: string; n: number; kick
   );
 }
 
-/** Flecha «baja»: lleva con scroll suave a la ruta de ejercicios */
-function Bajar({ destino, texto }: { destino: string; texto: string }) {
+/** Índice fijo de la página: qué secciones hay y en cuál estás. Cada entrada salta a su sección. */
+function IndicePagina({ items }: { items: { id: string; texto: string; extra?: string }[] }) {
+  const [activo, setActivo] = useState(items[0]?.id ?? '');
   const reducir = !!useReducedMotion();
-  const ir = () => {
-    const el = document.getElementById(destino);
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entradas) => {
+        const vis = entradas.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (vis[0]) setActivo(vis[0].target.id);
+      },
+      { rootMargin: '-30% 0px -60% 0px' },
+    );
+    items.forEach((it) => {
+      const el = document.getElementById(it.id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, [items.map((i) => i.id).join()]); // eslint-disable-line react-hooks/exhaustive-deps
+  const ir = (ev: MouseEvent<HTMLAnchorElement>, id: string) => {
+    ev.preventDefault();
+    const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
     const foco = el.querySelector<HTMLElement>('h2');
@@ -275,23 +289,18 @@ function Bajar({ destino, texto }: { destino: string; texto: string }) {
       foco.setAttribute('tabindex', '-1');
       foco.focus({ preventScroll: true });
     }
+    setActivo(id);
   };
   return (
-    <div className="pm-bajar-wrap">
-      <button type="button" className="pm-bajar" onClick={ir} aria-label={`${texto}: baja hasta los ejercicios del módulo`}>
-        <span>{texto}</span>
-        <motion.span
-          className="pm-bajar-ico"
-          aria-hidden="true"
-          animate={reducir ? undefined : { y: [0, 5, 0] }}
-          transition={reducir ? undefined : { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 5v14M6 13l6 6 6-6" />
-          </svg>
-        </motion.span>
-      </button>
-    </div>
+    <nav className="pm-indice" aria-label="En esta página">
+      <span>En esta página</span>
+      {items.map((it) => (
+        <a key={it.id} href={`#${it.id}`} className={activo === it.id ? 'on' : undefined} aria-current={activo === it.id ? 'location' : undefined} onClick={(e) => ir(e, it.id)}>
+          {it.texto}
+          {it.extra && <i>{it.extra}</i>}
+        </a>
+      ))}
+    </nav>
   );
 }
 
@@ -427,58 +436,22 @@ export default function ModulePage() {
           </div>
         )}
       </header>
-      <Bajar destino="ruta" texto="Ver tu ruta" />
-
-      {piezas.length > 0 && (
-        <section className="mod-sec" aria-labelledby="circ-h">
-          <CabSec
-            id="circ-h"
-            n={1}
-            kicker="Cómo encaja todo"
-            titulo="El circuito"
-            texto={movil ? 'Así viaja la información por este módulo. Toca una pieza para pararte en ella.' : 'Así viaja la información por este módulo. Cada pieza necesita la anterior: toca una para pararte en ella.'}
-          />
-          <div className="glass pm-panel">
-            {movil ? <CircuitoV piezas={piezas} ini={ini} /> : <CircuitoH piezas={piezas} color={meta.color} ini={ini} />}
-          </div>
-        </section>
-      )}
-
-      {verVideo && (
-        <section className="mod-sec pm-video" aria-label="Vídeo del módulo">
-          <div className="ax-banner pm-video-in">
-            {series.map((sv) => (
-              <CapitulosSerie
-                key={sv.id}
-                serie={sv.id}
-                titulo={series.length > 1 ? sv.titulo : `Vídeo del módulo: ${sv.capitulos.length} capítulos`}
-                intro={sv.intro}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {modulo.navegacion && modulo.navegacion.length > 0 && (
-        <section className="mod-sec" aria-labelledby="antes-h">
-          <CabSec id="antes-h" n={piezas.length > 0 ? 2 : 1} kicker="Lo básico" titulo="Antes de empezar" texto="Ábrelo cuando lo necesites: cada bloque se lee en un par de minutos." />
-          <div className="folds">
-            {modulo.navegacion.map((s, i) => (
-              <Desplegable key={s.id} n={i + 1} titulo={conIni(s.titulo, ini)} abiertoIni={i === 0 && av === 0}>
-                <SeccionVista s={s} ini={ini} conPasos />
-              </Desplegable>
-            ))}
-          </div>
-        </section>
-      )}
+      <IndicePagina
+        items={[
+          { id: 'ruta', texto: 'Tu ruta', extra: `${hechos}/${modulo.ejercicios.length}` },
+          ...(piezas.length > 0 ? [{ id: 'circuito', texto: 'El circuito' }] : []),
+          ...(verVideo ? [{ id: 'video', texto: 'Vídeo' }] : []),
+          ...(modulo.navegacion && modulo.navegacion.length > 0 ? [{ id: 'antes', texto: 'Antes de empezar' }] : []),
+        ]}
+      />
 
       <section className="mod-sec pm-ruta" id="ruta" aria-labelledby="ruta-h">
         <CabSec
           id="ruta-h"
-          n={(piezas.length > 0 ? 1 : 0) + (modulo.navegacion && modulo.navegacion.length > 0 ? 1 : 0) + 1}
+          n={1}
           kicker={`${hechos} de ${modulo.ejercicios.length} hechos`}
           titulo="Tu ruta"
-          texto="Cada ejercicio se completa con el recorrido guiado y el test aprobado. La checklist en la demo suma el resto."
+          texto="Empieza por el primero sin terminar. Un ejercicio cuenta como hecho con el recorrido guiado y el test aprobado; la checklist en la demo suma el resto."
         />
         <ol className="route mod-route">
           {modulo.ejercicios.map((e, i) => {
@@ -516,6 +489,50 @@ export default function ModulePage() {
           })}
         </ol>
       </section>
+
+      {piezas.length > 0 && (
+        <section className="mod-sec" id="circuito" aria-labelledby="circ-h">
+          <CabSec
+            id="circ-h"
+            n={2}
+            kicker="Cómo encaja todo"
+            titulo="El circuito"
+            texto={movil ? 'Así viaja la información por este módulo. Toca una pieza para pararte en ella.' : 'Así viaja la información por este módulo. Cada pieza necesita la anterior: toca una para pararte en ella.'}
+          />
+          <div className="glass pm-panel">
+            {movil ? <CircuitoV piezas={piezas} ini={ini} /> : <CircuitoH piezas={piezas} color={meta.color} ini={ini} />}
+          </div>
+        </section>
+      )}
+
+      {verVideo && (
+        <section className="mod-sec pm-video" id="video" aria-label="Vídeo del módulo">
+          <div className="ax-banner pm-video-in">
+            {series.map((sv) => (
+              <CapitulosSerie
+                key={sv.id}
+                serie={sv.id}
+                titulo={series.length > 1 ? sv.titulo : `Vídeo del módulo: ${sv.capitulos.length} capítulos`}
+                intro={sv.intro}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {modulo.navegacion && modulo.navegacion.length > 0 && (
+        <section className="mod-sec" id="antes" aria-labelledby="antes-h">
+          <CabSec id="antes-h" n={piezas.length > 0 ? 3 : 2} kicker="Lo básico" titulo="Antes de empezar" texto="Ábrelo cuando lo necesites: cada bloque se lee en un par de minutos." />
+          <div className="folds">
+            {modulo.navegacion.map((s, i) => (
+              <Desplegable key={s.id} n={i + 1} titulo={conIni(s.titulo, ini)} abiertoIni={i === 0 && av === 0}>
+                <SeccionVista s={s} ini={ini} conPasos />
+              </Desplegable>
+            ))}
+          </div>
+        </section>
+      )}
+
 
       <nav className="po-puertas pm-sig" aria-label="Qué hacer después">
         {sigMod ? (

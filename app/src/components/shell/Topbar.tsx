@@ -142,14 +142,14 @@ function Buscador() {
   );
 }
 
-export function Topbar({ onMenu }: { onMenu: () => void }) {
+export function Topbar({ onMenu, abierto = false }: { onMenu: () => void; abierto?: boolean }) {
   const loc = useLocation();
   const p = useProgreso();
   const pct = avanceGlobal(p);
   const migas = migasDe(loc.pathname);
   return (
     <header className="tb">
-      <button type="button" className="tb-menu" onClick={onMenu} aria-label="Abrir menú" aria-controls="barra-lateral">
+      <button type="button" className="tb-menu" onClick={onMenu} aria-label="Abrir menú" aria-controls="barra-lateral" aria-expanded={abierto}>
         <Icon name="menu" size={24} />
       </button>
       <Link to="/" className="tb-logo" aria-label="Inicio">

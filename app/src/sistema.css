@@ -1,0 +1,416 @@
+/*
+  Taller Axional · O&S · Sistema de diseño v4 («orden y profundidad»)
+  ---------------------------------------------------------------
+  Se carga la ÚLTIMA (main.tsx, después de App) y manda sobre las hojas de cada página.
+  Guía corta en _fuente/DISENO_V4.md.
+
+  1. Tokens         escala tipográfica 1,25 sobre 16 px, espacios, radios, movimiento.
+  2. Tipografía     un tamaño por PAPEL (página, sección, bloque), no por página.
+  3. Cabeceras      compactas: el contenido útil empieza en la primera pantalla.
+  4. Controles      un lenguaje para cada intención:
+                      a  enlace que lleva a otra página ....... flecha → al final
+                      b  botón que hace algo aquí ............. sin flecha
+                      c  desplegable .......................... chevron ⌄ que gira, aria-expanded
+                      d  abre una ventana (vídeo, diálogo) .... icono propio, aria-haspopup
+                      e  pestañas ............................. pastilla deslizante, numeradas si son pasos
+                    y estados hover / foco / pulsado iguales en todas partes.
+  5. Movimiento     transiciones 3D entre páginas, tarjetas que se inclinan, entradas escalonadas,
+                    suelo en perspectiva. Solo transform y opacity; nada si prefers-reduced-motion.
+*/
+
+/* ============================ 1. TOKENS ============================ */
+:root {
+  /* escala 1,25 (tercera mayor) sobre 16 px */
+  --fs-xs: 13px;
+  --fs-sm: 14.5px;
+  --fs-md: 16px;
+  --fs-lg: 18px;
+  --fs-xl: 20px;
+  --fs-2xl: 25px;
+  --fs-3xl: 31px;
+  --fs-hero: 44px;
+
+  /* papeles tipográficos */
+  --t-display: clamp(34px, 2.4vw + 18px, 54px); /* solo la portada */
+  --t-page: clamp(27px, 1.3vw + 16px, 38px);    /* título de página (h1) */
+  --t-section: clamp(21px, 0.6vw + 15px, 26px); /* sección (h2) */
+  --t-block: clamp(17px, 0.3vw + 14px, 19px);   /* bloque o tarjeta (h3) */
+  --t-sub: 16px;                                /* h4 */
+  --lh-tight: 1.08;
+  --lh-head: 1.18;
+  --lh-body: 1.6;
+
+  /* controles */
+  --ctl-h: 44px;          /* alto mínimo táctil */
+  --ctl-h-sm: 36px;
+  --ctl-r: 12px;
+  --focus: #f2a93b;       /* ámbar de marca: también «dónde actuar» */
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4.5px var(--focus);
+
+  /* movimiento */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+  --dur-1: 140ms;
+  --dur-2: 240ms;
+  --dur-3: 420ms;
+
+  --topbar-h: 58px;
+
+  /* iconos de control (máscaras: toman el color del texto) */
+  --i-flecha: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E");
+  --i-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+@media (max-width: 760px) {
+  :root {
+    --fs-sm: 14.5px; --fs-md: 16px; --fs-lg: 17px; --fs-xl: 19px; --fs-2xl: 22px; --fs-3xl: 26px; --fs-hero: 32px;
+    --t-display: clamp(30px, 8.4vw, 38px);
+    --t-page: clamp(24px, 6.6vw, 28px);
+    --t-section: 21px;
+    --t-block: 17px;
+    --topbar-h: 56px;
+  }
+}
+:root[data-theme='dark'] { --focus: #f5b75a; }
+
+/* el rem vuelve a 16: todo lo que las páginas tenían en rem baja a la vez, y cabe más */
+html, html:where(*) { font-size: 16px; }
+@media (max-width: 760px) { html { font-size: 16px; } }
+body { font-size: var(--fs-md); line-height: var(--lh-body); }
+p { max-width: 72ch; }
+
+/* ============================ 2. TIPOGRAFÍA ============================ */
+/* Un tamaño por papel en TODA la app. Los !important son deliberados: sustituyen
+   las decenas de tamaños sueltos que cada hoja de página había ido acumulando. */
+.page-host h1 {
+  font-size: var(--t-page) !important;
+  line-height: var(--lh-tight) !important;
+  letter-spacing: -0.028em !important;
+  max-width: 30ch;
+  text-wrap: balance;
+}
+.page-host h2:not(.kick):not(.sr-only) {
+  font-size: var(--t-section) !important;
+  line-height: var(--lh-head) !important;
+  letter-spacing: -0.02em !important;
+  text-wrap: balance;
+}
+.page-host h3 {
+  font-size: var(--t-block) !important;
+  line-height: 1.28 !important;
+  letter-spacing: -0.01em !important;
+  font-variation-settings: 'wdth' 92 !important;
+}
+.page-host h4 { font-size: var(--t-sub) !important; line-height: 1.35 !important; letter-spacing: 0 !important; }
+/* la portada es el único sitio con titular de exhibición */
+.page-host :is(.po-h1, .po3-h1, .e3-h1) { font-size: var(--t-display) !important; line-height: 0.98 !important; max-width: 14ch; }
+
+.lead, .page-host .ax-banner .lead { font-size: var(--fs-lg); line-height: 1.55; max-width: 66ch; }
+.page-host .ax-banner .lead { font-size: 16.5px; margin-top: 10px; }
+.muted { color: var(--ink-2); }
+small, .small { font-size: var(--fs-sm); }
+
+/* cifras grandes decorativas: un escalón menos */
+.page-host :is(.pc-panel-n, .hc-n, .ax-card-num) { font-size: clamp(30px, 2.4vw, 40px) !important; }
+.page-host .po3-celda.grande .ax-card-num { font-size: clamp(54px, 5vw, 76px) !important; }
+.page-host .ax-stat .ax-num { font-size: var(--fs-2xl) !important; }
+.page-host .step-count { font-size: 2.2rem; }
+
+/* antetítulo de sección: número + texto, sin mayúsculas */
+.page-host .kick { font-size: var(--fs-sm); letter-spacing: 0; text-transform: none; margin-bottom: 6px; }
+.page-host .pm-cab { margin-bottom: 18px; }
+.page-host .pm-cab-txt { margin-top: 6px; font-size: var(--fs-md); }
+
+/* ============================ 3. CABECERAS COMPACTAS ============================ */
+/* Objetivo: título + resumen + acciones en ~40 % de la primera pantalla. */
+.page-host .ax-banner { border-radius: 24px; }
+.page-host .ax-banner-in { padding: clamp(20px, 2.4vw, 34px) clamp(20px, 3vw, 40px) !important; gap: 20px 28px; align-items: center; }
+.page-host .ax-banner h1 { max-width: 26ch; }
+.page-host .ax-kicker { font-size: var(--fs-sm); margin-bottom: 8px; }
+
+/* módulo */
+.page-host .pm-banner-in { padding: clamp(20px, 2.4vw, 32px) clamp(20px, 3vw, 40px) 18px !important; gap: 24px; }
+.page-host .pm-planeta { width: clamp(118px, 11vw, 156px); }
+.page-host .pm-esfera svg { width: 34px; height: 34px; }
+.page-host .pm-planeta-pct { font-size: var(--fs-xl) !important; padding: 3px 10px; }
+.page-host .pm-stats { margin-top: 14px; gap: 28px; }
+.page-host .pm-ctas { margin-top: 18px; }
+.page-host .pm-aprendes { margin: 0 clamp(14px, 2vw, 28px) clamp(14px, 2vw, 24px); padding: 16px 20px; }
+.page-host .pm-aprendes h2 { font-size: var(--fs-sm) !important; margin-bottom: 10px; }
+.page-host .pm-volver { margin: 14px 0 10px; }
+
+/* ejercicio */
+.page-host .ex-side { gap: 8px; }
+.page-host .ex-side .ex-num { width: 64px !important; height: 64px !important; border-radius: 20px !important; font-size: 2rem !important; }
+.page-host .ex-side .ring, .page-host .ex-side .ax-ring-wrap { transform: scale(0.78); transform-origin: 50% 0; margin-bottom: -22px; }
+.page-host .ex-banner .ex-chips { margin-top: 12px; }
+.page-host .ex-vm { margin-top: 12px; }
+.page-host .ex-banner .vm-boton { padding-block: 6px; }
+.page-host .ex-banner .vm-boton-txt strong { font-size: 14px; }
+.page-host .ex-banner .vm-boton-txt span { font-size: 13px; }
+
+/* otras portadas de sección (glosario, logros, taller, vídeo) */
+.page-host :is(.gls-h1, .vd-title, .vd-h1, .tl-sim-tit h1, .tlx-hud h1, .cert-cab h1) { font-size: var(--t-page) !important; }
+
+@media (max-width: 760px) {
+  .page-host .ax-banner { border-radius: 20px; }
+  .page-host .ax-banner-in, .page-host .pm-banner-in { padding: 18px 18px 16px !important; gap: 12px; }
+  /* en móvil el número y el anillo van en una fila pequeña arriba */
+  .page-host .ex-side { grid-template-columns: auto auto; justify-content: start; align-items: center; order: -1; gap: 12px; }
+  .page-host .ex-side .ex-num { width: 44px !important; height: 44px !important; border-radius: 14px !important; font-size: 1.45rem !important; }
+  .page-host .ex-side .ring, .page-host .ex-side .ax-ring-wrap { transform: scale(0.52); transform-origin: 0 50%; margin: -26px -48px -26px 0; }
+  .page-host .ex-kicker { flex-wrap: wrap; row-gap: 2px; }
+  .page-host .ax-banner .lead { font-size: 15.5px; }
+  /* los momentos de vídeo, en una fila que se desliza */
+  .page-host .ex-vm > * { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; scrollbar-width: none; margin-inline: -18px; padding-inline: 18px; scroll-snap-type: x mandatory; }
+  .page-host .ex-vm > * > * { flex: 0 0 auto; scroll-snap-align: start; max-width: 82%; }
+  .page-host .pm-planeta { width: 60px; top: 14px; right: 14px; }
+  .page-host .pm-banner-txt .ax-kicker { padding-right: 70px; }
+  .page-host .pm-planeta-pct { font-size: 13px !important; padding: 2px 7px; right: -10px; bottom: -8px; }
+  .page-host .pm-stats { gap: 20px; }
+  .page-host .pm-ctas .btn { flex: 1 1 auto; }
+  .page-host .pm-aprendes { margin: 0 10px 10px; padding: 14px; }
+}
+
+/* ============================ 4. CONTROLES ============================ */
+
+/* --- base común: altura táctil, foco visible, pulsación --- */
+.btn, .icon-btn, .tab, .ver-mas, .fold-head, .sb-btn, .sb-link, .pm-bajar, .po-door, .route-item, .vm-boton, .chip:is(a, button) {
+  transition: transform var(--dur-1) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), background-color var(--dur-2), border-color var(--dur-2), color var(--dur-2);
+}
+:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+:is(a, button, [role='tab'], summary):focus-visible { outline: none; box-shadow: var(--focus-ring) !important; }
+:is(.btn, .icon-btn, .ver-mas, .sb-btn, .pm-bajar, .vm-boton, .tab):active { transform: translateY(1px) scale(0.97); }
+
+/* --- botones: primario (relleno), secundario (contorno), terciario (texto) --- */
+.btn { min-height: var(--ctl-h); padding: 0 20px; border-radius: 999px; gap: 10px; font-weight: 680; font-size: var(--fs-md); letter-spacing: 0; }
+.btn.sm { min-height: var(--ctl-h-sm); padding: 0 14px; font-size: var(--fs-sm); }
+.btn.lg { min-height: 50px; padding: 0 24px; font-size: var(--fs-md); }
+.btn:hover { transform: translateY(-2px); }
+.btn.arc:hover { box-shadow: 0 14px 30px -12px var(--arc-glow); }
+.btn.ghost:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.ax-banner .btn.ghost:hover, .ax-panel.dark .btn.ghost:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* (a) ENLACE A OTRA PÁGINA: los <a> con aspecto de botón llevan flecha al final.
+       Si ya traen su propio icono (volver ←, play ▶) no se añade nada. */
+a.btn:not(:has(svg))::after,
+a.ctl-ir::after {
+  content: '';
+  width: 1em; height: 1em; flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: var(--i-flecha) center / contain no-repeat; mask: var(--i-flecha) center / contain no-repeat;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+a.btn:not(:has(svg)):hover::after, a.ctl-ir:hover::after, a.ctl-ir:focus-visible::after { transform: translateX(4px); }
+/* tarjetas-enlace: la flecha aparece en el pie y avanza al pasar */
+:is(a.ax-card, a.po-card) .ax-card-foot::after,
+a.route-item .route-meta::after,
+a.po-door .po-door-txt::after {
+  content: ''; width: 18px; height: 18px; flex: 0 0 auto; justify-self: start;
+  background: currentColor; opacity: 0.55;
+  -webkit-mask: var(--i-flecha) center / contain no-repeat; mask: var(--i-flecha) center / contain no-repeat;
+  transition: transform var(--dur-2) var(--ease-out), opacity var(--dur-2);
+}
+:is(a.ax-card, a.po-card):is(:hover, :focus-visible) .ax-card-foot::after,
+a.route-item:is(:hover, :focus-visible) .route-meta::after,
+a.po-door:is(:hover, :focus-visible) .po-door-txt::after { transform: translateX(5px); opacity: 1; }
+a.route-item .route-meta { display: grid; justify-items: end; gap: 4px; }
+a.route-item .route-meta::after { justify-self: end; }
+
+/* (c) DESPLEGABLE: chevron que gira 180° (todas las piezas con aria-expanded comparten giro) */
+.ctl-chev {
+  display: inline-grid; place-items: center; width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%;
+  background: color-mix(in srgb, var(--mod, var(--arc)) 14%, transparent); color: var(--ink);
+}
+.ctl-chev::before {
+  content: ''; width: 16px; height: 16px; background: currentColor;
+  -webkit-mask: var(--i-chevron) center / contain no-repeat; mask: var(--i-chevron) center / contain no-repeat;
+  transition: transform var(--dur-3) var(--ease-spring);
+}
+[aria-expanded='true'] > .ctl-chev::before, [aria-expanded='true'] .ctl-chev::before { transform: rotate(180deg); }
+.ver-mas svg { transition: transform var(--dur-3) var(--ease-spring) !important; }
+[aria-expanded='true'].ver-mas svg { transform: rotate(180deg); }
+.fold-head { border-radius: 16px; cursor: pointer; }
+.fold-head:hover { background: color-mix(in srgb, var(--mod, var(--arc)) 7%, transparent); }
+.fold-head:hover .ctl-chev { background: color-mix(in srgb, var(--mod, var(--arc)) 24%, transparent); }
+.fold.open > .fold-head { background: color-mix(in srgb, var(--mod, var(--arc)) 6%, transparent); }
+details > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::after {
+  content: ''; width: 16px; height: 16px; margin-left: auto; flex: 0 0 auto; background: currentColor;
+  -webkit-mask: var(--i-chevron) center / contain no-repeat; mask: var(--i-chevron) center / contain no-repeat;
+  transition: transform var(--dur-3) var(--ease-spring);
+}
+details[open] > summary::after { transform: rotate(180deg); }
+
+/* (d) ABRE UNA VENTANA: el botón de vídeo ya lleva ▶; se marca con aria-haspopup='dialog'.
+       El botón de menú (hamburguesa) refleja si el cajón está abierto. */
+.vm-boton:hover { transform: translateY(-2px); }
+
+/* (e) PESTAÑAS: barra fija, compacta, con número de paso y estado */
+.page-host .tabs { top: calc(var(--topbar-h) + 8px); padding: 4px; gap: 2px; backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); background: color-mix(in srgb, var(--sheet) 82%, transparent); }
+.page-host .ex-tabs .tab { min-height: 40px; padding: 0 14px; font-size: 15px; gap: 8px; }
+.page-host .tab .tab-n {
+  position: relative; z-index: 1; display: inline-grid; place-items: center; width: 21px; height: 21px; border-radius: 50%;
+  font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--ink) 9%, transparent); color: var(--ink-2);
+}
+.page-host .tab[aria-selected='true'] .tab-n { background: rgba(3, 20, 47, 0.16); color: #03142f; }
+.page-host .tab .tab-l { position: relative; z-index: 1; }
+.page-host .tab:not([aria-selected='true']):hover { background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
+.page-host .tab-sep { flex: 0 0 1px; align-self: stretch; margin: 8px 4px; background: var(--line); }
+.page-host .ex-panel-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 16px 2px -6px; font-size: var(--fs-sm); color: var(--ink-3); }
+.page-host .ex-panel-cab b { color: var(--ink); font-weight: 700; }
+.page-host .ex-panel-cab .ex-paso-sig { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; padding: 6px 4px; color: var(--arc-deep); font-weight: 700; border-radius: 8px; }
+.page-host .ex-panel-cab .ex-paso-sig::after { content: ''; width: 15px; height: 15px; background: currentColor; -webkit-mask: var(--i-flecha) center / contain no-repeat; mask: var(--i-flecha) center / contain no-repeat; transition: transform var(--dur-2) var(--ease-out); }
+.page-host .ex-panel-cab .ex-paso-sig:hover::after { transform: translateX(4px); }
+@media (max-width: 760px) {
+  .page-host .ex-tabs .tab { padding: 0 12px; font-size: 14.5px; }
+  .page-host .ex-panel-cab { font-size: 13.5px; }
+}
+
+/* chips: si son enlaces, se nota */
+a.chip:hover { border-color: currentColor; }
+
+/* barra superior: más baja; botón de menú con estado */
+.tb { min-height: var(--topbar-h); }
+.tb-menu[aria-expanded='true'] { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+
+/* ============================ ORGANIZACIÓN ============================ */
+/* ritmo vertical: 56 px entre secciones en escritorio, 40 en móvil */
+.page-host .mod-sec { margin-top: 56px; scroll-margin-top: calc(var(--topbar-h) + 64px); }
+@media (max-width: 760px) { .page-host .mod-sec { margin-top: 40px; } }
+
+/* índice de la página del módulo: dónde estoy y qué hay debajo */
+.pm-indice {
+  position: sticky; top: calc(var(--topbar-h) + 8px); z-index: 25;
+  display: flex; align-items: center; gap: 4px; margin: 14px 0 0; padding: 4px;
+  width: max-content; max-width: 100%; overflow-x: auto; scrollbar-width: none;
+  border-radius: 999px; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--sheet) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 10px 30px -22px rgba(17, 26, 43, 0.6);
+}
+.pm-indice::-webkit-scrollbar { display: none; }
+.pm-indice span { padding: 0 10px 0 12px; font-size: var(--fs-xs); color: var(--ink-3); white-space: nowrap; }
+.pm-indice a {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border-radius: 999px;
+  font-size: var(--fs-sm); font-weight: 650; color: var(--ink-2); text-decoration: none; white-space: nowrap;
+  transition: background-color var(--dur-2), color var(--dur-2);
+}
+.pm-indice a:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
+.pm-indice a.on { background: var(--ink); color: var(--paper); }
+.pm-indice a i { font-style: normal; font-size: 12px; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: color-mix(in srgb, var(--mod, var(--arc)) 22%, transparent); color: inherit; }
+
+/* ruta de ejercicios: más densa */
+.page-host .route { gap: 10px; margin: 0; }
+.page-host .route-item { padding: 14px 18px; gap: 16px; grid-template-columns: 46px 1fr auto; }
+.page-host .route-num { width: 46px; height: 46px; font-size: 1.15rem; }
+.page-host .route-item strong { font-size: var(--t-block); line-height: 1.3; }
+.page-host a.route-item:hover { border-color: color-mix(in srgb, var(--mod, var(--arc)) 55%, var(--line)); box-shadow: var(--shadow-lg); }
+@media (max-width: 600px) {
+  .page-host .route-item { grid-template-columns: 40px 1fr; padding: 12px 14px; }
+  .page-host .route-num { width: 40px; height: 40px; }
+}
+
+/* paneles y tarjetas: un poco menos de relleno */
+.page-host .ax-panel { padding: clamp(18px, 2.4vw, 30px); }
+.page-host .ax-card { padding: 22px; }
+.page-host .ex-foot { margin-top: 32px; }
+
+/* ============================ 5. MOVIMIENTO ============================ */
+/* 5a. Inclinación 3D de tarjetas (lib/inclinar.ts escribe --incl-x/--incl-y al mover el puntero).
+       Usa la propiedad «rotate» independiente: no choca con los transform de framer-motion. */
+[data-inclina] {
+  rotate: var(--incl-y, 0) var(--incl-x, 0) 0 var(--incl-a, 0deg);
+  transition: rotate 0.5s var(--ease-out), transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2), border-color var(--dur-2);
+  will-change: rotate;
+}
+[data-inclina].inclinando { transition: rotate 0.08s linear, transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2), border-color var(--dur-2); }
+
+/* 5b. Entradas escalonadas de las rejillas al llegar a la página (una sola orquestación). */
+@keyframes sis-entra {
+  from { opacity: 0; transform: perspective(900px) translateY(18px) rotateX(-10deg) scale(0.98); }
+}
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > *,
+.page-host .route > li:not([style]) {
+  animation: sis-entra 0.62s var(--ease-out) backwards;
+}
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > :nth-child(2) { animation-delay: 50ms; }
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > :nth-child(3) { animation-delay: 100ms; }
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > :nth-child(4) { animation-delay: 150ms; }
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > :nth-child(5) { animation-delay: 200ms; }
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > :nth-child(6) { animation-delay: 250ms; }
+.page-host :is(.ax-grid, .po3-grid, .badges, .lg-grid, .vd-caps, .pm-indice) > :nth-child(n + 7) { animation-delay: 300ms; }
+
+/* 5c. Cabecera: el bloque de título entra con profundidad */
+@keyframes sis-cab {
+  from { opacity: 0; transform: perspective(1200px) translateZ(-60px) rotateX(8deg); }
+}
+.page-host .ax-banner { animation: sis-cab 0.7s var(--ease-out) backwards; transform-origin: 50% 0; }
+
+/* 5d. Suelo en perspectiva bajo el contenido (se desliza despacio) */
+.sis-suelo {
+  position: fixed; z-index: -1; pointer-events: none; left: var(--sidebar-w); right: 0; bottom: 0; height: 52vh;
+  perspective: 520px; perspective-origin: 50% 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%);
+  opacity: 0.55;
+}
+.sis-suelo i {
+  position: absolute; left: -50%; right: -50%; top: 0; height: 200%;
+  transform-origin: 50% 0; transform: rotateX(68deg);
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--arc) 22%, transparent) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--arc) 22%, transparent) 0 1px, transparent 1px 64px);
+  animation: sis-suelo 9s linear infinite;
+}
+@keyframes sis-suelo { to { transform: rotateX(68deg) translateY(64px); } }
+:root[data-theme='dark'] .sis-suelo { opacity: 0.7; }
+@media (max-width: 1100px) { .sis-suelo { left: 0; } }
+body.modo-examen .sis-suelo { display: none; }
+
+/* ============================ ACCESIBILIDAD DEL MOVIMIENTO ============================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  [data-inclina] { rotate: none !important; }
+  .sis-suelo i { animation: none; }
+}
+@media (hover: none), (pointer: coarse) {
+  [data-inclina] { rotate: none; will-change: auto; }
+}
+
+/* la ruta va justo después del índice */
+.page-host .pm-indice + .pm-ruta { margin-top: 28px; }
+
+/* momentos de vídeo de la cabecera: siempre en una fila que se desliza */
+.page-host .ex-vm .vm-list { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; padding-bottom: 2px; }
+.page-host .ex-vm .vm-list::-webkit-scrollbar { display: none; }
+.page-host .ex-vm .vm-list > * { flex: 0 0 auto; scroll-snap-align: start; }
+
+/* texto de lectura del concepto: cuerpo, no titular */
+.page-host .concepto-lead { font-size: var(--fs-lg); line-height: 1.6; }
+
+/* «Al terminar sabrás», más compacto */
+.page-host .pm-aprendes ul { gap: 10px 16px; }
+.page-host .pm-aprendes li { font-size: 14px; }
+
+@media (max-width: 760px) {
+  /* la columna no puede crecer por contenido que se desliza (momentos de vídeo, listas) */
+  .page-host .ax-banner-in, .page-host .pm-banner-in { grid-template-columns: minmax(0, 1fr) !important; }
+  .page-host .pm-banner-txt, .page-host .ax-banner-text { min-width: 0; }
+}
+
+/* fuera de «Concepto» la cabecera del ejercicio se recoge: el resumen ya se leyó en el paso 1 */
+.page-host .ex-banner.ex-compact .ex-vm { display: none; }
+@media (max-width: 760px) {
+  .page-host .ex-banner.ex-compact .lead, .page-host .ex-banner.ex-compact .ex-chips { display: none; }
+  .page-host .ex-banner.ex-compact .ex-side { display: none; }
+}
+
+/* cabeceras genéricas (ERP, glosario…): sin el velo de grano blanco que bajaba el contraste del texto */
+:where(.page-host) .ax-banner::after {
+  background:
+    radial-gradient(520px 340px at 88% 10%, color-mix(in srgb, var(--mod, var(--arc)) 34%, transparent), transparent 70%),
+    radial-gradient(400px 300px at 0% 100%, rgba(108, 143, 214, 0.18), transparent 70%);
+}
+.page-host .ax-banner .ax-kicker { color: #8ff3dc; }

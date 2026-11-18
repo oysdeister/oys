@@ -8,6 +8,7 @@ import { BottomNav } from './components/shell/BottomNav';
 import { Espacio } from './components/shell/Espacio';
 import { Onboarding } from './components/Onboarding';
 import { useProgreso } from './lib/progress';
+import { useInclinacion } from './lib/inclinar';
 import { CLERK_ACTIVO } from './auth/Acceso';
 import { INSIGNIAS, insigniasGanadas } from './lib/badges';
 import Home from './pages/Home';
@@ -98,10 +99,12 @@ function Rutas() {
       <motion.div
         key={loc.pathname}
         className="page-host"
-        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 34, rotateX: 7, scale: 0.975, filter: 'blur(6px)', transformPerspective: 1600 }}
-        animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)', transitionEnd: { filter: 'none', transform: 'none' } }}
-        exit={reduce ? { opacity: 0 } : { opacity: 0, y: -18, rotateX: -4, scale: 0.985, filter: 'blur(4px)' }}
-        transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1], opacity: { duration: 0.3 } }}
+        /* Transición 3D entre páginas: la nueva sube desde el fondo inclinada y la anterior se aleja.
+           Solo transform y opacity (sin blur) para ir a 60 fps. */
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28, z: -90, rotateX: 9, transformPerspective: 1400 }}
+        animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, z: 0, rotateX: 0, transformPerspective: 1400, transitionEnd: { transform: 'none' } }}
+        exit={reduce ? { opacity: 0 } : { opacity: 0, y: -14, z: -60, rotateX: -5, transformPerspective: 1400 }}
+        transition={{ duration: 0.46, ease: [0.2, 0.7, 0.2, 1], opacity: { duration: 0.28 } }}
       >
         <Routes location={loc}>
           <Route path="/" element={<Home />} />
@@ -129,6 +132,7 @@ function Marco() {
   const [oscuro, toggleTema] = useTema();
   const [plegada, togglePlegada] = usePlegada();
   const [cajon, setCajon] = useState(false);
+  useInclinacion();
   const loc = useLocation();
   useEffect(() => setCajon(false), [loc.pathname]);
   useEffect(() => {
@@ -140,10 +144,13 @@ function Marco() {
   return (
     <div className={`app-shell${plegada ? ' collapsed' : ''}${cajon ? ' drawer' : ''}`}>
       <Espacio />
+      <div className="sis-suelo" aria-hidden="true">
+        <i />
+      </div>
       <Sidebar oscuro={oscuro} onTema={toggleTema} plegada={plegada} onPlegar={togglePlegada} onNavegar={() => setCajon(false)} />
       <div className="sb-scrim" onClick={() => setCajon(false)} aria-hidden="true" />
       <div className="app-main">
-        <Topbar onMenu={() => setCajon(true)} />
+        <Topbar onMenu={() => setCajon(true)} abierto={cajon} />
         <main>
           <Rutas />
         </main>

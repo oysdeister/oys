@@ -1,4 +1,4 @@
-import { useEffect, useRef, type KeyboardEvent } from 'react';
+import { Fragment, useEffect, useRef, type KeyboardEvent } from 'react';
 import { Glosa } from '../components/Glosario';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
@@ -72,6 +72,8 @@ export default function ExercisePage() {
   const sig = todos[pos + 1];
   const practicasEj = PRACTICAS_POR_EJERCICIO[ej.id] ?? [];
   const tabs = TABS.filter((x) => x.id !== 'erp' || practicasEj.length > 0);
+  // Las pestañas son pasos en orden; «Problemas» es consulta y va aparte, sin número.
+  const pasos = tabs.filter((x) => x.id !== 'problemas');
   const tabParam = sp.get('tab');
   const tab = tabs.some((x) => x.id === tabParam) ? (tabParam as string) : 'concepto';
 
@@ -163,8 +165,9 @@ export default function ExercisePage() {
           {tabs.map((x) => {
             const sel = x.id === tab;
             return (
+              <Fragment key={x.id}>
+              {x.id === 'problemas' && <span className="tab-sep" aria-hidden="true" />}
               <button
-                key={x.id}
                 role="tab"
                 id={`tab-${x.id}`}
                 aria-selected={sel}
@@ -174,17 +177,46 @@ export default function ExercisePage() {
                 onClick={() => ir(x.id)}
               >
                 {sel && <motion.span layoutId="tab-pill" className="tab-pill" transition={reducir ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }} />}
-                {x.label}
+                {x.id !== 'problemas' && !hechoTab[x.id] && (
+                  <span className="tab-n" aria-hidden="true">
+                    {pasos.findIndex((y) => y.id === x.id) + 1}
+                  </span>
+                )}
+                <span className="tab-l">{x.label}</span>
                 {hechoTab[x.id] && (
                   <span className="tick" aria-label="hecho">
                     <Icon name="check" size={11} stroke={3.5} />
                   </span>
                 )}
               </button>
+              </Fragment>
             );
           })}
         </LayoutGroup>
       </div>
+
+      {(() => {
+        const k = pasos.findIndex((x) => x.id === tab);
+        const sigPaso = k >= 0 ? pasos[k + 1] : undefined;
+        return (
+          <div className="ex-panel-cab">
+            <span>
+              {k >= 0 ? (
+                <>
+                  Paso <b>{k + 1}</b> de {pasos.length}
+                </>
+              ) : (
+                'Consulta: errores típicos y cómo salir de ellos'
+              )}
+            </span>
+            {sigPaso && (
+              <button type="button" className="ex-paso-sig" onClick={() => ir(sigPaso.id)}>
+                Siguiente: {sigPaso.label}
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.section
