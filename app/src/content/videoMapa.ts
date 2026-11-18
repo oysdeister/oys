@@ -28,7 +28,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Bienvenida: el módulo de compras",
     "inicio": 0,
     "duracion": 461,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap01.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap01.mp4",
     "poster": "video/cap01.jpg",
     "escenas": [
       {
@@ -102,7 +102,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Los maestros: el proveedor y el artículo",
     "inicio": 461,
     "duracion": 601,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap02.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap02.mp4",
     "poster": "video/cap02.jpg",
     "escenas": [
       {
@@ -156,7 +156,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Los precios: listas y grupos de precios",
     "inicio": 1062,
     "duracion": 305,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap03.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap03.mp4",
     "poster": "video/cap03.jpg",
     "escenas": [
       {
@@ -198,7 +198,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Cómo se numeran y clasifican los documentos",
     "inicio": 1368,
     "duracion": 903,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap04.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap04.mp4",
     "poster": "video/cap04.jpg",
     "escenas": [
       {
@@ -284,7 +284,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "El pedido de compra",
     "inicio": 2271,
     "duracion": 741,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap05.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap05.mp4",
     "poster": "video/cap05.jpg",
     "escenas": [
       {
@@ -374,7 +374,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "El albarán: recibir la mercancía",
     "inicio": 3011,
     "duracion": 554,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap06.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap06.mp4",
     "poster": "video/cap06.jpg",
     "escenas": [
       {
@@ -448,7 +448,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "La factura del proveedor",
     "inicio": 3566,
     "duracion": 387,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap07.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap07.mp4",
     "poster": "video/cap07.jpg",
     "escenas": [
       {
@@ -494,7 +494,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Contabilizar: qué es un asiento",
     "inicio": 3953,
     "duracion": 495,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap08.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap08.mp4",
     "poster": "video/cap08.jpg",
     "escenas": [
       {
@@ -532,7 +532,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Docflow: seguir el rastro de una compra",
     "inicio": 4447,
     "duracion": 638,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap09.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap09.mp4",
     "poster": "video/cap09.jpg",
     "escenas": [
       {
@@ -594,7 +594,7 @@ export const CAPITULOS: CapituloVideo[] = [
     "titulo": "Resumen y cierre",
     "inicio": 5085,
     "duracion": 169,
-    "url": "https://github.com/sergibauli/oys/releases/download/video-v1/cap10.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap10.mp4",
     "poster": "video/cap10.jpg",
     "escenas": [
       {

@@ -20,7 +20,7 @@ FICH = {
 }
 DIRVID = {'icon1': 'finanzas-icon', 'icon11': 'finanzas-icon', 'icon2': 'finanzas-icon', 'maestros': 'maestros-contables',
           'asientos': 'asientos-gestion', 'cobros': 'cobros-pagos', 'tax-tablas': 'impuestos', 'tax-intro': 'impuestos'}
-REL = 'https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/'
+REL = 'https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/'
 PUBLICADOS = set(open(os.path.join(S, 'publicados.txt')).read().split()) if os.path.exists(os.path.join(S, 'publicados.txt')) else set()
 clips = '--clips' in sys.argv
 

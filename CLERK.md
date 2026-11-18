@@ -65,7 +65,7 @@ Aplicación **OYS** del workspace personal de Clerk (plan **Hobby**), instancia 
 
 La publishable key (`pk_...`) es pública: acaba en el JavaScript de la web. La secret key (`sk_...`) no se usa ni se tiene que poner en ningún sitio.
 
-1. Ve a GitHub → repositorio `sergibauli/oys` → **Settings → Secrets and variables → Actions → Variables → New repository variable**.
+1. Ve a GitHub → repositorio `oysdeister/oys` → **Settings → Secrets and variables → Actions → Variables → New repository variable**.
 2. Nombre: `CLERK_PUBLISHABLE_KEY`. Valor: la `pk_test_...` de Clerk (**Configure → API keys**).
 3. El workflow `.github/workflows/pages.yml` ya la pasa al build como `VITE_CLERK_PUBLISHABLE_KEY`.
 
@@ -75,12 +75,12 @@ Si prefieres guardarla como secret, créala en **Secrets** con el mismo nombre y
 
 1. Ve a Clerk → **Users → Invitations → Invite user**.
 2. Escribe el correo del alumno.
-3. Si te deja elegir la URL de redirección, pon `https://sergibauli.github.io/oys/`.
+3. Si te deja elegir la URL de redirección, pon `https://oysdeister.github.io/oys/`.
 4. El alumno recibe un correo. Al abrir el enlace, llega a la web con la invitación y ve el formulario de alta, donde crea su contraseña o entra con Google.
 
 ### 3. Origen permitido
 
-Las instancias de desarrollo de Clerk aceptan cualquier origen, `sergibauli.github.io` incluido; no hay nada que añadir. El campo **allowed origins** solo existe en producción.
+Las instancias de desarrollo de Clerk aceptan cualquier origen, `oysdeister.github.io` incluido; no hay nada que añadir. El campo **allowed origins** solo existe en producción.
 
 ## Límites de Clerk en GitHub Pages
 
@@ -90,7 +90,7 @@ Las instancias de desarrollo de Clerk aceptan cualquier origen, `sergibauli.gith
   - el inicio de sesión con Google usa las credenciales compartidas de Clerk.
 
   Para una formación interna de juniors suele bastar.
-- **La instancia de producción exige un dominio propio** en el que puedas crear registros DNS. Clerk usa esos registros para la sesión y para el correo. `sergibauli.github.io` no sirve, porque el dominio no es tuyo.
+- **La instancia de producción exige un dominio propio** en el que puedas crear registros DNS. Clerk usa esos registros para la sesión y para el correo. `oysdeister.github.io` no sirve, porque el dominio no es tuyo.
   - Si se quiere producción, crea un subdominio de la empresa, por ejemplo `practica.oysconsultores.com`, apuntado a GitHub Pages (Settings → Pages → Custom domain), y en Clerk pulsa **Go to prod** con ese dominio.
   - Clerk te pedirá varios CNAME (`clerk.`, `accounts.` y los de correo) en el DNS de `oysconsultores.com`.
   - La `pk_live_...` resultante sustituye a la `pk_test_...` en la variable de GitHub.

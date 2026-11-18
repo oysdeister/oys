@@ -1,6 +1,6 @@
 # Brief para los jefes de revisión de sección
 
-Contexto: lee `_fuente/BRIEF_APP.md` (app, diseño, lenguaje, reglas técnicas) y `_fuente/ESTADO.md`. La app está publicada en https://sergibauli.github.io/oys/ y corre en local en **http://127.0.0.1:5179/** (servidor Vite ya arrancado: NO arranques otro ni lo pares).
+Contexto: lee `_fuente/BRIEF_APP.md` (app, diseño, lenguaje, reglas técnicas) y `_fuente/ESTADO.md`. La app está publicada en https://oysdeister.github.io/oys/ y corre en local en **http://127.0.0.1:5179/** (servidor Vite ya arrancado: NO arranques otro ni lo pares).
 
 Petición de Sergi (dueño): cada sección tiene que ser **espectacular**: diseño propio y acorde a su función, animaciones (3D ligero donde aporte, framer-motion), impecable en móvil, y contenido fiel a los manuales (`_fuente/manuales/<slug>/manual.md` + capturas) y al vídeo de compras (guiones `nueva/v2/cap01.json…cap10.json` y `.md`). Revisa como formador de ERP exigente y como diseñador.
 

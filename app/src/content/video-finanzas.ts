@@ -59,7 +59,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Los registros fiscales (IVA)"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap01.mp4",
         "poster": "video/finanzas/icon1-cap01.jpg"
       },
       {
@@ -101,7 +101,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Excel de práctica para tu empresa"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap02.mp4",
         "poster": "video/finanzas/icon1-cap02.jpg"
       },
       {
@@ -139,7 +139,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Detalle de impuestos"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap03.mp4",
         "poster": "video/finanzas/icon1-cap03.jpg"
       },
       {
@@ -161,7 +161,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Error del entorno: lo revisa sistemas"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap04.mp4",
         "poster": "video/finanzas/icon1-cap04.jpg"
       },
       {
@@ -195,7 +195,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "¿Va vinculada al flujo original?"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap05.mp4",
         "poster": "video/finanzas/icon1-cap05.jpg"
       },
       {
@@ -229,7 +229,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Añadir cobro y pago con tesorería"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap06.mp4",
         "poster": "video/finanzas/icon1-cap06.jpg"
       },
       {
@@ -271,7 +271,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "El asiento contable siempre cuadra"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon1-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon1-cap07.mp4",
         "poster": "video/finanzas/icon1-cap07.jpg"
       }
     ]
@@ -317,7 +317,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Conciliación bancaria"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap01.mp4",
         "poster": "video/finanzas/icon11-cap01.jpg"
       },
       {
@@ -347,7 +347,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Clase Pagar y tipo de efecto TF"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap02.mp4",
         "poster": "video/finanzas/icon11-cap02.jpg"
       },
       {
@@ -381,7 +381,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Remesas por cuenta"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap03.mp4",
         "poster": "video/finanzas/icon11-cap03.jpg"
       },
       {
@@ -415,7 +415,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Asiento contable de la remesa"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap04.mp4",
         "poster": "video/finanzas/icon11-cap04.jpg"
       },
       {
@@ -437,7 +437,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Objetivo: llegar a remesar"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap05.mp4",
         "poster": "video/finanzas/icon11-cap05.jpg"
       },
       {
@@ -455,7 +455,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Enero a junio cerrados: empieza en julio"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap06.mp4",
         "poster": "video/finanzas/icon11-cap06.jpg"
       },
       {
@@ -481,7 +481,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Pasar a provisional y cambiar el efecto a TF"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap07.mp4",
         "poster": "video/finanzas/icon11-cap07.jpg"
       },
       {
@@ -515,7 +515,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Probar cobros y pagos con varios efectos"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon11-cap08.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon11-cap08.mp4",
         "poster": "video/finanzas/icon11-cap08.jpg"
       }
     ]
@@ -552,7 +552,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Diferencia entre extracto y conciliación"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon2-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon2-cap01.mp4",
         "poster": "video/finanzas/icon2-cap01.jpg"
       },
       {
@@ -582,7 +582,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Guardar y conciliación automática"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon2-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon2-cap02.mp4",
         "poster": "video/finanzas/icon2-cap02.jpg"
       },
       {
@@ -616,7 +616,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Gestión de origen y efectos"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon2-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon2-cap03.mp4",
         "poster": "video/finanzas/icon2-cap03.jpg"
       },
       {
@@ -646,7 +646,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Contabilizar el cobro"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/icon2-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/icon2-cap04.mp4",
         "poster": "video/finanzas/icon2-cap04.jpg"
       }
     ]
@@ -683,7 +683,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Planes por país"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap01.mp4",
         "poster": "video/finanzas/maestros-cap01.jpg"
       },
       {
@@ -717,7 +717,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Periodificable"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap02.mp4",
         "poster": "video/finanzas/maestros-cap02.jpg"
       },
       {
@@ -747,7 +747,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Resumen: plan, cuentas y mnemotécnicos"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap03.mp4",
         "poster": "video/finanzas/maestros-cap03.jpg"
       },
       {
@@ -777,7 +777,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Vínculo empresa-tercero"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap04.mp4",
         "poster": "video/finanzas/maestros-cap04.jpg"
       },
       {
@@ -811,7 +811,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Tabla c_tipo_ter y mnemotécnicos"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap05.mp4",
         "poster": "video/finanzas/maestros-cap05.jpg"
       },
       {
@@ -849,7 +849,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Formas de pago"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap06.mp4",
         "poster": "video/finanzas/maestros-cap06.jpg"
       },
       {
@@ -883,7 +883,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Un tercero por empresa"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap07.mp4",
         "poster": "video/finanzas/maestros-cap07.jpg"
       },
       {
@@ -917,7 +917,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Preguntas sobre la normativa contable"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/maestros-cap08.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/maestros-cap08.mp4",
         "poster": "video/finanzas/maestros-cap08.jpg"
       }
     ]
@@ -962,7 +962,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "IGV, IVA y GST, impuestos equivalentes"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap01.mp4",
         "poster": "video/finanzas/tax-intro-cap01.jpg"
       },
       {
@@ -992,7 +992,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Afecta o inafecta"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap02.mp4",
         "poster": "video/finanzas/tax-intro-cap02.jpg"
       },
       {
@@ -1022,7 +1022,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Tipo normal y gravámenes de lujo"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap03.mp4",
         "poster": "video/finanzas/tax-intro-cap03.jpg"
       },
       {
@@ -1056,7 +1056,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Identificación fiscal: DNI, RUC, NIF"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap04.mp4",
         "poster": "video/finanzas/tax-intro-cap04.jpg"
       },
       {
@@ -1086,7 +1086,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Excepciones por interés del legislador"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap05.mp4",
         "poster": "video/finanzas/tax-intro-cap05.jpg"
       },
       {
@@ -1116,7 +1116,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Los tres mecanismos de recaudación"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap06.mp4",
         "poster": "video/finanzas/tax-intro-cap06.jpg"
       },
       {
@@ -1146,7 +1146,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Pago neto: 224,2"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap07.mp4",
         "poster": "video/finanzas/tax-intro-cap07.jpg"
       },
       {
@@ -1176,7 +1176,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Autodetracción"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap08.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap08.mp4",
         "poster": "video/finanzas/tax-intro-cap08.jpg"
       },
       {
@@ -1206,7 +1206,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Síntesis y próxima sesión"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-intro-cap09.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-intro-cap09.mp4",
         "poster": "video/finanzas/tax-intro-cap09.jpg"
       }
     ]
@@ -1243,7 +1243,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Periodos fiscales y agencias tributarias"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap01.mp4",
         "poster": "video/finanzas/tax-tablas-cap01.jpg"
       },
       {
@@ -1273,7 +1273,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Bienes inmuebles y grupos de IVA"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap02.mp4",
         "poster": "video/finanzas/tax-tablas-cap02.jpg"
       },
       {
@@ -1295,7 +1295,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Esquemas y regímenes del tercero"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap03.mp4",
         "poster": "video/finanzas/tax-tablas-cap03.jpg"
       },
       {
@@ -1321,7 +1321,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Zona fiscal en las direcciones del tercero"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap04.mp4",
         "poster": "video/finanzas/tax-tablas-cap04.jpg"
       },
       {
@@ -1347,7 +1347,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Tipo de impuesto: porcentaje y base"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap05.mp4",
         "poster": "video/finanzas/tax-tablas-cap05.jpg"
       },
       {
@@ -1373,7 +1373,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Validar y leer la regla 1477"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap06.mp4",
         "poster": "video/finanzas/tax-tablas-cap06.jpg"
       },
       {
@@ -1403,7 +1403,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Destino a las tablas de declaración"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap07.mp4",
         "poster": "video/finanzas/tax-tablas-cap07.jpg"
       },
       {
@@ -1425,7 +1425,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Zonas fiscales en empresa y tercero"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/tax-tablas-cap08.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/tax-tablas-cap08.mp4",
         "poster": "video/finanzas/tax-tablas-cap08.jpg"
       }
     ]
@@ -1470,7 +1470,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Qué es un tipo de efecto"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap01.mp4",
         "poster": "video/finanzas/cobros-cap01.jpg"
       },
       {
@@ -1504,7 +1504,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Ejemplo: transferencia pendiente"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap02.mp4",
         "poster": "video/finanzas/cobros-cap02.jpg"
       },
       {
@@ -1530,7 +1530,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Evitar que dos usuarios gestionen lo mismo"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap03.mp4",
         "poster": "video/finanzas/cobros-cap03.jpg"
       },
       {
@@ -1556,7 +1556,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Lo que ve el tercero al elegir TF"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap04.mp4",
         "poster": "video/finanzas/cobros-cap04.jpg"
       },
       {
@@ -1590,7 +1590,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Por qué parametrizar antes"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap05.mp4",
         "poster": "video/finanzas/cobros-cap05.jpg"
       },
       {
@@ -1624,7 +1624,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Pestaña Histórico"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap06.mp4",
         "poster": "video/finanzas/cobros-cap06.jpg"
       },
       {
@@ -1662,7 +1662,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Estados de origen de la acción"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap07.mp4",
         "poster": "video/finanzas/cobros-cap07.jpg"
       },
       {
@@ -1700,7 +1700,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Problema con varios efectos"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap08.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap08.mp4",
         "poster": "video/finanzas/cobros-cap08.jpg"
       },
       {
@@ -1722,7 +1722,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Próximas casuísticas: devoluciones y comisiones"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/cobros-cap09.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/cobros-cap09.mp4",
         "poster": "video/finanzas/cobros-cap09.jpg"
       }
     ]
@@ -1759,7 +1759,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Asientos fijos, no facturados y provisión"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap01.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap01.mp4",
         "poster": "video/finanzas/asientos-cap01.jpg"
       },
       {
@@ -1781,7 +1781,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Circuito provisional, validada, contabilizada"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap02.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap02.mp4",
         "poster": "video/finanzas/asientos-cap02.jpg"
       },
       {
@@ -1807,7 +1807,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Se habilita la pestaña Componentes"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap03.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap03.mp4",
         "poster": "video/finanzas/asientos-cap03.jpg"
       },
       {
@@ -1833,7 +1833,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Código de bien y serie"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap04.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap04.mp4",
         "poster": "video/finanzas/asientos-cap04.jpg"
       },
       {
@@ -1859,7 +1859,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Estados del activo"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap05.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap05.mp4",
         "poster": "video/finanzas/asientos-cap05.jpg"
       },
       {
@@ -1885,7 +1885,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Totales por elemento"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap06.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap06.mp4",
         "poster": "video/finanzas/asientos-cap06.jpg"
       },
       {
@@ -1907,7 +1907,7 @@ export const SERIES_FIN: SerieFin[] = [
             "titulo": "Otros indicadores y cierre"
           }
         ],
-        "url": "https://github.com/sergibauli/oys/releases/download/video-finanzas-v1/asientos-cap07.mp4",
+        "url": "https://github.com/oysdeister/oys/releases/download/video-finanzas-v1/asientos-cap07.mp4",
         "poster": "video/finanzas/asientos-cap07.jpg"
       }
     ]

@@ -28,8 +28,8 @@ export interface CapituloTesoreria extends CapituloVideo {
   fichero: string;
 }
 
-/** Release «video-tesoreria-v1» de sergibauli/oys; VITE_VIDEO_TESORERIA_URL la sustituye (p. ej. «video-tesoreria» en local). */
-const RELEASE = 'https://github.com/sergibauli/oys/releases/download/video-tesoreria-v1';
+/** Release «video-tesoreria-v1» de oysdeister/oys; VITE_VIDEO_TESORERIA_URL la sustituye (p. ej. «video-tesoreria» en local). */
+const RELEASE = 'https://github.com/oysdeister/oys/releases/download/video-tesoreria-v1';
 const BASE = ((import.meta.env.VITE_VIDEO_TESORERIA_URL as string | undefined) || RELEASE).replace(/\/$/, '');
 const urlClip = (f: string) => (/^https?:/.test(BASE) ? `${BASE}/${f}.mp4` : `${import.meta.env.BASE_URL}${BASE}/${f}.mp4`);
 

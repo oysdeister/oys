@@ -15,7 +15,7 @@ export interface SerieTutorialFin {
   capitulos: CapituloVideo[];
 }
 
-const RELEASE = 'https://github.com/sergibauli/oys/releases/download/video-tutoriales-fin-v1';
+const RELEASE = 'https://github.com/oysdeister/oys/releases/download/video-tutoriales-fin-v1';
 const clip = (f: string) => `${RELEASE}/${f}.mp4`;
 
 export const SERIES_TUT_FIN: SerieTutorialFin[] = [
