@@ -1,0 +1,139 @@
+{
+ "c": "gcompedh_gen_gcomalbh",
+ "fecha": "2026-11-18",
+ "area": "compras",
+ "campos": {
+  "tipdoc": {
+   "req": 1,
+   "lov": {
+    "obj": "gcompedd",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc",
+     "codser",
+     "estado"
+    ],
+    "desc": "nomdoc"
+   },
+   "reglas": [
+    {
+     "si": "vacio(tipdoc)",
+     "msg": "Campo requerido",
+     "tipo": "error",
+     "campo": "tipdoc",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "docser": {},
+  "fecha": {},
+  "codalm": {
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo"
+   }
+  },
+  "empcode": {
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode"
+   }
+  },
+  "delega": {
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo"
+   }
+  },
+  "depart": {
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart"
+   }
+  },
+  "tercer": {
+   "lov": {
+    "obj": "gproveed",
+    "clave": "codigo"
+   }
+  },
+  "imptot": {},
+  "codart": {
+   "lov": {
+    "obj": "garticul_s",
+    "clave": "codigo"
+   }
+  },
+  "varlog": {
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog"
+   }
+  }
+ },
+ "botones": {
+  "ACTION_BUTTON_2579": {
+   "l": "Generar albaranes",
+   "pre": [
+    {
+     "si": "cuenta('gcompedl_gen_sel','sel',1) == 0",
+     "msg": "No se ha seleccionado ninguna línea de pedido.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "gcomalbh",
+      "valores": {
+       "tipdoc": "busca('gcompedd','codigo',tipdoc,'comalb')",
+       "empcode": "empcode",
+       "delega": "delega",
+       "depart": "depart",
+       "almori": "codalm",
+       "tercer": "tercer",
+       "fecmov": "hoy()",
+       "estcab": "'V'",
+       "estado": "'N'",
+       "docproc": "'IPa'"
+      }
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "gcompedl",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "canser": "canped",
+       "canpen": "0"
+      }
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "gcompedh",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "estado": "'S'"
+      }
+     }
+    }
+   ],
+   "nota": "Botón azul (#03A9F4) arriba a la derecha, sin confirmación ni diálogo. Llama a Ax.db.call('gcompedh_GenGcomalbh', tipdoc, form.gcompedh_gen_sel, form.gcompedl_gen_sel). Hay que marcar el pedido (panel 1) Y sus líneas (panel 2). Sin nada marcado no hace nada ni avisa; con el pedido marcado pero sin líneas: «No se ha seleccionado ninguna línea de pedido.». Con línea marcada genera y VALIDA un albarán del tipo gcompedd.comalb (ACPC) por proveedor: CAP-PED-02 (4 x 12,50) → 0AC000017 (cabid 42, ACPC, CAPNC, empresa 0/CENTRAL/C, almacén 0, fecha hoy, importe 50,00, Validado, Pendiente de facturar, Procesos IPa); la línea pasa a canser 4/canpen 0 y el pedido a Servido, y desaparece del filtro Pendiente. Sin mensaje de éxito: el panel «Albaranes de compras» queda en «Sin datos» (la traza SSE muestra «VALIDATE HEAD gcommovh [42]»)."
+  }
+ },
+ "notas": [
+  "Menú: Gestión › Compras › Albaranes › Procesos › «Generación de albaranes…». QBE (REPORT): variable obligatoria Tipo documento (lupa gcompedd: Tipo pedido, Descripción, Serie, Estado) y columnas de filtro Pedido, Fecha pedido, Almacén, Empresa, Delegación, Departamento, Proveedor, Importe neto, Artículo, VLP. Ejecutar sin tipo → «Campo requerido» bajo el campo.",
+  "Resultado (vtable/gcompedh_gen_gcomalbh/form/1) con tres paneles: «Pedidos de compras» (gcompedh_gen_sel, selección múltiple, filtros rápidos Pendiente [defecto] / Servido / Todos; columnas Situación, Tipo documento, Empresa, Delegación, Departamento, Fecha pedido, Pedido, Referencia [editable], Proveedor, Nombre, Importe neto, Inicio y Fin entrega, Estado, Situación); «Línea del pedido» (gcompedl_gen_sel, se carga al marcar pedidos; editables Cantidad pedida, Lote, Referencia fabricante, Fecha caducidad, Precio); «Albaranes de compras» (gcomalbh_list).",
+  "Solo salen pedidos validados de tipos con Tipo de albarán (gcompedd.comalb) informado; en TUTORIAL solo PC → ACPC.",
+  "El importe neto de la cabecera del pedido sale 0,00 aunque la línea vale 50,00 (la cabecera no se recalculó al importar líneas)."
+ ]
+}

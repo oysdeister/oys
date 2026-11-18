@@ -1,0 +1,393 @@
+{
+ "c": "ccomfach",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(1==1)",
+   "mayus": 1
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tercer": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccomfacd",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecfac": {
+   "req": 1
+  },
+  "feccon": {
+   "req": 1
+  },
+  "refexterna": {
+   "reqSi": "!(ccomfacd.autnum == 1)"
+  },
+  "impfac": {
+   "req": 1,
+   "def": 0
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "impnet": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipefe": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo"
+   }
+  },
+  "tippag": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "contab": {
+   "ro": "1==1",
+   "mayus": 1
+  },
+  "facidx": {
+   "ro": "1==1"
+  },
+  "fecope": {
+   "req": 1,
+   "calc": "fecfac"
+  },
+  "fecliq": {
+   "ro": "1==1"
+  },
+  "docrec": {
+   "lov": {
+    "obj": "ccomfach",
+    "clave": "docser"
+   }
+  },
+  "emp_ciftyp": {
+   "req": 1,
+   "mayus": 1
+  },
+  "emp_cifiss": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax"
+   }
+  },
+  "emp_cif": {
+   "req": 1,
+   "mayus": 1
+  },
+  "codact": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoact",
+    "clave": "codigo"
+   }
+  },
+  "ciftyp": {
+   "req": 1,
+   "mayus": 1
+  },
+  "cifiss": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax"
+   }
+  },
+  "cif": {
+   "req": 1,
+   "mayus": 1
+  },
+  "idioma": {
+   "req": 1,
+   "def": "es",
+   "lov": {
+    "obj": "ctipoidi",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "doclock": {
+   "def": "V",
+   "mayus": 1
+  },
+  "valpen": {
+   "ro": "1==1",
+   "mayus": 1
+  },
+  "movhis": {
+   "ro": "1 ==1",
+   "def": 0
+  },
+  "dtocab": {
+   "req": 1,
+   "def": 0
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctertipo",
+    "clave": "cuenta"
+   }
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "moneda == cempresa.divemp",
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!(((cambio == null) || (cambio > 0)))",
+     "msg": "El cambio debe ser mayor que 0.",
+     "tipo": "error",
+     "campo": "cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "camope": {
+   "req": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!(((camope == null || [0,1].includes(camope))))",
+     "msg": "El factor de cálculo es Multiplicar [0] o Dividir [1].",
+     "tipo": "error",
+     "campo": "camope",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nombre": {
+   "req": 1
+  },
+  "poblac": {
+   "lov": {
+    "obj": "cmunicip",
+    "clave": "nommun"
+   }
+  },
+  "codnac": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo"
+   }
+  },
+  "codprv": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "codigo"
+   }
+  },
+  "codpos": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cmunicip",
+    "clave": "codpos"
+   }
+  },
+  "codper": {
+   "req": 1,
+   "mayus": 1,
+   "calc": "tercer",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numban": {
+   "lov": {
+    "obj": "cterbanc",
+    "clave": "numban",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "agente": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "zimdel": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "zimter": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dockey": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_dockey",
+    "clave": "dock_code"
+   }
+  },
+  "grpfis": {
+   "req": 1,
+   "def": 0
+  },
+  "imptot": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((!(fecrec == null)) && (!(docrec == null || docrec.length === 0))) || (((fecrec == null)) && ((docrec == null || docrec.length === 0)))))",
+   "msg": "La fecha documento rectificativo y documento rectificativo ambos deben ser nulos o no nulos.",
+   "tipo": "error",
+   "campo": "fecrec",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((fecfac == null || fecrec == null) || (fecfac.getTime() >= fecrec.getTime())))",
+   "msg": "La fecha Factura debe ser Mayor igual que Fecha documento rectificativo.",
+   "tipo": "error",
+   "campo": "fecrec",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((zimdel == zimter) && (!(codprv == null || codprv.length === 0))) && (!(codpos == null || codpos.length === 0))) || (zimdel != zimter)))",
+   "msg": "Si la transacción es local, provincia y código postal son obligados",
+   "tipo": "error",
+   "campo": "zimdel",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_GEN_AUTOFAC": {
+   "l": "Generar e-autofactura",
+   "nota": "Activo si contab != null && ccomfacd.autnum == 1 && tipdoc == 'FA'; condición de servidor; pide confirmación; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "nota": "Activo si contab == null && estcab != 'X'; pide confirmación; en el menú Acciones"
+  },
+  "BUT_COPIAR_VEN": {
+   "l": "Copiar en ventas",
+   "nota": "Activo si estcab == 'V' && contab != null && venidx == null; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si estcab != 'P'; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_DESCONTABILIZAR": {
+   "l": "Descontabilizar",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; en el menú Acciones"
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "nota": "Siempre activo; condición de servidor; en el menú Acciones"
+  },
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'"
+  },
+  "BUT_ACTIVAR": {
+   "l": "Activar",
+   "nota": "Activo si estcab != 'P' && contab == null"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, X=Cancelada, E=Bloqueado, I=No válida, V=Validada",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

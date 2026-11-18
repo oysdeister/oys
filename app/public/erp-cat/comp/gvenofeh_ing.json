@@ -1,0 +1,317 @@
+{
+ "c": "gvenofeh_ing",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(context.isOnInsert())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "tercer": {
+   "reqSi": "!(!context.isOnUpdate())",
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenofed_ing",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecofe": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "imptot": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "tipdir": {
+   "reqSi": "!(context.isOnInsert())",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "N",
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['N','C','A'].includes(estado))))",
+     "msg": "El estado debe ser: [N] Pendiente, [C] Cursada, [A] Anulada",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1
+  },
+  "docori": {
+   "reqSi": "!(gvenofed_ing.tabori == null)",
+   "ro": "context.isOnUpdate() || gvenofed_ing.tabori == null"
+  },
+  "divisa": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0",
+   "reglas": [
+    {
+     "si": "!(((cambio == null) || (cambio != 0)))",
+     "msg": "El cambio debe ser diferente a cero.",
+     "tipo": "error",
+     "campo": "cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecini": {
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "defExpr": "hoy()"
+  },
+  "tipefe": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo"
+   }
+  },
+  "frmpag": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo"
+   }
+  },
+  "valpen": {
+   "ro": "1==1"
+  },
+  "movest": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "movhis": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "terenv": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "direnv": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codnac": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpos": {
+   "mayus": 1
+  },
+  "codprv": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dtoge1": {
+   "ro": "gvenofeh_ing.tercer == null || gvenofed_ing.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "dtoge2": {
+   "ro": "gvenofeh_ing.tercer == null || gvenofed_ing.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "dtoge3": {
+   "ro": "gvenofeh_ing.tercer == null || gvenofed_ing.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "dtopp": {
+   "ro": "gvenofeh_ing.tercer == null || gvenofed_ing.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "codpre": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parpreh",
+    "clave": "codpre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpar": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parprel",
+    "clave": "codpar"
+   }
+  },
+  "portes": {
+   "req": 1,
+   "def": "D",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((portes == null || ['P','D'].includes(portes))))",
+     "msg": "Los valores posibles del indicativo de portes son: [P]agados, [D]ebidos.",
+     "tipo": "error",
+     "campo": "portes",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores posibles del indicativo de movimientos estadísticos generados son: [S]i, [N]o, [M]odificar, [B]orrar",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agente": {
+   "lov": {
+    "obj": "grep_agente",
+    "clave": "codigo"
+   }
+  },
+  "doclock": {
+   "def": "V"
+  },
+  "porgar": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0",
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha de inicio de vigencia de la oferta ha de ser anterior o igual a la fecha final.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((codpar == null || codpar.length === 0)) || ((!(codpar == null || codpar.length === 0)) && (!(codpre == null || codpre.length === 0)))))",
+   "msg": "No se puede informar la partida sin indicar antes el presupuesto.",
+   "tipo": "error",
+   "campo": "codpre",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'"
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P'"
+  },
+  "BUT_GENERAR_ORDENES_PRODUCCION": {
+   "l": "Generar orden de producción",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; en el menú Acciones"
+  },
+  "BUT_GENERAR_PARTIDAS": {
+   "l": "Generar partidas",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si estcab != 'P'; condición de servidor; pide confirmación; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

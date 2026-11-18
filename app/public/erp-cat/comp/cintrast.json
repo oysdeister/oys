@@ -1,0 +1,228 @@
+{
+ "c": "cintrast",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "clase": {
+   "req": 1,
+   "mayus": 1
+  },
+  "fecha": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "docser": {
+   "req": 1,
+   "mayus": 1
+  },
+  "codent": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nacori": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   }
+  },
+  "nacdes": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   }
+  },
+  "codpar": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cexpesta",
+    "clave": "codest",
+    "cols": [
+     "codest",
+     "coment",
+     "unisup"
+    ],
+    "desc": "coment"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codpar) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codpar)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpar",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "canmov": {
+   "req": 1
+  },
+  "moneda": {
+   "req": 1,
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(moneda)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impdiv": {
+   "req": 1
+  },
+  "pesnet": {
+   "req": 1
+  },
+  "codnat": {
+   "req": 1,
+   "mayus": 1,
+   "def": "11",
+   "lov": {
+    "obj": "cinnatra",
+    "clave": "codnat",
+    "cols": [
+     "codnat",
+     "nomnat",
+     "grpnat"
+    ],
+    "desc": "nomnat"
+   }
+  },
+  "codest": {
+   "ro": "!clase",
+   "mayus": 1,
+   "lov": {
+    "obj": "cinreges",
+    "clave": "codreg"
+   }
+  },
+  "rowid": {
+   "ro": "1==1"
+  },
+  "apteid": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "docref": {
+   "req": 1
+  },
+  "codprv": {
+   "req": 1,
+   "ro": "!empcode",
+   "mayus": 1,
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "codigo"
+   }
+  },
+  "codtra": {
+   "mayus": 1
+  },
+  "puerto": {
+   "lov": {
+    "obj": "cinpuert",
+    "clave": "codpue",
+    "cols": [
+     "codpue",
+     "nompue"
+    ],
+    "desc": "nompue"
+   }
+  },
+  "import": {
+   "req": 1
+  },
+  "tabori": {
+   "ro": "1==1"
+  },
+  "tabid": {
+   "ro": "1==1"
+  },
+  "cifter": {
+   "mayus": 1
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((codtra == null || !['1','4'].includes(codtra))) || (((codtra == null || ['1','4'].includes(codtra))) && (!(puerto == null || puerto.length === 0)))))",
+   "msg": "La partida estadística no puede ser Transporte marítimo [1] o Transporte por vía aérea [4] o, la partida estadística puede ser [1] o [4] y el Puerto no nulo.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((tabori == null || tabori.length === 0)) && ((tabid == null))) || ((!(tabori == null || tabori.length === 0)) && (!(tabid == null)))))",
+   "msg": "La tabla origen y el identificador origen, ambos deben ser nulos o no nulos.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Intrastat › Registro",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

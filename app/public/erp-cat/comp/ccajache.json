@@ -1,0 +1,369 @@
+{
+ "c": "ccajache",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "fecche": {
+   "defExpr": "hoy()"
+  },
+  "iban": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "false",
+     "msg": "No válido",
+     "tipo": "error",
+     "campo": "iban",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "refban": {
+   "req": 1,
+   "mayus": 1
+  },
+  "numrem": {
+   "ro": "true",
+   "lov": {
+    "obj": "ccajarem",
+    "clave": "remesa",
+    "filtro": "(vacio(codcaj) || l.codcaj == codcaj) && (vacio(moneda) || l.moneda == moneda)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estado": {
+   "def": "R",
+   "ro": "true",
+   "mayus": 1
+  },
+  "import": {
+   "req": 1
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon",
+     "codint",
+     "symbol"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(moneda))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "apteid": {
+   "def": 0,
+   "ro": "true",
+   "lov": {
+    "obj": "ccajache",
+    "clave": "apteid",
+    "cols": [
+     "apteid",
+     "codcaj",
+     "proche",
+     "secche"
+    ],
+    "desc": "codcaj",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numero": {
+   "req": 1,
+   "lov": {
+    "obj": "ccajamov",
+    "clave": "cajaid",
+    "cols": [
+     "cajaid",
+     "codcaj",
+     "empcode",
+     "proyec"
+    ],
+    "desc": "codcaj",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "flujid": {
+   "lov": {
+    "obj": "taptfluj",
+    "clave": "apteid",
+    "cols": [
+     "apteid",
+     "codflu",
+     "monflu",
+     "gtsfin"
+    ],
+    "desc": "codflu",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcaj": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajadef",
+    "clave": "codcaj",
+    "cols": [
+     "codcaj",
+     "nomcaj",
+     "empcode",
+     "ctafin"
+    ],
+    "desc": "nomcaj",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "proche": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "filtro": "(vacio(codcaj) || l.codcaj == codcaj) && (vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "secche": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(secche) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(secche))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "secche",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1,
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(sistem))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecmov": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "cantid1": {
+   "req": 1,
+   "def": 0
+  },
+  "cantid2": {
+   "req": 1,
+   "def": 0
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "filtro": "(vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codaux": {
+   "mayus": 1
+  },
+  "ctaaux": {
+   "ro": "true",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxl",
+    "clave": "ctaaux",
+    "filtro": "(vacio(codaux) || l.codaux == codaux) && (vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctaaux))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaexp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctaexp))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "centro": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen"
+    ],
+    "desc": "nomcen",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(centro) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(centro))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "centro",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpre": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codpre) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codpre))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpar": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codpar) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codpar))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpar",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ciftyp": {
+   "reglas": [
+    {
+     "si": "!vacio(ciftyp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ciftyp))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ciftyp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cifiss": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(cifiss) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(cifiss))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "cifiss",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nif": {
+   "mayus": 1
+  },
+  "codcon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "coment"
+    ],
+    "desc": "coment",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codcon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codcon))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcon",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "botones": {
+  "BUT_DESHACER_IMPAGADO": {
+   "l": "Deshacer impagado",
+   "nota": "Desmarca los cheques que hayan sido marcados como impagados.. Visible/habilitado si: estado == 'I'. pide confirmación"
+  },
+  "BUT_CHEQUE_IMPAGADO": {
+   "l": "Cheque impagado",
+   "nota": "Marca los cheques que hayan sido impagados.. Visible/habilitado si: estado == 'G'. pide confirmación"
+  },
+  "BUT_DESREMESAR": {
+   "l": "Excluir de remesa",
+   "nota": "Excluye el cheque de la remesa a la que estaba asignada.. Visible/habilitado si: numrem != null && estado != 'G' && estado != 'I' && ccajamov.estado == 'A'. pide confirmación"
+  },
+  "BUT_REMESAR": {
+   "l": "Incluir en remesa",
+   "nota": "El cheque pasa a formar parte de una remesa.. Visible/habilitado si: numrem == null || numrem == 0. pide confirmación. abre diálogo con campos"
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'CHEQUES DE CAJA', editMode ROW, 0 filas en la demo; permisos insert=False update=True delete=True.",
+  "no probado: Deshacer impagado, Cheque impagado, Excluir de remesa, Incluir en remesa — TUTORIAL sin cheques de caja; documentados solo por metadatos (diálogo de Incluir en remesa no capturado)."
+ ]
+}

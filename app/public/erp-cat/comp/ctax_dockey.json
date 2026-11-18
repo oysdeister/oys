@@ -1,0 +1,86 @@
+{
+ "c": "ctax_dockey",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "dock_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_dockey",
+    "clave": "dock_code",
+    "cols": [
+     "dock_code",
+     "dock_name",
+     "dock_estado",
+     "dock_zonfis"
+    ],
+    "desc": "dock_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dock_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dock_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dock_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dock_name": {
+   "req": 1
+  },
+  "dock_zonfis": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name",
+    "noExiste": "Missing key in referenced table for referential constraint (informix.f_ctax_dockey1)."
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dock_zonfis) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dock_zonfis)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dock_zonfis",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(dock_zonfis) && !existe('ctax_zone','zone_code',dock_zonfis)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_dockey1).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "dock_zonfis"
+    }
+   ]
+  },
+  "dock_estado": {
+   "req": 1,
+   "def": "A"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Clave fiscal por documento",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ctax_dockey.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_dockey.dock_name).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila)."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_dockey','dock_code',dock_code)",
+   "msg": "Unique constraint (informix.p_ctax_dockey) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "dock_code"
+  }
+ ]
+}

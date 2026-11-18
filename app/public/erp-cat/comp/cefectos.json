@@ -1,0 +1,838 @@
+{
+ "c": "cefectos",
+ "fecha": "2026-11-18 tesoreria/A-cartera",
+ "area": "tesoreria",
+ "campos": {
+  "numero": {
+   "ro": "1==1"
+  },
+  "empcode": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "clase": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    },
+    {
+     "si": "!(((clase == null || ['C','P'].includes(clase))))",
+     "msg": "La clase puede ser Cobro [C] o Pago [P].",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tercer": {
+   "ro": "!__ins || vacio(clase)",
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(tercer)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "cuenta": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(cuenta)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "cuenta",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "jusser": {
+   "ro": "!__ins",
+   "mayus": 1,
+   "def": "CA"
+  },
+  "docser": {
+   "ro": "!__ins",
+   "def": "CA"
+  },
+  "estado": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cefecest",
+    "clave": "codigo",
+    "filtro": "l.clase == clase",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(estado)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "numefe": {
+   "ro": "!__ins",
+   "req": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "vacio(numefe)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "numefe",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecha": {
+   "ro": "!__ins",
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(fecha)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "fecha",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "fecven": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(fecven)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "fecven",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "import": {
+   "ro": "moneda == busca('cempresa','empcode',empcode,'divemp') || !__ins",
+   "req": 1,
+   "def": 0,
+   "calc": "camope == 1 ? impdiv / cambio : impdiv * cambio",
+   "reglas": [
+    {
+     "si": "vacio(import)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "import",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impdiv": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(impdiv)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "impdiv",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "moneda": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "def": "EUR",
+   "reglas": [
+    {
+     "si": "vacio(moneda)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "tipefe": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo",
+    "filtro": "l.clase == clase",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(tipefe)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "tipefe",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "genpos": {
+   "ro": "1==1",
+   "mayus": 1
+  },
+  "remesa": {
+   "ro": "!__ins"
+  },
+  "ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "filtro": "l.empcode == empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "caduca": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "def": "N",
+   "reglas": [
+    {
+     "si": "vacio(caduca)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "caduca",
+     "fuente": "meta"
+    },
+    {
+     "si": "!(((caduca == null || ['S','N','P','R'].includes(caduca))))",
+     "msg": "La caducidad es Si [S] , No [N] , Propuesto [P] u Ordenado [R].",
+     "tipo": "error",
+     "campo": "caduca",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "feccon": {
+   "ro": "1==1",
+   "defExpr": "hoy()"
+  },
+  "apteid": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "capuntes",
+    "clave": "id_apunte",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "refext_serie": {
+   "ro": "!__ins",
+   "mayus": 1
+  },
+  "refext_numero": {
+   "mayus": 1
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(proyec)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(seccio)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "sistem": {
+   "ro": "!__ins",
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "reglas": [
+    {
+     "si": "vacio(sistem)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codper": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(codper)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "codper",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "numban": {
+   "lov": {
+    "obj": "cterbanc",
+    "clave": "numban",
+    "filtro": "l.codigo == codper",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "impiva": {
+   "ro": "!__ins",
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(impiva)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "impiva",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impret": {
+   "ro": "!__ins",
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(impret)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "impret",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "gastos": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(gastos)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "gastos",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "difcam": {
+   "ro": "moneda == busca('cempresa','empcode',empcode,'divemp')  || !__ins",
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(difcam)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "difcam",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipdoc": {
+   "mayus": 1
+  },
+  "cambio": {
+   "ro": "moneda == busca('cempresa','empcode',empcode,'divemp') || !__ins",
+   "req": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "vacio(cambio)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "camope": {
+   "ro": "!__ins",
+   "req": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "vacio(camope)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "camope",
+     "fuente": "meta"
+    },
+    {
+     "si": "!(((camope == null || [0,1].includes(camope))))",
+     "msg": "El calculo solo puede ser 'Multiplicar' o 'Dividir'.",
+     "tipo": "error",
+     "campo": "camope",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impppa": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(impppa)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "impppa",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codppa": {
+   "mayus": 1
+  },
+  "feccam": {
+   "ro": "1==1"
+  },
+  "agente": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "parest": {
+   "mayus": 1
+  },
+  "numori": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "numdes": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "numges": {
+   "ro": "1==1"
+  },
+  "opeant": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "openum": {
+   "ro": "1==1",
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!(((openum == null) || (openum >= 1)))",
+     "msg": "La acción actual debe ser mayor o igual que 1.",
+     "tipo": "error",
+     "campo": "openum",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "usable": {
+   "ro": "1==1",
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!(((usable == null || [0,1].includes(usable))))",
+     "msg": "Solo puede ser 'Puede ser seleccionado' o 'No puede ser seleccionado'",
+     "tipo": "error",
+     "campo": "usable",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [],
+ "botones": {
+  "BUT_EVOLUCIONAR_ESTADO": {
+   "l": "Evolucionar estado",
+   "dialogoTit": "Evolucionar estado",
+   "dialogo": [
+    {
+     "n": "cefeacti_codigo_efe",
+     "l": "Acción",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "up": 1,
+     "fk": "cefeacti",
+     "h": "Acción de cartera (cefeacti) válida para la clase, estado y tipo de efecto de origen (cefeacti_est)"
+    },
+    {
+     "n": "feccon",
+     "l": "Fecha contabilización",
+     "t": "d",
+     "req": 1,
+     "ro": "feccon_out != 'P'"
+    },
+    {
+     "n": "cefectos_ctafin",
+     "l": "Cuenta financiera",
+     "t": "s",
+     "sz": 10,
+     "up": 1,
+     "fk": "cbancpro",
+     "ro": "ctafin_out == 0"
+    },
+    {
+     "n": "pcs_impban",
+     "l": "Importe banco",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "ro": "import_out == 0"
+    },
+    {
+     "n": "gasto1",
+     "l": "Importe gasto en divisa 1",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "ro": "gastos_out == 0"
+    },
+    {
+     "n": "gasto2",
+     "l": "Importe gasto en divisa 2",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "ro": "gastos_out == 0"
+    },
+    {
+     "n": "codper",
+     "l": "Perceptor",
+     "t": "s",
+     "sz": 12,
+     "up": 1,
+     "fk": "ctercero",
+     "ro": "domban_out == 0",
+     "def": "${codper}"
+    },
+    {
+     "n": "fecven",
+     "l": "Vencimiento",
+     "t": "d",
+     "ro": "fecven_out == 0",
+     "def": "${fecven}"
+    },
+    {
+     "n": "tipefe",
+     "l": "Tipo de efecto",
+     "t": "s",
+     "sz": 3,
+     "req": 1,
+     "up": 1,
+     "fk": "ctipoefe",
+     "ro": "tipefe_out == 0"
+    },
+    {
+     "n": "fecaux",
+     "l": "Fecha auxiliar",
+     "t": "d",
+     "ro": "fecven_out == 0",
+     "def": "${fecaux}"
+    },
+    {
+     "n": "numban",
+     "l": "Domiciliación",
+     "t": "i",
+     "fk": "cterbanc",
+     "ro": "domban_out == 0",
+     "def": "${numban}"
+    },
+    {
+     "n": "refban",
+     "l": "Referencia bancaria",
+     "t": "s",
+     "sz": 12,
+     "ro": "domban_out == 0",
+     "def": "${refban}"
+    },
+    {
+     "n": "cambio",
+     "l": "Cambio",
+     "t": "n",
+     "sz": 12,
+     "sc": 6,
+     "ro": "difcam_out == 0",
+     "def": "${cambio}"
+    },
+    {
+     "n": "impdiv",
+     "l": "Importe divisa",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "req": 1,
+     "ro": "import_out == 0",
+     "def": "${impdiv}"
+    },
+    {
+     "n": "camope",
+     "l": "Cálculo",
+     "t": "i",
+     "o": [
+      {
+       "k": "1",
+       "v": "Dividir"
+      },
+      {
+       "k": "0",
+       "v": "Multiplicar"
+      }
+     ],
+     "ro": "difcam_out == 0",
+     "def": "${camope}"
+    },
+    {
+     "n": "import",
+     "l": "Importe local",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "ro": 1,
+     "def": "${import}"
+    },
+    {
+     "n": "tipdoc",
+     "l": "Auxiliar",
+     "t": "s",
+     "sz": 20,
+     "ro": "tipdoc_out == 0",
+     "def": "${tipdoc}"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "ro": "coment_out == 0",
+     "def": "${coment}"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "opeant": "openum",
+      "openum": "openum + 1",
+      "estado": "busca('cefeacti','codigo',ent.cefeacti_codigo_efe,'estfin') || estado",
+      "numges": "siguiente('cefecges_pcs','pcs_seqno')",
+      "feccam": "ent.feccon || hoy()",
+      "usable": "1",
+      "coment": "ent.coment || coment"
+     }
+    },
+    {
+     "crea": {
+      "obj": "cefecges_pcs",
+      "valores": {
+       "pcs_seqno": "numges",
+       "pcs_clase": "clase",
+       "pcs_accion": "ent.cefeacti_codigo_efe",
+       "pcs_fecpro": "ent.feccon || hoy()",
+       "pcs_estado": "'C'",
+       "pcs_empcode": "empcode",
+       "pcs_proyec": "proyec",
+       "pcs_seccio": "seccio",
+       "pcs_moneda": "moneda",
+       "pcs_impdiv": "impdiv",
+       "pcs_import": "import",
+       "pcs_ctafin": "ent.cefectos_ctafin || ctafin",
+       "pcs_tipgen": "0"
+      }
+     }
+    },
+    {
+     "crea": {
+      "obj": "cefechis",
+      "valores": {
+       "numero": "numero",
+       "estado": "estado",
+       "openum": "openum",
+       "numges": "numges",
+       "clase": "clase",
+       "tercer": "tercer",
+       "import": "import"
+      }
+     }
+    }
+   ],
+   "nota": "Abre el diálogo de acción de cartera (POST action/BUT_EVOLUCIONAR_ESTA/fields/1). En la demo TUTORIAL la lupa y la validación de «Acción» fallan siempre (fk/virtual_action/cefeacti_codigo_efe/autocomplete|verify → 500 «No such column 'emi_repres_nif'…»), así que el botón no se puede completar. Pasos deducidos del mismo motor de acciones observado al Cerrar una gestión: estado = cefeacti.estfin, gestión automática (pcs_tipgen 0) cerrada, fila en cefechis."
+  },
+  "BUT_RETROCEDER": {
+   "l": "Retroceder",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Retroceder' ?",
+   "pasos": [
+    {
+     "set": {
+      "numges": "null",
+      "opeant": "0",
+      "openum": "openum + 1",
+      "feccam": "null",
+      "coment": "null"
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "El efecto vuelve al estado anterior registrado en el histórico (cefechis)."
+     }
+    }
+   ],
+   "nota": "Solo habilitado (expresión de servidor) si la última gestión del efecto es automática (pcs_tipgen 0, generada por Evolucionar estado), sin remesa ni movimiento de tesorería (taptcuen.gesdes), caduca != 'P' y el usuario tiene autorización RETCAR. Confirmación genérica literal. Probado solo hasta el diálogo (efecto 20, ajeno) y cancelado. El retorno observado al Abrir la gestión 15: estado anterior, numges null, opeant 0, openum+1, feccam null, coment null."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "BQ",
+    "por": "PBLQ (Cerrar gestión / Evolucionar estado)"
+   },
+   {
+    "de": [
+     "BQ"
+    ],
+    "a": "PE",
+    "por": "Abrir gestión / Retroceder / PDBQ"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "AU",
+    "por": "PAUT"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "OP",
+    "por": "ORD / PTES"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "PA",
+    "por": "PEFE / PAGD / CONBD"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "RG",
+    "por": "PREG"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "CM",
+    "por": "PCMP"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "AF",
+    "por": "LAEN"
+   },
+   {
+    "de": [
+     "PE"
+    ],
+    "a": "PR",
+    "por": "RPSCTP (remesa)"
+   }
+  ]
+ },
+ "notas": [
+  "Ficha real: form/1 con q={cols:{numero}} (la ruta form/N es posicional). Layouts: «Cartera de efectos» (cajas Unidad de negocio, Fechas, Referencias, Tercero, Estados, Importes, Información económica, Información financiera, Auxiliares, Notas, Información complementaria, Datos de control, Cronología cefectos_vtable_timeline), «Historia efecto» (cefechis_rep), «Asientos contables» si apteid > 0 (capuntes_report), «Tesorería» si taptcuen.tesoreria > 0 (cefectos_tesor_report).",
+  "Menú ⌄ del título (enlaces): Histórico (cefechis), Remesas (oculto si no aplica), Tesorería a medio plazo (tmovites), Registros fiscales (oculto si no aplica), Facturas compras/Facturas ventas (gcomfach/gvenfach por apteid), Asiento origen (casientos por apteid).",
+  "Casi todo es solo lectura al modificar (readonly_expr context.isOnUpdate()); editables en modificación: fecven, impdiv, ctafin, refban, proyec, seccio, codper, numban, gastos, tipdoc, impliq, impppa, codppa, fecaux, fecliq, agente, parest, coment, auxiliares.",
+  "Mensajes del cliente: «Este campo es obligatorio.» (obligatorio vacío) y «Error en la validación» (código inexistente en una lupa: verify devuelve 204).",
+  "Bug de la demo: Evolucionar estado no se puede completar (error «Se ha producido un error · No such column 'emi_repres_nif' in [...]»). Las acciones se ejecutan en la práctica por Gestiones (cefecges_pcs) → Cerrar."
+ ]
+}

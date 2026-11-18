@@ -1,0 +1,80 @@
+{
+ "c": "cinmelem_split",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "SEQNO": {
+   "req": 1,
+   "lov": {
+    "obj": "cinmelem",
+    "clave": "seqno",
+    "cols": [
+     "seqno",
+     "codinm",
+     "codele",
+     "nomele"
+    ],
+    "desc": "nomele"
+   }
+  },
+  "SPLIT_TYPE": {
+   "req": 1
+  },
+  "VALOR": {
+   "req": 1
+  },
+  "NUM_SPLITS": {
+   "req": 1,
+   "def": 1
+  }
+ },
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "confirm": "¿Está seguro de ejecutar el proceso?",
+   "dialogo": [
+    {
+     "n": "SEQNO",
+     "l": "ID.",
+     "t": "i",
+     "req": 1,
+     "fk": "cinmelem"
+    },
+    {
+     "n": "SPLIT_TYPE",
+     "l": "Tipo de división",
+     "t": "s",
+     "req": 1,
+     "o": [
+      {
+       "k": "P",
+       "v": "Porcentaje"
+      },
+      {
+       "k": "I",
+       "v": "Importe"
+      }
+     ]
+    },
+    {
+     "n": "VALOR",
+     "l": "Porcentaje o importe",
+     "t": "n",
+     "req": 1
+    },
+    {
+     "n": "NUM_SPLITS",
+     "l": "Número de divisiones",
+     "t": "i",
+     "req": 1,
+     "def": "1"
+    }
+   ],
+   "nota": "Misma lógica que el botón «Dividir elemento» de Elementos (BTN_GEN_DIV), con los mismos mensajes. Probado sobre 0000001 (importe 1.000, 2 divisiones): no hizo cambios porque la serie AF del bien vuelve a dar el código «AF» ya existente (por el botón: «Unique constraint (informix.p_cinmelem) violated.»)."
+  }
+ },
+ "notas": [
+  "«Proceso que genera la división de un elemento mediante porcentaje o importe».",
+  "probado: Ejecutar (sin efecto por la serie; ver nota)"
+ ]
+}

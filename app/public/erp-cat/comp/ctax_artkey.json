@@ -1,0 +1,78 @@
+{
+ "c": "ctax_artkey",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "artk_nature": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(artk_nature) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(artk_nature)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "artk_nature",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "artk_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_artkey",
+    "clave": "artk_code",
+    "cols": [
+     "artk_code",
+     "artk_name",
+     "artk_estado",
+     "artk_nature"
+    ],
+    "desc": "artk_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(artk_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(artk_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "artk_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "artk_name": {
+   "req": 1
+  },
+  "artk_estado": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Clave fiscal por artículo",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ctax_artkey.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_artkey.artk_nature).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila).",
+  "Naturaleza fuera de la lista (p. ej. «C»): «Check constraint (informix.c_ctax_artkey1) failed.»."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_artkey','artk_code',artk_code)",
+   "msg": "Unique constraint (informix.p_ctax_artkey) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "artk_code"
+  },
+  {
+   "si": "!vacio(artk_nature) && !['B','S'].includes(artk_nature)",
+   "msg": "Check constraint (informix.c_ctax_artkey1) failed.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "artk_nature"
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "c": "textract_concaut",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   }
+  },
+  "ctafin": {
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "ctafin",
+     "nomcta",
+     "iban"
+    ],
+    "desc": "nomcta"
+   }
+  },
+  "codban": {
+   "lov": {
+    "obj": "cbancdom",
+    "clave": "codban",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "orden": {
+   "lov": {
+    "obj": "textract",
+    "clave": "orden",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "concom": {
+   "lov": {
+    "obj": "tconcomu",
+    "clave": "codigo",
+    "noExiste": "Error en la validación",
+    "desc": "nomcom"
+   }
+  },
+  "conpro": {
+   "lov": {
+    "obj": "tconprop",
+    "clave": "codpro",
+    "noExiste": "Error en la validación",
+    "desc": "nompro"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(empcode)",
+   "msg": "Campo requerido",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "empcode"
+  }
+ ],
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "confirm": "¿Está seguro de ejecutar el proceso?",
+   "dialogoTit": "CONCILIACIÓN AUTOMÁTICA DE EXTRACTOS BANCARIOS",
+   "nota": "Proceso: concilia los extractos pendientes del filtro con los movimientos de tesorería y devuelve un informe (report/textract_concaut) con columnas Empresa, Nombre empresa, Cuenta financiera, Fecha operación, Orden, Importe extracto, Conciliado, Mensajes. Probado con Empresa 0 + CAPT_BCO: concilió el extracto 5 (33,33) con el movimiento manual 6 (-33,33) por importe (tconcili 5); el extracto 6 (10,00) quedó en el informe sin conciliar y sin mensaje."
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Tesorería › Procesos › Conciliación automática. Aviso azul fijo: «Conciliación automática de los extractos bancarios, por empresa y cuenta financiera. Muestra como resultado, los movimientos pendientes de conciliar y los finalmente conciliados.»",
+  "Columnas de consulta: Orden, Banco, Empresa*, Cuenta financiera, Fecha operación, Fecha valor, Concepto común, Concepto propio, Agenci, Documento, Referencia 1, Referencia 2, Descripción.",
+  "La conciliación usa la parametrización de la operación (toperfin.refban: N no considerar → por importe; D documento; 1/2 referencia) y la tolerancia de titescfg.",
+  "probado: Ejecutar consulta sin Empresa («Campo requerido»), confirmación y ejecución con Empresa 0 + CAPT_BCO (concilió el extracto CAP 5)."
+ ]
+}

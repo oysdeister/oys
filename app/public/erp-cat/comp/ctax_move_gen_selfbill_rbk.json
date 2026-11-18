@@ -1,0 +1,142 @@
+{
+ "c": "ctax_move_gen_selfbill_rbk",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy().slice(0,8)+'01'"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "taxh_empcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "taxh_natfac": {
+   "def": "C",
+   "mayus": 1
+  },
+  "taxh_ejefis": {
+   "defExpr": "Number(hoy().slice(0,4))",
+   "lov": {
+    "obj": "cejercic",
+    "clave": "numero"
+   }
+  },
+  "taxh_perfis": {
+   "def": "10"
+  },
+  "taxh_seccio": {
+   "def": "*",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   }
+  },
+  "taxh_proyec": {
+   "def": "*",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   }
+  },
+  "taxh_zondel": {
+   "def": "ESCO",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   }
+  },
+  "taxh_zonter": {
+   "def": "*",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   }
+  },
+  "taxh_tercer": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "taxh_cifter": {
+   "mayus": 1
+  },
+  "taxh_docser": {
+   "lov": {
+    "obj": "cdocnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "taxh_seqno": {
+   "lov": {
+    "obj": "ctax_move_head",
+    "clave": "taxh_seqno",
+    "cols": [
+     "taxh_docser"
+    ],
+    "desc": "taxh_docser"
+   }
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Procesos › Retroceder autofacturas e ISP",
+  "Tipo: REPORT (proceso/informe)",
+  "Descripción: Retrocesión Auto Facturas ya generadas según su naturaleza, fecha y justificante. El proceso revertirá y eliminará el asiento previamente generado.",
+  "Pide confirmación antes de ejecutar"
+ ]
+}

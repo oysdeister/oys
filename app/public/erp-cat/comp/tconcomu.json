@@ -1,0 +1,97 @@
+{
+ "c": "tconcomu",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nomcom": {
+   "req": 1
+  },
+  "file_format": {
+   "req": 1,
+   "def": "AEB43"
+  },
+  "debe": {},
+  "opedeb": {
+   "mayus": 1,
+   "ro": "debe != 'D'",
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "debhab",
+     "opefin",
+     "nomope"
+    ],
+    "desc": "nomope",
+    "filtro": "l.debhab == 'D'"
+   }
+  },
+  "haber": {
+   "mayus": 1
+  },
+  "opehab": {
+   "mayus": 1,
+   "ro": "haber != 'H'",
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "debhab",
+     "opefin",
+     "nomope"
+    ],
+    "desc": "nomope",
+    "filtro": "l.debhab == 'H'"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(codigo)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codigo"
+  },
+  {
+   "si": "vacio(nomcom)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "nomcom"
+  },
+  {
+   "si": "__ins && existe('tconcomu','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_tconcomu) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codigo"
+  },
+  {
+   "si": "debe == 'D' && vacio(opedeb)",
+   "msg": "Check constraint (informix.c_tconcomu3) failed.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "opedeb"
+  },
+  {
+   "si": "!vacio(opedeb) && !existe('toperfin','opefin',opedeb)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_tconcomu1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "opedeb"
+  }
+ ],
+ "notas": [
+  "Clave (codigo, file_format). Duplicado 01/AEB43 → «Unique constraint (informix.p_tconcomu) violated.». debe = D sin operación → «Check constraint (informix.c_tconcomu3) failed.» (se supone simétrico para haber/opehab). Operación inexistente → «Missing key… (informix.f_tconcomu1)». Mensajes provocados por API dml/insert; en pantalla salen en el cuadro «Se ha producido un error».",
+  "Borrar pide escribir «delete» (deleteConfirmationText). No se probó borrar con hijos (todos los conceptos con extractos son de la demo).",
+  "19 conceptos AEB43 (01…17, 98, 99) sin operaciones asignadas.",
+  "probado (por API dml/insert): alta C1, duplicado, debe D sin operación, operación inexistente. no probado: borrar con hijos — todos los conceptos con extractos son de la demo. Sin botones."
+ ]
+}

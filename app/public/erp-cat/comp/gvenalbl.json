@@ -1,0 +1,284 @@
+{
+ "c": "gvenalbl",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "ro": "(gvenmovd.tabori == 'EA' || gvenmovd.tabori == 'gvenmovh') || context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul_s",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart"
+   }
+  },
+  "varstk": {
+   "req": 1,
+   "ro": "gvenmovd.tabori == 'EA'",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "cols": [
+     "varlog",
+     "nomvar",
+     "reffab"
+    ],
+    "desc": "nomvar"
+   }
+  },
+  "canmov": {
+   "req": 1,
+   "ro": "(gvenmovd.tabori == 'EA' || gvenmovd.tabori == 'gvenmovh') && gvenmovd.natdoc == 'P' || (geanmovl.exists_ori > 0)"
+  },
+  "udmven": {
+   "req": 1,
+   "ro": "geanmovl.exists_ori > 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "canalt": {
+   "ro": "(gvenmovd.tabori == 'EA' || gvenmovd.tabori == 'gvenmovh') && gvenmovd.natdoc == 'P'  || (geanmovl.exists_ori > 0)"
+  },
+  "udmalt": {
+   "ro": "geanmovl.exists_ori > 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "numlot": {
+   "req": 1,
+   "ro": "gvenmovd.tabori == 'EA' ||\r\ngvenmovd.tabori == 'gvenmovh' ||\r\n(linori != null && context.isOnUpdate()) || virtualerp.batch_control != '1'",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartlote",
+    "clave": "numlot",
+    "cols": [
+     "numlot",
+     "lot_estado"
+    ],
+    "desc": "lot_estado"
+   }
+  },
+  "precio": {
+   "ro": "virtual_auth.precio_mod == 0 || preiva != null"
+  },
+  "dtoli1": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "dtoli2": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "dtoli3": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "impnet": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "regalo": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "valqty": {
+   "ro": "1==1"
+  },
+  "ubiori": {
+   "req": 1,
+   "ro": "document_parent.salori == 'N' || virtualerp.item_salori == 'N'",
+   "def": "0",
+   "lov": {
+    "obj": "galmstku",
+    "clave": "codubi",
+    "cols": [
+     "codubi",
+     "nomubi"
+    ],
+    "desc": "nomubi"
+   }
+  },
+  "ubides": {
+   "req": 1,
+   "ro": "document_parent.saldes == 'N' || virtualerp.item_saldes == 'N'",
+   "def": "0",
+   "lov": {
+    "obj": "galmubic",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomubi"
+    ],
+    "desc": "nomubi"
+   }
+  },
+  "terdep": {
+   "req": 1,
+   "ro": "gvenmovd.terstk == 'N' || (virtualerp.item_salori == 'N' && virtualerp.item_saldes == 'N')",
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "agente": {
+   "lov": {
+    "obj": "grep_agente",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "estado",
+     "nombre"
+    ],
+    "desc": "estado"
+   }
+  },
+  "canabo": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canfac": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "cananu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1
+  },
+  "canbon": {
+   "req": 1,
+   "def": 0
+  },
+  "canrea": {
+   "req": 1,
+   "def": 0
+  },
+  "udmpre": {
+   "req": 1,
+   "ro": "geanmovl.exists_ori > 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "preiva": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "impcos": {
+   "ro": "1==1"
+  },
+  "dtoimp": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "canpre": {
+   "req": 1,
+   "ro": "geanmovl.exists_ori > 0"
+  },
+  "canaux": {
+   "def": 0
+  },
+  "impdtc": {
+   "def": 0
+  },
+  "impdte": {
+   "def": 0
+  },
+  "impdto": {
+   "def": 0
+  }
+ },
+ "botones": {
+  "BUT_ACT_DESC": {
+   "l": "Activar descripción",
+   "nota": "Activo si garticul.desamp != null && desamp == null; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "txt_data",
+     "l": "Texto",
+     "t": "s",
+     "sz": 2048,
+     "req": 1,
+     "defs": "${virtualerp.txt_data}",
+     "h": "Contenido del texto"
+    }
+   ],
+   "dialogoTit": "Activar descripción"
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "nota": "Activo si virtual_auth.anular == 1 && virtualerp.ico_qtyanu == 0 && \r\ndocument_parent.estado != 'F' && document_parent.estado != 'T' &&\r\n(document_parent.indmod != 'N' && indmod != 'N'); abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "codmot",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "h": "Motivo de anulación",
+     "fk": "gmotanul"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1,
+     "h": "Notas"
+    }
+   ],
+   "dialogoTit": "Anular"
+  },
+  "BUT_ACTIVATE": {
+   "l": "Activar",
+   "nota": "Activo si virtual_auth.anular == 1 && virtualerp.ico_qtyanu == 1 && \r\ndocument_parent.estado != 'F' && document_parent.estado != 'T' &&\r\n(document_parent.indmod != 'N' && indmod != 'N'); pide confirmación"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

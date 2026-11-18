@@ -1,0 +1,135 @@
+{
+ "c": "cxls_apuntes_load",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "seqno": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "cxls_apuntes_load",
+    "clave": "seqno",
+    "cols": [
+     "load_exc_name",
+     "load_exc_type",
+     "load_comment"
+    ],
+    "desc": "load_exc_name"
+   }
+  },
+  "load_exc_name": {
+   "ro": "1==1"
+  },
+  "load_exc_size": {
+   "ro": "1==1"
+  },
+  "load_exc_data": {
+   "req": 1
+  },
+  "load_status": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "load_err_message": {
+   "ro": "1==1"
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  },
+  "load_exc_type": {
+   "ro": "1==1"
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "diario": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdia"
+    ],
+    "desc": "nomdia"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(diario) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(diario)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "diario",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "botones": {
+  "BUT_RETROCEDER": {
+   "l": "Retroceder",
+   "nota": "Habilitado si: load_status == 2 · Se oculta si no está habilitado"
+  },
+  "BUT_CONTABILIZAR_TEST": {
+   "l": "Contabilizar (test)",
+   "nota": "Código de botón en la demo: BUT_CONTABILIZAR_MVC"
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Diario contable › Asientos › Procesos › Carga de asientos por plantilla",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

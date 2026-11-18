@@ -1,0 +1,354 @@
+{
+ "c": "cbancpro",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   },
+   "alCambiar": {
+    "proyec": "null",
+    "seccio": "null"
+   }
+  },
+  "proyec": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(proyec)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(empcode)",
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nompro",
+    "filtro": "l.empcode == empcode"
+   },
+   "alCambiar": {
+    "seccio": "busca('cproyect','codigo',proyec,'seccio')"
+   }
+  },
+  "seccio": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(seccio)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(proyec)",
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomsec"
+   }
+  },
+  "ctafin": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(ctafin)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "nomcta": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(nomcta)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "nomcta",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "def": "A"
+  },
+  "codban": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancdom",
+    "clave": "codban",
+    "cols": [
+     "codban",
+     "nomban",
+     "swift"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomban"
+   }
+  },
+  "entfin": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(entfin)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "entfin",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nombre"
+   },
+   "alCambiar": {
+    "tipdir": "'0'"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(tipdir)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "tipdir",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(entfin)",
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomdir"
+   }
+  },
+  "cuenta": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(cuenta)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "cuenta",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(empcode)",
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "codigo"
+   }
+  },
+  "ctamov": {
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "codigo"
+   }
+  },
+  "agrcta": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(agrcta)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "agrcta",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "lov": {
+    "obj": "tagrupac",
+    "clave": "codagr",
+    "cols": [
+     "codagr",
+     "nomagr"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomagr"
+   }
+  },
+  "codcal": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccalendah",
+    "clave": "codcal",
+    "cols": [
+     "codcal",
+     "nomcal"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomcal"
+   }
+  },
+  "ctaref": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomcta"
+   }
+  },
+  "contact": {
+   "ro": "entfin == null",
+   "lov": {
+    "obj": "ccontact",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "apelli"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nombre"
+   }
+  },
+  "tarint": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ttarintc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomtar"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomtar"
+   }
+  },
+  "tipcta": {
+   "req": 1,
+   "def": 1
+  },
+  "divdom": {
+   "req": 1,
+   "def": "S"
+  },
+  "fapert": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "forext": {
+   "req": 1,
+   "def": "AEB43"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(empcode) || vacio(proyec) || vacio(seccio) || vacio(ctafin) || vacio(nomcta) || vacio(entfin) || vacio(tipdir) || vacio(cuenta) || vacio(agrcta)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && existe('cbancpro','ctafin',ctafin)",
+   "msg": "Unique constraint (informix.u_cbancpro1) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Nuevo = botón «Añadir bancos propios» (diálogo «Bancos propios»). Éxito: aviso «Éxito» + «Ver registro». Ficha real: table/cbancpro/form/1 (pestañas Banco, Condiciones bancarias, Líneas financieras, Operaciones por cuenta, Comisiones, Intereses, Numeradores, Remesas por cuenta, Sábados festivos, Liquidación).",
+  "Vistas al pie de la pestaña Banco: Condiciones bancarias (cbanccab), Líneas financieras (tlinefin), Operaciones por cuenta (tctaopec), Intereses (ttarintc), Festivos (tcalsaba), Liquidaciones (cbancliq), Calendario (ccalendah_calendar_vtab). Menú ⌄ del título: Terceros, Calendario, Bancos propios.",
+  "Guardar vacío: «Este campo es obligatorio.» en Empresa, Proyecto, Sección, Cuenta financiera, Desc. cuenta financiera, Entidad financiera, Tipo de dirección, Cuenta y Agrupación cuentas, más el aviso «Hay errores en los datos del formulario». Defectos: Moneda EUR, Estado Abierto, Tipo de cuenta Cuenta corriente (1), Preferencia Sí, Fecha apertura hoy, Formato extracto España AEB43.",
+  "Proyecto y Sección están bloqueados hasta elegir Empresa; al elegir Proyecto 0 se rellena Sección 0; al elegir Entidad financiera se rellena Tipo de dirección 0. Contacto bloqueado mientras Entidad financiera esté vacía (readonly_expr entfin == null).",
+  "Lupa inexistente (Moneda XXX): «Error en la validación» (POST fk/cbancpro/moneda/verify/cmonedas → 204).",
+  "Duplicado (Cuenta financiera BBVA_CA): 500 «Unique constraint (informix.u_cbancpro1) violated.» — la cuenta financiera es única aunque la clave sea empresa+cuenta.",
+  "Remesas por cuenta (cbancsop, pestaña de la ficha): alta en línea con ⊕ (defectos Límite importe 9.999.999, Ordenante 0, Sufijo 0, Estado Abierto); se guarda con POST table/cbancpro/form/1/<b64> (201) y aviso «Éxito». El objeto cbancsop suelto no tiene permiso de alta: «User oys.jma does not have ROW_INSERT privilege on table cbancsop».",
+  "Los tipos de remesa que admite una cuenta en Registro de remesas son los de su pestaña Remesas por cuenta (LOV de cremesas.tipdoc filtrada por clase y ctafin).",
+  "probado: Nuevo «Añadir bancos propios» (guardar vacío, alta con éxito), lupa Moneda inexistente, duplicado, alta en Remesas por cuenta (cbancsop). Sin botones ni Acciones."
+ ]
+}

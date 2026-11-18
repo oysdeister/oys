@@ -1,0 +1,379 @@
+{
+ "c": "cremesas",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   },
+   "alCambiar": {
+    "cambio": "1",
+    "ctafin": "null"
+   }
+  },
+  "clase": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "alCambiar": {
+    "tipdoc": "null",
+    "jusser": "null",
+    "accion": "null"
+   }
+  },
+  "ctafin": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(ctafin)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(empcode)",
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomcta",
+    "filtro": "l.empcode == empcode"
+   },
+   "alCambiar": {
+    "moneda": "busca('cbancpro','ctafin',ctafin,'moneda') || 'EUR'",
+    "impmax": "999999999.99",
+    "tipdoc": "null"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(tipdoc)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "tipdoc",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(clase) || vacio(ctafin)",
+   "lov": {
+    "obj": "cremesad",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nombre",
+    "filtro": "l.clase == clase && l.estado == 'A'"
+   },
+   "alCambiar": {
+    "jusser": "busca('cremesad','codigo',tipdoc,'jusser')",
+    "accion": "busca('cremesad','codigo',tipdoc,'accion')"
+   }
+  },
+  "jusser": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(jusser)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "jusser",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "tipdoc == null",
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "mask_name"
+   }
+  },
+  "linfin": {
+   "mayus": 1,
+   "ro": "busca('cremesad','codigo',tipdoc,'linfin') == 0",
+   "reqSi": "busca('cremesad','codigo',tipdoc,'linfin') != 0",
+   "lov": {
+    "obj": "tlinefin",
+    "clave": "linfin",
+    "cols": [
+     "linfin",
+     "deslin"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "deslin",
+    "filtro": "l.ctafin == ctafin"
+   },
+   "reglas": [
+    {
+     "si": "busca('cremesad','codigo',tipdoc,'linfin') != 0 && vacio(linfin)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "linfin",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "accion": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(accion)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "accion",
+     "fuente": "demo"
+    }
+   ],
+   "ro": "true"
+  },
+  "estrem": {
+   "req": 1,
+   "def": "A",
+   "ro": "true"
+  },
+  "numrem": {
+   "ro": "true"
+  },
+  "fecrem": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecval": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1
+  },
+  "impmax": {
+   "req": 1,
+   "def": 99999999
+  },
+  "impint": {
+   "req": 1,
+   "def": 0
+  },
+  "impcom": {
+   "req": 1,
+   "def": 0
+  },
+  "calint": {
+   "ro": "true",
+   "def": 0
+  },
+  "calcom": {
+   "ro": "true",
+   "def": 0
+  },
+  "imptot": {
+   "ro": "true",
+   "def": 0
+  },
+  "maxliq": {
+   "req": 1,
+   "def": 100
+  },
+  "calrem": {
+   "req": 1,
+   "def": "N"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(empcode) || vacio(ctafin) || vacio(clase) || vacio(tipdoc) || vacio(jusser) || vacio(accion)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "BUT_EVOLUCIONAR_ESTADO": {
+   "l": "Evolucionar estado",
+   "dialogoTit": "Confirmación",
+   "dialogo": [
+    {
+     "n": "nomact",
+     "l": "Descripción acción",
+     "t": "s",
+     "sz": 60,
+     "req": 1,
+     "ro": 1,
+     "h": "Definición de la acción del efecto."
+    },
+    {
+     "n": "feccon",
+     "l": "Fecha contabilización",
+     "t": "d",
+     "req": 1
+    },
+    {
+     "n": "impint",
+     "l": "Importe intereses",
+     "t": "n",
+     "sc": 2,
+     "req": 1,
+     "def": "0"
+    },
+    {
+     "n": "impcom",
+     "l": "Importe comisiones",
+     "t": "n",
+     "sc": 2,
+     "req": 1,
+     "def": "0"
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cefectos",
+      "donde": [
+       "remesa",
+       "numrem"
+      ],
+      "set": {
+       "estado": "(({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[])[({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion)+1]||[])[2] || l.estado",
+       "feccam": "hoy()",
+       "ctafin": "ctafin"
+      }
+     }
+    },
+    {
+     "set": {
+      "accion": "(({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[])[({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion)+1]||[])[1] || accion",
+      "estrem": "'C'"
+     }
+    }
+   ],
+   "nota": "Aplica a la remesa y a todos sus efectos la acción siguiente del circuito del tipo de remesa (cremesad_det por orden; la primera es cremesad.accion). Solo habilitado si la remesa tiene efectos y la acción actual no es la última del circuito (expresión de servidor). Abre el diálogo «Confirmación» con «Descripción acción» (solo lectura, la acción siguiente); «Fecha contabilización» solo se ve si el enlace contable de la acción pregunta la fecha (feccon_out = P) e «Importe intereses»/«Importe comisiones» solo si la acción permite gastos (gastos_out ≠ 0); «Importe banco» (pcs_impban) solo si la acción permite cambiar importe. Sin mensaje de éxito: la ficha se refresca. Demo (remesa CAP 5, PSCTS, efecto 57): 1.ª vez RPSCTP→RPSCSO, remesa A→C, crea gestión pcs_seqno 16 y efecto PR→OP (numges 16, feccam hoy); 2.ª vez RPSCSO→RCONB, efecto OP→PA (numges 17); después el botón queda deshabilitado."
+  },
+  "BUT_RETROCEDER": {
+   "l": "Retroceder",
+   "dialogoTit": "Confirmación",
+   "confirm": "Confirmación",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cefectos",
+      "donde": [
+       "remesa",
+       "numrem"
+      ],
+      "set": {
+       "estado": "(({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[])[({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion)-1]||[])[2] || l.estado",
+       "feccam": "({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion) <= 1 ? null : l.feccam"
+      }
+     }
+    },
+    {
+     "set": {
+      "estrem": "({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion) <= 1 ? 'A' : 'C'",
+      "pcs_seqno": "({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion) <= 1 ? null : pcs_seqno",
+      "accion": "(({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[])[({\"CCHES\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCHET\":[[1,\"RCCHEP\",\"PR\"],[2,\"RCCHEO\",\"OC\"]],\"CCNFS\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CCNFT\":[[1,\"RCCNFP\",\"PR\"],[2,\"RCCNFO\",\"OC\"]],\"CFCSS\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFSSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CFCST\":[[1,\"RCFCSP\",\"PR\"],[2,\"RCFCSO\",\"OC\"]],\"CLECS\":[[1,\"CLECAP\",\"PR\"],[2,\"RCLCA\",\"OC\"],[4,\"RLCCO\",\"CO\"]],\"CLECT\":[[1,\"CLECAP\",\"PR\"],[4,\"RCLCAB\",\"OC\"]],\"CPAGS\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPASO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CPAGT\":[[1,\"RCPAGP\",\"PR\"],[2,\"RCPAGO\",\"OC\"]],\"CSCTS\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSCTT\":[[1,\"RCSCTP\",\"PR\"],[2,\"RCSCTO\",\"OC\"]],\"CSDDS\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDSO\",\"OC\"],[4,\"RCONB\",\"CO\"]],\"CSDDT\":[[1,\"RCSDDP\",\"PR\"],[2,\"RCSDDO\",\"OC\"]],\"LCDTO\":[[1,\"RCLDCP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTS\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"LCDTT\":[[1,\"LCDCAP\",\"PR\"],[2,\"RCDLCA\",\"OC\"],[4,\"RLCED\",\"DC\"]],\"PCHES\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHSO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCHET\":[[1,\"RPCHEP\",\"PR\"],[2,\"RPCHEO\",\"OP\"]],\"PCNFS\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PCNFT\":[[1,\"RPCNFP\",\"PR\"],[2,\"RPCNFO\",\"OP\"]],\"PLECS\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLESO\",\"OP\"],[4,\"RLCPAB\",\"PA\"]],\"PLECT\":[[1,\"PLECSP\",\"PR\"],[2,\"RPLECO\",\"OP\"]],\"PPAGS\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PPAGT\":[[1,\"RPPAGP\",\"PR\"],[2,\"RPPAGO\",\"OP\"]],\"PSCTS\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCSO\",\"OP\"],[3,\"RCONB\",\"PA\"]],\"PSCTT\":[[1,\"RPSCTP\",\"PR\"],[2,\"RPSCTO\",\"OP\"]],\"PSDDS\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"],[4,\"RCONB\",\"PA\"]],\"PSDDT\":[[1,\"RPSDDP\",\"PR\"],[2,\"RPSDDO\",\"OP\"]]}[tipdoc]||[]).findIndex(x=>x[1]==accion)-1]||[])[1] || accion"
+     }
+    }
+   ],
+   "nota": "Deshace la última acción de la remesa. Habilitado si el usuario tiene la autorización RETREM de cefectos y la remesa no está Abierta (estrem ≠ A). Confirmación sin texto: título «Confirmación» y botones Cancelar/Aceptar. Demo: RCONB→RPSCSO (efecto PA→OP, numges 16) y RPSCSO→RPSCTP (remesa vuelve a Abierto, pcs_seqno vacío, efecto OP→PR, numges vacío). Sin mensaje de éxito."
+  },
+  "BUT_CALC_INT_COM": {
+   "l": "Calcular intereses-comisiones",
+   "nota": "Visible solo con la remesa Abierta y Total remesa ≠ 0 (estrem == 'A' && imptot != 0). No ejecutado en la demo (la remesa CAP es sin gastos)."
+  },
+  "BUT_SOPORTE_ELEC2": {
+   "l": "Soportes electrónicos 2025",
+   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+  },
+  "BUT_SOPORTE_ELEC": {
+   "l": "Soportes electrónicos",
+   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+  },
+  "BUT_IMPRESION_FORM": {
+   "l": "Imprimir formato",
+   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+  },
+  "BUT_CARTA_TER": {
+   "l": "Carta del tercero",
+   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+  },
+  "BUT_EMITIR_DOCBANC": {
+   "l": "Aviso al banco",
+   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+  }
+ },
+ "estados": {
+  "col": "estrem",
+  "trans": [
+   {
+    "de": [
+     "A",
+     "C"
+    ],
+    "a": "C",
+    "por": "BUT_EVOLUCIONAR_ESTADO"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_RETROCEDER"
+   }
+  ]
+ },
+ "notas": [
+  "Ficha real: table/cremesas/form/1 (pestañas Información, Gestión remesas, Apuntes, Tesorería). Lista en edición por fila (editMode ROW) con fila nueva en línea; botón «Nuevo» con submenú «Nuevo registro» / «Nuevo como» en la ficha; en la lista abre el diálogo inferior «Remesas de cobros y pagos». Menú ⌄ del título: Gestiones, Asientos contables.",
+  "Nuevo: defectos Fecha remesa y Fecha valor = hoy, Estado Abierto, Moneda EUR, Importe máximo 99.999.999, Importes 0,00, Máx. liquidable 100,00, Remesa 0. Cuenta financiera y Línea financiera bloqueadas hasta elegir Empresa; Tipo remesa, Justificante, Acción y Validaciones bloqueados hasta elegir Clase. Al elegir Empresa: Cambio 1; al elegir la cuenta: Moneda de la cuenta e Importe máximo 999.999.999,99 (se ve 1.000.000.000); al elegir Tipo remesa: Justificante = serie del tipo (RM) y Acción = acción inicial del tipo (p. ej. RPSCTP). Al grabar, el servidor numera el justificante: RM → RM026-000005.",
+  "Guardar vacío: «Este campo es obligatorio.» en Empresa, Cuenta financiera, Línea financiera, Clase, Tipo remesa, Justificante y Acción y aviso «Hay errores en los datos del formulario». Línea financiera deja de ser obligatoria y queda bloqueada cuando el tipo de remesa no exige línea (cremesad.linfin = 0).",
+  "Tipo remesa: la lupa solo ofrece los tipos de la Clase que están dados de alta en Remesas por cuenta (cbancsop) de la Cuenta financiera; un tipo no asignado a la cuenta (PSCTS con BBVA_CA) da «Error en la validación» (POST fk/cremesas/tipdoc/verify/cremesad → 204). En la réplica: comprobar existe cbancsop con ctafin = ctafin y codrem = tipdoc.",
+  "Añadir efectos: subpestaña «Selección de efectos» (cefectos_selector_vtab: efectos de la misma clase en estado PE sin remesa) con botones «Agregar todos los efectos» y, al marcar filas, «Agregar efectos» (acción BUT_AGREGAR_SEL_EFEC, sin confirmación ni mensaje). Demo: efecto 57 PE→PR (acción inicial RPSCTP), remesa = 5, ctafin = CAPBREM; Total remesa pasa a 151,25.",
+  "Quitar efectos: subpestaña «Efectos seleccionados» (cefecges_det_select_vtab); al marcar filas aparece «Desagregar efectos» (BUT_DESAGREGAR_SEL_E) → diálogo «Confirmación» (Cancelar/Aceptar) → aviso «Éxito». Demo: efecto 57 vuelve a PE sin remesa ni cuenta financiera y Total remesa 0,00. Solo con la remesa Abierta.",
+  "Evolucionar y Retroceder no muestran mensaje de éxito; la ficha se refresca. Endpoints: POST table/cremesas/form/1/<b64>/action/BUT_EVOLUCIONAR_ESTA/fields/1 (diálogo) y …/action/BUT_EVOLUCIONAR_ESTA con fields {nomact, feccon_out, feccon, gastos_out, impint, impcom, import_out, pcs_impban, clase_out, accion_out, efefin_out}; …/action/BUT_RETROCEDER.",
+  "El circuito de cada tipo de remesa está embebido en las expresiones de Evolucionar/Retroceder ([orden, acción, estado final del efecto]) a partir de cremesad + cremesad_det de la TUTORIAL."
+ ]
+}

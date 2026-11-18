@@ -1,0 +1,152 @@
+{
+ "c": "tdepmovh",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "codtip": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codtip) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codtip))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codtip",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctafin": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctafin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctafin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctadep": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctadep) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctadep))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctadep",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecope": {
+   "req": 1
+  },
+  "fecven": {
+   "req": 1
+  },
+  "import": {
+   "req": 1
+  },
+  "porint": {
+   "req": 1
+  },
+  "impint": {
+   "req": 1
+  },
+  "tipint": {
+   "req": 1
+  },
+  "regid": {
+   "ro": "true",
+   "lov": {
+    "obj": "tdepmovh",
+    "clave": "regid",
+    "cols": [
+     "regid",
+     "codtip",
+     "empcode",
+     "ctafin"
+    ],
+    "desc": "codtip",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "apteid": {
+   "ro": "true"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(codtip)",
+   "msg": "Cannot insert a null into column (tdepmovh.codtip).",
+   "tipo": "error",
+   "campo": "codtip",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "BUT_ELIMINAR": {
+   "l": "Eliminar",
+   "nota": "Elimina los movimientos.. Visible/habilitado si: apteid > 0. pide confirmación"
+  },
+  "BUT_CONFIRMAR": {
+   "l": "Confirmar",
+   "nota": "Visible/habilitado si: apteid == null. pide confirmación"
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'DEPÓSITOS Y PRÉSTAMOS', editMode ROW, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "TUTORIAL sin depósitos/préstamos ni tipos (tdepmovh y tdepmovd vacíos). Alta por API sin tipo → «Cannot insert a null into column (tdepmovh.codtip).» (demo). Botones Eliminar (requiere apteid > 0, fondo #2296F3) y Confirmar (apteid == null) documentados por metadatos.",
+  "probado (por API): alta sin tipo → «Cannot insert a null into column (tdepmovh.codtip).». no probado: Eliminar, Confirmar — TUTORIAL sin tipos de depósito/préstamo (tdepmovd vacío) ni movimientos; solo metadatos."
+ ]
+}

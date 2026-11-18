@@ -1,0 +1,117 @@
+{
+ "c": "casientos_contab",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy().slice(0,8)+'01'"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "empcode": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "diario": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdia"
+    ],
+    "desc": "nomdia"
+   }
+  },
+  "jusser": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "sistem": {
+   "mayus": 1,
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   }
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Diario contable › Asientos › Procesos › Contabilización",
+  "Tipo: REPORT (proceso/informe)",
+  "Descripción: Contabilización masiva de asientos contables para una empresa determinada, en un rango de fechas.",
+  "Pide confirmación antes de ejecutar",
+  "Probado en la demo filtrando Diario CV y asiento 46 (CAP): confirmación «CONTABILIZACIÓN DE ASIENTOS CONTABLES» / «¿Está seguro de ejecutar el proceso?» [Cancelar] [Aceptar]; resultado por asiento «Proceso completado correctamente.»; si no hay provisionales que cumplan el filtro: «No se han encontrado registros para la contabilización.»; empresa vacía: «Result of a boolean expression is not of boolean type.». Efecto: casientos.estado P→C y csaldos sube (62902 Debe 2.000→3.000).",
+  "Endpoints: POST qbe/casientos_contab {\"input\":{cols,vars,sqlFilter}} y GET report/casientos_contab/<b64>/1?html=true (sondeo …/queue). Ojo: el informe se cachea por <b64> idéntico.",
+  "probado: Ejecutar (éxito, sin registros, empresa vacía). Crudos: raw/contabilidad/b1/R_procesos.json, s/c13.*."
+ ],
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "dialogoTit": "CONTABILIZACIÓN DE ASIENTOS CONTABLES",
+   "confirm": "¿Está seguro de ejecutar el proceso?",
+   "ok": "Proceso completado correctamente.",
+   "pre": [
+    {
+     "si": "vacio(empcode)",
+     "msg": "Result of a boolean expression is not of boolean type.",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "empcode"
+    },
+    {
+     "si": "cuenta('casientos','estado','P') == 0",
+     "msg": "No se han encontrado registros para la contabilización.",
+     "tipo": "info",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "casientos",
+      "donde": [
+       "estado",
+       "'P'"
+      ],
+      "set": {
+       "estado": "'C'"
+      }
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "Resultado: una fila por asiento (ID. asiento, Nombre empresa, Fecha, Justificante, Mensaje «Proceso completado correctamente.»)."
+     }
+    }
+   ]
+  }
+ }
+}

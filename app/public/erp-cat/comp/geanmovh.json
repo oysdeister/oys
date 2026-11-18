@@ -1,0 +1,523 @@
+{
+ "c": "geanmovh",
+ "fecha": "2026-11-18 almacen/movimientos",
+ "area": "almacen",
+ "campos": {
+  "docser": {
+   "ro": "!__ins",
+   "mayus": 1
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "!__ins",
+   "mayus": 1,
+   "lov": {
+    "obj": "geanmovd",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(tipdoc)",
+     "msg": "Este campo es obligatorio.",
+     "campo": "tipdoc",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "empcode": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "nomcom",
+     "estado"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "almori": {
+   "req": 1,
+   "ro": "!__ins",
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomalm"
+    ],
+    "desc": "nomalm",
+    "noExiste": "Error en la validación"
+   },
+   "alCambiar": {
+    "delega": "busca('galmacen','codigo',almori,'delega')",
+    "depart": "busca('galmacen','codigo',almori,'depart')",
+    "empcode": "busca('galmacen','codigo',almori,'empcode')"
+   }
+  },
+  "almdes": {
+   "reqSi": "busca('geanmovd','codigo',tipdoc,'tipmov') == 'T'",
+   "ro": "!__ins || busca('geanmovd','codigo',tipdoc,'tipmov') != 'T'",
+   "mayus": 1,
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomalm"
+    ],
+    "desc": "nomalm",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "reqSi": "!__ins",
+   "ro": "1==1",
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdlg"
+    ],
+    "desc": "nomdlg"
+   }
+  },
+  "depart": {
+   "reqSi": "!__ins",
+   "ro": "1==1",
+   "def": "C",
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "cols": [
+     "depart",
+     "nomdep"
+    ],
+    "desc": "nomdep",
+    "filtro": "l.delega == delega"
+   }
+  },
+  "docori": {
+   "ro": "vacio(busca('geanmovd','codigo',tipdoc,'tabori')) || !__ins",
+   "mayus": 1,
+   "lov": {
+    "obj": "geanmovh",
+    "clave": "docser",
+    "cols": [
+     "docser"
+    ],
+    "filtro": "busca('geanmovd','codigo',tipdoc,'tabori') == 'EA'",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "oriaux": {
+   "ro": "1==1",
+   "mayus": 1
+  },
+  "refter": {},
+  "clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcla"
+    ],
+    "desc": "nomcla",
+    "filtro": "l.tipdoc == tipdoc"
+   }
+  },
+  "fecmov": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "alCambiar": {
+    "fecrec": "fecmov"
+   }
+  },
+  "fecrec": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "feccon": {
+   "ro": "1==1"
+  },
+  "terexp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "direxp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "direcc",
+     "poblac",
+     "codpos"
+    ],
+    "desc": "direcc",
+    "filtro": "l.codigo == terexp"
+   }
+  },
+  "movest": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "movhis": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "genrf": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "shipped": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "coment": {},
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1
+  },
+  "doclock": {
+   "def": "V"
+  },
+  "valpen": {
+   "ro": "1==1"
+  },
+  "date_validate": {
+   "ro": "1==1"
+  },
+  "date_print": {
+   "ro": "1==1"
+  },
+  "cabid": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(tipdoc)",
+   "msg": "Este campo es obligatorio.",
+   "campo": "tipdoc",
+   "fuente": "demo"
+  },
+  {
+   "si": "!vacio(tipdoc) && !existe('geanmovd','codigo',tipdoc)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_geanmovh1).",
+   "campo": "tipdoc",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && (vacio(busca('galmacen','codigo',almori,'delega')) || vacio(busca('galmacen','codigo',almori,'depart')))",
+   "msg": "Delegación y departamento no informados para el almacén [${almori}]",
+   "campo": "almori",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && vacio(docser)",
+   "msg": "gsernumh_getserie: Sin máscara.Tab.[geanmovh] Cod.[MOV]",
+   "campo": "docser",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && !vacio(docser) && existe('geanmovh','docser',docser)",
+   "msg": "Unique constraint (informix.u_geanmovh1) violated.",
+   "campo": "docser",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "estcab != 'P'",
+   "msg": "El botón Eliminar (papelera) está desactivado en un movimiento validado: hay que «Pasar a provisional» antes de borrarlo.",
+   "tipo": "error",
+   "fuente": "deducido"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "pre": [
+    {
+     "si": "busca('geanmovd','codigo',tipdoc,'eanmdes') == 'RIDP'",
+     "msg": "El tipo de movimiento [RIDP] no permite documento origen in wic_javascript_module:geanmovh_workflow at line number 456",
+     "fuente": "demo"
+    },
+    {
+     "si": "!vacio(busca('geanmovd','codigo',tipdoc,'eanmdes')) && busca('geanmovd','codigo',busca('geanmovd','codigo',tipdoc,'eanmdes'),'tabori') == 'EA'",
+     "msg": "gsernumh_getserie: Sin máscara.Tab.[geanmovh] Cod.[MOV] in wic_javascript_module:geanmovh_workflow at line number 456",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'V'",
+      "date_validate": "hoy()",
+      "valpen": "0"
+     }
+    }
+   ],
+   "ok": "Éxito",
+   "nota": "Valida el movimiento (estcab P→V, fecha de validación); se puede validar sin líneas. Con tipología RIDP (valstk N) el stock NO cambia al validar: ya se movió al grabar cada línea. Si la tipología tiene Movimiento destino (eanmdes) la validación intenta generar ese movimiento y falla en TUTORIAL. Tras validar el botón desaparece (no se puede validar dos veces) y salen Acciones y Pasar a provisional."
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'P'"
+     }
+    }
+   ],
+   "ok": "Éxito",
+   "nota": "Vuelve a Provisional (V→P). Solo si valstk == 'N' y sin contabilizar. No toca el stock ni borra la fecha de validación."
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "dialogoTit": "Copiar",
+   "dialogo": [
+    {
+     "n": "tipdoc",
+     "l": "Tipo movimiento",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "fk": "geanmovd",
+     "defs": "${tipdoc}"
+    },
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "fk": "cempresa",
+     "defs": "${empcode}"
+    },
+    {
+     "n": "almori",
+     "l": "Almacén origen",
+     "t": "s",
+     "sz": 12,
+     "req": 1,
+     "fk": "galmacen",
+     "defs": "${almori}"
+    },
+    {
+     "n": "almdes",
+     "l": "Almacén destino",
+     "t": "s",
+     "sz": 12,
+     "fk": "galmacen",
+     "defs": "${almdes}"
+    },
+    {
+     "n": "delega",
+     "l": "Delegación",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gdelegac",
+     "defs": "${delega}"
+    },
+    {
+     "n": "depart",
+     "l": "Departamento",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gdeparta",
+     "defs": "${depart}"
+    },
+    {
+     "n": "fecmov",
+     "l": "Fecha movimiento",
+     "t": "d",
+     "req": 1,
+     "defs": "${fecmov}"
+    },
+    {
+     "n": "docser",
+     "l": "Movimiento",
+     "t": "s",
+     "sz": 20
+    },
+    {
+     "n": "docori",
+     "l": "Documento origen",
+     "t": "s",
+     "sz": 20
+    },
+    {
+     "n": "refter",
+     "l": "Referencia",
+     "t": "s",
+     "sz": 20,
+     "defs": "${refter}"
+    },
+    {
+     "n": "terexp",
+     "l": "Tercero",
+     "t": "s",
+     "sz": 12,
+     "fk": "ctercero"
+    },
+    {
+     "n": "direxp",
+     "l": "Dirección",
+     "t": "s",
+     "sz": 6,
+     "fk": "cterdire"
+    }
+   ],
+   "pre": [
+    {
+     "si": "true",
+     "msg": "gsernumh_getserie: Sin máscara.Tab.[geanmovh] Cod.[MOV]",
+     "fuente": "demo"
+    }
+   ],
+   "nota": "Acciones › Copiar (solo con estcab != 'P'). Llama a geanmovh_Copy(cabid, campos del diálogo) y abriría el movimiento nuevo en modal; en TUTORIAL falla SIEMPRE con el error de serie, aunque se escriba el Movimiento (la rutina ignora docser y pide número a la serie MOV, que no tiene máscara)."
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "dialogoTit": "Contabilizar",
+   "dialogo": [
+    {
+     "n": "feccon",
+     "l": "Fecha contabilización",
+     "t": "d",
+     "req": 1,
+     "defs": "${fecmov}"
+    }
+   ],
+   "pre": [
+    {
+     "si": "estcab != 'V'",
+     "msg": "Movimiento EAN [${docser}] no validado.",
+     "fuente": "demo"
+    },
+    {
+     "si": "!(suma('geanmovl','cabid',cabid,'impcos') > 0)",
+     "msg": "gconasih_InsertCasientos : NO SE HAN GENERADO APUNTES.",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "feccon": "ent.feccon"
+     }
+    }
+   ],
+   "nota": "Visible si la tipología tiene Tipo asiento (geanmovd.tipast) y feccon vacía, también en provisional. Probado con tipología CAP con tipast EXIE: en provisional da «no validado»; validado y con línea sin coste da «NO SE HAN GENERADO APUNTES». No se llegó a generar asiento (paso set deducido)."
+  },
+  "BUT_DESCONTABILIZAR": {
+   "l": "Descontabilizar",
+   "pasos": [
+    {
+     "set": {
+      "feccon": "null"
+     }
+    }
+   ],
+   "nota": "Pide confirmación (conf). Solo con feccon informada y tipast; no se pudo provocar porque ningún movimiento CAP llegó a contabilizarse (texto de confirmación no capturado)."
+  },
+  "BUT_GENERAR_EAN": {
+   "l": "Generar movimiento interno",
+   "pre": [
+    {
+     "si": "true",
+     "msg": "gsernumh_getserie: Sin máscara.Tab.[geanmovh] Cod.[MOV] in wic_javascript_module:geanmovh_workflow at line number 456",
+     "fuente": "demo"
+    }
+   ],
+   "nota": "Acciones; pide confirmación. Solo con estcab V, tipología con Movimiento destino (eanmdes), tabori != 'EA' y docori != docser. En TUTORIAL la generación se dispara ya al Validar y falla (serie MOV sin máscara o destino sin tabla origen EA), así que el botón nunca llega a verse."
+  },
+  "BUT_UBICAR": {
+   "l": "Ubicar",
+   "nota": "Acciones; pide confirmación; condición estcab == 'V'. En la demo no aparece en el menú Acciones de un movimiento RIDP validado (solo sale «Copiar»): no capturado."
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Solo si estcab != 'P' y virtualerp.bloq_manu == 1; en TUTORIAL no aparece (bloqueo manual no activo)."
+  }
+ },
+ "estados": {
+  "col": "estcab",
+  "trans": [
+   {
+    "de": [
+     "P"
+    ],
+    "a": "V",
+    "por": "BUT_VALIDAR"
+   },
+   {
+    "de": [
+     "V"
+    ],
+    "a": "P",
+    "por": "BUT_TO_PROVISIONAL"
+   }
+  ]
+ },
+ "notas": [
+  "Ficha real: table/geanmovh/form/1 (q=…); las líneas son la subrejilla geanmovl (cursor 3728) de la pestaña «Líneas de movimiento», con su propio botón Nuevo que abre el diálogo «LÍNEAS DE MOVIMIENTOS INTERNOS».",
+  "Nuevo abre la ficha en modal «MOVIMIENTOS INTERNOS» con defectos de guserdefs_purchase_defdata: Empresa 0, Almacén origen 0 (ALMACEN CENTRAL), Delegación 0 (CENTRAL), Departamento C (COMPRAS); Fecha movimiento y recepción = hoy; Estado Provisional.",
+  "Al elegir el Tipo movimiento se cargan de geanmovd: Cuenta origen/destino (p. ej. RIDP NSAL › DISP), Unidades manipulación (Destino), tipmov, tipast, eanmdes.",
+  "Al elegir el almacén origen el servidor devuelve delega, depart y empcode del almacén (verify galmacen).",
+  "Tipo movimiento inexistente en la ficha: el campo queda en rojo con «Error en la validación»; al grabar por API sale el error de clave foránea f_geanmovh1.",
+  "Errores de servidor en pantalla: diálogo «Se ha producido un error» + «ID: nnnnn» + mensaje + botones Source/Trace.",
+  "Botones de cabecera: provisional → Validar, Nuevo (+ Contabilizar si la tipología tiene tipo asiento); validado → Acciones (Copiar), Pasar a provisional, Nuevo. Papelera desactivada en validado.",
+  "Borrar provisional: confirmación «Eliminar registro» / «¿Estás seguro que quieres eliminar el registro '${docser}' ?» con botones Cancelar / Eliminar; borra las líneas y deshace su stock (CAPA000003: DISP 15 → 10).",
+  "Stock (galmstkc/galmstkg): con RIDP el stock de la cuenta destino sube al GRABAR LA LÍNEA aunque el movimiento esté provisional (CAPA000001: CAPC1/DISP/CAPC001 0 → 10 al grabar la línea; validar y pasar a provisional no lo cambian).",
+  "Menú ⋮ de la ficha: Información, Metadata, Imprimir, Exportar. Lista: Ordenar, Filtros (Entradas, Salidas, Internos, Traspasos, Recuentos, Ajustes recuentos, Depósitos, Contabilizables, No contabilizables), Nuevo.",
+  "No reproducido: aviso «ELResolver no manejó el tipo: null con propiedad de 'null'» al elegir artículo en la línea (no salió en 4 intentos)."
+ ]
+}

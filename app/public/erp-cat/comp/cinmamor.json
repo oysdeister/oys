@@ -1,0 +1,108 @@
+{
+ "c": "cinmamor",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "loteid": {
+   "ro": "true"
+  },
+  "empcode": {
+   "def": "0",
+   "ro": "true",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codinm": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "codele": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "codcom": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "fecini": {
+   "ro": "true"
+  },
+  "fecfin": {
+   "ro": "true"
+  },
+  "porcen": {
+   "ro": "true"
+  },
+  "sisamo": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "import": {
+   "ro": "true"
+  },
+  "impmin": {
+   "ro": "true"
+  },
+  "impmax": {
+   "ro": "true"
+  },
+  "estado": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['N','C','B','X','F'].includes(estado))))",
+     "msg": "El estado debe ser Pendiente [N], Contabilizado [C] o Baja [B].",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "def": "A",
+   "ro": "true",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "motivo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "seqno": {
+   "ro": "true"
+  },
+  "numhis": {
+   "def": 0,
+   "ro": "true"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!vacio(fecini) && fecini > fecfin",
+   "msg": "La fecha inicial es menor o igual que la Fecha final.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Sin alta manual (insert=false); casi todo de solo lectura. Lo generan la contabilización de la factura, Activar y Recalcular; estado N Pendiente, C Contabilizado, B Baja, F Fiscal, X Otro; motivo A Amortización, B Ajuste, C Amort. previa.",
+  "Primer periodo prorrateado por días desde la fecha de inicio (5.000 × 10 % × 45/365 = 61,64); último hasta completar 10 años."
+ ]
+}

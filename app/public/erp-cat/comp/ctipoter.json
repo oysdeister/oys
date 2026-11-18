@@ -1,0 +1,211 @@
+{
+ "c": "ctipoter",
+ "fecha": "2026-11-18 maestros-a",
+ "area": "maestros",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nomter": {
+   "req": 1
+  },
+  "serter": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code"
+   }
+  },
+  "cusrel": {
+   "mayus": 1,
+   "lov": {
+    "obj": "crelcter",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomrel",
+     "ctanem"
+    ],
+    "desc": "nomrel",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "suprel": {
+   "mayus": 1,
+   "lov": {
+    "obj": "crelcter",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomrel",
+     "ctanem"
+    ],
+    "desc": "nomrel",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "exprel": {
+   "mayus": 1,
+   "lov": {
+    "obj": "crelcter",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomrel",
+     "ctanem"
+    ],
+    "desc": "nomrel",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "sumrel": {
+   "mayus": 1,
+   "lov": {
+    "obj": "crelcter",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomrel",
+     "ctanem"
+    ],
+    "desc": "nomrel",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cuscta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "supcta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "expcta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "sumcta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cusret": {
+   "req": 1,
+   "def": 0
+  },
+  "supret": {
+   "req": 1,
+   "def": 0
+  },
+  "expret": {
+   "req": 1,
+   "def": 0
+  },
+  "sumret": {
+   "req": 1,
+   "def": 0
+  },
+  "copacc": {
+   "req": 1,
+   "def": 0
+  },
+  "cartype": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccaractd",
+    "clave": "codigo"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(cartype) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(cartype)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "cartype",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipwkf": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cworkflow_val",
+    "clave": "val_code",
+    "cols": [
+     "val_code",
+     "val_name"
+    ],
+    "desc": "val_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tipwkf) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(tipwkf)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tipwkf",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctipoter','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_ctipoter) violated.",
+   "tipo": "error",
+   "campo": "codigo",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Lista «TIPOS DE TERCEROS», botón «Añadir tipo», sin botones de acción. Sin obligatorios: «Hay errores en los datos del formulario» y «Este campo es obligatorio.» en Tipo tercero y Descripción tipo (crudo t40).",
+  "Relación de cliente inexistente: «Error en la validación» (crudo t41).",
+  "Es la tabla que manda en Validar de ctercero: cusrel/cuscta crean la relación de cliente y suprel/supcta la de proveedor (cuenta = nemotécnico + '.' + código del tercero). tipwkf es el Workflow que muestra la ficha del tercero.",
+  "Datos TUTORIAL: 001 Clientes CLI/43000; 002 Proveedores PRO/40000; 003 Partners mixtos CLI/43000 + PRO/40000; 004 Deudores CLI/44000; 005 Acreedores PRO/41000; 006 Retail CLI/43000 (cusret 1); 007 Profesional PRO/41000 (supret 1); 008 Entidades financieras CLI/44000 + PRO/41000 (wkf MIX); 009 Centros comerciales CLI/43000 + PRO/40000; 100 y 200 Empresas/Delegaciones del grupo CLI/43300 + PRO/40300; 300 sin relaciones (wkf CLI); 800 Empleados CLI/43000 + PRO/46100.",
+  "probado: — (el catálogo no tiene botones para ctipoter)."
+ ]
+}

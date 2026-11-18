@@ -1,0 +1,116 @@
+{
+ "c": "cprevars",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "codpre": {
+   "req": 1,
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopre",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompre",
+     "nivpre"
+    ],
+    "desc": "nompre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codpre) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codpre)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ejerci": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cejercic",
+    "clave": "numero"
+   }
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cniveles",
+    "clave": "codigo"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(cuenta) && !/^([A-Z0-9]+)([A-Z0-9\\.])*$/.test(cuenta)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "cuenta",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "debhab": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(debhab) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(debhab)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "debhab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "porcen": {
+   "req": 1
+  },
+  "ctasal": {
+   "req": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "rowid": {
+   "ro": "1==1"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Presupuesto económico › Maestros › Programa presupuesto flexible",
+  "Permisos: alta no, modificar sí, borrar sí."
+ ]
+}

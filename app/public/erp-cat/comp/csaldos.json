@@ -1,0 +1,314 @@
+{
+ "c": "csaldos",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ejerci": {
+   "req": 1,
+   "ro": "1 == 1",
+   "lov": {
+    "obj": "cejercic",
+    "clave": "numero"
+   }
+  },
+  "period": {
+   "req": 1,
+   "ro": "1 == 1",
+   "lov": {
+    "obj": "cperiodo",
+    "clave": "codigo"
+   }
+  },
+  "cuenta": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(cuenta) && !/^([A-Z0-9]+)([A-Z0-9\\.])*$/.test(cuenta)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "cuenta",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode_ori": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "-"
+  },
+  "empcode_des": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "-"
+  },
+  "divdeb": {
+   "req": 1,
+   "ro": "1 == 1"
+  },
+  "divhab": {
+   "req": 1,
+   "ro": "1 == 1"
+  },
+  "moneda": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(moneda)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "debe": {
+   "req": 1,
+   "ro": "1 == 1"
+  },
+  "haber": {
+   "req": 1,
+   "ro": "1 == 1"
+  },
+  "codaux": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxh",
+    "clave": "codaux",
+    "cols": [
+     "codaux",
+     "desaux"
+    ],
+    "desc": "desaux"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codaux)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaaux": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ctaaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaaux)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dimcode1": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon1",
+    "clave": "coddim1",
+    "cols": [
+     "coddim1",
+     "nomdim1",
+     "estado"
+    ],
+    "desc": "nomdim1"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode1) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode1)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode1",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dimcode2": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon2",
+    "clave": "coddim2",
+    "cols": [
+     "coddim2",
+     "nomdim2",
+     "estado"
+    ],
+    "desc": "nomdim2"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode2) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode2)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode2",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cantid1": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "cantid2": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "placon": {
+   "req": 1,
+   "ro": "1 == 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(placon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(placon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "placon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ejeper": {
+   "req": 1,
+   "ro": "1 == 1"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Saldos › Saldos cuentas",
+  "Permisos: alta no, modificar sí, borrar sí.",
+  "Probado en la demo: sin botones ni alta (insert = no); menú ⌄ «Apuntes» → capuntes de la cuenta (6 filas para 62902). Cambia al finalizar/abrir asientos (ver casientos). probado: menú ⌄."
+ ]
+}

@@ -1,0 +1,539 @@
+{
+ "c": "gvenpedl",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul_s",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart"
+   }
+  },
+  "varlog": {
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "cols": [
+     "varlog",
+     "nomvar",
+     "reffab"
+    ],
+    "desc": "nomvar",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numlot": {
+   "req": 1,
+   "ro": "garticul.lotes == 'N'",
+   "lov": {
+    "obj": "gartlote",
+    "clave": "numlot",
+    "cols": [
+     "numlot",
+     "lot_estado"
+    ],
+    "desc": "lot_estado"
+   }
+  },
+  "canped": {
+   "req": 1
+  },
+  "udmven": {
+   "req": 1,
+   "ro": "virtual_auth.precio_mod == 0",
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmalt": {
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "precio": {
+   "ro": "virtual_auth.precio_mod == 0 || preiva != null"
+  },
+  "preiva": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "dtoli1": {
+   "ro": "virtual_auth.precio_mod == 0 || docfoot != 0"
+  },
+  "dtoli2": {
+   "ro": "virtual_auth.precio_mod == 0 || docfoot != 0"
+  },
+  "dtoli3": {
+   "ro": "virtual_auth.precio_mod == 0 || docfoot != 0"
+  },
+  "impnet": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "regalo": {
+   "req": 1,
+   "oculto": "regalo == 'S' || regalo == 'G'",
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((regalo == null || ['S','N','G','M'].includes(regalo))))",
+     "msg": "Los valores del indicador de regalo son: [S] Si, [M] Manual, [G] Genera regalo y [N] no genera.",
+     "tipo": "error",
+     "campo": "regalo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "valqty": {
+   "ro": "1==1"
+  },
+  "canbon": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canadj": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canext": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canser": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canfac": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((canfac == null) || (canfac >= 0)))",
+     "msg": "La cantidad facturada debe ser mayor o igual a cero.",
+     "tipo": "error",
+     "campo": "canfac",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cananu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]odificar, [B]orrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cabid": {
+   "req": 1
+  },
+  "entini": {
+   "req": 1
+  },
+  "desvar": {
+   "ro": "garticul.desvar != 'V'"
+  },
+  "canpre": {
+   "req": 1
+  },
+  "udmpre": {
+   "req": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "dtoimp": {
+   "ro": "virtual_auth.precio_mod == 0 || docfoot != 0"
+  },
+  "impdto": {
+   "req": 1,
+   "def": 0
+  },
+  "impdte": {
+   "req": 1,
+   "def": 0
+  },
+  "impdtc": {
+   "req": 1,
+   "def": 0
+  },
+  "pretar": {
+   "ro": "1==1"
+  },
+  "dtotar": {
+   "ro": "1==1"
+  },
+  "canalt_ser": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "canpro": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canpen": {
+   "req": 1,
+   "def": 0
+  },
+  "tax_porded": {
+   "def": 100
+  },
+  "tax_porpro": {
+   "def": 100
+  },
+  "tax_oper1": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code1": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_class"
+   }
+  },
+  "tax_rule1": {
+   "ro": "1==1"
+  },
+  "tax_oper2": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code2": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_class"
+   }
+  },
+  "tax_rule2": {
+   "ro": "1==1"
+  },
+  "tax_oper3": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code3": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_class"
+   }
+  },
+  "tax_rule3": {
+   "ro": "1==1"
+  },
+  "tax_oper4": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code4": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_class"
+   }
+  },
+  "tax_rule4": {
+   "ro": "1==1"
+  },
+  "codalm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomalm"
+    ],
+    "desc": "nomalm",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "agente": {
+   "lov": {
+    "obj": "grep_agente",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "estado",
+     "nombre"
+    ],
+    "desc": "estado"
+   }
+  },
+  "terexp": {
+   "mayus": 1
+  },
+  "direxp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "entpar": {
+   "req": 1
+  },
+  "adjpar": {
+   "req": 1,
+   "def": 0
+  },
+  "pedcom": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((pedcom == null || [0,1,2].includes(pedcom))))",
+     "msg": "Los valores de generar pedido de compra son: [0] No, [1] Si recepción en almacén y [2] Si y enviar al cliente directamente.",
+     "tipo": "error",
+     "campo": "pedcom",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpro": {
+   "mayus": 1
+  },
+  "docfoot": {
+   "ro": "1==1",
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((((canadj == null) || (canadj >= 0)) && ((canext == null) || (canext >= 0))) && ((canser == null) || (canser >= 0))) && ((canpro == null) || (canpro >= 0))))",
+   "msg": "Las cantidades adjudicadas, extraídas, servidas y prometidas han de ser mayor o igual a cero.",
+   "tipo": "error",
+   "campo": "canpro",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((canser == null) || (canser == 0)) || ((canfac == null) || (canfac == 0))))",
+   "msg": "Una línea de pedido no puede tener informadas la cantidad servida y la cantidad facturada a la vez.",
+   "tipo": "error",
+   "campo": "canfac",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((canpro == null) || (canpro == 0)) || ((canpro == null) || (canpro <= (((canped - canadj) - canext) - canser)))))",
+   "msg": "La cantidad prometida no puede ser mayor a la cantidad pedida pendiente de servir.",
+   "tipo": "error",
+   "campo": "canped",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_ACT_DESC": {
+   "l": "Activar descripción",
+   "nota": "Activo si garticul.desamp != null && desamp == null; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "txt_data",
+     "l": "Texto",
+     "t": "s",
+     "sz": 2048,
+     "req": 1,
+     "defs": "${virtualerp.txt_data}",
+     "h": "Contenido del texto"
+    }
+   ],
+   "dialogoTit": "Activar descripción"
+  },
+  "BUT_GEN_ORDPRODH": {
+   "l": "Generar orden producción",
+   "nota": "Activo si document_parent.indmod != 'N' &&\r\nindmod != 'N' &&\r\n!valqty &&\r\ncanped > canser + canadj + canext; condición de servidor; pide confirmación; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "checkstk",
+     "l": "Generar si no hay stock suficiente",
+     "t": "i",
+     "req": 1,
+     "def": "1",
+     "h": "Generar si no hay stock suficiente disponible"
+    }
+   ],
+   "dialogoTit": "Generar orden producción"
+  },
+  "BUT_MODIFICAR_PRECIO": {
+   "l": "Modificar datos de transporte",
+   "nota": "Activo si ['5', '6'].includes(docfoot) &&\r\ndocument_parent.estcab != 'P'; pide confirmación; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "canped",
+     "l": "Cantidad pedida",
+     "t": "n",
+     "sz": 12,
+     "sc": 3,
+     "def": "1.0",
+     "defs": "${canped}",
+     "nx": "1==1",
+     "h": "Cantidad pedida en unidades de stock"
+    },
+    {
+     "n": "precio",
+     "l": "Precio",
+     "t": "n",
+     "sz": 16,
+     "sc": 6,
+     "def": "5.0",
+     "defs": "${precio}",
+     "nx": "1==1",
+     "h": "Precio unitario"
+    }
+   ],
+   "dialogoTit": "Modificar datos de transporte"
+  },
+  "BUT_RESERVAR": {
+   "l": "Reservar stock",
+   "nota": "Activo si document_parent.tipadj != 0 &&\r\n!(['S','A'].includes(document_parent.estado)) &&\r\ndocument_parent.indmod != 'N' &&\r\ncanpen != 0 &&\r\ndocument_parent.estcab != 'P'; condición de servidor; pide confirmación"
+  },
+  "BUT_ACTIVATE_SERVER": {
+   "l": "Activar servido",
+   "nota": "Activo si virtual_auth.servir_auth == 1 &&\r\ndocument_parent.indmod != 'N' &&\r\nindmod != 'N' &&\r\ncanpen == 0 &&\r\ncanped > canser; pide confirmación"
+  },
+  "BUT_SERVIR": {
+   "l": "Marcar como servido",
+   "nota": "Activo si virtual_auth.servir_auth != 0 && document_parent.indmod != 'N' && indmod != 'N' && canpen != 0 && \r\n['N', 'P'].includes(document_parent.estado) && document_parent.estcab == 'V'; pide confirmación"
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "nota": "Activo si virtual_auth.anular_auth == 1 && virtualerp.ico_qtyanu == 0 && \r\ndocument_parent.indmod != 'N' && indmod != 'N' && document_parent.estado != 'S'; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "codmot",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gmotanul"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "dialogoTit": "Anular"
+  },
+  "BUT_ACTIVATE": {
+   "l": "Activar",
+   "nota": "Activo si virtualerp.ico_qtyanu == 1; pide confirmación"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

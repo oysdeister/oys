@@ -1,0 +1,99 @@
+{
+ "c": "cinmcval_camsisamo",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "FECPRO": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "SISTEM": {
+   "req": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo"
+   }
+  },
+  "SISAMO": {
+   "req": 1,
+   "lov": {
+    "obj": "cinmsish",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "PORCEN": {
+   "req": 1
+  },
+  "NUMEJE": {
+   "req": 1
+  }
+ },
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "confirm": "¿Está seguro de ejecutar el proceso?",
+   "dialogo": [
+    {
+     "n": "FECPRO",
+     "l": "Fecha proceso",
+     "t": "d",
+     "req": 1
+    },
+    {
+     "n": "SISTEM",
+     "l": "Sistema",
+     "t": "s",
+     "req": 1,
+     "def": "A",
+     "fk": "csistema"
+    },
+    {
+     "n": "SISAMO",
+     "l": "Sistema amortización",
+     "t": "s",
+     "req": 1,
+     "fk": "cinmsish"
+    },
+    {
+     "n": "PORCEN",
+     "l": "% Amortización",
+     "t": "n",
+     "req": 1
+    },
+    {
+     "n": "NUMEJE",
+     "l": "Años",
+     "t": "i",
+     "req": 1
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cinmcval",
+      "donde": [
+       "codcom",
+       "codcom"
+      ],
+      "set": {
+       "sisamo": "ent.SISAMO",
+       "porcen": "ent.PORCEN",
+       "numeje": "ent.NUMEJE"
+      }
+     }
+    }
+   ],
+   "nota": "Probado en CAPASC/AF/000002 (L 10 % → L 20 %, 5 años, fecha 18-11-2026): cambia cinmcval y regenera el cuadro: una fila al % antiguo hasta el día anterior (17-11, 1,10 €) y las nuevas al 20 % desde la fecha de proceso (96,44; 800 × 4; 702,46 hasta 16-11-2031). Sin mensaje."
+  }
+ },
+ "notas": [
+  "«Proceso que realiza el cambio de amortización de los componentes según el método indicado en el formulario». Se abre desde el enlace de cinmcval_camsisamo_sel con los valores actuales del componente.",
+  "probado: Ejecutar"
+ ]
+}

@@ -1,0 +1,200 @@
+{
+ "c": "cefecrec_pcs",
+ "fecha": "2026-11-18 tesoreria/A-cartera",
+ "area": "tesoreria",
+ "campos": {
+  "pcs_seqno": {
+   "ro": "1==1"
+  },
+  "pcs_empcode": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_proyec)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_proyec",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "pcs_seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_seccio)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_seccio",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "pcs_sistem": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_sistem)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_sistem",
+     "fuente": "meta"
+    }
+   ],
+   "def": "A"
+  },
+  "pcs_jusser": {
+   "mayus": 1,
+   "def": "CA"
+  },
+  "pcs_fecpro": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(pcs_fecpro)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_fecpro",
+     "fuente": "meta"
+    }
+   ],
+   "defExpr": "hoy()"
+  },
+  "pcs_estado": {
+   "ro": "1==1",
+   "mayus": 1,
+   "def": "A",
+   "reglas": [
+    {
+     "si": "!(((pcs_estado == null || ['A','C'].includes(pcs_estado))))",
+     "msg": "El estado debe ser Abierto [A] o Cerrado [C].",
+     "tipo": "error",
+     "campo": "pcs_estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_loteid": {
+   "ro": "1==1"
+  }
+ },
+ "botones": {
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Cerrar' ?",
+   "pre": [
+    {
+     "si": "cuenta('cefecrec_ori','pcs_seqno',pcs_seqno) == 0",
+     "msg": "cefecrecEstado: Ningun efecto en origenes.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "pcs_estado": "'C'"
+     }
+    }
+   ],
+   "nota": "Demo (reclasificación 1 sin efectos): error 500 en diálogo «Se ha producido un error» con el texto literal. Con efectos origen, reclasifica (cefecrec_des) y genera asiento (enlace «Asientos contables»); no probado con efectos."
+  },
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Abrir' ?",
+   "pasos": [
+    {
+     "set": {
+      "pcs_estado": "'A'"
+     }
+    }
+   ],
+   "nota": "Deshabilitado si no está cerrada. No probado."
+  },
+  "BUT_INVERTIR": {
+   "l": "Invertir reclasificación",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Invertir reclasificación' ?",
+   "nota": "Con diálogo de campos (hasFields) no capturado; habilitado solo si cerrada y los efectos destino siguen usables y no caducados. No probado."
+  }
+ },
+ "estados": {
+  "col": "pcs_estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "C",
+    "por": "BUT_CERRAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_ABRIR"
+   }
+  ]
+ },
+ "notas": [
+  "Nuevo: todos los obligatorios llegan con defecto (Empresa 0, Sistema A, Proyecto 0, Sección 0, Fecha proceso hoy, Estado Abierto, Justificante «CA»), así que Guardar sin tocar nada graba: el justificante se numera al guardar (CA026-000001).",
+  "Borrar: «Eliminar registro · ¿Estás seguro que quieres eliminar el registro '0' ?» → Eliminar → «Éxito».",
+  "Ficha: layout Proceso (Unidad de negocio, Reclasificación, Observaciones, Efectos seleccionados, Selección de efectos (oculta si cerrada), Destino reclasificación efectos, Totales, Datos de control) y, al modificar, «Detalle origen» (cefecrec_ori) y «Detalle destino» (cefecrec_des). Enlace ⌄: Asientos contables."
+ ]
+}

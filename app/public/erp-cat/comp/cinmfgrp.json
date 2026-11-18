@@ -1,0 +1,40 @@
+{
+ "c": "cinmfgrp",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('cinmfgrp','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_cinmfgrp) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cinmftab','codgrp',codigo)",
+   "msg": "Key value for constraint (informix.p_cinmfgrp) is still being referenced.",
+   "tipo": "error",
+   "fuente": "deducido"
+  }
+ ],
+ "notas": [
+  "Tabla oficial de grupos fiscales (ES0 Terrenos … ES9). 11 filas en TUTORIAL.",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.»."
+ ]
+}

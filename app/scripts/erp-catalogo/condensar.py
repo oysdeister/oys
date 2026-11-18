@@ -1,31 +1,47 @@
 #!/usr/bin/env python3
 """Condensa los metadatos descargados de Axional VNext (nextdemo, base tutorial) en el catálogo del ERP de práctica.
 
-Uso: python3 condensar.py <carpeta cap con raw/, index.json y menutree.json> <salida app/public/erp-cat>
+Uso: python3 condensar.py <carpeta cap> <salida app/public/erp-cat>
+
+La carpeta cap la llena ~/.cache/oys-demo-cap/transversal/harvest.mjs (recaptura 18-11-2026):
+  raw/<code>.list.json.gz   GET table/<code>/list/<B64>/1
+  raw/<code>.row.json.gz    GET table/<code>/form/1/<B64>/row          (ficha: layouts, botones, enlaces ⌄)
+  raw/<code>.reset.json.gz  GET table/<code>/list/<B64>/dml/insert/reset/form (diálogo Nuevo: layouts y defectos)
+  btn/<code>.<BOTON>.json.gz POST table/<code>/form/1/<B64>/action/<BOTON>/fields/1 (campos del diálogo)
+  sub/<sub>.json.gz         GET table/<code>/form/1/<B64>/cursor/<tab>/1/list (subrejillas sin objeto propio)
+  menutree.json             GET menu/tree?empty_folders=false
+  index_prev.json           tipo y total de cada objeto del catálogo anterior
+Los objetos sin captura nueva (consultas e informes) se conservan tal cual desde la salida anterior.
 
 Genera:
   menu.json            árbol del menú: {n, c?, k?, h?}
   obj/<code>.json      una pantalla: columnas, lista, layouts, botones, enlaces, filtros y filas de ejemplo
   buscar.json          índice plano para el buscador ⌘K: [nombre, código, ruta]
+  val.json             funciones JS de validación de campos (input_functionBody), por id (col.vf)
 El formato está descrito en app/src/erp/catalogo/tipos.ts.
 """
-import gzip, json, os, re, sys
+import base64, gzip, hashlib, json, os, re, sys, urllib.parse
 
 CAP, OUT = sys.argv[1], sys.argv[2]
 RAW = os.path.join(CAP, 'raw')
 MAX_FILAS = 12
 os.makedirs(os.path.join(OUT, 'obj'), exist_ok=True)
-index = json.load(open(os.path.join(CAP, 'index.json')))
+index = json.load(open(os.path.join(CAP, 'index_prev.json')))
+VAL = {}
 
 
-def load(name):
-    p = os.path.join(RAW, name + '.json.gz')
+def load(name, carpeta=RAW):
+    p = os.path.join(carpeta, name + '.json.gz')
     if not os.path.exists(p):
         return None
     try:
         return json.loads(gzip.open(p).read())
     except Exception:
         return None
+
+
+def html_a_texto(h):
+    return limpia(re.sub(r'<[^>]+>', ' ', (h or '').replace('&nbsp;', ' ')))
 
 
 def limpia(s):
@@ -86,10 +102,50 @@ def col(m):
         pk = (fks[0].get('pkOptions') or {})
         if pk.get('pkTableName'):
             c['fk'] = pk['pkTableName']
+            lov = {'t': pk['pkTableName'], 'c': pk.get('pkColumns') or []}
+            if pk.get('pkMethod'):
+                lov['m'] = pk['pkMethod']
+            fo = fks[0].get('fkOptions') or {}
+            if (fo.get('fkColumns') or [m['columnName']]) != [m['columnName']]:
+                lov['fc'] = fo['fkColumns']
+            if fks[0].get('filterColumns'):
+                lov['flt'] = fks[0]['filterColumns']
+            tipo = (fo.get('fkType') or {}).get('info')
+            if tipo and tipo != 'HARD_BASE':
+                lov['k'] = tipo
+            if fo.get('fkApplyExpression'):
+                lov['x'] = fo['fkApplyExpression'][:300]
+            if len(fks) > 1:
+                lov['alt'] = [(f.get('pkOptions') or {}).get('pkTableName') for f in fks[1:]]
+            c['lov'] = lov
+    # expresiones y defectos de servidor (recaptura 18-11-2026)
+    nx = inp.get('nullable_expr')
+    if nx:
+        c['nx'] = nx[:400]
+    hx = inp.get('hidden_expr')
+    if hx:
+        c['hx'] = hx[:400]
+    cx = inp.get('computed_expr')
+    if cx:
+        c['cx'] = cx[:400]
+    ds = inp.get('input_default_server_value')
+    if ds not in (None, '') and str(ds) != c.get('def'):
+        c['defs'] = str(ds)[:200]
+    if inp.get('input_default_mode') and inp.get('input_default_mode') != 'IFNULL':
+        c['defm'] = inp['input_default_mode']
+    if inp.get('input_hint'):
+        c['hint'] = limpia(str(inp['input_hint']))[:200]
+    if inp.get('input_mask'):
+        c['mask'] = str(inp['input_mask'])[:60]
+    fb = inp.get('input_functionBody')
+    if fb:
+        k = hashlib.sha1(fb.encode()).hexdigest()[:10]
+        VAL[k] = fb
+        c['vf'] = k
     return c
 
 
-def botones(cur):
+def botones(cur, code=None):
     res = []
     for b in ((cur.get('actions') or {}).get('button') or {}).get('rows') or []:
         lab = b.get('label') or {}
@@ -112,6 +168,18 @@ def botones(cur):
             x['campos'] = 1
         if b.get('selectionType') == 'MULTIPLE':
             x['sel'] = 'M'
+        tip = html_a_texto(lab.get('tooltip'))
+        if tip:
+            x['tip'] = tip[:300]
+        if code and x.get('campos'):
+            campos = load(code + '.' + (b.get('code') or ''), os.path.join(CAP, 'btn'))
+            if isinstance(campos, list) and campos:
+                x['dlg'] = [col(m) for m in campos][:30]
+                ncol = (b.get('form') or {}).get('columns')
+                if ncol and ncol > 1:
+                    x['dcol'] = ncol
+        if b.get('requiresUpdate'):
+            x['rq'] = 'u'
         if any(y['l'] == x['l'] and y.get('g') == x.get('g') for y in res):
             continue
         res.append(x)
@@ -158,12 +226,49 @@ subobjetos = set()
 escritos = {}
 
 
+def enlaces(rs, fila):
+    lk = (rs.get('row') or {}).get('links') or {}
+    urls = (lk.get('rows') or {}).get('0') or []
+    res = []
+    for i, x in enumerate(lk.get('links') or []):
+        if not x.get('label'):
+            continue
+        e = {'l': limpia(x['label']), 'm': x.get('mode')}
+        if x.get('hide_if_disabled'):
+            e['hid'] = 1
+        u = urls[i] if i < len(urls) else None
+        if isinstance(u, str):
+            mm = re.search(r'/view/app/tutorial/(table|vtable|qbe)/([^/?]+)', u)
+            if mm:
+                e['o'] = mm.group(2)
+                if mm.group(1) != 'table':
+                    e['ok'] = mm.group(1)
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(u).query).get('q')
+            if q:
+                try:
+                    ui = json.loads(base64.b64decode(q[0] + '==').decode('utf8'))
+                    f = {}
+                    for col_, v in (ui.get('cols') or {}).items():
+                        val = v.get('v') if isinstance(v, dict) else v
+                        src = next((k for k, vv in (fila or {}).items() if vv is not None and str(vv).strip() == str(val).strip() and str(val) != ''), None)
+                        f[col_] = src if src else '=' + str(val)
+                    if f:
+                        e['f'] = f
+                except Exception:
+                    pass
+        res.append(e)
+    return res
+
+
 def condensa(code, info):
-    obj = {'c': code, 'k': info.get('kind') or 'x'}
-    form = load(code + '.form')
+    obj = {'c': code, 'k': info.get('k') or 'x'}
+    row = load(code + '.row')
     lista = load(code + '.list')
-    qbe = load(code + '.qbe')
-    cur = (form or {}).get('cursor') or lista or {}
+    reset = load(code + '.reset')
+    rw = (reset or {}).get('wrapper') or {}
+    form = row if (row and (row.get('form') or {}).get('layouts')) else (rw if (rw.get('form') or {}).get('layouts') else row)
+    qbe = None
+    cur = (row or {}).get('cursor') or lista or rw.get('cursor') or {}
     src = cur.get('source') or {}
     rs = cur.get('resultSet') or {}
     meta = rs.get('metadata') or []
@@ -189,11 +294,30 @@ def condensa(code, info):
             obj['filtros'] = [limpia(f['label']) for f in fr]
         perm = cur.get('permissions') or {}
         obj['perm'] = {k[0]: 1 for k in ('insert', 'update', 'delete') if perm.get(k)}
-        obj['bot'] = botones(cur)
-        links = ((rs.get('row') or {}).get('links') or {}).get('links') or []
-        enl = [{'l': limpia(x['label']), 'm': x.get('mode')} for x in links if x.get('label')]
+        obj['bot'] = botones(cur, code) or botones(lista or {}, code)
+        fila1 = None
+        if rs.get('rowset'):
+            fila1 = dict(zip([m['columnName'] for m in meta], rs['rowset'][0]))
+        enl = enlaces(rs, fila1)
         if enl:
             obj['enl'] = enl
+        nl = cur.get('newLabel') or (lista or {}).get('newLabel') or (rw.get('cursor') or {}).get('newLabel')
+        if nl and nl != 'Nuevo':
+            obj['nuevo'] = limpia(nl)
+        ev = list(((cur.get('columns') or {}).get('events') or {}).keys())
+        if ev:
+            obj['ev'] = ev
+        dd = (reset or {}).get('data') or {}
+        porcol = {c['n']: c for c in cc}
+        nd = {}
+        for k, v in dd.items():
+            if k in ('user_created', 'date_created', 'user_updated', 'date_updated') or v is None or isinstance(v, (dict, list)):
+                continue
+            if k in porcol and porcol[k].get('def') == str(v):
+                continue
+            nd[k] = json_val(v)
+        if nd:
+            obj['ndef'] = nd
         # filas de ejemplo: de la lista (varias) o de la ficha (una)
         lrs = ((lista or {}).get('resultSet') or {})
         filas = []
@@ -212,7 +336,9 @@ def condensa(code, info):
         obj['total'] = ((lrs.get('pagination') or {}).get('totalTableRows')) or len(filas)
     if form and form.get('form'):
         obj['lay'] = layouts(form['form'])
-        for L in obj['lay']:
+        if not obj['lay']:
+            del obj['lay']
+        for L in obj.get('lay') or []:
             for cj in L['cajas']:
                 for t in cj['tabs']:
                     if t.get('o'):
@@ -237,9 +363,69 @@ def escribe(code, obj):
     escritos[code] = obj
 
 
+def previo(code):
+    p = os.path.join(OUT, 'obj', code + '.json')
+    if os.path.exists(p):
+        return json.load(open(p))
+    return None
+
+
+def subrejilla(code):
+    d = load(code, os.path.join(CAP, 'sub'))
+    if not d:
+        return None
+    rs = d.get('resultSet') or {}
+    meta = rs.get('metadata') or []
+    if not meta:
+        return None
+    src = d.get('source') or {}
+    obj = {'c': code, 'k': 'vtable', 'tit': limpia(src.get('title') or rs.get('title') or code), 'sub': 1}
+    vistos, cc = set(), []
+    for m in meta:
+        if m['columnName'] in vistos:
+            continue
+        vistos.add(m['columnName'])
+        cc.append(col(m))
+    obj['cols'] = cc
+    obj['lista'] = [c['n'] for c in cc if not c.get('hid')][:60]
+    obj['bot'] = botones(d)
+    names = [m['columnName'] for m in meta]
+    filas = [[json_val(dict(zip(names, r)).get(c['n'])) for c in cc] for r in (rs.get('rowset') or [])[:MAX_FILAS]]
+    if filas:
+        obj['filas'] = filas
+    obj['total'] = ((rs.get('pagination') or {}).get('totalTableRows')) or len(filas)
+    perm = d.get('permissions') or {}
+    obj['perm'] = {k[0]: 1 for k in ('insert', 'update', 'delete') if perm.get(k)}
+    return obj
+
+
+nuevos = 0
 for code, info in index.items():
-    if info.get('ok'):
-        escribe(code, condensa(code, info))
+    if os.path.exists(os.path.join(RAW, code + '.list.json.gz')) or os.path.exists(os.path.join(RAW, code + '.row.json.gz')):
+        o = condensa(code, info)
+        pv = previo(code)
+        if not o.get('cols'):
+            o = pv or o
+        else:
+            nuevos += 1
+            # si la captura nueva no trae layouts o enlaces (tabla vacía) se conservan los anteriores
+            for k in ('lay', 'enl'):
+                if pv and pv.get(k) and not o.get(k):
+                    o[k] = pv[k]
+        escribe(code, o)
+    else:
+        o = previo(code)
+        if o:
+            escribe(code, o)
+for f in sorted(os.listdir(os.path.join(CAP, 'sub'))) if os.path.isdir(os.path.join(CAP, 'sub')) else []:
+    code = f[:-len('.json.gz')]
+    if code in escritos:
+        continue
+    o = subrejilla(code)
+    if o:
+        escribe(code, o)
+json.dump(VAL, open(os.path.join(OUT, 'val.json'), 'w'), ensure_ascii=False, separators=(',', ':'))
+print('recapturados', nuevos)
 
 # menú
 t = json.load(open(os.path.join(CAP, 'menutree.json')))

@@ -1,0 +1,123 @@
+{
+ "c": "gven_dlvplan_dist",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "dlvd_entini": {
+   "req": 1
+  },
+  "dlvd_entfin": {
+   "req": 1
+  },
+  "dlvd_codart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo"
+   }
+  },
+  "dlvd_varlog": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dlvd_cantid": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((dlvd_cantid == null) || (dlvd_cantid >= 0)))",
+     "msg": "La cantidad de reparto debe ser mayor o igual a 0.",
+     "tipo": "error",
+     "campo": "dlvd_cantid",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvd_udmven": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni"
+   }
+  },
+  "dlvd_udmalt": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni"
+   }
+  },
+  "dlvd_confirm": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "dlvd_status": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((dlvd_status == null || [0,1].includes(dlvd_status))))",
+     "msg": "El estado del reparto debe ser: [0]Pendiente o [1]Servida",
+     "tipo": "error",
+     "campo": "dlvd_status",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvd_linped": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((dlvd_entini == null || dlvd_entfin == null) || (dlvd_entini.getTime() <= dlvd_entfin.getTime())))",
+   "msg": "La fecha de inicio no puede ser mayor a la fecha fin.",
+   "tipo": "error",
+   "campo": "dlvd_entini",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((dlvd_udmalt == null || dlvd_udmalt.length === 0)) && ((dlvd_canalt == null))) || ((!(dlvd_udmalt == null || dlvd_udmalt.length === 0)) && (!(dlvd_canalt == null)))))",
+   "msg": "La cantidad y unidad alternativa se han de informar de forma conjunta.",
+   "tipo": "error",
+   "campo": "dlvd_udmalt",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((dlvd_udmven != dlvd_udmpre) || ((dlvd_udmven == dlvd_udmpre) && ((dlvd_cantid == null || dlvd_canpre == null) || (dlvd_cantid == dlvd_canpre)))))",
+   "msg": "Las unidades de venta y precio deben ser diferentes. De ser iguales, la cantidad de precio y la cantidad a entregar también deben ser iguales.",
+   "tipo": "error",
+   "campo": "dlvd_canpre",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_CONFIRMADO": {
+   "l": "Confirmar",
+   "nota": "Activo si dlvd_confirm == 0 && dlvd_status == 0; condición de servidor"
+  },
+  "BUT_DELETE_PEDIDO": {
+   "l": "Borrar línea pedido",
+   "nota": "Activo si gven_dlvplan_head.dlvh_estcab != 'P' && gven_dlvplan_head.dlvh_estado != 'A'  && dlvd_status != 0; abre diálogo con campos"
+  },
+  "BUT_GENERAR_PEDIDO": {
+   "l": "Generar pedido",
+   "nota": "Activo si gven_dlvplan_head.dlvh_estcab == 'V' && dlvd_status == 0 && (gven_dlvplan_head.dlvt_order ||  '') != ''; condición de servidor; abre diálogo con campos"
+  },
+  "BUT_NO_CONFIRMADO": {
+   "l": "Desconfirmar",
+   "nota": "Activo si dlvd_confirm == 1 && dlvd_status == 0; condición de servidor"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

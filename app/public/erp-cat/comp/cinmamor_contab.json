@@ -1,0 +1,147 @@
+{
+ "c": "cinmamor_contab",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "CONTAB": {
+   "req": 1
+  },
+  "EMPCODE": {
+   "req": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "estado"
+    ],
+    "desc": "empname"
+   }
+  },
+  "AGRCON": {
+   "req": 1
+  },
+  "FECINI": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "FECFIN": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "cinmamor.codinm": {
+   "lov": {
+    "obj": "cinmhead",
+    "clave": "codinm",
+    "cols": [
+     "codinm",
+     "nominm"
+    ],
+    "desc": "nominm"
+   }
+  }
+ },
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "confirm": "¿Está seguro de ejecutar el proceso?",
+   "dialogo": [
+    {
+     "n": "CONTAB",
+     "l": "Acción",
+     "t": "i",
+     "req": 1,
+     "o": [
+      {
+       "k": "0",
+       "v": "Contabilizar"
+      },
+      {
+       "k": "1",
+       "v": "Descontabilizar"
+      }
+     ],
+     "h": "Acción a procesar"
+    },
+    {
+     "n": "EMPCODE",
+     "l": "Empresa",
+     "t": "s",
+     "req": 1,
+     "fk": "cempresa"
+    },
+    {
+     "n": "AGRCON",
+     "l": "Tipo de agrupción",
+     "t": "s",
+     "req": 1,
+     "o": [
+      {
+       "k": "B",
+       "v": "Bien"
+      },
+      {
+       "k": "E",
+       "v": "Elemento"
+      },
+      {
+       "k": "C",
+       "v": "Componente"
+      },
+      {
+       "k": "T",
+       "v": "Total"
+      }
+     ]
+    },
+    {
+     "n": "FECINI",
+     "l": "Fecha inicial",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha de inicio de período"
+    },
+    {
+     "n": "FECFIN",
+     "l": "Fecha fin",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha de finalización de período"
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cinmamor",
+      "donde": [
+       "estado",
+       "'N'"
+      ],
+      "set": {
+       "estado": "'C'"
+      }
+     }
+    },
+    {
+     "crea": {
+      "obj": "casientos",
+      "valores": {
+       "empcode": "ent.EMPCODE",
+       "fecha": "ent.FECFIN",
+       "diario": "'DG'",
+       "origen": "'cinmamor'"
+      }
+     }
+    }
+   ],
+   "nota": "Probado (bien CAPASC, Componente, 01-11/31-12-2026): Contabilizar marca C las 3 amortizaciones del periodo y crea UN asiento (63: diario DG, fecha 31-12-2026 = fecha fin, 184,93 = 61,64+49,32+73,97, 6 apuntes, origen cinmamor, loteid en cinmamor). Descontabilizar devuelve las filas a N y crea un contraasiento negativo (66: −184,93) en vez de borrar el 63. Sin filas en el periodo no hace nada. Tras ejecutar, la pantalla muestra «Se ha producido un error» con «Task … not found» aunque el proceso se haya hecho (comportamiento de la demo)."
+  }
+ },
+ "notas": [
+  "Formulario de proceso (qbe): Variables (Acción*, Empresa*, Tipo de agrupción* —sic—, Fecha inicial*, Fecha fin*) y Columnas de consulta (Bien, Elemento, Componente, Sistema, Proyecto, Sección, Centro coste, Cuenta explotación, Presupuesto, Partida, Dimensión 1 y 2). Defectos de fecha: primer y último día del mes anterior.",
+  "Texto de cabecera: «Genera asiento de amortización periódica según el filtro seleccionado. Además marca los registros en el cuadro de amortización de cada activo, como contabilizados.»",
+  "Obligatorios vacíos: «Campo requerido». Fecha mal tecleada: «Formato de consulta de date incorrecto (31-12-202026)» (literal provocado).",
+  "probado: Ejecutar (Contabilizar y Descontabilizar)"
+ ]
+}

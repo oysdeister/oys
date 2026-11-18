@@ -1,0 +1,109 @@
+{
+ "c": "cconsol_grupoh",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "grupoc": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cconsol_grupoh",
+    "clave": "grupoc",
+    "cols": [
+     "grupoc",
+     "descri",
+     "empcode",
+     "esifrs"
+    ],
+    "desc": "descri"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(grupoc) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(grupoc)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "grupoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "descri": {
+   "req": 1
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecini": {
+   "req": 1
+  },
+  "inieje": {
+   "req": 1
+  },
+  "fcomer": {
+   "req": 1,
+   "def": 0
+  },
+  "nivelc": {
+   "req": 1,
+   "def": 0
+  },
+  "esifrs": {
+   "req": 1,
+   "mayus": 1,
+   "def": "N"
+  },
+  "estado": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A"
+  },
+  "tipcon": {
+   "req": 1,
+   "def": 0
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((fecfin == null)) && (estado == 'A')) || (((fecfin == null || fecini == null) || (fecfin.getTime() >= fecini.getTime())) && (estado == 'C'))))",
+   "msg": "La fecha final deber ser igual o posterior a la fecha de inicio y  en estado cerrado.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Consolidación › Grupos consolidación › Grupos de consolidación",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

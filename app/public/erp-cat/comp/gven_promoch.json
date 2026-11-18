@@ -1,0 +1,131 @@
+{
+ "c": "gven_promoch",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nompro": {
+   "req": 1
+  },
+  "tipdoc": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gven_promocd",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "E",
+   "mayus": 1
+  },
+  "errcab": {
+   "req": 1,
+   "def": 0
+  },
+  "orden": {
+   "req": 1,
+   "def": 0
+  },
+  "lunes": {
+   "def": 1
+  },
+  "martes": {
+   "def": 1
+  },
+  "miercoles": {
+   "def": 1
+  },
+  "jueves": {
+   "def": 1
+  },
+  "viernes": {
+   "def": 1
+  },
+  "sabado": {
+   "def": 1
+  },
+  "domingo": {
+   "def": 1
+  },
+  "maxapl": {
+   "req": 1,
+   "def": 0
+  },
+  "numapl": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha inicial ha de ser anterior a la fecha fin.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((fecini == null)) && ((fecfin == null))) || ((!(fecini == null)) && (!(fecfin == null)))))",
+   "msg": "Si se informa la fecha inicial debe informarse a la fecha fin.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((horini == null)) && ((horfin == null))) || ((!(horini == null)) && (!(horfin == null)))))",
+   "msg": "Si se informa la hora inicial debe informarse a la hora fin.",
+   "tipo": "error",
+   "campo": "horini",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((estcab != 'E') && ((errcab == null) || (errcab == 0))) || (estcab == 'E')))",
+   "msg": "En estado bloqueado debe estar informado el número del bloqueo.",
+   "tipo": "error",
+   "campo": "estcab",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si 1==1; abre diálogo con campos"
+  },
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si 1==1"
+  },
+  "BUT_BLOQUEAR": {
+   "l": "Bloquear",
+   "nota": "Activo si 1==1; condición de servidor; abre diálogo con campos"
+  }
+ },
+ "notas": [
+  "Estados de estcab: E=Bloqueado, V=Validado, H=Histórico",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

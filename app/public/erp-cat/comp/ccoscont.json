@@ -1,0 +1,427 @@
+{
+ "c": "ccoscont",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "orden": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ccoscont",
+    "clave": "orden",
+    "cols": [
+     "diario",
+     "empcode",
+     "proyec"
+    ],
+    "desc": "diario"
+   }
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "centro": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen",
+     "estado",
+     "refcen"
+    ],
+    "desc": "nomcen"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(centro) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(centro)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "centro",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaexp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaexp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "placon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(placon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(placon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "placon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "porcen": {
+   "req": 1,
+   "def": 0
+  },
+  "debe": {
+   "req": 1,
+   "def": 0
+  },
+  "haber": {
+   "req": 1,
+   "def": 0
+  },
+  "dimcode1": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon1",
+    "clave": "coddim1",
+    "cols": [
+     "coddim1",
+     "nomdim1",
+     "estado"
+    ],
+    "desc": "nomdim1"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode1) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode1)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode1",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cantid1": {
+   "req": 1,
+   "def": 0
+  },
+  "dimcode2": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon2",
+    "clave": "coddim2",
+    "cols": [
+     "coddim2",
+     "nomdim2",
+     "estado"
+    ],
+    "desc": "nomdim2"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode2) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode2)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode2",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cantid2": {
+   "req": 1,
+   "def": 0
+  },
+  "contra_cuenta": {
+   "mayus": 1
+  },
+  "tercer": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(tercer) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(tercer)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "apteid": {
+   "lov": {
+    "obj": "capuntes",
+    "clave": "id_apunte",
+    "cols": [
+     "docser",
+     "refext_serie",
+     "moneda"
+    ],
+    "desc": "docser"
+   }
+  },
+  "id_asiento": {
+   "req": 1
+  },
+  "fecha": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "diario": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdia"
+    ],
+    "desc": "nomdia"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(diario) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(diario)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "diario",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "jusser": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "docser": {
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "sistem": {
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codcon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "coment"
+    ],
+    "desc": "coment"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codcon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codcon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((debe == null) || (debe == 0)) || ((haber == null) || (haber == 0))))",
+   "msg": "Debe y Haber, al menos uno debe ser igual a 0.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_DISTRIBUIR": {
+   "l": "Distribuir",
+   "nota": "Redistribuye los costos. · Habilitado si: apteid != null · Abre un diálogo con campos",
+   "dialogoTit": "Distribuir",
+   "dialogo": [
+    {
+     "n": "codimp",
+     "l": "Código",
+     "t": "s",
+     "req": 1,
+     "h": "Código de programa de porcentajes"
+    }
+   ],
+   "pre": [
+    {
+     "si": "busca('casientos','id_asiento',id_asiento,'estado') == 'C'",
+     "msg": "Asiento ID ${id_asiento} contabilizado. No se puede alterar",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "BUT_AJUSTE_REDONDEO": {
+   "l": "Ajustar redondeo",
+   "nota": "Ajusta el rendondeo de los campos transaccionales. · Habilitado si: apteid != null",
+   "pre": [
+    {
+     "si": "busca('casientos','id_asiento',id_asiento,'estado') == 'C'",
+     "msg": "Asiento ID ${id_asiento} finalizado. No se puede alterar",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Costes › Movimientos",
+  "Permisos: alta no, modificar sí, borrar sí.",
+  "Probado en la demo sobre el movimiento de coste de la factura CAP CAPF03 (asiento 96, contabilizado): Distribuir (diálogo «Código*» de programa de reparto) → «Asiento ID 96 contabilizado. No se puede alterar»; Ajustar redondeo → «Asiento ID 96 finalizado. No se puede alterar». Sin cambios en ccoscont.",
+  "El caso de éxito no se pudo probar: necesita un asiento provisional con costes y un programa de reparto (ccosimpc está vacío en la demo).",
+  "Menú ⌄: «Apuntes» → capuntes del apunte (1 fila), «Asientos contables» → el asiento, «Saldos» → csaldos.",
+  "probado: BUT_DISTRIBUIR y BUT_AJUSTE_REDONDEO (precondición «asiento contabilizado/finalizado»), menú ⌄ (3 entradas). Crudos: raw/contabilidad/b1/R_ccoscont.json."
+ ]
+}

@@ -1,0 +1,153 @@
+{
+ "c": "cefeplah",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "clase": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1
+  },
+  "codigo": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(codigo)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "nomast": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(nomast)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "nomast",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "feccon": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(feccon)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "feccon",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1
+  },
+  "codpla": {
+   "lov": {
+    "obj": "ccon_template_xls",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nombre"
+   }
+  },
+  "diario": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdia"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomdia"
+   }
+  },
+  "codcon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "coment"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "coment"
+   }
+  },
+  "jusser": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "mask_name"
+   }
+  },
+  "suscta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "descri"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(clase) || vacio(codigo) || vacio(nomast) || vacio(feccon)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && cuenta('cefeplah','codigo',codigo) > 0 && busca('cefeplah','codigo',codigo,'clase') == clase",
+   "msg": "Unique constraint (informix.p_cefeplah) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cefeacti','codast',codigo)",
+   "msg": "Key value for constraint (informix.p_cefeplah) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Nuevo = «Añadir enlace» (diálogo «ENLACES CONTABLES DE CARTERA»). Guardar vacío: «Este campo es obligatorio.» en Clase, Interfase, Descripción asiento y en el grupo de tarjetas «Fecha contabilización» (Preguntar / Sistema / Remesa / Vencimiento, sin valor por defecto) + «Hay errores en los datos del formulario». «Sustitución cuentas» son tarjetas Tercero / Perceptor / Banco / Efecto / No (opcional).",
+  "Lupa inexistente (Diario ZZ): «Error en la validación» (POST fk/cefeplah/diario/verify/cdiarios → 204).",
+  "Duplicado (C/CCIN): 500 «Unique constraint (informix.p_cefeplah) violated.».",
+  "Borrar con hijos (CAPX usado como Asiento en la acción CAPACC): «Se ha producido un error» «Key value for constraint (informix.p_cefeplah) is still being referenced.». Confirmación previa: «Eliminar registro» «¿Estás seguro que quieres eliminar el registro 'CAP enlace captura' ?».",
+  "Ficha form/1: vistas Tesorería (cefeplal_tes) y Acciones (cefeacti). Sin menú ⌄.",
+  "probado: Nuevo «Añadir enlace» (guardar vacío), lupa Diario inexistente, duplicado, borrar con hijos (CAPX). Sin botones ni Acciones."
+ ]
+}

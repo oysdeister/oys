@@ -1,0 +1,577 @@
+{
+ "c": "cfinconh",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "fconid": {
+   "ro": "true",
+   "lov": {
+    "obj": "cfinconh",
+    "clave": "fconid",
+    "cols": [
+     "fconid",
+     "codcon",
+     "codfin",
+     "desfin"
+    ],
+    "desc": "codcon",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cfincond",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descon",
+     "estado",
+     "actpas"
+    ],
+    "desc": "descon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codcon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codcon))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "role": {
+   "req": 1
+  },
+  "codfin": {
+   "req": 1,
+   "reqSi": "!(true)",
+   "mayus": 1
+  },
+  "desfin": {
+   "req": 1
+  },
+  "reffin": {
+   "req": 1
+  },
+  "fecsol": {
+   "req": 1
+  },
+  "estado": {
+   "def": "S",
+   "ro": "true",
+   "mayus": 1
+  },
+  "fconid_rel": {
+   "ro": "true"
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "nomcom",
+     "estado"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "req": 1,
+   "def": "0",
+   "ro": "empcode == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(proyec))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "def": "0",
+   "ro": "empcode == null && proyec == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "filtro": "(vacio(proyec) || l.proyec == proyec) && (vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(seccio))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode_rel": {
+   "ro": "role != 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "proyec_rel": {
+   "ro": "role != 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "filtro": "(vacio(empcode_rel) || l.empcode_rel == empcode_rel)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "seccio_rel": {
+   "ro": "role != 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "filtro": "(vacio(proyec) || l.proyec == proyec) && (vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tercer": {
+   "ro": "role != 2",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tercer) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(tercer))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipdir": {
+   "ro": "role != 2",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "filtro": "(vacio(tercer) || l.tercer == tercer)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tipdir) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(tipdir))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tipdir",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codcta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cfinctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri",
+     "cbcplp",
+     "cbcpcp"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctafin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctafin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "linfin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "tlinefin",
+    "clave": "linfin",
+    "cols": [
+     "linfin",
+     "deslin"
+    ],
+    "desc": "deslin",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(linfin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(linfin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "linfin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "metamo": {
+   "req": 1,
+   "def": "F",
+   "mayus": 1
+  },
+  "modamo": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "diacal": {
+   "req": 1,
+   "def": 365
+  },
+  "numcuo": {
+   "req": 1,
+   "def": 1
+  },
+  "fecamo": {
+   "req": 1
+  },
+  "indhis": {
+   "req": 1,
+   "def": 0
+  },
+  "valnet": {
+   "req": 1
+  },
+  "divisa": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(divisa) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(divisa))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "divisa",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cambio": {
+   "req": 1,
+   "def": 1
+  },
+  "valini": {
+   "req": 1,
+   "def": 0
+  },
+  "valres": {
+   "def": 0
+  },
+  "capint": {
+   "req": 1,
+   "def": 0
+  },
+  "totint": {
+   "req": 1,
+   "def": 0
+  },
+  "porint": {
+   "req": 1
+  },
+  "perrev": {
+   "req": 1,
+   "def": 0
+  },
+  "pordif": {
+   "req": 1,
+   "def": 0
+  },
+  "intini": {
+   "req": 1,
+   "def": 0
+  },
+  "varicuo": {
+   "def": 0
+  },
+  "impnet": {
+   "req": 1,
+   "def": 0
+  },
+  "impini": {
+   "req": 1,
+   "def": 0
+  },
+  "totret": {
+   "req": 1,
+   "def": 0
+  },
+  "totimp": {
+   "req": 1,
+   "def": 0
+  },
+  "codimp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_class",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codret": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_class",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cadret": {
+   "req": 1,
+   "def": "L"
+  },
+  "inicap": {
+   "req": 1,
+   "def": 0
+  },
+  "cuocap": {
+   "req": 1
+  },
+  "plzcap": {
+   "req": 1,
+   "def": 0
+  },
+  "iniint": {
+   "req": 1,
+   "def": 0
+  },
+  "cuoint": {
+   "req": 1,
+   "def": 0
+  },
+  "plzint": {
+   "req": 1,
+   "def": 0
+  },
+  "contab_auto": {
+   "def": 1
+  },
+  "totcom": {
+   "req": 1,
+   "def": 0
+  },
+  "rowtes": {
+   "ro": "true"
+  },
+  "loteid": {
+   "ro": "true"
+  },
+  "comest": {
+   "req": 1,
+   "def": 0
+  },
+  "comape": {
+   "req": 1,
+   "def": 0
+  },
+  "comini": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && !existe('cfincond','codigo',codcon)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cfinconh7).",
+   "tipo": "error",
+   "campo": "codcon",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(cuocap)",
+   "msg": "Cannot insert a null into column (cfinconh.cuocap).",
+   "tipo": "error",
+   "campo": "cuocap",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "BUT_COPIAR_CONTRATO": {
+   "l": "Copiar contrato",
+   "nota": "Genera una copia del contrato actual.. abre diálogo con campos"
+  },
+  "BUT_CONTAB_NO_AUTOMATICO": {
+   "l": "Contabilidad NO Automatica",
+   "nota": "Desactiva la contabilización automática.. Visible/habilitado si: contab_auto == 1 && estado == 'A'. pide confirmación"
+  },
+  "BUT_CONTAB_AUTOMATICO": {
+   "l": "Contabilizar Automático",
+   "nota": "Contabiliza automáticamente el registro de financiaciones.. Visible/habilitado si: contab_auto == 0 && estado == 'A'. pide confirmación"
+  },
+  "BUT_CANCELAR_CONTRATO": {
+   "l": "Cancelar contrato",
+   "nota": "Visible/habilitado si: estado != 'C'"
+  },
+  "BUT_DESACTIVAR_CONTRATO": {
+   "l": "Desactivar contrato",
+   "nota": "Desactiva el contrato y elimina todas las relaciones existentes.. Visible/habilitado si: estado == 'A' && !(fconid_rel == null || fconid_rel == '' && role == 2) || estado == 'A' && (fconid_rel == null || fconid_rel == '' && role == 2)"
+  },
+  "BUT_SIMULA_CONTABILIZAR": {
+   "l": "Simular contabilización",
+   "nota": "Simula la contabilización.. Visible/habilitado si: indhis == 2"
+  },
+  "BUT_REACTIVA_CONTRATO": {
+   "l": "Reactivar contrato",
+   "nota": "Visible/habilitado si: estado == 'C'"
+  },
+  "BUT_ACTIVAR_CONTRATO": {
+   "l": "Activar contrato",
+   "nota": "Activa el contrato de registro de financiaciones.. Visible/habilitado si: estado == 'S' && cfincond.fintip == 3. abre diálogo con campos | Variante sin diálogo si cfincond.fintip != 3 (el catálogo solo tiene un código BUT_ACTIVAR_CONTRATO)."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "S"
+    ],
+    "a": "A",
+    "por": "BUT_ACTIVAR_CONTRATO"
+   },
+   {
+    "de": [
+     "S",
+     "A"
+    ],
+    "a": "C",
+    "por": "BUT_CANCELAR_CONTRATO"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_REACTIVA_CONTRATO"
+   },
+   {
+    "de": [
+     "A"
+    ],
+    "a": "S",
+    "por": "BUT_DESACTIVAR_CONTRATO"
+   }
+  ]
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'Financiaciones a largo plazo', editMode ROW, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "TUTORIAL no tiene contratos (0 filas) ni tipos de financiación (cfincond vacío) y el tipo CAP no se pudo crear (check c_cfincond6): los botones solo están documentados por metadatos; transiciones de estado deducidas de las etiquetas y expresiones de habilitación.",
+  "Eventos de servidor after_column en codcon y divisa (rellenan datos del tipo y el cambio); no observados.",
+  "Pestañas de la ficha: Registro de financiación, Grupo de cuentas (cfinconh_cfinctas_rep), Revisión Intereses (cfinrevi), Activos vinculados (cfincomp), Cuadro amortización (cfinamor), Financiación relacionada, Asiento (capuntes_report).",
+  "Alta por API con tipo inexistente CAPZZ → «Missing key in referenced table for referential constraint (informix.f_cfinconh7).»; sin cuota capital → «Cannot insert a null into column (cfinconh.cuocap).» (demo).",
+  "probado (por API): tipo inexistente (f_cfinconh7), sin cuota capital (cuocap null). no probado: Copiar contrato, Contabilidad NO Automatica, Contabilizar Automático, Cancelar contrato, Desactivar contrato, Simular contabilización, Reactivar contrato, Activar contrato — TUTORIAL sin tipos de financiación y el tipo CAP no se pudo crear (c_cfincond6); diálogos no capturados."
+ ]
+}

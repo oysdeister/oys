@@ -1,0 +1,75 @@
+{
+ "c": "ganticid",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "codser": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gsernumh",
+    "clave": "mask_code"
+   }
+  },
+  "tipfac": {
+   "lov": {
+    "obj": "gvenfacd",
+    "clave": "codigo"
+   }
+  },
+  "codart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo"
+   }
+  },
+  "tipefe": {
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo"
+   }
+  },
+  "frmpag": {
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo"
+   }
+  },
+  "indrie": {
+   "req": 1,
+   "def": 0
+  },
+  "tipast": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gconasih",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((tipfac == null || tipfac.length === 0)) && ((codart == null || codart.length === 0))) || (((!(tipfac == null || tipfac.length === 0)) && (!(codart == null || codart.length === 0))) && ((tipast == null || tipast.length === 0)))))",
+   "msg": "Si se informa el tipo de factura a generar, se ha de informar también el código del artículo concepto del anticipo. En caso contrario, se ha de informar un tipo de asiento.",
+   "tipo": "error",
+   "campo": "codart",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((tipefe == null || tipefe.length === 0)) && ((frmpag == null || frmpag.length === 0))) || ((!(tipefe == null || tipefe.length === 0)) && (!(frmpag == null || frmpag.length === 0)))))",
+   "msg": "El tipo de efecto y la forma de pago se han de informar conjuntamente.",
+   "tipo": "error",
+   "campo": "tipefe",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

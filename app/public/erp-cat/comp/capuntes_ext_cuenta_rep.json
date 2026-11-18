@@ -1,0 +1,81 @@
+{
+ "c": "capuntes_ext_cuenta_rep",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy().slice(0,4)+'-01-01'"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "cuenta": {
+   "def": "*",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "proyec": {
+   "def": "*",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   }
+  },
+  "seccio": {
+   "def": "*",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   }
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Extractos › Mayor de cuentas",
+  "Tipo: REPORT (proceso/informe)",
+  "Probado en la demo: cuenta 62902.00000, empresa 0, 17-11-2026 → SALDO ANTERIOR 2.000,00 y el apunte del asiento CAP 46 (1.000,00, saldo 3.000,00). probado: Ejecutar."
+ ],
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "nota": "Sin confirmación. Devuelve el mayor de la cuenta: primera fila «SALDO ANTERIOR......» con el saldo a la fecha de inicio y una fila por apunte con saldo acumulado (columnas Empresa … Debe divisa, Haber divisa, Saldo divisas, Debe, Haber, Saldo)."
+  }
+ }
+}

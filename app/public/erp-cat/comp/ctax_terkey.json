@@ -1,0 +1,67 @@
+{
+ "c": "ctax_terkey",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "terk_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_terkey",
+    "clave": "terk_code",
+    "cols": [
+     "terk_code",
+     "terk_name"
+    ],
+    "desc": "terk_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(terk_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(terk_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "terk_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "terk_name": {
+   "req": 1
+  },
+  "terk_reg": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(terk_reg) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(terk_reg)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "terk_reg",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "terk_estado": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Clave fiscal por terceros",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ctax_terkey.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_terkey.terk_name).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila)."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_terkey','terk_code',terk_code)",
+   "msg": "Unique constraint (informix.p_ctax_terkey) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "terk_code"
+  }
+ ]
+}

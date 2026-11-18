@@ -1,0 +1,72 @@
+{
+ "c": "cfincamb",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ejerci": {
+   "req": 1
+  },
+  "period": {
+   "req": 1
+  },
+  "divisa": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(divisa) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(divisa))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "divisa",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "camcap": {
+   "req": 1,
+   "def": 0
+  },
+  "camint": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'REGISTRO DE TIPOS DE CAMBIO', editMode ROW, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "no probado: altas/errores — solo metadatos (tabla vacía). Sin botones."
+ ]
+}

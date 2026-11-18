@@ -1,0 +1,70 @@
+{
+ "c": "gven_dlvplan_sched",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "dlvs_code": {
+   "req": 1,
+   "mayus": 1
+  },
+  "dlvs_name": {
+   "req": 1
+  },
+  "dlvs_interv_size": {
+   "req": 1,
+   "def": 0
+  },
+  "dlvs_interv_unit": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvs_interv_unit == null || ['D','S','M'].includes(dlvs_interv_unit))))",
+     "msg": "Los valores posibles del tipo de intervalo son: [D] días, [M] meses y [S] niveles de stock.",
+     "tipo": "error",
+     "campo": "dlvs_interv_unit",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((dlvs_interv_size == null) || (dlvs_interv_size > 0)) && (dlvs_interv_unit != 'S')) || ((dlvs_interv_size == null) || (dlvs_interv_size == 0))))",
+   "msg": "Si el tipo de intervalo es niveles de stock, la longitud debe ser cero.",
+   "tipo": "error",
+   "campo": "dlvs_interv_unit",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((dlvs_week_day1 == null)) && ((dlvs_num_week1 == null))) || (!(dlvs_week_day1 == null))))",
+   "msg": "Si se informa el número de semana 1 se ha informar el dia de semana 1.",
+   "tipo": "error",
+   "campo": "dlvs_num_week1",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((dlvs_week_day2 == null)) && ((dlvs_num_week2 == null))) || (!(dlvs_week_day2 == null))))",
+   "msg": "Si se informa el número de semana 2 se ha informar el dia de semana 2.",
+   "tipo": "error",
+   "campo": "dlvs_num_week2",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((dlvs_week_day3 == null)) && ((dlvs_num_week3 == null))) || (!(dlvs_week_day3 == null))))",
+   "msg": "Si se informa el número de semana 3 se ha informar el dia de semana 3.",
+   "tipo": "error",
+   "campo": "dlvs_num_week3",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((dlvs_week_day4 == null)) && ((dlvs_num_week4 == null))) || (!(dlvs_week_day4 == null))))",
+   "msg": "Si se informa el número de semana 4 se ha informar el dia de semana 4.",
+   "tipo": "error",
+   "campo": "dlvs_num_week4",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

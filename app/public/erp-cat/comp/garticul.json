@@ -1,0 +1,756 @@
+{
+ "c": "garticul",
+ "fecha": "2026-11-18 almacen/captura-garticul",
+ "area": "almacen",
+ "campos": {
+  "codigo": {
+   "reqSi": "!__ins",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "__ins && !vacio(codigo) && existe('garticul','codigo',codigo)",
+     "msg": "Existe ya un artículo con código [${codigo}]",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "nomart": {
+   "mayus": 1
+  },
+  "grpemp": {
+   "req": 1,
+   "def": "ALL",
+   "mayus": 1,
+   "lov": {
+    "obj": "choldinh",
+    "clave": "holcode",
+    "cols": [
+     "holcode",
+     "holname"
+    ],
+    "desc": "holname",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmbas": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codfam": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomfam"
+    ],
+    "desc": "nomfam",
+    "noExiste": "Error en la validación"
+   },
+   "alCambiar": {
+    "taxkey": "busca('gartfami','codigo',codfam,'taxkey')",
+    "nature": "vacio(busca('gartfami','codigo',codfam,'taxkey')) ? nature : busca('ctax_artkey','artk_code',busca('gartfami','codigo',codfam,'taxkey'),'artk_nature')"
+   }
+  },
+  "codtip": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "garttipo",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomtip"
+    ],
+    "desc": "nomtip",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipcon": {
+   "lov": {
+    "obj": "gcontipo",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcon"
+    ],
+    "desc": "nomcon",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "clasif": {
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcla"
+    ],
+    "desc": "nomcla",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fabric": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estges": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gstatges",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "def": "P",
+   "ro": "true",
+   "mayus": 1
+  },
+  "taxkey": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_artkey",
+    "clave": "artk_code",
+    "cols": [
+     "artk_code",
+     "artk_name"
+    ],
+    "desc": "artk_name",
+    "noExiste": "Error en la validación"
+   },
+   "alCambiar": {
+    "nature": "vacio(taxkey) ? nature : busca('ctax_artkey','artk_code',taxkey,'artk_nature')"
+   }
+  },
+  "nature": {
+   "req": 1
+  },
+  "valpen": {
+   "ro": "true",
+   "oculto": "estado != 'B'"
+  },
+  "paranc": {
+   "lov": {
+    "obj": "cexpesta",
+    "clave": "codest",
+    "cols": [
+     "codest",
+     "coment"
+    ],
+    "desc": "coment",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "lotes": {
+   "req": 1,
+   "def": "N"
+  },
+  "stock": {
+   "req": 1,
+   "def": "S"
+  },
+  "cosuni": {
+   "req": 1,
+   "def": 0
+  },
+  "costol": {
+   "req": 1,
+   "def": 0
+  },
+  "udmaux": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmpre": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmcos": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmven": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmcom": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmexp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmrec": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmref": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni",
+     "impuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "webfam": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomfam"
+    ],
+    "desc": "nomfam",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "intfam": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomfam"
+    ],
+    "desc": "nomfam",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "budget_fam": {
+   "lov": {
+    "obj": "gart_fam_budget",
+    "clave": "fam_code",
+    "cols": [
+     "fam_code"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "sermin": {
+   "req": 1,
+   "def": 0
+  },
+  "sermax": {
+   "req": 1,
+   "def": 0
+  },
+  "metpla": {
+   "def": "N",
+   "mayus": 1
+  },
+  "clamed": {
+   "req": 1,
+   "def": "N"
+  },
+  "desvar": {
+   "req": 1,
+   "def": "F"
+  },
+  "fecalt": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "vencom": {
+   "req": 1,
+   "def": "N"
+  },
+  "comcos": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gpro_compcost",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "planti": {
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "plauni": {
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "marca": {
+   "lov": {
+    "obj": "gartmarc",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "modelo": {
+   "lov": {
+    "obj": "gartmode",
+    "clave": "modelo",
+    "cols": [
+     "modelo"
+    ],
+    "filtro": "l.marca == marca",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "grpdel": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelgrph",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "artfus": {
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "artenv": {
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "vendir": {
+   "req": 1,
+   "def": 0
+  },
+  "indser": {
+   "req": 1,
+   "def": "N"
+  },
+  "lotser": {
+   "lov": {
+    "obj": "gsernumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "difalb": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "indmod": {
+   "req": 1,
+   "def": "S",
+   "ro": "true",
+   "mayus": 1
+  },
+  "docfoot": {
+   "req": 1,
+   "def": 0
+  },
+  "albfoot": {
+   "lov": {
+    "obj": "gcommovd",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "artid": {
+   "ro": "true"
+  },
+  "gdoctext.data": {
+   "reqSi": "desvar == 'T'",
+   "oculto": "desvar != 'T'"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecbaj == null)) || ((fecalt == null || fecbaj == null) || (fecalt <= fecbaj)))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((fecbaj == null)) || ((fecalt == null || fecbaj == null) || (fecalt.getTime() <= fecbaj.getTime())))",
+   "tipo": "error",
+   "campo": "fecbaj",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((lotes != 'N') || (vacio(lotser))))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((lotes != 'N') || ((lotser == null || lotser.length === 0))) || (lotser.length == 0))",
+   "tipo": "error",
+   "campo": "lotser",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((difalb == 'N') || ((difalb != 'N') && (stock == 'N')))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: ((difalb == 'N') || ((difalb != 'N') && (stock == 'N')))",
+   "tipo": "error",
+   "campo": "difalb",
+   "fuente": "demo"
+  },
+  {
+   "si": "!(((costol == null) || (costol == 0)) || ((((costol == null) || (costol == 1)) || ((costol == null) || (costol == 2))) && (stock != 'N')))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((costol == null) || (costol == 0)) || ((((costol == null) || (costol == 1)) || ((costol == null) || (costol == 2))) && (stock != 'N')))",
+   "tipo": "error",
+   "campo": "costol",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((vacio(udmaux)) || (((!vacio(udmaux)) && ((relvar == null || [0,1].includes(relvar)))) && (udmaux != udmbas)))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((udmaux == null || udmaux.length === 0)) || (((!(udmaux == null || udmaux.length === 0)) && ((relvar == null || [0,1].includes(relvar)))) && (udmaux != udmbas)))",
+   "tipo": "error",
+   "campo": "udmaux",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(vacio(artfus) || !vacio(fecbaj))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: ((((artfus == null || artfus.length === 0)) || (artfus.length <= 0)) || (!(fecbaj == null)))",
+   "tipo": "error",
+   "campo": "artfus",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(vacio(artfus) || !vacio(fecfus))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: ((((artfus == null || artfus.length === 0)) || (artfus.length <= 0)) || (!(fecfus == null)))",
+   "tipo": "error",
+   "campo": "fecfus",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((vencom == 'N') || ((vencom == 'S') && (stock == 'N')))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: ((vencom == 'N') || ((vencom == 'S') && (stock == 'N')))",
+   "tipo": "error",
+   "campo": "vencom",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_CHANGE_INDMOD": {
+   "l": "Alterar modificación",
+   "dialogoTit": "Alterar modificación",
+   "dialogo": [
+    {
+     "n": "indmod",
+     "l": "Modificar",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "N",
+     "o": [
+      {
+       "k": "S",
+       "v": "Sí"
+      },
+      {
+       "k": "N",
+       "v": "No"
+      },
+      {
+       "k": "M",
+       "v": "Modificar"
+      },
+      {
+       "k": "B",
+       "v": "Borrar"
+      }
+     ]
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "indmod": "ent.indmod"
+     }
+    }
+   ],
+   "nota": "Grupo Operación. Visible si guserauth_check(USER,'garticul','INDMOD')=1. Cambia garticul.indmod sin mensaje: S=Sí (editar y borrar), N=No (ficha de solo lectura: sin guardar ni borrar, Validar/Copiar/Cambiar unidad base desactivados), M=Modificar (solo editar), B=Borrar (solo borrar). No toca date_updated."
+  },
+  "BUT_GENERAR_VL": {
+   "l": "Generar VL",
+   "nota": "Grupo Operación, pide confirmación. Oculto salvo guserauth_check GENVL y planti (Plantilla V.L.) informada; en la demo no aparece con planti vacío. No probado."
+  },
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'A'",
+      "valpen": "0"
+     }
+    }
+   ],
+   "nota": "Activo si estado A o B y la ficha está guardada (requiresUpdate). Ejecuta garticul_Valida(artid): sin validaciones pendientes deja estado A y valpen 0 y actualiza date_updated; no muestra mensaje (solo consola de progreso 'VALIDATE HEAD garticul [artid]' / 'WORKFLOW HEAD garticul'). Validar dos veces: mismo resultado, sin error. Con validaciones pendientes pasaría a B con valpen = nº pendientes (no provocado)."
+  },
+  "BUT_GENERA_CARACT": {
+   "l": "Generar características",
+   "nota": "Grupo Operación, pide confirmación. Oculto salvo que el tipo de artículo (garttipo.cartype) tenga características para garticul en ccaractd y guserauth_check ARTCAR. En la demo (tipos 0 y DTO sin cartype) nunca aparece."
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "dialogoTit": "Copiar",
+   "dialogo": [
+    {
+     "n": "codigo_art",
+     "l": "Artículo",
+     "t": "s",
+     "sz": 16,
+     "req": 1,
+     "fk": "garticul"
+    }
+   ],
+   "pasos": [
+    {
+     "ir": {
+      "obj": "garticul",
+      "clave": "ent.codigo_art"
+     }
+    }
+   ],
+   "nota": "Grupo Operación (requiere permiso de inserción y modificación). El campo Artículo es un desplegable con buscador de los artículos EXISTENTES (column/render/sql/codigo_gart). Ejecuta garticul_Copy(destino=ent.codigo_art, origen=codigo, null, 0) y abre la ficha del destino. En la demo TUTORIAL falla siempre con el error 'Column (list_code) not found in any table in the query (or SLV is undefined).' y no cambia nada (probado CAPA0001 → CAPA0002). Sin valor: 'Este campo es obligatorio.'"
+  },
+  "BUT_CHANGE_UDMBAS": {
+   "l": "Cambiar unidad base",
+   "dialogoTit": "Cambiar unidad base",
+   "dialogo": [
+    {
+     "n": "codigo",
+     "l": "Artículo",
+     "t": "s",
+     "sz": 16,
+     "req": 1,
+     "ro": 1,
+     "def": "${codigo}"
+    },
+    {
+     "n": "udmbas",
+     "l": "Unidad base",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gart_unimed"
+    }
+   ],
+   "pre": [
+    {
+     "si": "vacio(ent.udmbas)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "udmbas",
+     "fuente": "demo"
+    },
+    {
+     "si": "!vacio(ent.udmbas) && !existe('gart_unimed','coduni',ent.udmbas)",
+     "msg": "Error en la validación",
+     "tipo": "error",
+     "campo": "udmbas",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "udmbas": "ent.udmbas"
+     }
+    },
+    {
+     "crea": {
+      "obj": "gart_unidefs",
+      "valores": {
+       "codart": "codigo",
+       "coduni": "ent.udmbas",
+       "nomuni": "busca('gart_unimed','coduni',ent.udmbas,'nomuni')",
+       "udmrel": "'B'",
+       "canmul": "busca('gart_unimed','coduni',ent.udmbas,'canmul')",
+       "estado": "'A'",
+       "udmcom": "1",
+       "udmven": "1",
+       "udmlog": "1",
+       "udmpro": "1",
+       "udmpre": "1",
+       "fecalt": "hoy()"
+      }
+     }
+    }
+   ],
+   "nota": "Grupo Operación (requiere inserción y modificación). Sin mensaje de éxito y la ficha NO se refresca (refreshMode NONE): sigue mostrando la unidad anterior hasta recargar. Probado UNI → KGR en CAPA0001: garticul.udmbas=KGR (date_updated no cambia) y se añade una fila nueva en gart_unidefs (KGR, udmrel B, canmul 0); la fila UNI anterior se conserva."
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Grupo Estado, pide confirmación y abre diálogo. Solo visible si virtualerp.bloq_manu == 1 (bloqueo activo en gdoclock para el artículo); en la demo bloq_manu=0 y no aparece. No probado."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "P"
+    ],
+    "a": "A",
+    "por": "alta (garticul_Valida tras insertar)"
+   },
+   {
+    "de": [
+     "A",
+     "B"
+    ],
+    "a": "A",
+    "por": "BUT_VALIDAR"
+   }
+  ]
+ },
+ "notas": [
+  "Ficha real: table/garticul/form/3 desde la lista (con un único resultado el dispatch abre form/1 con los mismos botones). Nuevo desde la lista abre un diálogo inferior 'MAESTRO DE ARTÍCULOS' con Cancelar / Guardar (desplegable: 'Guardar y abrir').",
+  "Guardar sin obligatorios: validación en cliente, sin llamada al servidor; 'Este campo es obligatorio.' bajo Unidad base, Tipo, Familia, Clave fiscal y Naturaleza. Artículo no lleva asterisco en el alta (nullable_expr context.isOnInsert()) y sí en la ficha.",
+  "Código o lupa inexistente (Familia CAPXX99, Unidad base ZZ): el verify devuelve 204 y el campo muestra 'Error en la validación'.",
+  "Mayúsculas: codigo y nomart se graban en mayúsculas aunque se escriban en minúsculas (input_case 2).",
+  "Familia → Clave fiscal: el verify de codfam devuelve {taxkey: gartfami.taxkey} (también null si la familia no tiene: PROD, SERV, CAPAF) y en cascada la naturaleza de ctax_artkey (BOG → B 'Bien'). La familia NO propaga tipo contable (PROD tiene tipcon PROD y no se copia).",
+  "Alta: estado se graba P y el evento TRANSACTION_INSERT_AFTER llama a garticul_Valida → queda A (Activo) al instante, valpen 0. También se crea automáticamente una fila en gart_unidefs (codart, coduni=udmbas, udmrel 'B', canmul 1, udmcom/udmven/udmlog/udmpro/udmpre=1, user informix). sermin y sermax se graban 0.",
+  "Al modificar (TRANSACTION_UPDATE_AFTER) también se llama a garticul_Valida.",
+  "Borrar: icono papelera → diálogo 'Eliminar registro' con '¿Estás seguro que quieres eliminar el registro '${nomart}' ?' y botones Cancelar / Eliminar. Borra en cascada gart_unidefs (CAPA0002 borrado sin error).",
+  "indmod (Modificar) controla la seguridad de la fila [update, delete]: S [sí,sí], N [no,no], M [sí,no], B [no,sí]. Con N la ficha queda de solo lectura (guardar y papelera desactivados, Validar oculto, Copiar y Cambiar unidad base desactivados en el menú Operación).",
+  "Con cambios sin guardar, Validar se desactiva.",
+  "Restricciones SOFT: se evalúan en cliente al guardar y muestran un aviso naranja 'Las siguientes restricciones de verificación fallaron:' + 'Verificación de restricción fallida: <expresión>' + 'Evaluada a: <expresión con valores>'. Provocada c_garticul13 (Diferencias albaranes = Albarán de ventas con Stock Sí).",
+  "Menú ⋮ de la barra: Información, Metadata, Imprimir, Exportar."
+ ]
+}

@@ -1,0 +1,81 @@
+{
+ "c": "cinmftab",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codgrp": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codgrp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codgrp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codgrp",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cinmfgrp",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgru"
+    ],
+    "desc": "nomgru"
+   }
+  },
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nomfis": {
+   "req": 1
+  },
+  "porcen": {
+   "req": 1
+  },
+  "numeje": {
+   "req": 1
+  },
+  "porcor": {
+   "req": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && cuenta('cinmftab','codigo',codigo) > 0",
+   "msg": "Unique constraint (informix.p_cinmftab) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "!existe('cinmfgrp','codigo',codgrp)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmftab1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codgrp"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cinmhead','codfis',codigo) || existe('cinmelem','codfis',codigo)",
+   "msg": "Key value for constraint (informix.p_cinmftab) is still being referenced.",
+   "tipo": "error",
+   "fuente": "deducido"
+  }
+ ],
+ "notas": [
+  "Clave: grupo fiscal + código. Fija % máximo y años máximos de amortización fiscal; los bienes, elementos y componentes la referencian con (codgru, codfis): si el código fiscal no es del grupo fiscal elegido el servidor da f_cinmhead4 (probado en cinmhead).",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.»."
+ ]
+}

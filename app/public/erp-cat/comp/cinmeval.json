@@ -1,0 +1,109 @@
+{
+ "c": "cinmeval",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "sistem": {
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "def": "A",
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['A','C','N','F','B'].includes(estado))))",
+     "msg": "El estado debe ser Activo [A] o Baja [B].",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sisamo": {
+   "def": "L",
+   "mayus": 1
+  },
+  "porcen": {
+   "req": 1
+  },
+  "numeje": {
+   "ro": "sisamo != 'D'",
+   "calc": "sisamo == 'L' && porcen !=0 && porcen != null ? Math.round(100 /porcen + 0.499) : numeje"
+  },
+  "invele": {
+   "def": 0,
+   "ro": "true"
+  },
+  "resele": {
+   "def": 0,
+   "ro": "true"
+  },
+  "iniele": {
+   "def": 0,
+   "ro": "true"
+  },
+  "acuele": {
+   "def": 0,
+   "ro": "true"
+  },
+  "netele": {
+   "def": 0,
+   "ro": "true"
+  },
+  "inimax": {
+   "def": 0
+  },
+  "acumae": {
+   "def": 0
+  },
+  "inimin": {
+   "def": 0
+  },
+  "resfie": {
+   "def": 0
+  },
+  "empcode": {
+   "def": "0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codinm": {
+   "mayus": 1
+  },
+  "codele": {
+   "mayus": 1
+  },
+  "acumie": {
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "invele != (resele + acuele + netele)",
+   "msg": "El valor inventario debe ser igual a la suma del valor residual, la amortización acumulada y el valor neto.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Sin alta manual (permiso insert=false): se crea al contabilizar la factura de activos (1 fila por elemento: sistema A, estado A, invele = valor, netele = valor). Ej.: AP026-0000 → invele 5.000, acuele 0, netele 5.000.",
+  "Años se calcula en sistema L: Math.round(100/porcen + 0.499)."
+ ]
+}

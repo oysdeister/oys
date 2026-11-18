@@ -1,0 +1,740 @@
+{
+ "c": "capuntes",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "orden": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "defExpr": "siguiente('capuntes','orden')"
+  },
+  "proyec": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "docser": {
+   "ro": "casientos.estado == 'C'"
+  },
+  "cuenta": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "ctaaux": {
+   "ro": "codaux == null || casientos.estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxl",
+    "clave": "ctaaux"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaaux)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codcon": {
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "coment"
+    ],
+    "desc": "coment"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codcon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codcon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "concep": {
+   "ro": "casientos.estado == 'C'"
+  },
+  "divdeb": {
+   "req": 1,
+   "ro": "(divhab != null && divhab != 0) || casientos.estado == 'C'",
+   "defExpr": "padre.imp_cuadre < 0 ? -padre.imp_cuadre : 0"
+  },
+  "divhab": {
+   "req": 1,
+   "ro": "(divdeb != null && divdeb != 0) || casientos.estado == 'C'",
+   "defExpr": "padre.imp_cuadre > 0 ? padre.imp_cuadre : 0"
+  },
+  "moneda": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(moneda)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ],
+   "defExpr": "padre.moneda"
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "def": 1,
+   "defExpr": "padre.cambio"
+  },
+  "debe": {
+   "req": 1,
+   "ro": "cambio==1 || casientos.estado == 'C'",
+   "def": 0,
+   "calc": "camope == 1 ? divdeb / cambio : divdeb * cambio"
+  },
+  "haber": {
+   "req": 1,
+   "ro": "cambio==1 || casientos.estado == 'C'",
+   "def": 0,
+   "calc": "camope == 1 ? divhab / cambio : divhab * cambio"
+  },
+  "contra_cuenta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(contra_cuenta) && !/^([A-Z0-9]+)([A-Z0-9\\.])*$/.test(contra_cuenta)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "contra_cuenta",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode_ori": {
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "empcode_des": {
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "tercer": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tercer) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(tercer)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecha_val": {
+   "ro": "casientos.estado == 'C'"
+  },
+  "inversion": {
+   "lov": {
+    "obj": "cinversion",
+    "clave": "inv_codigo",
+    "cols": [
+     "inv_codigo",
+     "inv_nombre",
+     "inv_empcode",
+     "inv_origen",
+     "inv_estado"
+    ],
+    "desc": "inv_nombre"
+   }
+  },
+  "dimcode1": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon1",
+    "clave": "coddim1",
+    "cols": [
+     "coddim1",
+     "nomdim1",
+     "estado"
+    ],
+    "desc": "nomdim1"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode1) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode1)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode1",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cantid1": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "def": 0
+  },
+  "dimcode2": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon2",
+    "clave": "coddim2",
+    "cols": [
+     "coddim2",
+     "nomdim2",
+     "estado"
+    ],
+    "desc": "nomdim2"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode2) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode2)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode2",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cantid2": {
+   "req": 1,
+   "ro": "casientos.estado == 'C'",
+   "def": 0
+  },
+  "camope": {
+   "req": 1,
+   "def": 1,
+   "defExpr": "padre.camope"
+  },
+  "id_apunte": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "capuntes",
+    "clave": "id_apunte",
+    "cols": [
+     "docser",
+     "refext_serie",
+     "moneda"
+    ],
+    "desc": "docser"
+   }
+  },
+  "id_asiento": {
+   "req": 1,
+   "ro": "1==1",
+   "lov": {
+    "obj": "casientos",
+    "clave": "id_asiento",
+    "cols": [
+     "empcode",
+     "diario",
+     "jusser"
+    ],
+    "desc": "diario"
+   }
+  },
+  "refext_serie": {
+   "ro": "casientos.estado == 'C'"
+  },
+  "refext_numero": {
+   "ro": "casientos.estado == 'C'"
+  },
+  "empcode": {
+   "ro": "1 == 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ],
+   "defExpr": "padre.empcode"
+  },
+  "placon": {
+   "req": 1,
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(placon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(placon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "placon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codaux": {
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxh",
+    "clave": "codaux",
+    "cols": [
+     "codaux",
+     "desaux"
+    ],
+    "desc": "desaux"
+   }
+  },
+  "punteo": {
+   "req": 1,
+   "mayus": 1,
+   "def": "N",
+   "reglas": [
+    {
+     "si": "!vacio(punteo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(punteo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "punteo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((((debe == null) || (debe >= 0)) && ((divdeb == null) || (divdeb >= 0))) || (((debe == null) || (debe <= 0)) && ((divdeb == null) || (divdeb <= 0)))) && ((((haber == null) || (haber >= 0)) && ((divhab == null) || (divhab >= 0))) || (((haber == null) || (haber <= 0)) && ((divhab == null) || (divhab <= 0))))))",
+   "msg": "Debe y haber deben coincidir en signo con sus valores de divisa.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((((debe == null) || (debe == 0)) || ((haber == null) || (haber == 0))) && (((divdeb == null) || (divdeb == 0)) || ((divhab == null) || (divhab == 0)))) && (((debe == null) || (debe == 0)) || ((divhab == null) || (divhab == 0)))) && (((haber == null) || (haber == 0)) || ((divdeb == null) || (divdeb == 0)))))",
+   "msg": "El código y el valor del auxiliar se informan conjuntamente.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((((debe == null) || (debe == 0)) || ((haber == null) || (haber == 0))) && (((divdeb == null) || (divdeb == 0)) || ((divhab == null) || (divhab == 0)))) && (((debe == null) || (debe == 0)) || ((divhab == null) || (divhab == 0)))) && (((haber == null) || (haber == 0)) || ((divdeb == null) || (divdeb == 0)))))",
+   "msg": "No se permite consignar valores simultáneos en debe y haber.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_GENERA_EFECTOS": {
+   "l": "Generar efectos",
+   "nota": "Genera efectos a partir de los vencimientos.\nSe activa la acción cuando:\n1- Si la cuenta activa efectos.\n2- Si no hay efectos asociados. · Habilitado según consulta del servidor: SELECT COUNT(*) FROM ccuentas WHERE ccuentas.placon = '${placon}' AND ccuentas.codigo = '${cuenta}' AND (CASE WHEN ccuentas.activa LIKE '%E%' AND (ccuentas.tipact = 'A' OR (ccuentas.tipact = 'D' AND ${debe} != 0) OR (ccuentas.tipact = 'H' AND ${haber} != 0)) THEN 1 ELSE 0 END) = 1 AND (SELECT COUNT( · Abre un diálogo con campos",
+   "dialogoTit": "Generar efectos",
+   "dialogo": [
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "hid": 1,
+     "fk": "cempresa",
+     "h": "Código de la empresa"
+    },
+    {
+     "n": "clase",
+     "l": "Clase",
+     "t": "s",
+     "req": 1,
+     "o": [
+      {
+       "k": "C",
+       "v": "Cobrar"
+      },
+      {
+       "k": "P",
+       "v": "Pagar"
+      }
+     ],
+     "h": "Clase de la acción(cobrar o pagar)"
+    },
+    {
+     "n": "tercer",
+     "l": "Tercero",
+     "t": "s",
+     "req": 1,
+     "fk": "ctercero",
+     "h": "Código de tercero titular de la factura"
+    },
+    {
+     "n": "codper",
+     "l": "Perceptor",
+     "t": "s",
+     "req": 1,
+     "hid": 1,
+     "fk": "ctercero",
+     "h": "Código de tercero perceptor o nulo"
+    },
+    {
+     "n": "tippag",
+     "l": "Plazo pago",
+     "t": "s",
+     "req": 1,
+     "fk": "ctipopag",
+     "h": "Código de forma de pago para cálculo vencimientos"
+    },
+    {
+     "n": "tipefe",
+     "l": "Tipo de efecto",
+     "t": "s",
+     "req": 1,
+     "fk": "ctipoefe",
+     "h": "Código de tipo de efecto"
+    },
+    {
+     "n": "estado",
+     "l": "Estado",
+     "t": "s",
+     "req": 1,
+     "fk": "cefecest",
+     "h": "Estado de situación actual del efecto"
+    },
+    {
+     "n": "numban",
+     "l": "Domiciliación",
+     "t": "i",
+     "fk": "cterbanc",
+     "h": "Número de la domiciliación bancaria"
+    },
+    {
+     "n": "tipdoc",
+     "l": "Auxiliar",
+     "t": "s",
+     "h": "Referencia auxiliar complementaria"
+    }
+   ]
+  },
+  "BUT_PER_VAR_DEL": {
+   "l": "Eliminar distribución",
+   "nota": "Anula los apuntes distribuidos y/o marca el apunte distribuido para ser distribuido. · Habilitado según consulta del servidor: SELECT COUNT(*) FROM ccuentas WHERE ccuentas.placon = '${placon}' AND ccuentas.codigo = '${cuenta}' AND ccuentas.ctaper IN (1,2) AND '${punteo}' = 'S' · Se oculta si no está habilitado"
+  },
+  "BUT_PERIODIFICAR": {
+   "l": "Periodificar",
+   "nota": "Realiza la periodificación de un apunte contable. · Habilitado si: punteo == 'N' && ccuentas.ctaper == 1 · Habilitado según consulta del servidor: (SELECT COUNT(*) FROM casientos b WHERE b.id_origen = ${id_apunte} AND b.origen = 'capuntes') = 0 · Abre un diálogo con campos",
+   "dialogoTit": "Periodificar",
+   "dialogo": [
+    {
+     "n": "cuenta_des",
+     "l": "Cuenta destino",
+     "t": "s",
+     "req": 1,
+     "fk": "ccuentas",
+     "h": "Cuenta de destino"
+    },
+    {
+     "n": "fecpri",
+     "l": "Fecha del primer asiento",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-18",
+     "h": "Fecha inicial para el primer asiento"
+    },
+    {
+     "n": "proyec",
+     "l": "Proyecto",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "fk": "cproyect",
+     "h": "Proyecto contable"
+    },
+    {
+     "n": "seccio",
+     "l": "Sección",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "fk": "cseccion",
+     "h": "Sección contable"
+    },
+    {
+     "n": "numper",
+     "l": "Número de periodificaciones",
+     "t": "i",
+     "req": 1,
+     "def": "1",
+     "h": "Número de periodificaciones"
+    },
+    {
+     "n": "cadmen",
+     "l": "Cadencia mensual",
+     "t": "i",
+     "req": 1,
+     "def": "1",
+     "h": "Cadencia mensual"
+    },
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "ro": "1==1",
+     "hid": 1,
+     "fk": "cempresa",
+     "h": "Código de la empresa"
+    },
+    {
+     "n": "id_asiento",
+     "l": "Identificador del asiento",
+     "t": "i",
+     "req": 1,
+     "def": "93",
+     "ro": "1==1",
+     "hid": 1,
+     "fk": "casientos",
+     "h": "Identificador del asiento contable"
+    },
+    {
+     "n": "placon",
+     "l": "Plan contable",
+     "t": "s",
+     "req": 1,
+     "def": "ES",
+     "ro": "1==1",
+     "hid": 1,
+     "fk": "cplacont",
+     "h": "Código del plan contable"
+    }
+   ]
+  },
+  "BUT_DISTRIBUIR0": {
+   "l": "Distribuir",
+   "nota": "Realiza la distribución de un apunte contable. · Habilitado según consulta del servidor: SELECT COUNT(*) FROM ccuentas WHERE ccuentas.placon = '${placon}' AND ccuentas.codigo = '${cuenta}' AND ccuentas.ctaper = 2 AND '${punteo}' = 'N' · Abre un diálogo con campos",
+   "dialogoTit": "Distribuir",
+   "dialogo": [
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "hid": 1,
+     "fk": "cempresa",
+     "h": "Código de la empresa"
+    },
+    {
+     "n": "ctadst",
+     "l": "Cuenta distribución",
+     "t": "s",
+     "req": 1,
+     "def": "62902.00000",
+     "fk": "ccuentas",
+     "h": "Cuenta distribución"
+    },
+    {
+     "n": "cuenta",
+     "l": "Cuenta",
+     "t": "s",
+     "req": 1,
+     "def": "62902.00000",
+     "hid": 1,
+     "fk": "ccuentas",
+     "h": "Código de cuenta contable"
+    },
+    {
+     "n": "placon",
+     "l": "Plan contable",
+     "t": "s",
+     "req": 1,
+     "def": "ES",
+     "hid": 1,
+     "fk": "cplacont",
+     "h": "Código del plan contable"
+    },
+    {
+     "n": "proyec",
+     "l": "Proyecto",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "fk": "cproyect",
+     "h": "Proyecto contable al que pertenece el efecto"
+    },
+    {
+     "n": "seccio",
+     "l": "Sección",
+     "t": "s",
+     "req": 1,
+     "def": "0",
+     "fk": "cseccion",
+     "h": "Código de sección por defecto"
+    },
+    {
+     "n": "fecpri",
+     "l": "Fecha del primer asiento",
+     "t": "d",
+     "def": "2026-11-17",
+     "h": "Fecha inicial para el primer asiento"
+    },
+    {
+     "n": "coddstc",
+     "l": "Código distribución",
+     "t": "s",
+     "req": 1,
+     "fk": "cdistrih",
+     "h": "Código distribución"
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › (subrejilla)",
+  "Permisos: alta no, modificar sí, borrar sí.",
+  "Pestañas de la ficha: Líneas de apuntes | Impuestos | Costes | Formulario principal",
+  "Nuevo en «Líneas de apuntes» propone en Haber (o Debe) divisa el importe que falta para cuadrar el asiento (captura asientos-015: con cuadre 250,00 propone Haber 250,00).",
+  "Debe/Haber en euros se calculan desde Debe/Haber divisa con el cambio (calc); con cambio 1 son de solo lectura.",
+  "Al escribir importe en Debe divisa, Haber divisa queda de solo lectura y al revés (ro de divhab/divdeb).",
+  "Botones de la línea (Generar efectos, Eliminar distribución, Periodificar, Distribuir) dependen de la cuenta (ccuentas.activa con E, ctaper 1/2) y se habilitan según consulta del servidor; no probados en la demo (requieren cuentas con efectos o periodificación).",
+  "Fase 1b: diálogos reales de Generar efectos, Periodificar y Distribuir sacados de la demo (fields con r-uuid). En las 3 líneas del asiento CAP 46 (62902 y 57200) los cuatro botones están OCULTOS: las cuentas no activan efectos ni periodificación (precondición observada). No se ejecutaron (crearían asientos y efectos sin cuentas preparadas).",
+  "Menú ⌄ de la línea: «Saldos» → csaldos de la cuenta (1 fila), «Costos» → ccoscont_capuntes del apunte.",
+  "probado: diálogos de BUT_GENERA_EFECTOS, BUT_PERIODIFICAR, BUT_DISTRIBUIR0; ocultos por precondición en el asiento CAP; menú ⌄ (2 entradas)."
+ ]
+}

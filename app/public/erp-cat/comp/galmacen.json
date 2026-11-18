@@ -1,0 +1,479 @@
+{
+ "c": "galmacen",
+ "fecha": "2026-11-18 almacen/captura-galmacen-galmctas",
+ "area": "almacen",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nomalm": {
+   "req": 1
+  },
+  "tercer": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "alCambiar": {
+    "tipdir": "null"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "desc": "direcc",
+    "filtro": "l.codigo == tercer"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "agrupa": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gagrupac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomagr"
+    ],
+    "desc": "nomagr",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "recint": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "galmreci",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomrec"
+    ],
+    "desc": "nomrec",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipval": {
+   "req": 1,
+   "def": "F",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(tipval) && !['F','L','M','N','A'].includes(tipval)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los tipos de valoración permitidos para un almacén son: FIFO, LIFO, Precio medio ponderado, No valorado.",
+     "tipo": "error",
+     "campo": "tipval",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "stkneg": {
+   "req": 1,
+   "def": 0
+  },
+  "stkrup": {
+   "req": 1,
+   "def": "N",
+   "reglas": [
+    {
+     "si": "!vacio(stkrup) && !['N','G','Z'].includes(stkrup)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los posibles valores para el indicador de nivel de control de rupturas son : [N]Ninguno, [G]Stock negativo, y [Z]Stock a cero.",
+     "tipo": "error",
+     "campo": "stkrup",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cosuni": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(cosuni) && !['S','N'].includes(cosuni)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los posibles valores del indicativo de valoración por coste unificado son: [S]í, [N]o.",
+     "tipo": "error",
+     "campo": "cosuni",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "costol": {
+   "req": 1,
+   "def": 0
+  },
+  "fecval": {
+   "req": 1,
+   "alCambiar": {
+    "fecult": "fecval"
+   }
+  },
+  "fecult": {
+   "req": 1,
+   "ro": "1 == 1"
+  },
+  "horini": {
+   "req": 1,
+   "def": 0
+  },
+  "horfin": {
+   "req": 1,
+   "def": 0
+  },
+  "tippro": {
+   "lov": {
+    "obj": "gmovprod",
+    "clave": "codigo"
+   }
+  },
+  "solrep": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gcomsold",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc"
+   }
+  },
+  "pedrep": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gcompedd",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc"
+   }
+  },
+  "codcal": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccalendah",
+    "clave": "codcal",
+    "cols": [
+     "codcal",
+     "nomcal"
+    ],
+    "desc": "nomcal"
+   }
+  },
+  "tipast": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gconasih",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomasi"
+    ],
+    "desc": "nomasi"
+   }
+  },
+  "inipot": {},
+  "estado": {
+   "req": 1,
+   "def": "P",
+   "ro": "1 == 1",
+   "mayus": 1
+  },
+  "grpcos": {
+   "lov": {
+    "obj": "galm_grupcost",
+    "clave": "gca_code"
+   }
+  },
+  "valpen": {
+   "ro": "1 == 1"
+  },
+  "grp_print_code": {
+   "lov": {
+    "obj": "g_print_progrp",
+    "clave": "grp_print_code",
+    "cols": [
+     "grp_print_code",
+     "print_code"
+    ]
+   }
+  },
+  "has_wms": {
+   "req": 1,
+   "def": 0
+  },
+  "fecalt": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "delega": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdlg"
+    ],
+    "desc": "nomdlg",
+    "filtro": "l.empcode == empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "depart": {
+   "mayus": 1,
+   "ro": "delega == null",
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "cols": [
+     "depart",
+     "nomdep"
+    ],
+    "desc": "nomdep",
+    "filtro": "l.delega == delega",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpre": {
+   "lov": {
+    "obj": "gpar_parpreh",
+    "clave": "codpre",
+    "cols": [
+     "codpre",
+     "nompre"
+    ],
+    "desc": "nompre",
+    "filtro": "l.empcode == empcode"
+   }
+  },
+  "capdes": {
+   "req": 1,
+   "def": 0
+  },
+  "aplven": {
+   "req": 1,
+   "def": 0
+  },
+  "disdel": {
+   "req": 1,
+   "def": 0
+  },
+  "indlot": {
+   "req": 1,
+   "def": 1
+  },
+  "almid": {
+   "ro": "1 == 1"
+  },
+  "cosadq": {
+   "req": 1,
+   "def": 0
+  },
+  "gartprov_req": {
+   "req": 1,
+   "def": 1
+  },
+  "user_created": {
+   "ro": "1 == 1",
+   "req": 1
+  },
+  "date_created": {
+   "ro": "1 == 1",
+   "req": 1
+  },
+  "user_updated": {
+   "ro": "1 == 1"
+  },
+  "date_updated": {
+   "ro": "1 == 1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && !vacio(codigo) && existe('galmacen','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_galmacen) violated.",
+   "tipo": "error",
+   "campo": "codigo",
+   "fuente": "demo"
+  },
+  {
+   "si": "horini != null && horfin != null && horini > horfin",
+   "msg": "Las siguientes restricciones de verificación fallaron: La hora inicio de descarga debe ser anterior a la hora final.",
+   "tipo": "error",
+   "campo": "horini",
+   "fuente": "demo"
+  },
+  {
+   "si": "(horini != null && (horini < 0 || horini > 23)) || (horfin != null && (horfin < 0 || horfin > 23))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Los valores de la hora inicio de descarga y de la fin deben estar comprendidos entre 0 y 23.",
+   "tipo": "error",
+   "campo": "horini",
+   "fuente": "demo"
+  },
+  {
+   "si": "costol != null && costol != 0 && tipval != 'M'",
+   "msg": "Las siguientes restricciones de verificación fallaron: Si se actualiza el coste medio on-line en un almacén, el tipo de valoración debe ser [M] (coste medio).",
+   "tipo": "error",
+   "campo": "costol",
+   "fuente": "demo"
+  },
+  {
+   "si": "!vacio(date_end_disable) && !vacio(fecval) && date_end_disable < fecval",
+   "msg": "Las siguientes restricciones de verificación fallaron: La fecha de valoración en proceso debe ser superior a la fecha de última valoración.",
+   "tipo": "error",
+   "campo": "date_end_disable",
+   "fuente": "meta"
+  },
+  {
+   "si": "!vacio(feccon) && !vacio(fecval) && feccon > fecval",
+   "msg": "Las siguientes restricciones de verificación fallaron: La fecha de la última contabilización no puede ser posterior a la fecha de valoración del almacén.",
+   "tipo": "error",
+   "campo": "feccon",
+   "fuente": "meta"
+  },
+  {
+   "si": "!vacio(feccon) && vacio(tipast)",
+   "msg": "Las siguientes restricciones de verificación fallaron: No tiene sentido que esté informada la fecha de contabilización de un almacén si no tiene un asiento programado asignado.",
+   "tipo": "error",
+   "campo": "feccon",
+   "fuente": "meta"
+  },
+  {
+   "si": "!vacio(fecbaj) && !vacio(fecalt) && fecbaj < fecalt",
+   "msg": "Las siguientes restricciones de verificación fallaron: La fecha de baja no puede ser anterior a la fecha de alta.",
+   "tipo": "error",
+   "campo": "fecbaj",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'A'",
+      "valpen": "0"
+     }
+    }
+   ],
+   "nota": "Acción ACTION_BUTTON_738 (sin diálogo ni confirmación). Deja el almacén Activo desde Provisional, Activo o En recuento; no muestra mensaje ni exige delegación/departamento (CAPA1 se validó sin ellos). Pulsarlo en un almacén ya Activo no da error ni cambia nada visible. Solo cambia galmacen (estado, valpen, user/date_updated)."
+  },
+  "BUT_COUNT_LOCK": {
+   "l": "Bloquear para recuento",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'R'"
+     }
+    }
+   ],
+   "nota": "Acción ACTION_BUTTON_1670, visible solo con estado == 'A' (hideIfDisabled). Sin diálogo, sin confirmación y sin mensaje: pasa el almacén a En recuento (R). Solo cambia galmacen.estado."
+  },
+  "BUT_UNLOCK_WAREHOUSE": {
+   "l": "Desbloquear almacén",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'A'"
+     }
+    }
+   ],
+   "nota": "Acción ACTION_BUTTON_1669, visible solo con estado == 'R'. Sin diálogo, sin confirmación y sin mensaje: vuelve a Activo. Solo cambia galmacen.estado."
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Bloqueo manual' ?",
+   "nota": "Grupo «Estado», fondo rojo #F44335, confirm=true y diálogo con campos (form.hasFields, 1 columna). Visible solo si virtualerp.bloq_manu == 1, y en TUTORIAL vale 0 en todos los almacenes (0, 0000, CAPC1, MB1, CAPA1): NO se ha podido abrir ni ver su diálogo. La confirmación es el texto genérico del motor (_generico.accion_confirmar), no provocada. Por el nombre y el estado B (Bloqueado) de la lista de estados, se supone que lleva a B."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "P"
+    ],
+    "a": "A",
+    "por": "alta: al guardar un almacén nuevo, el servidor lo pasa a Activo por sí solo (workflow de validación, valpen = 0); visto en CAPA2: insert 09:28:30 en P y a las 09:28:31 ya en A sin pulsar nada"
+   },
+   {
+    "de": [
+     "P",
+     "A",
+     "R"
+    ],
+    "a": "A",
+    "por": "BUT_VALIDAR"
+   },
+   {
+    "de": [
+     "A"
+    ],
+    "a": "R",
+    "por": "BUT_COUNT_LOCK"
+   },
+   {
+    "de": [
+     "R"
+    ],
+    "a": "A",
+    "por": "BUT_UNLOCK_WAREHOUSE"
+   }
+  ]
+ },
+ "notas": [
+  "Ficha: table/galmacen/form/<posición de la fila>?q=<filtro>; el número de form es la posición de la fila en el cursor, no un formulario distinto. «Nuevo» de la ficha es un menú (Nuevo / Nuevo como) y abre la ficha en un diálogo con Cancelar / Guardar.",
+  "Menú ⋮ de la ficha: Información, Metadata, Imprimir, Exportar, Mas opciones. No hay menú Acciones: los botones Bloquear para recuento / Desbloquear almacén / Validar van en la barra del título.",
+  "Guardar con vacíos: «Este campo es obligatorio.» bajo Almacén, Descripción, Recinto, Empresa, Agrupación, Tercero asociado, Fecha última valoración y Fecha último movimiento, y toast «Hay errores en los datos del formulario»; no llama al servidor.",
+  "Fecha último movimiento es obligatoria y de solo lectura: la rellena el evento de servidor de fecval (event/column/fecval/after_column_server, en alta) copiando fecval.",
+  "Al cambiar el Tercero asociado se vacía Tipo Dirección (hay que volver a elegirlo; en alta queda «Este campo es obligatorio.»). Los datos de dirección (País, CP, Población, Provincia, Teléfonos, E-mail) son de cterdire, solo lectura.",
+  "Lupas con código inexistente (Recinto ZZZ, Empresa ZZ, Agrupación ZZ, Delegación ZZZ, Departamento ZZ): texto rojo «Error en la validación» bajo el campo (verify devuelve 204); al guardar, toast «Hay errores en los datos del formulario» y no se envía nada.",
+  "Departamento es de solo lectura mientras Delegación está vacía; su lupa filtra por la delegación (gdeparta: A ADMINISTRACION, C COMPRAS, V VENTAS para la delegación 0 CENTRAL).",
+  "Las restricciones SOFT salen en un aviso naranja «Las siguientes restricciones de verificación fallaron:» con una viñeta por cada restricción que falla (si fallan dos, van las dos en el mismo aviso) y bloquean el guardado.",
+  "Duplicado: el servidor responde 500 con «Unique constraint (informix.p_galmacen) violated.» (toast rojo arriba; el diálogo sigue abierto).",
+  "Borrar: confirmación «Eliminar registro» / «¿Estás seguro que quieres eliminar el registro '<descripción>' ?» (Cancelar / Eliminar). Se borró CAPA2 estando En recuento sin ninguna precondición.",
+  "Validar NO exige delegación ni departamento; el error «Delegación y departamento no informados para el almacén [X]» sale después, al grabar un movimiento interno (geanmovh) con ese almacén.",
+  "Lupas de Tipo propuesta (gmovprod) y Grupo de coste (galm_grupcost): el autocomplete REST no respondió con los parámetros probados; columnas sin capturar."
+ ]
+}

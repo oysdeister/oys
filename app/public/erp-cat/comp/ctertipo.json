@@ -1,0 +1,85 @@
+{
+ "c": "ctertipo",
+ "fecha": "2026-11-18 maestros-a",
+ "area": "maestros",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "defExpr": "padre.codigo",
+   "ro": "true",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "codtip": {
+   "req": 1,
+   "def": "C"
+  },
+  "tiprel": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "crelcter",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomrel",
+     "ctanem"
+    ],
+    "desc": "nomrel",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "placon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   },
+   "alCambiar": {
+    "cuenta": "busca('crelcter','codigo',tiprel,'ctanem')"
+   }
+  },
+  "cuenta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "aplret": {
+   "req": 1,
+   "def": "N"
+  }
+ },
+ "notas": [
+  "Diálogo «RELACIONES CONTABLES CON TERCEROS» (botón «Añadir relacion» de la pestaña Relaciones de ctercero): Tipo tercero* (Cliente por defecto), Tipo relación*, Plan contable*, Cuenta, Retención. Sin obligatorios: «Hay errores en los datos del formulario» y «Este campo es obligatorio.» en Tipo relación y Plan contable (crudo t17).",
+  "Código de tipo de relación inexistente (XXX): «Error en la validación» (crudo t18).",
+  "Al validar Plan contable, el evento server_after de placon rellena Cuenta con la cuenta nemotécnica de la relación (crelcter.ctanem, p. ej. 43000) (crudo t18.7).",
+  "TRANSACTION_INSERT_BEFORE: cuenta = ctertipoInsCcuentas(codigo, codtip, tiprel, placon, cuenta) → guarda 43000.<tercero> y crea esa cuenta en ccuentas si no existe (nombre del tercero, tipcta T, tipact A, activa IEV, poscta D, estado A). TRANSACTION_INSERT_AFTER: UPDATE ctercero SET estado='P' (el tercero vuelve a Provisional) (crudo t18.9).",
+  "Borrar una relación: confirmación «¿Estás seguro que quieres eliminar el registro 1 ?» (número de fila); no toca ccuentas ni el estado del tercero (crudo t36/t37).",
+  "Como pantalla de menú (Perfil contable) permissions.insert = false: solo modificar y borrar; las altas van desde la ficha del tercero.",
+  "probado: — (el catálogo no tiene botones para ctertipo)."
+ ]
+}

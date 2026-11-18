@@ -1,0 +1,53 @@
+{
+ "c": "ccosdgrp",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdgrp",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgrp",
+     "clasif",
+     "estado"
+    ],
+    "desc": "nomgrp"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nomgrp": {
+   "req": 1
+  },
+  "clasif": {
+   "lov": {
+    "obj": "cclasgrp",
+    "clave": "codcla",
+    "cols": [
+     "codcla",
+     "nomcla"
+    ],
+    "desc": "nomcla"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "def": "A"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Costes › Maestros › Jerarquías de centros de coste",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

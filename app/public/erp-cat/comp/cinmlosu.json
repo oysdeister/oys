@@ -1,0 +1,64 @@
+{
+ "c": "cinmlosu",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpri": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmlopr",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomloc"
+    ],
+    "desc": "nomloc"
+   }
+  },
+  "codori": {
+   "lov": {
+    "obj": "cinmlosu",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomlug"
+    ],
+    "desc": "nomlug"
+   }
+  },
+  "glnloc": {
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('cinmlosu','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_cinmlosu) violated.",
+   "tipo": "error",
+   "fuente": "deducido"
+  },
+  {
+   "si": "!vacio(codpri) && !existe('cinmlopr','codigo',codpri)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmlosu1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codpri"
+  }
+ ],
+ "notas": [
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.»."
+ ]
+}

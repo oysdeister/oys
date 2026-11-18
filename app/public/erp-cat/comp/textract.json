@@ -1,0 +1,204 @@
+{
+ "c": "textract",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "orden": {
+   "ro": "true"
+  },
+  "concid": {
+   "ro": "true"
+  },
+  "file_seqno": {
+   "ro": "true"
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   }
+  },
+  "ctafin": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "ctafin",
+     "nomcta",
+     "iban"
+    ],
+    "desc": "nomcta"
+   },
+   "alCambiar": {
+    "codban": "busca('cbancpro','ctafin',ctafin,'codban')",
+    "divisa": "busca('cbancpro','ctafin',ctafin,'moneda')",
+    "empcode": "busca('cbancpro','ctafin',ctafin,'empcode')"
+   }
+  },
+  "codban": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancdom",
+    "clave": "codban",
+    "noExiste": "Error en la validación",
+    "desc": "nomban"
+   }
+  },
+  "ccc1": {
+   "req": 1,
+   "ro": "true"
+  },
+  "ccc2": {
+   "req": 1,
+   "ro": "true"
+  },
+  "ctacte": {
+   "req": 1,
+   "ro": "true"
+  },
+  "codofi": {
+   "ro": "true"
+  },
+  "fecope": {
+   "req": 1
+  },
+  "fecval": {
+   "req": 1
+  },
+  "concom": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "tconcomu",
+    "clave": "codigo",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "codigo",
+     "nomcom",
+     "file_format"
+    ],
+    "desc": "nomcom"
+   }
+  },
+  "conpro": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "tconprop",
+    "clave": "codpro",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "codpro",
+     "nompro",
+     "codban",
+     "domban"
+    ],
+    "desc": "nompro",
+    "filtro": "l.codban == codban"
+   }
+  },
+  "import": {
+   "req": 1
+  },
+  "divisa": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "noExiste": "Error en la validación",
+    "desc": "nombre"
+   }
+  },
+  "user_created": {
+   "ro": "true"
+  },
+  "date_created": {
+   "ro": "true"
+  },
+  "user_updated": {
+   "ro": "true"
+  },
+  "date_updated": {
+   "ro": "true"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(ctafin)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "ctafin"
+  },
+  {
+   "si": "vacio(concom)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "concom"
+  },
+  {
+   "si": "vacio(conpro)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "conpro"
+  },
+  {
+   "si": "vacio(import)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "import"
+  }
+ ],
+ "botones": {
+  "BUT_DESCONCILIAR": {
+   "l": "Desconciliar",
+   "nota": "Código real BUT_DESCONCILIAR; visible si concid > 0; sin confirmación ni mensaje. Quita el concid del extracto y de su movimiento. Si el movimiento se creó desde el extracto (origen 'X', Generar tesorería) lo BORRA de taptcuen; si es manual (origen 'M') solo le quita el concid. La fila de tconcili queda.",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "taptcuen",
+      "donde": [
+       "concid",
+       "concid"
+      ],
+      "set": {
+       "concid": "null"
+      }
+     }
+    },
+    {
+     "set": {
+      "concid": "null"
+     }
+    }
+   ]
+  },
+  "BUT_CONCIL_AUT": {
+   "l": "Conciliar automático",
+   "nota": "Código real BUT_CONCILIAR; visible si concid == null; sin confirmación. Lanza la conciliación automática del apunte y muestra el diálogo «Éxito» con una rejilla (Empresa, empname, Cuenta financiera, Fecha operación, Orden, Importe extracto, Conciliado, errmsg). Si no encuentra movimiento, Conciliado y errmsg vacíos y el extracto sigue pendiente.",
+   "ok": "Éxito"
+  }
+ },
+ "notas": [
+  "Guardar sin obligatorios: aviso «Hay errores en los datos del formulario» y «Este campo es obligatorio.» bajo cada campo (validación del cliente).",
+  "Código inexistente en una lupa (p. ej. concepto común ZZ): «Error en la validación» bajo el campo (fk/textract/concom/verify devuelve 204).",
+  "Concepto propio con el mismo código dos veces en el banco (901 de ES0019): la verificación falla con «A verification query returned more than on row for ([conpro] -> [901])».",
+  "La tabla no tiene clave foránea en BD para concom: por API se graba un extracto con concom ZZ (orden 7). Solo el cliente lo impide.",
+  "Al elegir cuenta financiera (evento after_column_server) rellena empcode, codban, ccc1, ccc2, ctacte, codofi, divisa, cbancpro.proyec, cbancpro.seccio y titescfg.modope.",
+  "El borrador nuevo no tiene botones; en la ficha guardada solo uno de los dos (Desconciliar o Conciliar automático) según concid.",
+  "BUT_DESCONCILIAR: la regla de borrado del movimiento generado es real (taptcuen 3 desapareció al desconciliar el extracto 5)."
+ ]
+}

@@ -1,0 +1,232 @@
+{
+ "c": "geanmovl",
+ "fecha": "2026-11-18 almacen/movimientos",
+ "area": "almacen",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "ro": "linori != null && !__ins",
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul_s",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart",
+     "estado"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   },
+   "alCambiar": {
+    "varstk": "'0'",
+    "udmori": "busca('garticul','codigo',codart,'udmbas')",
+    "numlot": "'0'",
+    "ubiori": "'0'"
+   }
+  },
+  "varstk": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "cols": [
+     "varlog",
+     "nomvar"
+    ],
+    "filtro": "l.codart == codart"
+   }
+  },
+  "desvar": {
+   "ro": "busca('garticul','codigo',codart,'desvar') != 'V'"
+  },
+  "canmov": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "(canmov == null || canmov == 0) && (canalt == null || canalt == 0)",
+     "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad del movimiento y cantidad alternativa, no pueden ser ambas 0.",
+     "campo": "canmov",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "udmori": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "filtro": "l.codart == codart"
+   }
+  },
+  "canalt": {},
+  "udmalt": {
+   "mayus": 1
+  },
+  "candes": {},
+  "udmdes": {
+   "mayus": 1
+  },
+  "numlot": {
+   "req": 1,
+   "def": "0",
+   "ro": "busca('garticul','codigo',codart,'lotes') != 'S'",
+   "mayus": 1
+  },
+  "precio": {},
+  "impcos": {
+   "ro": "1==1"
+  },
+  "canabo": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canrec": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "ubiori": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1
+  },
+  "ubides": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1
+  },
+  "terdep": {
+   "req": 1,
+   "def": "0",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctaori": {
+   "req": 1,
+   "defExpr": "busca('geanmovd','codigo',padre.tipdoc,'ctaori')",
+   "lov": {
+    "obj": "galmctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctades": {
+   "req": 1,
+   "defExpr": "busca('geanmovd','codigo',padre.tipdoc,'ctades')",
+   "lov": {
+    "obj": "galmctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S"
+  },
+  "codean": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "(canmov == null || canmov == 0) && (canalt == null || canalt == 0)",
+   "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad del movimiento y cantidad alternativa, no pueden ser ambas 0.",
+   "campo": "canmov",
+   "fuente": "demo"
+  },
+  {
+   "si": "!vacio(codart) && !existe('garticul','codigo',codart)",
+   "msg": "Error en la validación",
+   "campo": "codart",
+   "fuente": "demo"
+  },
+  {
+   "si": "canmov < 0 && suma('galmstkc','codart',codart,'stkact') + canmov < 0",
+   "msg": "STOCK NEGATIVO -->Alm:[${padre.almori}] Cta:[${ctades}] Art:[${codart}] VL:[${varstk}] Lot:[${numlot}] Ubi:[${ubides}] Ean:[${codean}]",
+   "campo": "canmov",
+   "fuente": "demo"
+  },
+  {
+   "si": "!((((canabo == null) || (canabo >= 0)) && ((canabo == null) || (canabo <= Math.abs(canmov)))))",
+   "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad devuelta o abonada no puede ser inferior a cero, ni superior a la cantidad de la línea del albarán.",
+   "tipo": "error",
+   "campo": "canmov",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((udmdes == null || udmdes.length === 0)) && ((candes == null))) || (((!(udmdes == null || udmdes.length === 0)) && (!(candes == null))) && (udmori != udmdes))))",
+   "msg": "Las siguientes restricciones de verificación fallaron:\nSi se informa la cantidad destino ha de estar informada la unidad de medida destino.",
+   "tipo": "error",
+   "campo": "udmdes",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((canmov == null) || (canmov > 0)) && ((canmov == null || canrec == null) || (canmov >= canrec))) || ((canmov == null) || (canmov <= 0))))",
+   "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad recepcionada ha de ser menor o igual a la cantidad de la linea.",
+   "tipo": "error",
+   "campo": "canmov",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((udmalt == null || udmalt.length === 0)) && ((canalt == null))) || ((!(udmalt == null || udmalt.length === 0)) && (!(canalt == null)))))",
+   "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad y unidad alternativas se han de informar conjuntamente. O se informan las dos o ninguna.",
+   "tipo": "error",
+   "campo": "canalt",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_ACT_DESC": {
+   "l": "Activar descripción",
+   "nota": "Solo si el artículo tiene descripción ampliada (garticul.desamp) y la línea no; diálogo con Texto obligatorio. No provocado."
+  },
+  "BUT_CONTROL_CALIDAD": {
+   "l": "Generar control de calidad",
+   "nota": "Solo con cabecera validada y tipología con control de calidad (concal != 0); RIDP tiene concal 0. No provocado."
+  }
+ },
+ "notas": [
+  "Subrejilla de geanmovh (pestaña «Líneas de movimiento»); el botón Nuevo solo aparece con la cabecera provisional. Diálogo «LÍNEAS DE MOVIMIENTOS INTERNOS» con secciones Artículo, Cuentas, Estado, Lote, Cantidad, Ubicación, Cantidades procesadas, Precio, Auxiliares.",
+  "Defectos al abrir: Cuenta Origen/Destino de la tipología (NSAL «NO SALDO» / DISP «DISPONIBLE PARA SER UTILIZADO»), U. manipulación 0, Depósito 0 (DEISTER SOFTWARE), Ubicación origen/destino 0, Cantidad 0, Modificar Sí.",
+  "Al elegir artículo (evento after_column codart): VL 0, Lote 0, Unidad origen = unidad base (UNI / KGR), Ubicación origen 0; descripción del artículo al lado.",
+  "Artículo inexistente: el campo queda en rojo con «Error en la validación» (verify garticul_s devuelve 204).",
+  "Cantidad negativa en RIDP: el servidor rechaza la línea con «STOCK NEGATIVO -->Alm:[CAPC1] Cta:[DISP] Art:[CAPC001] VL:[0] Lot:[0] Ubi:[0] Ean:[0]» (no había stock).",
+  "Al grabar la línea se actualiza el stock (galmstkc/galmstkg) aunque la cabecera siga provisional; al borrar la cabecera provisional se deshace.",
+  "Lista de la lupa de artículo: Artículo, Descripción artículo, Estado.",
+  "No reproducido: aviso «ELResolver no manejó el tipo: null con propiedad de 'null'»."
+ ]
+}

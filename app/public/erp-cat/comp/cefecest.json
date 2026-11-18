@@ -1,0 +1,103 @@
+{
+ "c": "cefecest",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "clase": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1
+  },
+  "codigo": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(codigo)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "nomest": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(nomest)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "nomest",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "caduca": {
+   "req": 1,
+   "def": "N"
+  },
+  "grpmod": {
+   "req": 1,
+   "def": "N"
+  },
+  "insmod": {
+   "req": 1,
+   "def": "S"
+  },
+  "liquid": {
+   "req": 1,
+   "def": 0
+  },
+  "delmod": {
+   "req": 1,
+   "def": "S"
+  },
+  "updmod": {
+   "req": 1,
+   "def": "S"
+  },
+  "tespos": {
+   "req": 1,
+   "def": "N"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(clase) || vacio(codigo) || vacio(nomest)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && cuenta('cefecest','codigo',codigo) > 0 && busca('cefecest','codigo',codigo,'clase') == clase",
+   "msg": "Unique constraint (informix.p_cefecest) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('ctipoefe','estefe',codigo) || existe('cefeacti','estfin',codigo)",
+   "msg": "Key value for constraint (informix.p_cefecest) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Nuevo = «Añadir estado» (diálogo «ESTADOS DE LOS EFECTOS»). Guardar vacío: «Este campo es obligatorio.» en Clase, Estado y Descripción estado + «Hay errores en los datos del formulario». Éxito: «Éxito» + «Ver registro».",
+  "Duplicado (C/PE): 500 «Unique constraint (informix.p_cefecest) violated.». Clave = clase + codigo.",
+  "Borrar: diálogo «Eliminar registro» «¿Estás seguro que quieres eliminar el registro '<Descripción estado>' ?» (Cancelar/Eliminar). Con hijos (estado CX usado por el tipo de efecto CAP y la acción CAPACC): ventana «Se ha producido un error» con «Key value for constraint (informix.p_cefecest) is still being referenced.» (DELETE table/cefecest/form/1/<b64> → 500).",
+  "Casillas Borrable, Modificable y Tesorería con ayuda en línea («Permite ejecutar acciones de eliminación en los efectos.», «Permite ejecutar acciones de actualización en los efectos.», «Computar en previsión de tesorería L/P.»). Lista en edición por celda.",
+  "probado: Nuevo «Añadir estado» (guardar vacío, alta con éxito), duplicado, borrar con hijos (CX). Sin botones ni Acciones."
+ ]
+}

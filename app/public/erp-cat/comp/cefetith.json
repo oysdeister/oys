@@ -1,0 +1,206 @@
+{
+ "c": "cefetith",
+ "fecha": "2026-11-18 tesoreria/A-cartera",
+ "area": "tesoreria",
+ "campos": {
+  "cabid": {
+   "ro": "1==1"
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "tercer": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(tercer)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "terdes": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(terdes)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "terdes",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(cuenta)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "cuenta",
+     "fuente": "demo"
+    }
+   ],
+   "ro": "vacio(terdes)"
+  },
+  "estado": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "reglas": [
+    {
+     "si": "vacio(estado)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    },
+    {
+     "si": "!(((estado == null || ['A','C'].includes(estado))))",
+     "msg": "El estado debe ser Abierto [A] o Cerrado [C].",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impacu": {
+   "def": 0
+  },
+  "porcen": {
+   "req": 1,
+   "def": 100,
+   "reglas": [
+    {
+     "si": "vacio(porcen)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "porcen",
+     "fuente": "meta"
+    },
+    {
+     "si": "!((((porcen == null) || (porcen >= 1)) && ((porcen == null) || (porcen <= 100))))",
+     "msg": "El porcentaje debe estar entre 1 y 100.",
+     "tipo": "error",
+     "campo": "porcen",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "numban": {
+   "lov": {
+    "obj": "cterbanc",
+    "clave": "numban",
+    "filtro": "l.codigo == terdes",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecini": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(fecini)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "fecini",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "fecfin": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(fecfin)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "fecfin",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "priori": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(priori)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "priori",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipefe": {
+   "mayus": 1
+  },
+  "estefe": {
+   "ro": "tipefe == null"
+  }
+ },
+ "botones": {
+  "BUT_CONT_CAMB_TIT": {
+   "l": "Contabilizar",
+   "nota": "Oculto si no hay líneas cefetitl sin contabilizar (contab='N') con la cabecera abierta. Sin confirmación. No probado (sin datos)."
+  },
+  "BUT_CAMBIAR_TITULA": {
+   "l": "Cambiar titularidad",
+   "nota": "Oculto salvo cabecera abierta, hoy entre fecha inicio y fin y sin líneas pendientes de contabilizar. Cambia el titular de los efectos seleccionados (pestañas Selección/Efectos seleccionados, cefectos_selector_vtab) del tercero origen al destino y crea cefetitl. No probado."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "C",
+    "por": "Contabilizar (deducido)"
+   }
+  ]
+ },
+ "notas": [
+  "Lista vacía en TUTORIAL. Nuevo: Empresa vacía, Estado Abierto, Prioridad 0, Porcentaje 100,00, Importe transferido 0,00; Cuenta destino, Domiciliación, Estado efecto (solo si hay Tipo efecto) y descripciones son de solo lectura hasta rellenar el tercero destino / tipo.",
+  "Guardar vacío: «Este campo es obligatorio.» en Empresa, Tercero origen, Fecha inicio, Cuenta destino, Tercero destino y Fecha fin. Tercero inexistente (CAPZZZ): «Error en la validación» (fk/cefetith/tercer/verify/ctercero → 204).",
+  "Ficha: Identificación, Efectos, Observaciones, Importes, pestañas Efectos seleccionados / Selección de efectos / Efectos asociados (cefetitl), Datos de control; segundo layout «Efectos asociados»."
+ ]
+}

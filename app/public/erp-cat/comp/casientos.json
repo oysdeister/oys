@@ -1,0 +1,450 @@
+{
+ "c": "casientos",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "ro": "estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "vacio(empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "demo"
+    },
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecha": {
+   "req": 1,
+   "ro": "estado == 'C'",
+   "defExpr": "hoy()"
+  },
+  "asient": {
+   "ro": "1==1"
+  },
+  "jusser": {
+   "ro": "estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "docser": {
+   "ro": "estado == 'C'"
+  },
+  "sistem": {
+   "ro": "estado == 'C'",
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "diario": {
+   "ro": "estado == 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdia"
+    ],
+    "desc": "nomdia"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(diario) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(diario)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "diario",
+     "fuente": "meta"
+    }
+   ],
+   "def": "DG"
+  },
+  "moneda": {
+   "req": 1,
+   "ro": "estado == 'C'",
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(moneda)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "moneda == cempresa.divemp || estado == 'C'",
+   "def": 1
+  },
+  "camope": {
+   "req": 1,
+   "ro": "moneda == cempresa.divemp || estado == 'C'",
+   "def": 1
+  },
+  "ejercicio": {
+   "ro": "1==1",
+   "mayus": 1,
+   "defExpr": "Number(String(fecha).slice(0,4))"
+  },
+  "periodo": {
+   "ro": "1==1",
+   "defExpr": "Number(String(fecha).slice(5,7))"
+  },
+  "imp_cuadre": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "max_orden": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P"
+  },
+  "origen": {
+   "ro": "1==1"
+  },
+  "id_origen": {
+   "ro": "1==1"
+  },
+  "id_asiento": {
+   "ro": "estado == 'C'",
+   "lov": {
+    "obj": "casientos",
+    "clave": "id_asiento",
+    "cols": [
+     "empcode",
+     "diario",
+     "jusser"
+    ],
+    "desc": "empcode"
+   }
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((estado == 'C') && ((imp_cuadre == null) || (imp_cuadre == 0))) || (estado == 'P')))",
+   "msg": "No se puede contabilizar un asiento descuadrado",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_RECALCULAR_CUADRE": {
+   "l": "Recalcular cuadre",
+   "nota": "Volver a calcular el importe del Cuadre a cero. · Habilitado si: estado != 'C' · Se oculta si no está habilitado · Código de botón en la demo: BUT_RECALCULAR_CUADR",
+   "pasos": [
+    {
+     "set": {
+      "imp_cuadre": "Math.round((suma('capuntes','id_asiento',id_asiento,'debe') - suma('capuntes','id_asiento',id_asiento,'haber'))*100)/100"
+     }
+    }
+   ],
+   "ok": "Éxito"
+  },
+  "BUT_REORDENAR_APUNTES": {
+   "l": "Reordenar líneas",
+   "nota": "Re-calcula el número de orden de cada apunte contable dentro del asiento · Habilitado si: estado == 'P' · Se oculta si no está habilitado · Código de botón en la demo: BUT_REORDENAR_APUNTE",
+   "ok": "Éxito"
+  },
+  "BUT_ASIENT_PROVISIONAL": {
+   "l": "Abrir a provisional",
+   "nota": "Permite marcar el asiento contable cómo \"provisional\" y por tanto habilita su posible modificación.\nAsimismo, el proceso elimina los valores económicos de debe y de haber consignados en el libro mayor, ajustando aumentos o disminuciones de los saldos de cada cuenta contable existente en el asiento contable.\nNótese que un asiento contable \"provisional\" no tiene impacto en los estados financieros de la empresa.\nEl proceso de cierre de período contable, exige que todos los registros del período, se hayan finalizado.\nSi el período contable está \"cerrado\" entonces no es posible modificar el estado de sus registros contables. · Habilitado si: estado == 'C' · Se oculta si no está habilitado · Admite selección múltiple · Código de botón en la demo: BUT_DESCONTABILIZAR",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'P'"
+     }
+    }
+   ],
+   "ok": "Éxito"
+  },
+  "BUT_ASIENT_FINALIZAR": {
+   "l": "Finalizar",
+   "nota": "Permite marcar el asiento contable cómo \"finalizado\" y por tanto deshabilita su posible modificación.\nAsimismo, el proceso traslada los valores económicos de debe y de haber al libro mayor, acumulando aumentos o disminuciones de los saldos de cada cuenta contable existente en el asiento contable.\nNótese que un asiento contable \"provisional\" no tiene impacto en los estados financieros de la empresa.\nEl proceso de cierre de período contable, exige que todos los registros del período, se hayan finalizado. · Habilitado si: estado != 'C' && imp_cuadre == 0 · Se oculta si no está habilitado · Admite selección múltiple · Código de botón en la demo: BUT_CONTABILIZAR",
+   "pre": [
+    {
+     "si": "imp_cuadre != 0",
+     "msg": "No se puede contabilizar un asiento descuadrado",
+     "tipo": "error",
+     "fuente": "meta"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estado": "'C'"
+     }
+    }
+   ],
+   "ok": "Éxito"
+  },
+  "BUT_COPIARASIENTO": {
+   "l": "Copiar asiento",
+   "nota": "Copia el asiento, duplicado o múltiples veces.\nSi se rellena descripción, ésta sobreescribe la de los nuevos apuntes\nInvertir crea un contra-asiento a la fecha seleccionada\nTodo no prescinde de cartera e impuestos, si los tuviere el original\nSi se rellena documento, ésta sobreescribe la de los nuevos apuntes y asientos. · Se oculta si no está habilitado · Abre un diálogo con campos · Probado (fase 1b): las copias salen PROVISIONALES en el mismo diario, con justificante «AC»; «Inverir asiento» = Sí copia las líneas en el MISMO lado con importes en negativo (contra-asiento: Debe −1.000, Haber −500/−500).",
+   "dialogoTit": "Copiar asiento",
+   "dialogo": [
+    {
+     "n": "divemp",
+     "l": "Moneda empresa",
+     "t": "s",
+     "sz": 3,
+     "req": 1,
+     "def": "EUR",
+     "hid": 1,
+     "h": "Moneda de la empresa",
+     "fk": "cmonedas"
+    },
+    {
+     "n": "placon",
+     "l": "Plan contable",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "def": "ES",
+     "hid": 1,
+     "h": "Código de plan contable",
+     "fk": "cplacont"
+    },
+    {
+     "n": "casientos_empcode",
+     "l": "Empresa",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "def": "0",
+     "h": "Código de empresa",
+     "fk": "cempresa"
+    },
+    {
+     "n": "fecha",
+     "l": "Fecha",
+     "t": "d",
+     "sz": 10,
+     "req": 1,
+     "def": "2026-11-18",
+     "h": "Fecha de contabilización"
+    },
+    {
+     "n": "docser",
+     "l": "Documento",
+     "t": "s",
+     "sz": 20,
+     "h": "Documento"
+    },
+    {
+     "n": "concep",
+     "l": "Descripción",
+     "t": "s",
+     "sz": 255,
+     "h": "Descripción del apunte contable"
+    },
+    {
+     "n": "numast",
+     "l": "Número a generar",
+     "t": "i",
+     "sz": 10,
+     "req": 1,
+     "def": "1",
+     "h": "Número de asientos a generar"
+    },
+    {
+     "n": "cadmen",
+     "l": "Cadencia mensual",
+     "t": "i",
+     "sz": 10,
+     "req": 1,
+     "def": "1",
+     "h": "Cadencia mensual"
+    },
+    {
+     "n": "invasi",
+     "l": "Inverir asiento",
+     "t": "i",
+     "sz": 10,
+     "req": 1,
+     "def": "0",
+     "o": [
+      {
+       "k": "1",
+       "v": "Sí"
+      },
+      {
+       "k": "0",
+       "v": "No"
+      }
+     ],
+     "h": "Revertir los importes del asiento contable a generar"
+    },
+    {
+     "n": "copyAll",
+     "l": "Copiar todo",
+     "t": "i",
+     "sz": 10,
+     "req": 1,
+     "def": "1",
+     "o": [
+      {
+       "k": "1",
+       "v": "Sí"
+      },
+      {
+       "k": "0",
+       "v": "No"
+      }
+     ],
+     "h": "Copiar todos los datos relacionados con el asentamiento (incluidos impuestos y efectos)"
+    }
+   ],
+   "ok": "Éxito",
+   "pasos": [
+    {
+     "crea": {
+      "obj": "casientos",
+      "valores": {
+       "empcode": "ent.casientos_empcode",
+       "fecha": "ent.fecha",
+       "diario": "diario",
+       "sistem": "sistem",
+       "moneda": "moneda",
+       "cambio": "cambio",
+       "camope": "camope",
+       "docser": "vacio(ent.docser) ? docser : ent.docser",
+       "estado": "'P'",
+       "imp_cuadre": "0"
+      }
+     }
+    },
+    {
+     "crea": {
+      "obj": "capuntes",
+      "porCada": "capuntes",
+      "valores": {
+       "cuenta": "cuenta",
+       "proyec": "proyec",
+       "seccio": "seccio",
+       "concep": "vacio(ent.concep) ? concep : ent.concep",
+       "divdeb": "ent.invasi == 1 ? -divdeb : divdeb",
+       "divhab": "ent.invasi == 1 ? -divhab : divhab",
+       "debe": "ent.invasi == 1 ? -debe : debe",
+       "haber": "ent.invasi == 1 ? -haber : haber"
+      }
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "Con «Número a generar» n se crean n asientos, el k-ésimo con fecha + (k−1) × «Cadencia mensual» meses. Al terminar la demo abre los asientos nuevos en otra ventana."
+     }
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Diario contable › Asientos › Asientos",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Pestañas de la ficha: Asiento | Carteras | Líneas de apuntes | Impuestos | Costes | Tesorería | Periodificaciones | Saldos",
+  "Nuevo (dml/insert/reset LBL_NEW) propone: diario DG, sistema A, moneda EUR, cambio 1, cálculo Dividir, estado Provisional, ejercicio y período según la fecha (hoy). Empresa vacía y obligatoria.",
+  "Guardar sin Empresa: el campo muestra «Este campo es obligatorio.» (validación de cliente, no llega al servidor).",
+  "Diario con más de 2 caracteres: «Demasiado largo.» (validación de cliente por tamaño).",
+  "Probado en la demo con el asiento CAP 46 (id 93, diario CV): Abrir a provisional → aviso «Éxito», estado C→P; Recalcular cuadre y Reordenar líneas sin mensaje propio; Finalizar → estado P→C. Las respuestas del servidor traen message null: el «Éxito» lo pone la interfaz.",
+  "Endpoints: botón = POST table/casientos/form/<n>/<b64>/action/<código demo> con {\"cursor_crc\",\"selectedRows\":[[n,crc]],\"form\":{\"capuntes_report\":[]}} (+ GET …/progress/<uuid> SSE); diálogo = POST …/action/<código>/fields/<n> {\"form\":{…}} → lista de metadatos de campos; Nuevo = GET table/<code>/list/<b64>/1/dml/insert/reset/form?reset_code=LBL_NEW; lupa = GET fk/<tabla>/<col>/autocomplete/<pk>?pkMethod=&searchText=&isQBE=false&data=<b64 fila>; verificación = POST fk/<tabla>/<col>/verify/<pk>?pkMethod= (cuerpo base64 de la fila; 204 si no existe).",
+  "Finalizar y Abrir a provisional se OCULTAN cuando no están habilitados (hideIfDisabled): no hay mensaje de error visible para «ya contabilizado».",
+  "Menú ⌄ del asiento (37 entradas, casi todas ocultas según el origen): para el asiento manual CAP 46 solo se ven «Apuntes» → capuntes del asiento y «Saldos» → csaldos del asiento (2 filas). Probado en fase 1b.",
+  "Efecto de Finalizar/Contabilizar sobre saldos (probado con el asiento CAP 46: 62902 D 1.000, 57200 H 1.000): csaldos 62902 período 11 pasa de Debe 2.000 a 3.000 y 57200 de Haber 2.850 a 3.850; al abrir a provisional vuelve.",
+  "Copiar asiento probado en la demo sobre el asiento CAP 46: «Número a generar» 2 y «Cadencia mensual» 1 crearon los asientos 70 (18-11-2026) y 71 (18-12-2026), provisionales, 3 líneas cada uno con el concepto «CAP copia»; la respuesta abre los nuevos en otra ventana (OpenUrl). Invertir creó el 72 con importes en negativo. Borrados después.",
+  "Borrar un asiento provisional con líneas: se borra con sus líneas sin aviso (cascada).",
+  "probado: BUT_ASIENT_PROVISIONAL, BUT_RECALCULAR_CUADRE, BUT_REORDENAR_APUNTES, BUT_ASIENT_FINALIZAR, BUT_COPIARASIENTO (normal, 2 copias con cadencia, invertido), Borrar con líneas, menú ⌄ (Apuntes, Saldos)."
+ ],
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "P"
+    ],
+    "a": "C",
+    "por": "BUT_ASIENT_FINALIZAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "P",
+    "por": "BUT_ASIENT_PROVISIONAL"
+   }
+  ]
+ }
+}

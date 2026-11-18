@@ -1,0 +1,65 @@
+{
+ "c": "gven_promocp",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "tipmag": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((tipmag == null || ['M','A','R','P','T','F'].includes(tipmag))))",
+     "msg": "El tipo de magnitud del escalado solo puede ser misma [M]Marca, mismo [A]Fabricante, [R]eferencias de artículos, mismo [P]Pack, cantidades [T]otales o misma [F]amilia.",
+     "tipo": "error",
+     "campo": "tipmag",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipesc": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((tipesc == null || ['E','X'].includes(tipesc))))",
+     "msg": "Los posibles valores del indicador de tipo de escalado son: [E]Escalado y [X]MxN.",
+     "tipo": "error",
+     "campo": "tipesc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "bascal": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((bascal == null || ['C','I'].includes(bascal))))",
+     "msg": "La base de calculo solo puede ser [C]antidad o [I]mporte.",
+     "tipo": "error",
+     "campo": "bascal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "coduni": {
+   "ro": "bascal != 'C'",
+   "oculto": "gven_promocd.hide_coduni != 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((coduni == null || coduni.length === 0)) || (bascal == 'C')))",
+   "msg": "La unidad de medida solo se puede informar si la base de cálculo es por cantidad.",
+   "tipo": "error",
+   "campo": "coduni",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

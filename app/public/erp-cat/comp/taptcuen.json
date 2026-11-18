@@ -1,0 +1,342 @@
+{
+ "c": "taptcuen",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "apteid": {
+   "ro": "true"
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "origen != 'M'",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   }
+  },
+  "ctafin": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "origen != 'M'",
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "ctafin",
+     "nomcta",
+     "iban"
+    ],
+    "desc": "nomcta"
+   }
+  },
+  "impcta": {
+   "req": 1,
+   "ro": "origen != 'M'",
+   "def": 0
+  },
+  "debhab": {
+   "req": 1,
+   "ro": "origen != 'M'",
+   "mayus": 1,
+   "calc": "(impcta || 0) == 0 ? debhab : impcta > 0 ? 'D' : 'H'"
+  },
+  "opefin": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "remesa != null",
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "debhab",
+     "opefin",
+     "nomope"
+    ],
+    "desc": "nomope",
+    "filtro": "l.debhab == debhab"
+   },
+   "alCambiar": {
+    "clase": "busca('toperfin','opefin',opefin,'clase')",
+    "accion": "busca('toperfin','opefin',opefin,'accion')"
+   }
+  },
+  "fecope": {
+   "req": 1,
+   "ro": "origen != 'M'",
+   "defExpr": "hoy()"
+  },
+  "fecval": {
+   "req": 1,
+   "ro": "origen != 'M'",
+   "defExpr": "hoy()"
+  },
+  "feccon": {
+   "ro": "!(origen == 'M' && tipmov == 'S')"
+  },
+  "estcab": {
+   "req": 1,
+   "def": 0
+  },
+  "concid": {
+   "ro": "true"
+  },
+  "rowenl": {
+   "ro": "true"
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "origen != 'M'",
+   "def": "0",
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "noExiste": "Error en la validación",
+    "desc": "nompro"
+   }
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "origen != 'M'",
+   "def": "0",
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "noExiste": "Error en la validación",
+    "desc": "nomsec"
+   }
+  },
+  "sistem": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "origen != 'M'",
+   "def": "A"
+  },
+  "refban": {
+   "mayus": 1,
+   "ro": "origen == 'E'"
+  },
+  "origen": {
+   "req": 1,
+   "ro": "true",
+   "def": "M"
+  },
+  "tipmov": {
+   "req": 1,
+   "ro": "origen != 'M'",
+   "def": "R"
+  },
+  "audtes": {
+   "req": 1,
+   "def": "N"
+  },
+  "audcon": {
+   "req": 1,
+   "def": "N"
+  },
+  "clase": {
+   "ro": "remesa != null"
+  },
+  "accion": {
+   "ro": "remesa != null",
+   "lov": {
+    "obj": "cefeacti",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "gesori": {
+   "ro": "true"
+  },
+  "gesdes": {
+   "ro": "true"
+  },
+  "remesa": {
+   "ro": "true"
+  },
+  "aptenl": {
+   "ro": "true"
+  },
+  "auxemp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "auxcta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(empcode)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "empcode"
+  },
+  {
+   "si": "vacio(ctafin)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "ctafin"
+  },
+  {
+   "si": "vacio(opefin)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "opefin"
+  },
+  {
+   "si": "(debhab == 'H' && impcta > 0) || (debhab == 'D' && impcta < 0)",
+   "msg": "Check constraint (informix.c_taptcuen1) failed.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "impcta"
+  }
+ ],
+ "botones": {
+  "BUT_INCORPORAR_GESCOB": {
+   "l": "Incorporar reclamados",
+   "nota": "Código real BUT_INCORPORAR_GESC; habilitado si clase == 'C' && accion != null && estcab == 1 && feccon == null && audtes == 'S'; abre diálogo de campos. No probado (requiere efectos de cartera)."
+  },
+  "BUT_INCORPORAR_GESTION": {
+   "l": "Incorporar gestión",
+   "nota": "Código real BUT_INCORPORAR_GEST; habilitado si accion != null && estcab == 1 && feccon == null && audtes == 'S'; abre diálogo de campos. No probado."
+  },
+  "BUT_AUDITORIA_TESORERO": {
+   "l": "Auditar tesorería",
+   "nota": "Código real BUT_AUDITORIA_TESOR; sin confirmación; pone audtes = 'S' (movimiento 6). Mensaje «Éxito».",
+   "pasos": [
+    {
+     "set": {
+      "audtes": "'S'"
+     }
+    }
+   ],
+   "ok": "Éxito"
+  },
+  "BUT_VALIDAR_MOV": {
+   "l": "Validar movimiento",
+   "confirm": "",
+   "nota": "Habilitado si estcab == 0. En la demo el alta ya deja estcab = 1 (trigger taptcuen_valida), así que no se pudo pulsar.",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "1"
+     }
+    }
+   ]
+  },
+  "BUT_PSEUDO_DESCONCILIAR": {
+   "l": "Anular pseudo-conciliación",
+   "confirm": "",
+   "nota": "Código real BUT_PSEUDO_DESCONCI; habilitado si tipmov != 'S' && cbancpro.fecext == null && estcab == 1 && concid > 0 && feccon == null. No probado (CAPT_BCO ya tiene extracto).",
+   "pasos": [
+    {
+     "set": {
+      "concid": "null"
+     }
+    }
+   ]
+  },
+  "BUT_RECALCULAR_COMISION": {
+   "l": "Recalcular comisión",
+   "confirm": "",
+   "nota": "Código real BUT_RECALCULAR_COMI; siempre visible, habilitado si feccon == null. Diálogo «Confirmación» sin texto (Cancelar/Aceptar) y luego «Éxito». Recalcula los flujos de comisión (taptfluj).",
+   "ok": "Éxito"
+  },
+  "BUT_FECHA_VALOR": {
+   "l": "Cambiar Fecha valor",
+   "confirm": "",
+   "nota": "Habilitado si tipmov != 'S' && feccon != null && rowenl > 0 && origen == 'A'; diálogo con campos. No probado."
+  },
+  "BUT_AUDITORIA_CONTABLE": {
+   "l": "Auditoría contable",
+   "confirm": "",
+   "nota": "En la demo son dos botones con la misma etiqueta: BUT_AUDITORIA_CONTA1 (audcon == 'N' → 'S') y BUT_AUDITORIA_CONTA2 (audcon == 'S' → 'N'); ambos requieren feccon != null. No probado.",
+   "pasos": [
+    {
+     "set": {
+      "audcon": "audcon == 'S' ? 'N' : 'S'"
+     }
+    }
+   ]
+  },
+  "BUT_PSEUDO_CONCILIAR": {
+   "l": "Pseudo-conciliar",
+   "confirm": "",
+   "nota": "Habilitado si tipmov != 'S' && cbancpro.fecext == null && estcab == 1 && concid == null (cuentas sin extractos). No probado."
+  },
+  "BUT_DESCONTABILIZAR": {
+   "l": "Descontabilizar",
+   "confirm": "",
+   "nota": "Habilitado si tipmov != 'S' && feccon != null && audtes == 'S' && origen != 'A' && estcab == 1 && audcon == 'N'. No probado.",
+   "pasos": [
+    {
+     "set": {
+      "feccon": "null"
+     }
+    }
+   ]
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "confirm": "",
+   "dialogoTit": "Confirmación",
+   "dialogo": [
+    {
+     "n": "feccon",
+     "l": "Fecha contabilización",
+     "t": "d",
+     "req": 1,
+     "def": "hoy"
+    }
+   ],
+   "nota": "Habilitado si concid != null && tipmov != 'S' && feccon == null && origen != 'A' && estcab == 1 && audcon == 'N' && audtes == 'S'. Diálogo «Confirmación» con Fecha contabilización* (defecto hoy). Capturado el diálogo y cancelado (no se generó asiento).",
+   "pasos": [
+    {
+     "set": {
+      "feccon": "ent.feccon"
+     }
+    }
+   ]
+  }
+ },
+ "estados": {
+  "col": "audtes",
+  "trans": [
+   {
+    "de": [
+     "N"
+    ],
+    "a": "S",
+    "por": "BUT_AUDITORIA_TESORERO"
+   }
+  ]
+ },
+ "notas": [
+  "Guardar sin obligatorios: «Hay errores en los datos del formulario» + «Este campo es obligatorio.» en Empresa, Cta. financiera y Operación financiera.",
+  "Operación financiera inexistente (ZZZZZZ): «Error en la validación».",
+  "Signo: debhab se calcula del signo de impcta (positivo = D Entrada, negativo = H Salida). Grabar H con importe positivo → «Check constraint (informix.c_taptcuen1) failed.».",
+  "Tras el alta, el trigger taptcuen_valida deja estcab = 1 y la fila resaltada en amarillo (#FFC108) mientras audtes = 'N'.",
+  "Al elegir la operación financiera se rellenan Clase de cartera y Acción desde toperfin (ACADOP → Pagar, CONB).",
+  "Menú ⋮ de la ficha: Información, Metadata, Imprimir, Exportar.",
+  "Los botones Auditar tesorería, Validar, Contabilizar… no salen en el diálogo de Nuevo; solo en la ficha guardada."
+ ]
+}

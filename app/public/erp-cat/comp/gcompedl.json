@@ -1,0 +1,298 @@
+{
+ "c": "gcompedl",
+ "fecha": "2026-11-18",
+ "area": "compras",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "ro": "!__ins",
+   "lov": {
+    "obj": "garticul_s",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "varlog": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numlot": {
+   "req": 1,
+   "ro": "busca('garticul','codigo',codart,'lotes') == 'N'",
+   "lov": {
+    "obj": "gartlote",
+    "clave": "numlot",
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "entini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "canped": {
+   "req": 1
+  },
+  "udmcom": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmalt": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "canpre": {
+   "req": 1
+  },
+  "udmpre": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "impnet": {
+   "req": 1,
+   "ro": "true"
+  },
+  "canadj": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "canext": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "canser": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "canfac": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "cananu": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "canbon": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "canpen": {
+   "req": 1,
+   "def": 0
+  },
+  "regalo": {
+   "req": 1,
+   "ro": "true",
+   "def": "N",
+   "mayus": 1
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "true",
+   "def": "S"
+  },
+  "valqty": {
+   "ro": "true"
+  },
+  "pretar": {
+   "ro": "true"
+  },
+  "dtotar": {
+   "ro": "true"
+  },
+  "impcos": {
+   "ro": "true"
+  },
+  "impdto": {
+   "req": 1,
+   "def": 0
+  },
+  "impdte": {
+   "req": 1,
+   "def": 0
+  },
+  "impdtc": {
+   "req": 1,
+   "def": 0
+  },
+  "docfoot": {
+   "req": 1,
+   "def": 0
+  },
+  "tax_porded": {
+   "def": 100
+  },
+  "tax_porpro": {
+   "def": 100
+  },
+  "tax_cost": {
+   "def": 0
+  },
+  "terexp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "direxp": {
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "filtro": "l.codigo == terexp",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cabid": {
+   "req": 1,
+   "lov": {
+    "obj": "gcompedh",
+    "clave": "cabid",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((vacio(canser) || canser == 0) || (vacio(canfac) || canfac == 0))",
+   "msg": "Una línea de pedido de compras no puede ser servida y facturada directamente.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((vacio(canadj) || canadj >= 0) && (vacio(canext) || canext >= 0) && (vacio(canser) || canser >= 0))",
+   "msg": "Check constraint (informix.c_gcompedl8) failed.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "ACTION_BUTTON_199": {
+   "l": "Marcar como servida",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Marcar como servida' ?",
+   "pasos": [
+    {
+     "set": {
+      "canpen": "0"
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "gcompedh",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "estado": "cuenta('gcompedl','cabid',cabid) > 0 && suma('gcompedl','cabid',cabid,'canpen') == 0 ? 'S' : 'P'"
+      }
+     }
+    }
+   ],
+   "nota": "Pone la cantidad pendiente (canpen) de la línea a 0 sin tocar canser; con todas las líneas así la cabecera pasa a Situación S Servido. Sin mensaje de éxito (respuesta result null). Requiere guserauth_check(USER, gcompedh, SERVIR)=1. Probado en la línea 54 de CAP-PED-01 (Pendiente → Servido). Visible (hideIfDisabled) solo si: padre.indmod != 'N' && indmod != 'N' && canpen != 0 && (padre.estado == 'N' || padre.estado == 'P') && padre.estcab == 'V'."
+  },
+  "ACTION_55": {
+   "l": "Activar servido",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Activar servido' ?",
+   "pasos": [
+    {
+     "set": {
+      "canpen": "canped - canser"
+     }
+    }
+   ],
+   "nota": "Inverso de «Marcar como servida». Solo visible si la cabecera sigue Pendiente/Parcial; tras marcar la única línea la cabecera pasa a Servido y el botón ya no aparece (no se pudo ejecutar). Texto de confirmación por el patrón genérico. Visible (hideIfDisabled) solo si: padre.indmod != 'N' && indmod != 'N' && canpen == 0 && canped > canser && (padre.estado == 'N' || padre.estado == 'P') && padre.estcab == 'V'."
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "dialogoTit": "Anular",
+   "dialogo": [
+    {
+     "n": "codmot",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gmotanul"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "gcompeda",
+      "valores": {
+       "linid": "linid",
+       "codmot": "ent.codmot",
+       "coment": "ent.coment"
+      }
+     }
+    },
+    {
+     "set": {
+      "cananu": "canpen",
+      "canpen": "0"
+     }
+    }
+   ],
+   "nota": "Diálogo «Anular» con Motivo* (lupa gmotanul, vacía en TUTORIAL: «Datos no disponibles») y Notas*. Aceptar vacío → «Este campo es obligatorio.» en los dos; motivo inexistente → «Error en la validación». No se pudo ejecutar porque no hay motivos de anulación. Los pasos son deducidos. Visible (hideIfDisabled) solo si: cananu == 0 && padre.estado != 'S' && indmod != 'N' && padre.indmod != 'N'."
+  },
+  "ACTION_BUTTON_ACTIVA": {
+   "l": "Activar",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Activar' ?",
+   "nota": "Reactiva una línea anulada (virtualerp.ico_qtyanu == 1). No observado en ejecución. Visible (hideIfDisabled) solo si: cananu > 0 && padre.estado != 'S' && indmod != 'N' && padre.indmod != 'N'."
+  },
+  "BUT_ACT_DESC": {
+   "l": "Activar descripción",
+   "nota": "Abre un diálogo con campos (form.hasFields) para la descripción ampliada; solo si el artículo tiene descripción ampliada. No observado. Visible (hideIfDisabled) solo si: !vacio(busca(\"garticul\",\"codigo\",codart,\"desamp\")) && vacio(desamp)."
+  }
+ },
+ "notas": [
+  "Lista «LÍNEAS DE PEDIDOS DE COMPRAS» sin Nuevo (permiso insert = false) ni filtro por pedido; ⋮ = Información, Columnas, Metadata, Imprimir, Exportar, Importar.",
+  "Ficha de línea real = table/gcompedl/form/<fila> con layout «Detalle»: Artículo | Vigencia, Estado | Cantidad | Precio, Tarifa, Costes | Descuentos - Importe neto | Cantidades procesadas | Impuestos, Dirección de envío, Texto, Auxiliares, gcompedl_lnk | subobjetos Descuentos de línea (gcompedl_dtll), Costes (gcompedl_dtlh), Cambios de precio (gcompedl_modp), Datos contables (gcompedl_datc), Anulaciones (gcompeda), Documentos (gcompedh_docs), Notas (gcompedh_note), Movimientos planificados (gpro_stkplanm), Prótesis - Paciente (gcomdatp), Condiciones comerciales aplicadas (gcom_vtab_src_pricedtos). Menú ⌄: «Condiciones Comerciales Aplicadas».",
+  "Los botones de línea están pensados para la subrejilla del pedido (usan document_parent.*); se ven en la barra de la ficha de línea cuando el pedido está Validado y Pendiente/Parcial. Con el pedido validado la papelera de la línea sale deshabilitada.",
+  "Importar (asistente de 5 pasos: Selecciona fichero, Selecciona datos [Formato CSV Default, Delimitador TAB, Charset UTF-8, Carácter de cita ', Tiene cabecera], Mapeado de columnas, Opciones importación [Importar todas las filas / N filas, Parar en error], Acabar). Cabecera con nombres físicos: cabid linrel orden codart varlog numlot canped udmcom canpre udmpre precio impnet canser dtoimp. El delimitador «;» elegido en el desplegable no se aplica: usar fichero separado por TAB.",
+  "Importar OK → «1 row(s) inserted, 0 row(s) updated, 0 row(s) excluded, 0 row(s) with error». Decimal con coma → «Failed to parse value into BigDecimal: 12,5». Artículo inexistente → «No se ha definido la conversión de la unidad origen a la unidad base para el artículo.». canser negativo → «Check constraint (informix.c_gcompedl8) failed.». Importe dto. 5 se acepta tal cual (impnet no se recalcula; el antiguo error 26865 ya no sale).",
+  "La importación no recalcula los importes de la cabecera (gcompedh.imptot sigue 0)."
+ ]
+}

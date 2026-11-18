@@ -1,0 +1,117 @@
+{
+ "c": "ccajaope",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajaope",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomope",
+     "cuenta",
+     "tippag"
+    ],
+    "desc": "nomope",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codigo))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nomope": {
+   "req": 1
+  },
+  "cuenta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tippag": {
+   "req": 1,
+   "def": "E",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(tippag) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(tippag))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tippag",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "invers": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "indliq": {
+   "req": 1,
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(indliq) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(indliq))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "indliq",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "debhab": {
+   "def": "D",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(debhab) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(debhab))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "debhab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opefin": {
+   "ro": "debhab == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "filtro": "(vacio(debhab) || l.debhab == debhab)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(opefin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(opefin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opefin",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'TIPOS DE OPERACIONES DE CAJA', editMode CELL, 50 filas en la demo; permisos insert=True update=True delete=True.",
+  "no probado: altas/errores — solo metadatos (50 filas de la demo). Sin botones."
+ ]
+}

@@ -1,0 +1,181 @@
+{
+ "c": "cinmtras_pcs",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "pcs_seqno": {
+   "ro": "true"
+  },
+  "pcs_empcode": {
+   "def": "0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(pcs_empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pcs_empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pcs_empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_inmdes": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(pcs_inmdes) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pcs_inmdes)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pcs_inmdes",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cinmhead",
+    "clave": "codinm",
+    "cols": [
+     "codinm",
+     "nominm"
+    ],
+    "desc": "nominm"
+   }
+  },
+  "pcs_prodes": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(pcs_prodes) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pcs_prodes)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pcs_prodes",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro"
+    ],
+    "desc": "nompro"
+   }
+  },
+  "pcs_secdes": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   }
+  },
+  "pcs_ctades": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp"
+   }
+  },
+  "pcs_cendes": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen"
+    ],
+    "desc": "nomcen"
+   }
+  },
+  "pcs_fecpro": {
+   "defExpr": "hoy()"
+  },
+  "pcs_estado": {
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(pcs_estado) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pcs_estado)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pcs_estado",
+     "fuente": "meta"
+    },
+    {
+     "si": "!(((pcs_estado == null || ['A','C'].includes(pcs_estado))))",
+     "msg": "El estado debe ser Abierto [A] o Cerrado [C].",
+     "tipo": "error",
+     "campo": "pcs_estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_estcom": {
+   "mayus": 1
+  }
+ },
+ "botones": {
+  "BUT_TRASPASAR": {
+   "l": "Traspasar",
+   "pasos": [
+    {
+     "set": {
+      "pcs_estado": "'C'"
+     }
+    }
+   ],
+   "nota": "Se marcan elementos en la pestaña «Selección» (cinmtras_pcs_cimelem_vtab: Bien, Elemento, Descripción, Grupos, Proyecto, Sección, Valor inventario, Valor neto…) y se pulsa Traspasar: sale el aviso verde «Éxito» y el estado pasa a Cerrado. En la demo NO movió el elemento (probado con AF y con 0000001 hacia el bien CAPMB) y la pestaña «Elementos de inmovilizado» quedó vacía. Sin elementos marcados también cierra el proceso.",
+   "ok": "Éxito"
+  },
+  "BUT_RETROCEDER": {
+   "l": "Retroceder",
+   "pasos": [
+    {
+     "set": {
+      "pcs_estado": "'A'"
+     }
+    }
+   ],
+   "nota": "Probado: confirmación literal y estado Cerrado → Abierto, sin mensaje.",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Retroceder' ?"
+  },
+  "BUT_CAMBIAR_AMORT": {
+   "l": "Cambiar amortización",
+   "nota": "Deshabilitado siempre en la demo: la condición compara pcs_fecpro con date:today() y no se cumple ni con proceso cerrado de hoy y con bien destino. Al pedir su diálogo por API el servidor responde «Character # is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.»."
+  }
+ },
+ "estados": {
+  "col": "pcs_estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "C",
+    "por": "BUT_TRASPASAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_RETROCEDER"
+   }
+  ]
+ },
+ "notas": [
+  "Estado: A Abierto, C Cerrado («El estado debe ser Abierto [A] o Cerrado [C].»).",
+  "Alta: botón «Nuevo»; proceso 1 «CAP traspaso prueba» creado en la demo.",
+  "probado: BUT_TRASPASAR, BUT_RETROCEDER; BUT_CAMBIAR_AMORT no ejecutable (siempre deshabilitado)"
+ ]
+}

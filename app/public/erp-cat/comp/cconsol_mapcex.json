@@ -1,0 +1,84 @@
+{
+ "c": "cconsol_mapcex",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "grupoc": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cconsol_grupoh",
+    "clave": "grupoc",
+    "cols": [
+     "grupoc",
+     "descri",
+     "empcode",
+     "esifrs"
+    ],
+    "desc": "descri"
+   }
+  },
+  "orden": {
+   "req": 1,
+   "def": 1
+  },
+  "empalias": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empalias) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empalias)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empalias",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaexp": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaexp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "descen": {
+   "mayus": 1
+  },
+  "descex": {
+   "mayus": 1
+  },
+  "desdim1": {
+   "mayus": 1
+  },
+  "desdim2": {
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((!(descen == null || descen.length === 0)) || (!(descex == null || descex.length === 0))) || (!(desdim1 == null || desdim1.length === 0))) || (!(desdim2 == null || desdim2.length === 0))))",
+   "msg": "Empresa destino, Cta. explot.  destino, Dimensión destino 1 y Dimensión destino 2,   almenos uno debe ser no nulo",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Consolidación › Integración datos › Mapeo orígenes › Mapeo cuentas explot.",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

@@ -1,0 +1,65 @@
+{
+ "c": "ccomfach_efac",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "efac_seqno": {
+   "ro": "1==1"
+  },
+  "efac_origen": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "R",
+   "reglas": [
+    {
+     "si": "!(((efac_origen == null || ['E','R'].includes(efac_origen))))",
+     "msg": "El origen debe ser Emitida [E] o Recibida [R].",
+     "tipo": "error",
+     "campo": "efac_origen",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "facidx": {
+   "ro": "1==1"
+  },
+  "efac_estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "reglas": [
+    {
+     "si": "!(((efac_estado == null || ['P','I','E','C'].includes(efac_estado))))",
+     "msg": "El estado debe ser Pendiente [P] o Integrada [I].",
+     "tipo": "error",
+     "campo": "efac_estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "efac_errmsg": {
+   "ro": "1==1"
+  }
+ },
+ "botones": {
+  "BUT_GET_FILE": {
+   "l": "Obtener fichero",
+   "nota": "Activo si efac_xml != null"
+  },
+  "BUT_PROCESS_INVOICE": {
+   "l": "Generar factura",
+   "nota": "Activo si efac_estado == 'P' && efac_origen == 'R'; pide confirmación"
+  },
+  "BUT_RETRO_CANCELAR": {
+   "l": "Retroceder cancelación",
+   "nota": "Activo si efac_estado == 'C'; pide confirmación"
+  },
+  "BUT_CANCELAR": {
+   "l": "Cancelar",
+   "nota": "Activo si efac_estado == 'P'; pide confirmación"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

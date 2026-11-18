@@ -1,0 +1,204 @@
+{
+ "c": "cxlstemplate",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "bal_code": {
+   "req": 1,
+   "lov": {
+    "obj": "cxlstemplate",
+    "clave": "bal_code",
+    "cols": [
+     "bal_code",
+     "bal_name",
+     "bal_info",
+     "bal_grpsql"
+    ],
+    "desc": "bal_name"
+   }
+  },
+  "bal_name": {
+   "req": 1
+  },
+  "bal_qrytype": {
+   "req": 1,
+   "def": 0
+  },
+  "bal_datasql": {
+   "req": 1
+  },
+  "bal_grpsql": {
+   "req": 1
+  },
+  "bal_status": {
+   "req": 1,
+   "def": 1
+  },
+  "templ_type": {
+   "ro": "1==1"
+  },
+  "templ_size": {
+   "ro": "1==1"
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "botones": {
+  "BUT_DELETE_HIST": {
+   "l": "Eliminar histórico",
+   "nota": "Elimina el histórico de ejecuciones. · Habilitado si: bal_status == 1 · Habilitado según consulta del servidor: (SELECT COUNT(*) FROM cxlsoutput WHERE bal_code = '${bal_code}') > 0 · Pide confirmación antes de ejecutar",
+   "ok": "Éxito",
+   "pasos": [
+    {
+     "borra": {
+      "obj": "cxlsoutput",
+      "donde": [
+       "bal_code",
+       "bal_code"
+      ]
+     }
+    }
+   ]
+  },
+  "BUT_RUN_EXCEL_QUERY": {
+   "l": "Ejecutar XLS",
+   "nota": "Ejecuta la evaluación de la plantilla excel. · Abre un diálogo con campos",
+   "dialogoTit": "Ejecutar XLS",
+   "dialogo": [
+    {
+     "n": "cxls_empcode",
+     "l": "Empresa",
+     "t": "s",
+     "req": 1,
+     "def": "*",
+     "fk": "cempresa",
+     "h": "Código de la empresa"
+    },
+    {
+     "n": "ejerci",
+     "l": "Ejercicio",
+     "t": "i",
+     "req": 1,
+     "fk": "cejercic",
+     "h": "Número de ejercicio contable"
+    },
+    {
+     "n": "period",
+     "l": "Período",
+     "t": "i",
+     "req": 1,
+     "def": "12",
+     "fk": "cperiodo",
+     "h": "Período contable"
+    },
+    {
+     "n": "cxls_proyec",
+     "l": "Proyecto",
+     "t": "s",
+     "req": 1,
+     "def": "*",
+     "fk": "cproyect",
+     "h": "Código del proyecto"
+    },
+    {
+     "n": "cxls_seccio",
+     "l": "Sección",
+     "t": "s",
+     "req": 1,
+     "def": "*",
+     "fk": "cseccion",
+     "h": "Código de la sección"
+    },
+    {
+     "n": "cxls_sistem",
+     "l": "Sistema",
+     "t": "s",
+     "req": 1,
+     "def": "*",
+     "h": "Código del sistema"
+    }
+   ],
+   "ok": "Éxito",
+   "pre": [
+    {
+     "si": "vacio(ent.ejerci)",
+     "msg": "ReferenceError: ejerci is not defined in <function> at line number 8 at column number 12 in <function> at line number 8 at column number 12",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "cxlsoutput",
+      "valores": {
+       "bal_code": "bal_code"
+      }
+     }
+    }
+   ]
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Pide confirmación antes de ejecutar · Abre un diálogo con campos",
+   "dialogoTit": "Copiar",
+   "dialogo": [
+    {
+     "n": "bal_code",
+     "l": "Plantilla",
+     "t": "s",
+     "req": 1,
+     "h": "Código de plantilla excel"
+    },
+    {
+     "n": "bal_name",
+     "l": "Nombre",
+     "t": "s",
+     "req": 1,
+     "h": "Nombre de la plantilla"
+    }
+   ],
+   "ok": "Éxito",
+   "pre": [
+    {
+     "si": "existe('cxlstemplate','bal_code',ent.bal_code)",
+     "msg": "Excel template [${ent.bal_code}] existing at database !",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "cxlstemplate",
+      "valores": {
+       "bal_code": "ent.bal_code",
+       "bal_name": "ent.bal_name",
+       "bal_status": "bal_status"
+      }
+     }
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Balances › Cuentas anuales ( Excel ) › Cuentas anuales y estados financieros",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo con la copia CAP cap_pyme de es_2008_balsit_pyme (creada con «Copiar» y borrada):",
+  "- Copiar: copia también los 6 criterios de filtro (cxlsinput). Con un código que ya existe: «Excel template [cap_pyme] existing at database !».",
+  "- Ejecutar XLS (empresa 0, ejercicio 2026, período 11, resto *): añade 1 fila al histórico de ejecuciones (cxlsoutput). Sin ejercicio: error de script literal «ReferenceError: ejerci is not defined …».",
+  "- Eliminar histórico: oculto mientras no hay histórico (consulta del servidor); tras ejecutar aparece y borra las filas de cxlsoutput.",
+  "- Borrar la plantilla borra en cascada sus criterios (sin error).",
+  "probado: BUT_COPIAR, BUT_RUN_EXCEL_QUERY, BUT_DELETE_HIST (oculto sin histórico y ejecutado con histórico), Borrar; sin menú ⌄. Crudos: raw/contabilidad/b1/R_cxlstemplate.json, R_copias.json."
+ ]
+}

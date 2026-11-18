@@ -1,0 +1,116 @@
+{
+ "c": "ctax_operkey",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "opek_code": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(opek_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(opek_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opek_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opek_name": {
+   "req": 1
+  },
+  "opek_class": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_class",
+    "clave": "class_code",
+    "cols": [
+     "class_code",
+     "class_name",
+     "class_type",
+     "class_clase"
+    ],
+    "desc": "class_name",
+    "noExiste": "Missing key in referenced table for referential constraint (informix.f_ctax_operkey1)."
+   },
+   "reglas": [
+    {
+     "si": "!vacio(opek_class) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(opek_class)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opek_class",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(opek_class) && !existe('ctax_class','class_code',opek_class)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_operkey1).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "opek_class"
+    }
+   ]
+  },
+  "opek_key": {
+   "ro": "!opek_class",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(opek_key) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(opek_key)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opek_key",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opek_subkey": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(opek_subkey) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(opek_subkey)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opek_subkey",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opek_estado": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "reglas": [
+    {
+     "si": "!vacio(opek_estado) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(opek_estado)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opek_estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opek_indest": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Claves de operaciones",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ctax_operkey.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_operkey.opek_name).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila)."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_operkey','opek_code',opek_code)",
+   "msg": "Unique constraint (informix.p_ctax_operkey) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "opek_code"
+  }
+ ]
+}

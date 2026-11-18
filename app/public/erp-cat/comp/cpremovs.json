@@ -1,0 +1,246 @@
+{
+ "c": "cpremovs",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "codpre": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopre",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompre",
+     "nivpre"
+    ],
+    "desc": "nompre"
+   }
+  },
+  "numero": {
+   "req": 1
+  },
+  "fecha": {
+   "req": 1
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(cuenta) && !/^([A-Z0-9]+)([A-Z0-9\\.])*$/.test(cuenta)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "cuenta",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "debe": {
+   "req": 1
+  },
+  "haber": {
+   "req": 1
+  },
+  "tipdis": {
+   "req": 1,
+   "mayus": 1,
+   "def": "E"
+  },
+  "dimcode1": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon1",
+    "clave": "coddim1",
+    "cols": [
+     "coddim1",
+     "nomdim1",
+     "estado"
+    ],
+    "desc": "nomdim1"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode1) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode1)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode1",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dimcode2": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cdimcon2",
+    "clave": "coddim2",
+    "cols": [
+     "coddim2",
+     "nomdim2",
+     "estado"
+    ],
+    "desc": "nomdim2"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode2) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode2)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode2",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cantid1": {
+   "req": 1,
+   "def": 0
+  },
+  "cantid2": {
+   "req": 1,
+   "def": 0
+  },
+  "seqno": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "cpremovs",
+    "clave": "seqno",
+    "cols": [
+     "codpre",
+     "empcode",
+     "proyec"
+    ],
+    "desc": "codpre"
+   }
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((debe == null) || (debe != 0)) || ((haber == null) || (haber != 0))))",
+   "msg": "Debe y Haber, al menos uno no debe ser igual a 0.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Presupuesto económico › Cuentas › Movimientos",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

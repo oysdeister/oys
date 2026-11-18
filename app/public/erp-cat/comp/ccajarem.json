@@ -1,0 +1,142 @@
+{
+ "c": "ccajarem",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "remesa": {
+   "ro": "true",
+   "lov": {
+    "obj": "ccajarem",
+    "clave": "remesa",
+    "cols": [
+     "remesa",
+     "empcode",
+     "codcaj",
+     "ctafin"
+    ],
+    "desc": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codcaj": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajadef",
+    "clave": "codcaj",
+    "cols": [
+     "codcaj",
+     "nomcaj",
+     "empcode",
+     "proyec",
+     "seccio",
+     "jusser",
+     "moneda"
+    ],
+    "desc": "nomcaj",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctafin": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctafin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctafin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "jusser": {
+   "req": 1,
+   "mayus": 1
+  },
+  "remtot": {
+   "def": 0,
+   "ro": "true"
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(moneda))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "def": "A",
+   "ro": "true",
+   "mayus": 1
+  }
+ },
+ "botones": {
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "nota": "Visible/habilitado si: estado == 'C'"
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "nota": "Habilitado por SQL: SELECT COUNT(*) FROM ccajamov, ccajache WHERE ccajamov.cajaid = ccajache.numero AND ccajamov.estado = 'C' AND ccajache.numrem = ${remesa} AND '${estado}' != 'C'"
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'REMESAS', editMode CELL, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "no probado: Abrir, Cerrar — TUTORIAL sin remesas de caja ni cheques; documentados solo por metadatos."
+ ]
+}
