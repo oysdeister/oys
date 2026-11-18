@@ -12,26 +12,126 @@
   position: relative; min-height: 100%; max-width: 1240px; margin: 0 auto; padding: clamp(28px, 6vw, 80px) var(--gutter, 16px);
   display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 6vw, 96px); align-items: center;
 }
-.acc-logo { height: 72px; width: auto; margin-bottom: 36px; }
+.acc-logo { height: 64px; width: auto; margin-bottom: 30px; }
 .acc h1 { font-size: clamp(44px, 6.6vw, 96px); color: #fff; max-width: 11ch; text-wrap: balance; line-height: 0.95; }
 .acc-lead { font-size: var(--fs-lg, 19px); color: #bccadb; max-width: 44ch; margin-top: 26px; }
-.acc-nota {
-  display: inline-block; margin-top: 22px; padding: 10px 18px; border-radius: 999px; font-size: var(--fs-sm, 14px); color: #d4deea;
-  border: 1px solid rgba(79, 191, 165, 0.35); background: rgba(79, 191, 165, 0.08);
-}
-.acc-panel { display: flex; flex-direction: column; align-items: center; gap: 14px; min-height: 320px; justify-content: center; }
 
-/* Tarjeta de Clerk como cristal con borde de neón */
-.acc .acc-cardbox {
-  border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.16);
-  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
-  backdrop-filter: blur(22px) saturate(1.3); -webkit-backdrop-filter: blur(22px) saturate(1.3);
-  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(79, 191, 165, 0.18), 0 0 46px -12px rgba(79, 191, 165, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  max-width: 100%;
+/* ---------- Pantalla de entrada ---------- */
+.acc-entrada { overflow-x: hidden; }
+/* Aurora: tres manchas de luz que flotan despacio */
+.acc-aurora { position: fixed; inset: -10%; pointer-events: none; filter: blur(70px); opacity: 0.7; }
+.acc-blob { position: absolute; border-radius: 50%; mix-blend-mode: screen; will-change: transform; }
+.acc-blob-1 { width: 46vmax; height: 46vmax; left: 52%; top: -8%; background: radial-gradient(circle, rgba(79, 191, 165, 0.5), transparent 65%); animation: acc-flota-1 22s ease-in-out infinite alternate; }
+.acc-blob-2 { width: 40vmax; height: 40vmax; left: -10%; top: 45%; background: radial-gradient(circle, rgba(88, 120, 230, 0.3), transparent 65%); animation: acc-flota-2 26s ease-in-out infinite alternate; }
+.acc-blob-3 { width: 30vmax; height: 30vmax; left: 30%; top: 60%; background: radial-gradient(circle, rgba(140, 110, 240, 0.22), transparent 65%); animation: acc-flota-3 30s ease-in-out infinite alternate; }
+@keyframes acc-flota-1 { to { transform: translate(-14vw, 16vh) scale(1.15); } }
+@keyframes acc-flota-2 { to { transform: translate(18vw, -14vh) scale(0.9); } }
+@keyframes acc-flota-3 { to { transform: translate(-10vw, -24vh) scale(1.2); } }
+/* Rejilla en perspectiva que avanza hacia el horizonte */
+.acc-rejilla {
+  position: fixed; left: -50%; right: -50%; bottom: -10%; height: 55vh; pointer-events: none; opacity: 0.35;
+  background-image: linear-gradient(rgba(79, 191, 165, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 191, 165, 0.5) 1px, transparent 1px);
+  background-size: 64px 64px; transform: perspective(500px) rotateX(62deg); transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%); mask-image: linear-gradient(to top, #000 10%, transparent 85%);
+  animation: acc-avanza 3.2s linear infinite;
 }
-.acc .acc-card { background: transparent; box-shadow: none; border: 0; }
-.acc .acc-footer { background: rgba(0, 0, 0, 0.18); }
-.acc .acc-boton { box-shadow: 0 0 22px -6px rgba(79, 191, 165, 0.8); }
+@keyframes acc-avanza { to { background-position: 0 64px, 0 0; } }
+
+.acc-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; font-size: 13px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #9fe7d5;
+}
+.acc-punto { width: 8px; height: 8px; border-radius: 50%; background: #4fbfa5; box-shadow: 0 0 0 0 rgba(79, 191, 165, 0.7); animation: acc-latido 2.2s ease-out infinite; }
+@keyframes acc-latido { 70% { box-shadow: 0 0 0 10px rgba(79, 191, 165, 0); } 100% { box-shadow: 0 0 0 0 rgba(79, 191, 165, 0); } }
+
+.acc-titulo { font-size: clamp(52px, 6.4vw, 104px) !important; max-width: none !important; letter-spacing: -0.04em; font-variation-settings: 'wdth' 80; }
+.acc-linea { display: block; overflow-y: clip; overflow-x: visible; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.acc-linea > span { display: inline-block; }
+.acc-brillo {
+  background: linear-gradient(100deg, #4fbfa5 0%, #9ef0dc 25%, #7aa2ff 50%, #4fbfa5 75%, #9ef0dc 100%); background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: acc-reflejo 7s linear infinite;
+}
+@keyframes acc-reflejo { to { background-position: -220% 0; } }
+
+.acc-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 0; padding: 0; }
+.acc-chips li {
+  padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #dce6f2;
+  border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.acc-chips li::before { content: '✦'; color: #4fbfa5; margin-right: 8px; }
+
+/* Panel de entrada: cristal con borde de luz que gira y se inclina con el ratón */
+.acc-escena { display: flex; justify-content: center; perspective: 1200px; }
+.acc-panel {
+  position: relative; width: min(100%, 460px); border-radius: 30px; transform-style: preserve-3d;
+  background: linear-gradient(155deg, rgba(30, 44, 68, 0.78), rgba(10, 16, 28, 0.82));
+  backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  box-shadow: 0 50px 120px -40px rgba(0, 0, 0, 0.9), 0 0 80px -20px rgba(79, 191, 165, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.acc-borde {
+  position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  background: conic-gradient(from var(--acc-giro, 0deg), rgba(79, 191, 165, 0.1), #4fbfa5, #7aa2ff, rgba(122, 162, 255, 0.1) 40%, rgba(79, 191, 165, 0.1) 60%, #9ef0dc, rgba(79, 191, 165, 0.1));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: acc-gira 6s linear infinite;
+}
+@property --acc-giro { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes acc-gira { to { --acc-giro: 360deg; } }
+.acc-luz { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+.acc-panel-in { position: relative; padding: clamp(26px, 4vw, 40px); display: flex; flex-direction: column; gap: 16px; }
+.acc-panel-kicker { margin: 0; font-size: 13px; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; color: #8fa3bd; }
+.acc-panel-titulo { margin: -8px 0 6px; font-size: clamp(36px, 4vw, 48px); color: #fff; font-variation-settings: 'wdth' 80; }
+
+/* Botón grande de Google */
+.acc-google {
+  position: relative; overflow: hidden; display: flex; align-items: center; gap: 16px; width: 100%; min-height: 72px; padding: 12px 20px 12px 14px;
+  border: 0; border-radius: 18px; cursor: pointer; text-align: left; color: #0d1524; font: inherit;
+  background: linear-gradient(180deg, #ffffff, #e9eef5);
+  box-shadow: 0 18px 40px -16px rgba(79, 191, 165, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.6) inset, 0 2px 0 rgba(255, 255, 255, 0.9) inset;
+}
+.acc-google:hover { box-shadow: 0 24px 50px -14px rgba(79, 191, 165, 0.95), 0 0 0 3px rgba(79, 191, 165, 0.55); }
+.acc-google:focus-visible { outline: 3px solid #9ef0dc; outline-offset: 3px; }
+.acc-google:disabled { opacity: 0.7; cursor: progress; }
+.acc-google-logo { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #fff; box-shadow: 0 4px 14px -4px rgba(13, 21, 36, 0.35); }
+.acc-google-txt { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.acc-google-txt b, .acc-google-txt small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.acc-google-txt b { font-family: var(--display); font-size: 20px; font-weight: 750; letter-spacing: -0.01em; }
+.acc-google-txt small { font-size: 13px; color: #55657b; }
+.acc-google-flecha { font-size: 22px; font-weight: 700; color: #2b8f78; transition: transform 0.3s ease; }
+.acc-google:hover .acc-google-flecha { transform: translateX(5px); }
+.acc-google-brillo {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(79, 191, 165, 0.28) 48%, rgba(255, 255, 255, 0.7) 50%, transparent 62%);
+  transform: translateX(-120%); animation: acc-barrido 4.5s ease-in-out 1.6s infinite;
+}
+@keyframes acc-barrido { 0% { transform: translateX(-120%); } 35%, 100% { transform: translateX(120%); } }
+.acc-onda { position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; background: rgba(79, 191, 165, 0.55); pointer-events: none; }
+.acc-spinner-g { width: 24px; height: 24px; }
+.acc-error { margin: 0; padding: 10px 14px; border-radius: 12px; font-size: 14px; color: #ffd2d2; background: rgba(224, 112, 138, 0.14); border: 1px solid rgba(224, 112, 138, 0.4); overflow: hidden; }
+
+.acc-sep { display: flex; align-items: center; gap: 12px; color: #8fa3bd; font-size: 13px; letter-spacing: 0.04em; }
+.acc-sep::before, .acc-sep::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent); }
+
+/* Formulario de correo de Clerk, sin tarjeta ni marca */
+.acc-correo { width: 100%; }
+.acc .acc-clerk { width: 100%; }
+.acc .acc-correo .acc-cardbox { width: 100%; max-width: 100%; border: 0; border-radius: 0; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; overflow: visible; }
+.acc .acc-correo .acc-card { width: 100%; max-width: 100%; padding: 0; gap: 18px; background: transparent; box-shadow: none; border: 0; }
+.acc .acc-oculto { display: none !important; }
+.acc .acc-cl-header:has(.cl-headerTitle:empty) { display: none; }
+.acc .acc-correo .cl-headerTitle { color: #fff; font-family: var(--display); font-size: 24px; }
+.acc .acc-correo .acc-input { height: 48px; background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.16); }
+.acc .acc-correo .acc-input:focus { border-color: #4fbfa5; box-shadow: 0 0 0 3px rgba(79, 191, 165, 0.25); }
+.acc .acc-correo .acc-boton {
+  height: 46px; background: rgba(79, 191, 165, 0.14); color: #c9f5ea; border: 1px solid rgba(79, 191, 165, 0.55); box-shadow: none; font-size: 15px;
+}
+.acc .acc-correo .acc-boton:hover { background: rgba(79, 191, 165, 0.26); box-shadow: 0 0 22px -6px rgba(79, 191, 165, 0.8); }
+/* Pie de Clerk: solo quedan los enlaces de acción (p. ej. «Usar otro método»); fuera «Secured by Clerk». */
+.acc .acc-footer { background: transparent; border: 0; padding: 0; margin-top: 4px; }
+.acc .acc-footer > :not(.cl-footerAction) { display: none !important; }
+.acc .acc-footer:not(:has(.cl-footerAction)) { display: none; }
+
+.acc-nota { margin: 4px 0 0; font-size: 13px; line-height: 1.45; color: #9fb0c6; text-align: center; }
+.acc-cargando-panel { justify-content: center; min-height: 160px; }
 
 .acc-cargando { display: flex; align-items: center; gap: 12px; color: #b5c3d6; }
 .acc-spinner {
@@ -39,13 +139,32 @@
   animation: acc-giro 0.9s linear infinite;
 }
 @keyframes acc-giro { to { transform: rotate(360deg); } }
-.acc-cambiar { background: none; border: 0; color: #b6f2e3; font: inherit; text-decoration: underline; cursor: pointer; }
+.acc-cambiar { align-self: center; background: none; border: 0; color: #b6f2e3; font: inherit; text-decoration: underline; cursor: pointer; }
 
 @media (max-width: 860px) {
-  .acc-in { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 28px; }
-  .acc-logo { height: 52px; margin-bottom: 22px; }
+  .acc-in { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 28px; padding-top: 28px; }
+  .acc-logo { height: 46px; margin-bottom: 18px; }
+  .acc-titulo { font-size: clamp(44px, 13vw, 72px) !important; }
+  .acc-lead { margin-top: 16px; font-size: 16px; }
+  .acc-chips { display: none; }
+  .acc-eyebrow { font-size: 11px; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .acc-panel { width: 100%; }
+  .acc-rejilla { height: 40vh; }
 }
-@media (prefers-reduced-motion: reduce) { .acc-spinner { animation-duration: 2.4s; } }
+@media (max-width: 420px) {
+  .acc-panel-in { padding: 24px 18px; }
+  .acc-google { gap: 12px; min-height: 66px; padding: 10px 14px 10px 10px; }
+  .acc-google-txt b, .acc-google-txt small { white-space: normal; line-height: 1.2; }
+  .acc-google-txt small { font-size: 12px; }
+  .acc-google-flecha { display: none; }
+  .acc-google-logo { width: 42px; height: 42px; }
+  .acc-google-txt b { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .acc-spinner { animation-duration: 2.4s; }
+  .acc-blob, .acc-rejilla, .acc-brillo, .acc-borde, .acc-google-brillo, .acc-punto { animation: none !important; }
+  .acc-google-flecha { transition: none; }
+}
 
 /* Barra superior: estado de la copia, botón de usuario y salir */
 .acc-cuenta { display: flex; align-items: center; gap: 10px; }
