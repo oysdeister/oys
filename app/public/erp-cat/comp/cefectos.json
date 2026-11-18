@@ -735,7 +735,7 @@
      }
     }
    ],
-   "nota": "Abre el diálogo de acción de cartera (POST action/BUT_EVOLUCIONAR_ESTA/fields/1). En la demo TUTORIAL la lupa y la validación de «Acción» fallan siempre (fk/virtual_action/cefeacti_codigo_efe/autocomplete|verify → 500 «No such column 'emi_repres_nif'…»), así que el botón no se puede completar. Pasos deducidos del mismo motor de acciones observado al Cerrar una gestión: estado = cefeacti.estfin, gestión automática (pcs_tipgen 0) cerrada, fila en cefechis."
+   "nota": "Abre el diálogo de acción de cartera (POST action/BUT_EVOLUCIONAR_ESTA/fields/1). En la demo TUTORIAL la lupa y la validación de «Acción» fallan siempre (fk/virtual_action/cefeacti_codigo_efe/autocomplete|verify → 500 «No such column 'emi_repres_nif'…»), así que el botón no se puede completar. Pasos deducidos del mismo motor de acciones observado al Cerrar una gestión: estado = cefeacti.estfin, gestión automática (pcs_tipgen 0) cerrada, fila en cefechis. Re-probado (grupo E, 18-11 ~10:45): la lupa de Acción sigue dando 500 «No such column 'emi_repres_nif' in [rowid, casientos_empcode, cefeacti_codigo_efe, …]» (GET fk/virtual_action/cefeacti_codigo_efe/autocomplete/cefeacti?pkMethod=cefectos_action). La ejecución escribiendo la acción sin lupa (PBLQ con los *_out de cefeacti) no llegó a lanzarse: sesión de la demo caducada (redirige a /account/login) a mitad de la ola E; no se teclean credenciales."
   },
   "BUT_RETROCEDER": {
    "l": "Retroceder",
@@ -757,7 +757,7 @@
      }
     }
    ],
-   "nota": "Solo habilitado (expresión de servidor) si la última gestión del efecto es automática (pcs_tipgen 0, generada por Evolucionar estado), sin remesa ni movimiento de tesorería (taptcuen.gesdes), caduca != 'P' y el usuario tiene autorización RETCAR. Confirmación genérica literal. Probado solo hasta el diálogo (efecto 20, ajeno) y cancelado. El retorno observado al Abrir la gestión 15: estado anterior, numges null, opeant 0, openum+1, feccam null, coment null."
+   "nota": "Solo habilitado (expresión de servidor) si la última gestión del efecto es automática (pcs_tipgen 0, generada por Evolucionar estado), sin remesa ni movimiento de tesorería (taptcuen.gesdes), caduca != 'P' y el usuario tiene autorización RETCAR. Confirmación genérica literal. Probado solo hasta el diálogo (efecto 20, ajeno) y cancelado. El retorno observado al Abrir la gestión 15: estado anterior, numges null, opeant 0, openum+1, feccam null, coment null. PROBADO por la API (grupo E): con el efecto 57 dentro de la remesa CAP 5 evolucionada (estado OP, numges 18 = gestión automática de remesa) el botón llega deshabilitado (enabledByServerExpression false, porque pcs_numrem ≠ 0), pero el servidor NO revalida y al ejecutarlo devuelve 200 sin mensaje y retrocede toda la remesa: efecto OP→PR (caduca R→P, opeant 5→4, openum 6→7, numges vacío), remesa 5 C→A con acción RPSCSO→RPSCTP y la gestión 18 borrada. En la réplica el botón debe quedar deshabilitado en ese caso."
   }
  },
  "estados": {
@@ -833,6 +833,8 @@
   "Menú ⌄ del título (enlaces): Histórico (cefechis), Remesas (oculto si no aplica), Tesorería a medio plazo (tmovites), Registros fiscales (oculto si no aplica), Facturas compras/Facturas ventas (gcomfach/gvenfach por apteid), Asiento origen (casientos por apteid).",
   "Casi todo es solo lectura al modificar (readonly_expr context.isOnUpdate()); editables en modificación: fecven, impdiv, ctafin, refban, proyec, seccio, codper, numban, gastos, tipdoc, impliq, impppa, codppa, fecaux, fecliq, agente, parest, coment, auxiliares.",
   "Mensajes del cliente: «Este campo es obligatorio.» (obligatorio vacío) y «Error en la validación» (código inexistente en una lupa: verify devuelve 204).",
-  "Bug de la demo: Evolucionar estado no se puede completar (error «Se ha producido un error · No such column 'emi_repres_nif' in [...]»). Las acciones se ejecutan en la práctica por Gestiones (cefecges_pcs) → Cerrar."
+  "Bug de la demo: Evolucionar estado no se puede completar (error «Se ha producido un error · No such column 'emi_repres_nif' in [...]»). Las acciones se ejecutan en la práctica por Gestiones (cefecges_pcs) → Cerrar.",
+  "Menú ⌄ del título (recapturado, efecto 57): Histórico, Remesas (hide_if_disabled: solo si tiene remesa), Tesorería a medio plazo, Registros fiscales (hide_if_disabled), Facturas compras, Asiento origen. La ficha no tiene opciones en el grupo «Acciones» (solo los dos botones).",
+  "probado: Retroceder (por la API, efecto en remesa), lupa de Acción de Evolucionar (sigue el 500), menú ⌄. no probado: Evolucionar estado escribiendo la acción sin lupa y Retroceder habilitado sobre una gestión automática sin remesa — motivo: sesión de la demo caducada (redirige a /account/login) a mitad de la ola E; no se teclean credenciales. Estado final del efecto 57: PE, sin remesa ni gestión."
  ]
 }

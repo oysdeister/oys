@@ -1,6 +1,6 @@
 {
  "c": "cremesas",
- "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros · 2026-11-18 tesoreria/E (pruebas de botones)",
  "area": "tesoreria",
  "campos": {
   "empcode": {
@@ -319,31 +319,116 @@
      }
     }
    ],
-   "nota": "Deshace la última acción de la remesa. Habilitado si el usuario tiene la autorización RETREM de cefectos y la remesa no está Abierta (estrem ≠ A). Confirmación sin texto: título «Confirmación» y botones Cancelar/Aceptar. Demo: RCONB→RPSCSO (efecto PA→OP, numges 16) y RPSCSO→RPSCTP (remesa vuelve a Abierto, pcs_seqno vacío, efecto OP→PR, numges vacío). Sin mensaje de éxito."
+   "nota": "Deshace la última acción de la remesa. Habilitado si el usuario tiene la autorización RETREM de cefectos y la remesa no está Abierta (estrem ≠ A). Confirmación sin texto: título «Confirmación» y botones Cancelar/Aceptar. Demo: RCONB→RPSCSO (efecto PA→OP, numges 16) y RPSCSO→RPSCTP (remesa vuelve a Abierto, pcs_seqno vacío, efecto OP→PR, numges vacío). Sin mensaje de éxito. Re-probado (grupo E, remesa CAP 8 cerrada): RPSCSO→RPSCTP, estrem C→A, gestión 19 borrada, efecto 57 OP→PR."
   },
   "BUT_CALC_INT_COM": {
    "l": "Calcular intereses-comisiones",
-   "nota": "Visible solo con la remesa Abierta y Total remesa ≠ 0 (estrem == 'A' && imptot != 0). No ejecutado en la demo (la remesa CAP es sin gastos)."
+   "nota": "Visible solo con la remesa Abierta y Total remesa ≠ 0 (estrem == 'A' && imptot != 0; oculto si no). Sin confirmación ni diálogo ni mensaje: la ficha se refresca. PROBADO (grupo E, remesa CAP 5 con el efecto 57, 151,25): calrem N→S; calint, calcom, impint e impcom siguen en 0 (CAPBREM no tiene condiciones de intereses/comisiones).",
+   "pre": [
+    {
+     "si": "estrem != 'A' || imptot == 0",
+     "msg": "(botón oculto: hideIfDisabled)",
+     "tipo": "info",
+     "fuente": "meta"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "calrem": "'S'"
+     }
+    }
+   ]
   },
   "BUT_SOPORTE_ELEC2": {
    "l": "Soportes electrónicos 2025",
-   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+   "nota": "Habilitado en cliente si cbancsop.sopelec != null && estrem == 'C' (cbancsop = Remesas por cuenta de la cuenta financiera y tipo). Sin confirmación. Misma lógica que Soportes electrónicos (variante 2025). PROBADO (grupo E, remesa CAP 5 cerrada en RPSCSO): se pusieron formatos en cbancsop CAPBREM/PSCTS, pero la columna enlazada cbancsop.sopelec de la remesa siguió llegando vacía (la remesa no tiene línea financiera; la unión con cbancsop no casa), así que en la interfaz el botón sigue deshabilitado. Lanzado por la API el servidor responde 500 con el diálogo «Se ha producido un error»: «Electronic format not supported.». Formatos devueltos a null al acabar.",
+   "pre": [
+    {
+     "si": "estrem != 'C'",
+     "msg": "(botón deshabilitado: visible en gris)",
+     "tipo": "info",
+     "fuente": "meta"
+    },
+    {
+     "si": "vacio(busca('cbancsop','ctafin',ctafin,'sopelec'))",
+     "msg": "Electronic format not supported.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
   },
   "BUT_SOPORTE_ELEC": {
    "l": "Soportes electrónicos",
-   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+   "nota": "Habilitado en cliente si cbancsop.sopelec != null && estrem == 'C' (cbancsop = Remesas por cuenta de la cuenta financiera y tipo). Sin confirmación. Con formato genera el fichero con el objeto del formato (sepa_pag_credit_transfer, sepa_cob_direct_debit [B2B/CORE según cremesad.sepamet], es_cefectos_pag_sop_confirm, es_cefectos_pag_sop_aeb67/68, pe_remesa_pago_detraccion) con NUMREM. PROBADO (grupo E, remesa CAP 5 cerrada en RPSCSO): se pusieron formatos en cbancsop CAPBREM/PSCTS, pero la columna enlazada cbancsop.sopelec de la remesa siguió llegando vacía (la remesa no tiene línea financiera; la unión con cbancsop no casa), así que en la interfaz el botón sigue deshabilitado. Lanzado por la API el servidor responde 500 con el diálogo «Se ha producido un error»: «Electronic format not supported.». Formatos devueltos a null al acabar.",
+   "pre": [
+    {
+     "si": "estrem != 'C'",
+     "msg": "(botón deshabilitado y oculto)",
+     "tipo": "info",
+     "fuente": "meta"
+    },
+    {
+     "si": "vacio(busca('cbancsop','ctafin',ctafin,'sopelec'))",
+     "msg": "Electronic format not supported.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
   },
   "BUT_IMPRESION_FORM": {
    "l": "Imprimir formato",
-   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+   "nota": "Habilitado en cliente si cbancsop.impfor != null && estrem == 'C' (cbancsop = Remesas por cuenta de la cuenta financiera y tipo). Sin confirmación. Con formato abre (OpenUrl) el objeto cbancsop.impfor con la variable REMESA = numrem. PROBADO (grupo E, remesa CAP 5 cerrada en RPSCSO): se pusieron formatos en cbancsop CAPBREM/PSCTS, pero la columna enlazada cbancsop.impfor de la remesa siguió llegando vacía (la remesa no tiene línea financiera; la unión con cbancsop no casa), así que en la interfaz el botón sigue deshabilitado. Lanzado por la API el servidor responde 500 con el diálogo «Se ha producido un error»: «Object 'null' not found in wic_obj_base from database 'tutorial'». Formatos devueltos a null al acabar.",
+   "pre": [
+    {
+     "si": "estrem != 'C'",
+     "msg": "(botón deshabilitado y oculto)",
+     "tipo": "info",
+     "fuente": "meta"
+    },
+    {
+     "si": "vacio(busca('cbancsop','ctafin',ctafin,'impfor'))",
+     "msg": "Object 'null' not found in wic_obj_base from database 'tutorial'",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
   },
   "BUT_CARTA_TER": {
    "l": "Carta del tercero",
-   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+   "nota": "Habilitado en cliente si cbancsop.carter != null && estrem == 'C' (cbancsop = Remesas por cuenta de la cuenta financiera y tipo). Sin confirmación. Con formato abre (OpenUrl) el objeto cbancsop.carter de la remesa. PROBADO (grupo E, remesa CAP 5 cerrada en RPSCSO): se pusieron formatos en cbancsop CAPBREM/PSCTS, pero la columna enlazada cbancsop.carter de la remesa siguió llegando vacía (la remesa no tiene línea financiera; la unión con cbancsop no casa), así que en la interfaz el botón sigue deshabilitado. Lanzado por la API el servidor responde 500 con el diálogo «Se ha producido un error»: «Object 'null' not found in wic_obj_base from database 'tutorial'». Formatos devueltos a null al acabar.",
+   "pre": [
+    {
+     "si": "estrem != 'C'",
+     "msg": "(botón deshabilitado y oculto)",
+     "tipo": "info",
+     "fuente": "meta"
+    },
+    {
+     "si": "vacio(busca('cbancsop','ctafin',ctafin,'carter'))",
+     "msg": "Object 'null' not found in wic_obj_base from database 'tutorial'",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
   },
   "BUT_EMITIR_DOCBANC": {
    "l": "Aviso al banco",
-   "nota": "Solo habilitado con la remesa Cerrada y el formato correspondiente informado en Remesas por cuenta (cbancsop) de la cuenta financiera. En la demo ninguna cuenta tiene formatos: siempre deshabilitado. No probado."
+   "nota": "Habilitado en cliente si cbancsop.docbanc != null && estrem == 'C' (cbancsop = Remesas por cuenta de la cuenta financiera y tipo). Sin confirmación. Con formato abre (OpenUrl) el objeto cbancsop.docbanc de la remesa. PROBADO (grupo E, remesa CAP 5 cerrada en RPSCSO): se pusieron formatos en cbancsop CAPBREM/PSCTS, pero la columna enlazada cbancsop.docbanc de la remesa siguió llegando vacía (la remesa no tiene línea financiera; la unión con cbancsop no casa), así que en la interfaz el botón sigue deshabilitado. Lanzado por la API el servidor responde 500 con el diálogo «Se ha producido un error»: «Object 'null' not found in wic_obj_base from database 'tutorial'». Formatos devueltos a null al acabar.",
+   "pre": [
+    {
+     "si": "estrem != 'C'",
+     "msg": "(botón deshabilitado y oculto)",
+     "tipo": "info",
+     "fuente": "meta"
+    },
+    {
+     "si": "vacio(busca('cbancsop','ctafin',ctafin,'docbanc'))",
+     "msg": "Object 'null' not found in wic_obj_base from database 'tutorial'",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ]
   }
  },
  "estados": {
@@ -374,6 +459,18 @@
   "Añadir efectos: subpestaña «Selección de efectos» (cefectos_selector_vtab: efectos de la misma clase en estado PE sin remesa) con botones «Agregar todos los efectos» y, al marcar filas, «Agregar efectos» (acción BUT_AGREGAR_SEL_EFEC, sin confirmación ni mensaje). Demo: efecto 57 PE→PR (acción inicial RPSCTP), remesa = 5, ctafin = CAPBREM; Total remesa pasa a 151,25.",
   "Quitar efectos: subpestaña «Efectos seleccionados» (cefecges_det_select_vtab); al marcar filas aparece «Desagregar efectos» (BUT_DESAGREGAR_SEL_E) → diálogo «Confirmación» (Cancelar/Aceptar) → aviso «Éxito». Demo: efecto 57 vuelve a PE sin remesa ni cuenta financiera y Total remesa 0,00. Solo con la remesa Abierta.",
   "Evolucionar y Retroceder no muestran mensaje de éxito; la ficha se refresca. Endpoints: POST table/cremesas/form/1/<b64>/action/BUT_EVOLUCIONAR_ESTA/fields/1 (diálogo) y …/action/BUT_EVOLUCIONAR_ESTA con fields {nomact, feccon_out, feccon, gastos_out, impint, impcom, import_out, pcs_impban, clase_out, accion_out, efefin_out}; …/action/BUT_RETROCEDER.",
-  "El circuito de cada tipo de remesa está embebido en las expresiones de Evolucionar/Retroceder ([orden, acción, estado final del efecto]) a partir de cremesad + cremesad_det de la TUTORIAL."
+  "El circuito de cada tipo de remesa está embebido en las expresiones de Evolucionar/Retroceder ([orden, acción, estado final del efecto]) a partir de cremesad + cremesad_det de la TUTORIAL.",
+  "Borrar remesa (botón papelera estándar, «Eliminar registro» / «¿Estás seguro que quieres eliminar el registro 'RM026-00000n' ?» [Cancelar] [Eliminar]). PROBADO (grupo E): remesa CAP 7 Abierta con el efecto 57 → se borra («Éxito») y antes un evento TRANSACTION_DELETE_AFTER desagrega sus efectos restaurándolos desde el histórico cefechis (efecto 57 vuelve a PE sin remesa; si el efecto se reclasificó a otra remesa: «Error: Efecto [n] incluido en remesa [m], quizás se haya reclasificado!»). Remesa CAP 8 Cerrada (RPSCSO) → 500 «User oys.jma does not have ROW_DELETE privilege on table cremesas» (privilegio por fila: solo se borran remesas Abiertas). Tras Retroceder a Abierta, la 8 se borró sin error.",
+  "Menú ⌄ del título (recapturado, grupo E): dos entradas «Efectos relacionados» (mode 6); la primera abre vtable/cefectos_selector_vtab/list filtrada por numrem (cols {numrem}), la segunda llega sin URL (deshabilitada) en la remesa CAP 5.",
+  "probado: Evolucionar estado, Retroceder, Calcular intereses-comisiones, Agregar efectos, Desagregar efectos, Borrar remesa (abierta y cerrada), menú ⌄; Soportes electrónicos, Soportes electrónicos 2025, Imprimir formato, Carta del tercero y Aviso al banco solo por la API (mensaje literal del servidor). no probado: Soportes electrónicos / 2025, Imprimir formato, Carta del tercero, Aviso al banco con formato real — motivo: la columna cbancsop.* de la remesa llega vacía aunque cbancsop tenga formato (unión sin línea financiera), así que no hay fichero ni listado que observar.",
+  "Ojo réplica: el servidor NO revalida la condición de habilitado al ejecutar un botón por la API (p. ej. Retroceder de cefectos sobre un efecto de remesa se ejecutó y retrocedió toda la remesa). La réplica debe respetar las condiciones de la interfaz."
+ ],
+ "alBorrar": [
+  {
+   "si": "estrem != 'A'",
+   "msg": "User oys.jma does not have ROW_DELETE privilege on table cremesas",
+   "tipo": "error",
+   "fuente": "demo"
+  }
  ]
 }
