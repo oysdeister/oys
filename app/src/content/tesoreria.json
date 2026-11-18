@@ -19,7 +19,7 @@
    "paraQueSirve": "Entiende qué piezas mueve la tesorería a corto plazo y por qué el banco y el ERP se concilian.",
    "ruta": null,
    "explicacion": [
-    "La tesorería es el control del dinero real de la empresa: lo que entra y sale de sus bancos y cajas, día a día. Cada entrada o salida es un «movimiento de tesorería». Sus orígenes son la cartera (efectos y remesas, que viste en Carteras), los asientos, los préstamos y la financiación, y los movimientos manuales. La previsión a medio plazo aparece a través de la financiación (ejercicio 7) y del parámetro «Notificar medio plazo» (ejercicio 2).",
+    "La tesorería es el control del dinero real de la empresa: lo que entra y sale de sus bancos y cajas, día a día. Cada entrada o salida es un «movimiento de tesorería». Sus orígenes son la cartera (efectos y remesas, que viste en Cartera, cobros y pagos), los asientos, los préstamos y la financiación, y los movimientos manuales. La previsión a medio plazo aparece a través de la financiación (ejercicio 7) y del parámetro «Notificar medio plazo» (ejercicio 2).",
     "El banco, por su lado, envía el «extracto»: la lista de movimientos que él ha visto en tu cuenta, normalmente en un fichero de norma 43 (N43), el formato estándar de la banca española. «Conciliar» es casar cada movimiento del extracto con su movimiento de tesorería para comprobar que el banco y el ERP dicen lo mismo. Ejemplo: pagas una remesa de 8.080,15 €; en tesorería hay una salida de 8.080,15 y en el extracto del banco, un cargo de 8.080,15; al conciliarlos, los dos quedan marcados como casados.",
     "En el esquema: a la izquierda el ERP (factura, cartera y movimientos de tesorería, tabla taptcuen, con sus flujos, taptfluj); a la derecha el banco (el fichero N43 se guarda en el almacén, textract_file, y de él salen los extractos, textract). En medio, la conciliación (tconcili), que se apoya en la correspondencia entre operaciones y flujos (lado ERP) y conceptos común y propio (lado banco).",
     "Regla de oro: un movimiento de tesorería necesita banco propio + operación financiera + flujo, y el flujo debe tener cuenta contable. Sin eso no podrás contabilizar ni conciliar."
@@ -56,14 +56,14 @@
    "id": "tesoreria-1",
    "numero": 1,
    "titulo": "Banco propio preparado para tesorería",
-   "objetivo": "Tendrás BBVA_{INI} (si no lo tienes, créalo como en Carteras, ejercicio 2) con su cuenta contable, el control del extracto en formato AEB43 y una comisión fija por transferencia configurada.",
+   "objetivo": "Tendrás BBVA_{INI} (si no lo tienes, créalo como en Cartera, cobros y pagos, ejercicio 2) con su cuenta contable, el control del extracto en formato AEB43 y una comisión fija por transferencia configurada.",
    "concepto": "El banco propio (cbancpro) es la ficha maestra de cada cuenta bancaria de la empresa. En ella defines la cuenta financiera, la cuenta contable (por ejemplo 57200.00000) a la que irán los movimientos al contabilizar, y el formato de extracto con el que el banco envía los ficheros N43. Sin esta pieza no puede existir tesorería.\n\nAdemás, el banco propio guarda la configuración de comisiones bancarias. Si separas la comisión (campo «Operación comisión» informado), tesorería genera un movimiento adicional para la comisión; si no, la comisión viaja como un flujo más dentro del mismo movimiento. En las pestañas de la parte de arriba de la ficha (Operaciones por cuenta, Comisiones, Numeradores, Remesas por cuenta…) encontrarás la información relacionada con la cuenta.",
    "duracionMin": 30,
    "secciones": [
     {
      "id": "tesoreria-1-banco",
      "titulo": "Repaso del banco propio para tesorería",
-     "paraQueSirve": "Repasa en tu banco BBVA_{INI} los datos que usa tesorería. La ficha completa (entidad, IBAN, tipo de cuenta) la creaste en Carteras, ejercicio 2.",
+     "paraQueSirve": "Repasa en tu banco BBVA_{INI} los datos que usa tesorería. La ficha completa (entidad, IBAN, tipo de cuenta) la creaste en Cartera, cobros y pagos, ejercicio 2.",
      "ruta": [
       "Finanzas",
       "Cobros y Pagos",
@@ -72,7 +72,7 @@
       "Bancos propios"
      ],
      "explicacion": [
-      "BBVA_{INI} ya lo creaste en Carteras, ejercicio 2: aquí no lo repites, solo repasas lo que usa tesorería.",
+      "BBVA_{INI} ya lo creaste en Cartera, cobros y pagos, ejercicio 2: aquí no lo repites, solo repasas lo que usa tesorería.",
       "La Cuenta contable es la contrapartida de todos los movimientos de tesorería del banco al contabilizar. Fondos en curso, Preferencia y Estado deciden cómo y para qué se puede usar la cuenta."
      ],
      "campos": [
@@ -983,7 +983,7 @@
    "numero": 3,
    "titulo": "Movimiento de tesorería manual",
    "objetivo": "Tendrás un movimiento manual de salida en BBVA_{INI} con la operación {INI}COM, con sus flujos revisados y contabilizado.",
-   "concepto": "El movimiento de tesorería (taptcuen) representa una entrada o salida real de dinero en un banco propio. Lleva fecha operación y fecha valor (obligatoria), operación financiera, importe y una rejilla de flujos con sus cuentas contables. El campo Conciliado queda vacío hasta que el movimiento se casa con el extracto del banco.\n\nLos movimientos también nacen solos desde la cartera, con la acción PTES de un efecto o al ordenar una remesa con tesorería: lo ves en Carteras, ejercicio 4. El asiento que deja el movimiento al contabilizar (banco contra las cuentas de los flujos) lo trabajas en Asientos, ejercicio 14.",
+   "concepto": "El movimiento de tesorería (taptcuen) representa una entrada o salida real de dinero en un banco propio. Lleva fecha operación y fecha valor (obligatoria), operación financiera, importe y una rejilla de flujos con sus cuentas contables. El campo Conciliado queda vacío hasta que el movimiento se casa con el extracto del banco.\n\nLos movimientos también nacen solos desde la cartera, con la acción PTES de un efecto o al ordenar una remesa con tesorería: lo ves en Cartera, cobros y pagos, ejercicio 13. El asiento que deja el movimiento al contabilizar (banco contra las cuentas de los flujos) lo trabajas en Asientos, ejercicio 14.",
    "duracionMin": 20,
    "secciones": [
     {
@@ -1142,7 +1142,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "Los movimientos que nacen de un efecto (acción PTES) o de una remesa con tesorería están en Carteras, ejercicio 4."
+       "texto": "Los movimientos que nacen de un efecto (acción PTES) o de una remesa con tesorería están en Cartera, cobros y pagos, ejercicio 13."
       },
       {
        "tipo": "problema",
@@ -1962,7 +1962,7 @@
      "explicacion": [
       "Selecciona un movimiento del extracto y su movimiento de tesorería con el mismo importe, y pulsa «Conciliar banco». Ambos desaparecen de pendientes y pasan a conciliados.",
       "En el movimiento de tesorería, el campo Conciliado recibe un número correlativo y un enlace al extracto; en el extracto queda la marca de conciliado y el vínculo al movimiento.",
-      "Tu movimiento manual del ejercicio 3 ya está contabilizado (banco contra el flujo), así que aquí solo lo concilias. Cuando el movimiento nace de una remesa con tesorería, el asiento del banco se genera al contabilizar después de conciliar (lo verás en Cobros y pagos)."
+      "Tu movimiento manual del ejercicio 3 ya está contabilizado (banco contra el flujo), así que aquí solo lo concilias. Cuando el movimiento nace de una remesa con tesorería, el asiento del banco se genera al contabilizar después de conciliar (lo verás en Cartera, cobros y pagos, ejercicios 14 a 16)."
      ],
      "campos": [
       {
@@ -2320,7 +2320,7 @@
    "numero": 6,
    "titulo": "Cajas de efectivo",
    "objetivo": "Localizarás los maestros y procesos de caja y comprenderás la configuración, el registro, los vales, la liquidación, los cheques, las remesas y los informes.",
-   "concepto": "Una caja de efectivo es el dinero en metálico que la empresa guarda en una oficina o tienda (la CAJA_{INI} que creaste en Carteras, ejercicio 2). El módulo de cajas registra cada jornada de caja: las entradas y salidas de dinero, los vales (dinero que se presta con fondos de la caja), el recuento al final del día («liquidación»: comparar lo que hay físicamente con lo que dice el ERP) y la contabilización.\n\nEn este ejercicio localizas y entiendes la configuración de una caja, sus movimientos y líneas, los vales, la liquidación, la gestión de cheques y remesas y los informes.",
+   "concepto": "Una caja de efectivo es el dinero en metálico que la empresa guarda en una oficina o tienda (la CAJA_{INI} que creaste en Cartera, cobros y pagos, ejercicio 2). El módulo de cajas registra cada jornada de caja: las entradas y salidas de dinero, los vales (dinero que se presta con fondos de la caja), el recuento al final del día («liquidación»: comparar lo que hay físicamente con lo que dice el ERP) y la contabilización.\n\nEn este ejercicio localizas y entiendes la configuración de una caja, sus movimientos y líneas, los vales, la liquidación, la gestión de cheques y remesas y los informes.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -2392,7 +2392,7 @@
       "Definición de cajas"
      ],
      "explicacion": [
-      "La definición de caja (ccajadef) es una ficha distinta del banco propio: en su campo Cuenta financiera eliges la caja de efectivo que creaste en Carteras (CAJA_{INI}).",
+      "La definición de caja (ccajadef) es una ficha distinta del banco propio: en su campo Cuenta financiera eliges la caja de efectivo que creaste en Cartera, cobros y pagos (CAJA_{INI}).",
       "El maestro ccajadef identifica cada caja y reúne la configuración que condiciona su funcionamiento: empresa, cuenta financiera, moneda, cuenta contable, proyecto, sección, justificante, responsable, operaciones de cobro y pago y liquidación.",
       "La estructura obliga a informar opecob y opepag a la vez, o a dejar ambos vacíos; no se admite uno solo.",
       "El maestro de tipos de operación de caja (ccajaope) define código, descripción, cuenta, secuencia, forma de pago (campo «Plazo pago»: Efectivo, Tarjeta crédito, Tarjeta débito o Saldo inicial), si afecta a inversiones, si es liquidable, posición Debe/Haber y la operación financiera asociada que ya conoces del ejercicio 2.",
@@ -2471,7 +2471,7 @@
       },
       {
        "texto": "Abre el formulario de definición de caja y comprueba los campos obligatorios",
-       "detalle": "Son obligatorios (llevan *) Caja, Descripción caja, Estado, Empresa, Cuenta y Moneda. La Cuenta financiera es opcional: ahí eliges la caja de efectivo de Carteras (CAJA_{INI}).",
+       "detalle": "Son obligatorios (llevan *) Caja, Descripción caja, Estado, Empresa, Cuenta y Moneda. La Cuenta financiera es opcional: ahí eliges la caja de efectivo de Cartera, cobros y pagos (CAJA_{INI}).",
        "imagen": "icon-tesoreria-003.webp"
       },
       {
@@ -2666,7 +2666,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Aquí «remesa» es el grupo de cheques de la caja que llevas al banco; no es la remesa de efectos de Carteras."
+       "texto": "Aquí «remesa» es el grupo de cheques de la caja que llevas al banco; no es la remesa de efectos de Cartera, cobros y pagos."
       },
       {
        "tipo": "nota",

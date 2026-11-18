@@ -216,6 +216,8 @@ function rutasDeMenu() {
     // Las rutas de finanzas salen del árbol de la documentación, no de un menú comprobado en la demo
     if (esFinanzas(m.id)) continue;
     for (const e of m.ejercicios) {
+      // Los ejercicios que vienen de finanzas (ids icon-*) conservan esa regla aunque su módulo se haya fusionado
+      if (esFinanzas(e.id)) continue;
       for (const s of e.secciones) {
         const r = s.ruta;
         if (!r || r.length < 4 || r.length > 6) continue;

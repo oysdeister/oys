@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { META, MODULOS, getModulo } from '../content';
 import { avanceEjercicio, ejercicioCompletado, useProgreso } from '../lib/progress';
@@ -314,6 +314,9 @@ export default function ModulePage() {
       </div>
     );
   }
+
+  // Enlace a un módulo antiguo que se fusionó en otro (p. ej. #/modulo/icon-cartera): al módulo vigente
+  if (modulo.id !== id) return <Navigate to={`/modulo/${modulo.id}`} replace />;
 
   const ini = p.alumno.ini;
   const meta = META[modulo.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: modulo.titulo };

@@ -20,7 +20,7 @@ export const SERIES_FIN: SerieFin[] = [
     "intro": "Contabilizas una factura, creas facturas directas y preparas la primera remesa.",
     "modulos": [
       "icon-contabilidad",
-      "icon-cartera",
+      "carteras",
       "maestros"
     ],
     "capitulos": [
@@ -282,7 +282,7 @@ export const SERIES_FIN: SerieFin[] = [
     "corto": "Sesión 2",
     "intro": "Recorres una remesa completa y aprendes por qué una factura no contabiliza o no remesa.",
     "modulos": [
-      "icon-cartera",
+      "carteras",
       "icon-contabilidad"
     ],
     "capitulos": [
@@ -526,7 +526,7 @@ export const SERIES_FIN: SerieFin[] = [
     "corto": "Sesión 3",
     "intro": "Del extracto bancario a la conciliación y la contabilización del cobro o el pago.",
     "modulos": [
-      "icon-cartera"
+      "carteras"
     ],
     "capitulos": [
       {
@@ -1436,7 +1436,7 @@ export const SERIES_FIN: SerieFin[] = [
     "corto": "Cartera",
     "intro": "Tipos de efecto, estados y cómo se paga o se gestiona un efecto.",
     "modulos": [
-      "icon-cartera"
+      "carteras"
     ],
     "capitulos": [
       {

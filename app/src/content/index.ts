@@ -6,18 +6,29 @@ const ficheros = import.meta.glob<{ default: Modulo }>('./*.json', { eager: true
 /**
  * Orden pedagógico para un junior: primero los datos maestros y la parametrización; luego el circuito
  * comercial (compras → ventas); después la contabilidad (asientos → contabilidad general); la cartera y
- * el banco (cartera de efectos → cobros y pagos → tesorería) y, al final, impuestos y activos fijos.
+ * el banco (cartera, cobros y pagos → tesorería) y, al final, impuestos y activos fijos.
  * Los ids icon-* son internos (vienen de la documentación oficial de Finanzas): el alumno nunca los ve.
  */
-export const ORDEN = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'icon-contabilidad', 'carteras', 'icon-cartera', 'tesoreria', 'icon-impuestos', 'icon-activos'] as const;
+export const ORDEN = ['maestros', 'parametrizacion', 'compras', 'ventas', 'asientos', 'icon-contabilidad', 'carteras', 'tesoreria', 'icon-impuestos', 'icon-activos'] as const;
 
 /** Módulos de finanzas (documentación oficial de Finanzas) */
 export const esFinanzas = (id: string) => id.startsWith('icon-');
 
 export const MODULOS: Modulo[] = ORDEN.map((id) => ficheros[`./${id}.json`]?.default).filter(Boolean) as Modulo[];
 
+/**
+ * Módulos antiguos que se fusionaron en otro: los enlaces #/modulo/<viejo> redirigen al nuevo.
+ * «Cobros y pagos» (icon-cartera) se unió a «Cartera de efectos» (carteras) en «Cartera, cobros y pagos»;
+ * los ids de ejercicio no cambian, así que el progreso guardado y los momentos de vídeo siguen enlazados.
+ */
+export const ALIAS_MODULO: Record<string, string> = { 'icon-cartera': 'carteras' };
+
+/** Id vigente de un módulo (resuelve los alias de módulos fusionados) */
+export const idModulo = (id: string) => ALIAS_MODULO[id] ?? id;
+
 export function getModulo(id: string) {
-  return MODULOS.find((m) => m.id === id);
+  const real = idModulo(id);
+  return MODULOS.find((m) => m.id === real);
 }
 
 export function getEjercicio(id: string): { modulo: Modulo; ejercicio: Ejercicio } | undefined {
@@ -44,10 +55,9 @@ export const META: Record<string, { color: string; icono: string; corto: string 
   compras: { color: '#f2a93b', icono: 'compras', corto: 'Compras' },
   ventas: { color: '#e0708a', icono: 'ventas', corto: 'Ventas' },
   asientos: { color: '#8a7be0', icono: 'asiento', corto: 'Asientos manuales' },
-  carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Cartera de efectos' },
+  carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Cartera, cobros y pagos' },
   tesoreria: { color: '#8bc34a', icono: 'banco', corto: 'Tesorería y bancos' },
   'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad general' },
-  'icon-cartera': { color: '#2fae8f', icono: 'cobros', corto: 'Cobros y pagos' },
   'icon-impuestos': { color: '#d9824b', icono: 'impuestos', corto: 'Impuestos' },
   'icon-activos': { color: '#b06fc4', icono: 'activos', corto: 'Activos fijos' },
 };
