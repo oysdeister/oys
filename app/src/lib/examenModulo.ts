@@ -6,10 +6,10 @@
  * - Las preguntas no se repiten entre módulos ni con los tests de los ejercicios.
  * - La mejor nota se guarda en el progreso (`progress.ts`, campo `examenes`) y viaja a la cuenta
  *   compactada (`auth/compacto.ts`, campo `xm`).
- * - Si dos módulos se fusionan o cambian de id, `claveExamen` los lleva al mismo banco.
+ * - Un id de módulo fusionado (ALIAS_MODULO) lleva al examen del módulo vigente.
  */
 import type { Pregunta } from '../types';
-import { MODULOS } from '../content';
+import { MODULOS, idModulo } from '../content';
 import { APROBADO, type Progreso } from './progress';
 
 const ficheros = import.meta.glob<{ default: Pregunta[] }>('../content/examenes/*.json', { eager: true });
@@ -18,14 +18,11 @@ export const BANCOS: Record<string, Pregunta[]> = Object.fromEntries(
   Object.entries(ficheros).map(([ruta, m]) => [ruta.replace(/^.*\/([^/]+)\.json$/, '$1'), m.default]),
 );
 
-/** Ids antiguos que llevan al examen de su módulo actual («Cobros y pagos» se unió a «Cartera de efectos») */
-const ALIAS: Record<string, string> = { 'icon-cartera': 'carteras' };
-
 /** Clave del banco de examen de un módulo, o null si no tiene */
 export function claveExamen(moduloId: string): string | null {
-  if (BANCOS[moduloId]) return moduloId;
-  const alias = ALIAS[moduloId];
-  return alias && BANCOS[alias] ? alias : null;
+  // Los ids de módulos fusionados (ALIAS_MODULO) llevan al examen del módulo vigente
+  const id = idModulo(moduloId);
+  return BANCOS[id] ? id : null;
 }
 
 export function preguntasDe(moduloId: string): Pregunta[] {

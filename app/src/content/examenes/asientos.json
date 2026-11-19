@@ -1,0 +1,145 @@
+[
+ {
+  "pregunta": "Un asiento en estado X (Intermedio), ¿qué efecto contable tiene?",
+  "opciones": [
+   "Acumula saldos contables pero no costes",
+   "No afecta a los saldos ni a los costes y se puede editar",
+   "Acumula saldos y costes, y exige imp_cuadre = 0",
+   "Solo se usa para asientos de apertura y no aparece en el diario"
+  ],
+  "correcta": 0,
+  "explicacion": "El estado X intermedio acumula saldos contables, pero todavía no incorpora costes."
+ },
+ {
+  "pregunta": "¿Qué estados de asiento permiten guardar el asiento con imp_cuadre distinto de cero?",
+  "opciones": [
+   "Solo P",
+   "P y X",
+   "P y C",
+   "X y C"
+  ],
+  "correcta": 1,
+  "explicacion": "La regla de integridad solo obliga a que un asiento contabilizado (C) tenga cuadre cero; los estados P y X pueden estar descuadrados."
+ },
+ {
+  "pregunta": "¿Qué hace el proceso de descontabilización sobre un asiento contabilizado?",
+  "opciones": [
+   "Lo devuelve a Provisional (P) sin borrar sus apuntes",
+   "Lo pasa a Intermedio (X) para poder editarlo",
+   "Lo borra junto con todos sus apuntes",
+   "Genera un asiento inverso y deja el original contabilizado"
+  ],
+  "correcta": 0,
+  "explicacion": "Descontabilizar devuelve el asiento de Contabilizado (C) a Provisional (P); los apuntes se conservan para poder corregirlos."
+ },
+ {
+  "pregunta": "Antes de lanzar una contabilización masiva, ¿qué debes revisar en los asientos filtrados?",
+  "opciones": [
+   "Que ningún asiento tenga jusser informado",
+   "Que todos los asientos estén en estado X",
+   "El imp_cuadre y corregirlo hasta que sea cero",
+   "Que la empresa esté cerrada para evitar cambios"
+  ],
+  "correcta": 2,
+  "explicacion": "La contabilización exige cuadre cero, por lo que primero hay que revisar imp_cuadre y corregir cualquier descuadre."
+ },
+ {
+  "pregunta": "En una copia masiva, ¿qué valor de cadencia se usa para generar copias trimestrales?",
+  "opciones": [
+   "3",
+   "0",
+   "1",
+   "6"
+  ],
+  "correcta": 0,
+  "explicacion": "La cadencia 3 genera una copia cada trimestre; 0 mantiene la misma fecha, 1 es mensual y 6 semestral."
+ },
+ {
+  "pregunta": "En copia masiva, ¿qué implica dejar Copiar todo = 0?",
+  "opciones": [
+   "Se copian los impuestos sin indicador de envío al SII",
+   "Se omiten los impuestos y la cartera; los costes se copian",
+   "Se omite solo el concepto contable",
+   "Se copian todos los impuestos y la cartera"
+  ],
+  "correcta": 1,
+  "explicacion": "Con Copiar todo 0 la copia es limitada: copia costes, pero no copia impuestos ni cartera y omite el concepto contable."
+ },
+ {
+  "pregunta": "Si en 'Auditar seleccionados' un grupo de apuntes no cuadra al céntimo, ¿qué resultado obtienes?",
+  "opciones": [
+   "Se marcan solo los apuntes pendientes",
+   "No se marca ninguno",
+   "Se marcan los que estén en moneda nacional",
+   "Se pasan a propuesta de IA"
+  ],
+  "correcta": 1,
+  "explicacion": "La auditoría seleccionada exige que el Debe y el Haber coincidan al céntimo; si no cuadran, no marca ningún apunte."
+ },
+ {
+  "pregunta": "En la carga de asientos por plantilla, ¿qué sucede con las líneas que se dejan sin fecha?",
+  "opciones": [
+   "El sistema emite un error de fecha obligatoria",
+   "Se asigna automáticamente la fecha del sistema",
+   "El fichero completo se rechaza",
+   "Se omiten sin mensaje y el asiento puede quedar descuadrado"
+  ],
+  "correcta": 3,
+  "explicacion": "Las líneas sin fecha se omiten sin avisar; si formaban parte de un asiento, este puede quedar incompleto o descuadrado."
+ },
+ {
+  "pregunta": "En la carga de asientos por plantilla, ¿qué mensaje aparece si el total del Debe no coincide con el total del Haber?",
+  "opciones": [
+   "El fichero no contiene datos.",
+   "La columna 'Tercero' del fichero no cumple con las condiciones.",
+   "Total debe [100.00] distinto al total haber [1.00]",
+   "Fechas del periodo fuera de rango de vigencia en empresa"
+  ],
+  "correcta": 2,
+  "explicacion": "Es un mensaje literal de error de cuadre en la carga de asientos por plantilla."
+ },
+ {
+  "pregunta": "En un fichero de carga de asientos por plantilla, ¿cómo debe informarse la cuenta contable?",
+  "opciones": [
+   "Como número sin decimales, por ejemplo 62500",
+   "Como texto, por ejemplo 62500.00000",
+   "Con el nombre de la cuenta, por ejemplo Bancos",
+   "Con el código y el nombre separados por un guion"
+  ],
+  "correcta": 1,
+  "explicacion": "La cuenta debe informarse como texto, manteniendo el formato completo de plan contable."
+ },
+ {
+  "pregunta": "Si un fichero de carga de asientos por plantilla contiene varios asientos, ¿qué dato debe informarse para distinguirlos?",
+  "opciones": [
+   "Documento",
+   "Asiento",
+   "Cuenta",
+   "Fecha"
+  ],
+  "correcta": 1,
+  "explicacion": "Cuando hay varios asientos en el fichero, debe informarse la columna Asiento para separar cada bloque."
+ },
+ {
+  "pregunta": "¿Cuál de estas situaciones bloquea el borrado de un asiento?",
+  "opciones": [
+   "Asiento en estado Provisional",
+   "Período contable cerrado",
+   "Que el imp_cuadre sea 0",
+   "Que no tenga apuntes de impuestos"
+  ],
+  "correcta": 1,
+  "explicacion": "Un período contable cerrado impide borrar el asiento; también lo bloquean fechas inmutables o ausencia de privilegios sobre asientos de sistema, entre otros casos."
+ },
+ {
+  "pregunta": "¿Qué estado de asiento se debe filtrar para lanzar correctamente una descontabilización masiva?",
+  "opciones": [
+   "Provisional",
+   "Intermedio",
+   "Contabilizado",
+   "Todos los estados"
+  ],
+  "correcta": 2,
+  "explicacion": "La descontabilización masiva se filtra por asientos contabilizados y luego confirma que el período no esté cerrado a libros oficiales."
+ }
+]
