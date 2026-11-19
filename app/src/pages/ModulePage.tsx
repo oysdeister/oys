@@ -4,6 +4,8 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { META, MODULOS, getModulo } from '../content';
 import { avanceEjercicio, ejercicioCompletado, useProgreso } from '../lib/progress';
 import { avanceModulo } from '../lib/avance';
+import { notaExamen, preguntasDe } from '../lib/examenModulo';
+import { APROBADO } from '../lib/progress';
 import { conIni } from '../lib/texto';
 import { CapitulosSerie } from '../components/video';
 import { seriesDeModulo } from '../content/videoSeries';
@@ -343,6 +345,10 @@ export default function ModulePage() {
   const sigMod = MODULOS[idx + 1];
   const sigMeta = sigMod ? META[sigMod.id] : undefined;
 
+  const nExamen = preguntasDe(modulo.id).length;
+  const notaEx = notaExamen(p, modulo.id);
+  const exTexto = notaEx === null ? `${nExamen} preguntas de test. Apruebas con un ${Math.round(APROBADO * 100)} %.` : `Tu mejor nota: ${Math.round(notaEx * 100)} %${notaEx >= APROBADO ? ' (aprobado)' : ''}. Puedes repetirlo.`;
+
   const ctaTexto = hechos === modulo.ejercicios.length ? 'Repasar el módulo' : av === 0 ? 'Empezar el módulo' : `Continuar con el ejercicio ${siguiente?.numero ?? ''}`;
 
   return (
@@ -378,6 +384,11 @@ export default function ModulePage() {
               {siguiente && (
                 <Link className="btn arc lg" to={`/ejercicio/${siguiente.id}`}>
                   {ctaTexto}
+                </Link>
+              )}
+              {nExamen > 0 && (
+                <Link className="btn ghost lg" to={`/modulo/${modulo.id}/examen`}>
+                  <Icon name="examen" size={18} /> Examen del módulo
                 </Link>
               )}
               {sims[0] && (
@@ -535,6 +546,18 @@ export default function ModulePage() {
 
 
       <nav className="po-puertas pm-sig" aria-label="Qué hacer después">
+        {nExamen > 0 && (
+          <Link to={`/modulo/${modulo.id}/examen`} className="po-door po-door-examen pm-examen-mod">
+            <span className="po-door-ico" aria-hidden="true">
+              <Icon name="examen" size={26} />
+            </span>
+            <span className="po-door-txt">
+              <span>Para cerrar el módulo</span>
+              <strong>Examen de {meta.corto}</strong>
+              <span>{exTexto}</span>
+            </span>
+          </Link>
+        )}
         {sigMod ? (
           <Link to={`/modulo/${sigMod.id}`} className="po-door po-door-examen" style={{ ['--mod' as string]: sigMeta?.color ?? 'var(--arc)' } as CSSProperties}>
             <span className="po-door-ico pm-sig-ico" aria-hidden="true">

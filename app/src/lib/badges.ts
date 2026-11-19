@@ -1,5 +1,6 @@
 import { META, MODULOS } from '../content';
-import { ejercicioCompletado, type Progreso } from './progress';
+import { APROBADO, ejercicioCompletado, type Progreso } from './progress';
+import { clavesActivas } from './examenModulo';
 
 export interface Insignia {
   id: string;
@@ -28,6 +29,13 @@ export const INSIGNIAS: Insignia[] = [
     texto: 'Termina todos los ejercicios del módulo.',
     color: META[m.id]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => modCompleto(p, m.id),
+  })),
+  ...clavesActivas().map(({ clave, moduloId }) => ({
+    id: `exm-${clave}`,
+    titulo: `Examen: ${META[moduloId]?.corto ?? clave}`,
+    texto: `Aprueba el examen del módulo (${Math.round(APROBADO * 100)} %).`,
+    color: META[moduloId]?.color ?? '#2a9c83',
+    ganada: (p: Progreso) => (p.examenes?.[clave] ?? 0) >= APROBADO,
   })),
   { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa todos los módulos.', color: '#1f2738', ganada: (p) => MODULOS.length > 0 && MODULOS.every((m) => modCompleto(p, m.id)) },
 ];

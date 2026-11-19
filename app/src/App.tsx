@@ -17,6 +17,7 @@ import ExercisePage from './pages/ExercisePage';
 import Taller from './pages/Taller';
 import Logros from './pages/Logros';
 import Examen from './pages/Examen';
+import ExamenModulo from './pages/ExamenModulo';
 import Certificado from './pages/Certificado';
 import Examinador from './pages/Examinador';
 import Video from './pages/Video';
@@ -109,6 +110,7 @@ function Rutas() {
         <Routes location={loc}>
           <Route path="/" element={<Home />} />
           <Route path="/modulo/:id" element={<ModulePage />} />
+          <Route path="/modulo/:id/examen" element={<ExamenModulo />} />
           <Route path="/ejercicio/:id" element={<ExercisePage />} />
           <Route path="/erp" element={<ErpPractica />} />
           <Route path="/taller" element={<Taller />} />

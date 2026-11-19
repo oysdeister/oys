@@ -67,6 +67,8 @@ export interface ProgresoC {
   /** Último examen terminado (código e inicio): un examen a medias más antiguo ya no se recupera */
   xf?: [string, string] | null;
   iv: string[];
+  /** Mejor nota del examen de cada módulo, en % entero */
+  xm?: Record<string, number>;
   /** Preferencias: tema y barra lateral */
   pf?: { tema?: string; barra?: string };
   c: string;
@@ -218,6 +220,7 @@ export function leerLocal(): ProgresoC {
     xa: enCursoAC(ex.actual),
     xf: fin,
     iv: leerJson<string[]>(CLAVE_VISTAS, []),
+    xm: Object.fromEntries(Object.entries(p.examenes ?? {}).map(([k, v]) => [k, Math.round(v * 100)])),
     pf,
     c: p.creado ?? ahora,
     u: p.actualizado ?? ahora,
@@ -235,6 +238,7 @@ export function escribirLocal(pc: ProgresoC) {
     alumno: { id, nombre, ini, usuario },
     ejercicios,
     sims: Object.fromEntries(pc.s.map((k) => [k, true])),
+    examenes: Object.fromEntries(Object.entries(pc.xm ?? {}).map(([k, v]) => [k, v / 100])),
     creado: pc.c,
     actualizado: pc.u > (previo.actualizado ?? '') ? pc.u : (previo.actualizado ?? pc.u),
   };
@@ -309,6 +313,8 @@ export function fusionar(a: ProgresoC, b: ProgresoC | null): ProgresoC {
   for (const [k, v] of Object.entries(a.t)) t[k] = Math.max(v, t[k] ?? 0);
   const n = { ...b.n };
   for (const [k, v] of Object.entries(a.n)) if (!n[k] || v[0] > n[k][0]) n[k] = v;
+  const xm = { ...b.xm };
+  for (const [k, v] of Object.entries(a.xm ?? {})) xm[k] = Math.max(v, xm[k] ?? 0);
   const alumnoA = a.a[1] && a.a[2];
   return {
     v: 1,
@@ -324,6 +330,7 @@ export function fusionar(a: ProgresoC, b: ProgresoC | null): ProgresoC {
       return { xf, xa: fusionarEnCurso(a.xa, b.xa, xf) };
     })(),
     iv: [...new Set([...a.iv, ...b.iv])],
+    xm,
     pf: { ...b.pf, ...a.pf },
     c: a.c < b.c ? a.c : b.c,
     u: a.u > b.u ? a.u : b.u,

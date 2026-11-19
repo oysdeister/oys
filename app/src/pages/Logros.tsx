@@ -5,6 +5,7 @@ import { META, MODULOS } from '../content';
 import { acciones, APROBADO, ejercicioCompletado, useProgreso, type Progreso, limpiaUsuario } from '../lib/progress';
 import { avanceGlobal, avanceModulo } from '../lib/avance';
 import { INSIGNIAS, type Insignia } from '../lib/badges';
+import { clavesActivas } from '../lib/examenModulo';
 import { Icon } from '../components/Icon';
 import { NucleoOrbita } from '../components/shell/NucleoOrbita';
 import { Planeta } from '../components/shell/Planeta';
@@ -207,6 +208,12 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
     const hechos = m ? m.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length : 0;
     const total = m?.ejercicios.length ?? 1;
     return { color: META[id]?.color ?? b.color, icono: META[id]?.icono ?? 'check', valor: hechos / total, cuenta: `${hechos} de ${total} ejercicios` };
+  }
+  if (b.id.startsWith('exm-')) {
+    const clave = b.id.slice(4);
+    const mod = clavesActivas().find((c) => c.clave === clave)?.moduloId ?? clave;
+    const nota = p.examenes?.[clave] ?? null;
+    return { color: META[mod]?.color ?? b.color, icono: 'examen', valor: Math.min(1, (nota ?? 0) / APROBADO), cuenta: nota === null ? 'Sin hacer' : `Mejor nota: ${Math.round(nota * 100)} %` };
   }
   switch (b.id) {
     case 'primer-paso': {

@@ -16,6 +16,8 @@ export interface Progreso {
   alumno: { id: string; nombre: string; ini: string; usuario: string };
   ejercicios: Record<string, EstadoEjercicio>;
   sims: Record<string, boolean>;
+  /** Mejor nota (0-1) del examen de cada módulo, por clave de examen (lib/examenModulo.ts) */
+  examenes?: Record<string, number>;
   creado: string;
   actualizado: string;
 }
@@ -112,6 +114,11 @@ export const acciones = {
   },
   toggleDemo(ej: string, idx: number) {
     conEjercicio(ej, (e) => ({ ...e, demo: e.demo.includes(idx) ? e.demo.filter((i) => i !== idx) : [...e.demo, idx] }));
+  },
+  notaExamenModulo(clave: string, nota: number) {
+    const previa = estado.examenes?.[clave] ?? 0;
+    if (nota <= previa && estado.examenes?.[clave] !== undefined) return;
+    guardar({ ...estado, examenes: { ...estado.examenes, [clave]: Math.max(previa, nota) } });
   },
   simSuperado(id: string) {
     if (estado.sims[id]) return;
