@@ -105,7 +105,7 @@ function DondeClic({ pasos, modulo, ini, onListo }: { pasos: PasoPlano[]; modulo
       </div>
       <p className="pl-instr">{t(actual.paso.texto)}</p>
       <div className="pl-shot" key={i}>
-        <Captura src={imgSrc(modulo, actual.paso.imagen!)} alt="Captura del ERP: busca dónde harías clic" onPunto={onPunto} clicable={res === 'nada'}>
+        <Captura src={imgSrc(modulo, actual.paso.imagen!)} alt="Captura del ERP: busca dónde harías clic" onPunto={onPunto} clicable={res === 'nada'} ampliable instruccion={t(actual.paso.texto)}>
           {h && res === 'bien' && <CajaHotspot h={h} modo="acierto" />}
           {h && res === 'revelado' && <CajaHotspot h={h} modo="revelar" />}
           <Fallos marcas={marcas} />

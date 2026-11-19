@@ -44,8 +44,8 @@ export function PanelPractica({ practica, ini, compacto, onCerrar }: { practica:
         </div>
         <Nota valor={nota} />
         {onCerrar && (
-          <button type="button" className="pr-cerrar" onClick={onCerrar} aria-label="Cerrar el enunciado">
-            ×
+          <button type="button" className="pr-cerrar" onClick={onCerrar} aria-label="Ocultar el enunciado">
+            Ocultar
           </button>
         )}
       </header>
@@ -151,7 +151,7 @@ export function Practicar({ ids, ini, alto }: { ids: string[]; ini: string; alto
         </p>
       )}
       <Tira practica={pr} ini={ini} abierto={abierto} onAbrir={() => setAbierto((v) => !v)} />
-      <div className="pr-lienzo">
+      <div className={`pr-lienzo${abierto ? ' con-panel' : ''}`}>
         <div className="pr-erp">
           <ErpApp key={pr.id} ini={ini} inicial={pr.pantalla} />
         </div>

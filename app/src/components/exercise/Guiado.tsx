@@ -43,6 +43,19 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
   const h = actual?.paso.hotspot;
   const img = actual?.paso.imagen;
   const conClic = !!(h && img);
+  // Paso sin captura propia: se enseña la pantalla de su parte (la anterior con captura; si no, la siguiente)
+  const imgRef = useMemo(() => {
+    if (!actual || img) return undefined;
+    const conImg = (x: (typeof pasos)[number]) => !!x.paso.imagen;
+    const antes = pasos.slice(0, i).reverse();
+    const despues = pasos.slice(i + 1);
+    return (
+      antes.find((x) => x.secIdx === actual.secIdx && conImg(x)) ??
+      despues.find((x) => x.secIdx === actual.secIdx && conImg(x)) ??
+      antes.find(conImg) ??
+      despues.find(conImg)
+    )?.paso.imagen;
+  }, [actual, img, pasos, i]);
   const hecho = actual ? hechos.includes(actual.idx) : false;
 
   // En móvil la captura va ampliada con desplazamiento lateral: céntrala en el punto
@@ -56,6 +69,17 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
     }, 120);
     return () => window.clearTimeout(id);
   }, [i, pasos, reducir]);
+
+  // Al cambiar de paso la página puede encoger: que el título no quede a medias bajo la barra superior
+  const primerRender = useRef(true);
+  useEffect(() => {
+    if (primerRender.current) { primerRender.current = false; return; }
+    const el = stageRef.current;
+    if (!el || window.scrollY <= 0) return;
+    const barra = document.querySelector<HTMLElement>('.tb')?.offsetHeight ?? 64;
+    const arriba = el.getBoundingClientRect().top + window.scrollY - barra - 12;
+    window.scrollTo({ top: window.scrollY < arriba ? 0 : Math.max(0, arriba), behavior: 'auto' });
+  }, [i]);
 
   // Precarga la captura siguiente
   useEffect(() => {
@@ -162,7 +186,7 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
 
       {img ? (
         <div className="pl-shot" key={i}>
-          <Captura src={imgSrc(modulo, img)} alt={`Captura del ERP: ${t(actual.paso.texto)}`} onPunto={onPunto} clicable={conClic && fase === 'jugando'}>
+          <Captura src={imgSrc(modulo, img)} alt={`Captura del ERP: ${t(actual.paso.texto)}`} onPunto={onPunto} clicable={conClic && fase === 'jugando'} ampliable instruccion={t(actual.paso.texto)}>
             {h && fase === 'acierto' && <CajaHotspot h={h} modo="acierto" />}
             {h && fase === 'jugando' && <CajaHotspot h={h} modo={fallos >= 2 ? 'pista' : 'aro'} />}
             {h && fase === 'jugando' && (
@@ -180,6 +204,11 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
             <Fallos marcas={marcas} />
           </Captura>
           {conClic && <p className="pl-swipe">Desliza la captura a los lados para verla entera.</p>}
+        </div>
+      ) : imgRef ? (
+        <div className="pl-shot pl-shot-ref" key={i}>
+          <p className="pl-ref">Pantalla de esta parte. En este paso no hay que pulsar en ella: lee la instrucción y pulsa «Continuar».</p>
+          <Captura src={imgSrc(modulo, imgRef)} alt={`Captura del ERP: ${t(actual.seccion.titulo)}`} clicable={false} ampliable />
         </div>
       ) : (
         !actual.paso.detalle && actual.seccion.ruta && actual.seccion.ruta.length > 0 && <RutaMenu ruta={actual.seccion.ruta.map(t)} />
