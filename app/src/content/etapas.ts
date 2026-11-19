@@ -18,13 +18,6 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { titulo: 'Terceros, empresa, artículos y almacén', que: 'Das de alta los datos que usarán las compras y las ventas, y creas tu propia empresa.', bloques: ['maestros-1', 'maestros-v-4', 'maestros-2'] },
     { titulo: 'El stock', que: 'Registras una entrada de mercancía y la compruebas.', bloques: ['maestros-3'] },
   ],
-  parametrizacion: [
-    { titulo: 'Cuentas contables', que: 'Creas una cuenta de gasto y la retocas.', bloques: ['parametrizacion-1', 'parametrizacion-2'] },
-    { titulo: 'Auxiliares', que: 'Creas un grupo auxiliar y lo asignas a la cuenta.', bloques: ['parametrizacion-3', 'parametrizacion-4'] },
-    { titulo: 'Analítica', que: 'Creas un proyecto y una sección para repartir gastos.', bloques: ['parametrizacion-5', 'parametrizacion-6'] },
-    { titulo: 'El mapa de Finanzas', que: 'Ves en qué orden se cargan las tablas y cómo encaja lo que has creado.', bloques: ['parametrizacion-icon-1'] },
-    { titulo: 'Para saber más', que: 'Finanzas sola o junto a compras y ventas.', bloques: ['parametrizacion-icon-2'], opcional: true },
-  ],
   compras: [
     { titulo: 'Preparar la compra', que: 'Proveedor, artículo y tarifa: lo que necesita cualquier compra.', bloques: ['compras-1'] },
     { titulo: 'Comprar', que: 'Llevas una compra hasta el asiento, primero corta y luego completa.', bloques: ['compras-2', 'compras-3'] },
@@ -32,16 +25,16 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
   ventas: [
     { titulo: 'Vender', que: 'Llevas una venta hasta el asiento y el cobro pendiente. Funciona como en Compras, pero con clientes.', bloques: ['ventas-1', 'ventas-2'] },
   ],
-  asientos: [
-    { titulo: 'Escribir un asiento', que: 'Abres los asientos, escribes uno y compruebas que cuadra.', bloques: ['asientos-1', 'asientos-2', 'asientos-3', 'asientos-4', 'asientos-5'] },
+  'icon-contabilidad': [
+    { titulo: 'Cómo se organiza la contabilidad', que: 'En qué orden se cargan las tablas de Finanzas, y qué son el diario, los periodos y las plantillas.', bloques: ['parametrizacion-icon-1', 'icon-contabilidad-1'] },
+    { titulo: 'El plan de cuentas', que: 'Creas una cuenta de gasto y la retocas.', bloques: ['parametrizacion-1', 'parametrizacion-2'] },
+    { titulo: 'Auxiliares y analítica', que: 'Creas un grupo auxiliar y lo asignas a la cuenta; después un proyecto y una sección para repartir gastos.', bloques: ['parametrizacion-3', 'parametrizacion-4', 'parametrizacion-5', 'parametrizacion-6'] },
+    { titulo: 'Escribir un asiento manual', que: 'Abres los asientos, escribes uno y compruebas que cuadra.', bloques: ['asientos-1', 'asientos-2', 'asientos-3', 'asientos-4', 'asientos-5'] },
     { titulo: 'Contabilizar y copiar', que: 'Lo pasas a definitivo, lo duplicas y corriges importes.', bloques: ['asientos-6', 'asientos-11', 'asientos-12', 'asientos-13'] },
     { titulo: 'Consultar', que: 'Ves el asiento en los listados, el extracto y las sumas y saldos.', bloques: ['asientos-7', 'asientos-8', 'asientos-9', 'asientos-10'] },
-    { titulo: 'Para saber más', que: 'El asiento que genera un movimiento de banco. Se trabaja a fondo en Tesorería.', bloques: ['asientos-14'], opcional: true },
-  ],
-  'icon-contabilidad': [
-    { titulo: 'Cómo se organiza la contabilidad', que: 'Diarios, periodos y plantillas: dónde cae cada asiento.', bloques: ['icon-contabilidad-1'] },
     { titulo: 'Facturas que generan asientos', que: 'Contabilizas facturas, haces facturas directas y corriges errores.', bloques: ['icon-contabilidad-v-1', 'icon-contabilidad-v-2', 'icon-contabilidad-v-3', 'icon-contabilidad-v-4'] },
     { titulo: 'Cerrar el año', que: 'Cierre, apertura, balances y consolidación.', bloques: ['icon-contabilidad-2', 'icon-contabilidad-3'] },
+    { titulo: 'Para saber más', que: 'Finanzas sola o junto a compras y ventas, y el asiento que genera un movimiento de banco (se trabaja a fondo en Tesorería).', bloques: ['parametrizacion-icon-2', 'asientos-14'], opcional: true },
   ],
   carteras: [
     { titulo: 'Preparar', que: 'Plazos, tipos de efecto y bancos propios.', bloques: ['carteras-1', 'carteras-3'] },

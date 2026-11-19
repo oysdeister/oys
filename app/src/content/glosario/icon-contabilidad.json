@@ -1,5 +1,373 @@
 [
  {
+  "termino": "Cuenta de gastos",
+  "definicion": "Cuenta del grupo 6 del plan contable (62900, 62902, etc.) donde se anotan los gastos de la empresa. La creas para ver separado un tipo de gasto en informes.",
+  "ejemplo": "La cuenta 62999 Gastos varios {INI} recoge un gasto de 100 €: Debe 62999 100 / Haber 57200 Bancos 100."
+ },
+ {
+  "termino": "Grupo auxiliar",
+  "definicion": "Lista de códigos que desglosa el saldo de una cuenta sin crear subcuentas. Por ejemplo, gastos por empleado con el grupo {INI}EMP.",
+  "ejemplo": "Con el grupo {INI}EMP en 62999, registras 50 € de gasto de José Gómez: Debe 62999 50 (código {INI}0001) / Haber 57200 50."
+ },
+ {
+  "termino": "Analítica",
+  "definicion": "Proyectos y secciones que indican a qué parte del negocio pertenece cada gasto o ingreso. Permite informes por división o departamento.",
+  "ejemplo": "Un gasto de 200 € se asigna al proyecto {INI}1 y sección {INI}ADM: Debe 62902 200 / Haber 57200 200."
+ },
+ {
+  "termino": "Proyecto",
+  "definicion": "Código que identifica una división, obra o actividad para clasificar apuntes de costes e ingresos en la analítica.",
+  "ejemplo": "El proyecto {INI}1 recibe un gasto: Debe 62900 150 / Haber 57200 150 con proyecto {INI}1."
+ },
+ {
+  "termino": "Sección",
+  "definicion": "Departamento o centro de coste (Administración, Comercial...) que complementa al proyecto en la analítica.",
+  "ejemplo": "La sección {INI}ADM se usa en un apunte: Debe 62903 80 / Haber 57200 80 con sección {INI}ADM."
+ },
+ {
+  "termino": "Plantilla de contabilización",
+  "definicion": "Hoja de cálculo XLS que define cómo un documento (factura, cobro) genera automáticamente asiento, impuestos y cartera.",
+  "ejemplo": "La plantilla de compra genera: Debe 60000 875 y 47200 183,75 / Haber proveedor 1.058,75."
+ },
+ {
+  "termino": "Asiento",
+  "definicion": "Conjunto de apuntes que registra una operación contable. La suma del Debe siempre iguala a la del Haber.",
+  "ejemplo": "Asiento de pago: Debe 62902 100 / Haber 57200 100."
+ },
+ {
+  "termino": "Cuenta contable",
+  "definicion": "Cajón numerado del plan de cuentas donde se acumulan los importes de las operaciones. Ej: 62900, 57200.",
+  "ejemplo": "La cuenta 62900 Otros servicios acumula 300 € al Debe por un pago."
+ },
+ {
+  "termino": "Código auxiliar",
+  "definicion": "Elemento concreto de un grupo auxiliar, por ejemplo un empleado. Se elige en el apunte para saber a quién corresponde el importe.",
+  "ejemplo": "El código {INI}0001 (José Gómez) se asigna a un gasto de 40 € en la cuenta 62999."
+ },
+ {
+  "termino": "Plan de cuentas",
+  "definicion": "Lista numerada de todas las cuentas contables que usa la empresa, como el PGE 2008 español.",
+  "ejemplo": "El plan PGE 2008 incluye 62900, 62902, 62903, 57200, 60000, 70000."
+ },
+ {
+  "termino": "Debe",
+  "definicion": "Columna izquierda de un asiento. Normalmente anotas aquí los gastos y lo que la empresa recibe.",
+  "ejemplo": "Pagas 100 € de material de oficina por el banco: Debe 62900 Otros servicios 100 / Haber 57200 Bancos 100."
+ },
+ {
+  "termino": "Haber",
+  "definicion": "Columna derecha de un asiento. Normalmente anotas de dónde sale el dinero o los ingresos.",
+  "ejemplo": "En el mismo pago de 100 €, el dinero sale del banco: Haber 57200 Bancos 100 (y Debe 62900 100)."
+ },
+ {
+  "termino": "Consolidación",
+  "definicion": "Sumar las contabilidades de varias empresas del grupo como si fueran una sola, eliminando operaciones internas.",
+  "ejemplo": "La matriz vende a su filial por 1.000 €; en consolidado se eliminan esa venta y esa compra."
+ },
+ {
+  "termino": "Empresa",
+  "definicion": "Sociedad que registra su contabilidad en el ERP. En las prácticas usas la empresa 0.",
+  "ejemplo": "La empresa 0 tiene plan PGE 2008 y ejercicio 2026."
+ },
+ {
+  "termino": "Ejercicio",
+  "definicion": "Año contable. Se divide en 12 periodos mensuales (uno por mes).",
+  "ejemplo": "Una factura del 15-03-2026 cae en ejercicio 2026, periodo 3."
+ },
+ {
+  "termino": "Periodo",
+  "definicion": "Mes contable dentro del ejercicio. Cada periodo agrupa los movimientos de ese mes.",
+  "ejemplo": "Periodo 11 es noviembre de 2026."
+ },
+ {
+  "termino": "Tercero",
+  "definicion": "Ficha única de un cliente o proveedor con sus datos. Se usa en facturas, asientos y cartera.",
+  "ejemplo": "El proveedor 00027 se usa en la factura de 1.058,75."
+ },
+ {
+  "termino": "Numerador",
+  "definicion": "Regla que da números correlativos a documentos (facturas, justificantes). Define el formato y cuándo reinicia.",
+  "ejemplo": "El numerador {INI}#yy-#n genera {INI}26-000001 para el primer justificante de 2026."
+ },
+ {
+  "termino": "Máscara",
+  "definicion": "Texto con códigos (#e empresa, #yy año, #n contador) para formar números de documento automáticamente.",
+  "ejemplo": "{INI}#yy-#n produce {INI}26-000001."
+ },
+ {
+  "termino": "Tipología",
+  "definicion": "Clase de documento (factura directa, factura de abono...) que determina su comportamiento y numeración.",
+  "ejemplo": "Tipología FC para factura de compra directa."
+ },
+ {
+  "termino": "Balance de sumas y saldos",
+  "definicion": "Lista de todas las cuentas con lo anotado en el Debe, en el Haber y la diferencia o saldo.",
+  "ejemplo": "En el balance, 62902 tiene Debe 1.000, Haber 0, saldo deudor 1.000."
+ },
+ {
+  "termino": "Cuenta de resultados",
+  "definicion": "Informe que calcula ingresos menos gastos para obtener beneficio o pérdida del periodo.",
+  "ejemplo": "Ventas 10.000 € − gastos 7.000 € = 3.000 € de beneficio."
+ },
+ {
+  "termino": "Saldo",
+  "definicion": "Diferencia entre lo anotado en el Debe y en el Haber de una cuenta: es deudor si pesa más el Debe y acreedor si pesa más el Haber.",
+  "ejemplo": "Si la 57200 Bancos suma 3.000 al Debe y 1.250 al Haber, su saldo es deudor de 1.750 €: lo que queda en el banco."
+ },
+ {
+  "termino": "Tipo Costes",
+  "definicion": "Tipo de cuenta contable de los grupos 6 y 7 que pide obligatoriamente proyecto y sección al contabilizar.",
+  "ejemplo": "La cuenta 62999 es Tipo Costes y pide proyecto {INI}1 y sección {INI}ADM."
+ },
+ {
+  "termino": "Posición",
+  "definicion": "Lado donde la cuenta acumula saldo normalmente: Debe para gastos, Haber para ingresos y pasivos.",
+  "ejemplo": "La cuenta 62902 tiene posición Debe; la 70000, Haber."
+ },
+ {
+  "termino": "Periodificable",
+  "definicion": "Permite repartir el importe de un apunte entre varios periodos contables, como un seguro anual.",
+  "ejemplo": "Un seguro anual de 1.200 € periodificable se registra a 100 €/mes durante 12 meses."
+ },
+ {
+  "termino": "Cartera de efectos",
+  "definicion": "Registro de deudas o cobros pendientes con su fecha de vencimiento. Se genera al contabilizar facturas.",
+  "ejemplo": "Una factura de compra de 1.058,75 deja un efecto a pagar de 1.058,75 con su fecha de vencimiento; cuando lo pagas, desaparece de la cartera."
+ },
+ {
+  "termino": "Registro fiscal",
+  "definicion": "Apunte de los impuestos de un documento (IVA, IRPF) que luego se declaran a Hacienda.",
+  "ejemplo": "Registro fiscal de la factura: IVA soportado 183,75 sobre base 875."
+ },
+ {
+  "termino": "Contabilizar (Real y Diferido)",
+  "definicion": "Permiso que decide si contabilizar en tiempo real o en un área diferida para revisar antes de pasar a real.",
+  "ejemplo": "Con permiso Real, la factura se contabiliza al momento; con Diferido, va a un área aparte."
+ },
+ {
+  "termino": "Maestro",
+  "definicion": "Tabla de datos fijos que se da de alta una vez y se reutiliza en todos los documentos: empresas, terceros, cuentas, monedas, proyectos…",
+  "ejemplo": "El maestro de empresas de TUTORIAL tiene dos: 0 Deister Software y DIS Distribuidora S.L."
+ },
+ {
+  "termino": "Diario contable",
+  "definicion": "Agrupación de asientos de un mismo tipo de operación. Cada asiento indica en qué diario va, y así se pueden listar por separado.",
+  "ejemplo": "Las facturas de venta se contabilizan en el diario VE (ventas)."
+ },
+ {
+  "termino": "Workflow",
+  "definicion": "Reglas y estados por los que tiene que pasar un documento antes de poder seguir (validar, aprobar, contabilizar). Si no se cumplen, el ERP bloquea el paso.",
+  "ejemplo": "Una factura de compra pasa de Provisional a Validada; solo entonces se puede contabilizar."
+ },
+ {
+  "termino": "Condición de pago",
+  "definicion": "Plazos y número de vencimientos con que se cobra o se paga a un tercero. Se usa para calcular los efectos de cartera.",
+  "ejemplo": "«3 Vtos. 30 60 y 90 días»: una factura de 300 € deja tres efectos de 100 € a 30, 60 y 90 días."
+ },
+ {
+  "termino": "Mandato SEPA",
+  "definicion": "Autorización firmada por el cliente para que la empresa le cargue recibos en su cuenta bancaria. Sin mandato no se pueden remesar sus recibos domiciliados.",
+  "ejemplo": "El cliente firma el mandato y cada mes se le carga en cuenta la cuota de 50 €."
+ },
+ {
+  "termino": "Hoja destino",
+  "definicion": "Hoja de una plantilla de contabilización que dice qué se crea al contabilizar: capuntes (apuntes del asiento), cimpcont (registro de impuestos) y cefectos (cartera de cobros y pagos).",
+  "ejemplo": "Una factura de compra de 100 € + 21 € de IVA llena capuntes con los apuntes del asiento, cimpcont con el IVA de 21 € y cefectos con el efecto a pagar de 121 €."
+ },
+ {
+  "termino": "Asiento",
+  "definicion": "Unidad del libro diario: conjunto de apuntes donde la suma del Debe iguala a la del Haber. Registra una operación.",
+  "ejemplo": "Asiento de pago: Debe 62902 100 / Haber 57200 100."
+ },
+ {
+  "termino": "Apunte",
+  "definicion": "Cada línea de un asiento que anota un importe en una cuenta concreta al Debe o al Haber.",
+  "ejemplo": "Apunte 1: Debe 62902 1.000; Apunte 2: Haber 57200 1.000."
+ },
+ {
+  "termino": "Debe",
+  "definicion": "Columna izquierda del asiento; normalmente gastos y lo que entra.",
+  "ejemplo": "Debe 62902 100 en un pago de gastos."
+ },
+ {
+  "termino": "Haber",
+  "definicion": "Columna derecha del asiento; normalmente de dónde sale el dinero o ingresos.",
+  "ejemplo": "Haber 57200 100 en el pago anterior."
+ },
+ {
+  "termino": "Provisional",
+  "definicion": "Estado de un asiento recién creado que aún se puede modificar. No impacta en saldos.",
+  "ejemplo": "El asiento 6 queda Provisional hasta que pulses Finalizar."
+ },
+ {
+  "termino": "Contabilizado (Finalizar)",
+  "definicion": "Estado final de un asiento tras pulsar 'Finalizar'. Sus importes pasan al mayor y a saldos; ya no es editable.",
+  "ejemplo": "El asiento 7 pasa a Contabilizado con Debe 300 / Haber 300."
+ },
+ {
+  "termino": "Diario",
+  "definicion": "Libro que agrupa asientos por origen (compras, ventas, general). Creas uno propio {INI} para tus prácticas.",
+  "ejemplo": "El diario {INI} agrupa todos tus asientos manuales."
+ },
+ {
+  "termino": "Cabecera",
+  "definicion": "Parte superior del asiento con datos comunes: empresa, fecha, diario, justificante, documento y notas.",
+  "ejemplo": "Cabecera del asiento 6: empresa 0, fecha 12-11-2026, diario {INI}, documento {INI}-DOC-001."
+ },
+ {
+  "termino": "Justificante",
+  "definicion": "Código correlativo que identifica cada asiento en auditorías. Se genera con un numerador de justificantes.",
+  "ejemplo": "El justificante {INI}26-000001 corresponde al primer asiento manual de 2026."
+ },
+ {
+  "termino": "Numerador de justificantes",
+  "definicion": "Regla que asigna números correlativos a los justificantes de asiento. Se define con máscaras.",
+  "ejemplo": "Numerador {INI} con máscara {INI}#yy-#n genera {INI}26-000001."
+ },
+ {
+  "termino": "Máscara (#e, #yy, #n)",
+  "definicion": "Patrón con códigos que el ERP sustituye: #e empresa, #yy año (26), #d diario, #n contador. El resto del texto se copia tal cual.",
+  "ejemplo": "Máscara {INI}#yy-#n → {INI}26-000001.",
+  "alias": [
+   "Máscara"
+  ]
+ },
+ {
+  "termino": "Contrapartida",
+  "definicion": "La otra línea de un asiento que compensa la primera: si una va al Debe, la contrapartida va al Haber por el mismo importe.",
+  "ejemplo": "Contrapartida del gasto 62902 Debe 100 es Haber 57200 100."
+ },
+ {
+  "termino": "Cuadre",
+  "definicion": "Comprobación de que Debe = Haber en un asiento. Si no cuadra, no se puede contabilizar.",
+  "ejemplo": "Asiento con Debe 1.250 y Haber 1.250 cuadra; Cuadre = 0."
+ },
+ {
+  "termino": "Ejercicio",
+  "definicion": "Año contable. Los asientos se asignan a un ejercicio según su fecha.",
+  "ejemplo": "Asiento del 12-11-2026 pertenece al ejercicio 2026."
+ },
+ {
+  "termino": "Periodo",
+  "definicion": "Mes contable dentro del ejercicio. Un asiento cae en un periodo según su fecha.",
+  "ejemplo": "El asiento del 12-11-2026 cae en periodo 11."
+ },
+ {
+  "termino": "Saldo",
+  "definicion": "Diferencia entre lo anotado en el Debe y en el Haber de una cuenta: es deudor si pesa más el Debe y acreedor si pesa más el Haber.",
+  "ejemplo": "La 62902 tiene saldo deudor de 1.000 tras el asiento 6."
+ },
+ {
+  "termino": "Libro mayor (extracto)",
+  "definicion": "Lista de movimientos de una cuenta con saldo acumulado línea a línea. Sirve para revisar una cuenta.",
+  "ejemplo": "El mayor de 62902 muestra tres apuntes y saldo final 3.500."
+ },
+ {
+  "termino": "Sumas y saldos",
+  "definicion": "Informe que muestra por cuenta y periodo el total de Debe, Haber y saldo de los asientos contabilizados.",
+  "ejemplo": "En periodo 11, 57200 tiene Haber 2.800 y 62902 Debe 2.000."
+ },
+ {
+  "termino": "Vigencia de la empresa",
+  "definicion": "Fechas entre las que la empresa puede contabilizar. Fuera de la vigencia no hay ejercicio ni periodo asignable.",
+  "ejemplo": "La empresa 0 está vigente desde 2000 sin fecha fin, por eso contabiliza en 2026."
+ },
+ {
+  "termino": "Abrir a provisional",
+  "definicion": "Acción que revierte un asiento contabilizado a estado provisional para poder modificarlo. Quita sus importes del mayor.",
+  "ejemplo": "Pulsas Abrir a provisional en el asiento 7 para corregir un importe."
+ },
+ {
+  "termino": "Contraasiento",
+  "definicion": "Asiento inverso (Debe y Haber cambiados) que anula el efecto de otro. Se genera al duplicar con 'Invertir asiento'.",
+  "ejemplo": "Para anular el pago Debe 62902 100 / Haber 57200 100 se hace Debe 57200 100 / Haber 62902 100: las dos cuentas vuelven a cero."
+ },
+ {
+  "termino": "Cadencia mensual",
+  "definicion": "Frecuencia con la que se programan copias de un asiento recurrente (cada mes, cada dos meses...).",
+  "ejemplo": "Con cadencia 1, copias del asiento 6 al 01-12-2026, 01-01-2027 y 01-02-2027."
+ },
+ {
+  "termino": "Integridad (descuadres)",
+  "definicion": "Menú de informes que detectan incoherencias: asientos descuadrados, diferencias con impuestos o cartera.",
+  "ejemplo": "El informe Descuadres General e impuestos sale vacío si no hay errores de IVA."
+ },
+ {
+  "termino": "Movimiento de tesorería",
+  "definicion": "Registro de un cobro o pago bancario. Al contabilizarlo genera un asiento banco contra la cuenta del flujo.",
+  "ejemplo": "Movimiento de salida: Debe proveedor 1.058,75 / Haber 57200 1.058,75."
+ },
+ {
+  "termino": "Flujo",
+  "definicion": "Cada línea de un movimiento de tesorería que indica la contrapartida (proveedor, cliente, comisión) y su importe.",
+  "ejemplo": "Flujo del pago a proveedor: cuenta 40100.00003 por 8.080,15."
+ },
+ {
+  "termino": "Comisión bancaria",
+  "definicion": "Gasto que cobra el banco por gestionar un movimiento. Puede ser un flujo del mismo asiento o un asiento aparte.",
+  "ejemplo": "Comisión de 5 € en un pago: Debe 62600 Servicios bancarios 5 / Haber 57200 Bancos 5."
+ },
+ {
+  "termino": "Empresa",
+  "definicion": "Sociedad que registra los asientos. En las prácticas usas empresa 0.",
+  "ejemplo": "La empresa 0 usa el plan PGE 2008 y diario {INI}."
+ },
+ {
+  "termino": "Documento",
+  "definicion": "Referencia libre que identifica un asiento, como {INI}-DOC-001. Se copia a todas sus líneas.",
+  "ejemplo": "El asiento 6 lleva documento {INI}-DOC-001."
+ },
+ {
+  "termino": "Clasificación",
+  "definicion": "Etiqueta que indica el origen del asiento (manual, factura, cobro…). Ayuda a filtrar la lista de asientos.",
+  "ejemplo": "La copia del asiento 6 aparece con clasificación Manual."
+ },
+ {
+  "termino": "Proceso de contabilización",
+  "definicion": "Utilidad que contabiliza varios asientos provisionales a la vez, filtrando por fechas, empresa y diario.",
+  "ejemplo": "Contabilizas todos los asientos del diario {INI} entre 01-11-2026 y 28-02-2027."
+ },
+ {
+  "termino": "Plan contable",
+  "definicion": "Lista de cuentas que puede usar una empresa. En la demo se llama PGE 2008 (ES) y sigue el Plan General de Contabilidad español.",
+  "ejemplo": "62902.00000 Gastos diversos y 57200.00000 Bancos son cuentas del plan PGE 2008."
+ },
+ {
+  "termino": "Proyecto y sección",
+  "definicion": "Datos de cada línea que dicen a qué unidad de negocio y centro pertenece el importe, para la contabilidad analítica.",
+  "ejemplo": "Proyecto 0 GENERAL y Sección 0 General en todas las líneas del módulo."
+ },
+ {
+  "termino": "Dimensión analítica",
+  "definicion": "Campo extra de una línea para clasificarla en informes de costes (línea de negocio, zona…). En TUTORIAL se deja en 0.",
+  "ejemplo": "Dimensión 1 = 0 General, Dimensión 2 = 0 General."
+ },
+ {
+  "termino": "Objeto (del ERP)",
+  "definicion": "Nombre técnico de una pantalla. Se puede escribir en el buscador superior para abrirla sin pasar por el menú.",
+  "ejemplo": "cdiarios es la lista de diarios; casientos, la de asientos."
+ },
+ {
+  "termino": "IVA soportado / repercutido",
+  "definicion": "IVA soportado es el que la empresa paga en sus compras (cuenta 472); IVA repercutido, el que cobra en sus ventas (cuenta 477).",
+  "ejemplo": "Compra de 100 € + 21 € de IVA: los 21 € van al Debe de la 47200."
+ },
+ {
+  "termino": "Efecto (cartera)",
+  "definicion": "Cada cobro o pago pendiente con su vencimiento (un recibo, un pagaré, una transferencia a fecha). El conjunto de efectos es la cartera.",
+  "ejemplo": "Una factura de proveedor a pagar en 30 días genera un efecto a pagar."
+ },
+ {
+  "termino": "Remesa",
+  "definicion": "Grupo de efectos que se envían juntos al banco para cobrarlos o pagarlos de una vez.",
+  "ejemplo": "Remesa de pagos con las facturas de varios proveedores del mes."
+ },
+ {
+  "termino": "Cuenta mnemotécnica",
+  "definicion": "Código de cuenta genérico que el ERP traduce a la cuenta real del plan contable de cada empresa, para que un mismo flujo sirva en empresas con planes distintos.",
+  "ejemplo": "El flujo de comisiones lleva su cuenta mnemotécnica; al contabilizar se convierte en la cuenta del plan de la empresa."
+ },
+ {
   "termino": "Debe y Haber",
   "definicion": "Las dos columnas de todo asiento: el Debe (izquierda) recoge el gasto o lo que la empresa recibe; el Haber (derecha), de dónde sale o a quién se debe. Siempre suman lo mismo.",
   "ejemplo": "Compra de 875 € + 183,75 € de IVA: Debe 60000 875 y 47200 183,75 / Haber proveedor 1.058,75."

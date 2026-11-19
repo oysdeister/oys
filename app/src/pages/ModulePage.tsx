@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { META, MODULOS, getModulo } from '../content';
 import { ejercicioCompletado, useProgreso, APROBADO } from '../lib/progress';
-import { notaExamen, preguntasDe } from '../lib/examenModulo';
+import { MAX_PREG, notaExamen, preguntasDe } from '../lib/examenModulo';
 import { conIni } from '../lib/texto';
 import { seriesDeModulo } from '../content/videoSeries';
 import { SIMS } from '../sims/registro';
@@ -49,7 +49,7 @@ export default function ModulePage() {
   const sigMod = MODULOS[idx + 1];
   const series = seriesDeModulo(modulo.id);
   const sims = SIMS.filter((s) => s.modulo === modulo.id);
-  const nExamen = preguntasDe(modulo.id).length;
+  const nExamen = Math.min(preguntasDe(modulo.id).length, MAX_PREG);
   const notaEx = notaExamen(p, modulo.id);
   const todos = etapas.flatMap((e) => e.bloques.map((b) => ({ b, opc: !!e.opcional })));
   const nOpc = todos.filter((x) => x.opc).length;

@@ -459,7 +459,7 @@ export function generarCaso(codigo: string): Caso {
     },
     {
       id: 't8',
-      modulo: 'asientos',
+      modulo: 'icon-contabilidad',
       titulo: 'Asiento manual',
       encargo: `Hemos pagado por banco ${p2(gasto.importe)} € de ${gasto.concepto}. Regístralo a mano en el diario EA de la empresa 0, con la cuenta ${gasto.cuenta}.00000 (${gasto.nombre}) contra el banco 57200.00000, y en Documento pon el código de examen. Deja el asiento contabilizado.`,
       datos: [
@@ -619,7 +619,7 @@ const CIRCUITO_TESORERIA = {
 /* Parejas para relacionar */
 const RELACIONES: { origen: string; pregunta: string; titulos: [string, string]; pares: [string, string][]; explicacion: string }[] = [
   {
-    origen: 'asientos',
+    origen: 'icon-contabilidad',
     pregunta: 'Une cada cuenta con lo que recoge.',
     titulos: ['Cuenta', 'Qué recoge'],
     pares: [
@@ -741,7 +741,7 @@ function generarDatos(r: ReturnType<typeof rng>): { importe: PreguntaDato[]; cue
     { tipo: 'dato', formato: 'cuenta', origen: 'compras', pregunta: 'Contabilizas el albarán de compra. ¿Qué cuenta va al Haber?', esperado: '40090', placeholder: '00000', explicacion: 'El albarán lleva la 60000 al Debe contra la 40090 Compras pendiente de factura.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'ventas', pregunta: 'Contabilizas una factura de venta. ¿En qué cuenta va el IVA repercutido?', esperado: '47000', placeholder: '00000', explicacion: 'La factura de venta lleva 43000 al Debe y 47000 y 70000 al Haber.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'carteras', pregunta: 'Cobras un efecto por banco con COBD. ¿Qué cuenta va al Debe?', esperado: '57200', placeholder: '00000', explicacion: 'El cobro lleva Bancos 57200 al Debe y Clientes 43000 al Haber.' },
-    { tipo: 'dato', formato: 'cuenta', origen: 'parametrizacion', pregunta: 'Registras una factura de compra con IVA. ¿En qué cuenta va el IVA soportado?', esperado: '47200', placeholder: '00000', explicacion: 'El IVA de las compras va al Debe de la 47200.' },
+    { tipo: 'dato', formato: 'cuenta', origen: 'icon-contabilidad', pregunta: 'Registras una factura de compra con IVA. ¿En qué cuenta va el IVA soportado?', esperado: '47200', placeholder: '00000', explicacion: 'El IVA de las compras va al Debe de la 47200.' },
   ];
   cuenta.push({ tipo: 'dato', formato: 'cuenta', origen: 'tesoreria', pregunta: 'El flujo de comisión de un movimiento de tesorería lleva la cuenta de servicios bancarios. ¿Cuál es?', esperado: '62600', placeholder: '00000', explicacion: 'Las comisiones bancarias van a la 62600 Servicios bancarios y similares, al Debe, contra el banco 57200.' });
   return { importe, cuenta };

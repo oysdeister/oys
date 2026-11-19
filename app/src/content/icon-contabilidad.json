@@ -2,17 +2,4163 @@
  "id": "icon-contabilidad",
  "titulo": "Contabilidad general",
  "sesion": "",
- "resumen": "Empiezas viendo qué genera contabilizar una factura (asiento, cartera de efectos y registro fiscal), cómo se hace una factura directa, cuándo rectificar o sustituir y por qué una factura no contabiliza. Después localizas la estructura del diario, los periodos y las plantillas, los procesos de cierre y apertura del ejercicio, los balances, las cuentas anuales XLS, el motor de consultas Excel y la consolidación.",
+ "resumen": "Montas y usas la contabilidad de una empresa de principio a fin. Primero ves cómo se organiza (orden de carga de Finanzas, diarios, periodos y plantillas) y das de alta el plan de cuentas, los auxiliares y la analítica. Después escribes, contabilizas, copias y consultas asientos manuales. Luego ves qué asientos dejan las facturas y cómo se corrigen, y terminas con el cierre y la apertura del ejercicio, los balances y la consolidación.",
  "circuito": [
-  "Contabilizar facturas",
-  "Corregir facturas",
-  "Diario y periodos",
-  "Plantillas de contabilización",
-  "Cierre y apertura",
-  "Balances",
-  "Consolidación"
+  "Orden de carga y diarios",
+  "Plan de cuentas",
+  "Auxiliares y analítica",
+  "Asientos manuales",
+  "Consultas: mayor y saldos",
+  "Facturas que contabilizan",
+  "Cierre y balances"
+ ],
+ "navegacion": [
+  {
+   "id": "parametrizacion-nav",
+   "titulo": "Cómo moverte por el ERP",
+   "paraQueSirve": "Antes de contabilizar nada, la empresa define su estructura contable: el plan de cuentas, los auxiliares (un segundo nivel de detalle dentro de una cuenta, por ejemplo por empleado) y la analítica (proyectos y secciones). Aquí aprendes a llegar a cada pantalla y a manejar sus elementos comunes.",
+   "ruta": [
+    "Finanzas",
+    "Maestros"
+   ],
+   "explicacion": [
+    "Si nunca has visto contabilidad, quédate con esto: cada operación de la empresa se anota en un asiento, que reparte el importe en dos columnas, el Debe (izquierda) y el Haber (derecha), que siempre suman lo mismo. Cada importe se anota en una cuenta del plan de cuentas, la lista numerada de «cajones» donde se acumulan los importes (62900 otros servicios, 57200 bancos, 70000 ventas…). Ejemplo: pagas 100 € de material de oficina por el banco → Debe 62900 Otros servicios 100 € / Haber 57200 Bancos 100 €. Lo que montas en este módulo (cuentas, auxiliares, proyectos y secciones) son los cajones y las etiquetas que después usarán esos asientos.",
+    "Todo lo que se crea en estos ejercicios se usa después en los asientos, las facturas y los informes: una cuenta mal definida obliga a corregir asientos más tarde, así que conviene entender cada campo.",
+    "Se entra con el menú lateral (icono ☰ arriba a la izquierda): Finanzas › Maestros › … También puedes usar el buscador superior «Buscar» (Cmd/Ctrl + K) y escribir el nombre de la pantalla.",
+    "Las pantallas de maestros se abren en modo lista (la de cuentas contables muestra antes un filtro de consulta). Para abrir la ficha de un registro, pulsa su número de fila (1, 2…) en la columna de la izquierda; si pulsas el código subrayado sale un menú de pantallas relacionadas. Para crear un registro, pulsa el botón azul oscuro «Añadir …» arriba a la derecha: desde la lista abre directamente la ventana de alta en blanco; desde una ficha despliega «Nuevo» (formulario en blanco) o «Nuevo como» (copia del registro que estás viendo).",
+    "El alta se rellena en una ventana y se guarda con «Guardar» abajo a la derecha. Los cambios en una ficha ya existente se guardan con el icono del disquete de la barra superior. En los dos casos sale el aviso verde «Éxito».",
+    "Los campos con lista (plan contable, grupo auxiliar, sección…) son de autocompletar: escribes el código y eliges la fila. Debajo del campo aparece la descripción del valor elegido.",
+    "Los campos obligatorios llevan un asterisco rojo en la etiqueta. Si guardas sin ellos sale «Hay errores en los datos del formulario» y el campo que falta se marca en rojo.",
+    "En los ejemplos se usan códigos con tus iniciales ({INI}): cuenta «Gastos varios {INI}», grupo auxiliar {INI}EMP, proyecto {INI}1, sección {INI}ADM. Las capturas muestran las iniciales del autor del manual (EC); tú usa las tuyas.",
+    "La base TUTORIAL es compartida: en las listas verás también los registros de otros alumnos y los del autor del manual (iniciales EC). No los modifiques; trabaja solo con los que llevan tus iniciales."
+   ],
+   "campos": [],
+   "pasos": [
+    {
+     "texto": "Abre el menú lateral con el icono ☰ y navega por Finanzas › Maestros › … hasta la pantalla que necesites",
+     "detalle": "También puedes pulsar Cmd/Ctrl + K y escribir el nombre de la pantalla en el buscador «Buscar»."
+    },
+    {
+     "texto": "Para crear un registro, pulsa el botón azul oscuro «Añadir …» arriba a la derecha",
+     "detalle": "Desde la lista se abre la ventana de alta en blanco. Desde una ficha el botón despliega «Nuevo» (formulario en blanco) o «Nuevo como» (copia el registro que estás viendo)."
+    },
+    {
+     "texto": "Guarda un alta con «Guardar» abajo a la derecha y un cambio en una ficha con el icono del disquete",
+     "detalle": "En ambos casos debe salir el aviso verde «Éxito»."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Las listas son editables en la propia rejilla: un clic sobre una celda (por ejemplo la descripción de otra cuenta) abre su edición en línea."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Para consultar, abre el registro con el enlace del código. Si has abierto una celda por error, pulsa Esc sin escribir nada y no se guarda ningún cambio."
+    }
+   ]
+  }
  ],
  "ejercicios": [
+  {
+   "id": "parametrizacion-icon-1",
+   "numero": 1,
+   "titulo": "Cargar las tablas de Finanzas en orden",
+   "objetivo": "Verás las áreas de Finanzas y el orden lógico de carga de maestros para dejar el entorno contable bien parametrizado.",
+   "concepto": "Axional Finanzas es el núcleo económico-financiero: registra, procesa y presenta la información contable del ciclo de negocio y se nutre de datos de otros módulos. Antes de parametrizar debes decidir el entorno empresarial (unisociedad o multisociedad, multipaís, consolidación, contabilidad de gestión) y después cargas los maestros en un orden lógico: permisos, tercero de empresa, plan contable/PGC, empresa, ejercicio y periodos, cuentas, numeradores, terceros funcionales, tipologías y plantillas de contabilización. Algunas dependencias son explícitas en la documentación y otras se deducen de los campos de cada maestro.\n\nPalabras que salen aquí: el ejercicio es el año contable (2026) y se divide en 12 periodos, uno por mes; una factura del 15-03-2026 cae en el ejercicio 2026, periodo 3. El tercero es la ficha única de un cliente o proveedor. Un numerador es la regla que da número a los documentos: con la máscara {INI}#yy-#n la primera de 2026 sale {INI}26-000001. Una tipología es una clase de documento (factura directa, factura de abono…) y la plantilla de contabilización dice qué asiento genera cada documento: una factura de compra de 100 € + 21 € de IVA → Debe compras 100 y IVA soportado 21, Haber proveedor 121. La consolidación suma las contabilidades de varias empresas de un grupo como si fueran una sola.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "parametrizacion-icon-1-vision-general",
+     "titulo": "Visión general de Finanzas y qué produce contabilizar",
+     "paraQueSirve": "Entender el papel central de Finanzas, sus áreas y los efectos de la contabilización sobre los documentos.",
+     "ruta": [
+      "Finanzas",
+      "Visión general"
+     ],
+     "explicacion": [
+      "Axional Finanzas es un conjunto de utilidades que permiten registrar, procesar y presentar la información económico-financiera del ciclo de negocio. Está compuesto por áreas totalmente integradas entre sí que se nutren de datos de otros módulos y del conjunto de repositorios de datos maestros. Ocupa una posición central respecto a las distintas funcionalidades.",
+      "Áreas documentadas: Costes, Impuestos, Consolidación, Saldos contables, Cartera de cobros y pagos, Tesorería, Activos permanentes, Inversiones, Financiación largo plazo, Caja, Presupuesto económico y Presupuesto financiero.",
+      "Efectos de contabilizar: el documento origen queda marcado como no editable; el documento permite, si se tienen permisos, navegar entre él y los asientos contables generados; y prácticamente todas las áreas permiten revertir las contabilizaciones si las restricciones lo permiten. En cada área o módulo es posible definir distintos tipos de entradas contables."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la ruta «Finanzas» y despliega el menú para ver las áreas listadas"
+      },
+      {
+       "texto": "Identifica al menos tres áreas que se nutren de otros módulos, como Costes, Cartera y Tesorería"
+      },
+      {
+       "texto": "Abre Finanzas › Facturación › Compras › Fact. de compras y mira la columna «Estado» de la lista",
+       "detalle": "Verás facturas en estado Validada. Cuando una factura se contabiliza ya no se puede editar y desde ella se puede ir a su asiento; esa práctica completa está en el módulo Contabilidad general."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no muestra campos de pantalla en esta vista general; se trata de una página introductoria."
+      }
+     ]
+    },
+    {
+     "id": "parametrizacion-icon-1-decisiones-previas",
+     "titulo": "Decisiones previas de maestros",
+     "paraQueSirve": "Definir el entorno empresarial antes de tocar los maestros para evitar reprocesos.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Visión general"
+     ],
+     "explicacion": [
+      "La configuración inicial de Axional Finanzas comienza por decisiones que condicionan todo lo demás: ¿trabajarás en una sola sociedad o en varias? ¿En un solo país o en varios? ¿Compartirás datos maestros entre empresas? ¿Necesitas consolidación contable, contabilidad de gestión o una codificación concreta?",
+      "Un maestro es una tabla de datos fijos que se da de alta una vez y se reutiliza en todos los documentos (empresas, terceros, cuentas, monedas…). Los maestros se agrupan en cuatro ámbitos: generales (diarios, monedas, calendarios...), terceros, empresas y usuarios. Además, hay workflow y maestros propios de cada área."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Revisa la página de Maestros y localiza los cuatro ámbitos de datos maestros"
+      },
+      {
+       "texto": "Contesta esas preguntas para la base TUTORIAL: abre Finanzas › Maestros › Parametrización › Empresas (o pulsa Cmd/Ctrl + K y escribe «Empresas») y anota cuántas empresas hay y de qué país son",
+       "detalle": "Hay dos: 0 «Deister Software» y DIS «Distribuidora S.L.», las dos en España (columna País = ESP). La demo es, por tanto, multisociedad en un solo país.",
+       "imagen": "parametrizacion-n-04.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no detalla formularios aquí; es una página conceptual. La lista de empresas de la demo sirve para contestar las preguntas."
+      }
+     ]
+    },
+    {
+     "id": "parametrizacion-icon-1-orden-carga",
+     "titulo": "Orden de carga: lo explícito y lo deducido",
+     "paraQueSirve": "Conocer la secuencia de maestros y separar las dependencias documentadas de las que se deducen de los campos.",
+     "ruta": [
+      "Finanzas",
+      "Maestros"
+     ],
+     "explicacion": [
+      "La documentación establece de forma explícita varias dependencias: primero se define la agrupación de permisos, luego los permisos y, si aplica, sus valores. Para dar de alta una empresa, antes debe existir el tercero de la empresa. La empresa debe escoger un plan contable ya dado de alta. Un tercero, aunque esté Activo, no es completamente funcional hasta definir direcciones, relaciones contables (las cuentas contables que usa: por ejemplo la del proveedor), domiciliaciones (su cuenta bancaria para cobros y pagos), condiciones de pago (plazos, por ejemplo a 30 días) y contactos. Para que un ejercicio pueda utilizarse contablemente debe tener sus periodos (contables y de impuestos), que se generan automáticamente al crearlo. Antes de crear cualquier documento de compras o ventas debe existir al menos una tipología. Los numeradores se asignan a los tipos de documento. Para contabilizar se requiere una plantilla por cada origen de impactos.",
+      "De los campos se deducen otras dependencias: la empresa referencia tercero, moneda, idioma y zona impositiva; las cuentas financieras de empresa referencian proyecto, sección, cuenta financiera, banco, entidad, calendario, línea financiera y agrupación de cuentas; el tercero referencia tipo de identificación fiscal, país, idioma, clave fiscal, tipo de tercero, holding, responsable y workflow; las direcciones, datos bancarios, condiciones de pago, mandatos SEPA (la autorización firmada del cliente para cargarle recibos en su cuenta) y contactos referencian sus propios maestros; el ejercicio referencia empresa y usuario; las tipologías referencian tabla origen y numerador; las plantillas referencian etiquetas tabla.campo y hojas destino capuntes, cimpcont, cefectos.",
+      "Orden recomendado de carga: permisos por grupo → tercero de empresa → plan contable/PGC → empresa → ejercicio y periodos → cuentas → numeradores por tipo de documento → terceros funcionales (con auxiliares mínimos) → tipologías → plantillas de contabilización."
+     ],
+     "campos": [
+      {
+       "campo": "Agrupación de permisos",
+       "significado": "primer nivel de permisos; contiene permisos",
+       "ejemplo": "Finanzas"
+      },
+      {
+       "campo": "Empresa",
+       "significado": "código de empresa (máx. 4 caracteres)",
+       "ejemplo": "0 (Deister Software en TUTORIAL)"
+      },
+      {
+       "campo": "Tercero (en empresa)",
+       "significado": "tercero previamente definido que autocompleta datos fiscales",
+       "ejemplo": "el tercero de la propia empresa"
+      },
+      {
+       "campo": "Ejercicio",
+       "significado": "año contable; al crearlo se generan sus periodos",
+       "ejemplo": "2026"
+      },
+      {
+       "campo": "Numerador",
+       "significado": "expresión de máscara de serie y máscara de número",
+       "ejemplo": "{INI}#yy-#n → {INI}26-000001"
+      },
+      {
+       "campo": "Plantilla de contabilización",
+       "significado": "patrón de contabilización por origen",
+       "ejemplo": "una por origen: facturas de compra, de venta, cobros…"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas › Maestros › Parametrización › Grupos de permisos (o busca «Grupos de permisos» con Cmd/Ctrl + K) y localiza una agrupación, por ejemplo capuntes «CONTABILIDAD GENERAL»",
+       "imagen": "parametrizacion-icon-001.webp",
+       "detalle": "Cada fila es una agrupación de permisos de un módulo (Finanzas, Gestión). Primero existe la agrupación; dentro de ella se definen después los permisos."
+      },
+      {
+       "texto": "Abre Finanzas › Maestros › Cuentas contables › Planes contables y comprueba que existe el plan ES «PGE 2008»",
+       "imagen": "parametrizacion-n-07.webp",
+       "detalle": "La demo tiene cuatro planes (AD, ES, PE, PT). La columna «Formato cuenta contable» (#####.#####) explica por qué las cuentas tienen 5 dígitos, un punto y otros 5.",
+       "hotspot": {
+        "x": 5.3,
+        "y": 16.4,
+        "w": 29.3,
+        "h": 3.1,
+        "etiqueta": "ES · PGE 2008"
+       }
+      },
+      {
+       "texto": "En Finanzas › Maestros › Parametrización › Empresas mira la columna «Tercero»: cada empresa apunta a un tercero",
+       "imagen": "parametrizacion-n-04.webp",
+       "detalle": "La empresa 0 usa el tercero 0 y la DIS el tercero 00003. Ese tercero tuvo que existir antes de dar de alta la empresa.",
+       "hotspot": {
+        "x": 40.0,
+        "y": 10.9,
+        "w": 3.5,
+        "h": 8.6,
+        "etiqueta": "Tercero"
+       }
+      },
+      {
+       "texto": "Abre Finanzas › Maestros › Cierres › Ejercicios contables y pulsa el número de fila del ejercicio 2026 de la empresa 0",
+       "imagen": "parametrizacion-n-05.webp",
+       "detalle": "La ficha muestra «Periodos contables (12)», uno por mes de 01-01-2026 a 31-12-2026 (los nombres de mes salen en catalán: gener, febrer…), y debajo «Periodos fiscales (12)». Se generaron al crear el ejercicio.",
+       "hotspot": {
+        "x": 13.2,
+        "y": 35.5,
+        "w": 11.4,
+        "h": 3.0,
+        "etiqueta": "Periodos contables (12)"
+       }
+      },
+      {
+       "texto": "En la captura de una plantilla de contabilización (libro XLS), localiza las pestañas de abajo: Factura, capuntes, cimpcont y cefectos",
+       "imagen": "parametrizacion-icon-005.webp",
+       "detalle": "Cada pestaña es una hoja. «Factura» es la hoja origen (los datos del documento); las otras son hojas destino: capuntes = apuntes (líneas) del asiento, cimpcont = registro de impuestos (IVA), cefectos = cartera de cobros y pagos. Lo ves con detalle en el bloque «Distinguir Finanzas sola o integrada con gestión».",
+       "hotspot": {
+        "x": 12.9,
+        "y": 95.8,
+        "w": 22.1,
+        "h": 2.4,
+        "etiqueta": "Hojas Factura, capuntes, cimpcont, cefectos"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las dependencias deducidas de campos no aparecen como secuencia literal en la documentación; se desprenden de las referencias entre maestros."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué efecto NO produce la contabilización de un documento?",
+     "opciones": [
+      "Elimina el documento origen",
+      "Permite navegar al asiento si hay permisos",
+      "Marca el documento origen como no editable",
+      "Permite revertir en casi todas las áreas"
+     ],
+     "correcta": 0,
+     "explicacion": "La contabilización marca no editable, permite navegar y casi siempre se puede revertir, pero no elimina el documento."
+    },
+    {
+     "pregunta": "¿Cuál es el primer paso para definir permisos por grupo de usuarios?",
+     "opciones": [
+      "Asignar al grupo de usuarios",
+      "Definir la agrupación de permisos",
+      "Definir el permiso",
+      "Asignar valores"
+     ],
+     "correcta": 1,
+     "explicacion": "Primero se define la agrupación; luego los permisos y, si aplica, sus valores."
+    },
+    {
+     "pregunta": "¿Qué debe existir antes de dar de alta una empresa?",
+     "opciones": [
+      "Un ejercicio",
+      "Un numerador",
+      "El tercero de la empresa y el plan contable",
+      "Un asiento de apertura"
+     ],
+     "correcta": 2,
+     "explicacion": "Primero se da de alta la empresa como tercero, y la empresa elige un plan contable que ya debe existir."
+    },
+    {
+     "pregunta": "¿Qué se genera automáticamente al crear el primer ejercicio?",
+     "opciones": [
+      "Las cuentas contables",
+      "Los numeradores",
+      "Los asientos de apertura",
+      "Doce periodos contables y doce periodos de impuestos"
+     ],
+     "correcta": 3,
+     "explicacion": "Al crear el primer ejercicio se generan doce periodos contables y doce periodos de impuestos."
+    },
+    {
+     "pregunta": "¿Cómo se relacionan las tres entidades con las que se define un permiso?",
+     "opciones": [
+      "Los permisos pertenecen a una agrupación y los valores pertenecen a un permiso",
+      "Los valores pertenecen a una agrupación y las agrupaciones a un permiso",
+      "Las agrupaciones pertenecen a un grupo de usuarios y no tienen permisos",
+      "Todo permiso necesita valores, aunque sea de tipo Verdadero/Falso"
+     ],
+     "correcta": 0,
+     "explicacion": "Agrupación de permisos, Permisos y Valores están relacionados jerárquicamente; los permisos de tipo Verdadero/Falso no necesitan valores."
+    }
+   ],
+   "checklist": [
+    "Abre «Finanzas» y localiza al menos cinco áreas del menú (Costes, Impuestos, Cartera, Tesorería, Caja).",
+    "Abre la página de Maestros y anota los cuatro ámbitos de datos maestros.",
+    "En permisos por grupo, abre una agrupación y comprueba que está definida antes que los permisos.",
+    "Dentro de esa agrupación, localiza un permiso con valores.",
+    "Abre la ficha de una empresa y comprueba que el campo «Tercero» está informado.",
+    "Abre Finanzas › Maestros › Cierres › Ejercicios contables, abre el ejercicio 2026 y comprueba que tiene 12 periodos contables y 12 periodos fiscales.",
+    "En planes contables, comprueba que existe el plan ES «PGE 2008».",
+    "En cuentas contables, busca una cuenta de tercero y anota si fue generada automáticamente.",
+    "En numeradores de documentos, localiza la tabla de tipos de factura de venta y su numerador asignado.",
+    "En el maestro de terceros, abre un tercero activo y revisa sus auxiliares mínimos: direcciones, relaciones contables, condiciones de pago y contactos.",
+    "En tipologías de documento de gestión, abre una tipología con origen y revisa «Tabla origen».",
+    "En plantillas de contabilización, abre un modelo XLS y localiza las hojas destino capuntes, cimpcont y cefectos."
+   ],
+   "problemas": [
+    {
+     "problema": "Al intentar dar de alta una empresa, no autocompleta los datos fiscales.",
+     "solucion": "Verifica que el tercero de la empresa existe previamente en el maestro de terceros y que lo seleccionas correctamente."
+    },
+    {
+     "problema": "Al crear un ejercicio, no se generan los periodos.",
+     "solucion": "Comprueba que estás creando el primer ejercicio; si es posterior, los periodos se copian del anterior. Revisa la tabla de periodos contables."
+    },
+    {
+     "problema": "La serie de numerador incluye #d pero el número no, y hay duplicados.",
+     "solucion": "Añade #d también a la máscara de número o elimina #d de la serie para evitar contadores independientes."
+    }
+   ]
+  },
+  {
+   "id": "parametrizacion-1",
+   "numero": 2,
+   "titulo": "Dar de alta una cuenta del grupo 6 «Gastos varios»",
+   "objetivo": "Crearás la cuenta de gastos varios en el plan contable para registrar ese gasto por separado y usarlo en asientos y facturas.",
+   "concepto": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia cuando se quiere ver por separado un tipo de gasto en el balance de sumas y saldos (la lista de todas las cuentas con lo anotado en el Debe, en el Haber y la diferencia o saldo) y en la cuenta de resultados (ingresos menos gastos: 10.000 € de ventas − 7.000 € de gastos = 3.000 € de beneficio). A partir de ese momento se puede usar en asientos, facturas de compra y plantillas contables.\n\nEn la base TUTORIAL hay cuatro planes contables (AD, ES, PE y PT); el español es «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000). Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "parametrizacion-1-cuenta",
+     "titulo": "Alta de la cuenta 62999.00000",
+     "paraQueSirve": "Las cuentas del grupo 6 recogen gastos. Se crea una cuenta propia para ver por separado un tipo de gasto en balance de sumas y saldos y cuenta de resultados, y usarla en asientos, facturas de compra y plantillas contables.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Cuentas contables (objeto ccuentas)"
+     ],
+     "explicacion": [
+      "Primero conviene mirar cómo están definidas las cuentas parecidas. Al abrir la pantalla se muestra un filtro de consulta: escribe 629* en «Cuenta» (el asterisco significa «que empieza por») y pulsa «Ejecutar consulta».",
+      "En la base TUTORIAL hay cuatro planes contables (AD, ES, PE y PT); el español es «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000). En la lista de cuentas el plan andorrano sale como «PG Andorra 2012».",
+      "Las cuentas 629 del plan PGE 2008 son todas de tipo Costes, Activar Ambos, Activa C, grupo Standard, 999 días y posición Debe. La nueva cuenta seguirá el mismo modelo.",
+      "En Plan contable se escribe el código del plan (ES), no su descripción. Al guardar sale «Éxito» y la cuenta aparece en la lista."
+     ],
+     "campos": [
+      {
+       "campo": "Plan contable *",
+       "significado": "Plan de cuentas al que pertenece la cuenta. Se escribe el código del plan (ES), no su descripción.",
+       "ejemplo": "ES (PGE 2008)"
+      },
+      {
+       "campo": "Posición *",
+       "significado": "Lado en el que la cuenta suele acumular importe (su saldo habitual). Un gasto se anota en el Debe: si pagas 100 € de luz, 100 € van al Debe de la cuenta de gasto.",
+       "ejemplo": "Debe"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo las cuentas abiertas admiten apuntes. Una cuenta cerrada no se puede usar en asientos nuevos.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Código de la cuenta, con el formato del plan (5 dígitos, punto, 5 dígitos).",
+       "ejemplo": "62999.00000"
+      },
+      {
+       "campo": "Descripción cuenta *",
+       "significado": "Nombre que sale en los listados, el mayor y el balance.",
+       "ejemplo": "Gastos varios {INI}"
+      },
+      {
+       "campo": "Grupo *",
+       "significado": "Si es una cuenta de parte relacionada o vinculada (para la memoria). Lo normal es Standard.",
+       "ejemplo": "Standard"
+      },
+      {
+       "campo": "Grupo auxiliar",
+       "significado": "Grupo de códigos auxiliares que pedirá la cuenta al contabilizar. Se rellena en el bloque «Asignar el grupo auxiliar a la cuenta».",
+       "ejemplo": "(vacío por ahora)"
+      },
+      {
+       "campo": "Tipo *",
+       "significado": "Comportamiento de la cuenta: Normal, Terceros (clientes y proveedores), Entidades financieras (bancos), Costes (cuentas de gestión de los grupos 6 y 7) o Analítica (grupo 9). Una cuenta de gastos es de Costes.",
+       "ejemplo": "Costes"
+      },
+      {
+       "campo": "Activa",
+       "significado": "Qué auxiliares activa la cuenta al contabilizar: la ayuda del campo indica impuestos, cartera y costes; C = costes, como el resto de la 629.",
+       "ejemplo": "C"
+      },
+      {
+       "campo": "Activar",
+       "significado": "En qué lado del asiento se activan esos auxiliares: Debe, Haber o Ambos.",
+       "ejemplo": "Ambos"
+      },
+      {
+       "campo": "Días máximos *",
+       "significado": "Días sin movimiento a partir de los cuales la cuenta se considera inactiva. 999 = sin límite práctico.",
+       "ejemplo": "999"
+      },
+      {
+       "campo": "Periodificable *",
+       "significado": "Si los importes de la cuenta se pueden repartir entre varios periodos (periodificar): un seguro anual de 1.200 € pagado en enero se lleva a gasto a 100 € por mes. Para gastos varios, No.",
+       "ejemplo": "No"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta: aparece el filtro de consulta. Escribe 629* en «Cuenta»",
+       "detalle": "El asterisco significa «que empieza por»: 629* trae todas las cuentas que empiezan por 629.",
+       "imagen": "parametrizacion-n-01.webp",
+       "hotspot": {
+        "x": 42.7,
+        "y": 21.7,
+        "w": 13.5,
+        "h": 6.0,
+        "etiqueta": "Cuenta = 629*"
+       }
+      },
+      {
+       "texto": "Pulsa «Ejecutar consulta» para ver las cuentas parecidas",
+       "detalle": "Fíjate en que las del plan PGE 2008 son todas Costes, Ambos, C, Standard, 999 y Debe. La última fila, 62999.00000 «Gastos varios EC Administración», es la que creó el autor del manual.",
+       "imagen": "parametrizacion-d-119.webp",
+       "hotspot": {
+        "x": 21.8,
+        "y": 6.0,
+        "w": 10.2,
+        "h": 3.6,
+        "etiqueta": "Cuenta Es igual a 629*"
+       }
+      },
+      {
+       "texto": "Pulsa el botón azul oscuro «Añadir cuenta», arriba a la derecha",
+       "detalle": "Se abre la ventana «CUENTAS CONTABLES».",
+       "imagen": "parametrizacion-d-120.webp",
+       "hotspot": {
+        "x": 86.8,
+        "y": 6.0,
+        "w": 6.6,
+        "h": 3.6,
+        "etiqueta": "Añadir cuenta"
+       }
+      },
+      {
+       "texto": "En Plan contable escribe ES y elige la fila «ES · PGE 2008» de la lista",
+       "detalle": "Debajo del campo debe aparecer «ES».",
+       "imagen": "parametrizacion-d-121.webp",
+       "hotspot": {
+        "x": 16.4,
+        "y": 17.4,
+        "w": 19.6,
+        "h": 5.1,
+        "etiqueta": "Plan contable"
+       }
+      },
+      {
+       "texto": "Escribe la Cuenta 62999.00000 y la Descripción «Gastos varios {INI}». Deja Debe, Abierto y Standard",
+       "detalle": "Los dos campos están en la segunda fila del bloque «Identificación». Posición (Debe), Estado (Abierto) y Grupo (Standard) ya vienen rellenos en la primera y la segunda fila.",
+       "imagen": "parametrizacion-d-121.webp",
+       "hotspot": {
+        "x": 16.6,
+        "y": 25.0,
+        "w": 47.8,
+        "h": 5.0,
+        "etiqueta": "Cuenta y Descripción cuenta"
+       }
+      },
+      {
+       "texto": "En Información general elige Tipo «Costes»",
+       "detalle": "El bloque «Información general» está debajo de «Identificación». Abre la lista Tipo: cada tipo explica su uso; «Costes» es el de las cuentas de gestión de los grupos 6 y 7.",
+       "imagen": "parametrizacion-d-122.webp",
+       "hotspot": {
+        "x": 16.4,
+        "y": 62.8,
+        "w": 22.8,
+        "h": 5.4,
+        "etiqueta": "Costes"
+       }
+      },
+      {
+       "texto": "Escribe C en Activa y elige «Ambos» en Activar. Deja 999 días",
+       "detalle": "Activa y Activar están a la derecha de Tipo, en la misma fila; Días máximos está debajo y ya trae 999. La alta queda con plan PGE 2008, cuenta 62999.00000, Costes, Activa C y Activar Ambos.",
+       "imagen": "parametrizacion-d-123.webp",
+       "hotspot": {
+        "x": 38.6,
+        "y": 45.6,
+        "w": 22.8,
+        "h": 5.1,
+        "etiqueta": "Activa"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "detalle": "Sale «Éxito» y la cuenta aparece en la lista.",
+       "imagen": "parametrizacion-d-124.webp",
+       "hotspot": {
+        "x": 76.8,
+        "y": 89.3,
+        "w": 6.9,
+        "h": 4.0,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: filtra otra vez por 629* y la cuenta 62999.00000 aparece en la última fila con Costes, Ambos, C, Standard, 999 y Debe",
+       "imagen": "parametrizacion-d-125.webp",
+       "detalle": "La captura se tomó al final del tema: por eso la descripción ya lleva «Administración» (el bloque «Cambiar la descripción de la cuenta») y el grupo auxiliar ECEMP (el bloque «Asignar el grupo auxiliar a la cuenta»). Tú verás «Gastos varios {INI}» y el grupo auxiliar vacío."
+      },
+      {
+       "texto": "Error típico: si en Plan contable escribes «PGE» a mano, el plan no es válido y el campo se marca «Error en la validación»",
+       "detalle": "Así se ve en la captura. Se evita escribiendo el código ES y eligiendo la fila de la lista.",
+       "imagen": "parametrizacion-d-126.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Las capturas muestran las iniciales EC del autor del manual; tú usa las tuyas ({INI})."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Si en Plan contable se escribe la descripción (PGE) en lugar del código, la lista no encuentra nada, el campo queda en rojo con «Error en la validación» y al escribir después la cuenta puede salir la ventana «Se ha producido un error · TypeError: Cannot read property 'split' of null», porque la pantalla no sabe qué formato de cuenta aplicar."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Cierra el aviso, borra el texto del plan, escribe ES y sal del campo (Tab) o elige la fila de la lista. Debajo del campo debe aparecer «ES» y el plan «PGE 2008»; entonces la cuenta se acepta."
+      },
+      {
+       "tipo": "problema",
+       "texto": "La base TUTORIAL es compartida: si la cuenta 62999.00000 ya existe (la creó el autor del manual u otro alumno), no puedes darla de alta otra vez con el mismo código."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Usa otro número libre del mismo grupo, por ejemplo 62999.00001 (filtra antes por 62999* para ver cuáles están ocupados), y usa ese código en los bloques «Cambiar la descripción de la cuenta» y «Asignar el grupo auxiliar a la cuenta»."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué código de plan debes escribir en el campo Plan contable para usar el plan español?",
+     "opciones": [
+      "PGE",
+      "ES",
+      "PGE 2008",
+      "PG Andorra 2012"
+     ],
+     "correcta": 1,
+     "explicacion": "Se escribe el código del plan (ES), no su descripción; si escribes PGE el campo da «Error en la validación»."
+    },
+    {
+     "pregunta": "¿De qué tipo es una cuenta de gastos del grupo 6 en la base TUTORIAL?",
+     "opciones": [
+      "Normal",
+      "Terceros",
+      "Costes",
+      "Analítica"
+     ],
+     "correcta": 2,
+     "explicacion": "Costes es el tipo de las cuentas de gestión de los grupos 6 y 7; así piden proyecto y sección al contabilizar."
+    },
+    {
+     "pregunta": "¿Qué formato tienen los códigos de cuenta del plan PGE 2008 en la demo?",
+     "opciones": [
+      "4 + 6 dígitos",
+      "5 + 5 dígitos con punto, como 62999.00000",
+      "8 dígitos seguidos",
+      "3 dígitos"
+     ],
+     "correcta": 1,
+     "explicacion": "Las cuentas tienen 5 dígitos, un punto y otros 5 dígitos, por ejemplo 62900.00000."
+    },
+    {
+     "pregunta": "¿Qué posición lleva una cuenta de gastos?",
+     "opciones": [
+      "Haber",
+      "Debe",
+      "Ambos",
+      "Ninguna"
+     ],
+     "correcta": 1,
+     "explicacion": "Un gasto se carga en el Debe."
+    },
+    {
+     "pregunta": "¿Cómo compruebas que la cuenta se ha creado bien?",
+     "opciones": [
+      "Filtrando la lista por 629*: aparece al final con los mismos valores que el resto",
+      "Cerrando sesión",
+      "Mirando el balance de sumas y saldos",
+      "No se puede comprobar"
+     ],
+     "correcta": 0,
+     "explicacion": "Al filtrar por 629* la cuenta aparece al final con los mismos valores que el resto de la 629."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Cuentas contables › Cuentas contables (objeto ccuentas)",
+    "Escribes 629* en «Cuenta», pulsas «Ejecutar consulta» y ves que las cuentas son Costes, Ambos, C, Standard, 999 y Debe",
+    "Pulsas «Añadir cuenta» (botón azul oscuro arriba a la derecha) y se abre la ventana «CUENTAS CONTABLES»",
+    "En Plan contable escribes ES y eliges «ES · PGE 2008»",
+    "Escribes la cuenta 62999.00000 y la descripción «Gastos varios {INI}»",
+    "Dejas Posición Debe, Estado Abierto y Grupo Standard",
+    "Eliges Tipo «Costes», escribes C en Activa y eliges «Ambos» en Activar",
+    "Dejas Días máximos en 999",
+    "Pulsas «Guardar» y sale el aviso «Éxito»",
+    "Filtras por 629* y la cuenta aparece al final de la lista con los mismos valores que el resto"
+   ],
+   "problemas": [
+    {
+     "problema": "Al escribir PGE en Plan contable el campo se marca «Error en la validación» y puede salir «TypeError: Cannot read property 'split' of null».",
+     "solucion": "Cierra el aviso, borra el texto, escribe ES y sal del campo (Tab) o elige la fila de la lista; debajo debe aparecer «ES» y el plan «PGE 2008»."
+    },
+    {
+     "problema": "La cuenta 62999.00000 ya existe porque la base TUTORIAL es compartida.",
+     "solucion": "Filtra por 62999* y usa un número libre, por ejemplo 62999.00001; usa ese código en los ejercicios siguientes."
+    }
+   ]
+  },
+  {
+   "id": "parametrizacion-2",
+   "numero": 3,
+   "titulo": "Cambiar la descripción de la cuenta",
+   "objetivo": "Modificarás la descripción de una cuenta contable para que los listados muestren el texto correcto sin alterar el código ni los apuntes.",
+   "concepto": "La descripción de una cuenta se puede cambiar en cualquier momento, incluso si ya tiene apuntes: es solo el texto que sale en los listados. Lo que no se cambia así es el código: para renumerar una cuenta con movimientos hay una pantalla específica, Finanzas › Maestros › Cuentas contables › Cambio código de cuenta.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "parametrizacion-2-descripcion",
+     "titulo": "Modificar la descripción",
+     "paraQueSirve": "La descripción es solo el texto que sale en listados, mayor y balance, y se puede cambiar siempre. El código de una cuenta con movimientos se renumera en otra pantalla: Finanzas › Maestros › Cuentas contables › Cambio código de cuenta.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Cuentas contables (objeto ccuentas)"
+     ],
+     "explicacion": [
+      "Se abre la ficha de la cuenta y se guarda con el disquete de la barra superior. Si la ficha se abre en una ventana flotante, también se puede ver en página completa (aparece el menú lateral con la ruta).",
+      "Mientras hay un cambio sin guardar, el campo modificado muestra una barra vertical azul oscuro a su izquierda y se activa el icono del disquete de la barra superior."
+     ],
+     "campos": [
+      {
+       "campo": "Descripción cuenta *",
+       "significado": "Nombre que sale en los listados, el mayor y el balance.",
+       "ejemplo": "Gastos varios {INI} Administración"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Filtra la lista por 62999* y abre la cuenta 62999.00000 pulsando su número de fila (columna de la izquierda)",
+       "detalle": "Si pulsas el código subrayado sale un menú de pantallas relacionadas: elige «Cuentas contables» para abrir la ficha."
+      },
+      {
+       "texto": "Cambia la Descripción cuenta a «Gastos varios {INI} Administración»",
+       "detalle": "Mientras no guardas, el campo muestra una barra vertical azul oscuro a su izquierda. En la captura el cambio ya está guardado, por eso no se ve.",
+       "imagen": "parametrizacion-d-127.webp",
+       "hotspot": {
+        "x": 26.9,
+        "y": 23.4,
+        "w": 35.2,
+        "h": 5.4,
+        "etiqueta": "Descripción cuenta"
+       }
+      },
+      {
+       "texto": "Pulsa el icono del disquete de la barra superior",
+       "detalle": "Sale «Éxito».",
+       "imagen": "parametrizacion-d-128.webp",
+       "hotspot": {
+        "x": 90.0,
+        "y": 6.0,
+        "w": 2.5,
+        "h": 3.6,
+        "etiqueta": "Guardar (disquete)"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: la ficha muestra la nueva descripción y la barra de cambio pendiente ya no aparece",
+       "imagen": "parametrizacion-d-129.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Para cambiar el código de una cuenta con movimientos usa la pantalla «Cambio código de cuenta»; la descripción se cambia directamente en la ficha."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Se puede cambiar la descripción de una cuenta que ya tiene apuntes?",
+     "opciones": [
+      "No, nunca",
+      "Sí, es solo el texto de los listados",
+      "Solo si está cerrada",
+      "Solo con permiso especial del plan"
+     ],
+     "correcta": 1,
+     "explicacion": "La descripción se puede cambiar en cualquier momento, incluso con apuntes."
+    },
+    {
+     "pregunta": "¿Cómo se guardan los cambios en una ficha existente?",
+     "opciones": [
+      "Con «Guardar» de la ventana de alta",
+      "Con el icono del disquete de la barra superior",
+      "Se guardan solos",
+      "Con Cmd/Ctrl + K"
+     ],
+     "correcta": 1,
+     "explicacion": "En las fichas ya existentes se guarda con el disquete de la barra superior."
+    },
+    {
+     "pregunta": "¿Qué indica la barra vertical azul oscuro a la izquierda de la descripción?",
+     "opciones": [
+      "Un error de validación",
+      "Un cambio pendiente de guardar",
+      "Que la cuenta está cerrada",
+      "Que es obligatoria"
+     ],
+     "correcta": 1,
+     "explicacion": "La barra señala un cambio pendiente de guardar; desaparece al pulsar el disquete."
+    },
+    {
+     "pregunta": "¿Qué pantalla sirve para renumerar una cuenta con movimientos?",
+     "opciones": [
+      "Cuentas contables",
+      "Cambio código de cuenta",
+      "Grupos auxiliares",
+      "Planes contables"
+     ],
+     "correcta": 1,
+     "explicacion": "El código no se cambia en la ficha; hay una pantalla específica llamada Cambio código de cuenta."
+    }
+   ],
+   "checklist": [
+    "Filtras la lista por la cuenta 62999.00000",
+    "Abres la ficha pulsando el número de fila de la cuenta",
+    "Cambias Descripción cuenta a «Gastos varios {INI} Administración»",
+    "Ves la barra vertical de cambio pendiente a la izquierda de la descripción",
+    "Pulsas el disquete de la barra superior y sale «Éxito»",
+    "En la lista (filtro 629*) sale la nueva descripción"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-3",
+   "numero": 4,
+   "titulo": "Crear un grupo auxiliar «Empleados» con José Gómez",
+   "objetivo": "Crearás un grupo auxiliar y un código de empleado para desglosar el saldo de una cuenta por persona sin crear subcuentas.",
+   "concepto": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Por ejemplo, con el grupo «Empleados» la misma cuenta de gastos puede llevar cada apunte asignado a un empleado concreto, y después sacar el saldo por empleado.\n\nPrimero se crea el grupo y sus códigos; después se asigna a las cuentas (el bloque «Asignar el grupo auxiliar a la cuenta»).",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "parametrizacion-3-grupo",
+     "titulo": "Crear el grupo",
+     "paraQueSirve": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Primero se crea el grupo; después sus códigos; por último se asigna a las cuentas.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Grupos auxiliares (objeto cctaauxh)"
+     ],
+     "explicacion": [
+      "Al abrir la pantalla se muestra la lista de grupos auxiliares (en la demo, TERCER «Terceros» y los de otros alumnos, como ECEMP del autor). Pulsa «Añadir grupos»: desde la lista abre directamente la ventana de alta en blanco.",
+      "El código del grupo tiene un máximo de 6 caracteres. La descripción se guarda en mayúsculas."
+     ],
+     "campos": [
+      {
+       "campo": "Grupo auxiliar *",
+       "significado": "Código del grupo. Es lo que se elige después en la ficha de la cuenta. Máximo 6 caracteres.",
+       "ejemplo": "{INI}EMP"
+      },
+      {
+       "campo": "Descripción auxiliar *",
+       "significado": "Nombre del grupo (se guarda en mayúsculas).",
+       "ejemplo": "EMPLEADOS {INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta",
+       "detalle": "Se muestra la lista de grupos auxiliares, con el grupo existente TERCER «Terceros»."
+      },
+      {
+       "texto": "Pulsa «Añadir grupos», arriba a la derecha",
+       "detalle": "Se abre la ventana «GRUPOS AUXILIARES ASOCIADOS A CUENTAS». Si estuvieras dentro de la ficha de un grupo, el botón despliega «Nuevo» y «Nuevo como»: elige «Nuevo»."
+      },
+      {
+       "texto": "Escribe {INI}EMP como Grupo auxiliar y «Empleados {INI}» como descripción",
+       "detalle": "La pantalla convierte la descripción a mayúsculas.",
+       "imagen": "parametrizacion-d-130.webp",
+       "hotspot": {
+        "x": 34.8,
+        "y": 47.3,
+        "w": 15.5,
+        "h": 5.1,
+        "etiqueta": "Grupo auxiliar"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "parametrizacion-d-131.webp",
+       "hotspot": {
+        "x": 58.4,
+        "y": 59.7,
+        "w": 6.9,
+        "h": 3.6,
+        "etiqueta": "Guardar"
+       }
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "parametrizacion-3-codigo",
+     "titulo": "Añadir el código auxiliar José Gómez",
+     "paraQueSirve": "Cada código auxiliar es un elemento del grupo (aquí, un empleado). Solo los códigos abiertos se pueden usar en los apuntes.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Grupos auxiliares (objeto cctaauxh)"
+     ],
+     "explicacion": [
+      "Grupo y códigos están en la misma ficha: arriba el grupo y debajo sus códigos auxiliares y las cuentas que lo usan.",
+      "El código auxiliar tiene un máximo de 14 caracteres."
+     ],
+     "campos": [
+      {
+       "campo": "Auxiliar *",
+       "significado": "Código del elemento dentro del grupo (aquí, el empleado). Máximo 14 caracteres.",
+       "ejemplo": "{INI}0001"
+      },
+      {
+       "campo": "Descripción auxiliar *",
+       "significado": "Nombre del elemento.",
+       "ejemplo": "José Gómez"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo los códigos abiertos se pueden usar en los apuntes.",
+       "ejemplo": "Abierto"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ficha del grupo {INI}EMP pulsando su número de fila en la lista de grupos",
+       "detalle": "La captura es del final del tema: ya muestra el código EC0001 y la cuenta 62999.00000. Recién creado, tu grupo sale con los dos bloques vacíos.",
+       "imagen": "parametrizacion-d-132.webp"
+      },
+      {
+       "texto": "En el bloque «Códigos auxiliares» pulsa «Añadir codigos»",
+       "detalle": "La ventana debe mostrar «EMPLEADOS {INI}» bajo el título.",
+       "imagen": "parametrizacion-d-133.webp",
+       "hotspot": {
+        "x": 85.2,
+        "y": 28.6,
+        "w": 7.0,
+        "h": 3.8,
+        "etiqueta": "Añadir codigos"
+       }
+      },
+      {
+       "texto": "Escribe {INI}0001 y «José Gómez» y deja el Estado en Abierto",
+       "detalle": "Debajo del título de la ventana se ve el grupo al que se añade.",
+       "imagen": "parametrizacion-d-134.webp",
+       "hotspot": {
+        "x": 34.8,
+        "y": 49.3,
+        "w": 10.5,
+        "h": 5.1,
+        "etiqueta": "Auxiliar"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "parametrizacion-d-135.webp",
+       "hotspot": {
+        "x": 58.4,
+        "y": 59.7,
+        "w": 6.9,
+        "h": 3.6,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: el grupo {INI}EMP tiene el código {INI}0001 «José Gómez» abierto",
+       "imagen": "parametrizacion-d-136.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Justo después de guardar el grupo nuevo, la cabecera de la pantalla puede seguir mostrando «Terceros» y la ventana de «Añadir codigos» salir con «Terceros» bajo el título: el código se añadiría al grupo TERCER, que no es el tuyo."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Cancela esa ventana y vuelve a abrir la ficha del grupo {INI}EMP desde la lista. Antes de guardar un código, comprueba siempre que debajo del título de la ventana aparece el nombre de tu grupo."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve un grupo auxiliar?",
+     "opciones": [
+      "Para crear subcuentas",
+      "Para desglosar el saldo de una cuenta con una lista de códigos, sin una subcuenta por cada caso",
+      "Para cerrar cuentas",
+      "Para cambiar el plan contable"
+     ],
+     "correcta": 1,
+     "explicacion": "Permite, por ejemplo, sacar el saldo de una cuenta de gastos por empleado."
+    },
+    {
+     "pregunta": "¿Cuántos caracteres como máximo tiene el código de un grupo auxiliar?",
+     "opciones": [
+      "3",
+      "6",
+      "14",
+      "60"
+     ],
+     "correcta": 1,
+     "explicacion": "El grupo auxiliar admite un máximo de 6 caracteres; el código auxiliar, 14."
+    },
+    {
+     "pregunta": "¿Qué debes comprobar antes de guardar un código auxiliar?",
+     "opciones": [
+      "Que la cuenta está cerrada",
+      "Que debajo del título de la ventana aparece el nombre de tu grupo",
+      "Que el plan es PGE",
+      "Que el código está en minúsculas"
+     ],
+     "correcta": 1,
+     "explicacion": "Si aparece «Terceros» el código se añadiría al grupo TERCER."
+    },
+    {
+     "pregunta": "¿Qué estado debe tener el código para usarse en apuntes?",
+     "opciones": [
+      "Cerrado",
+      "Abierto",
+      "Pendiente",
+      "Bloqueado"
+     ],
+     "correcta": 1,
+     "explicacion": "Solo los códigos abiertos se pueden usar en los apuntes."
+    },
+    {
+     "pregunta": "¿Dónde están el grupo y sus códigos?",
+     "opciones": [
+      "En dos pantallas distintas",
+      "En la misma ficha: arriba el grupo y debajo sus códigos y las cuentas que lo usan",
+      "En el plan contable",
+      "En el buscador"
+     ],
+     "correcta": 1,
+     "explicacion": "La ficha del grupo recoge códigos auxiliares y listado de cuentas contables."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Cuentas contables › Grupos auxiliares (objeto cctaauxh)",
+    "Ves la lista de grupos auxiliares con TERCER «Terceros»",
+    "Pulsas «Añadir grupos»",
+    "Escribes {INI}EMP y «Empleados {INI}» y guardas",
+    "La descripción se guarda en mayúsculas: EMPLEADOS {INI}",
+    "Abres la ficha del grupo {INI}EMP con su número de fila y pulsas «Añadir codigos»",
+    "Compruebas que bajo el título de la ventana pone «EMPLEADOS {INI}»",
+    "Escribes {INI}0001 y «José Gómez», dejas Abierto y guardas",
+    "La lista de grupos auxiliares muestra {INI}EMP y TERCER",
+    "La ficha de {INI}EMP muestra el código {INI}0001 «José Gómez»"
+   ],
+   "problemas": [
+    {
+     "problema": "La cabecera sigue mostrando «Terceros» tras guardar el grupo nuevo y la ventana de «Añadir codigos» muestra «Terceros» bajo el título.",
+     "solucion": "Cancela la ventana y reabre la ficha del grupo {INI}EMP desde la lista; comprueba que bajo el título aparece el nombre de tu grupo antes de guardar."
+    }
+   ]
+  },
+  {
+   "id": "parametrizacion-4",
+   "numero": 5,
+   "titulo": "Asignar el grupo auxiliar a la cuenta",
+   "objetivo": "Asignarás el grupo auxiliar a la cuenta para que cada apunte pueda llevarlo y consultar el mayor por empleado.",
+   "concepto": "Al asignar el grupo auxiliar a la cuenta, cada apunte que se haga en ella podrá llevar uno de los códigos del grupo ({INI}0001 José Gómez…). Así el mayor de la cuenta se puede consultar por empleado sin abrir una subcuenta para cada uno.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "parametrizacion-4-asignar",
+     "titulo": "Asignar el grupo a la cuenta",
+     "paraQueSirve": "Al asignar el grupo auxiliar a la cuenta, cada apunte podrá llevar uno de los códigos del grupo y el mayor se podrá consultar por empleado sin abrir una subcuenta para cada uno.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cuentas contables",
+      "Cuentas contables (objeto ccuentas)"
+     ],
+     "explicacion": [
+      "La lista del campo Grupo auxiliar muestra los grupos creados en Grupos auxiliares.",
+      "Para comprobarlo se abre el grupo y se pulsa «Recargar» (↻) en el bloque «Listado de cuentas contables»."
+     ],
+     "campos": [
+      {
+       "campo": "Grupo auxiliar",
+       "significado": "Grupo de códigos que usará la cuenta. La lista muestra los grupos creados en Grupos auxiliares.",
+       "ejemplo": "{INI}EMP EMPLEADOS {INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ficha de la cuenta 62999.00000 (Cuentas contables, filtro 62999*, número de fila)"
+      },
+      {
+       "texto": "En «Grupo auxiliar» (bloque Identificación, a la derecha de «Referencia cuenta») escribe {INI} y elige {INI}EMP de la lista",
+       "detalle": "La lista muestra los grupos creados en Grupos auxiliares: el tuyo, TERCER «Terceros» y los de otros alumnos. La captura muestra el campo ya con ECEMP elegido.",
+       "imagen": "parametrizacion-d-137.webp",
+       "hotspot": {
+        "x": 52.9,
+        "y": 42.0,
+        "w": 17.9,
+        "h": 5.4,
+        "etiqueta": "ECEMP"
+       }
+      },
+      {
+       "texto": "Pulsa el disquete",
+       "detalle": "Sale «Éxito» y la cuenta queda guardada con el Grupo auxiliar {INI}EMP.",
+       "imagen": "parametrizacion-d-138.webp",
+       "hotspot": {
+        "x": 84.35,
+        "y": 15.7,
+        "w": 3.3,
+        "h": 4.6,
+        "etiqueta": "Guardar (disquete)"
+       }
+      },
+      {
+       "texto": "Para comprobarlo, abre el grupo {INI}EMP y pulsa «Recargar» (↻) en el bloque «Listado de cuentas contables»",
+       "detalle": "Tras Recargar, el listado muestra la cuenta 62999.00000.",
+       "imagen": "parametrizacion-d-139.webp",
+       "hotspot": {
+        "x": 93.9,
+        "y": 45.5,
+        "w": 2.7,
+        "h": 3.8,
+        "etiqueta": "Recargar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El bloque «Listado de cuentas contables» de la ficha del grupo no se actualiza solo; si acabas de asignar el grupo y sale «Sin datos», pulsa «Recargar»."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué permite el grupo auxiliar asignado a la cuenta?",
+     "opciones": [
+      "Que cada apunte lleve un código del grupo, p. ej. un empleado",
+      "Cambiar el código de la cuenta",
+      "Cerrar la cuenta",
+      "Cambiar el plan"
+     ],
+     "correcta": 0,
+     "explicacion": "Así el mayor se puede consultar por empleado sin una subcuenta para cada uno."
+    },
+    {
+     "pregunta": "¿Cómo se guarda el cambio en la ficha de la cuenta?",
+     "opciones": [
+      "Con el icono del disquete",
+      "Con «Guardar» de una ventana",
+      "Cerrando la pantalla",
+      "Con Esc"
+     ],
+     "correcta": 0,
+     "explicacion": "Los cambios en fichas existentes se guardan con el disquete."
+    },
+    {
+     "pregunta": "Si el «Listado de cuentas contables» del grupo sale «Sin datos» tras asignar el grupo, ¿qué haces?",
+     "opciones": [
+      "Vuelves a crear el grupo",
+      "Pulsas «Recargar» (↻)",
+      "Borras la cuenta",
+      "Cambias de plan"
+     ],
+     "correcta": 1,
+     "explicacion": "El bloque no se actualiza solo; hay que pulsar Recargar."
+    },
+    {
+     "pregunta": "¿Qué grupos auxiliares ofrece la lista del campo en la demo, además del tuyo?",
+     "opciones": [
+      "TERCER",
+      "ES",
+      "GENERAL",
+      "Ninguno"
+     ],
+     "correcta": 0,
+     "explicacion": "La lista muestra el tuyo y el grupo existente TERCER «Terceros»."
+    }
+   ],
+   "checklist": [
+    "Abres la ficha de la cuenta 62999.00000",
+    "Abres la lista de Grupo auxiliar y ves {INI}EMP «EMPLEADOS {INI}» y TERCER",
+    "Eliges {INI}EMP",
+    "Pulsas el disquete y sale «Éxito»",
+    "Abres el grupo {INI}EMP y pulsas «Recargar» en «Listado de cuentas contables»",
+    "El listado muestra ES · PGE 2008 · 62999.00000"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-5",
+   "numero": 6,
+   "titulo": "Crear un proyecto «División 1»",
+   "objetivo": "Crearás un proyecto contable para asignar apuntes de costes a una división y obtener resultados por proyecto.",
+   "concepto": "Proyectos y secciones son la analítica de la contabilidad: cada apunte de una cuenta de costes se asigna a un proyecto (por ejemplo una división o una obra) y a una sección (un departamento), y así se obtiene la cuenta de resultados por división o por departamento. El proyecto puede llevar una sección por defecto, que se propone al contabilizar.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "parametrizacion-5-proyecto",
+     "titulo": "Crear el proyecto con «Nuevo como»",
+     "paraQueSirve": "Cada apunte de una cuenta de costes se asigna a un proyecto y a una sección, para obtener la cuenta de resultados por división o por departamento. El proyecto puede llevar una sección por defecto, que se propone al contabilizar.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Auxiliares",
+      "Proyectos",
+      "Proyectos (objeto cproyect)"
+     ],
+     "explicacion": [
+      "«Nuevo como» crea un proyecto nuevo a partir de otro existente copiando sus valores; no modifica el proyecto de origen.",
+      "Al abrir la ruta se muestra la lista de proyectos. «Nuevo como» solo aparece dentro de una ficha: abre antes el proyecto 0 «GENERAL», que sirve de modelo, pulsando su número de fila (1)."
+     ],
+     "campos": [
+      {
+       "campo": "Proyecto *",
+       "significado": "Código del proyecto. Máximo 12 caracteres.",
+       "ejemplo": "{INI}1"
+      },
+      {
+       "campo": "Descripción proyecto *",
+       "significado": "Nombre del proyecto.",
+       "ejemplo": "División 1 {INI}"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo los proyectos abiertos se pueden usar en los apuntes.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Sección",
+       "significado": "Sección por defecto del proyecto. No es obligatoria; con «Nuevo como» se copia la del proyecto de origen.",
+       "ejemplo": "0 General (después {INI}ADM)"
+      },
+      {
+       "campo": "Empresa / Tercero / Dirección",
+       "significado": "Permiten limitar el proyecto a una empresa o vincularlo a un cliente. No hacen falta aquí.",
+       "ejemplo": "(vacío)"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa el número de fila 1 para abrir la ficha del proyecto 0 «GENERAL»",
+       "detalle": "La lista muestra 0 «GENERAL» y los proyectos de otros alumnos (en la captura, EC1 del autor).",
+       "imagen": "parametrizacion-d-140.webp",
+       "hotspot": {
+        "x": 2.8,
+        "y": 13.9,
+        "w": 2.4,
+        "h": 3.4,
+        "etiqueta": "Fila 1: proyecto 0"
+       }
+      },
+      {
+       "texto": "En la ficha de GENERAL pulsa «Añadir proyecto» y elige «Nuevo como»",
+       "imagen": "parametrizacion-n-02.webp",
+       "hotspot": {
+        "x": 82.8,
+        "y": 6.0,
+        "w": 7.7,
+        "h": 9.1,
+        "etiqueta": "Añadir proyecto › Nuevo como"
+       },
+       "detalle": "Desde la lista, «Añadir proyecto» abre una ventana en blanco sin copiar nada; «Nuevo» y «Nuevo como» solo salen dentro de una ficha."
+      },
+      {
+       "texto": "Escribe {INI}1 y «División 1 {INI}»",
+       "detalle": "Estado (Abierto) y Sección 0 «General» vienen copiados de GENERAL; código y descripción salen en blanco.",
+       "imagen": "parametrizacion-n-03.webp",
+       "hotspot": {
+        "x": 28.0,
+        "y": 40.0,
+        "w": 9.3,
+        "h": 5.1,
+        "etiqueta": "Proyecto"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "detalle": "Sale «Éxito».",
+       "imagen": "parametrizacion-n-03.webp",
+       "hotspot": {
+        "x": 65.2,
+        "y": 67.3,
+        "w": 6.9,
+        "h": 3.0,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Fíjate en el resultado: la lista de proyectos muestra 0 GENERAL y tu {INI}1 «División 1 {INI}», de momento con la sección 0",
+       "imagen": "parametrizacion-d-144.webp",
+       "detalle": "En la captura, EC1 ya tiene la sección ECADM porque se tomó después del bloque «Crear una sección «Administración»»."
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué hace «Nuevo como»?",
+     "opciones": [
+      "Abre un formulario en blanco",
+      "Crea un registro nuevo copiando los valores del que estás viendo, sin modificar el original",
+      "Borra el proyecto actual",
+      "Exporta el proyecto"
+     ],
+     "correcta": 1,
+     "explicacion": "No modifica el proyecto de origen: crea uno nuevo con sus valores."
+    },
+    {
+     "pregunta": "¿Cuál es el máximo de caracteres del código de proyecto?",
+     "opciones": [
+      "6",
+      "12",
+      "14",
+      "60"
+     ],
+     "correcta": 1,
+     "explicacion": "El código de proyecto admite un máximo de 12 caracteres."
+    },
+    {
+     "pregunta": "¿Qué es la analítica contable?",
+     "opciones": [
+      "Proyectos y secciones para saber a qué parte del negocio pertenece cada gasto o ingreso",
+      "Los impuestos",
+      "El plan de cuentas",
+      "Los bancos"
+     ],
+     "correcta": 0,
+     "explicacion": "Permite sacar la cuenta de resultados por división o departamento."
+    },
+    {
+     "pregunta": "¿Qué sección se copia al crear el proyecto con «Nuevo como» desde GENERAL?",
+     "opciones": [
+      "{INI}ADM",
+      "0 General",
+      "Ninguna",
+      "Administración"
+     ],
+     "correcta": 1,
+     "explicacion": "Se copian estado y sección del proyecto GENERAL (0 General)."
+    },
+    {
+     "pregunta": "¿Es obligatoria la Sección del proyecto?",
+     "opciones": [
+      "Sí",
+      "No",
+      "Solo en proyectos cerrados",
+      "Solo con tercero"
+     ],
+     "correcta": 1,
+     "explicacion": "La sección por defecto no es obligatoria."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Auxiliares › Proyectos › Proyectos (objeto cproyect)",
+    "Abres la ficha del proyecto 0 «GENERAL» con su número de fila",
+    "Pulsas «Añadir proyecto › Nuevo como»",
+    "Compruebas que código y descripción salen en blanco y estado y sección copiados",
+    "Escribes {INI}1 y «División 1 {INI}»",
+    "Dejas Estado Abierto y sección 0 «General»",
+    "Pulsas «Guardar» y sale «Éxito»",
+    "La lista de proyectos muestra {INI}1"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-6",
+   "numero": 7,
+   "titulo": "Crear una sección «Administración»",
+   "objetivo": "Crearás una sección y la asignarás al proyecto para clasificar gastos por departamento en la contabilidad analítica.",
+   "concepto": "La sección representa un departamento o centro de coste (Administración, Comercial, Taller…). Junto con el proyecto permite ver los gastos por departamento. Se crea una vez y se puede usar en cualquier proyecto; aquí además se asigna como sección por defecto del proyecto {INI}1.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "parametrizacion-6-seccion",
+     "titulo": "Crear la sección y asignarla al proyecto",
+     "paraQueSirve": "La sección representa un departamento o centro de coste. Junto con el proyecto permite ver los gastos por departamento. Se crea una vez y sirve para cualquier proyecto.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Auxiliares",
+      "Secciones",
+      "Secciones (objeto cseccion)"
+     ],
+     "explicacion": [
+      "La sección se puede crear desde su pantalla (Auxiliares › Secciones) o desde el propio proyecto, con el botón «+» de la lista del campo Sección.",
+      "El bloque «Secciones autorizadas» del proyecto sirve para limitar qué secciones se pueden combinar con él al contabilizar. Si se deja vacío, el proyecto admite cualquier sección."
+     ],
+     "campos": [
+      {
+       "campo": "Sección *",
+       "significado": "Código de la sección. Máximo 12 caracteres.",
+       "ejemplo": "{INI}ADM"
+      },
+      {
+       "campo": "Descripción sección *",
+       "significado": "Nombre de la sección.",
+       "ejemplo": "Administración {INI}"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Solo las secciones abiertas se pueden usar.",
+       "ejemplo": "Abierto"
+      },
+      {
+       "campo": "Referencia sección / Tercero / Dirección",
+       "significado": "Datos opcionales para enlazar la sección con un código externo o un tercero.",
+       "ejemplo": "(vacío)"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta",
+       "detalle": "Se muestra la lista de secciones: 0 «General» y las de otros alumnos."
+      },
+      {
+       "texto": "Pulsa «Añadir sección», arriba a la derecha",
+       "detalle": "Se abre la ventana «SECCIONES CONTABLES» en blanco."
+      },
+      {
+       "texto": "Escribe {INI}ADM y «Administración {INI}»",
+       "detalle": "Deja el Estado en Abierto.",
+       "imagen": "parametrizacion-d-145.webp",
+       "hotspot": {
+        "x": 33.8,
+        "y": 40.0,
+        "w": 8.6,
+        "h": 5.1,
+        "etiqueta": "Sección"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar»",
+       "imagen": "parametrizacion-d-146.webp",
+       "hotspot": {
+        "x": 59.4,
+        "y": 66.9,
+        "w": 6.9,
+        "h": 3.6,
+        "etiqueta": "Guardar"
+       }
+      },
+      {
+       "texto": "Abre el proyecto {INI}1: Proyectos › Proyectos y pulsa su número de fila"
+      },
+      {
+       "texto": "En «Sección» borra el 0, escribe {INI} y elige {INI}ADM",
+       "detalle": "Debajo aparece «Administración {INI}». El botón «+» de esa lista permite crear una sección sin salir del proyecto.",
+       "imagen": "parametrizacion-d-147.webp",
+       "hotspot": {
+        "x": 0.8,
+        "y": 22.5,
+        "w": 19.8,
+        "h": 5.1,
+        "etiqueta": "ECADM"
+       }
+      },
+      {
+       "texto": "Pulsa el disquete",
+       "detalle": "Sale «Éxito»: el proyecto {INI}1 «División 1 {INI}» queda con la sección {INI}ADM «Administración {INI}».",
+       "imagen": "parametrizacion-d-148.webp",
+       "hotspot": {
+        "x": 89.9,
+        "y": 6.2,
+        "w": 2.5,
+        "h": 3.6,
+        "etiqueta": "Guardar (disquete)"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El bloque «Secciones autorizadas» del proyecto limita qué secciones se pueden combinar con él; vacío, admite cualquiera."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Datos creados en TUTORIAL en todo el tema: cuenta ES 62999.00000, grupo auxiliar {INI}EMP con {INI}0001, proyecto {INI}1 y sección {INI}ADM. No has tocado ningún registro de la demo que no sea tuyo."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué representa una sección?",
+     "opciones": [
+      "Un departamento o centro de coste",
+      "Un plan contable",
+      "Un tercero",
+      "Un banco"
+     ],
+     "correcta": 0,
+     "explicacion": "Junto con el proyecto permite ver los gastos por departamento."
+    },
+    {
+     "pregunta": "¿Cómo puedes crear una sección sin salir del proyecto?",
+     "opciones": [
+      "No se puede",
+      "Con el botón «+» de la lista del campo Sección",
+      "Con Cmd/Ctrl + K",
+      "Con «Nuevo como»"
+     ],
+     "correcta": 1,
+     "explicacion": "El «+» de la lista permite crearla sin salir del proyecto."
+    },
+    {
+     "pregunta": "Si «Secciones autorizadas» del proyecto está vacío, ¿qué pasa?",
+     "opciones": [
+      "No admite ninguna sección",
+      "Admite cualquier sección",
+      "Solo admite la 0",
+      "Da error"
+     ],
+     "correcta": 1,
+     "explicacion": "Vacío significa que el proyecto admite cualquier sección."
+    },
+    {
+     "pregunta": "¿Cuál es el máximo de caracteres del código de sección?",
+     "opciones": [
+      "6",
+      "12",
+      "14",
+      "60"
+     ],
+     "correcta": 1,
+     "explicacion": "El código de sección admite un máximo de 12 caracteres."
+    },
+    {
+     "pregunta": "¿Qué modificas en el proyecto para dejar la sección por defecto?",
+     "opciones": [
+      "El campo Sección",
+      "El campo Empresa",
+      "El Estado",
+      "La Dirección"
+     ],
+     "correcta": 0,
+     "explicacion": "En «Sección» sustituyes el 0 por tu sección."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Auxiliares › Secciones › Secciones (objeto cseccion)",
+    "Ves la lista de secciones con la 0 «General»",
+    "Pulsas «Añadir sección»",
+    "Escribes {INI}ADM y «Administración {INI}», con Estado Abierto, y guardas",
+    "Abres el proyecto {INI}1",
+    "En Sección borras el 0, escribes {INI} y eliges {INI}ADM",
+    "Debajo del campo aparece «Administración {INI}»",
+    "Pulsas el disquete y sale «Éxito»",
+    "El proyecto {INI}1 muestra la sección {INI}ADM"
+   ],
+   "problemas": []
+  },
+  {
+   "id": "parametrizacion-icon-2",
+   "numero": 8,
+   "titulo": "Distinguir Finanzas sola o integrada con gestión",
+   "objetivo": "Distinguirás cómo contabiliza Finanzas sola o integrada con documentos de gestión para saber qué plantillas y permisos intervienen.",
+   "concepto": "En el escenario solo, registras facturas de ventas y de compras directamente en Finanzas; al contabilizar generan asiento, cartera de efectos (lo pendiente de cobrar o pagar, con su vencimiento) y registro fiscal (el IVA que luego se declara). En el escenario integrado, los pedidos, albaranes y facturas se gestionan en los documentos de gestión (IGES), que ves en los módulos de Compras y Ventas; para contabilizarlos se usan plantillas de contabilización definidas por origen. El permiso «Contabilizar» con valores Real y Diferido controla cuándo y cómo se contabiliza.",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "parametrizacion-icon-2-escenario-solo",
+     "titulo": "Escenario solo: facturas de ventas y compras en Finanzas",
+     "paraQueSirve": "Entender cómo contabilizar facturas registradas directamente en Finanzas sin documentos de gestión.",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Ventas"
+     ],
+     "explicacion": [
+      "Facturas de ventas: el sistema funciona como entrada de facturas convencional con cabecera y líneas. Al validar se calculan importes, impuestos, vencimientos y se valida el workflow (las reglas y estados por los que debe pasar el documento). Al contabilizar, toda factura genera un asiento contable, su cartera de efectos y registros fiscales de forma automática. Los asientos se contabilizan en el diario de ventas (un diario agrupa los asientos de un mismo tipo de operación), código VE por defecto. La fecha contable no debe ser menor a la fecha de facturación; no se puede contabilizar una factura no emitida.",
+      "Facturas de compras: ruta Finanzas / Facturación / Compras / Factura de compra. Estados Provisional, Bloqueado, Validada. Al contabilizar, genera asiento, cartera de efectos y documento fiscal automático, dependiendo de la configuración de la cuenta contable. El asiento tendrá la fecha especificada en el campo fecha contable de la cabecera.",
+      "En ambos casos, para contabilizar es necesario que estén definidos los valores defecto de usuarios, donde se indica si la generación de asientos es en tiempo real o en borrador, y se debe definir la plantilla de contabilización en la tipología del documento. La práctica completa de una factura directa (FC y FB) está en el módulo Contabilidad general."
+     ],
+     "campos": [
+      {
+       "campo": "Tipo documento",
+       "significado": "tipo de factura predefinido",
+       "ejemplo": "Tipo de factura de venta"
+      },
+      {
+       "campo": "Fecha factura",
+       "significado": "fecha de emisión",
+       "ejemplo": "01-02-2026"
+      },
+      {
+       "campo": "Fecha contable",
+       "significado": "fecha del asiento",
+       "ejemplo": "01-02-2026"
+      },
+      {
+       "campo": "Cliente / Proveedor",
+       "significado": "código del tercero",
+       "ejemplo": "código del tercero, p. ej. 00003"
+      },
+      {
+       "campo": "Artículo",
+       "significado": "artículo del maestro",
+       "ejemplo": "código del artículo"
+      },
+      {
+       "campo": "Diario",
+       "significado": "diario contable; ventas VE",
+       "ejemplo": "VE"
+      },
+      {
+       "campo": "Plantilla",
+       "significado": "plantilla de contabilización",
+       "ejemplo": "la indicada en la tipología del documento"
+      },
+      {
+       "campo": "Estado",
+       "significado": "Provisional, Bloqueado, Validado, Contabilizado",
+       "ejemplo": "Validado"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas › Facturación › Ventas y localiza una factura de ventas; fíjate en la cabecera (tipo, empresa, fechas, cliente, importes) y en las pestañas Detalle (líneas), Impuestos por documento y Vencimientos",
+       "imagen": "parametrizacion-icon-006.webp"
+      },
+      {
+       "texto": "Fíjate en el botón «Validar» de la barra superior (recuadrado en la captura): al validar, el ERP calcula importes, impuestos y vencimientos y comprueba el workflow",
+       "imagen": "parametrizacion-icon-007.webp",
+       "detalle": "No lo pulses en facturas que no son tuyas: la práctica completa de una factura está en el módulo Contabilidad general."
+      },
+      {
+       "texto": "Fíjate en el botón «Contabilizar» documentado para facturas de venta: aparece cuando la factura ya está validada",
+       "imagen": "parametrizacion-icon-008.webp"
+      },
+      {
+       "texto": "Abre Finanzas › Facturación › Compras › Fact. de compras: la captura es la ventana de alta de una factura de compra (tipo FC)",
+       "imagen": "parametrizacion-icon-009.webp",
+       "detalle": "El orden es siempre el mismo: guardar (botón recuadrado), validar y, por último, contabilizar. El circuito completo lo haces en Contabilidad general."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En ventas, el diario por defecto es VE; en compras no se documenta un diario por defecto."
+      }
+     ]
+    },
+    {
+     "id": "parametrizacion-icon-2-plantillas-permiso",
+     "titulo": "Plantillas de contabilización y permiso «Contabilizar»",
+     "paraQueSirve": "Definir el mapeo entre documentos origen y asientos, impuestos y cartera, y controlar la contabilización con permisos.",
+     "ruta": [
+      "Cmd/Ctrl + K",
+      "Modelos de plantilla de contabilización (ccon_template_xls)"
+     ],
+     "explicacion": [
+      "Para cada posible origen de impactos a contabilidad se requiere un patrón de contabilización, registrado mediante hojas de cálculo. El gestor de plantillas hoja de cálculo permite definir libros maestros para crear registros en contabilidad, impuestos, carteras, costes y partidas presupuestarias.",
+      "Por dentro: cada libro contiene una hoja origen con los datos a procesar y una o más hojas destino donde se define el mapeo. Las hojas destino por convenio son capuntes (asientos, costes y partidas presupuestarias), cimpcont (registro de datos fiscales) y cefectos (registro de efectos en cartera). Las etiquetas de origen usan tabla.campo, como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid.",
+      "El permiso «Contabilizar» puede tener valores Real y Diferido. Sin permiso no se contabiliza; con valor Real se contabiliza en tiempo real; con Diferido se contabiliza en área diferida. La documentación usa como ejemplo restringir la contabilización de albaranes y acuerdos. En usuarios existe un indicador para que los procesos registren en área diferida o directamente en real."
+     ],
+     "campos": [
+      {
+       "campo": "Hoja origen",
+       "significado": "datos a procesar",
+       "ejemplo": "Origen"
+      },
+      {
+       "campo": "Hoja destino",
+       "significado": "capuntes, cimpcont, cefectos",
+       "ejemplo": "capuntes"
+      },
+      {
+       "campo": "Etiqueta origen",
+       "significado": "tabla.campo",
+       "ejemplo": "ccomfach.fecfac (fecha de la factura de compra)"
+      },
+      {
+       "campo": "Permiso",
+       "significado": "código y descripción",
+       "ejemplo": "Contabilizar"
+      },
+      {
+       "campo": "Valor del permiso",
+       "significado": "Real, Diferido",
+       "ejemplo": "Real"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Pulsa Cmd/Ctrl + K, escribe «plantilla» y abre «Modelos de plantilla de contabilización» (ccon_template_xls)",
+       "detalle": "No la confundas con «Plantillas de asientos del motor de contabilización», que es otra pantalla.",
+       "imagen": "parametrizacion-n-06.webp",
+       "hotspot": {
+        "x": 31.3,
+        "y": 51.0,
+        "w": 37.5,
+        "h": 5.6,
+        "etiqueta": "Modelos de plantilla de contabilización"
+       }
+      },
+      {
+       "texto": "Se abre la lista de modelos: cada fila es una plantilla, con su Tabla origen, su código y su nombre (por ejemplo «Cobro regularización v2021»)",
+       "imagen": "parametrizacion-icon-014.webp"
+      },
+      {
+       "texto": "Fíjate en la hoja origen y sus áreas de datos",
+       "imagen": "parametrizacion-icon-005.webp",
+       "detalle": "La primera pestaña del libro (aquí «Factura») es la hoja origen: reproduce el documento por bloques (Identificación, Proveedor, Consignación, Importes, Impuestos, Pagos, Otros datos y, abajo, las líneas)."
+      },
+      {
+       "texto": "Localiza una etiqueta de origen como ccomfach.fecfac",
+       "imagen": "parametrizacion-icon-015.webp",
+       "detalle": "La etiqueta se ve en el cuadro de nombre, a la izquierda de la barra de fórmulas: al seleccionar la celda de «Fecha emisión» muestra ccomfach.fecfac (tabla ccomfach, campo fecfac = fecha de la factura de compra)."
+      },
+      {
+       "texto": "Revisa la hoja destino capuntes y su mapeo",
+       "imagen": "parametrizacion-icon-016.webp",
+       "detalle": "En capuntes cada columna es un campo del apunte (Concepto, Plan contable, Cuenta contable, Descripción, Divisa, Cambio, Debe divisa, Haber divisa…) y la fila 2 recoge los valores que se leen de la hoja origen."
+      },
+      {
+       "texto": "En la definición de permisos, localiza el permiso CONTAB «Contabilizar» y recuerda que sus valores son Real y Diferido",
+       "imagen": "parametrizacion-icon-017.webp",
+       "detalle": "En la captura aparece en las agrupaciones CAJAS y FACTURAS DE COMPRAS. Real: el asiento se crea en la contabilidad definitiva; Diferido: va a un área diferida (de revisión) y después se traspasa a real."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La documentación no asocia literalmente una plantilla concreta a cada tipología de documento de gestión; solo indica que cada origen de impactos requiere su patrón."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Con valor Diferido, los asientos van a un área diferida que luego se traspasa a real."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "En el escenario solo (facturas financieras), ¿qué genera la contabilización de una factura de venta?",
+     "opciones": [
+      "Solo asiento",
+      "Asiento, cartera de efectos y registros fiscales",
+      "Asiento y registro de inventario",
+      "Asiento y cartera de efectos"
+     ],
+     "correcta": 1,
+     "explicacion": "Toda factura contabilizada genera asiento, cartera de efectos y registros fiscales automáticos."
+    },
+    {
+     "pregunta": "¿Cuál es el código de diario por defecto para facturas de venta en Finanzas?",
+     "opciones": [
+      "FA",
+      "DI",
+      "VE",
+      "CO"
+     ],
+     "correcta": 2,
+     "explicacion": "Los asientos de ventas se contabilizan en el diario de ventas con código VE."
+    },
+    {
+     "pregunta": "¿Qué hoja destino se utiliza para registrar los asientos contables en una plantilla de contabilización?",
+     "opciones": [
+      "capuntes",
+      "cefectos",
+      "param",
+      "cimpcont"
+     ],
+     "correcta": 0,
+     "explicacion": "capuntes es la hoja destino para asientos contables, costes y partidas presupuestarias."
+    },
+    {
+     "pregunta": "¿Qué valores puede tomar el permiso «Contabilizar»?",
+     "opciones": [
+      "Solo Real",
+      "Real y Diferido",
+      "Automático y Manual",
+      "Total y Parcial"
+     ],
+     "correcta": 1,
+     "explicacion": "El permiso Contabilizar admite los valores Real y Diferido."
+    }
+   ],
+   "checklist": [
+    "Abre una factura de venta en Finanzas y comprueba que el diario por defecto es VE.",
+    "Localiza el botón de contabilización en factura de venta y revisa qué genera.",
+    "Abre una factura de compra y localiza el botón de contabilización.",
+    "Con Cmd/Ctrl + K abre «Modelos de plantilla de contabilización» y localiza una plantilla con hojas destino capuntes, cimpcont y cefectos.",
+    "Dentro de una plantilla, identifica una etiqueta de origen como ccomfach.fecfac.",
+    "En permisos por grupo de usuarios, localiza el permiso «Contabilizar» y sus valores Real y Diferido.",
+    "En permisos por grupo de usuarios, comprueba que un permiso de tipo Verdadero/Falso no tiene valores definidos."
+   ],
+   "problemas": [
+    {
+     "problema": "No puedes contabilizar una factura porque no aparece el botón.",
+     "solucion": "Verifica que la factura está Validada y que tu usuario tiene el permiso «Contabilizar» con valor Real o Diferido."
+    },
+    {
+     "problema": "La contabilización de un documento de gestión no se realiza o no genera asiento.",
+     "solucion": "Comprueba que existe una plantilla de contabilización para ese origen y que está indicada en la tipología del documento."
+    },
+    {
+     "problema": "El asiento se genera en área diferida cuando esperabas real.",
+     "solucion": "Revisa el indicador de contabilización en tiempo real o borrador en los valores defecto de usuario, y el valor del permiso Contabilizar."
+    }
+   ]
+  },
+  {
+   "id": "asientos-1",
+   "numero": 1,
+   "titulo": "Acceder a los asientos",
+   "objetivo": "Crearás un diario y abrirás la pantalla de asientos para saber dónde se registran los asientos de la empresa.",
+   "concepto": "Antes de escribir un asiento hay que saber dónde se registra y en qué diario. El diario agrupa los asientos por su origen (compras, ventas, tesorería, general…) y sirve para listar o numerar por separado.\n\nPara los ejercicios se crea un diario propio, {INI}, y así los asientos de práctica no se mezclan con los de otros usuarios de la base.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-1-diario",
+     "titulo": "Crear el diario {INI}",
+     "paraQueSirve": "El diario es el libro donde se anota cada asiento. Con uno propio ({INI}) tus asientos de práctica quedan separados de los de otros usuarios.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Auxiliares",
+      "Diarios"
+     ],
+     "explicacion": [
+      "La pantalla es el objeto cdiarios. Muestra la lista de diarios existentes (DA Cierre y apertura, DC Compras, DD Distribución costes, DG General, DV Ventas…).",
+      "Ojo con el nombre: en Finanzas › Contabilidad General › Diario contable › Diarios están los informes del libro diario (Anual, Resumen, Por asiento), no la lista de diarios. La lista se abre en Finanzas › Maestros › Auxiliares › Diarios, o escribiendo «cdiarios» en el buscador superior.",
+      "Las listas pequeñas tienen una fila en blanco al final para dar de alta en línea con el icono ⊕. También se puede crear el diario desde el propio campo Diario del asiento, con el «+» que aparece al pie de la lista de ese campo."
+     ],
+     "campos": [
+      {
+       "campo": "Diario *",
+       "significado": "Código del libro diario. Es lo que se elige en la cabecera de cada asiento.",
+       "ejemplo": "{INI}"
+      },
+      {
+       "campo": "Descripción diario *",
+       "significado": "Nombre que aparece debajo del código en los formularios.",
+       "ejemplo": "Entrada de asientos {INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta Finanzas › Maestros › Auxiliares › Diarios (objeto cdiarios), o escribe «cdiarios» en el buscador superior.",
+       "detalle": "Se ve la lista de diarios existentes (DA cierre, DC compras, DG general, DV ventas…)."
+      },
+      {
+       "texto": "En la fila en blanco del final (la que tiene el icono ⊕ a la izquierda) escribe {INI} en la columna Diario y «Entrada de asientos {INI}» en Descripción diario."
+      },
+      {
+       "texto": "Pulsa el icono ⊕ de la fila.",
+       "detalle": "Sale el aviso verde «Éxito» y el diario {INI} aparece en la lista. En la captura ya se ve el diario EA del autor en la fila 11.",
+       "imagen": "asientos-d-192.webp",
+       "hotspot": {
+        "x": 14.7,
+        "y": 40.4,
+        "w": 2.5,
+        "h": 3.6,
+        "etiqueta": "⊕"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El campo Diario del asiento también permite crear el diario con el «+» del pie de su lista, sin salir de la pantalla."
+      }
+     ]
+    },
+    {
+     "id": "asientos-1-pantalla",
+     "titulo": "Abrir la pantalla de asientos",
+     "paraQueSirve": "Es la pantalla donde se registran y consultan los asientos de todas las empresas.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "El objeto se llama casientos. La lista muestra los asientos de todas las empresas, con su fecha, número, justificante, diario, ejercicio, periodo y totales.",
+      "Debajo del objeto «Asientos» están los procesos Contabilización, Descontabilización y Copia masiva."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la ruta Finanzas › Contabilidad General › Diario contable › Asientos › Asientos (objeto casientos).",
+       "detalle": "Se muestra la lista de asientos con fecha, número, justificante, diario, ejercicio, periodo y totales."
+      },
+      {
+       "texto": "Pulsa «Nuevo» para empezar un asiento.",
+       "detalle": "Es lo que haces en el ejercicio siguiente."
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Para qué sirve el diario de un asiento?",
+     "opciones": [
+      "Para agrupar los asientos por su origen y poder listarlos o numerarlos por separado",
+      "Para calcular el IVA del asiento",
+      "Para elegir la moneda del asiento",
+      "Para fijar el ejercicio contable"
+     ],
+     "correcta": 0,
+     "explicacion": "El diario agrupa los asientos por su origen (compras, ventas, tesorería, general…)."
+    },
+    {
+     "pregunta": "¿Por qué se crea un diario propio {INI} para los ejercicios?",
+     "opciones": [
+      "Porque es obligatorio para contabilizar",
+      "Para que los asientos de práctica no se mezclen con los de otros usuarios de la base",
+      "Porque el diario DG no existe",
+      "Para que el asiento cuadre solo"
+     ],
+     "correcta": 1,
+     "explicacion": "El diario propio separa tus asientos de práctica de los de otros usuarios."
+    },
+    {
+     "pregunta": "¿Cómo se da de alta una fila nueva en la lista de diarios?",
+     "opciones": [
+      "Con el botón Finalizar",
+      "Con el proceso Contabilización",
+      "Escribiendo en la fila en blanco del final y pulsando el icono ⊕",
+      "Copiando un asiento"
+     ],
+     "correcta": 2,
+     "explicacion": "En la fila en blanco del final se escribe el código y la descripción y se pulsa ⊕; sale el aviso «Éxito»."
+    },
+    {
+     "pregunta": "¿Cuál es el objeto de la pantalla de asientos?",
+     "opciones": [
+      "cdiarios",
+      "casientos",
+      "capuntes",
+      "csaldos"
+     ],
+     "correcta": 1,
+     "explicacion": "Los asientos se abren con el objeto casientos; cdiarios es la lista de diarios."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Maestros › Auxiliares › Diarios (cdiarios).",
+    "En la fila en blanco escribes el diario {INI}.",
+    "Escribes la descripción «Entrada de asientos {INI}».",
+    "Pulsas ⊕ y ves el aviso «Éxito».",
+    "{INI} aparece en la lista de diarios.",
+    "{INI} aparece en el desplegable Diario del asiento.",
+    "Abres la pantalla Asientos (casientos) y ves la lista de asientos."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-2",
+   "numero": 2,
+   "titulo": "Introducir un asiento de dos líneas",
+   "objetivo": "Crearás un asiento provisional con cabecera y dos líneas cuadradas para registrar una operación contable básica.",
+   "concepto": "El asiento tiene dos partes: la cabecera (empresa, fecha, diario, justificante) y las líneas de apuntes (cuenta, Debe o Haber). Se guarda primero la cabecera y después se añaden las líneas desde la pestaña «Líneas de apuntes».\n\nEjemplo del ejercicio: un gasto diverso de 1.000 € pagado por banco, con 62902 al Debe y 57200 al Haber. Un asiento nace «Provisional» y se puede modificar mientras está así.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "asientos-2-cabecera",
+     "titulo": "Cabecera del asiento",
+     "paraQueSirve": "La cabecera recoge los datos comunes del asiento: empresa, diario, fecha, justificante y documento. Las líneas los heredan.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "En la lista de asientos se pulsa «Nuevo» y se rellena la cabecera. Al guardar, el asiento aparece en la lista con su número (6, automático) y estado Provisional.",
+      "La ficha guardada muestra la banda naranja PROVISIONAL y los botones Recalcular cuadre, Reordenar líneas, Finalizar y Copiar asiento."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa *",
+       "significado": "Sociedad en la que se registra el asiento. Decide el plan contable y los ejercicios disponibles.",
+       "ejemplo": "0 (Deister Software)"
+      },
+      {
+       "campo": "Asiento",
+       "significado": "Número del asiento dentro del ejercicio. Lo pone el ERP al guardar.",
+       "ejemplo": "6 (automático)"
+      },
+      {
+       "campo": "Diario",
+       "significado": "Libro diario del asiento. Por defecto propone DG General.",
+       "ejemplo": "{INI}"
+      },
+      {
+       "campo": "Sistema",
+       "significado": "Sistema contable. En TUTORIAL solo existe A General.",
+       "ejemplo": "A"
+      },
+      {
+       "campo": "Fecha *",
+       "significado": "Fecha contable. De ella salen el ejercicio y el periodo.",
+       "ejemplo": "12-11-2026"
+      },
+      {
+       "campo": "Ejercicio / Período",
+       "significado": "Se calculan solos a partir de la fecha.",
+       "ejemplo": "2026 / 11"
+      },
+      {
+       "campo": "Justificante",
+       "significado": "Numerador de justificantes: al guardar genera el justificante, el código correlativo con el que se cita el asiento en auditorías y extractos (p. ej. {INI}26-000001).",
+       "ejemplo": "{INI} (Asientos manuales {INI})"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Referencia libre del documento que justifica el asiento. Se copia a todas las líneas.",
+       "ejemplo": "{INI}-DOC-001"
+      },
+      {
+       "campo": "Notas",
+       "significado": "Texto libre del asiento. Se propone como descripción de las líneas.",
+       "ejemplo": "{INI} Ejercicio 2 entrada de asientos"
+      },
+      {
+       "campo": "Moneda / Cambio / Cálculo *",
+       "significado": "Divisa del asiento y tipo de cambio. En euros, cambio 1.",
+       "ejemplo": "EUR / 1,000000 / Dividir"
+      },
+      {
+       "campo": "Estado *",
+       "significado": "Provisional al crearlo; Contabilizado al finalizarlo.",
+       "ejemplo": "Provisional"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En la lista de asientos pulsa «Nuevo».",
+       "detalle": "Es el botón azul oscuro «Nuevo» de arriba a la derecha. Se abre la ventana «Asientos contables» con los bloques Identificación, Fechas y Referencias."
+      },
+      {
+       "texto": "Elige la Empresa 0, cambia el Diario a {INI} y pon la Fecha 12-11-2026.",
+       "detalle": "Empresa: escribe 0 y haz clic en la fila «0 Deister Software» de la lista que se abre. Diario: viene con DG; bórralo, escribe {INI} y elige tu fila. Fecha: 12-11-2026 es la fecha de los ejercicios, así tus totales y periodos coincidirán (periodo 11 de 2026)."
+      },
+      {
+       "texto": "En Justificante elige el numerador {INI}.",
+       "detalle": "Despliega la lista con la flecha ▾ del campo. Si tu numerador {INI} aún no existe, créalo ahora con el «+» del pie de esa lista siguiendo la sección siguiente («Numerador de justificantes {INI}») y vuelve a este paso."
+      },
+      {
+       "texto": "Escribe el Documento {INI}-DOC-001 y unas Notas.",
+       "detalle": "Por ejemplo «{INI} Ejercicio 2 entrada de asientos»."
+      },
+      {
+       "texto": "Pulsa «Guardar».",
+       "detalle": "El asiento aparece en la lista con el siguiente número libre (en las capturas, el 6) y estado Provisional. Fíjate en la banda naranja PROVISIONAL de la ficha. La captura es la ventana antes de rellenar Justificante, Documento y Notas, con fecha 17-11-2026; tú pon 12-11-2026.",
+       "imagen": "asientos-d-193.webp",
+       "hotspot": {
+        "x": 91.5,
+        "y": 75.3,
+        "w": 7.0,
+        "h": 3.8,
+        "etiqueta": "Guardar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La cabecera se guarda una sola vez: empresa, diario, justificante y documento se escriben aquí y las líneas los heredan. Proyecto y sección se rellenan en cada línea. La línea nueva propone además el importe que falta para cuadrar."
+      }
+     ]
+    },
+    {
+     "id": "asientos-2-numerador",
+     "titulo": "Numerador de justificantes {INI}",
+     "paraQueSirve": "El numerador fabrica el código del justificante (por ejemplo {INI}26-000001) cada vez que se guarda un asiento que lo usa. Así cada asiento manual tiene un número correlativo propio, que es el que se cita en auditorías y en el extracto.",
+     "ruta": [
+      "Campo Justificante del asiento",
+      "«+»",
+      "Numeradores de justificantes contables (cjusnumh)"
+     ],
+     "explicacion": [
+      "Se puede abrir desde el campo Justificante del asiento con el «+», o desde el buscador escribiendo «Numeradores de justificantes contables» (objeto cjusnumh).",
+      "Rotura y Numerador no son valores sino máscaras de formato: #e es la empresa, #yy el año, #d el diario y #n el contador. El resto del texto se copia tal cual. Con Rotura #e#yy hay un contador por empresa y año; con Numerador {INI}#yy-#n y Justificación 6 sale {INI}26-000001.",
+      "El «Detalle serializador» del numerador guarda el último número de cada rotura."
+     ],
+     "campos": [
+      {
+       "campo": "Tabla origen *",
+       "significado": "Documentos que numera.",
+       "ejemplo": "Asientos contables"
+      },
+      {
+       "campo": "Código de numerador *",
+       "significado": "Código que se elige en el campo Justificante.",
+       "ejemplo": "{INI}"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Nombre visible.",
+       "ejemplo": "Asientos manuales {INI}"
+      },
+      {
+       "campo": "Rotura *",
+       "significado": "MÁSCARA que decide cuándo vuelve a empezar el contador: #e empresa, #yy año, #d diario.",
+       "ejemplo": "#e#yy (un contador por empresa y año)"
+      },
+      {
+       "campo": "Numerador *",
+       "significado": "MÁSCARA del justificante. #n es el contador; el resto se copia tal cual.",
+       "ejemplo": "{INI}#yy-#n ({INI}26-000001)"
+      },
+      {
+       "campo": "Justificación",
+       "significado": "Número de dígitos del contador (rellena con ceros).",
+       "ejemplo": "6"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Desde el campo Justificante del asiento, pulsa el «+» al pie de la lista para crear el numerador.",
+       "detalle": "Despliega la lista del campo Justificante con la flecha ▾. Al pie hay dos iconos: «+» (crear un numerador nuevo) y la lupa (buscar). Se abre la ventana «Numeradores de justificantes contables».",
+       "imagen": "asientos-n-01.webp",
+       "hotspot": {
+        "x": 83.7,
+        "y": 54.6,
+        "w": 2.6,
+        "h": 3.6,
+        "etiqueta": "+"
+       }
+      },
+      {
+       "texto": "Rellena Tabla origen «Asientos contables», Código de numerador {INI} y Descripción «Asientos manuales {INI}».",
+       "detalle": "En la captura Rotura y Numerador aún están vacíos: los rellenas en el paso siguiente.",
+       "imagen": "asientos-d-194.webp"
+      },
+      {
+       "texto": "Rellena Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6 y pulsa «Guardar».",
+       "detalle": "Son máscaras, no valores: #e es la empresa, #yy el año (26) y #n el contador. Con ellas el primer justificante de 2026 será {INI}26-000001."
+      },
+      {
+       "texto": "Abre la lista de numeradores (Numeradores de justificantes contables, objeto cjusnumh, desde el buscador) y compara el tuyo con los existentes.",
+       "detalle": "Los de la demo usan máscaras como #e#yy#d (rotura) y #d#e#yy-#n (numerador) con justificación 6. En la captura, tu fila EA (fila 2) ya tiene las máscaras bien puestas: #e#yy y EA#yy-#n. Compárala con filas como «Lotes de comunicación» (fila 26) o «Global 1» (fila 28), que tienen números (0, 1) en lugar de máscaras: es el error típico del aviso de abajo.",
+       "imagen": "asientos-d-195.webp"
+      },
+      {
+       "texto": "Si tu numerador tiene números en lugar de máscaras, ábrelo (clic en el número de su fila), pon Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6 y guarda con el icono del disquete (Guardar) de la barra superior, a la derecha.",
+       "detalle": "Sale «Éxito». El «Detalle serializador» guarda el último número de cada rotura. En la captura tiene dos filas: la de la rotura buena #e#yy (último número 1) y la de la rotura mal escrita «26» (último número 2, último justificante 0), de cuando el numerador estaba mal.",
+       "imagen": "asientos-d-196.webp",
+       "hotspot": {
+        "x": 90.0,
+        "y": 6.1,
+        "w": 2.4,
+        "h": 3.4,
+        "etiqueta": "Guardar (disquete)"
+       }
+      },
+      {
+       "texto": "Vuelve al asiento, elige el numerador {INI} en Justificante y guarda.",
+       "detalle": "El asiento recibe el justificante {INI}26-000001. En la captura, EA26-000001 es el asiento 11 (EA-DOC-005), una prueba de 50,00 que hizo el autor tras corregir el numerador; sus asientos 6 y 7 se guardaron con el numerador mal y conservan el justificante «0».",
+       "imagen": "asientos-d-197.webp",
+       "hotspot": {
+        "x": 18.9,
+        "y": 35.7,
+        "w": 7.1,
+        "h": 3.2,
+        "etiqueta": "EA26-000001"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Con Rotura «26» y Numerador «0» el asiento se guarda sin error, pero su justificante sale «0» en todos los asientos. Rotura y Numerador no son valores sino máscaras: un texto sin #n nunca muestra el contador (el contador sí avanza: se ve en «Detalle serializador», último número 2)."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Abre el numerador {INI} en cjusnumh y pon Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6; guarda con el disquete. Los asientos nuevos reciben justificantes {INI}26-000001, {INI}26-000002… (los ya guardados conservan el «0»)."
+      }
+     ]
+    },
+    {
+     "id": "asientos-2-lineas",
+     "titulo": "Líneas de apuntes",
+     "paraQueSirve": "Cada línea es un apunte a una cuenta: importe al Debe o al Haber, con proyecto, sección y dimensiones para análisis de costes. Heredan documento y descripción de la cabecera; solo se pone cuenta e importe.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "En las líneas no se repiten los datos de cabecera: se escriben una vez en la cabecera y la línea nueva propone además el importe que descuadra. Al escribir un importe en Debe, el Haber queda bloqueado a 0 y al revés.",
+      "El ejemplo del ejercicio: gasto diverso de 1.000 € pagado por banco, 62902 al Debe y 57200 al Haber."
+     ],
+     "campos": [
+      {
+       "campo": "Orden *",
+       "significado": "Número de línea dentro del asiento. Lo propone el ERP.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Proyecto *",
+       "significado": "Unidad de negocio de la línea (analítica). Usa el 0 GENERAL de la demo; si hiciste Parametrización también verás tu {INI}1.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Sección *",
+       "significado": "Sección o centro de la línea. Se rellena sola al elegir el proyecto.",
+       "ejemplo": "0 General"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Heredado de la cabecera.",
+       "ejemplo": "{INI}-DOC-001"
+      },
+      {
+       "campo": "Auditado *",
+       "significado": "Marca de revisión del apunte.",
+       "ejemplo": "No"
+      },
+      {
+       "campo": "Plan contable *",
+       "significado": "Plan de cuentas de la empresa: la lista de cuentas que se pueden usar. En la demo se llama PGE 2008 (ES) y contiene las cuentas del Plan General de Contabilidad español (PGC 2007).",
+       "ejemplo": "PGE 2008 (ES)"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Cuenta contable del apunte. Debajo se ve su descripción.",
+       "ejemplo": "62902.00000 Gastos diversos"
+      },
+      {
+       "campo": "Debe divisa / Haber divisa *",
+       "significado": "Importe del apunte. Al escribir uno, el otro queda bloqueado a 0.",
+       "ejemplo": "1.000,00 / 0,00"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Concepto del apunte. Se propone el texto de Notas.",
+       "ejemplo": "{INI} Ejercicio 2 entrada de asientos"
+      },
+      {
+       "campo": "Dimensión 1 / Dimensión 2 *",
+       "significado": "Dimensiones analíticas: campos extra para clasificar el apunte en informes de costes (por ejemplo, por línea de negocio o zona). En TUTORIAL se dejan en 0 «General».",
+       "ejemplo": "0 / 0"
+      },
+      {
+       "campo": "Cantidad 1 / Cantidad 2 *",
+       "significado": "Cantidades estadísticas opcionales.",
+       "ejemplo": "0,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "En la ficha del asiento abre la pestaña «Líneas de apuntes» y pulsa el «Nuevo» de la lista de líneas (a la derecha, encima de las columnas), no el de la barra superior, que crea otro asiento.",
+       "imagen": "asientos-d-202.webp",
+       "hotspot": {
+        "x": 88.2,
+        "y": 29.2,
+        "w": 3.8,
+        "h": 3.0,
+        "etiqueta": "Nuevo"
+       },
+       "detalle": "En la captura el asiento (uno de prueba, CV-DOC-001) ya tiene una línea; el botón está en el mismo sitio. En un asiento ya contabilizado este botón no aparece."
+      },
+      {
+       "texto": "Escribe 0 en Proyecto y haz clic en la fila «0 GENERAL» de la lista que se abre.",
+       "detalle": "La Sección pasa sola a 0 General."
+      },
+      {
+       "texto": "Escribe 62902 en Cuenta y haz clic en la fila 62902.00000 Gastos diversos.",
+       "imagen": "asientos-d-199.webp",
+       "hotspot": {
+        "x": 40.6,
+        "y": 63.6,
+        "w": 56.5,
+        "h": 6.7,
+        "etiqueta": "Cuenta"
+       },
+       "detalle": "Debajo del campo aparece la descripción «Gastos diversos». La captura es el panel de la línea ya guardada."
+      },
+      {
+       "texto": "Baja hasta el bloque Debe/Haber del panel, pon 1000 en Debe divisa y pulsa «Guardar».",
+       "detalle": "Haber divisa queda a 0,00 y bloqueado. El panel muestra «Éxito» y la línea aparece en la lista con Orden 1."
+      },
+      {
+       "texto": "Fíjate en la parte inferior de la línea: Dimensión 1 y Dimensión 2 a 0 (obligatorias) y los datos de control.",
+       "imagen": "asientos-d-200.webp",
+       "hotspot": {
+        "x": 40.6,
+        "y": 32.0,
+        "w": 56.5,
+        "h": 31.4,
+        "etiqueta": "Dimensión 1"
+       },
+       "detalle": "Las dimensiones son campos de análisis de costes; en TUTORIAL se dejan en 0 «General». Cantidad 1 y 2 quedan a 0,00. Debajo, «Datos de control» muestra el identificador interno del apunte y del asiento."
+      },
+      {
+       "texto": "Pulsa otra vez el «Nuevo» de la lista de líneas.",
+       "detalle": "La línea 2 ya trae Haber 1.000,00 (el importe que falta para cuadrar)."
+      },
+      {
+       "texto": "Pon Proyecto 0 y la cuenta 57200.00000 Bancos y pulsa «Guardar».",
+       "detalle": "Solo faltan el Proyecto 0 y la cuenta: el Haber ya viene propuesto.",
+       "imagen": "asientos-d-201.webp",
+       "hotspot": {
+        "x": 40.6,
+        "y": 63.6,
+        "w": 56.5,
+        "h": 6.7,
+        "etiqueta": "Cuenta"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Resultado: asiento 6 de la empresa 0, diario {INI}, documento {INI}-DOC-001, Provisional, con 62902.00000 Debe 1.000,00 y 57200.00000 Haber 1.000,00. Compruébalo en la lista de asientos: el 6 sale con diario {INI} y Debe = Haber = 1.000,00."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué contiene la cabecera de un asiento?",
+     "opciones": [
+      "Las cuentas y los importes",
+      "Empresa, fecha, diario y justificante, entre otros datos",
+      "Solo el estado Contabilizado",
+      "Únicamente las dimensiones analíticas"
+     ],
+     "correcta": 1,
+     "explicacion": "La cabecera recoge empresa, fecha, diario, justificante, documento y notas; las líneas llevan cuentas e importes."
+    },
+    {
+     "pregunta": "¿Qué son Rotura y Numerador en el numerador de justificantes?",
+     "opciones": [
+      "Importes literales",
+      "Máscaras de formato (#e, #yy, #d, #n…)",
+      "Códigos de cuenta",
+      "Fechas"
+     ],
+     "correcta": 1,
+     "explicacion": "Son máscaras: un texto sin #n nunca muestra el contador."
+    },
+    {
+     "pregunta": "¿Qué justificante genera la máscara {INI}#yy-#n con Justificación 6 en 2026?",
+     "opciones": [
+      "{INI}26-000001",
+      "{INI}-26-1",
+      "0",
+      "26-{INI}"
+     ],
+     "correcta": 0,
+     "explicacion": "Con #yy el año, #n el contador y 6 dígitos sale {INI}26-000001."
+    },
+    {
+     "pregunta": "¿Qué propone el ERP al pulsar «Nuevo» para la línea 2?",
+     "opciones": [
+      "Un Debe de 1.000,00",
+      "El Haber que falta para cuadrar (1.000,00)",
+      "Una cuenta al azar",
+      "Nada"
+     ],
+     "correcta": 1,
+     "explicacion": "La línea nueva propone el importe que descuadra: Haber 1.000,00."
+    },
+    {
+     "pregunta": "¿En qué estado nace un asiento?",
+     "opciones": [
+      "Contabilizado",
+      "Finalizado",
+      "Provisional",
+      "Auditado"
+     ],
+     "correcta": 2,
+     "explicacion": "Nace Provisional y pasa a Contabilizado al finalizarlo."
+    }
+   ],
+   "checklist": [
+    "Pulsas «Nuevo» en la lista de asientos.",
+    "Eliges Empresa 0 y Diario {INI}.",
+    "Eliges el numerador {INI} en Justificante.",
+    "Escribes Documento {INI}-DOC-001 y las Notas.",
+    "Guardas y ves el asiento con estado Provisional (banda naranja).",
+    "El numerador {INI} tiene Rotura #e#yy, Numerador {INI}#yy-#n y Justificación 6.",
+    "En «Líneas de apuntes» creas la línea 1: Proyecto 0, cuenta 62902.00000, Debe divisa 1.000,00.",
+    "Creas la línea 2: Proyecto 0, cuenta 57200.00000, Haber 1.000,00.",
+    "En la lista de asientos, el 6 sale con diario {INI} y Debe = Haber = 1.000,00.",
+    "Los asientos nuevos reciben justificantes del tipo {INI}26-000001."
+   ],
+   "problemas": [
+    {
+     "problema": "El asiento se guarda pero el justificante sale «0» en todos los asientos.",
+     "solucion": "Rotura y Numerador son máscaras, no valores. Corrige el numerador {INI}: Rotura #e#yy, Numerador {INI}#yy-#n, Justificación 6. Los ya guardados conservan el «0»."
+    }
+   ]
+  },
+  {
+   "id": "asientos-3",
+   "numero": 3,
+   "titulo": "Verificar el cuadre",
+   "objetivo": "Comprobarás que el Debe y el Haber coinciden en el asiento para asegurar que puede contabilizarse sin descuadres.",
+   "concepto": "Un asiento solo puede contabilizarse si cuadra: la suma del Debe debe ser igual a la del Haber. El bloque «Totales» de la pestaña Líneas de apuntes va sumando a medida que se graban líneas y muestra la diferencia en «Cuadre».\n\nMientras el Cuadre no es 0, el botón «Finalizar» desaparece de la barra: el ERP no deja contabilizar un asiento descuadrado.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-3-cuadre",
+     "titulo": "Verificar el cuadre",
+     "paraQueSirve": "Un asiento descuadrado no se puede contabilizar. El bloque Totales te dice en todo momento cuánto falta para cuadrar.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "El bloque Totales de la pestaña Líneas de apuntes muestra el número de líneas, el Debe, el Haber y el Cuadre.",
+      "Con una sola línea el Cuadre sale en rojo y el botón Finalizar no aparece. Con las dos líneas, Debe = Haber y vuelve a aparecer «Finalizar»."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Tras guardar la línea 1, mira el bloque Totales.",
+       "detalle": "Debe 1.000,00, Haber 0,00 y Cuadre 1.000,00 en rojo; el botón Finalizar no aparece. La captura es un asiento de prueba (CV-DOC-001) con una sola línea de 1.000,00.",
+       "imagen": "asientos-d-202.webp",
+       "hotspot": {
+        "x": 77.6,
+        "y": 20.8,
+        "w": 19.3,
+        "h": 5.0,
+        "etiqueta": "Cuadre"
+       }
+      },
+      {
+       "texto": "Tras guardar la línea 2, comprueba de nuevo Totales.",
+       "detalle": "Debe 1.000,00 = Haber 1.000,00 y Cuadre 0,00; vuelve a aparecer «Finalizar». La captura es del asiento 7 (300,00) ya contabilizado: por eso en la barra se ve «Abrir a provisional» en lugar de «Finalizar»; en tu asiento, aún provisional, verás «Finalizar».",
+       "imagen": "asientos-d-203.webp",
+       "hotspot": {
+        "x": 77.4,
+        "y": 20.1,
+        "w": 19.9,
+        "h": 5.6,
+        "etiqueta": "Cuadre"
+       }
+      },
+      {
+       "texto": "Si el cuadre no se actualiza, pulsa «Recalcular cuadre» en la barra superior.",
+       "detalle": "Es el texto «Recalcular cuadre» de la barra superior de la ficha, a la izquierda de «Reordenar líneas».",
+       "imagen": "asientos-d-202.webp",
+       "hotspot": {
+        "x": 66.0,
+        "y": 6.5,
+        "w": 7.1,
+        "h": 3.0,
+        "etiqueta": "Recalcular cuadre"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El ERP no deja contabilizar un asiento descuadrado: mientras el Cuadre no es 0 el botón «Finalizar» desaparece de la barra."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuándo se puede contabilizar un asiento?",
+     "opciones": [
+      "Cuando el Cuadre es 0 (Debe = Haber)",
+      "Siempre",
+      "Solo con una línea",
+      "Cuando tiene tres líneas"
+     ],
+     "correcta": 0,
+     "explicacion": "Solo cuadra con Debe = Haber; si no, Finalizar desaparece."
+    },
+    {
+     "pregunta": "Con una sola línea de 1.000,00 al Debe, ¿qué muestra el Cuadre?",
+     "opciones": [
+      "0,00",
+      "1.000,00 en rojo",
+      "500,00",
+      "2.000,00"
+     ],
+     "correcta": 1,
+     "explicacion": "Cuadre 1.000,00 en rojo y sin botón Finalizar."
+    },
+    {
+     "pregunta": "¿Qué haces si el cuadre no se actualiza?",
+     "opciones": [
+      "Borras el asiento",
+      "Pulsas «Recalcular cuadre»",
+      "Cambias el diario",
+      "Cierras sesión"
+     ],
+     "correcta": 1,
+     "explicacion": "El botón «Recalcular cuadre» está en la barra superior."
+    },
+    {
+     "pregunta": "¿Qué botón reaparece cuando el asiento cuadra?",
+     "opciones": [
+      "Abrir a provisional",
+      "Finalizar",
+      "Cancelar",
+      "Ordenar"
+     ],
+     "correcta": 1,
+     "explicacion": "Con Cuadre 0,00 vuelve a aparecer «Finalizar»."
+    }
+   ],
+   "checklist": [
+    "Con solo la línea 1, Totales muestra Debe 1.000,00, Haber 0,00 y Cuadre 1.000,00 en rojo.",
+    "Con solo la línea 1 no ves el botón «Finalizar».",
+    "Tras la línea 2, Debe 1.000,00 y Haber 1.000,00.",
+    "Cuadre 0,00.",
+    "Vuelve a aparecer el botón «Finalizar».",
+    "Sabes usar «Recalcular cuadre» si el cuadre no se actualiza."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-4",
+   "numero": 4,
+   "titulo": "Añadir dos líneas más",
+   "objetivo": "Añadirás dos apuntes a un asiento y comprobarás que sigue cuadrado para registrar varias operaciones en un mismo documento.",
+   "concepto": "Un asiento puede tener tantas líneas como haga falta; lo único que se exige es que el total cuadre. Aquí se añade un segundo gasto, de correos y mensajería, pagado también por banco.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-4-lineas",
+     "titulo": "Añadir dos líneas más",
+     "paraQueSirve": "Muestra que un asiento admite varias líneas siempre que el total cuadre.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "Asiento 6 con cuatro líneas: 62902 D 1.000 / 57200 H 1.000 / 62903 D 250 / 57200 H 250."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "En «Líneas de apuntes» pulsa el «Nuevo» de la lista de líneas: Proyecto 0, cuenta 62903.00000 Correos y mensajería, Debe divisa 250. Guarda."
+      },
+      {
+       "texto": "Pulsa otra vez el «Nuevo» de la lista de líneas: el ERP propone Haber 250,00. Pon Proyecto 0 y la cuenta 57200.00000. Guarda.",
+       "detalle": "Totales indica 4 líneas, Debe 1.250,00, Haber 1.250,00 y Cuadre 0,00. La captura es del asiento ya terminado, con sus 4 líneas.",
+       "imagen": "asientos-d-204.webp",
+       "hotspot": {
+        "x": 0.5,
+        "y": 20.0,
+        "w": 97.0,
+        "h": 5.8,
+        "etiqueta": "Totales"
+       }
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuántas líneas tiene el asiento 6 al terminar este ejercicio?",
+     "opciones": [
+      "2",
+      "3",
+      "4",
+      "6"
+     ],
+     "correcta": 2,
+     "explicacion": "4 líneas: 62902, 57200, 62903 y 57200."
+    },
+    {
+     "pregunta": "¿Qué importe propone el ERP al crear la línea de contrapartida del gasto de 250?",
+     "opciones": [
+      "Haber 250,00",
+      "Debe 250,00",
+      "Haber 1.250,00",
+      "Nada"
+     ],
+     "correcta": 0,
+     "explicacion": "Propone el importe que descuadra: Haber 250,00."
+    },
+    {
+     "pregunta": "¿Cuál es el total del Debe del asiento 6 con las 4 líneas?",
+     "opciones": [
+      "1.000,00",
+      "1.250,00",
+      "250,00",
+      "2.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.000 + 250 = 1.250,00."
+    },
+    {
+     "pregunta": "¿Qué cuenta se usa para correos y mensajería?",
+     "opciones": [
+      "62900.00000",
+      "62902.00000",
+      "62903.00000",
+      "57200.00000"
+     ],
+     "correcta": 2,
+     "explicacion": "62903.00000 Correos y mensajería."
+    }
+   ],
+   "checklist": [
+    "Añades línea 3: Proyecto 0, cuenta 62903.00000, Debe 250.",
+    "Añades línea 4: Proyecto 0, cuenta 57200.00000, Haber 250,00.",
+    "Totales indica 4 líneas.",
+    "Debe 1.250,00 y Haber 1.250,00.",
+    "Cuadre 0,00.",
+    "Las líneas 3 y 4 tienen Documento {INI}-DOC-001 heredado de la cabecera."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-5",
+   "numero": 5,
+   "titulo": "Crear un asiento nuevo",
+   "objetivo": "Crearás un segundo asiento provisional en el mismo diario para registrar una nueva operación independiente.",
+   "concepto": "Cada operación independiente va en su propio asiento, con su número y su justificante. Se crea otro asiento en la misma empresa, diario y cuentas: un pago de otros servicios de 300 € por banco.",
+   "duracionMin": 12,
+   "secciones": [
+    {
+     "id": "asientos-5-nuevo",
+     "titulo": "Crear un asiento nuevo",
+     "paraQueSirve": "Una operación independiente se registra en un asiento propio, con su número y justificante.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "El «Nuevo» de la ficha queda inactivo mientras estás en las líneas de otro asiento, así que se vuelve a la lista de asientos para crear uno nuevo."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Vuelve a la lista de asientos y pulsa «Nuevo».",
+       "detalle": "El «Nuevo» de la ficha queda inactivo mientras estás en las líneas de otro asiento."
+      },
+      {
+       "texto": "Rellena la cabecera: Empresa 0, Fecha 12-11-2026, Diario {INI}, Justificante {INI}, Documento {INI}-DOC-002, Notas «{INI} Ejercicio 5 segundo asiento». Guarda."
+      },
+      {
+       "texto": "Abre tu asiento nuevo ({INI}-DOC-002; en las capturas, el 7) › «Líneas de apuntes» y, con el «Nuevo» de la lista de líneas, crea la línea 1: Proyecto 0, cuenta 62900.00000 Otros servicios, Debe 300; y la línea 2: Proyecto 0, cuenta 57200.00000, Haber 300.",
+       "detalle": "Asiento 7 cuadrado: 62900 Debe 300,00 y 57200 Haber 300,00.",
+       "imagen": "asientos-d-205.webp",
+       "hotspot": {
+        "x": 39.5,
+        "y": 20.8,
+        "w": 57.5,
+        "h": 5.0,
+        "etiqueta": "Totales"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "En la lista de asientos debe haber dos asientos del diario {INI}: el 6 por 1.250,00 y el 7 por 300,00."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cómo reconoces tu segundo asiento en la lista?",
+     "opciones": [
+      "Por el Documento {INI}-DOC-002 y el diario {INI}",
+      "Siempre es el asiento 7",
+      "Por el diario DG",
+      "Por el justificante AC"
+     ],
+     "correcta": 0,
+     "explicacion": "El número de asiento lo pone el ERP (en la captura, 7); el documento {INI}-DOC-002 y tu diario lo identifican siempre."
+    },
+    {
+     "pregunta": "¿Qué cuenta va al Debe en el asiento 7?",
+     "opciones": [
+      "62902.00000",
+      "62903.00000",
+      "62900.00000 Otros servicios",
+      "57200.00000"
+     ],
+     "correcta": 2,
+     "explicacion": "62900.00000 Otros servicios, Debe 300."
+    },
+    {
+     "pregunta": "¿Cuál es el importe del asiento 7?",
+     "opciones": [
+      "250,00",
+      "300,00",
+      "1.250,00",
+      "1.000,00"
+     ],
+     "correcta": 1,
+     "explicacion": "300,00 por banco."
+    },
+    {
+     "pregunta": "¿Desde dónde se crea un asiento nuevo?",
+     "opciones": [
+      "Desde la ficha de otro asiento con su «Nuevo»",
+      "Desde la lista de asientos con «Nuevo»",
+      "Desde el proceso Contabilización",
+      "Desde Integridad"
+     ],
+     "correcta": 1,
+     "explicacion": "El «Nuevo» de la ficha queda inactivo; hay que volver a la lista."
+    }
+   ],
+   "checklist": [
+    "Vuelves a la lista de asientos y pulsas «Nuevo».",
+    "Cabecera: Empresa 0, Fecha 12-11-2026, Diario {INI}, Justificante {INI}, Documento {INI}-DOC-002.",
+    "Notas «{INI} Ejercicio 5 segundo asiento».",
+    "Línea 1: 62900.00000 Debe 300.",
+    "Línea 2: 57200.00000 Haber 300.",
+    "El asiento 7 cuadra y está Provisional.",
+    "En la lista hay dos asientos {INI}: el 6 por 1.250,00 y el 7 por 300,00."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-6",
+   "numero": 6,
+   "titulo": "Contabilizar el asiento",
+   "objetivo": "Contabilizarás asientos uno a uno y en proceso para pasar sus importes al mayor y a los saldos de cuentas.",
+   "concepto": "Contabilizar (finalizar) un asiento lo da por bueno: sus importes pasan al libro mayor (la lista de movimientos de cada cuenta, con su saldo) y a los saldos de las cuentas, y ya no se puede modificar salvo que se vuelva a abrir. Hay dos maneras: asiento a asiento con el botón «Finalizar», o muchos a la vez con el proceso «Contabilización».\n\nPara contabilizar, la fecha del asiento debe caer dentro de un periodo contable: la empresa tiene una vigencia, cada año su ejercicio y cada ejercicio sus periodos mensuales. Un asiento del 12-11-2026 cae en el ejercicio 2026, periodo 11.",
+   "duracionMin": 25,
+   "secciones": [
+    {
+     "id": "asientos-6-finalizar",
+     "titulo": "Asiento a asiento: botón Finalizar",
+     "paraQueSirve": "Finalizar da el asiento por bueno y mete sus importes en el mayor y en los saldos.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos"
+     ],
+     "explicacion": [
+      "Al finalizar, el Estado pasa a Contabilizado y aparece la pestaña «Saldos». El botón cambia a «Abrir a provisional», que deshace la contabilización si hay que corregir algo.",
+      "«Abrir a provisional» vuelve a dejar el asiento modificable y quita sus importes del mayor. El asiento provisional no tiene impacto en los estados financieros. Si el periodo está cerrado no se puede abrir a provisional."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre tu asiento {INI}-DOC-002 (en las capturas, el 7), ya cuadrado, y pulsa «Finalizar» en la barra superior."
+      },
+      {
+       "texto": "Comprueba el resultado: sale «Éxito», la banda pasa a FINALIZADO, el Estado a Contabilizado y aparece la pestaña «Saldos».",
+       "imagen": "asientos-d-206.webp",
+       "hotspot": {
+        "x": 0.2,
+        "y": 34.3,
+        "w": 97.4,
+        "h": 4.0,
+        "etiqueta": "FINALIZADO"
+       },
+       "detalle": "La captura es del asiento 6 ({INI}-DOC-001); el 7 queda igual al finalizarlo."
+      },
+      {
+       "texto": "Fíjate en que el botón cambia a «Abrir a provisional».",
+       "detalle": "Su ayuda indica que vuelve a dejar el asiento modificable y quita sus importes del mayor; si el periodo está cerrado no se puede.",
+       "imagen": "asientos-d-206.webp",
+       "hotspot": {
+        "x": 72.5,
+        "y": 6.0,
+        "w": 8.1,
+        "h": 3.6,
+        "etiqueta": "Abrir a provisional"
+       }
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "asientos-6-proceso",
+     "titulo": "Varios asientos: proceso Contabilización",
+     "paraQueSirve": "Contabiliza muchos asientos provisionales a la vez, dentro de un rango de fechas.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Procesos",
+      "Contabilización (casientos_contab)"
+     ],
+     "explicacion": [
+      "El proceso contabiliza todos los provisionales del rango, también los de otras personas que trabajan en la misma base, por eso hay que filtrar siempre por empresa y por tu diario."
+     ],
+     "campos": [
+      {
+       "campo": "Fecha inicio / Fecha fin *",
+       "significado": "Rango de fechas de los asientos provisionales que se contabilizan.",
+       "ejemplo": "01-11-2026 / 12-11-2026"
+      },
+      {
+       "campo": "Empresa *",
+       "significado": "Empresa de los asientos. Por defecto «*» (todas).",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Diario (columnas de consulta)",
+       "significado": "Filtro opcional. Limítalo a tu diario para no contabilizar asientos de otros.",
+       "ejemplo": "{INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta. Pon las fechas, la Empresa 0 y, en Columnas de consulta, el Diario {INI}.",
+       "imagen": "asientos-d-208.webp",
+       "hotspot": {
+        "x": 56.8,
+        "y": 41.4,
+        "w": 14.1,
+        "h": 7.1,
+        "etiqueta": "Diario"
+       },
+       "detalle": "«Columnas de consulta» es el segundo bloque del formulario, debajo de «Variables»: sirve para filtrar. En Diario despliega la lista y elige el tuyo (en la captura sale «ENTRADA DE ASIENTOS EA»). La captura tiene Fecha fin 17-11-2026: vale cualquier fecha igual o posterior a la de tus asientos."
+      },
+      {
+       "texto": "Pulsa «Ejecutar consulta» y confirma «¿Está seguro de ejecutar el proceso?» con «Aceptar».",
+       "detalle": "«Ejecutar consulta» está abajo en el centro y también arriba a la derecha del formulario."
+      },
+      {
+       "texto": "Revisa el resultado: cada asiento tratado sale con el mensaje «Proceso completado correctamente».",
+       "detalle": "En la captura sale un asiento de prueba del autor (ID. asiento 93, justificante CV26-000001, filtro Diario CV). En la tuya saldrá tu asiento {INI}-DOC-001 (el 6 en las capturas). ID. asiento es un número interno del ERP, distinto del número de asiento.",
+       "imagen": "asientos-d-209.webp",
+       "hotspot": {
+        "x": 26.5,
+        "y": 13.0,
+        "w": 15.8,
+        "h": 2.9,
+        "etiqueta": "Proceso completado correctamente."
+       }
+      },
+      {
+       "texto": "Abre tu asiento {INI}-DOC-001 (el 6 en las capturas): debe estar FINALIZADO, con 4 líneas y 1.250,00 cuadrado.",
+       "imagen": "asientos-d-206.webp",
+       "hotspot": {
+        "x": 0.2,
+        "y": 34.3,
+        "w": 97.4,
+        "h": 4.0,
+        "etiqueta": "FINALIZADO"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Si se deja la Empresa en «*» y no se filtra el diario, el proceso contabiliza todos los asientos provisionales del rango, también los de otras personas que trabajan en la misma base."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Filtra siempre por empresa y por tu diario."
+      }
+     ]
+    },
+    {
+     "id": "asientos-6-vigencia",
+     "titulo": "Nota: vigencia de empresa, ejercicio y periodos",
+     "paraQueSirve": "Un asiento solo se puede contabilizar si su fecha cae dentro de la vigencia de la empresa y tiene ejercicio y periodo.",
+     "ruta": [
+      "Maestro de empresas (cempresa)",
+      "Ejercicios contables (cejercic)",
+      "Períodos contables (cperiodo)"
+     ],
+     "explicacion": [
+      "Pueden abrirse desde el buscador. La empresa tiene una vigencia (cempresa); cada año tiene su ejercicio contable (cejercic) dentro de esa vigencia, y cada ejercicio sus periodos mensuales (cperiodo). Los asientos del día a día deben caer dentro de un periodo abierto.",
+      "Cuando la fecha del asiento no tiene ejercicio puede salir el error «cperiodo_ins: Fechas del periodo fuera de rango de vigencia en empresa».",
+      "En TUTORIAL la empresa 0 está vigente desde 2000 sin fecha fin y tiene ejercicios abiertos hasta 2026 (en la captura ya aparece también 2027). En el bloque «Generar tres copias en meses consecutivos» crearás copias con fecha de 2027: antes, comprueba en cejercic que existe el ejercicio 2027."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre el Maestro de empresas (cempresa) desde el buscador y mira la vigencia de la empresa 0.",
+       "detalle": "Fecha inicio 01-01-2000 y Fecha fin vacía: vigencia abierta.",
+       "imagen": "asientos-d-211.webp",
+       "hotspot": {
+        "x": 64.4,
+        "y": 20.3,
+        "w": 16.5,
+        "h": 11.6,
+        "etiqueta": "Fecha inicio"
+       }
+      },
+      {
+       "texto": "Abre Ejercicios contables (cejercic).",
+       "detalle": "Ejercicios de la empresa 0, todos abiertos. Fíjate en si ya existe 2027: lo necesitarás en el bloque «Generar tres copias en meses consecutivos».",
+       "imagen": "asientos-d-212.webp",
+       "hotspot": {
+        "x": 9.4,
+        "y": 11.2,
+        "w": 5.0,
+        "h": 27.9,
+        "etiqueta": "Ejercicio"
+       }
+      },
+      {
+       "texto": "Abre Períodos contables (cperiodo).",
+       "detalle": "Hay un periodo por mes, con su fecha inicial y final y su estado contable.",
+       "imagen": "asientos-d-213.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Al contabilizar sale «cperiodo_ins: Fechas del periodo fuera de rango de vigencia en empresa» cuando la fecha del asiento no tiene ejercicio."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Abre cempresa y revisa que la Fecha inicio de tu empresa sea anterior al ejercicio (y la Fecha fin vacía o posterior); después da de alta el ejercicio en cejercic («Añadir ejercicio») y sus periodos en cperiodo («Añadir periodo»). No cambies la vigencia de empresas que no sean tuyas."
+      },
+      {
+       "tipo": "nota",
+       "texto": "En la empresa 0 la vigencia es abierta (desde 2000 sin fecha fin), así que el error solo saldría si falta el ejercicio o el periodo de la fecha del asiento."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué hace el botón «Finalizar»?",
+     "opciones": [
+      "Borra el asiento",
+      "Contabiliza el asiento: sus importes pasan al mayor y a los saldos",
+      "Duplica el asiento",
+      "Cambia el diario"
+     ],
+     "correcta": 1,
+     "explicacion": "Finalizar contabiliza el asiento."
+    },
+    {
+     "pregunta": "¿Qué botón deshace la contabilización de un asiento?",
+     "opciones": [
+      "Copiar asiento",
+      "Recalcular cuadre",
+      "Abrir a provisional",
+      "Reordenar líneas"
+     ],
+     "correcta": 2,
+     "explicacion": "«Abrir a provisional» lo deja modificable y quita sus importes del mayor (si el periodo no está cerrado)."
+    },
+    {
+     "pregunta": "¿Qué riesgo hay si el proceso Contabilización se ejecuta con Empresa «*» y sin filtrar el diario?",
+     "opciones": [
+      "Ninguno",
+      "Contabiliza también los provisionales de otras personas de la misma base",
+      "No ejecuta nada",
+      "Borra los asientos"
+     ],
+     "correcta": 1,
+     "explicacion": "Contabiliza todos los provisionales del rango; hay que filtrar por empresa y diario."
+    },
+    {
+     "pregunta": "¿Qué mensaje muestra el proceso por cada asiento tratado correctamente?",
+     "opciones": [
+      "Éxito",
+      "Proceso completado correctamente.",
+      "Asiento finalizado",
+      "Cuadre 0,00"
+     ],
+     "correcta": 1,
+     "explicacion": "El resultado lista cada asiento con «Proceso completado correctamente»."
+    },
+    {
+     "pregunta": "¿Qué debe cumplirse para contabilizar según la vigencia?",
+     "opciones": [
+      "Que la fecha caiga dentro de un periodo del ejercicio y de la vigencia de la empresa",
+      "Que el asiento tenga tres líneas",
+      "Que el diario sea DG",
+      "Que no haya justificante"
+     ],
+     "correcta": 0,
+     "explicacion": "La empresa tiene vigencia, cada año un ejercicio y cada ejercicio sus periodos."
+    }
+   ],
+   "checklist": [
+    "Finalizas el asiento 7 con «Finalizar» y sale «Éxito».",
+    "El asiento 7 muestra la banda FINALIZADO y Estado Contabilizado.",
+    "Aparece la pestaña «Saldos».",
+    "El botón ha cambiado a «Abrir a provisional».",
+    "En Contabilización pones fechas 01-11-2026 / 12-11-2026, Empresa 0 y Diario {INI}.",
+    "Ejecutas la consulta y confirmas con «Aceptar».",
+    "El resultado muestra «Proceso completado correctamente.» para el asiento 6.",
+    "El asiento 6 está FINALIZADO, con 4 líneas y 1.250,00 cuadrado.",
+    "Has mirado la vigencia de la empresa 0 en cempresa y los ejercicios en cejercic."
+   ],
+   "problemas": [
+    {
+     "problema": "Si se deja la Empresa en «*» y no se filtra el diario, se contabilizan los asientos de otras personas.",
+     "solucion": "Filtra siempre por empresa y por tu diario."
+    },
+    {
+     "problema": "Error «cperiodo_ins: Fechas del periodo fuera de rango de vigencia en empresa».",
+     "solucion": "Revisa la Fecha inicio en cempresa, da de alta el ejercicio en cejercic y sus periodos en cperiodo. No cambies la vigencia de empresas que no sean tuyas."
+    }
+   ]
+  },
+  {
+   "id": "asientos-11",
+   "numero": 7,
+   "titulo": "Duplicar el asiento",
+   "objetivo": "Duplicarás un asiento existente para crear copias de operaciones repetidas sin teclearlas de nuevo.",
+   "concepto": "Duplicar sirve para asientos que se repiten igual (una cuota, un alquiler, un ajuste mensual): se copia uno ya hecho en lugar de teclearlo de nuevo. Revisa siempre el estado de la copia antes de seguir.",
+   "duracionMin": 12,
+   "secciones": [
+    {
+     "id": "asientos-11-duplicar",
+     "titulo": "Duplicar el asiento",
+     "paraQueSirve": "Copia un asiento ya hecho en lugar de teclearlo de nuevo.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "ficha del asiento 6",
+      "Copiar asiento"
+     ],
+     "explicacion": [
+      "El botón «Copiar asiento» hace una copia o varias con cadencia mensual. Si se rellena Descripción, sobrescribe la de los nuevos apuntes. «Invertir asiento» crea un contraasiento (el mismo asiento con Debe y Haber cambiados, que anula el original) a la fecha seleccionada. «Copiar todo» copia también los datos de cartera e impuestos del original, si los tiene. Si se rellena Documento, sobrescribe el de los nuevos apuntes y asientos.",
+      "Al aceptar, la página intenta abrir el asiento nuevo en otra pestaña del navegador. Si el navegador lo bloquea no pasa nada: la copia está creada y se ve en la lista.",
+      "La copia lleva el justificante AC en lugar del numerador {INI} del original. Si lo necesitas, cámbialo en la cabecera antes de finalizar."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa *",
+       "significado": "Empresa en la que se crea la copia.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Fecha *",
+       "significado": "Fecha de la (primera) copia.",
+       "ejemplo": "12-11-2026"
+      },
+      {
+       "campo": "Documento",
+       "significado": "Si se rellena, sustituye el documento de la cabecera y de las líneas.",
+       "ejemplo": "{INI}-DOC-003"
+      },
+      {
+       "campo": "Descripción",
+       "significado": "Si se rellena, sustituye la descripción de los apuntes y las notas.",
+       "ejemplo": "{INI} duplicado del asiento 6"
+      },
+      {
+       "campo": "Número a generar *",
+       "significado": "Cuántas copias se crean.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Cadencia mensual *",
+       "significado": "Meses entre una copia y la siguiente.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Invertir asiento *",
+       "significado": "Sí: crea el contraasiento (Debe y Haber cambiados), útil para anular.",
+       "ejemplo": "No"
+      },
+      {
+       "campo": "Copiar todo *",
+       "significado": "Sí: copia también los datos de cartera e impuestos del original, si los tiene.",
+       "ejemplo": "Sí"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre tu asiento {INI}-DOC-001 (el 6 en las capturas) y pulsa «Copiar asiento», el botón naranja de la barra superior."
+      },
+      {
+       "texto": "Deja la Fecha 12-11-2026 y pon Documento {INI}-DOC-003 y la Descripción «{INI} duplicado del asiento 6»."
+      },
+      {
+       "texto": "Deja Número a generar 1 y pulsa «Aceptar».",
+       "detalle": "Es el diálogo «Copiar asiento» con una sola copia a la misma fecha. En la captura la Descripción se dejó vacía y la Fecha es 17-11-2026.",
+       "imagen": "asientos-d-220.webp",
+       "hotspot": {
+        "x": 58.0,
+        "y": 81.4,
+        "w": 4.8,
+        "h": 3.8,
+        "etiqueta": "Aceptar"
+       }
+      },
+      {
+       "texto": "Vuelve a la lista de asientos.",
+       "detalle": "Aparece la copia por 1.250,00 con clasificación Manual (en la captura, el asiento 8). Mira su Estado: puede salir Provisional o ya Contabilizada, como en la captura. El 6 y el 7 siguen Contabilizados.",
+       "imagen": "asientos-d-221.webp",
+       "hotspot": {
+        "x": 74.3,
+        "y": 47.6,
+        "w": 6.8,
+        "h": 3.2,
+        "etiqueta": "Estado"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Al aceptar, la página intenta abrir el asiento nuevo en otra pestaña. Si el navegador lo bloquea no pasa nada: la copia está creada y se ve en la lista."
+      },
+      {
+       "tipo": "nota",
+       "texto": "La copia lleva el justificante AC en lugar del numerador {INI} del original. Si lo necesitas, cámbialo en la cabecera antes de finalizar."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué debes mirar en la copia antes de seguir?",
+     "opciones": [
+      "Su Estado: puede salir Provisional o ya Contabilizada",
+      "Nada: siempre sale Provisional",
+      "Que tenga otra empresa",
+      "Que el diario sea DG"
+     ],
+     "correcta": 0,
+     "explicacion": "La copia puede salir en un estado u otro; si está Contabilizada y hay que corregirla, primero se abre a provisional."
+    },
+    {
+     "pregunta": "¿Qué hace «Invertir asiento = Sí»?",
+     "opciones": [
+      "Borra el original",
+      "Crea el contraasiento (Debe y Haber cambiados), útil para anular",
+      "Copia solo el Debe",
+      "Cambia el diario"
+     ],
+     "correcta": 1,
+     "explicacion": "Crea el contraasiento."
+    },
+    {
+     "pregunta": "¿Qué justificante lleva la copia?",
+     "opciones": [
+      "Tu numerador {INI}",
+      "AC",
+      "DG",
+      "Ninguno"
+     ],
+     "correcta": 1,
+     "explicacion": "Lleva AC en lugar del numerador {INI}."
+    },
+    {
+     "pregunta": "¿Para qué sirve duplicar un asiento?",
+     "opciones": [
+      "Para asientos que se repiten igual, sin teclearlos de nuevo",
+      "Para borrar el original",
+      "Para cambiar de empresa",
+      "Para cuadrar un asiento descuadrado"
+     ],
+     "correcta": 0,
+     "explicacion": "Cuotas, alquileres o ajustes mensuales: se copia uno ya hecho."
+    },
+    {
+     "pregunta": "¿Qué hace Documento en el diálogo de copia, si se rellena?",
+     "opciones": [
+      "Nada",
+      "Sustituye el documento de la cabecera y de las líneas",
+      "Cambia la fecha",
+      "Elige la empresa"
+     ],
+     "correcta": 1,
+     "explicacion": "Sustituye el documento de cabecera y líneas."
+    }
+   ],
+   "checklist": [
+    "Abres el asiento 6 y pulsas «Copiar asiento».",
+    "Pones Documento {INI}-DOC-003 y Descripción «{INI} duplicado del asiento 6».",
+    "Dejas Número a generar 1 y Cadencia mensual 1.",
+    "Pulsas «Aceptar».",
+    "En la lista aparece la copia por 1.250,00 con clasificación Manual y miras su Estado.",
+    "El asiento 8 tiene las mismas 4 líneas que el 6.",
+    "El 6 y el 7 siguen Contabilizados."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-12",
+   "numero": 8,
+   "titulo": "Generar tres copias en meses consecutivos",
+   "objetivo": "Generarás copias de un asiento con cadencia mensual para programar de una vez los asientos recurrentes de la empresa.",
+   "concepto": "Con Número a generar y Cadencia mensual se programan de una vez los asientos recurrentes de los próximos meses: cada copia se fecha un mes después de la anterior. Aquí se hace desde el 01-12-2026.\n\nLa numeración de asientos empieza de nuevo cada año.",
+   "duracionMin": 18,
+   "secciones": [
+    {
+     "id": "asientos-12-copias",
+     "titulo": "Tres copias en meses consecutivos",
+     "paraQueSirve": "Programa de una vez los asientos recurrentes de los próximos meses.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Copiar asiento"
+     ],
+     "explicacion": [
+      "En la lista salen tres asientos: 01-12-2026 (asiento 9 de 2026), 01-01-2027 y 01-02-2027 (asientos 1 y 2 de 2027).",
+      "Las copias de 2027 necesitan que exista el ejercicio 2027 de la empresa 0 (lo comprobaste en el bloque «Contabilizar el asiento»)."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la copia {INI}-DOC-003 (en la captura, el asiento 8) y pulsa «Copiar asiento»."
+      },
+      {
+       "texto": "Rellena Fecha 01-12-2026, Documento {INI}-DOC-004, Descripción «{INI} copia mensual», Número a generar 3 y Cadencia mensual 1. Acepta."
+      },
+      {
+       "texto": "En la lista localiza las tres copias con Documento {INI}-DOC-004: 01-12-2026, 01-01-2027 y 01-02-2027 (en la captura, el asiento 9 de 2026 y los asientos 1 y 2 de 2027).",
+       "detalle": "Una copia en diciembre de 2026 y dos en 2027.",
+       "imagen": "asientos-d-222.webp",
+       "hotspot": {
+        "x": 24.5,
+        "y": 40.8,
+        "w": 6.0,
+        "h": 7.2,
+        "etiqueta": "Documento"
+       }
+      },
+      {
+       "texto": "Abre la última copia: fecha 01-02-2027, ejercicio 2027, periodo 2.",
+       "detalle": "La numeración de asientos empieza de nuevo cada año.",
+       "imagen": "asientos-d-223.webp",
+       "hotspot": {
+        "x": 33.0,
+        "y": 20.3,
+        "w": 21.2,
+        "h": 6.2,
+        "etiqueta": "01-02-2027"
+       }
+      },
+      {
+       "texto": "Si alguna copia está Provisional, contabilízala con el proceso Contabilización: Fecha inicio 01-11-2026, Fecha fin 28-02-2027, Empresa 0 y Diario {INI}.",
+       "detalle": "Si ya salieron contabilizadas, el proceso no encuentra nada que contabilizar.",
+       "imagen": "asientos-d-224.webp",
+       "hotspot": {
+        "x": 42.7,
+        "y": 28.9,
+        "w": 14.6,
+        "h": 4.8,
+        "etiqueta": "Fecha fin"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si al contabilizar las copias de 2027 sale «cperiodo_ins: Fechas del periodo fuera de rango…», falta el ejercicio 2027: revisa la nota de vigencia del bloque «Contabilizar el asiento»."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué fecha tiene la segunda copia con Cadencia mensual 1 desde el 01-12-2026?",
+     "opciones": [
+      "01-12-2026",
+      "01-01-2027",
+      "01-02-2027",
+      "01-03-2027"
+     ],
+     "correcta": 1,
+     "explicacion": "Cada copia se fecha un mes después de la anterior."
+    },
+    {
+     "pregunta": "¿Cuántas copias se generan con Número a generar 3?",
+     "opciones": [
+      "1",
+      "2",
+      "3",
+      "4"
+     ],
+     "correcta": 2,
+     "explicacion": "Tres copias: 01-12-2026, 01-01-2027 y 01-02-2027."
+    },
+    {
+     "pregunta": "¿Qué numeración tienen las copias de 2027?",
+     "opciones": [
+      "Siguen la de 2026",
+      "Empieza de nuevo: son los primeros números de 2027",
+      "Llevan el mismo número que la copia de diciembre",
+      "Sin número"
+     ],
+     "correcta": 1,
+     "explicacion": "La numeración de asientos empieza de nuevo cada año (en la captura, asientos 1 y 2 de 2027)."
+    },
+    {
+     "pregunta": "¿Qué Fecha fin se pone en Contabilización para incluir las tres copias?",
+     "opciones": [
+      "12-11-2026",
+      "31-12-2026",
+      "28-02-2027",
+      "01-12-2026"
+     ],
+     "correcta": 2,
+     "explicacion": "28-02-2027."
+    },
+    {
+     "pregunta": "¿Qué documento llevan las copias?",
+     "opciones": [
+      "{INI}-DOC-001",
+      "{INI}-DOC-003",
+      "{INI}-DOC-004",
+      "{INI}-DOC-005"
+     ],
+     "correcta": 2,
+     "explicacion": "{INI}-DOC-004."
+    }
+   ],
+   "checklist": [
+    "Abres la copia {INI}-DOC-003 y pulsas «Copiar asiento».",
+    "Pones Fecha 01-12-2026, Documento {INI}-DOC-004, Descripción «{INI} copia mensual».",
+    "Pones Número a generar 3 y Cadencia mensual 1 y aceptas.",
+    "En la lista salen las copias del 01-12-2026, 01-01-2027 y 01-02-2027.",
+    "Las de 2027 son los asientos 1 y 2 de 2027.",
+    "Si quedan provisionales, ejecutas Contabilización con fechas 01-11-2026 a 28-02-2027, Empresa 0 y Diario {INI}.",
+    "Todas tus copias quedan Contabilizadas.",
+    "Cada asiento tiene su ejercicio y periodo (2026/12, 2027/1 y 2027/2)."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-13",
+   "numero": 9,
+   "titulo": "Cambiar importes de las dos primeras líneas",
+   "objetivo": "Modificarás las dos primeras líneas de un asiento provisional y lo contabilizarás cuadrado para corregir importes antes de finalizarlo.",
+   "concepto": "Mientras el asiento está Provisional se puede corregir cualquier línea. Si se cambia el importe de una sola, el asiento se descuadra; hay que cambiar también su contrapartida. Un asiento ya contabilizado primero se pasa a provisional con «Abrir a provisional».\n\nLas líneas no se editan en la cuadrícula, sino en un panel lateral que se abre al pulsar el número de la fila.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "asientos-13-cambiar",
+     "titulo": "Cambiar importes de las dos primeras líneas",
+     "paraQueSirve": "Corrige líneas mientras el asiento es provisional, manteniendo el cuadre.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Asientos",
+      "Líneas de apuntes"
+     ],
+     "explicacion": [
+      "Hay que guardar con el disquete del panel y recargar la lista para ver los totales nuevos.",
+      "Con solo la línea 1 cambiada: Debe 1.750,00, Haber 1.250,00 y Cuadre 500,00 en rojo."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la copia del 01-12-2026 ({INI}-DOC-004; en la captura, el asiento 9). Si está Contabilizada, pulsa «Abrir a provisional» (botón morado de la barra superior); después ve a «Líneas de apuntes»."
+      },
+      {
+       "texto": "Pulsa el número de la línea 1 (columna de la izquierda): se abre un panel lateral. En el bloque Debe/Haber cambia Debe divisa de 1.000 a 1.500 y guarda con el icono del disquete de la barra del panel.",
+       "detalle": "El campo modificado se marca con una barra roja hasta que se guarda.",
+       "imagen": "asientos-d-225.webp",
+       "hotspot": {
+        "x": 40.6,
+        "y": 29.6,
+        "w": 56.3,
+        "h": 6.6,
+        "etiqueta": "Debe divisa"
+       }
+      },
+      {
+       "texto": "Cierra el panel con la X y pulsa «Recargar» (la flecha circular a la derecha de la lista de líneas).",
+       "detalle": "Cuadre 500,00 en rojo y sin botón Finalizar. La captura es un asiento de prueba (CV-DOC-001) con Debe 1.000,00 y Haber 500,00: es el mismo caso.",
+       "imagen": "asientos-d-226.webp",
+       "hotspot": {
+        "x": 94.4,
+        "y": 29.3,
+        "w": 1.7,
+        "h": 3.0,
+        "etiqueta": "Recargar"
+       }
+      },
+      {
+       "texto": "Abre la línea 2 y cambia Haber divisa de 1.000 a 1.500. Guarda.",
+       "detalle": "El asiento vuelve a cuadrar: Debe = Haber = 1.750,00 y Cuadre 0,00. La captura es la copia ya terminada y contabilizada.",
+       "imagen": "asientos-d-227.webp",
+       "hotspot": {
+        "x": 3.6,
+        "y": 37.7,
+        "w": 3.3,
+        "h": 3.4,
+        "etiqueta": "2"
+       }
+      },
+      {
+       "texto": "Pulsa «Finalizar» para volver a contabilizar el asiento."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Un asiento ya contabilizado primero se pasa a provisional con «Abrir a provisional»."
+      },
+      {
+       "tipo": "nota",
+       "texto": "En el ejercicio del extracto verás este movimiento del 01-12-2026 con 1.500,00."
+      }
+     ]
+    },
+    {
+     "id": "asientos-13-resumen",
+     "titulo": "Resumen de datos creados",
+     "paraQueSirve": "Recoge lo que has creado en los ejercicios.",
+     "ruta": null,
+     "explicacion": [
+      "Diario {INI} «Entrada de asientos {INI}» (cdiarios).",
+      "Numerador de justificantes {INI} «Asientos manuales {INI}» (cjusnumh), con máscaras #e#yy / {INI}#yy-#n.",
+      "Empresa 0, ejercicio 2026: {INI}-DOC-001 (1.250,00), {INI}-DOC-002 (300,00), {INI}-DOC-003 (copia, 1.250,00) y {INI}-DOC-004 del 01-12-2026 (1.750,00), todos contabilizados. En las capturas son los asientos 6, 7, 8 y 9.",
+      "Empresa 0, ejercicio 2027: asientos 1 y 2 ({INI}-DOC-004, copias de enero y febrero), contabilizados."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Fíjate en el justificante de tus asientos manuales: {INI}26-000001, {INI}26-000002… generados por tu numerador (en la captura, EA26-000001). Las copias llevan el justificante AC.",
+       "imagen": "asientos-d-228.webp",
+       "hotspot": {
+        "x": 65.5,
+        "y": 20.4,
+        "w": 21.3,
+        "h": 5.6,
+        "etiqueta": "EA26-000001"
+       },
+       "detalle": "En la captura, EA26-000001 es el asiento 11 (EA-DOC-005, una prueba de 50,00 que hizo el autor tras corregir el numerador). Los asientos 6 y 7 del autor se guardaron con el numerador mal y conservan el justificante «0»."
+      }
+     ],
+     "avisos": []
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cómo se edita una línea de apunte?",
+     "opciones": [
+      "En la cuadrícula directamente",
+      "En un panel lateral que se abre al pulsar el número de la fila",
+      "Solo con el proceso Contabilización",
+      "Duplicando el asiento"
+     ],
+     "correcta": 1,
+     "explicacion": "Se abre un panel lateral y se guarda con el disquete."
+    },
+    {
+     "pregunta": "Si cambias solo el Debe de la línea 1 de 1.000 a 1.500, ¿cuánto marca el Cuadre?",
+     "opciones": [
+      "0,00",
+      "500,00",
+      "1.500,00",
+      "250,00"
+     ],
+     "correcta": 1,
+     "explicacion": "Debe 1.750,00 - Haber 1.250,00 = 500,00."
+    },
+    {
+     "pregunta": "¿Qué haces para ver los totales nuevos tras guardar en el panel?",
+     "opciones": [
+      "Pulsas «Recargar» en la lista de líneas",
+      "Reinicias el ERP",
+      "Duplicas el asiento",
+      "Nada"
+     ],
+     "correcta": 0,
+     "explicacion": "Hay que recargar la lista."
+    },
+    {
+     "pregunta": "¿Qué total tiene la copia de diciembre tras cambiar las líneas 1 y 2 a 1.500?",
+     "opciones": [
+      "1.250,00",
+      "1.750,00",
+      "3.000,00",
+      "1.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.500 + 250 = 1.750,00."
+    },
+    {
+     "pregunta": "¿Cómo se corrige un asiento ya contabilizado?",
+     "opciones": [
+      "Se pasa a provisional con «Abrir a provisional»",
+      "Se borra la empresa",
+      "No se puede nunca",
+      "Con Copiar asiento"
+     ],
+     "correcta": 0,
+     "explicacion": "Primero se pasa a provisional (si el periodo no está cerrado)."
+    }
+   ],
+   "checklist": [
+    "Abres la copia del 01-12-2026 ({INI}-DOC-004) y, si está Contabilizada, pulsas «Abrir a provisional».",
+    "Pulsas el número de la línea 1 y se abre el panel lateral.",
+    "Cambias Debe divisa de 1.000 a 1.500 y guardas con el disquete.",
+    "El campo modificado se marca con una barra roja hasta guardar.",
+    "Recargas la lista: Cuadre 500,00 en rojo y sin botón Finalizar.",
+    "Abres la línea 2 y cambias Haber divisa de 1.000 a 1.500.",
+    "Tras guardar, Debe = Haber = 1.750,00 y Cuadre 0,00.",
+    "Pulsas «Finalizar» y el asiento queda Contabilizado con 1.750,00."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-7",
+   "numero": 10,
+   "titulo": "Comprobar el resultado",
+   "objetivo": "Revisarás el informe de descuadres de impuestos para comprobar que la contabilización no deja errores en los registros de la empresa.",
+   "concepto": "Tras contabilizar conviene revisar que no han quedado incoherencias: asientos descuadrados, diferencias entre los apuntes de IVA/IRPF y el registro de impuestos, o efectos de cartera que no casan con la contabilidad. Estos controles se agrupan en el menú Integridad.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-7-integridad",
+     "titulo": "Comprobar el resultado",
+     "paraQueSirve": "Detecta incoherencias después de contabilizar: asientos descuadrados, diferencias con impuestos o con cartera.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Integridad"
+     ],
+     "explicacion": [
+      "El menú Integridad incluye descuadres de asientos, de impuestos, de cartera, de costes y de divisas.",
+      "Los asientos de este módulo no llevan IVA ni efectos, así que estos informes salen vacíos. Si un asiento manual usa cuentas de IVA (47200 IVA soportado, 47700 IVA repercutido) sin rellenar la pestaña «Impuestos», aparecería aquí como descuadre."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre «Descuadres General e impuestos».",
+       "detalle": "Fíjate en el menú Integridad: descuadres de asientos, de impuestos, de cartera, de costes y de divisas.",
+       "imagen": "asientos-d-214.webp",
+       "hotspot": {
+        "x": 1.0,
+        "y": 18.7,
+        "w": 15.1,
+        "h": 3.8,
+        "etiqueta": "Descuadres General e impuestos"
+       }
+      },
+      {
+       "texto": "Pon Empresa 0 y las fechas de tus asientos (01-11-2026 a 28-02-2027) y pulsa «Ejecutar consulta»."
+      },
+      {
+       "texto": "Si la lista sale vacía, no hay asientos con diferencias entre contabilidad e impuestos.",
+       "detalle": "Descuadres contabilidad general-impuestos de la empresa 0: sin filas, no hay errores de IVA/IRPF.",
+       "imagen": "asientos-d-215.webp"
+      },
+      {
+       "texto": "Para los efectos usa «Descuadres General -> Cartera por cuentas» o «por terceros»; para asientos que no cuadran, «Descuadres asientos»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Comprueba también «Descuadres asientos» si has modificado líneas después de cuadrar."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Dónde se agrupan los controles de coherencia contable?",
+     "opciones": [
+      "En el menú Integridad",
+      "En Procesos",
+      "En Saldos",
+      "En Diarios"
+     ],
+     "correcta": 0,
+     "explicacion": "Finanzas › Contabilidad General › Diario contable › Integridad."
+    },
+    {
+     "pregunta": "Si «Descuadres General e impuestos» sale vacío, ¿qué significa?",
+     "opciones": [
+      "Hay un error grave",
+      "No hay diferencias entre contabilidad e impuestos",
+      "El informe no funciona",
+      "El asiento no está contabilizado"
+     ],
+     "correcta": 1,
+     "explicacion": "Lista vacía: no hay asientos con diferencias."
+    },
+    {
+     "pregunta": "¿Por qué salen vacíos estos informes con los asientos del ejercicio?",
+     "opciones": [
+      "Porque no llevan IVA ni efectos",
+      "Porque el diario es {INI}",
+      "Porque no están finalizados",
+      "Porque faltan líneas"
+     ],
+     "correcta": 0,
+     "explicacion": "Los asientos del ejercicio no llevan IVA ni efectos."
+    },
+    {
+     "pregunta": "¿Qué informe usas para asientos que no cuadran?",
+     "opciones": [
+      "Descuadres asientos",
+      "Descuadres General -> Divisas",
+      "Costes no autorizados",
+      "Auxiliares inexistentes"
+     ],
+     "correcta": 0,
+     "explicacion": "«Descuadres asientos» detecta asientos que no cuadran."
+    }
+   ],
+   "checklist": [
+    "Abres Finanzas › Contabilidad General › Diario contable › Integridad.",
+    "Abres «Descuadres General e impuestos».",
+    "Pones Empresa 0 y las fechas 01-11-2026 a 28-02-2027.",
+    "Pulsas «Ejecutar consulta».",
+    "La lista sale vacía (sin errores de IVA/IRPF).",
+    "Sabes dónde están los descuadres de cartera y de asientos."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-8",
+   "numero": 11,
+   "titulo": "Listar el asiento",
+   "objetivo": "Consultarás el listado de apuntes para revisar línea a línea lo que se ha contabilizado en un documento.",
+   "concepto": "El listado de apuntes muestra línea a línea lo que se ha contabilizado: cuenta, documento, descripción, Debe y Haber. Es la consulta rápida para revisar un asiento o buscar todos los apuntes de un documento.",
+   "duracionMin": 8,
+   "secciones": [
+    {
+     "id": "asientos-8-listar",
+     "titulo": "Listar el asiento",
+     "paraQueSirve": "Consulta rápida línea a línea de un asiento o de todos los apuntes de un documento.",
+     "ruta": [
+      "Buscador",
+      "Líneas de asiento (objeto capuntes)"
+     ],
+     "explicacion": [
+      "También se llega desde la lista de asientos, abriendo el asiento y yendo a Líneas de apuntes.",
+      "El asterisco en el filtro ({INI}-DOC*) busca todo lo que empieza así."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre capuntes (Líneas de asiento) desde el buscador y pulsa la lupa de la barra superior para abrir el formulario de búsqueda.",
+       "detalle": "La lupa es el primer icono a la derecha de la barra superior de la lista. Se abre un formulario con un campo por columna para filtrar.",
+       "imagen": "asientos-d-216.webp",
+       "hotspot": {
+        "x": 95.6,
+        "y": 6.0,
+        "w": 2.0,
+        "h": 3.6,
+        "etiqueta": "Buscar (lupa)"
+       }
+      },
+      {
+       "texto": "En Documento escribe {INI}-DOC* y pulsa «Ejecutar consulta».",
+       "detalle": "Salen todos tus apuntes ({INI}-DOC-001 a -004, también las copias de 2027), con cuenta, descripción, Debe y Haber. El filtro queda como etiqueta «Documento Es igual a {INI}-DOC*» junto a «Ordenar». En la captura sale también EA-DOC-005, una prueba del autor.",
+       "imagen": "asientos-d-216.webp",
+       "hotspot": {
+        "x": 14.4,
+        "y": 6.0,
+        "w": 11.7,
+        "h": 3.6,
+        "etiqueta": "Documento Es igual a EA-DOC*"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Comprueba que los cuatro apuntes del {INI}-DOC-001 suman 1.250,00 al Debe y 1.250,00 al Haber."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué objeto lista los apuntes?",
+     "opciones": [
+      "capuntes",
+      "cdiarios",
+      "csaldos",
+      "cempresa"
+     ],
+     "correcta": 0,
+     "explicacion": "Líneas de asiento es el objeto capuntes."
+    },
+    {
+     "pregunta": "¿Qué hace el asterisco en {INI}-DOC*?",
+     "opciones": [
+      "Excluye {INI}-DOC",
+      "Busca todo lo que empieza por {INI}-DOC",
+      "Ordena el listado",
+      "Nada"
+     ],
+     "correcta": 1,
+     "explicacion": "Es un comodín: todo lo que empieza así."
+    },
+    {
+     "pregunta": "¿Cuánto suman al Debe los cuatro apuntes del {INI}-DOC-001?",
+     "opciones": [
+      "1.000,00",
+      "1.250,00",
+      "300,00",
+      "2.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.000 + 250 = 1.250,00 (y lo mismo al Haber)."
+    },
+    {
+     "pregunta": "¿Para qué sirve el listado de apuntes?",
+     "opciones": [
+      "Para contabilizar",
+      "Para revisar un asiento o buscar los apuntes de un documento",
+      "Para crear diarios",
+      "Para duplicar asientos"
+     ],
+     "correcta": 1,
+     "explicacion": "Es la consulta rápida línea a línea."
+    }
+   ],
+   "checklist": [
+    "Abres Líneas de asiento (capuntes) desde el buscador.",
+    "Pulsas la lupa para abrir el formulario de búsqueda.",
+    "Escribes {INI}-DOC* en Documento.",
+    "Pulsas «Ejecutar consulta».",
+    "Ves cuenta, descripción, Debe y Haber de cada apunte.",
+    "Los cuatro apuntes del {INI}-DOC-001 suman 1.250,00 al Debe y 1.250,00 al Haber."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-9",
+   "numero": 12,
+   "titulo": "Consultar extracto de las cuentas del asiento",
+   "objetivo": "Verás el extracto de una cuenta para justificar su saldo con todos los movimientos del periodo.",
+   "concepto": "El extracto (mayor) de una cuenta enseña todos sus movimientos en un periodo con el saldo acumulado línea a línea. Es lo que se mira para justificar el saldo de una cuenta o localizar un apunte.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-9-mayor",
+     "titulo": "Extracto de las cuentas del asiento",
+     "paraQueSirve": "Muestra los movimientos de una cuenta con su saldo acumulado.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Extractos",
+      "Mayor de cuentas (capuntes_ext_cuenta_rep)"
+     ],
+     "explicacion": [
+      "Hay que desplazar la tabla a la derecha para ver Debe, Haber y Saldo.",
+      "Tus apuntes de la 62902 en 2026 son tres: {INI}-DOC-001 (asiento 6, 1.000), {INI}-DOC-003 (copia, 1.000) y {INI}-DOC-004 del 01-12-2026 (1.500 tras corregirlo), con saldo acumulado 1.000 › 2.000 › 3.500."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa *",
+       "significado": "Empresa del extracto.",
+       "ejemplo": "0"
+      },
+      {
+       "campo": "Fecha inicial / Fecha fin *",
+       "significado": "Periodo del extracto; para todo el año, del 1 de enero al 31 de diciembre.",
+       "ejemplo": "01-01-2026 / 31-12-2026"
+      },
+      {
+       "campo": "Cuenta *",
+       "significado": "Cuenta o cuentas a extractar.",
+       "ejemplo": "62902.00000"
+      },
+      {
+       "campo": "Proyecto / Sección *",
+       "significado": "Filtros de unidad de negocio; «*» para todos.",
+       "ejemplo": "*"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre la ruta, pon Empresa 0, Fecha inicial 01-01-2026, Fecha fin 31-12-2026 y, en Cuenta, escribe 62902 y haz clic en la fila 62902.00000 Gastos diversos.",
+       "imagen": "asientos-n-03.webp",
+       "hotspot": {
+        "x": 28.4,
+        "y": 43.3,
+        "w": 15.8,
+        "h": 3.8,
+        "etiqueta": "62902.00000"
+       },
+       "detalle": "Al elegir la fila, el campo Cuenta muestra «ES», el código del plan contable de la fila: es normal. El filtro es la cuenta 62902.00000, como verás en la etiqueta «Cuenta Está en la lista 62902.00000» del resultado."
+      },
+      {
+       "texto": "Pulsa «Ejecutar consulta» y desplaza la tabla a la derecha para ver Debe, Haber y Saldo.",
+       "detalle": "Saldo acumulado 1.000 › 2.000 › 3.500; el primer movimiento es el asiento 6, documento {INI}-DOC-001. Para desplazar la tabla usa la barra horizontal de abajo.",
+       "imagen": "asientos-d-218.webp",
+       "hotspot": {
+        "x": 95.9,
+        "y": 10.4,
+        "w": 4.1,
+        "h": 15.4,
+        "etiqueta": "Saldo"
+       }
+      },
+      {
+       "texto": "Repite con 62903.00000 y 57200.00000 si quieres ver las demás cuentas del asiento."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si otras personas practican en la misma base con la 62902, sus apuntes también salen y el saldo será mayor: reconoce los tuyos por el documento {INI}-DOC."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué enseña el extracto (mayor) de una cuenta?",
+     "opciones": [
+      "Sus movimientos con saldo acumulado línea a línea",
+      "Solo el saldo final",
+      "Los diarios",
+      "Las empresas"
+     ],
+     "correcta": 0,
+     "explicacion": "Movimientos del periodo con saldo acumulado."
+    },
+    {
+     "pregunta": "¿Qué saldo suman tus apuntes de la 62902.00000 en 2026?",
+     "opciones": [
+      "1.000,00",
+      "2.000,00",
+      "3.500,00",
+      "1.250,00"
+     ],
+     "correcta": 2,
+     "explicacion": "1.000 (asiento original) + 1.000 (duplicado) + 1.500 (copia de diciembre corregida) = 3.500,00."
+    },
+    {
+     "pregunta": "¿Qué documentos tuyos aparecen en el extracto 2026 de la 62902?",
+     "opciones": [
+      "{INI}-DOC-001, {INI}-DOC-003 y {INI}-DOC-004",
+      "Solo {INI}-DOC-001",
+      "{INI}-DOC-002",
+      "Ninguno: el extracto solo muestra saldos"
+     ],
+     "correcta": 0,
+     "explicacion": "El original, el duplicado y la copia de diciembre. Las copias de 2027 quedan fuera del rango de fechas y el {INI}-DOC-002 no usa la 62902."
+    },
+    {
+     "pregunta": "¿Qué fechas pones para extractar todo el año?",
+     "opciones": [
+      "01-01-2026 / 31-12-2026",
+      "01-11-2026 / 12-11-2026",
+      "01-12-2026 / 01-02-2027",
+      "Ninguna"
+     ],
+     "correcta": 0,
+     "explicacion": "Del 1 de enero al 31 de diciembre."
+    }
+   ],
+   "checklist": [
+    "Abres Mayor de cuentas (capuntes_ext_cuenta_rep).",
+    "Pones Empresa 0, 01-01-2026 / 31-12-2026 y cuenta 62902.00000.",
+    "Ejecutas la consulta.",
+    "Ves tus documentos {INI}-DOC-001, -003 y -004 con saldo 1.000 › 2.000 › 3.500.",
+    "El primer movimiento es el asiento 6, documento {INI}-DOC-001.",
+    "Repites con 62903.00000 y 57200.00000."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-10",
+   "numero": 13,
+   "titulo": "Consultar sumas y saldos de las cuentas",
+   "objetivo": "Consultarás los saldos por periodo de las cuentas usadas para obtener la base del balance de sumas y saldos.",
+   "concepto": "Los saldos de cuentas guardan, por cuenta y periodo, la suma del Debe y del Haber de los asientos contabilizados. Es la base del balance de sumas y saldos y solo recoge asientos finalizados: los provisionales no tienen impacto.",
+   "duracionMin": 10,
+   "secciones": [
+    {
+     "id": "asientos-10-saldos",
+     "titulo": "Sumas y saldos de las cuentas",
+     "paraQueSirve": "Muestra, por cuenta y periodo, lo acumulado en el Debe y el Haber de los asientos contabilizados.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Saldos",
+      "Saldos cuentas (objeto csaldos)"
+     ],
+     "explicacion": [
+      "Los saldos también están en el menú Saldos (Saldos cuentas, mensualizados, agrupados) y en Balances.",
+      "Con tus asientos, en el periodo 11: 57200 Haber 2.800 (1.250 + 300 + 1.250), 62900 Debe 300, 62902 Debe 2.000 y 62903 Debe 500; el periodo 12 recoge la copia de diciembre (1.750)."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre la ruta y pulsa la lupa (primer icono a la derecha de la barra superior)."
+      },
+      {
+       "texto": "Marca Empresa 0 y Ejercicio 2026 y pulsa «Ejecutar consulta»."
+      },
+      {
+       "texto": "Localiza las cuentas 57200, 62900, 62902 y 62903 en los periodos 11 y 12.",
+       "detalle": "Periodo 11: 57200 Haber 2.800, 62900 Debe 300, 62902 Debe 2.000, 62903 Debe 500. Periodo 12: la copia de diciembre (62902 Debe 1.500, 62903 Debe 250, 57200 Haber 1.750). En la captura la 57200 del periodo 11 marca Haber 2.850 y la 62900 Debe 350 porque incluyen los 50,00 del asiento de prueba EA-DOC-005 del autor; el Debe 484,00 de la 57200 son, por lo que se ve en la lista de asientos, apuntes de otras prácticas del curso (no de otro año).",
+       "imagen": "asientos-d-219.webp",
+       "hotspot": {
+        "x": 16.3,
+        "y": 61.7,
+        "w": 5.6,
+        "h": 25.6,
+        "etiqueta": "Cuenta"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Comprueba que la 57200 del periodo 11 suma al Haber lo mismo que las cuentas de gasto al Debe."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Los saldos suman los asientos de todas las personas de la empresa 0. Si otros practican a la vez, verás cifras mayores: calcula los tuyos con los importes del ejercicio."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué asientos recogen los saldos de cuentas?",
+     "opciones": [
+      "Solo los contabilizados",
+      "Todos",
+      "Solo los provisionales",
+      "Los del diario DG"
+     ],
+     "correcta": 0,
+     "explicacion": "Los provisionales no tienen impacto."
+    },
+    {
+     "pregunta": "¿Cuánto suman al Haber de la 57200 tus asientos del periodo 11?",
+     "opciones": [
+      "1.250,00",
+      "2.800,00",
+      "300,00",
+      "3.500,00"
+     ],
+     "correcta": 1,
+     "explicacion": "1.250 (asiento 6) + 300 (asiento 7) + 1.250 (duplicado) = 2.800,00."
+    },
+    {
+     "pregunta": "¿Cuánto suman al Debe de la 62902 tus asientos del periodo 11?",
+     "opciones": [
+      "1.000,00",
+      "1.500,00",
+      "2.000,00",
+      "3.500,00"
+     ],
+     "correcta": 2,
+     "explicacion": "1.000 del asiento 6 + 1.000 del duplicado = 2.000,00; la copia de diciembre va al periodo 12."
+    },
+    {
+     "pregunta": "¿Qué periodo recoge la copia de diciembre?",
+     "opciones": [
+      "11",
+      "12",
+      "1",
+      "2"
+     ],
+     "correcta": 1,
+     "explicacion": "Periodo 12 de 2026."
+    },
+    {
+     "pregunta": "¿Qué objeto abre la pantalla de saldos de cuentas?",
+     "opciones": [
+      "csaldos",
+      "capuntes",
+      "cdiarios",
+      "cempresa"
+     ],
+     "correcta": 0,
+     "explicacion": "Saldos cuentas es el objeto csaldos."
+    }
+   ],
+   "checklist": [
+    "Abres Saldos cuentas (csaldos) y pulsas la lupa.",
+    "Marcas Empresa 0 y Ejercicio 2026.",
+    "Ejecutas la consulta.",
+    "Localizas 57200, 62900, 62902 y 62903 en el periodo 11.",
+    "Localizas las cuentas del periodo 12.",
+    "La 57200 del periodo 11 suma al Haber lo mismo que los gastos al Debe."
+   ],
+   "problemas": []
+  },
+  {
+   "id": "asientos-14",
+   "numero": 14,
+   "titulo": "Entender el asiento de un movimiento de tesorería",
+   "objetivo": "Entenderás el asiento de tesorería que enfrenta el banco con la cuenta del flujo y tratarás la comisión aparte para contabilizar cobros y pagos.",
+   "concepto": "Cuando contabilizas un movimiento de tesorería, el asiento enfrenta la cuenta del banco propio (la de cbancpro) contra las cuentas contables de los flujos. En una salida, la cuenta del flujo va al Debe y el banco al Haber; en una entrada es al revés, y siempre Debe = Haber. Por ejemplo, el pago de una remesa con flujo en la cuenta 40100.00003 (proveedor) salda la deuda contra el banco por el importe del flujo.\n\nLa comisión bancaria se trata aparte: si en la comisión del banco propio está informada «Operación comisión», se genera un movimiento y un asiento adicionales para la comisión; si no, la comisión es un flujo más dentro del mismo movimiento y del mismo asiento. Cada flujo debe tener cuenta contable, porque sin ella el movimiento no se puede contabilizar.",
+   "duracionMin": 15,
+   "secciones": [
+    {
+     "id": "asientos-14-movimiento",
+     "titulo": "Banco contra la cuenta del flujo",
+     "paraQueSirve": "Esta sección te enseña a leer los flujos de un movimiento de tesorería y a prever el asiento que se generará al contabilizar.",
+     "ruta": [
+      "Buscador",
+      "Movimientos de tesorería (taptcuen)"
+     ],
+     "explicacion": [
+      "El movimiento de tesorería (taptcuen) tiene un botón «Contabilizar» arriba y una pestaña Flujos con Flujo, Cuenta contable, Descripción cuenta, Importe flujo y Efecto. Al contabilizar, la cuenta del banco propio (la de su ficha en Bancos propios, objeto cbancpro; p. ej. 57200.00000) se enfrenta a las cuentas de los flujos. En una salida, la cuenta del flujo va al Debe y el banco al Haber; en una entrada, al revés. Debe = Haber.",
+      "En el pago de una remesa de la formación de Deister (otra base de datos, no TUTORIAL), el flujo lleva la cuenta del proveedor 40100.00003, así que el asiento salda la deuda con el proveedor contra el banco por 8.080,15 (40100.00003 al Debe, banco al Haber)."
+     ],
+     "campos": [
+      {
+       "campo": "Cuenta del banco",
+       "significado": "Cuenta contable del banco propio (cbancpro) que se utiliza en el asiento.",
+       "ejemplo": "57200.00000 en los ejemplos de la demo."
+      },
+      {
+       "campo": "Cuenta del flujo",
+       "significado": "Cuenta contable del flujo (proveedor, cliente, etc.) que determina la contrapartida.",
+       "ejemplo": "40100.00003 (TELEFONICA DE ESPAÑA S.A.) en el pago de la remesa de la formación de Deister."
+      },
+      {
+       "campo": "Importe flujo",
+       "significado": "Importe del flujo que va al Debe o al Haber según la posición.",
+       "ejemplo": "8.080,15 en la remesa de la formación de Deister."
+      },
+      {
+       "campo": "Posición",
+       "significado": "Indica si es salida o entrada; determina qué cuenta va al Debe y cuál al Haber.",
+       "ejemplo": "Salida: cuenta del flujo al Debe, banco al Haber."
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Movimientos de tesorería (buscador: «Movimientos de tesorería», objeto taptcuen) y baja hasta el bloque «Flujos».",
+       "detalle": "La captura es el movimiento de práctica CAP-TES-001 (pago de 480,00 desde el banco CAPT_BCO). Aún no tiene flujos: la rejilla dice «Sin datos» y el aviso «Importes diferentes» recuerda que la suma de los flujos debe igualar el importe. Cada fila de flujo lleva su «Cuenta contable», que es la que irá al asiento.",
+       "imagen": "asientos-n-02.webp",
+       "hotspot": {
+        "x": 0.5,
+        "y": 57.3,
+        "w": 96.4,
+        "h": 23.9,
+        "etiqueta": "Flujos"
+       }
+      },
+      {
+       "texto": "Fíjate en la cuenta del flujo del pago de una remesa",
+       "detalle": "Captura de la formación de Deister: flujo «Transferencia por operaciones mercantiles», cuenta 40100.00003 TELEFONICA DE ESPAÑA S.A., importe 8.080,15. Es la cuenta del proveedor al que se paga.",
+       "imagen": "asientos-tes-02.jpg",
+       "hotspot": {
+        "x": 30.5,
+        "y": 77.5,
+        "w": 7.5,
+        "h": 5.5,
+        "etiqueta": "Cuenta contable"
+       }
+      },
+      {
+       "texto": "Antes de pulsar «Contabilizar», escribe el asiento que esperas",
+       "detalle": "Salida: cuenta del flujo al Debe, banco al Haber; Debe = Haber. «Contabilizar» es el botón morado de la barra superior. Contabiliza solo tu propio movimiento (el que creaste en el ejercicio del movimiento manual del módulo Tesorería; si no lo hiciste, quédate en escribir el asiento esperado) y compara el resultado con lo que escribiste.",
+       "imagen": "asientos-n-02.webp",
+       "hotspot": {
+        "x": 80.8,
+        "y": 6.3,
+        "w": 6.0,
+        "h": 3.0,
+        "etiqueta": "Contabilizar"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El flujo debe tener cuenta contable (es una cuenta mnemotécnica traducida a la cuenta real de cada plan contable); sin ella el movimiento no se puede contabilizar."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Al contabilizar el movimiento, el asiento no cuadra."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Revisa que Debe = Haber y que cada flujo tenga su cuenta contable; en salida, flujo al Debe y banco al Haber."
+      }
+     ]
+    },
+    {
+     "id": "asientos-14-comision",
+     "titulo": "La comisión bancaria, aparte",
+     "paraQueSirve": "Esta sección explica cómo la configuración de la comisión del banco propio decide si la comisión va en el mismo asiento o en uno aparte.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Maestros",
+      "Auxiliares",
+      "Bancos propios",
+      "Comisiones"
+     ],
+     "explicacion": [
+      "La comisión la configuras en el banco propio (Tesorería, el bloque «Preparar el banco propio para tesorería» (Tesorería y bancos)); aquí ves qué asiento deja. Si en la comisión se informa «Operación comisión», la comisión genera un registro adicional en tesorería: otro movimiento y otro asiento. Si no, va como un flujo más del mismo movimiento y del mismo asiento.",
+      "El flujo de comisión debe tener su cuenta contable (en el PGC español suele ser una 626 «Servicios bancarios y similares», como orientación). Sin cuenta contable, el movimiento no se puede contabilizar."
+     ],
+     "campos": [
+      {
+       "campo": "Flujo de comisión",
+       "significado": "Tipo de flujo para la comisión bancaria; puede ser un flujo más del mismo movimiento o uno aparte si se define operación.",
+       "ejemplo": "Flujo de tipo Comisión con cuenta 626 (orientación)."
+      },
+      {
+       "campo": "Operación comisión",
+       "significado": "Campo en la comisión del banco propio; si está informado, la comisión genera otro movimiento y asiento.",
+       "ejemplo": "Informada → otro movimiento; vacía → flujo en el mismo asiento."
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre el banco propio (Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios), baja a la vista «Comisiones», abre una comisión y mira si está informada «Operación comisión»",
+       "detalle": "Informada: otro movimiento y otro asiento. Vacía: un flujo más en el mismo asiento. En la captura (formación de Deister), la comisión ADOP tiene «Operación comisión» vacía: iría como un flujo más del mismo movimiento.",
+       "imagen": "asientos-tes-03.jpg",
+       "hotspot": {
+        "x": 25,
+        "y": 35,
+        "w": 24,
+        "h": 11,
+        "etiqueta": "Operación comisión"
+       }
+      },
+      {
+       "texto": "Escribe el asiento de un pago con comisión en el mismo movimiento",
+       "detalle": "Cuenta del flujo del pago y cuenta del flujo de comisión al Debe; banco al Haber por la suma."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Si en la comisión del banco propio se informa «Operación comisión», la comisión genera un registro adicional en tesorería (otro movimiento y otro asiento)."
+      },
+      {
+       "tipo": "problema",
+       "texto": "No sabes si la comisión va en el mismo asiento o en otro."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Mira el campo «Operación comisión»: si está informado, es otro movimiento; si está vacío, es un flujo más del mismo asiento."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "En un movimiento de tesorería de salida, ¿qué cuentas van al Debe y al Haber?",
+     "opciones": [
+      "Cuenta del flujo al Haber, banco al Debe.",
+      "Cuenta del flujo al Debe, banco al Haber.",
+      "Ambas al Debe.",
+      "Ambas al Haber."
+     ],
+     "correcta": 1,
+     "explicacion": "En una salida, la cuenta del flujo va al Debe y el banco al Haber; en una entrada es al revés."
+    },
+    {
+     "pregunta": "¿Qué es imprescindible para que un movimiento de tesorería se pueda contabilizar?",
+     "opciones": [
+      "Que el flujo tenga cuenta contable.",
+      "Que tenga referencia bancaria.",
+      "Que esté conciliado.",
+      "Que tenga operación comisión."
+     ],
+     "correcta": 0,
+     "explicacion": "El flujo debe tener cuenta contable; sin ella el movimiento no se puede contabilizar."
+    },
+    {
+     "pregunta": "En el pago de la remesa de la formación de Deister, ¿qué cuenta se utiliza para el proveedor?",
+     "opciones": [
+      "57200.00000",
+      "43000.00003",
+      "40100.00003",
+      "626"
+     ],
+     "correcta": 2,
+     "explicacion": "El flujo lleva la cuenta 40100.00003 (TELEFONICA DE ESPAÑA S.A.), una cuenta de proveedor del grupo 40; las 430 son de clientes y la 57200 es el banco."
+    },
+    {
+     "pregunta": "Si en la comisión del banco propio se informa «Operación comisión», ¿qué ocurre?",
+     "opciones": [
+      "La comisión se ignora.",
+      "La comisión va como flujo en el mismo asiento.",
+      "Se genera un movimiento y un asiento adicionales para la comisión.",
+      "No se puede contabilizar."
+     ],
+     "correcta": 2,
+     "explicacion": "Con «Operación comisión» informada, la comisión genera otro movimiento y otro asiento; si no, es un flujo más del mismo asiento."
+    }
+   ],
+   "checklist": [
+    "Abre un movimiento de tesorería y revisa la pestaña Flujos para ver las cuentas contables.",
+    "Verifica que la cuenta del flujo del pago corresponda al proveedor (en la formación de Deister, 40100.00003).",
+    "En tu movimiento manual del módulo Tesorería pulsa «Contabilizar» y comprueba que el asiento cuadra: flujo al Debe, banco al Haber, Debe = Haber.",
+    "En las comisiones de bancos propios, localiza si «Operación comisión» está informada.",
+    "Comprueba si la comisión aparece como un flujo más o como un movimiento aparte según ese campo."
+   ],
+   "problemas": [
+    {
+     "problema": "El movimiento no se contabiliza y no aparece error claro.",
+     "solucion": "Revisa que todos los flujos tengan cuenta contable; sin ella no se puede contabilizar."
+    },
+    {
+     "problema": "Al contabilizar un pago con comisión, no sabes cómo cuadrar el asiento.",
+     "solucion": "Si la comisión va en el mismo movimiento, suma al Debe la cuenta del flujo del pago y la cuenta del flujo de comisión; el banco va al Haber por la suma total."
+    },
+    {
+     "problema": "Aparece un movimiento de tesorería adicional inesperado al contabilizar.",
+     "solucion": "Puede deberse a que «Operación comisión» está informada, generando otro movimiento y asiento para la comisión."
+    }
+   ]
+  },
   {
    "id": "icon-contabilidad-v-1",
    "numero": 1,
@@ -2522,5 +6668,228 @@
     }
    ]
   }
- ]
+ ],
+ "datosSimulador": {
+  "numerador": null,
+  "relaciones": null,
+  "asientos": [
+   {
+    "titulo": "Asiento 6 ({INI}-DOC-001) con dos líneas",
+    "descripcion": "Gasto diverso de 1.000 € pagado por banco, tal como queda al terminar el apartado de introducir un asiento de dos líneas (ejercicio 2).",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "{INI} Ejercicio 2 entrada de asientos",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} Ejercicio 2 entrada de asientos",
+      "debe": 0,
+      "haber": 1000
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 6 ({INI}-DOC-001) con cuatro líneas",
+    "descripcion": "Gasto diverso de 1.000 € y gasto de correos y mensajería de 250 €, ambos pagados por banco. Debe 1.250,00 = Haber 1.250,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "{INI} Ejercicio 2 entrada de asientos",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} Ejercicio 2 entrada de asientos",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "{INI} Ejercicio 2 entrada de asientos",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} Ejercicio 2 entrada de asientos",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 7 ({INI}-DOC-002)",
+    "descripcion": "Pago de otros servicios de 300 € por banco.",
+    "lineas": [
+     {
+      "cuenta": "62900.00000",
+      "nombreCuenta": "Otros servicios",
+      "concepto": "{INI} Ejercicio 5 segundo asiento",
+      "debe": 300,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} Ejercicio 5 segundo asiento",
+      "debe": 0,
+      "haber": 300
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 8 ({INI}-DOC-003): copia del asiento 6",
+    "descripcion": "Copia exacta del asiento 6 por 1.250,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "{INI} duplicado del asiento 6",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} duplicado del asiento 6",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "{INI} duplicado del asiento 6",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} duplicado del asiento 6",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 9 ({INI}-DOC-004) tal como se copia el 01-12-2026",
+    "descripcion": "Copia mensual del asiento 8 (igual que el 6), antes de cambiar importes. Las copias del 01-01-2027 y 01-02-2027 (asientos 1 y 2 de 2027) llevan las mismas cuatro líneas.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "{INI} copia mensual",
+      "debe": 1000,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} copia mensual",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "{INI} copia mensual",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} copia mensual",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   },
+   {
+    "titulo": "Asiento 9 ({INI}-DOC-004) con solo la línea 1 cambiada (descuadrado)",
+    "descripcion": "Estado intermedio del ejercicio 9: la línea 1 pasa a 1.500,00 y la 2 sigue en 1.000,00. Debe 1.750,00, Haber 1.250,00, Cuadre 500,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "{INI} copia mensual",
+      "debe": 1500,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} copia mensual",
+      "debe": 0,
+      "haber": 1000
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "{INI} copia mensual",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} copia mensual",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": false
+   },
+   {
+    "titulo": "Asiento 9 ({INI}-DOC-004) con las líneas 1 y 2 a 1.500,00",
+    "descripcion": "Resultado final del ejercicio 9: Debe = Haber = 1.750,00.",
+    "lineas": [
+     {
+      "cuenta": "62902.00000",
+      "nombreCuenta": "Gastos diversos",
+      "concepto": "{INI} copia mensual",
+      "debe": 1500,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} copia mensual",
+      "debe": 0,
+      "haber": 1500
+     },
+     {
+      "cuenta": "62903.00000",
+      "nombreCuenta": "Correos y mensajería",
+      "concepto": "{INI} copia mensual",
+      "debe": 250,
+      "haber": 0
+     },
+     {
+      "cuenta": "57200.00000",
+      "nombreCuenta": "Bancos e instituciones de crédito c/c vista, euros",
+      "concepto": "{INI} copia mensual",
+      "debe": 0,
+      "haber": 250
+     }
+    ],
+    "cuadra": true
+   }
+  ]
+ }
 }

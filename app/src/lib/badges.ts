@@ -1,4 +1,5 @@
 import { META, MODULOS } from '../content';
+import { bloquesObligatorios } from './ruta';
 import { APROBADO, ejercicioCompletado, type Progreso } from './progress';
 import { clavesActivas } from './examenModulo';
 
@@ -12,7 +13,8 @@ export interface Insignia {
 
 const modCompleto = (p: Progreso, id: string) => {
   const m = MODULOS.find((x) => x.id === id);
-  return !!m && m.ejercicios.length > 0 && m.ejercicios.every((e) => ejercicioCompletado(p.ejercicios[e.id]));
+  const ob = m ? bloquesObligatorios(m) : [];
+  return ob.length > 0 && ob.every((e) => ejercicioCompletado(p.ejercicios[e.id]));
 };
 
 export const INSIGNIAS: Insignia[] = [
@@ -25,7 +27,7 @@ export const INSIGNIAS: Insignia[] = [
   { id: 'taller', titulo: 'Taller completo', texto: 'Supera todos los simuladores.', color: '#e0708a', ganada: (p) => ['asiento', 'numerador', 'circuito', 'docflow', 'factura', 'cartera'].every((s) => p.sims[s]) },
   ...MODULOS.map((m) => ({
     id: `mod-${m.id}`,
-    titulo: m.titulo,
+    titulo: META[m.id]?.corto ?? m.titulo,
     texto: 'Termina todos los bloques del módulo.',
     color: META[m.id]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => modCompleto(p, m.id),

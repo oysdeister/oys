@@ -25,6 +25,9 @@ export function claveExamen(moduloId: string): string | null {
   return BANCOS[id] ? id : null;
 }
 
+/** Preguntas por intento como máximo (los bancos de módulos fusionados son más grandes) */
+export const MAX_PREG = 20;
+
 export function preguntasDe(moduloId: string): Pregunta[] {
   const c = claveExamen(moduloId);
   return c ? BANCOS[c] : [];

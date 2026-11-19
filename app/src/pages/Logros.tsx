@@ -1,3 +1,4 @@
+import { bloquesObligatorios } from '../lib/ruta';
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -205,8 +206,8 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
   if (b.id.startsWith('mod-')) {
     const id = b.id.slice(4);
     const m = MODULOS.find((x) => x.id === id);
-    const hechos = m ? m.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length : 0;
-    const total = m?.ejercicios.length ?? 1;
+    const hechos = m ? bloquesObligatorios(m).filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length : 0;
+    const total = m ? bloquesObligatorios(m).length || 1 : 1;
     return { color: META[id]?.color ?? b.color, icono: META[id]?.icono ?? 'check', valor: hechos / total, cuenta: `${hechos} de ${total} ejercicios` };
   }
   if (b.id.startsWith('exm-')) {
@@ -238,7 +239,7 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
       return { color: b.color, icono: 'taller', valor: n / SIMS_INSIGNIA.length, cuenta: `${n} de ${SIMS_INSIGNIA.length} simuladores de la insignia` };
     }
     case 'listo': {
-      const n = MODULOS.filter((m) => m.ejercicios.length > 0 && m.ejercicios.every((e) => ejercicioCompletado(p.ejercicios[e.id]))).length;
+      const n = MODULOS.filter((m) => bloquesObligatorios(m).length > 0 && bloquesObligatorios(m).every((e) => ejercicioCompletado(p.ejercicios[e.id]))).length;
       return { color: 'var(--arc-deep)', icono: 'examen', valor: n / Math.max(1, MODULOS.length), cuenta: `${n} de ${MODULOS.length} módulos` };
     }
     default:
@@ -361,8 +362,8 @@ export default function Logros() {
 
   // La próxima insignia: la pendiente con más avance
   const proxima = lista.filter((x) => !x.on).sort((x, y) => y.a.valor - x.a.valor)[0];
-  const ejTotal = MODULOS.reduce((s, m) => s + m.ejercicios.length, 0);
-  const ejHechos = MODULOS.reduce((s, m) => s + m.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length, 0);
+  const ejTotal = MODULOS.reduce((s, m) => s + bloquesObligatorios(m).length, 0);
+  const ejHechos = MODULOS.reduce((s, m) => s + bloquesObligatorios(m).filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length, 0);
   const tests = Object.values(p.ejercicios).filter((e) => (e.test ?? 0) >= APROBADO).length;
 
   return (
@@ -456,12 +457,12 @@ export default function Logros() {
             {MODULOS.map((m) => {
               const meta = META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
               const av = avanceModulo(p, m.id);
-              const hechos = m.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
+              const hechos = bloquesObligatorios(m).filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
               return (
                 <li key={m.id}>
                   <Planeta color={meta.color} valor={av} size={64} icono={meta.icono} etiqueta={meta.corto} pct to={`/modulo/${m.id}`} />
                   <span className="pl-planeta-ej">
-                    {hechos} de {m.ejercicios.length} ejercicios
+                    {hechos} de {bloquesObligatorios(m).length} bloques
                   </span>
                 </li>
               );

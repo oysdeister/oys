@@ -1,10 +1,10 @@
 import { useMemo, useState, type CSSProperties } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { META, getModulo } from '../content';
 import { APROBADO, acciones, useProgreso } from '../lib/progress';
-import { claveExamen, preguntasDe } from '../lib/examenModulo';
+import { claveExamen, preguntasDe, MAX_PREG } from '../lib/examenModulo';
 import { conIni } from '../lib/texto';
 import { Glosa } from '../components/Glosario';
 import { Icon } from '../components/Icon';
@@ -25,7 +25,8 @@ interface Intento {
 function nuevoIntento(banco: Pregunta[], previo?: Intento): Intento {
   const base = banco.map((_, i) => i);
   // El orden de las preguntas cambia siempre respecto al intento anterior
-  const orden = previo ? barajarDistinto(previo.orden) : barajar(base);
+  // Con un banco grande (módulos fusionados) cada intento saca MAX_PREG preguntas distintas
+  const orden = (previo && banco.length <= MAX_PREG ? barajarDistinto(previo.orden) : barajar(base)).slice(0, MAX_PREG);
   return { orden, opciones: orden.map((i) => barajar(banco[i].opciones.map((_, k) => k))) };
 }
 
@@ -44,6 +45,9 @@ export default function ExamenModulo() {
   const ini = p.alumno.ini;
   const t = (x: string) => conIni(x, ini);
 
+  // Módulo fusionado (ALIAS_MODULO): la URL antigua lleva al examen del módulo vigente
+  if (modulo && modulo.id !== id) return <Navigate to={`/modulo/${modulo.id}/examen`} replace />;
+
   if (!modulo || !clave || !banco.length) {
     return (
       <div className="wrap" style={{ padding: '60px 0' }}>
@@ -58,7 +62,7 @@ export default function ExamenModulo() {
 
   const meta = META[modulo.id] ?? { color: 'var(--arc)', icono: 'examen', corto: modulo.titulo };
   const mejor = p.examenes?.[clave] ?? null;
-  const total = banco.length;
+  const total = Math.min(banco.length, MAX_PREG);
 
   const empezar = (repetir: boolean) => {
     if (repetir) {
@@ -95,7 +99,7 @@ export default function ExamenModulo() {
           <p className="ax-kicker">Examen del módulo</p>
           <h1>{meta.corto}</h1>
           <p className="lead">
-            {total} preguntas de test sobre lo que has visto en el módulo. Cada vez que lo haces, las preguntas y las opciones salen en otro orden.
+            {total} preguntas de test sobre lo que has visto en el módulo. Cada vez que lo haces, {banco.length > total ? 'salen otras preguntas, ' : 'las preguntas y las opciones salen '}en otro orden.
           </p>
           <ul className="exm-reglas">
             <li>Una sola respuesta correcta por pregunta.</li>
