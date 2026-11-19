@@ -140,7 +140,7 @@ export default function ModulePage() {
         <h2 id="bloques-h"> Los bloques
         </h2>
         <p className="md-sec-txt">
-          Se hacen en orden. Cada bloque se abre al terminar el Guiado y aprobar el Test del anterior.
+          Te recomendamos hacerlos en orden: cada uno usa lo que montaste en el anterior. «Te toca» marca el siguiente que tienes pendiente.
         </p>
         <ol className="md-bloques">
               {todos.map(({ b, opc }) => {
@@ -167,7 +167,7 @@ export default function ModulePage() {
                         <em>{b.duracionMin} min</em>
                       </span>
                     </span>
-                    <span className="md-b-estado">{hecho ? 'Hecho' : esToca ? 'Te toca' : abierto ? (p.ejercicios[b.id] ? 'Empezado' : 'Abierto') : 'Cerrado'}</span>
+                    <span className="md-b-estado">{hecho ? 'Hecho' : esToca ? 'Te toca' : abierto ? (p.ejercicios[b.id] ? 'Empezado' : '') : 'Cerrado'}</span>
                   </>
                 );
                 return (
@@ -200,7 +200,7 @@ export default function ModulePage() {
                   <strong>Examen del módulo</strong>
                   <span>
                     {notaEx === null
-                      ? `${nExamen} preguntas de test. Apruebas con un ${Math.round(APROBADO * 100)} %.${todoHecho ? '' : ' Se abre cuando termines los bloques.'}`
+                      ? `${nExamen} preguntas de test. Apruebas con un ${Math.round(APROBADO * 100)} %.${todoHecho ? '' : ' Mejor cuando termines los bloques.'}`
                       : `Tu mejor nota: ${Math.round(notaEx * 100)} %${notaEx >= APROBADO ? ' (aprobado)' : ''}. Puedes repetirlo.`}
                   </span>
                 </span>

@@ -398,3 +398,45 @@ li.hecho .md-b-estado { color: var(--arc-deep); }
 .hm-mas h2 { margin: 0 0 10px; }
 .hm-mas ul { margin: 0; padding-left: 22px; display: grid; gap: 6px; line-height: 1.6; }
 .hm-mas a { font-weight: 650; }
+
+/* =====================================================================
+   v5.3 · Más ancho y más agradable (petición de Sergi)
+   ===================================================================== */
+.md { max-width: 1280px; padding: 32px 48px 48px; }
+@media (min-width: 1180px) {
+  .md { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); column-gap: 56px; align-items: start; }
+  .md > .md-volver, .md > .md-cab { grid-column: 1 / -1; }
+  .md > section[aria-labelledby='bloques-h'] { grid-column: 1; grid-row: 3 / span 3; }
+  .md > section:not([aria-labelledby='bloques-h']) { grid-column: 2; }
+  .md > section[aria-labelledby='antes-h'] { grid-row: 3; }
+  .md > section[aria-labelledby='cierre-h'] { grid-row: 4; }
+  .md > section.md-extra { grid-row: 5; margin-top: 0; }
+  .md > section:not([aria-labelledby='bloques-h']) { background: var(--sheet-2); border-radius: var(--r-l); padding: 22px 24px; margin-top: 28px; }
+  .md > section:not([aria-labelledby='bloques-h']) > * { margin-left: 0 !important; }
+  .md > section:not([aria-labelledby='bloques-h']) > h2 { font-size: var(--t-block) !important; }
+  .md-sec-txt { margin-left: 0; }
+  .md > section[aria-labelledby='bloques-h'] .md-bloques { margin-left: 0; }
+}
+.md-cab { display: grid; gap: 0; }
+.md-cab h1 { font-size: clamp(30px, 3.2vw, 44px) !important; }
+
+/* Bloques como filas amables con el color del módulo */
+.md-bloques { border-left: 0; display: grid; gap: 10px; counter-reset: none; }
+.md-bloques li { list-style: none; }
+.md-b { margin-left: 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--sheet-solid, #fff); grid-template-columns: 44px 1fr auto; transition: border-color .15s, box-shadow .15s, transform .15s; }
+a.md-b:hover { border-color: color-mix(in srgb, var(--mod) 60%, var(--line)); box-shadow: 0 6px 18px -10px color-mix(in srgb, var(--mod) 70%, transparent); transform: translateY(-1px); background: var(--sheet-solid, #fff); }
+.md-b-n { width: 44px; height: 44px; border: 0; background: color-mix(in srgb, var(--mod) 16%, transparent); color: color-mix(in srgb, var(--mod) 70%, var(--ink)); font-size: 17px; }
+li.toca .md-b { border-color: var(--mod); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mod) 22%, transparent); }
+li.toca .md-b-n { background: var(--mod); color: #fff; box-shadow: none; }
+li.hecho .md-b-n { background: var(--arc-deep); color: #fff; }
+li.opc .md-b { border-style: dashed; }
+.md-b-txt strong { font-size: 17px; }
+
+/* Lección más ancha: texto a medida de lectura, capturas a todo el ancho */
+.bq { max-width: 1280px; padding: 32px 48px 48px; }
+.bq-cab { max-width: none; }
+.bq-obj, .doc > p, .doc .lect-lead, .lect-lista, .lect-aviso, .doc-sec > p { max-width: 78ch; }
+.doc { max-width: none; }
+.doc .cc-shot img, .doc .cc-shot { max-width: 100%; }
+@media (max-width: 700px) { .md, .bq { padding: 18px 16px 28px; } }
+.md-cab > .btn, .md-cab > .md-cta { justify-self: start; }

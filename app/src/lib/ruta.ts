@@ -84,19 +84,19 @@ export function todosBloques() {
   return MODULOS.flatMap((m) => bloquesDe(m).map((ejercicio) => ({ modulo: m, ejercicio })));
 }
 
-/* ---------- Modo libre: para revisar sin tener que hacer cada bloque (?libre=1 / ?libre=0) ---------- */
+/* ---------- Todo abierto por defecto (decisión de Sergi). ?libre=0 activa el modo guiado con cierres; ?libre=1 lo quita ---------- */
 const CLAVE_LIBRE = 'oys-libre';
 export function modoLibre() {
   try {
-    return localStorage.getItem(CLAVE_LIBRE) === '1';
+    return localStorage.getItem(CLAVE_LIBRE) !== '0';
   } catch {
-    return false;
+    return true;
   }
 }
 export function fijarModoLibre(si: boolean) {
   try {
-    if (si) localStorage.setItem(CLAVE_LIBRE, '1');
-    else localStorage.removeItem(CLAVE_LIBRE);
+    if (si) localStorage.removeItem(CLAVE_LIBRE);
+    else localStorage.setItem(CLAVE_LIBRE, '0');
   } catch {
     /* sin almacenamiento */
   }
