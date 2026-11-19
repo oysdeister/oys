@@ -26,7 +26,7 @@ export const INSIGNIAS: Insignia[] = [
   ...MODULOS.map((m) => ({
     id: `mod-${m.id}`,
     titulo: m.titulo,
-    texto: 'Termina todos los ejercicios del módulo.',
+    texto: 'Termina todos los bloques del módulo.',
     color: META[m.id]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => modCompleto(p, m.id),
   })),

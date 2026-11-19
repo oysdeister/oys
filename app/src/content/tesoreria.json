@@ -55,15 +55,15 @@
   {
    "id": "tesoreria-1",
    "numero": 1,
-   "titulo": "Banco propio preparado para tesorería",
-   "objetivo": "Tendrás BBVA_{INI} (si no lo tienes, créalo como en Cartera, cobros y pagos, ejercicio 2) con su cuenta contable, el control del extracto en formato AEB43 y una comisión fija por transferencia configurada.",
+   "titulo": "Preparar el banco propio para tesorería",
+   "objetivo": "Dejas el banco propio con su cuenta contable, su extracto y su comisión. Así podrás contabilizar movimientos y conciliar.",
    "concepto": "El banco propio (cbancpro) es la ficha maestra de cada cuenta bancaria de la empresa. En ella defines la cuenta financiera, la cuenta contable (por ejemplo 57200.00000) a la que irán los movimientos al contabilizar, y el formato de extracto con el que el banco envía los ficheros N43. Sin esta pieza no puede existir tesorería.\n\nAdemás, el banco propio guarda la configuración de comisiones bancarias. Si separas la comisión (campo «Operación comisión» informado), tesorería genera un movimiento adicional para la comisión; si no, la comisión viaja como un flujo más dentro del mismo movimiento. En las pestañas de la parte de arriba de la ficha (Operaciones por cuenta, Comisiones, Numeradores, Remesas por cuenta…) encontrarás la información relacionada con la cuenta.",
    "duracionMin": 30,
    "secciones": [
     {
      "id": "tesoreria-1-banco",
      "titulo": "Repaso del banco propio para tesorería",
-     "paraQueSirve": "Repasa en tu banco BBVA_{INI} los datos que usa tesorería. La ficha completa (entidad, IBAN, tipo de cuenta) la creaste en Cartera, cobros y pagos, ejercicio 2.",
+     "paraQueSirve": "Repasa en tu banco BBVA_{INI} los datos que usa tesorería. La ficha completa (entidad, IBAN, tipo de cuenta) la creaste en Cartera, cobros y pagos, el bloque «Dar de alta bancos propios y caja» (Cartera, cobros y pagos).",
      "ruta": [
       "Finanzas",
       "Cobros y Pagos",
@@ -72,7 +72,7 @@
       "Bancos propios"
      ],
      "explicacion": [
-      "BBVA_{INI} ya lo creaste en Cartera, cobros y pagos, ejercicio 2: aquí no lo repites, solo repasas lo que usa tesorería.",
+      "BBVA_{INI} ya lo creaste en Cartera, cobros y pagos, el bloque «Dar de alta bancos propios y caja» (Cartera, cobros y pagos): aquí no lo repites, solo repasas lo que usa tesorería.",
       "La Cuenta contable es la contrapartida de todos los movimientos de tesorería del banco al contabilizar. Fondos en curso, Preferencia y Estado deciden cómo y para qué se puede usar la cuenta."
      ],
      "campos": [
@@ -434,8 +434,8 @@
   {
    "id": "tesoreria-2",
    "numero": 2,
-   "titulo": "Operación financiera, flujo y parámetros de tesorería",
-   "objetivo": "Tendrás el flujo {INI}COM de tipo Comisión y la operación {INI}COM de salida que lo usa, con sus parámetros de conciliación, y sabrás leer los parámetros de tesorería.",
+   "titulo": "Flujo, operación y parámetros de tesorería",
+   "objetivo": "Crearás un flujo y una operación financiera y revisarás los parámetros de conciliación para entender cómo se clasifica el dinero.",
    "concepto": "El flujo financiero clasifica el dinero que se mueve (pago de servicios, de nóminas, cobro de facturas, comisión del banco…) y siempre lleva una cuenta contable: es lo que dice a qué cuenta irá cada importe al contabilizar. Si marcas Tipo flujo «Comisión» (o «Interés»), solo se puede usar en comisiones (o intereses) bancarios; si no marcas ninguno, es un flujo normal que se puede usar en cualquier operación.\n\nLa operación financiera (toperfin) es el tipo de movimiento de tesorería: si el dinero entra o sale, qué asiento hace y con qué flujo. En sus parámetros de conciliación decides cómo se casa con el extracto: por importe, por documento o por referencia, y con cuántos días de margen («float») buscas el apunte en el banco. Los parámetros globales de tesorería (titescfg) fijan reglas para toda la empresa, como tolerancias, fecha contable y búsqueda de flujos.",
    "duracionMin": 40,
    "secciones": [
@@ -982,8 +982,8 @@
    "id": "tesoreria-3",
    "numero": 3,
    "titulo": "Movimiento de tesorería manual",
-   "objetivo": "Tendrás un movimiento manual de salida en BBVA_{INI} con la operación {INI}COM, con sus flujos revisados y contabilizado.",
-   "concepto": "El movimiento de tesorería (taptcuen) representa una entrada o salida real de dinero en un banco propio. Lleva fecha operación y fecha valor (obligatoria), operación financiera, importe y una rejilla de flujos con sus cuentas contables. El campo Conciliado queda vacío hasta que el movimiento se casa con el extracto del banco.\n\nLos movimientos también nacen solos desde la cartera, con la acción PTES de un efecto o al ordenar una remesa con tesorería: lo ves en Cartera, cobros y pagos, ejercicio 13. El asiento que deja el movimiento al contabilizar (banco contra las cuentas de los flujos) lo trabajas en Asientos, ejercicio 14.",
+   "objetivo": "Crearás y contabilizarás un movimiento manual de salida para registrar una operación real en el banco propio.",
+   "concepto": "El movimiento de tesorería (taptcuen) representa una entrada o salida real de dinero en un banco propio. Lleva fecha operación y fecha valor (obligatoria), operación financiera, importe y una rejilla de flujos con sus cuentas contables. El campo Conciliado queda vacío hasta que el movimiento se casa con el extracto del banco.\n\nLos movimientos también nacen solos desde la cartera, con la acción PTES de un efecto o al ordenar una remesa con tesorería: lo ves en Cartera, cobros y pagos, el bloque «Llevar efectos de la cartera a tesorería» (Cartera, cobros y pagos). El asiento que deja el movimiento al contabilizar (banco contra las cuentas de los flujos) lo trabajas en Asientos, ejercicio 14.",
    "duracionMin": 20,
    "secciones": [
     {
@@ -1142,7 +1142,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "Los movimientos que nacen de un efecto (acción PTES) o de una remesa con tesorería están en Cartera, cobros y pagos, ejercicio 13."
+       "texto": "Los movimientos que nacen de un efecto (acción PTES) o de una remesa con tesorería están en Cartera, cobros y pagos, el bloque «Llevar efectos de la cartera a tesorería» (Cartera, cobros y pagos)."
       },
       {
        "tipo": "problema",
@@ -1221,8 +1221,8 @@
   {
    "id": "tesoreria-4",
    "numero": 4,
-   "titulo": "Extracto bancario N43 y conceptos del banco",
-   "objetivo": "Habrás visto un N43 cargado y sus movimientos, y tendrás claros los conceptos comunes y propios que hacen que la carga no falle y la conciliación case sola.",
+   "titulo": "Extracto bancario y conceptos del banco",
+   "objetivo": "Verás un extracto N43 ya cargado, darás de alta a mano el extracto de tu movimiento y revisarás los conceptos del banco para que la conciliación case sola.",
    "concepto": "El fichero N43 (norma 43 española) trae una cabecera con la cuenta y el saldo inicial, líneas de movimientos con fechas, importe y códigos de concepto común y propio, y un cierre con el saldo final. El cargador valida la continuidad de saldos: el saldo inicial de un extracto debe coincidir con el final del anterior.\n\nLos conceptos comunes (tconcomu) son códigos estándar de la banca española para el tipo de movimiento (por ejemplo 04 = giros, transferencias, traspasos y cheques); los conceptos propios (tconprop) son códigos particulares de cada banco, con su descripción, y vienen en el fichero. Hay que darlos de alta todos. En el concepto propio se configuran las operaciones a conciliar y la integración (Debe/Haber + operación) para los movimientos que solo conoce el banco, como comisiones o impuestos.\n\nOjo con el signo del extracto: depende de la base. En las capturas de la demo TRI (octubre de 2024) los cargos (pagos) salen en negativo, igual que en tesorería; en la base de prácticas (BBDD TUTORIAL) salen en positivo: el pago de 480,00 de la cuenta CAPT_BCO es 480,00 en el extracto y -480,00 en tesorería. Antes de dar de alta un extracto a mano, mira cómo vienen los demás extractos de esa cuenta.",
    "duracionMin": 40,
    "secciones": [
@@ -1680,7 +1680,7 @@
     {
      "id": "tesoreria-4-manual",
      "titulo": "Alta manual del extracto de tu movimiento",
-     "paraQueSirve": "Tener en BBVA_{INI} un extracto que casar con el movimiento manual del ejercicio 3, ya que tu banco de prácticas no recibe ficheros N43.",
+     "paraQueSirve": "Tener en BBVA_{INI} un extracto que casar con el movimiento manual del bloque «Movimiento de tesorería manual», ya que tu banco de prácticas no recibe ficheros N43.",
      "ruta": [
       "Finanzas",
       "Tesorería",
@@ -1688,7 +1688,7 @@
       "Movimientos"
      ],
      "explicacion": [
-      "Un extracto también se puede dar de alta a mano: es lo que harás aquí para simular lo que diría el banco de tu movimiento de 10,00 del ejercicio 3.",
+      "Un extracto también se puede dar de alta a mano: es lo que harás aquí para simular lo que diría el banco de tu movimiento de 10,00 del bloque «Movimiento de tesorería manual».",
       "Usa la misma fecha y el mismo importe que tu movimiento y un concepto común y propio que ya existan para tu banco. Fíjate en el signo con que vienen los demás extractos de la cuenta."
      ],
      "campos": [
@@ -1720,7 +1720,7 @@
        "imagen": "tesoreria-n-10.webp"
       },
       {
-       "texto": "Elige empresa y la cuenta BBVA_{INI}, y pon las fechas de tu movimiento del ejercicio 3",
+       "texto": "Elige empresa y la cuenta BBVA_{INI}, y pon las fechas de tu movimiento del bloque «Movimiento de tesorería manual»",
        "detalle": "Elige la Cuenta financiera BBVA_{INI}; el Banco y los datos de la cuenta bancaria (CCC1, CCC2, cuenta) salen de tu banco propio. Pon en Fecha operación y Fecha valor las de tu movimiento.",
        "imagen": "tesoreria-n-10.webp",
        "hotspot": {
@@ -1745,7 +1745,7 @@
       },
       {
        "texto": "Escribe el importe de tu movimiento y guarda",
-       "detalle": "Mismo importe que tu movimiento y Divisa EUR. En la base de prácticas los cargos del extracto salen en positivo (el pago de 480,00 de CAPT_BCO es 480,00 en el extracto y -480,00 en tesorería): para tu salida de 10,00 escribe 10,00. Pulsa «Guardar». Este extracto es el que conciliarás en el ejercicio 5.",
+       "detalle": "Mismo importe que tu movimiento y Divisa EUR. En la base de prácticas los cargos del extracto salen en positivo (el pago de 480,00 de CAPT_BCO es 480,00 en el extracto y -480,00 en tesorería): para tu salida de 10,00 escribe 10,00. Pulsa «Guardar». Este extracto es el que conciliarás en el bloque «Conciliación bancaria individual y automática».",
        "imagen": "tesoreria-n-10.webp",
        "hotspot": {
         "x": 66.4,
@@ -1830,7 +1830,7 @@
     "Revisa el concepto común 02 en tconcomu.",
     "En tconprop, filtra por tu banco y comprueba que existen los conceptos propios del fichero.",
     "En un concepto propio, revisa la integración y la rejilla «Operaciones a conciliar».",
-    "Has dado de alta a mano en BBVA_{INI} el extracto de tu movimiento del ejercicio 3."
+    "Has dado de alta a mano en BBVA_{INI} el extracto de tu movimiento del bloque «Movimiento de tesorería manual»."
    ],
    "problemas": [
     {
@@ -1855,7 +1855,7 @@
    "id": "tesoreria-5",
    "numero": 5,
    "titulo": "Conciliación bancaria individual y automática",
-   "objetivo": "Sabrás conciliar a mano tu movimiento con su extracto, cuándo usar «Cancelar extractos», «Generar tesorería», «Conciliar cartera» y «Desconciliar», y cómo lanzar la conciliación automática.",
+   "objetivo": "Conciliarás movimientos con extractos a mano y en automático para confirmar que el banco y el ERP dicen lo mismo.",
    "concepto": "La conciliación bancaria individual (textract_concil_taptcuen_vtab) enfrenta el extracto (izquierda) y la tesorería (derecha). Marca un movimiento de cada lado con el mismo importe y pulsa «Conciliar banco»; ambos pasan a las pestañas de conciliado y quedan huellas cruzadas. Los botones «Cancelar extractos», «Generar tesorería» y «Conciliar cartera» cubren extornos (un cargo y su anulación por el mismo importe con signo contrario), comisiones que solo están en el banco y efectos de cartera que no pasaron por tesorería.\n\nLa conciliación automática (textract_concaut) usa la configuración de conceptos propios (operaciones a conciliar e integración) y los parámetros de conciliación de las operaciones financieras para casar masivamente por empresa, cuenta y rango de fechas. Si los importes no coinciden exactamente, puedes definir tolerancias en los parámetros de tesorería.",
    "duracionMin": 45,
    "secciones": [
@@ -1962,7 +1962,7 @@
      "explicacion": [
       "Selecciona un movimiento del extracto y su movimiento de tesorería con el mismo importe, y pulsa «Conciliar banco». Ambos desaparecen de pendientes y pasan a conciliados.",
       "En el movimiento de tesorería, el campo Conciliado recibe un número correlativo y un enlace al extracto; en el extracto queda la marca de conciliado y el vínculo al movimiento.",
-      "Tu movimiento manual del ejercicio 3 ya está contabilizado (banco contra el flujo), así que aquí solo lo concilias. Cuando el movimiento nace de una remesa con tesorería, el asiento del banco se genera al contabilizar después de conciliar (lo verás en Cartera, cobros y pagos, ejercicios 14 a 16)."
+      "Tu movimiento manual del bloque «Movimiento de tesorería manual» ya está contabilizado (banco contra el flujo), así que aquí solo lo concilias. Cuando el movimiento nace de una remesa con tesorería, el asiento del banco se genera al contabilizar después de conciliar (lo verás en Cartera, cobros y pagos, los bloques «Extracto, conciliación y circuito de tesorería», «Crear el extracto de una remesa de pago» y «Conciliar y contabilizar una remesa de pago»)."
      ],
      "campos": [
       {
@@ -2031,7 +2031,7 @@
       },
       {
        "texto": "Comprueba las huellas en el movimiento y en el extracto",
-       "detalle": "El movimiento de tesorería recibe el número en su campo Conciliado (1 en la captura del ejercicio 3) y el extracto, el mismo número (Conciliado = 1 en esta ficha).",
+       "detalle": "El movimiento de tesorería recibe el número en su campo Conciliado (1 en la captura del bloque «Movimiento de tesorería manual») y el extracto, el mismo número (Conciliado = 1 en esta ficha).",
        "imagen": "tesoreria-n-06.webp",
        "hotspot": {
         "x": 13.3,
@@ -2280,7 +2280,7 @@
    ],
    "checklist": [
     "Has ejecutado la consulta de conciliación para BBVA_{INI} con el rango de fechas de tu movimiento.",
-    "Has marcado tu extracto del ejercicio 4 y tu movimiento del ejercicio 3 y pulsado Conciliar.",
+    "Has marcado tu extracto del bloque «Extracto bancario y conceptos del banco» y tu movimiento del bloque «Movimiento de tesorería manual» y pulsado Conciliar.",
     "Comprueba las huellas de conciliación en el movimiento y en el extracto.",
     "Localiza los botones «Cancelar extractos», «Generar tesorería», «Conciliar cartera» y «Conciliar banco» y di en qué caso usarías cada uno.",
     "Si en tu extracto hay un extorno (mismo importe con signo contrario), concílialo con «Cancelar extractos».",
@@ -2319,8 +2319,8 @@
    "id": "tesoreria-6",
    "numero": 6,
    "titulo": "Cajas de efectivo",
-   "objetivo": "Localizarás los maestros y procesos de caja y comprenderás la configuración, el registro, los vales, la liquidación, los cheques, las remesas y los informes.",
-   "concepto": "Una caja de efectivo es el dinero en metálico que la empresa guarda en una oficina o tienda (la CAJA_{INI} que creaste en Cartera, cobros y pagos, ejercicio 2). El módulo de cajas registra cada jornada de caja: las entradas y salidas de dinero, los vales (dinero que se presta con fondos de la caja), el recuento al final del día («liquidación»: comparar lo que hay físicamente con lo que dice el ERP) y la contabilización.\n\nEn este ejercicio localizas y entiendes la configuración de una caja, sus movimientos y líneas, los vales, la liquidación, la gestión de cheques y remesas y los informes.",
+   "objetivo": "Recorrerás la configuración y operativa de caja, vales, liquidación e informes para controlar el efectivo y cuadrarlo.",
+   "concepto": "Una caja de efectivo es el dinero en metálico que la empresa guarda en una oficina o tienda (la CAJA_{INI} que creaste en Cartera, cobros y pagos, el bloque «Dar de alta bancos propios y caja» (Cartera, cobros y pagos)). El módulo de cajas registra cada jornada de caja: las entradas y salidas de dinero, los vales (dinero que se presta con fondos de la caja), el recuento al final del día («liquidación»: comparar lo que hay físicamente con lo que dice el ERP) y la contabilización.\n\nEn este ejercicio localizas y entiendes la configuración de una caja, sus movimientos y líneas, los vales, la liquidación, la gestión de cheques y remesas y los informes.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -2395,7 +2395,7 @@
       "La definición de caja (ccajadef) es una ficha distinta del banco propio: en su campo Cuenta financiera eliges la caja de efectivo que creaste en Cartera, cobros y pagos (CAJA_{INI}).",
       "El maestro ccajadef identifica cada caja y reúne la configuración que condiciona su funcionamiento: empresa, cuenta financiera, moneda, cuenta contable, proyecto, sección, justificante, responsable, operaciones de cobro y pago y liquidación.",
       "La estructura obliga a informar opecob y opepag a la vez, o a dejar ambos vacíos; no se admite uno solo.",
-      "El maestro de tipos de operación de caja (ccajaope) define código, descripción, cuenta, secuencia, forma de pago (campo «Plazo pago»: Efectivo, Tarjeta crédito, Tarjeta débito o Saldo inicial), si afecta a inversiones, si es liquidable, posición Debe/Haber y la operación financiera asociada que ya conoces del ejercicio 2.",
+      "El maestro de tipos de operación de caja (ccajaope) define código, descripción, cuenta, secuencia, forma de pago (campo «Plazo pago»: Efectivo, Tarjeta crédito, Tarjeta débito o Saldo inicial), si afecta a inversiones, si es liquidable, posición Debe/Haber y la operación financiera asociada que ya conoces del bloque «Flujo, operación y parámetros de tesorería».",
       "El maestro ccajamon mantiene los billetes y monedas admitidos por la caja, con tipo, descripción, moneda e importe.",
       "Por dentro, ccajadef contiene campos como codcaj, nomcaj, empcode, ctafin, moneda, cuenta, proyec, seccio, opecob y opepag."
      ],
@@ -2502,7 +2502,7 @@
       "Registro y operativa"
      ],
      "explicacion": [
-      "El diario de movimientos se registra en ccajamov, como los movimientos manuales de tesorería que viste en el ejercicio 3. Cada registro queda identificado por cajaid y asociado a una caja, empresa, proyecto y sección contable. El estado inicial es Abierto (A).",
+      "El diario de movimientos se registra en ccajamov, como los movimientos manuales de tesorería que viste en el bloque «Movimiento de tesorería manual». Cada registro queda identificado por cajaid y asociado a una caja, empresa, proyecto y sección contable. El estado inicial es Abierto (A).",
       "Las líneas de movimiento (ccajalin) son las contrapartidas contables. Al registrar un movimiento, si existen saldo o movimientos anteriores, el sistema inserta automáticamente una línea de saldo inicial, que puedes modificar, si el tipo de operación está parametrizado como saldo inicial.",
       "Los vales son préstamos de dinero hechos con fondos de la caja (por ejemplo, 50 € a un empleado para un recado). Al cancelar un vale, su importe vuelve al saldo disponible.",
       "Si la caja tiene activado el control de liquidación (ccajadef.indliq = S), la liquidación comprueba que los billetes y monedas contados coinciden con el saldo de líneas y vales. Si coincide, pasa la jornada a Liquidado (L); si no, muestra el descuadre.",
@@ -2818,7 +2818,7 @@
    "id": "tesoreria-7",
    "numero": 7,
    "titulo": "Financiación y líneas financieras",
-   "objetivo": "Localizarás los maestros de financiación, el registro de contratos, el cuadro de amortización, la generación de tesorería y facturas, y las líneas financieras.",
+   "objetivo": "Localizarás contratos y cuadros de amortización y su generación de tesorería para controlar la deuda y sus cuotas.",
    "concepto": "La financiación registra y controla la deuda o el crédito de la empresa que se devuelve en cuotas: préstamos bancarios, leasings, rentings, pólizas, préstamos entre empresas del grupo y depósitos o préstamos puntuales a corto plazo.\n\nEn este ejercicio localizarás los tipos de financiación, el registro de contratos, la revisión de intereses, el cuadro de amortización, los procesos de tesorería y facturas, la reclasificación de largo a corto plazo y las líneas financieras.",
    "duracionMin": 40,
    "secciones": [
@@ -2833,7 +2833,7 @@
      ],
      "explicacion": [
       "Registra y controla la deuda o el crédito de la empresa que se devuelve en cuotas: préstamos bancarios, leasings (alquiler de un bien con opción de compra al final), rentings (alquiler a largo plazo sin compra), pólizas de crédito (dinero que el banco deja disponer hasta un límite), préstamos entre empresas del grupo y depósitos o préstamos puntuales a corto plazo.",
-      "El circuito es: Registro de financiación → Cuadro de amortización → Resultados. Al activar, el sistema calcula capital, interés y deuda pendiente; a partir del cuadro se generan movimientos de tesorería, facturas y la reclasificación contable de largo a corto plazo. Esos movimientos de tesorería se concilian después con el banco, como viste en el ejercicio 5.",
+      "El circuito es: Registro de financiación → Cuadro de amortización → Resultados. Al activar, el sistema calcula capital, interés y deuda pendiente; a partir del cuadro se generan movimientos de tesorería, facturas y la reclasificación contable de largo a corto plazo. Esos movimientos de tesorería se concilian después con el banco, como viste en el bloque «Conciliación bancaria individual y automática».",
       "Largo plazo (LP) = deuda que vence en más de 12 meses; corto plazo (CP) = en 12 meses o menos. Cada año la parte que vence en los 12 meses siguientes pasa de LP a CP («reclasificación»). Devengo anticipado = los intereses se pagan al empezar el periodo; vencido = al acabarlo. Ejemplo de interés de un préstamo: 10.000 € al 3 % durante 30 días = 10.000 × 3 × 30 / 36.000 = 25 €.",
       "Los tipos configurables son Préstamo, Leasing, Interempresa y Otros. El perfil puede ser Financiado (la empresa recibe el dinero) o Financiador (lo presta). Los métodos de cálculo son Francés (cuota constante, el más habitual en España), Americano (solo intereses y todo el capital al final), Italiano (capital constante, cuota decreciente) e Incremento de periodos.",
       "Por dentro: las tablas principales son cfinconh, cfinrevi, cfinamor, cfincond, cfinctas, cfinrevi_file, cfincomp, cfincamb, tdepmovh, tdepmovd."
@@ -3058,10 +3058,10 @@
      ],
      "explicacion": [
       "Los grupos de cuentas de financiación (cfinctas) definen las cuentas contables según la naturaleza de la deuda: préstamos bancarios, leasing y préstamos entre empresas del grupo. Incluyen cuentas de financiación LP y CP, intereses diferidos, intereses acumulados, gastos e ingresos por intereses y diferencias de cambio. Intereses acumulados: los ya devengados (corresponden a tiempo ya pasado) que aún no se han pagado. Intereses diferidos: los pactados que corresponden a periodos futuros y todavía no son gasto. Diferencias de cambio: lo que se gana o se pierde cuando la deuda está en otra moneda y cambia su cotización.",
-      "Los tipos de financiación LP (cfincond) son plantillas de cada tipo de contrato. Definen clasificación, activo/pasivo, cuenta tercero, generación de tesorería, flujo capital e intereses, y tipo de factura. Los flujos de capital e intereses son los que ya viste en el ejercicio 2. Generar tesorería Sí crea previsión de tesorería por cuota; No liquida por factura.",
+      "Los tipos de financiación LP (cfincond) son plantillas de cada tipo de contrato. Definen clasificación, activo/pasivo, cuenta tercero, generación de tesorería, flujo capital e intereses, y tipo de factura. Los flujos de capital e intereses son los que ya viste en el bloque «Flujo, operación y parámetros de tesorería». Generar tesorería Sí crea previsión de tesorería por cuota; No liquida por factura.",
       "Las cuentas de depósito/préstamo C.P. (tdepmovd) indican por empresa y cuenta bancaria las operaciones y flujos para depósitos/préstamos a corto plazo. Sin esta fila, Confirmar muestra «No especificada parametrización para la cuenta y empresa del registro actual».",
       "Los componentes de la financiación (cfincomp) vinculan contratos con inmovilizado. Los tipos de cambio (cfincamb) registran cambios por empresa, ejercicio, mes y divisa.",
-      "Los maestros de grupos de cuentas, tipos financiación LP y cuentas de depósito/préstamo C.P. se encuentran en Finanzas > Tesorería > Maestros > Financiación. Tipos de cambio está en Finanzas > Tesorería > Financiación > Tipos de cambio. Estos maestros complementan las operaciones financieras que configuraste en el ejercicio 2.",
+      "Los maestros de grupos de cuentas, tipos financiación LP y cuentas de depósito/préstamo C.P. se encuentran en Finanzas > Tesorería > Maestros > Financiación. Tipos de cambio está en Finanzas > Tesorería > Financiación > Tipos de cambio. Estos maestros complementan las operaciones financieras que configuraste en el bloque «Flujo, operación y parámetros de tesorería».",
       "Por dentro: cfinctas, cfincond, tdepmovd, cfincomp y cfincamb son las tablas de configuración."
      ],
      "campos": [
@@ -3124,7 +3124,7 @@
       },
       {
        "texto": "Abre Tipos financiación LP y comprueba los campos Generar tesorería, Flujo capital y Flujo intereses.",
-       "detalle": "Comprueba cómo Generar tesorería decide si las cuotas crean previsión de tesorería y revisa los flujos de capital e intereses del ejercicio 2.",
+       "detalle": "Comprueba cómo Generar tesorería decide si las cuotas crean previsión de tesorería y revisa los flujos de capital e intereses del bloque «Flujo, operación y parámetros de tesorería».",
        "imagen": "icon-tesoreria-023.webp"
       },
       {
@@ -3155,7 +3155,7 @@
      "explicacion": [
       "Los préstamos y depósitos a corto plazo están en Finanzas > Tesorería > Financiación > Depósitos y préstamos C.P. A las líneas financieras se accede desde Finanzas > Tesorería > Líneas financieras.",
       "Los préstamos y depósitos a corto plazo permiten definir y emitir préstamos y depósitos entre cuentas, gestionar la liquidación de intereses y la devolución del importe.",
-      "Al confirmar una operación se generan cinco movimientos de tesorería: dos de pago, dos de cobro y uno de cobro/pago de intereses. Mientras estos movimientos no estén conciliados, puedes anular la operación con el botón Anular. La conciliación sigue la mecánica del ejercicio 5.",
+      "Al confirmar una operación se generan cinco movimientos de tesorería: dos de pago, dos de cobro y uno de cobro/pago de intereses. Mientras estos movimientos no estén conciliados, puedes anular la operación con el botón Anular. La conciliación sigue la mecánica del bloque «Conciliación bancaria individual y automática».",
       "Las fórmulas de intereses son: Depósito → (Importe * % interés * número de días) / 36500; Préstamo → (Importe * % interés * número de días) / 36000.",
       "Las líneas financieras gestionan límites de crédito, condiciones y términos financieros, desembolsos y amortizaciones, informes y análisis, alertas y notificaciones. Una vez definidas las modalidades, se asignan a avales, remesas y condiciones de crédito.",
       "Por dentro: para préstamos y depósitos se usan tdepmovh y tdepmovd. Para líneas financieras no se detallan nombres de tablas en este ejercicio."
@@ -3316,7 +3316,7 @@
    "id": "tesoreria-8",
    "numero": 8,
    "titulo": "Cartera de valores, avales e informes de posición",
-   "objetivo": "Localizarás los maestros de cartera de valores, el registro de operaciones, los avales de garantía y los informes de posición de tesorería.",
+   "objetivo": "Localizarás maestros y operaciones de cartera, avales e informes para controlar inversiones y garantías de la empresa.",
    "concepto": "La cartera de valores registra las inversiones de la empresa en acciones, bonos o fondos (renta variable: acciones, cuyo rendimiento o dividendo no es fijo; renta fija: bonos u obligaciones que pagan un interés pactado, el cupón, y devuelven el capital al vencer), a corto y largo plazo, y sus operaciones (compra, venta, cobro de dividendos o intereses). Un aval es el compromiso de un banco de pagar por la empresa si esta no cumple (por ejemplo, un aval de alquiler o de licitación pública). Los informes de posición proyectan la liquidez: cuánto dinero tendrás en los próximos días según los cobros y pagos previstos.",
    "duracionMin": 40,
    "secciones": [
@@ -3467,7 +3467,7 @@
     {
      "id": "tesoreria-8-avales",
      "titulo": "Avales de garantía",
-     "paraQueSirve": "Registra avales, sus tipos, condiciones y su reflejo en tesorería; es un complemento a las líneas financieras del ejercicio 7.",
+     "paraQueSirve": "Registra avales, sus tipos, condiciones y su reflejo en tesorería; es un complemento a las líneas financieras del bloque «Financiación y líneas financieras».",
      "ruta": [
       "Finanzas",
       "Tesorería",
@@ -3555,7 +3555,7 @@
       "Posición"
      ],
      "explicacion": [
-      "Dentro de Finanzas › Tesorería › Posición dispones de: Flujos por tramos de días, Cuentas por tramos de días, Cuentas y operaciones por tramos de días, Cuentas por tramos de meses, Información globalizada, Situación financiera global y Cash flow. Con ellos proyectas los flujos financieros que definiste en el ejercicio 2.",
+      "Dentro de Finanzas › Tesorería › Posición dispones de: Flujos por tramos de días, Cuentas por tramos de días, Cuentas y operaciones por tramos de días, Cuentas por tramos de meses, Información globalizada, Situación financiera global y Cash flow. Con ellos proyectas los flujos financieros que definiste en el bloque «Flujo, operación y parámetros de tesorería».",
       "El informe de posición por tramo de días proyecta la liquidez de una empresa: distribuye el saldo inicial de tesorería y los cobros y pagos previstos en doce intervalos temporales sucesivos."
      ],
      "campos": [
@@ -3679,6 +3679,826 @@
     {
      "problema": "Al cancelar un aval, no se eliminan todas las cuotas.",
      "solucion": "Cancelar solo elimina las cuotas pendientes de contabilización; las cuotas de interés ya debitadas mediante conciliación permanecen."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-8",
+   "numero": 14,
+   "titulo": "Extracto, conciliación y circuito de tesorería",
+   "objetivo": "Distinguirás qué emite el banco y qué hace la empresa y ordenarás remesa, extracto, conciliación y contabilización.",
+   "concepto": "Lo practicarás con más detalle en el módulo Tesorería (los bloques «Extracto bancario y conceptos del banco» y «Conciliación bancaria individual y automática»); aquí lo aplicas a la remesa. El extracto bancario es la lista de movimientos que el banco dice que ha habido en tu cuenta (normalmente llega en un fichero de norma 43, N43). La conciliación bancaria es la comprobación que hace la empresa: casa cada movimiento del extracto con su movimiento de tesorería para confirmar que el banco y el ERP dicen lo mismo.\n\nEl circuito que vas a practicar: remesa ordenada (con su tesorería) → extracto bancario → conciliación → contabilización. Como en la base de formación no llega un fichero real del banco, el extracto lo darás de alta a mano.\n\nHay dos asientos distintos. Al ordenar la remesa, el ERP saca la deuda del proveedor (400) a la cuenta que diga la acción, todavía sin tocar el banco. Cuando el extracto confirma el cargo y lo concilias, «Contabilizar» genera el asiento del banco. Con el PGC español, si al ordenar la deuda pasó a la 401, este asiento es 401 al debe y 572 Bancos al haber; en la base del vídeo sale la 57900.00000 «Fondos en movimiento», que esa base usa como cuenta del banco (lo ves en el bloque «Conciliar y contabilizar una remesa de pago»). Hasta entonces el banco contable no baja.",
+   "duracionMin": 20,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-8-conceptos",
+     "titulo": "Extracto y conciliación",
+     "paraQueSirve": "Fija qué es cada documento y quién lo emite para no confundir el extracto con la conciliación.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería"
+     ],
+     "explicacion": [
+      "El extracto bancario es un documento del banco: detalla los movimientos de la cuenta y lo emite el banco.",
+      "La conciliación bancaria la realiza la empresa: compara los movimientos de tesorería del ERP con los del extracto para comprobar que coinciden; contabilizar viene después.",
+      "No son lo mismo: el extracto muestra movimientos; la conciliación compara esos movimientos con los registros de la empresa."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas › Tesorería › Extractos bancarios › Movimientos",
+       "detalle": "Es la lista de lo que dice el banco: cada línea, un movimiento del extracto."
+      },
+      {
+       "texto": "Abre Finanzas › Tesorería › Conciliación bancaria",
+       "detalle": "Es donde la empresa compara: extracto a un lado, tesorería al otro."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Usa esta separación: extracto, documento del banco; conciliación, tarea de la empresa."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-8-circuito",
+     "titulo": "Circuito de tesorería",
+     "paraQueSirve": "Ordena las pantallas de tesorería para no saltarte pasos entre la remesa, el extracto y la conciliación.",
+     "ruta": null,
+     "explicacion": [
+      "El circuito es: remesa → extracto bancario → conciliación bancaria → contabilización.",
+      "Solo se concilia cuando hay extracto y tesorería pendientes; contabilizar es el último paso.",
+      "En los bloques «Crear el extracto de una remesa de pago» y «Conciliar y contabilizar una remesa de pago» partes de una remesa de pago ya ordenada en la base del vídeo, de 1.524,60, y te centras en el extracto y la conciliación."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Localiza la remesa de partida en Registro de remesas",
+       "detalle": "En la captura, una remesa de pago ya ordenada.",
+       "imagen": "v-icon2-001.jpg"
+      },
+      {
+       "texto": "Repasa el orden: extracto (el bloque «Crear el extracto de una remesa de pago») → conciliación y contabilización (el bloque «Conciliar y contabilizar una remesa de pago»)"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No saltes del extracto a contabilizar sin conciliar: el circuito pasa por la conciliación."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué es un extracto bancario?",
+     "opciones": [
+      "Un libro contable obligatorio de la empresa",
+      "Un documento emitido por la empresa para el banco",
+      "Un documento oficial del banco que detalla movimientos de la cuenta",
+      "Un informe de impuestos mensual"
+     ],
+     "correcta": 2,
+     "explicacion": "El extracto lo emite el banco y detalla las entradas y salidas de la cuenta."
+    },
+    {
+     "pregunta": "¿Quién emite el extracto y quién realiza la conciliación?",
+     "opciones": [
+      "El banco emite el extracto; la empresa realiza la conciliación",
+      "La empresa emite el extracto; el banco realiza la conciliación",
+      "Ambos los emite el banco",
+      "Ambos los realiza la empresa"
+     ],
+     "correcta": 0,
+     "explicacion": "El extracto es del banco y la conciliación es una tarea de la empresa."
+    },
+    {
+     "pregunta": "¿Cuál es el orden del circuito de tesorería?",
+     "opciones": [
+      "Conciliación → extracto → remesa → contabilización",
+      "Remesa → extracto bancario → conciliación → contabilización",
+      "Extracto → conciliación → remesa → contabilización",
+      "Remesa → conciliación → extracto → contabilización"
+     ],
+     "correcta": 1,
+     "explicacion": "Primero se parte de la remesa, después se crea el extracto y finalmente se concilia."
+    },
+    {
+     "pregunta": "¿Qué es la conciliación bancaria?",
+     "opciones": [
+      "Un documento oficial emitido por el banco para la empresa",
+      "Una comparación entre los registros de la empresa y el extracto bancario",
+      "Un listado de todas las facturas emitidas y pendientes de cobro",
+      "Un impuesto especial sobre las cuentas bancarias de la empresa"
+     ],
+     "correcta": 1,
+     "explicacion": "La empresa compara su contabilidad con el extracto para comprobar que los saldos coinciden."
+    },
+    {
+     "pregunta": "¿Qué diferencia hay entre extracto y conciliación?",
+     "opciones": [
+      "Son el mismo documento",
+      "El extracto muestra movimientos; la conciliación compara contabilidad y extracto",
+      "La conciliación muestra movimientos; el extracto compara contabilidad",
+      "Ninguna"
+     ],
+     "correcta": 1,
+     "explicacion": "El extracto es la foto de movimientos y la conciliación es la comparación con los registros de la empresa."
+    }
+   ],
+   "checklist": [
+    "Has abierto Extractos bancarios › Movimientos y sabes que es lo que dice el banco.",
+    "Has abierto Conciliación bancaria y sabes que es donde la empresa compara.",
+    "Ordenas el circuito como remesa → extracto → conciliación → contabilización.",
+    "Sabes que conciliar y contabilizar son dos pasos distintos."
+   ],
+   "problemas": [
+    {
+     "problema": "Crees que extracto y conciliación son lo mismo.",
+     "solucion": "Recuerda: el extracto es un documento del banco; la conciliación es la comparación que hace la empresa."
+    },
+    {
+     "problema": "Intentas contabilizar directamente después del extracto sin pasar por la conciliación.",
+     "solucion": "Sigue el circuito: remesa → extracto → conciliación → contabilización."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-9",
+   "numero": 15,
+   "titulo": "Crear el extracto de una remesa de pago",
+   "objetivo": "Crearás un extracto bancario de una remesa de pago para reflejar lo que el banco registra.",
+   "concepto": "El extracto se da de alta en Finanzas › Tesorería › Extractos bancarios › Movimientos. Eliges la empresa y la cuenta financiera se rellena sola.\n\nEl concepto común es el código estándar de la banca española para el tipo de movimiento (04 = giros, transferencias, traspasos y cheques); el concepto propio es el código particular de cada banco (13 = transferencia en la base del vídeo). La conciliación los usa para saber con qué operaciones casar.\n\nOjo con el signo. En la conciliación de esta base, el extracto de un pago va en positivo y su movimiento de tesorería en negativo (Salida): en la captura, extracto 1.524,60 y tesorería -1.524,60. El extracto sigue el criterio del banco: para el banco tu cuenta es dinero que te debe, y cuando pagas te lo carga (lo anota en su debe). Por eso, al revés que en tesorería, los pagos (cargos) van en positivo y los cobros (abonos) en negativo. Ojo: es el criterio de esta base de formación. En la demo TRI (lo verás en Tesorería, el bloque «Extracto bancario y conceptos del banco») el pago de la remesa sale en el extracto en negativo; en el fichero N43 el importe va sin signo con una clave de debe o haber. Antes de escribir un extracto a mano, mira cómo vienen los demás extractos de esa cuenta.",
+   "duracionMin": 30,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-9-alta-extracto",
+     "titulo": "Alta del extracto de pago",
+     "paraQueSirve": "Crea un extracto que refleje la remesa de pago con importe positivo y con los conceptos indicados.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Extractos bancarios",
+      "Movimientos"
+     ],
+     "explicacion": [
+      "Entra en la ventana de extractos bancarios y movimientos y elige la empresa 0 Deister Software: la cuenta financiera (PRVCC0) se carga sola.",
+      "El importe del pago, 1.524,60, se escribe en positivo: es un cargo del banco en tu cuenta."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad para la que se crea el extracto.",
+       "ejemplo": "0 Deister Software"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta de tesorería asociada a la empresa.",
+       "ejemplo": "PRVCC0 (se carga sola)"
+      },
+      {
+       "campo": "Fecha de operación",
+       "significado": "Día en que se registra la operación.",
+       "ejemplo": "24-06-2026"
+      },
+      {
+       "campo": "Concepto común",
+       "significado": "Clasificación general del movimiento.",
+       "ejemplo": "04 Giros, transferencias, traspasos, cheques"
+      },
+      {
+       "campo": "Concepto propio",
+       "significado": "Clasificación propia de la operación.",
+       "ejemplo": "13 Transferencia"
+      },
+      {
+       "campo": "Importe",
+       "significado": "Importe del extracto. Un pago (cargo del banco) va en positivo.",
+       "ejemplo": "1.524,60"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Tesorería › Extractos bancarios › Movimientos.",
+       "imagen": "v-icon2-002.jpg"
+      },
+      {
+       "texto": "Pulsa «Nuevo» y elige la empresa 0 Deister Software",
+       "detalle": "La cuenta financiera se carga automáticamente.",
+       "imagen": "v-icon2-003.jpg"
+      },
+      {
+       "texto": "Pon la fecha de operación y la fecha valor 24-06-2026"
+      },
+      {
+       "texto": "Pon concepto común 04.",
+       "imagen": "v-icon2-004.jpg",
+       "detalle": "Está en el bloque «Información operación». Debajo aparece su descripción: GIROS, TRANSFERENCIAS, TRASPASOS, CHEQUES.",
+       "hotspot": {
+        "x": 33.0,
+        "y": 63.6,
+        "w": 33.4,
+        "h": 6.8,
+        "etiqueta": "Concepto común 04"
+       }
+      },
+      {
+       "texto": "Pon concepto propio 13.",
+       "detalle": "Al escribir 13 la lista ofrece «13 TRANSFERENCIA»; elígelo y la descripción se rellena sola."
+      },
+      {
+       "texto": "Escribe el importe 1.524,60 en positivo",
+       "imagen": "v-icon2-005.jpg",
+       "detalle": "Es el campo «Importe extracto» del bloque «Importes». La divisa EUR se rellena sola.",
+       "hotspot": {
+        "x": 33.0,
+        "y": 70.2,
+        "w": 33.4,
+        "h": 5.8,
+        "etiqueta": "Importe extracto 1.524,60"
+       }
+      },
+      {
+       "texto": "Pulsa «Guardar».",
+       "detalle": "El extracto queda guardado con su número de orden (7 en la captura) e importe 1.524,60.",
+       "imagen": "v-icon2-006.jpg"
+      },
+      {
+       "texto": "No uses el botón de conciliación automática en este ejercicio.",
+       "detalle": "Es el botón «Conciliar automático» de arriba a la derecha. La conciliación la harás a mano en el bloque «Conciliar y contabilizar una remesa de pago»."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El concepto común 04 corresponde a giros, transferencias, traspasos y cheques."
+      },
+      {
+       "tipo": "nota",
+       "texto": "El pago va en positivo porque el extracto sigue el criterio del banco: un pago es un cargo en tu cuenta. En tesorería el mismo pago es -1.524,60 (Salida)."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuál es la ruta para crear el extracto?",
+     "opciones": [
+      "Finanzas › Contabilidad General › Asientos",
+      "Finanzas › Tesorería › Conciliación bancaria",
+      "Finanzas › Tesorería › Extractos bancarios › Movimientos",
+      "Finanzas › Cartera › Remesas"
+     ],
+     "correcta": 2,
+     "explicacion": "El extracto se crea en Finanzas › Tesorería › Extractos bancarios › Movimientos."
+    },
+    {
+     "pregunta": "¿Qué concepto común se usa para transferencias, giros y otras operaciones?",
+     "opciones": [
+      "13",
+      "03",
+      "04",
+      "5082"
+     ],
+     "correcta": 2,
+     "explicacion": "El concepto común 04 es «Giros, transferencias, traspasos, cheques»."
+    },
+    {
+     "pregunta": "En esta base, ¿con qué signo escribes en el extracto el pago de una remesa?",
+     "opciones": [
+      "Negativo, igual que en tesorería",
+      "Positivo: es un cargo del banco en tu cuenta",
+      "Siempre cero",
+      "No importa el signo"
+     ],
+     "correcta": 1,
+     "explicacion": "En esta base, el extracto guarda los cargos (pagos) en positivo y los abonos (cobros) en negativo, al revés que tesorería. En otras bases puede variar."
+    },
+    {
+     "pregunta": "¿Qué concepto propio se usa en el ejemplo de pagar?",
+     "opciones": [
+      "03",
+      "04",
+      "13",
+      "Ninguno"
+     ],
+     "correcta": 2,
+     "explicacion": "En el ejemplo de pagar se indica concepto propio 13."
+    },
+    {
+     "pregunta": "¿Qué haces después de rellenar los campos del extracto?",
+     "opciones": [
+      "Pulsas «Conciliar tesorería»",
+      "Pulsas «Guardar»",
+      "Borras la remesa",
+      "Contabilizas directamente"
+     ],
+     "correcta": 1,
+     "explicacion": "Se pulsa «Guardar» para generar el extracto y dejarlo visible."
+    }
+   ],
+   "checklist": [
+    "Has entrado en Finanzas › Tesorería › Extractos bancarios › Movimientos.",
+    "Has elegido la empresa y la cuenta financiera se ha rellenado sola.",
+    "El extracto tiene fecha 24-06-2026, concepto común 04 y concepto propio 13.",
+    "El importe es 1.524,60 en positivo y el extracto está guardado."
+   ],
+   "problemas": [
+    {
+     "problema": "No entiendes por qué un pago va en positivo.",
+     "solucion": "El extracto sigue el criterio del banco: cuando pagas, el banco te hace un cargo, y los cargos van en positivo. En tesorería el mismo pago es negativo (Salida)."
+    },
+    {
+     "problema": "No se carga la cuenta financiera.",
+     "solucion": "Comprueba que has elegido bien la empresa; su cuenta financiera se carga sola."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-10",
+   "numero": 16,
+   "titulo": "Conciliar y contabilizar una remesa de pago",
+   "objetivo": "Conciliarás el extracto con su movimiento de tesorería y contabilizarás la conciliación para confirmar el cargo.",
+   "concepto": "La conciliación bancaria está en Finanzas › Tesorería › Conciliación bancaria. Filtras empresa, cuenta y fechas y pulsas «Ejecutar»: a la izquierda sale el extracto pendiente y a la derecha la tesorería pendiente.\n\nMarcas el extracto de 1.524,60 y su movimiento de tesorería de -1.524,60 (mismo importe, signo contrario por lo visto en el bloque «Crear el extracto de una remesa de pago») y pulsas «Conciliar tesorería».\n\nLa tarea no termina al conciliar: entras en el importe conciliado y pulsas «Contabilizar» para que se genere el asiento.",
+   "duracionMin": 35,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-10-filtros",
+     "titulo": "Filtros y ejecución",
+     "paraQueSirve": "Reduce la conciliación a la empresa, cuenta y fechas correctas antes de comparar extracto y tesorería.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Conciliación bancaria"
+     ],
+     "explicacion": [
+      "Abre la conciliación bancaria desde el menú de Finanzas › Tesorería.",
+      "Usa los filtros para dejar visibles las partidas pendientes de la empresa y cuenta deseadas.",
+      "Pulsa «Ejecutar» para abrir la ventana con las columnas de extracto pendiente y tesorería pendiente."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad que se concilia.",
+       "ejemplo": "0 Deister Software"
+      },
+      {
+       "campo": "Cuenta",
+       "significado": "Cuenta financiera a revisar. Puedes usar asterisco para ver todas.",
+       "ejemplo": "*"
+      },
+      {
+       "campo": "Fecha inicio",
+       "significado": "Desde cuándo se filtran las partidas.",
+       "ejemplo": "01-01-2026"
+      },
+      {
+       "campo": "Fecha fin",
+       "significado": "Hasta cuándo se filtran las partidas.",
+       "ejemplo": "30-06-2026 o hoy"
+      },
+      {
+       "campo": "Extracto pendiente",
+       "significado": "Columna con importes del extracto aún no casados.",
+       "ejemplo": "1.524,60"
+      },
+      {
+       "campo": "Tesorería pendiente",
+       "significado": "Columna con importes de tesorería aún no casados.",
+       "ejemplo": "-1.524,60"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Tesorería › Conciliación bancaria.",
+       "imagen": "v-icon2-007.jpg"
+      },
+      {
+       "texto": "Filtra por la empresa 0 Deister Software"
+      },
+      {
+       "texto": "En cuenta escribe un asterisco para ver todas las cuentas.",
+       "detalle": "Si solo hay una cuenta, aparecerá la de la empresa."
+      },
+      {
+       "texto": "Pon fecha inicio 01-01-2026 y fecha fin 30-06-2026 (o hoy)"
+      },
+      {
+       "texto": "Pulsa «Ejecutar».",
+       "imagen": "v-icon2-007.jpg",
+       "hotspot": {
+        "x": 71.4,
+        "y": 26.4,
+        "w": 5.6,
+        "h": 3.8,
+        "etiqueta": "Ejecutar"
+       }
+      },
+      {
+       "texto": "Localiza el extracto 1.524,60 a la izquierda y la tesorería -1.524,60 a la derecha",
+       "imagen": "v-icon2-008.jpg",
+       "detalle": "A la izquierda, «Extracto pendiente»; a la derecha, «Tesorería pendiente», con su posición (Salida o Entrada) y su operación financiera (PMICDT).",
+       "hotspot": {
+        "x": 14.0,
+        "y": 57.8,
+        "w": 42.6,
+        "h": 3.8,
+        "etiqueta": "Extracto pendiente 1.524,60"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "El asterisco en el campo cuenta sirve para no depender de escribir un código concreto."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-10-conciliar-contabilizar",
+     "titulo": "Conciliar tesorería y contabilizar",
+     "paraQueSirve": "Casa el extracto con la tesorería y deja generados los asientos contables para cerrar la operación.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Conciliación bancaria"
+     ],
+     "explicacion": [
+      "Marca el extracto y su movimiento de tesorería y pulsa «Conciliar tesorería».",
+      "Una vez conciliados, salen en las pestañas «Extracto conciliado» y «Tesorería conciliada».",
+      "Después hay que entrar en el importe conciliado y pulsar «Contabilizar» para generar el asiento."
+     ],
+     "campos": [
+      {
+       "campo": "Conciliar tesorería",
+       "significado": "Acción que casa el extracto pendiente con la tesorería pendiente.",
+       "ejemplo": "Operación con éxito"
+      },
+      {
+       "campo": "Extracto conciliado",
+       "significado": "Pestaña que muestra el extracto casado.",
+       "ejemplo": "1.524,60"
+      },
+      {
+       "campo": "Tesorería conciliada",
+       "significado": "Pestaña que muestra la tesorería casada.",
+       "ejemplo": "-1.524,60"
+      },
+      {
+       "campo": "Contabilizar",
+       "significado": "Acción que genera los asientos contables.",
+       "ejemplo": "Asiento con debe y haber cuadrados"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Marca el extracto y el movimiento de tesorería y pulsa «Conciliar tesorería»",
+       "detalle": "Marca la casilla de cada fila y pulsa «Conciliar tesorería», arriba a la derecha. Debe salir el aviso verde «Éxito».",
+       "imagen": "v-icon2-009.jpg",
+       "hotspot": {
+        "x": 69.4,
+        "y": 20.4,
+        "w": 7.8,
+        "h": 3.6,
+        "etiqueta": "Conciliar tesorería"
+       }
+      },
+      {
+       "texto": "Abre la pestaña «Extracto conciliado» y comprueba el 1.524,60",
+       "imagen": "v-icon2-010.jpg",
+       "hotspot": {
+        "x": 14.8,
+        "y": 58.0,
+        "w": 41.6,
+        "h": 3.6,
+        "etiqueta": "Extracto conciliado 1.524,60"
+       }
+      },
+      {
+       "texto": "Abre la pestaña «Tesorería conciliada» y comprueba el -1.524,60"
+      },
+      {
+       "texto": "En la pestaña «Tesorería conciliada», pulsa el importe subrayado -1.524,60",
+       "detalle": "Se abre en una ventana el movimiento de tesorería (PMICDT) con su extracto y, abajo, el resumen de apuntes."
+      },
+      {
+       "texto": "Pulsa «Contabilizar» en la barra de botones de esa ventana.",
+       "imagen": "v-icon2-011.jpg",
+       "detalle": "Una vez contabilizado, el botón pasa a llamarse «Descontabilizar»: es lo que ves en la captura.",
+       "hotspot": {
+        "x": 54.4,
+        "y": 26.2,
+        "w": 6.8,
+        "h": 3.4,
+        "etiqueta": "Contabilizar (ahora Descontabilizar)"
+       }
+      },
+      {
+       "texto": "Revisa el asiento generado: debe y haber cuadran",
+       "imagen": "v-icon2-011.jpg",
+       "detalle": "En «Resumen de apuntes»: dos líneas de 1.524,60. En la captura, la 10000.00027 al debe (la cuenta que abonó la orden de la remesa) y la 57900.00000 «Fondos en movimiento» al haber, la cuenta del banco en esa base. En el PGC español serían la 401 y la 572.",
+       "hotspot": {
+        "x": 15.0,
+        "y": 77.8,
+        "w": 67.4,
+        "h": 6.6,
+        "etiqueta": "Asiento de la conciliación"
+       }
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "problema",
+       "texto": "Conciliar no es el final: si no pulsas «Contabilizar», no se generan asientos."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Entra al importe y pulsa «Contabilizar». Verás la fecha de contabilización y los apuntes."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Cuál es la ruta de conciliación bancaria?",
+     "opciones": [
+      "Finanzas › Tesorería › Extractos bancarios › Movimientos",
+      "Finanzas › Tesorería › Conciliación bancaria",
+      "Finanzas › Contabilidad General › Asientos",
+      "Finanzas › Cartera › Efectos"
+     ],
+     "correcta": 1,
+     "explicacion": "La conciliación está en Finanzas › Tesorería › Conciliación bancaria."
+    },
+    {
+     "pregunta": "¿Qué pones en el campo cuenta para ver todas las cuentas?",
+     "opciones": [
+      "La fecha",
+      "El importe cero",
+      "Un asterisco",
+      "El código de empresa"
+     ],
+     "correcta": 2,
+     "explicacion": "El asterisco permite ver todas las cuentas disponibles."
+    },
+    {
+     "pregunta": "¿Qué columnas comparas al ejecutar?",
+     "opciones": [
+      "Extracto pendiente y tesorería pendiente",
+      "Facturas emitidas y recibos pendientes de pago",
+      "Las columnas Debe y Haber del asiento contable",
+      "Anticipo de remesa y remesa confirmada"
+     ],
+     "correcta": 0,
+     "explicacion": "Se comparan extracto pendiente y tesorería pendiente."
+    },
+    {
+     "pregunta": "¿Qué acción es obligatoria después de conciliar?",
+     "opciones": [
+      "Borrar el extracto",
+      "Conciliar automáticamente",
+      "Crear otra remesa",
+      "Contabilizar"
+     ],
+     "correcta": 3,
+     "explicacion": "Hay que pulsar «Contabilizar» para generar los asientos contables."
+    },
+    {
+     "pregunta": "¿Dónde verificas que el importe ha quedado casado?",
+     "opciones": [
+      "En el extracto bancario original sin conciliar",
+      "En extracto conciliado y tesorería conciliada",
+      "En la pantalla de remesas de la cartera de efectos",
+      "No se puede verificar de forma manual en el sistema"
+     ],
+     "correcta": 1,
+     "explicacion": "Después de conciliar, el importe aparece en las pestañas «Extracto conciliado» y «Tesorería conciliada»."
+    }
+   ],
+   "checklist": [
+    "Has abierto Finanzas › Tesorería › Conciliación bancaria.",
+    "Has filtrado empresa, cuenta (o asterisco) y fechas y pulsado «Ejecutar».",
+    "Ves el extracto 1.524,60 y la tesorería -1.524,60 pendientes.",
+    "Has pulsado «Conciliar tesorería» y sale «Operación con éxito».",
+    "El importe está en «Extracto conciliado» y en «Tesorería conciliada».",
+    "Has entrado en el importe conciliado y pulsado «Contabilizar».",
+    "El asiento de la conciliación aparece y cuadra."
+   ],
+   "problemas": [
+    {
+     "problema": "La tesorería conciliada no muestra fecha de contabilización.",
+     "solucion": "No has pulsado «Contabilizar». Entra al importe y pulsa «Contabilizar» para generar los asientos."
+    },
+    {
+     "problema": "No ves la partida de la empresa en la ventana de conciliación.",
+     "solucion": "Revisa los filtros: empresa, cuenta, fecha inicio y fecha fin. Vuelve a pulsar «Ejecutar»."
+    }
+   ]
+  },
+  {
+   "id": "icon-cartera-v-11",
+   "numero": 17,
+   "titulo": "Extracto de un cobro y anticipo en finanzas",
+   "objetivo": "Crearás un extracto de cobro y entenderás que un anticipo genera dos efectos de signo contrario sin factura.",
+   "concepto": "El cobro es el caso contrario al bloque «Crear el extracto de una remesa de pago»: para el banco es un abono en tu cuenta, y en el extracto los abonos van en negativo (en tesorería el mismo cobro es una Entrada en positivo). En el vídeo, la remesa de cobro se refleja en un extracto de 5.082,00 en negativo con concepto común 04 y concepto propio 13. Después se concilia y contabiliza igual que el pago (el bloque «Conciliar y contabilizar una remesa de pago»).\n\nUn anticipo es dinero que el cliente paga antes de que exista la factura (por ejemplo, una señal de 500 €). En finanzas no genera factura: genera dos efectos: uno de +500 que se cobra ya (con su remesa y su extracto) y otro de -500 que queda pendiente y se compensa con el efecto de la factura cuando llegue; ese -500 no mueve dinero, así que no tiene extracto propio. El proceso de anticipos lo ves por dentro en el bloque «Procesos avanzados y cuadre de cartera a fecha pasada» (Cartera, cobros y pagos).",
+   "duracionMin": 40,
+   "secciones": [
+    {
+     "id": "icon-cartera-v-11-extracto-cobro",
+     "titulo": "Extracto de cobro en negativo",
+     "paraQueSirve": "Crea un extracto de cobro y aplica la lógica de signos desde la perspectiva del banco.",
+     "ruta": [
+      "Finanzas",
+      "Tesorería",
+      "Extractos bancarios",
+      "Movimientos"
+     ],
+     "explicacion": [
+      "La remesa de cobro se refleja en un extracto de 5.082,00 en negativo.",
+      "El signo negativo no es un error: para el banco es un abono en tu cuenta, y los abonos van en negativo.",
+      "Después de guardar, concilia y contabiliza como en el bloque «Conciliar y contabilizar una remesa de pago»."
+     ],
+     "campos": [
+      {
+       "campo": "Empresa",
+       "significado": "Sociedad para la que se crea el extracto.",
+       "ejemplo": "0 Deister Software"
+      },
+      {
+       "campo": "Cuenta financiera",
+       "significado": "Cuenta de tesorería asociada.",
+       "ejemplo": "Se carga automáticamente"
+      },
+      {
+       "campo": "Concepto común",
+       "significado": "Clasificación general del movimiento.",
+       "ejemplo": "04"
+      },
+      {
+       "campo": "Concepto propio",
+       "significado": "Clasificación propia del cobro.",
+       "ejemplo": "13"
+      },
+      {
+       "campo": "Importe",
+       "significado": "Importe del extracto. Un cobro (abono del banco) va en negativo.",
+       "ejemplo": "-5.082,00"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Entra en Finanzas › Tesorería › Extractos bancarios › Movimientos."
+      },
+      {
+       "texto": "Pulsa «Nuevo» y elige la empresa 0 Deister Software",
+       "imagen": "v-icon2-013.jpg"
+      },
+      {
+       "texto": "Pon concepto común 04."
+      },
+      {
+       "texto": "Pon concepto propio 13.",
+       "imagen": "v-icon2-014.jpg"
+      },
+      {
+       "texto": "Escribe el importe 5.082,00 en negativo (-5.082,00)",
+       "imagen": "v-icon2-015.jpg",
+       "hotspot": {
+        "x": 33.0,
+        "y": 65.0,
+        "w": 33.4,
+        "h": 4.6,
+        "etiqueta": "Importe extracto -5082"
+       }
+      },
+      {
+       "texto": "Guarda el extracto."
+      },
+      {
+       "texto": "Comprueba que el extracto queda guardado con -5.082,00"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No lo cambies a positivo: en el extracto, el cobro es un abono del banco y va en negativo."
+      }
+     ]
+    },
+    {
+     "id": "icon-cartera-v-11-anticipo",
+     "titulo": "Anticipo en finanzas",
+     "paraQueSirve": "Entiende el resultado esperado de un anticipo en finanzas y no esperes una factura.",
+     "ruta": [
+      "Finanzas",
+      "Cobros y Pagos",
+      "Procesos",
+      "Especiales",
+      "Anticipos"
+     ],
+     "explicacion": [
+      "Un anticipo en finanzas no genera factura: genera dos efectos del mismo importe y signo contrario.",
+      "El efecto positivo se cobra ya, con su remesa y su extracto. El negativo queda pendiente y se compensa con el efecto de la factura cuando llegue: al banco solo va la diferencia, así que no tiene extracto propio."
+     ],
+     "campos": [],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas › Cobros y Pagos › Procesos › Especiales › Anticipos",
+       "detalle": "Es la pantalla GENERACIÓN DE ANTICIPOS (en la demo, sin registros todavía). Pulsa «Nuevo» y fíjate en que el formulario no pide ninguna factura: tercero, fecha, vencimiento, moneda, importe y tipo de efecto. Sal con «Cancelar».",
+       "imagen": "icon-cartera-n-08.webp",
+       "hotspot": {
+        "x": 5.8,
+        "y": 36.0,
+        "w": 6.8,
+        "h": 3.4,
+        "etiqueta": "Procesos › Especiales › Anticipos"
+       }
+      },
+      {
+       "texto": "Repasa qué saldrá al generar el anticipo",
+       "detalle": "Dos efectos (+ y −): el positivo se cobra con su remesa y su extracto; el negativo se compensa con la factura futura."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No trates el anticipo como una venta normal con factura. El detalle del proceso está en el bloque «Procesos avanzados y cuadre de cartera a fecha pasada» (Cartera, cobros y pagos)."
+      }
+     ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "En esta base, ¿con qué signo escribes en el extracto el cobro de una remesa?",
+     "opciones": [
+      "Positivo, porque es un cobro para la empresa",
+      "Negativo: es un abono del banco en tu cuenta",
+      "Positivo, igual que en tesorería",
+      "Cero"
+     ],
+     "correcta": 1,
+     "explicacion": "En esta base, los abonos (cobros) van en negativo en el extracto y los cargos (pagos) en positivo. En otras bases puede variar."
+    },
+    {
+     "pregunta": "¿Qué concepto propio se usa en el ejemplo de cobrar?",
+     "opciones": [
+      "04",
+      "03",
+      "13",
+      "Ninguno"
+     ],
+     "correcta": 2,
+     "explicacion": "En el vídeo, el extracto de cobro también lleva concepto propio 13 (transferencia)."
+    },
+    {
+     "pregunta": "Has dado de alta el extracto de un cobro con el importe en positivo. ¿Qué pasará al conciliar?",
+     "opciones": [
+      "Casará sin problema si el importe coincide",
+      "No casará: en esta base el cobro va en negativo",
+      "Se convertirá automáticamente en un pago",
+      "Se borrará el extracto automáticamente"
+     ],
+     "correcta": 1,
+     "explicacion": "En esta base el extracto guarda los abonos (cobros) en negativo; con el signo cambiado no encontrará su movimiento de tesorería."
+    },
+    {
+     "pregunta": "Según lo explicado, ¿qué genera un anticipo en finanzas?",
+     "opciones": [
+      "Una factura y su efecto de cobro",
+      "Dos efectos de signo contrario, sin factura",
+      "Solo una remesa de cobro",
+      "No afecta a tesorería"
+     ],
+     "correcta": 1,
+     "explicacion": "El anticipo no genera factura: genera un efecto positivo que se cobra ya y otro negativo que se compensa con la factura futura."
+    },
+    {
+     "pregunta": "¿Por qué el cobro va en negativo en el extracto?",
+     "opciones": [
+      "Porque la empresa lo contabiliza como un gasto financiero",
+      "Porque el sistema solo admite importes en negativo",
+      "Porque es un abono del banco y el extracto sigue su criterio",
+      "Porque se compensa o netea contra un pago pendiente"
+     ],
+     "correcta": 2,
+     "explicacion": "Para el banco, tu cuenta es dinero que te debe: un cobro la aumenta (abono) y el extracto lo guarda en negativo."
+    }
+   ],
+   "checklist": [
+    "Has creado el extracto con empresa, concepto común 04 y concepto propio 13.",
+    "El importe es -5.082,00 y el extracto está guardado.",
+    "Has abierto la pantalla de Anticipos y visto que no pide factura.",
+    "Sabes que un anticipo genera dos efectos: el positivo se cobra y el negativo se compensa con la factura."
+   ],
+   "problemas": [
+    {
+     "problema": "Te confundes con el signo negativo del cobro.",
+     "solucion": "El extracto sigue el criterio del banco: un cobro es un abono en tu cuenta y los abonos van en negativo."
+    },
+    {
+     "problema": "Esperas que el anticipo genere una factura.",
+     "solucion": "En finanzas, el anticipo no genera factura: genera dos efectos, uno que se cobra ya y otro que se compensa con la factura futura."
     }
    ]
   }

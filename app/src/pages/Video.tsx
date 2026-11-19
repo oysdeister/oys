@@ -362,7 +362,7 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
         </h2>
         {practicas.length ? (
           <>
-            <p className="muted">Estos ejercicios piden registrar lo que se explica en el capítulo. Pulsa el minuto para verlo otra vez.</p>
+            <p className="muted">Estos bloques piden registrar lo que se explica en el capítulo. Pulsa el minuto para verlo otra vez.</p>
             <ul className="vd-prac-grid">
               {practicas.map((pr, i) => (
                 <motion.li
@@ -395,7 +395,7 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
             </ul>
           </>
         ) : (
-          <p className="muted">Este capítulo es de contexto: no hay un ejercicio que lo practique directamente. Sigue con el siguiente capítulo.</p>
+          <p className="muted">Este capítulo es de contexto: no hay un bloque que lo practique directamente. Sigue con el siguiente capítulo.</p>
         )}
       </section>
     </>

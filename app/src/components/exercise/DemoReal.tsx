@@ -1,8 +1,7 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import type { Ejercicio } from '../../types';
 import { acciones, useProgreso } from '../../lib/progress';
 import { conIni } from '../../lib/texto';
-import { Icon } from '../Icon';
+import { problemasNuevos } from './util';
 
 export const URL_DEMO = 'https://nextdemo.geasa.eu';
 
@@ -28,7 +27,6 @@ export function abrirErpDividido() {
 }
 
 export function DemoReal({ ej, ini }: { ej: Ejercicio; ini: string }) {
-  const reducir = useReducedMotion();
   const p = useProgreso();
   const marcados = p.ejercicios[ej.id]?.demo ?? [];
   const total = ej.checklist.length;
@@ -36,74 +34,70 @@ export function DemoReal({ ej, ini }: { ej: Ejercicio; ini: string }) {
   const todo = total > 0 && hechos >= total;
   const t = (x: string) => conIni(x, ini);
   const tuIni = ini || 'CL';
+  const problemas = problemasNuevos(ej);
+  const quitados = ej.problemas.length - problemas.length;
 
   return (
-    <div className="demo">
-      <div className="demo-grid">
-        <div className="sheet pad demo-pasos">
-          <h2>Ahora en el ERP de verdad</h2>
-          <ol className="demo-ol">
-            <li>
-              Abre la demo en pantalla dividida: el ERP ocupa los dos tercios de la derecha y esta página queda a la izquierda con la lista.{' '}
-              <button type="button" className="btn demo-dividir" onClick={() => abrirErpDividido()}>
-                Abrir el ERP al lado
-              </button>{' '}
-              <span className="small muted">
-                (o en otra pestaña:{' '}
-                <a className="demo-link" href={URL_DEMO} target="_blank" rel="noopener noreferrer">
-                  nextdemo.geasa.eu
-                </a>
-                ). Pon esta ventana en la mitad izquierda de la pantalla para verlas a la vez.
-              </span>
-            </li>
-            <li>
-              Entra en la base <b>TUTORIAL</b> con el usuario que te haya dado tu formador.
-            </li>
-            <li>Repite el ejercicio de memoria. Si te atascas, vuelve aquí al recorrido guiado.</li>
-            <li>Marca abajo cada punto cuando lo veas hecho en pantalla.</li>
-          </ol>
-        </div>
-        <div className="demo-ini" aria-label={`Tus iniciales: ${tuIni}`}>
-          <span className="small">Tus iniciales en todos los códigos</span>
-          <motion.strong initial={reducir ? false : { rotateX: -90, opacity: 0 }} animate={{ rotateX: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 12, delay: 0.15 }}>
-            {tuIni}
-          </motion.strong>
-          <span className="small">
-            La demo la comparten muchas personas. Con tus iniciales tus datos no chocan con los de nadie: por ejemplo <code className="k">T{tuIni}</code>.
-          </span>
-        </div>
+    <div className="pl demo-pl">
+      <ol className="pl-pasos">
+        <li>
+          Abre el ERP de demostración al lado de esta página:{' '}
+          <button type="button" className="pl-link en-linea" onClick={() => abrirErpDividido()}>
+            abrir el ERP al lado
+          </button>{' '}
+          (o en otra pestaña:{' '}
+          <a href={URL_DEMO} target="_blank" rel="noopener noreferrer">
+            nextdemo.geasa.eu
+          </a>
+          ).
+        </li>
+        <li>
+          Entra en la base <b>TUTORIAL</b> con el usuario que te haya dado tu formador.
+        </li>
+        <li>
+          Usa tus iniciales, <b>{tuIni}</b>, en todos los códigos que crees (por ejemplo <code>T{tuIni}</code>): la demo la comparte mucha gente y así tus datos no se mezclan con los de otros.
+        </li>
+        <li>Hazlo sin mirar los pasos. Si te atascas, vuelve al Guiado.</li>
+        <li>Marca cada punto de la lista cuando lo veas hecho en pantalla.</li>
+      </ol>
+
+      <h2 className="pl-h">Comprueba en pantalla</h2>
+      <p className="pl-cont">
+        <b>
+          {hechos} de {total}
+        </b>{' '}
+        comprobados{todo ? '. Bloque hecho en el ERP real.' : ''}
+      </p>
+      <div className="pl-checks" role="group" aria-label="Lista de comprobación">
+        {ej.checklist.map((c, i) => {
+          const on = marcados.includes(i);
+          return (
+            <label key={i} className={`pl-check${on ? ' on' : ''}`}>
+              <input type="checkbox" checked={on} onChange={() => acciones.toggleDemo(ej.id, i)} />
+              <span>{t(c)}</span>
+            </label>
+          );
+        })}
       </div>
 
-      <div className="sheet pad demo-check">
-        <div className="demo-check-top">
-          <h3>Comprueba en pantalla</h3>
-          <span className={`chip${todo ? ' ok' : ''}`}>
-            {hechos} de {total}
-          </span>
-        </div>
-        <div className="meter" aria-hidden="true">
-          <motion.i initial={false} animate={{ width: `${total ? (hechos / total) * 100 : 0}%` }} />
-        </div>
-        <div role="group" aria-label="Lista de comprobación">
-          {ej.checklist.map((c, i) => {
-            const on = marcados.includes(i);
-            return (
-              <label key={i} className={`check${on ? ' on' : ''}`}>
-                <input type="checkbox" checked={on} onChange={() => acciones.toggleDemo(ej.id, i)} />
-                <motion.span className="box" animate={on && !reducir ? { scale: [1, 1.25, 1] } : { scale: 1 }} transition={{ duration: 0.3 }}>
-                  {on && <Icon name="check" size={16} stroke={3} />}
-                </motion.span>
-                <span className="check-txt">{t(c)}</span>
-              </label>
-            );
-          })}
-        </div>
-        {todo && (
-          <motion.p className="mem-ok" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-            Hecho en la demo real. Esto ya es trabajo de consultor.
-          </motion.p>
-        )}
-      </div>
+      {problemas.length > 0 ? (
+        <>
+          <h2 className="pl-h" id="problemas">
+            Si algo falla
+          </h2>
+          {quitados > 0 && <p className="muted">Además de los avisos «Ojo» del Concepto:</p>}
+          <dl className="pl-problemas">
+            {problemas.map((pr, i) => (
+              <div key={i}>
+                <dt>{t(pr.problema)}</dt>
+                <dd>{t(pr.solucion)}</dd>
+              </div>
+            ))}
+          </dl>
+        </>
+      ) : (
+        quitados > 0 && <p className="muted pl-nota">Si algo falla, repasa los avisos «Ojo» del Concepto: ahí está cómo resolver los errores más frecuentes.</p>
+      )}
     </div>
   );
 }

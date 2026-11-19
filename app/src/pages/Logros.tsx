@@ -37,7 +37,7 @@ function DatosAlumno() {
       }}
     >
       <h2>Tus datos</h2>
-      <p className="small muted">Tus iniciales aparecen en todos los códigos de los ejercicios. Si las cambias, usa las nuevas también en la demo.</p>
+      <p className="small muted">Tus iniciales aparecen en todos los códigos de los bloques. Si las cambias, usa las nuevas también en la demo.</p>
       <label className="lg-label">
         Nombre y apellidos
         <input className="field-input" value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" />
@@ -235,7 +235,7 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
       return { color: b.color, icono: 'asiento', valor: p.sims.asiento ? 1 : 0, cuenta: p.sims.asiento ? 'Hecho' : 'Simulador «Cuadra el asiento»' };
     case 'taller': {
       const n = SIMS_INSIGNIA.filter((s) => p.sims[s]).length;
-      return { color: b.color, icono: 'taller', valor: n / SIMS_INSIGNIA.length, cuenta: `${n} de ${SIMS_INSIGNIA.length} simuladores` };
+      return { color: b.color, icono: 'taller', valor: n / SIMS_INSIGNIA.length, cuenta: `${n} de ${SIMS_INSIGNIA.length} simuladores de la insignia` };
     }
     case 'listo': {
       const n = MODULOS.filter((m) => m.ejercicios.length > 0 && m.ejercicios.every((e) => ejercicioCompletado(p.ejercicios[e.id]))).length;
@@ -373,7 +373,7 @@ export default function Logros() {
           <div className="pl-banner-txt">
             <h1 className="lg-h1">Tus logros</h1>
             <p className="lead">
-              {global >= 1 ? 'Lo tienes todo: a por el examen.' : ganadas.length === 0 ? 'Termina tu primer recorrido guiado y estrenas la primera insignia.' : 'Cada ejercicio que completas suma.'}
+              {global >= 1 ? 'Lo tienes todo: a por el examen.' : ganadas.length === 0 ? 'Termina tu primer recorrido guiado y estrenas la primera insignia.' : 'Cada bloque que completas suma.'}
             </p>
             <div className="ax-stats pl-stats">
               <div className="ax-stat">
@@ -388,7 +388,7 @@ export default function Logros() {
                   {ejHechos}
                   <small>/{ejTotal}</small>
                 </span>
-                <span>ejercicios</span>
+                <span>bloques</span>
               </div>
               <div className="ax-stat">
                 <span className="ax-num">{tests}</span>

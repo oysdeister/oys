@@ -9,15 +9,16 @@ import {
   useTransform,
   type MotionValue,
 } from 'framer-motion';
-import { META, MODULOS, todosEjercicios } from '../content';
+import { META, MODULOS } from '../content';
 import type { Modulo } from '../types';
-import { avanceEjercicio, ejercicioCompletado, useProgreso, type Progreso } from '../lib/progress';
+import { ejercicioCompletado, useProgreso, type Progreso } from '../lib/progress';
 import { avanceGlobal, avanceModulo } from '../lib/avance';
 import { useExamen } from '../lib/examen';
 import { conIni } from '../lib/texto';
+import { bloqueQueToca, bloquesObligatorios, numeroBloque, pasoQueToca, PASOS } from '../lib/ruta';
+import { useNotas } from '../erp/practicas';
 import { SIMS } from '../sims/registro';
 import { Icon } from '../components/Icon';
-import { Anillo } from '../components/shell/Anillo';
 import { Planeta } from '../components/shell/Planeta';
 import { NucleoOrbita } from '../components/shell/NucleoOrbita';
 import { FICHAS } from './portadaDatos';
@@ -25,6 +26,7 @@ import { hayWebGL, type PlanetaDato } from '../components/escena3d/tipos';
 import '../components/escena3d/escena3d.css';
 import './aprender.css';
 import './portada.css';
+import './ruta.css';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
 const EscenaPortada = lazy(() => import('../components/escena3d/EscenaPortada'));
@@ -311,37 +313,6 @@ function Orbita({ p }: { p: Progreso }) {
   );
 }
 
-/* =====================================================================
-   Tarjetas de módulo
-   ===================================================================== */
-
-function TiltCard({ to, color, hecho, children }: { to: string; color: string; hecho: boolean; children: ReactNode }) {
-  const reducir = useReducedMotion();
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 180, damping: 18 });
-  const sry = useSpring(ry, { stiffness: 180, damping: 18 });
-  return (
-    <motion.div
-      className="tilt"
-      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
-      onPointerMove={(e) => {
-        if (reducir || e.pointerType !== 'mouse') return;
-        const r = e.currentTarget.getBoundingClientRect();
-        rx.set(-((e.clientY - r.top) / r.height - 0.5) * 7);
-        ry.set(((e.clientX - r.left) / r.width - 0.5) * 9);
-      }}
-      onPointerLeave={() => {
-        rx.set(0);
-        ry.set(0);
-      }}
-    >
-      <Link to={to} className={`ax-card neon-mod po-card${hecho ? ' done' : ''}`} style={{ ['--mod' as string]: color } as CSSProperties}>
-        {children}
-      </Link>
-    </motion.div>
-  );
-}
 
 /* =====================================================================
    Escena 3D con respaldo: sin WebGL o si falla, la órbita SVG
@@ -371,7 +342,8 @@ function useMedia(q: string) {
   return si;
 }
 
-function EscenaHero({ p, activo }: { p: Progreso; activo?: string }) {
+/** Escena 3D de planetas de la v4. La v5.1 usa una cabecera sobria; se deja disponible. */
+export function EscenaHero({ p, activo }: { p: Progreso; activo?: string }) {
   const reducir = !!useReducedMotion();
   const centrada = useMedia('(max-width: 1100px)');
   const navegar = useNavigate();
@@ -410,6 +382,7 @@ export default function Home() {
   const reducir = useReducedMotion();
   const ini = p.alumno.ini;
   const nombre = p.alumno.nombre.split(/\s+/)[0] ?? '';
+  const notasErp = useNotas();
 
   useEffect(() => {
     if (loc.hash !== '#modulos') return;
@@ -417,39 +390,27 @@ export default function Home() {
     return () => clearTimeout(t);
   }, [loc.hash, reducir]);
 
+  // Lo que toca: el primer bloque obligatorio sin terminar, en el orden del curso, y su paso
   const continuar = useMemo(() => {
-    const lista = todosEjercicios();
-    // Primero el que tienes a medias; si no hay, el primero sin completar en el orden de la formación
-    const aMedias = lista.find(({ ejercicio }) => {
-      const e = p.ejercicios[ejercicio.id];
-      return !!e && !ejercicioCompletado(e) && (e.guiado || e.pasos.length > 0 || e.test !== null || e.demo.length > 0);
-    });
-    return aMedias ?? lista.find(({ ejercicio }) => !ejercicioCompletado(p.ejercicios[ejercicio.id])) ?? null;
-  }, [p]);
-
-  const empezado = Object.keys(p.ejercicios).length > 0;
-  const totalEj = todosEjercicios().length;
-  const hechosEj = todosEjercicios().filter(({ ejercicio }) => ejercicioCompletado(p.ejercicios[ejercicio.id])).length;
-  const simsHechos = SIMS.filter((s) => p.sims[s.id]).length;
-
-  let tabSugerida = '';
-  let pasoSugerido = 'Empieza por el concepto y el recorrido guiado.';
-  if (continuar) {
-    const e = p.ejercicios[continuar.ejercicio.id];
-    if (e && !e.guiado) {
-      tabSugerida = '?tab=guiado';
-      pasoSugerido = 'Te queda terminar el recorrido guiado.';
-    } else if (e) {
-      tabSugerida = '?tab=test';
-      pasoSugerido = 'Ya hiciste el guiado: te falta aprobar el test.';
+    for (const m of MODULOS) {
+      const b = bloqueQueToca(p, m);
+      if (b) return { modulo: m, ejercicio: b };
     }
-  }
-  const colCont = continuar ? metaDe(continuar.modulo).color : 'var(--arc)';
-  const avCont = continuar ? avanceEjercicio(p.ejercicios[continuar.ejercicio.id], continuar.ejercicio.checklist.length) : 1;
+    return null;
+  }, [p]);
+  const empezado = Object.keys(p.ejercicios).length > 0;
+  const simsHechos = SIMS.filter((s) => p.sims[s.id]).length;
+  const pasoCont = continuar ? pasoQueToca(p, continuar.ejercicio, notasErp) : 'concepto';
+  const enlaceCont = continuar ? `/ejercicio/${continuar.ejercicio.id}${pasoCont === 'concepto' ? '' : `?tab=${pasoCont}`}` : '/examen';
+  const nMod = continuar ? MODULOS.indexOf(continuar.modulo) + 1 : 0;
+  const nBloque = continuar ? numeroBloque(continuar.modulo, continuar.ejercicio.id) : 0;
+  const textoCta = !continuar
+    ? 'Ir al examen final'
+    : !empezado
+      ? 'Empezar por el módulo 1'
+      : `Seguir: ${metaDe(continuar.modulo).corto}, bloque ${nBloque}`;
   const activo = continuar?.modulo.id;
 
-  const aparece = (d: number) =>
-    reducir ? {} : { initial: { opacity: 0, y: 22 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.8, delay: d, ease: EASE } };
 
   const examenEstado = ex.aprobado
     ? { t: 'Aprobado. Descarga tu certificado.', to: '/certificado', b: 'Ver certificado' }
@@ -457,189 +418,94 @@ export default function Home() {
       ? { t: 'Tienes un examen a medias.', to: '/examen', b: 'Retomar el examen' }
       : { t: 'Teoría y un caso práctico completo en la demo.', to: '/examen', b: 'Ir al examen' };
 
-  // El módulo en curso va primero y en grande; el resto, en su orden
-  const ordenMods = activo ? [...MODULOS.filter((m) => m.id === activo), ...MODULOS.filter((m) => m.id !== activo)] : MODULOS;
-  const verRuta = (e: MouseEvent) => {
-    e.preventDefault();
-    document.getElementById('modulos')?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth' });
-  };
-
   return (
     <div className="home po po3">
-      <section className="po3-hero" aria-labelledby="po3-h1">
-        <div className="po3-escena">
-          <EscenaHero p={p} activo={activo} />
-        </div>
-        <div className="po3-copy">
-          <motion.p className="home-hola" {...aparece(0.9)}>
-            {nombre ? `Hola, ${nombre}` : 'Hola'}
-            {ini && <span className="home-ini">{ini}</span>}
-          </motion.p>
-          <motion.h1 id="po3-h1" className="po3-h1" {...aparece(1.05)}>
-            Aprende Axional haciéndolo
-          </motion.h1>
-          <motion.p className="po3-lead" {...aparece(1.25)}>
-            {MODULOS.length} módulos, del tercero a los activos fijos. Entiendes la idea, la practicas sobre pantallas reales del ERP y la repites en la demo.
-          </motion.p>
-          <motion.div className="po3-ctas" {...aparece(1.4)}>
-            {continuar ? (
-              <Link className="btn arc lg po3-cta" to={`/ejercicio/${continuar.ejercicio.id}${tabSugerida}`}>
-                {empezado ? 'Seguir' : 'Empezar'}
-              </Link>
-            ) : (
-              <Link className="btn arc lg po3-cta" to="/examen">
-                Ir al examen
-              </Link>
-            )}
-            <a className="btn ghost lg po3-cta" href="#modulos" onClick={verRuta}>
-              Ver ruta
-            </a>
-          </motion.div>
-        </div>
-        <p className="po3-hint" aria-hidden="true">
-          Toca un planeta para entrar en su módulo
+      <header className="wrap hm-cab">
+        <p className="hm-hola">{nombre ? `Hola, ${nombre}.` : 'Hola.'}</p>
+        <h1>Formación en Axional Deister VNext</h1>
+        <p className="hm-lead">
+          {MODULOS.length} módulos, en orden, del tercero a los activos fijos. En cada bloque lees la idea, lo haces paso a paso sobre pantallas reales del ERP y lo repites en la demo.
         </p>
-      </section>
+        <Link className="btn arc lg" to={enlaceCont}>
+          {textoCta}
+        </Link>
+        {continuar && empezado && (
+          <p className="hm-sigue">
+            Módulo {nMod}, bloque {nBloque}: {conIni(continuar.ejercicio.titulo, ini)}. Paso: {PASOS.find((x) => x.id === pasoCont)?.label}.
+          </p>
+        )}
+      </header>
 
       <div className="wrap">
-        {/* Seguir donde lo dejaste */}
-        <section className="po-next po3-next" aria-label="Tu siguiente paso">
-          {continuar ? (
-            <motion.div
-              className="glass neon-mod po-cont po3-cont"
-              style={{ ['--mod' as string]: colCont } as CSSProperties}
-              initial={reducir ? false : { opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 1.6, ease: EASE }}
-            >
-              <div className="po-cont-ico" aria-hidden="true">
-                <Icon name={metaDe(continuar.modulo).icono} size={30} />
-              </div>
-              <div className="po-cont-body">
-                <h2 className="po-cont-h">{empezado ? 'Continúa donde lo dejaste' : 'Tu primer ejercicio'}</h2>
-                <p className="po-cont-t">{conIni(continuar.ejercicio.titulo, ini)}</p>
-                <p className="po-cont-mod">
-                  {metaDe(continuar.modulo).corto}, ejercicio {continuar.ejercicio.numero}. {pasoSugerido}
-                </p>
-                <div className="ax-bar lg po-cont-bar" aria-hidden="true">
-                  <i style={{ width: `${Math.max(avCont * 100, 2)}%` }} />
-                </div>
-              </div>
-              <Link className="btn arc po-cont-btn" to={`/ejercicio/${continuar.ejercicio.id}${tabSugerida}`}>
-                {empezado ? 'Continuar' : 'Empezar'}
-              </Link>
-            </motion.div>
-          ) : (
-            <div className="glass neon-mod po-cont po-cont-fin po3-cont">
-              <div className="po-cont-body">
-                <h2 className="po-cont-h">Has completado todos los ejercicios</h2>
-                <p className="po-cont-t">Ya puedes presentarte al examen final.</p>
-              </div>
-              <Link className="btn arc po-cont-btn" to="/examen">
-                Ir al examen
-              </Link>
-            </div>
-          )}
+        <section className="hm-como" aria-labelledby="como-h">
+          <h2 id="como-h">Cómo funciona</h2>
+          <ol className="hm-como-l">
+            <li>
+              <b>{MODULOS.length} módulos, en orden.</b> Cada uno usa lo que montaste en el anterior.
+            </li>
+            <li>
+              <b>Cada módulo tiene bloques.</b> Un bloque es una tarea del ERP. Se abren de uno en uno.
+            </li>
+            <li>
+              <b>Cada bloque, siempre en el mismo orden:</b> Concepto → Guiado → De memoria → Test → Demo real. Algunos añaden una Práctica antes de la Demo real.
+            </li>
+          </ol>
+          <p>
+            La <b>Práctica</b> es un ERP simulado dentro de esta web, que se corrige solo. La <b>Demo real</b> es el ERP de demostración, en otra pestaña.
+          </p>
         </section>
 
-        <section id="modulos" className="po-mods" aria-labelledby="mods-h">
-          <div className="po-sec-head">
-            <h2 id="mods-h">Los módulos</h2>
-            <p className="muted">
-              Hazlos en este orden: cada uno usa lo que montaste en el anterior. Llevas {hechosEj} de {totalEj} ejercicios.
-            </p>
-          </div>
-          <div className="po3-grid">
-            {ordenMods.map((m) => {
-              const i = MODULOS.indexOf(m);
+        <section id="modulos" className="hm-ruta" aria-labelledby="mods-h">
+          <h2 id="mods-h">Tu ruta</h2>
+          <ol className="hm-mods">
+            {MODULOS.map((m, i) => {
               const meta = metaDe(m);
               const ficha = FICHAS[m.id];
               const av = avanceModulo(p, m.id);
-              const min = m.ejercicios.reduce((s, e) => s + e.duracionMin, 0);
-              const hechos = m.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
-              const hecho = hechos === m.ejercicios.length && hechos > 0;
-              const grande = m.id === activo;
+              const bloques = bloquesObligatorios(m);
+              const min = bloques.reduce((s2, e) => s2 + e.duracionMin, 0);
+              const hechos = bloques.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
+              const hecho = hechos === bloques.length && hechos > 0;
+              const toca = m.id === activo;
               return (
-                <div key={m.id} className={`po3-celda${grande ? ' grande' : ''}`}>
-                  <TiltCard to={`/modulo/${m.id}`} color={meta.color} hecho={hecho}>
-                    <span className="po-card-top">
-                      <span className="ax-card-icon">
-                        <Icon name={meta.icono} size={grande ? 28 : 24} />
+                <li key={m.id} className={`${hecho ? 'hecho' : ''}${toca ? ' toca' : ''}`} style={{ ['--mod' as string]: meta.color } as CSSProperties}>
+                  <Link to={`/modulo/${m.id}`} className="hm-mod">
+                    <span className="hm-n" aria-hidden="true">
+                      {hecho ? <Icon name="check" size={18} stroke={3} /> : i + 1}
+                    </span>
+                    <span className="hm-ico" aria-hidden="true">
+                      <Icon name={meta.icono} size={20} />
+                    </span>
+                    <span className="hm-txt">
+                      <strong>{meta.corto}</strong>
+                      <span>{ficha ? conIni(ficha.frase, ini) : conIni(m.resumen, ini)}</span>
+                    </span>
+                    <span className="hm-meta">
+                      {toca ? <em>{av > 0 ? 'En curso' : 'Empieza aquí'}</em> : null}
+                      <span>
+                        {hechos}/{bloques.length} bloques · {Math.round(min / 60)} h
                       </span>
-                      {grande && <span className="po3-encurso">{av > 0 ? 'En curso' : 'Empieza aquí'}</span>}
-                      <span className="ax-card-num" aria-hidden="true">
-                        {String(i + 1).padStart(2, '0')}
+                      <span className="hm-barra" aria-hidden="true">
+                        <i style={{ width: `${av * 100}%` }} />
                       </span>
                     </span>
-                    <h3>{m.titulo}</h3>
-                    <p className="po-card-frase">{ficha ? ficha.frase : conIni(m.resumen, ini)}</p>
-                    {grande && ficha && (
-                      <>
-                        <p className="po3-aprendes-h">Al terminar sabrás</p>
-                        <ul className="po3-aprendes">
-                          {ficha.aprendes.map((t) => (
-                            <li key={t}>{conIni(t, ini)}</li>
-                          ))}
-                        </ul>
-                      </>
-                    )}
-                    {grande && ficha && (
-                      <ol className="po3-ruta" aria-label={ficha.recorrido}>
-                        {ficha.circuito.map((c) => (
-                          <li key={c.t}>{c.t}</li>
-                        ))}
-                      </ol>
-                    )}
-                    <span className="po-card-foot">
-                      <span className="po-card-meta">
-                        {hechos} de {m.ejercicios.length} ejercicios, {min} min
-                      </span>
-                      {hecho ? (
-                        <span className="ax-check on" aria-label="Módulo completado">
-                          <Icon name="check" size={18} />
-                        </span>
-                      ) : (
-                        <Anillo valor={av} size={grande ? 72 : 46} grosor={grande ? 6 : 4} className="po-card-ring" texto={`${Math.round(av * 100)}`} />
-                      )}
-                    </span>
-                    <div className="ax-bar mod po-card-bar" aria-hidden="true">
-                      <i style={{ width: `${av * 100}%` }} />
-                    </div>
-                  </TiltCard>
-                </div>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ol>
         </section>
 
-        <section className="po-puertas" aria-label="Practicar y demostrar">
-          <Link to="/taller" className="po-door po-door-taller">
-            <span className="po-door-ico" aria-hidden="true">
-              <Icon name="taller" size={26} />
-            </span>
-            <span className="po-door-txt">
-              <strong>Taller</strong>
-              <span>Simuladores para equivocarte sin miedo.</span>
-            </span>
-            <span className="po-door-dots" aria-label={`${simsHechos} de ${SIMS.length} simuladores superados`}>
-              {SIMS.map((s) => (
-                <i key={s.id} className={p.sims[s.id] ? 'on' : ''} title={s.titulo} />
-              ))}
-              <b>
-                {simsHechos}/{SIMS.length}
-              </b>
-            </span>
-          </Link>
-          <Link to={examenEstado.to} className="po-door po-door-examen">
-            <span className="po-door-ico" aria-hidden="true">
-              <Icon name="examen" size={26} />
-            </span>
-            <span className="po-door-txt">
-              <strong>Examen final</strong>
-              <span>{examenEstado.t}</span>
-            </span>
-            <span className="btn arc sm po-door-cta">{examenEstado.b}</span>
-          </Link>
+        <section className="hm-mas" aria-labelledby="mas-h">
+          <h2 id="mas-h">Además</h2>
+          <ul>
+            <li>
+              <Link to="/taller">Taller</Link>: simuladores para repasar lo que más cuesta al principio ({simsHechos} de {SIMS.length} superados).
+            </li>
+            <li>
+              <Link to={examenEstado.to}>Examen final</Link>: {examenEstado.t}
+            </li>
+          </ul>
         </section>
       </div>
     </div>

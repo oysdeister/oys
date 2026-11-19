@@ -63,8 +63,8 @@
   {
    "id": "parametrizacion-icon-1",
    "numero": 1,
-   "titulo": "Orden de carga de las tablas de Finanzas",
-   "objetivo": "Tendrás una visión general de las áreas de Finanzas, qué produce contabilizar y el orden lógico de carga de maestros, diferenciando lo explícito de lo deducido.",
+   "titulo": "Cargar las tablas de Finanzas en orden",
+   "objetivo": "Verás las áreas de Finanzas y el orden lógico de carga de maestros para dejar el entorno contable bien parametrizado.",
    "concepto": "Axional Finanzas es el núcleo económico-financiero: registra, procesa y presenta la información contable del ciclo de negocio y se nutre de datos de otros módulos. Antes de parametrizar debes decidir el entorno empresarial (unisociedad o multisociedad, multipaís, consolidación, contabilidad de gestión) y después cargas los maestros en un orden lógico: permisos, tercero de empresa, plan contable/PGC, empresa, ejercicio y periodos, cuentas, numeradores, terceros funcionales, tipologías y plantillas de contabilización. Algunas dependencias son explícitas en la documentación y otras se deducen de los campos de cada maestro.\n\nPalabras que salen aquí: el ejercicio es el año contable (2026) y se divide en 12 periodos, uno por mes; una factura del 15-03-2026 cae en el ejercicio 2026, periodo 3. El tercero es la ficha única de un cliente o proveedor. Un numerador es la regla que da número a los documentos: con la máscara {INI}#yy-#n la primera de 2026 sale {INI}26-000001. Una tipología es una clase de documento (factura directa, factura de abono…) y la plantilla de contabilización dice qué asiento genera cada documento: una factura de compra de 100 € + 21 € de IVA → Debe compras 100 y IVA soportado 21, Haber proveedor 121. La consolidación suma las contabilidades de varias empresas de un grupo como si fueran una sola.",
    "duracionMin": 40,
    "secciones": [
@@ -222,7 +222,7 @@
       {
        "texto": "En la captura de una plantilla de contabilización (libro XLS), localiza las pestañas de abajo: Factura, capuntes, cimpcont y cefectos",
        "imagen": "parametrizacion-icon-005.webp",
-       "detalle": "Cada pestaña es una hoja. «Factura» es la hoja origen (los datos del documento); las otras son hojas destino: capuntes = apuntes (líneas) del asiento, cimpcont = registro de impuestos (IVA), cefectos = cartera de cobros y pagos. Lo ves con detalle en el ejercicio 8.",
+       "detalle": "Cada pestaña es una hoja. «Factura» es la hoja origen (los datos del documento); las otras son hojas destino: capuntes = apuntes (líneas) del asiento, cimpcont = registro de impuestos (IVA), cefectos = cartera de cobros y pagos. Lo ves con detalle en el bloque «Distinguir Finanzas sola o integrada con gestión».",
        "hotspot": {
         "x": 12.9,
         "y": 95.8,
@@ -236,32 +236,6 @@
       {
        "tipo": "nota",
        "texto": "Las dependencias deducidas de campos no aparecen como secuencia literal en la documentación; se desprenden de las referencias entre maestros."
-      }
-     ]
-    },
-    {
-     "id": "parametrizacion-icon-1-tablas",
-     "titulo": "Tablas literales que intervienen",
-     "paraQueSirve": "Identificar las tablas de base de datos nombradas en la documentación para permisos, numeradores y plantillas.",
-     "ruta": null,
-     "explicacion": [
-      "Esta sección es solo de lectura: los nombres que siguen son tablas internas de la base de datos. No hace falta abrirlas; sirven para reconocer los datos cuando aparecen en plantillas, informes o mensajes de error.",
-      "Por dentro: en permisos se nombran cuserperh, cuserperl, cuserperv, cusergrp, gusergrp, cuserauth y guserauth. En numeradores, las tablas de tipos de factura son gvenfacd para ventas y gcommovd para compras. En plantillas de contabilización se usan etiquetas como ccomfach.fecfac, ccomfach.opimp1, ccomefec.fecven y ccomfacl.linid, y las hojas destino capuntes, cimpcont y cefectos.",
-      "No se nombran tablas físicas para empresa, ejercicio, plan contable o terceros; para tipologías, intervienen las tablas de tipos de documento usadas por numeradores (gvenford, gvenacud, gvenpedd, gvenfacd, gcommovd, etc.), además de permisos y plantillas."
-     ],
-     "campos": [],
-     "pasos": [
-      {
-       "texto": "En Finanzas › Maestros › Parametrización › Grupos de permisos, relaciona lo que ves con sus tablas: la agrupación se guarda en cuserperh, sus permisos en cuserperl y los valores de cada permiso en cuserperv"
-      },
-      {
-       "texto": "Recuerda que los tipos de factura de venta se guardan en gvenfacd y los de compra en gcommovd: son las tablas a las que se asignan los numeradores"
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Las hojas destino capuntes, cimpcont y cefectos son nombres de hoja por convenio que coinciden con la tabla principal de destino."
       }
      ]
     }
@@ -356,14 +330,14 @@
    "id": "parametrizacion-1",
    "numero": 2,
    "titulo": "Dar de alta una cuenta del grupo 6 «Gastos varios»",
-   "objetivo": "Tendrás creada la cuenta 62999.00000 «Gastos varios {INI}» en el plan PGE 2008, de tipo Costes.",
+   "objetivo": "Crearás la cuenta de gastos varios en el plan contable para registrar ese gasto por separado y usarlo en asientos y facturas.",
    "concepto": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia cuando se quiere ver por separado un tipo de gasto en el balance de sumas y saldos (la lista de todas las cuentas con lo anotado en el Debe, en el Haber y la diferencia o saldo) y en la cuenta de resultados (ingresos menos gastos: 10.000 € de ventas − 7.000 € de gastos = 3.000 € de beneficio). A partir de ese momento se puede usar en asientos, facturas de compra y plantillas contables.\n\nEn la base TUTORIAL hay cuatro planes contables (AD, ES, PE y PT); el español es «PGE 2008» (código ES), con cuentas de 5 + 5 dígitos (62900.00000). Las cuentas de gastos son de tipo «Costes» para que pidan la analítica (proyecto y sección) al contabilizar.",
    "duracionMin": 15,
    "secciones": [
     {
      "id": "parametrizacion-1-cuenta",
      "titulo": "Alta de la cuenta 62999.00000",
-     "paraQueSirve": "Las cuentas del grupo 6 recogen los gastos de la empresa. Se crea una cuenta propia para ver por separado un tipo de gasto en el balance de sumas y saldos y en la cuenta de resultados, y poder usarla en asientos, facturas de compra y plantillas contables.",
+     "paraQueSirve": "Las cuentas del grupo 6 recogen gastos. Se crea una cuenta propia para ver por separado un tipo de gasto en balance de sumas y saldos y cuenta de resultados, y usarla en asientos, facturas de compra y plantillas contables.",
      "ruta": [
       "Finanzas",
       "Maestros",
@@ -409,7 +383,7 @@
       },
       {
        "campo": "Grupo auxiliar",
-       "significado": "Grupo de códigos auxiliares que pedirá la cuenta al contabilizar. Se rellena en el ejercicio 5.",
+       "significado": "Grupo de códigos auxiliares que pedirá la cuenta al contabilizar. Se rellena en el bloque «Asignar el grupo auxiliar a la cuenta».",
        "ejemplo": "(vacío por ahora)"
       },
       {
@@ -538,7 +512,7 @@
       {
        "texto": "Fíjate en el resultado: filtra otra vez por 629* y la cuenta 62999.00000 aparece en la última fila con Costes, Ambos, C, Standard, 999 y Debe",
        "imagen": "parametrizacion-d-125.webp",
-       "detalle": "La captura se tomó al final del tema: por eso la descripción ya lleva «Administración» (ejercicio 3) y el grupo auxiliar ECEMP (ejercicio 5). Tú verás «Gastos varios {INI}» y el grupo auxiliar vacío."
+       "detalle": "La captura se tomó al final del tema: por eso la descripción ya lleva «Administración» (el bloque «Cambiar la descripción de la cuenta») y el grupo auxiliar ECEMP (el bloque «Asignar el grupo auxiliar a la cuenta»). Tú verás «Gastos varios {INI}» y el grupo auxiliar vacío."
       },
       {
        "texto": "Error típico: si en Plan contable escribes «PGE» a mano, el plan no es válido y el campo se marca «Error en la validación»",
@@ -569,7 +543,7 @@
       },
       {
        "tipo": "solucion",
-       "texto": "Usa otro número libre del mismo grupo, por ejemplo 62999.00001 (filtra antes por 62999* para ver cuáles están ocupados), y usa ese código en los ejercicios 3 y 5."
+       "texto": "Usa otro número libre del mismo grupo, por ejemplo 62999.00001 (filtra antes por 62999* para ver cuáles están ocupados), y usa ese código en los bloques «Cambiar la descripción de la cuenta» y «Asignar el grupo auxiliar a la cuenta»."
       }
      ]
     }
@@ -658,7 +632,7 @@
    "id": "parametrizacion-2",
    "numero": 3,
    "titulo": "Cambiar la descripción de la cuenta",
-   "objetivo": "La cuenta 62999.00000 se llamará «Gastos varios {INI} Administración».",
+   "objetivo": "Modificarás la descripción de una cuenta contable para que los listados muestren el texto correcto sin alterar el código ni los apuntes.",
    "concepto": "La descripción de una cuenta se puede cambiar en cualquier momento, incluso si ya tiene apuntes: es solo el texto que sale en los listados. Lo que no se cambia así es el código: para renumerar una cuenta con movimientos hay una pantalla específica, Finanzas › Maestros › Cuentas contables › Cambio código de cuenta.",
    "duracionMin": 8,
    "secciones": [
@@ -785,8 +759,8 @@
    "id": "parametrizacion-3",
    "numero": 4,
    "titulo": "Crear un grupo auxiliar «Empleados» con José Gómez",
-   "objetivo": "Tendrás el grupo auxiliar {INI}EMP «EMPLEADOS {INI}» con el código auxiliar {INI}0001 «José Gómez» abierto.",
-   "concepto": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Por ejemplo, con el grupo «Empleados» la misma cuenta de gastos puede llevar cada apunte asignado a un empleado concreto, y después sacar el saldo por empleado.\n\nPrimero se crea el grupo y sus códigos; después se asigna a las cuentas (ejercicio 5).",
+   "objetivo": "Crearás un grupo auxiliar y un código de empleado para desglosar el saldo de una cuenta por persona sin crear subcuentas.",
+   "concepto": "Un grupo auxiliar es una lista de códigos que permite desglosar el saldo de una cuenta sin crear una subcuenta por cada caso. Por ejemplo, con el grupo «Empleados» la misma cuenta de gastos puede llevar cada apunte asignado a un empleado concreto, y después sacar el saldo por empleado.\n\nPrimero se crea el grupo y sus códigos; después se asigna a las cuentas (el bloque «Asignar el grupo auxiliar a la cuenta»).",
    "duracionMin": 15,
    "secciones": [
     {
@@ -1019,7 +993,7 @@
    "id": "parametrizacion-4",
    "numero": 5,
    "titulo": "Asignar el grupo auxiliar a la cuenta",
-   "objetivo": "La cuenta 62999.00000 tendrá asignado el grupo auxiliar {INI}EMP.",
+   "objetivo": "Asignarás el grupo auxiliar a la cuenta para que cada apunte pueda llevarlo y consultar el mayor por empleado.",
    "concepto": "Al asignar el grupo auxiliar a la cuenta, cada apunte que se haga en ella podrá llevar uno de los códigos del grupo ({INI}0001 José Gómez…). Así el mayor de la cuenta se puede consultar por empleado sin abrir una subcuenta para cada uno.",
    "duracionMin": 8,
    "secciones": [
@@ -1153,7 +1127,7 @@
    "id": "parametrizacion-5",
    "numero": 6,
    "titulo": "Crear un proyecto «División 1»",
-   "objetivo": "Tendrás el proyecto {INI}1 «División 1 {INI}» creado y abierto, con la sección 0 de momento.",
+   "objetivo": "Crearás un proyecto contable para asignar apuntes de costes a una división y obtener resultados por proyecto.",
    "concepto": "Proyectos y secciones son la analítica de la contabilidad: cada apunte de una cuenta de costes se asigna a un proyecto (por ejemplo una división o una obra) y a una sección (un departamento), y así se obtiene la cuenta de resultados por división o por departamento. El proyecto puede llevar una sección por defecto, que se propone al contabilizar.",
    "duracionMin": 10,
    "secciones": [
@@ -1251,7 +1225,7 @@
       {
        "texto": "Fíjate en el resultado: la lista de proyectos muestra 0 GENERAL y tu {INI}1 «División 1 {INI}», de momento con la sección 0",
        "imagen": "parametrizacion-d-144.webp",
-       "detalle": "En la captura, EC1 ya tiene la sección ECADM porque se tomó después del ejercicio 7."
+       "detalle": "En la captura, EC1 ya tiene la sección ECADM porque se tomó después del bloque «Crear una sección «Administración»»."
       }
      ],
      "avisos": []
@@ -1330,7 +1304,7 @@
    "id": "parametrizacion-6",
    "numero": 7,
    "titulo": "Crear una sección «Administración»",
-   "objetivo": "Tendrás la sección {INI}ADM «Administración {INI}» creada y asignada como sección por defecto del proyecto {INI}1.",
+   "objetivo": "Crearás una sección y la asignarás al proyecto para clasificar gastos por departamento en la contabilidad analítica.",
    "concepto": "La sección representa un departamento o centro de coste (Administración, Comercial, Taller…). Junto con el proyecto permite ver los gastos por departamento. Se crea una vez y se puede usar en cualquier proyecto; aquí además se asigna como sección por defecto del proyecto {INI}1.",
    "duracionMin": 10,
    "secciones": [
@@ -1516,8 +1490,8 @@
   {
    "id": "parametrizacion-icon-2",
    "numero": 8,
-   "titulo": "Dos escenarios: Finanzas sola o integrada con los documentos de gestión",
-   "objetivo": "Distinguirás cómo contabiliza Finanzas cuando registras facturas directamente en Finanzas o cuando vienen de compras y ventas (IGES), y conocerás las plantillas de contabilización y el permiso «Contabilizar».",
+   "titulo": "Distinguir Finanzas sola o integrada con gestión",
+   "objetivo": "Distinguirás cómo contabiliza Finanzas sola o integrada con documentos de gestión para saber qué plantillas y permisos intervienen.",
    "concepto": "En el escenario solo, registras facturas de ventas y de compras directamente en Finanzas; al contabilizar generan asiento, cartera de efectos (lo pendiente de cobrar o pagar, con su vencimiento) y registro fiscal (el IVA que luego se declara). En el escenario integrado, los pedidos, albaranes y facturas se gestionan en los documentos de gestión (IGES), que ves en los módulos de Compras y Ventas; para contabilizarlos se usan plantillas de contabilización definidas por origen. El permiso «Contabilizar» con valores Real y Diferido controla cuándo y cómo se contabiliza.",
    "duracionMin": 40,
    "secciones": [

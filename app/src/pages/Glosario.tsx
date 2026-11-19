@@ -85,7 +85,7 @@ export default function Glosario() {
         <div className="gls-vacio ax-panel">
           <Icon name="libro" size={34} />
           <h2>El glosario se está escribiendo</h2>
-          <p className="muted">Todavía no hay términos. En cuanto los módulos tengan su vocabulario aparecerá aquí, y se resaltará también dentro de los ejercicios.</p>
+          <p className="muted">Todavía no hay términos. En cuanto los módulos tengan su vocabulario aparecerá aquí, y se resaltará también dentro de los bloques.</p>
         </div>
       ) : (
         <>

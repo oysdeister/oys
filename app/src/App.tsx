@@ -11,6 +11,7 @@ import { useProgreso } from './lib/progress';
 import { useInclinacion } from './lib/inclinar';
 import { CLERK_ACTIVO } from './auth/Acceso';
 import { INSIGNIAS, insigniasGanadas } from './lib/badges';
+import { fijarModoLibre } from './lib/ruta';
 import Home from './pages/Home';
 import ModulePage from './pages/ModulePage';
 import ExercisePage from './pages/ExercisePage';
@@ -95,6 +96,11 @@ function Rutas() {
     if (loc.hash) return;
     window.scrollTo({ top: 0 });
   }, [loc.pathname, loc.hash]);
+  // ?libre=1 abre todos los bloques (para revisar el curso sin hacerlo entero); ?libre=0 lo quita
+  useEffect(() => {
+    const libre = new URLSearchParams(loc.search).get('libre');
+    if (libre !== null) fijarModoLibre(libre === '1');
+  }, [loc.search]);
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -102,10 +108,10 @@ function Rutas() {
         className="page-host"
         /* Transición 3D entre páginas: la nueva sube desde el fondo inclinada y la anterior se aleja.
            Solo transform y opacity (sin blur) para ir a 60 fps. */
-        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28, z: -90, rotateX: 9, transformPerspective: 1400 }}
-        animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, z: 0, rotateX: 0, transformPerspective: 1400, transitionEnd: { transform: 'none' } }}
-        exit={reduce ? { opacity: 0 } : { opacity: 0, y: -14, z: -60, rotateX: -5, transformPerspective: 1400 }}
-        transition={{ duration: 0.46, ease: [0.2, 0.7, 0.2, 1], opacity: { duration: 0.28 } }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: reduce ? 0 : 0.18 }}
       >
         <Routes location={loc}>
           <Route path="/" element={<Home />} />

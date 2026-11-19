@@ -26,20 +26,20 @@ export interface FichaModulo {
 
 export const FICHAS: Record<string, FichaModulo> = {
   maestros: {
-    frase: 'Las fichas que usan todos los documentos. Si un maestro está mal, el error se arrastra a cada pedido, factura y asiento.',
-    recorrido: 'Del tercero al stock',
+    frase: 'Las fichas que usan todos los documentos: empresa, cuentas, terceros y artículos. Si un maestro está mal, el error se arrastra a cada pedido, factura y asiento.',
+    recorrido: 'De la empresa al stock',
     aprendes: [
+      'Leer y crear una empresa, y entender su plan contable y sus cuentas.',
       'Dar de alta un tercero con su cuenta contable y su forma de cobro.',
-      'Crear un artículo, asignarlo a un proveedor y preparar un almacén con su cuenta logística.',
-      'Registrar una entrada de stock y comprobarla en el Stock global y en el kardex.',
+      'Preparar un artículo y un almacén, y comprobar una entrada de stock.',
     ],
     circuito: [
-      { t: 'Tercero', d: 'Una sola ficha para clientes y proveedores. Su perfil contable dice a qué cuenta va.', ej: 'Tercero {INI}1 · relación CLI' },
-      { t: 'Forma de cobro', d: 'Tipo de efecto + plazo de pago, asignados al tercero.', ej: 'Efecto {INI} + plazo {INI}1 (30/60 días)' },
-      { t: 'Artículo y proveedor', d: 'El artículo logístico y quién te lo suministra.', ej: '{INI}0001 · proveedor 00001' },
-      { t: 'Almacén', d: 'Dónde se guarda el stock, con su cuenta logística.', ej: 'Almacén {INI}1 (FIFO)' },
-      { t: 'Movimiento', d: 'Una entrada de mercancía al almacén: el stock pasa a disponible.', ej: '{INI}000001 · 10 × {INI}0001' },
-      { t: 'Stock y kardex', d: 'Compruebas el saldo y la traza del movimiento. Deben coincidir.', ej: '10 unidades en {INI}1' },
+      { t: 'Empresa', d: 'Quién factura. Lleva su plan contable, su moneda y su ejercicio.', ej: 'Empresa S{INI} · ejercicio 2026' },
+      { t: 'Plan y cuentas', d: 'Las cuentas donde el ERP apunta cada importe. El mnemotécnico es un alias que el ERP convierte en la cuenta real.', ej: '43000 Clientes · 57200 Bancos' },
+      { t: 'Tercero', d: 'Una sola ficha para clientes y proveedores. Su relación contable dice a qué cuenta va.', ej: 'Tercero {INI}1 · relación CLI' },
+      { t: 'Forma de cobro', d: 'Tipo de efecto y plazo de pago, asignados al tercero.', ej: 'Efecto {INI} + plazo {INI}1 (30/60 días)' },
+      { t: 'Artículo y almacén', d: 'Qué compras o vendes, quién te lo suministra y dónde se guarda.', ej: '{INI}0001 · almacén {INI}1' },
+      { t: 'Stock', d: 'Una entrada de mercancía y su comprobación en el stock y el kardex.', ej: '10 unidades en {INI}1' },
     ],
   },
   parametrizacion: {
@@ -102,7 +102,7 @@ export const FICHAS: Record<string, FichaModulo> = {
       'Consultarlo en el mayor y en los saldos, duplicarlo y corregir importes.',
     ],
     circuito: [
-      { t: 'Diario', d: 'El libro donde se guardan tus asientos de práctica, con su numerador de justificantes.', ej: 'Diario EA' },
+      { t: 'Diario', d: 'El libro donde se guardan tus asientos de práctica, con su numerador de justificantes.', ej: 'Diario {INI}' },
       { t: 'Cabecera', d: 'Empresa, fecha, diario y concepto del asiento.', ej: 'Estado Provisional' },
       { t: 'Líneas', d: 'Cada apunte: cuenta, Debe o Haber e importe.', ej: '1.000,00 al Debe / 1.000,00 al Haber' },
       { t: 'Cuadre', d: 'Debe = Haber. Mientras no cuadra, el botón «Finalizar» no aparece.', ej: 'Cuadre 0,00' },
@@ -111,14 +111,12 @@ export const FICHAS: Record<string, FichaModulo> = {
     ],
   },
   carteras: {
-    frase: 'Cada factura deja vencimientos: aquí los sigues de la factura al banco hasta que se cobran o se pagan, sueltos, en gestión o en remesa, y concilias su extracto.',
-    recorrido: 'Del plazo de pago a la conciliación',
+    frase: 'Cada factura deja vencimientos (efectos). Aquí los sigues hasta que se cobran o se pagan: sueltos, en una gestión o en una remesa.',
+    recorrido: 'Del plazo de pago a la remesa',
     aprendes: [
-      'Definir un plazo de pago, un tipo de efecto y las condiciones de un tercero, y dar de alta un banco propio y una caja de efectivo.',
-      'Leer un efecto en cartera y los estados, tipos y acciones que lo mueven.',
-      'Cobrar y pagar efectos sueltos, con una gestión y con una remesa, viendo cada cambio de estado, su asiento y su tesorería.',
-      'Ver cómo un pago o una remesa con tesorería crean su movimiento.',
-      'Crear el extracto, conciliarlo y contabilizarlo, y conocer anticipos, reclasificaciones y recobros.',
+      'Preparar plazos de pago, tipos de efecto y bancos propios.',
+      'Leer un efecto en cartera y saber qué estados puede tener.',
+      'Cobrar y pagar efectos sueltos, con una gestión o en una remesa, y llevarlos a tesorería.',
     ],
     circuito: [
       { t: 'Plazo de pago, tipo de efecto y condiciones del tercero', d: 'Cuándo se paga, con qué tipo de efecto, y la forma de pago y de cobro que recibe el tercero.', ej: 'Plazo {INI}1: 40, 80 y 120 días (40/20/40 %) · pago: efecto T{INI} + plazo {INI}1' },
@@ -126,8 +124,6 @@ export const FICHAS: Record<string, FichaModulo> = {
       { t: 'Banco propio y tipos de remesa', d: 'La cuenta por la que se cobra o se paga, con los tipos de remesa que admite.', ej: 'BBVA_{INI} (57200) · CAJA_{INI} (57000) · CSCTS' },
       { t: 'Cobro o pago: suelto, con gestión o en remesa', d: 'Un efecto suelto, varios con una gestión o un lote en una remesa.', ej: 'PE › PR › OC › CO · pago directo · gestión masiva' },
       { t: 'Asiento contable y movimiento de tesorería', d: 'Cada cambio de estado deja su asiento; si la acción mueve dinero, el pago o la remesa crean su movimiento en tesorería.', ej: 'Efecto en CO = cobrado · PTES · remesa PSCTT' },
-      { t: 'Extracto bancario', d: 'El banco devuelve el movimiento con su criterio: el cargo en positivo y el abono en negativo.', ej: 'Extracto 1.524,60 · tesorería −1.524,60' },
-      { t: 'Conciliación', d: 'Casas tesorería con el extracto y contabilizas la conciliación.', ej: 'Conciliar · Contabilizar' },
     ],
   },
   tesoreria: {
@@ -137,7 +133,7 @@ export const FICHAS: Record<string, FichaModulo> = {
       'Preparar el banco propio, una operación financiera y su flujo con cuenta contable.',
       'Crear un movimiento de tesorería a mano, revisar sus flujos y contabilizarlo.',
       'Cargar un extracto N43, dar de alta sus conceptos y conciliarlo a mano o de forma automática.',
-      'Llevar las cajas de efectivo, la financiación y las líneas financieras, la cartera de valores, los avales y los informes de posición.',
+      'Si quieres ampliar: cajas de efectivo, financiación, valores y avales.',
     ],
     circuito: [
       { t: 'Banco propio', d: 'La cuenta del banco, con su cuenta contable, formato de extracto y comisiones.', ej: 'BBVA_{INI} · 57200 · AEB43' },
@@ -149,20 +145,20 @@ export const FICHAS: Record<string, FichaModulo> = {
     ],
   },
   'icon-contabilidad': {
-    frase: 'Entiendes el diario, los periodos y las plantillas, y localizas los procesos de cierre, balances y consolidación.',
-    recorrido: 'Del diario a la consolidación',
+    frase: 'Cómo se organiza la contabilidad (diarios y periodos), qué asientos dejan las facturas y cómo se cierra el año.',
+    recorrido: 'Del diario al cierre del año',
     aprendes: [
-      'Navegar por el diario, los periodos contables y las plantillas de contabilización.',
-      'Ejecutar procesos periódicos de cierre y apertura y consultar la contabilidad a una fecha pasada.',
-      'Generar balances y trabajar con cuentas anuales XLS, el motor de consultas Excel y la consolidación.',
+      'Saber en qué diario y periodo cae cada asiento.',
+      'Contabilizar facturas, hacer facturas directas y corregirlas con rectificativas.',
+      'Localizar el cierre, la apertura, los balances y la consolidación.',
     ],
     circuito: [
-      { t: 'Diario y periodos', d: 'El diario orientado al apunte y la configuración del ejercicio con doce periodos contables y de impuestos.', ej: 'Diario anual, Diario resumen, Diario por asiento' },
-      { t: 'Plantillas de contabilización', d: 'Libros maestros XLS que generan apuntes, impuestos, cartera y costes.', ej: 'capuntes, cimpcont, cefectos' },
-      { t: 'Procesos periódicos', d: 'Regularización, cierre temporal, cierre definitivo y otros procesos sobre el ejercicio.', ej: 'asiento 99999998' },
-      { t: 'Cierre y apertura', d: 'El cierre definitivo genera asiento de cierre y apertura; la reapertura los elimina.', ej: 'asientos 99999999 y 0' },
-      { t: 'Balances', d: 'Balances de saldos y estados financieros por agrupación con cuentas anuales XLS.', ej: 'BALANCE08 · CTEPIG08' },
-      { t: 'Consolidación', d: 'Siete etapas para combinar estados financieros de varias empresas del grupo.', ej: 'eliminación de operaciones intra-grupo' },
+      { t: 'Diario y periodos', d: 'Dónde y en qué mes cae cada asiento. El año se parte en doce periodos.', ej: 'Ejercicio 2026 · periodos 1 a 12' },
+      { t: 'Factura contabilizada', d: 'Al contabilizar una factura nacen su asiento, sus vencimientos y su registro fiscal.', ej: 'Asiento + efectos + IVA' },
+      { t: 'Facturas directas', d: 'Facturas hechas desde Finanzas, sin albarán ni pedido.', ej: 'FC compra · FB venta' },
+      { t: 'Corregir facturas', d: 'Rectificativa o sustitutiva, y qué hacer cuando una factura no contabiliza.', ej: 'Rectificativa en negativo' },
+      { t: 'Cierre y apertura', d: 'Al acabar el año se cierran las cuentas y se abren en el siguiente.', ej: 'Asientos de cierre y apertura' },
+      { t: 'Balances', d: 'Los estados financieros: balance y cuenta de resultados.', ej: 'Balance · pérdidas y ganancias' },
     ],
   },
   'icon-impuestos': {

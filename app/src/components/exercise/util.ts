@@ -75,3 +75,33 @@ export const pct = (f: number) => `${Math.round(f * 100)} %`;
 export function parrafos(t: string) {
   return t.split(/\n{2,}|\n/).map((s) => s.trim()).filter(Boolean);
 }
+
+/* ---------- Problemas que ya cuenta el Concepto ---------- */
+const palabras = (s: string) =>
+  new Set(
+    s
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .match(/[a-z0-9]+/g)
+      ?.filter((x) => x.length >= 4) ?? [],
+  );
+const cubre = (a: Set<string>, b: Set<string>) => {
+  if (!a.size) return 0;
+  let n = 0;
+  a.forEach((x) => {
+    if (b.has(x)) n++;
+  });
+  return n / a.size;
+};
+
+/** Problemas de la Demo real que no repiten un «Ojo / Solución» del Concepto */
+export function problemasNuevos(ej: Ejercicio) {
+  const avisos = ej.secciones.flatMap((s) => s.avisos.map((a) => palabras(a.texto)));
+  return ej.problemas.filter((pr) => {
+    const p = palabras(pr.problema);
+    const s = palabras(pr.solucion);
+    const repetido = avisos.some((a) => cubre(p, a) >= 0.6) && avisos.some((a) => cubre(s, a) >= 0.5);
+    return !repetido;
+  });
+}

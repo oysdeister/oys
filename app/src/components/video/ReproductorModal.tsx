@@ -268,11 +268,11 @@ export function BotonMomento({ m, className }: { m: MomentoVideo; className?: st
           <Icon name="play" />
         </span>
         <span className="vm-boton-txt">
-          <strong>Míralo en el vídeo</strong>
+          <strong>Ver en el vídeo</strong>
           <span>
             {m.serie && serieDe(m.serie).original
-              ? `${serieDe(m.serie).corto} · ${mmss(m.t)} — ${m.titulo}`
-              : `${m.serie ? `${serieDe(m.serie).corto} · ` : ''}cap. ${m.capitulo}, ${mmss(m.tCap)} — ${m.titulo}`}
+              ? `Vídeo «${serieDe(m.serie).corto}» · ${mmss(m.t)} — ${m.titulo}`
+              : `${m.serie ? `Vídeo «${serieDe(m.serie).corto}»` : 'Vídeo de Compras'} · cap. ${m.capitulo}, ${mmss(m.tCap)} — ${m.titulo}`}
           </span>
         </span>
       </button>

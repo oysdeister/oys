@@ -9,8 +9,6 @@ import { VerMas, partir, useRevela } from './Revela';
 
 const TITULO_AVISO = { problema: 'Ojo', solucion: 'Solución', nota: 'Nota' } as const;
 const MAX_IDEAS = 3;
-const MAX_CAMPOS = 6;
-const MAX_PASOS = 5;
 
 /** Ruta de menú del ERP en forma de migas */
 export function RutaMenu({ ruta }: { ruta: string[] | null }) {
@@ -52,93 +50,83 @@ export function Ideas({ parrafos, ini, max = MAX_IDEAS }: { parrafos: string[]; 
   );
 }
 
-/** Contenido de una sección: para qué sirve, ruta, explicación, campos y avisos */
-export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion; ini: string; conPasos?: boolean; modulo?: string }) {
+/** Contenido de una sección, como lectura: para qué sirve, dónde está, explicación, campos y avisos */
+export function SeccionVista({ s, ini, conPasos = false, modulo, destacar = false }: { s: Seccion; ini: string; conPasos?: boolean; modulo?: string; destacar?: boolean }) {
   const t = (x: string) => conIni(x, ini);
-  const r = useRevela();
-  const [todosCampos, setTodosCampos] = useState(false);
-  const [todosPasos, setTodosPasos] = useState(false);
-  const campos = todosCampos ? s.campos : s.campos.slice(0, MAX_CAMPOS);
-  const pasos = todosPasos ? s.pasos : s.pasos.slice(0, MAX_PASOS);
+  const iDestacado = destacar ? s.avisos.findIndex((a) => a.tipo === 'problema') : -1;
   return (
-    <div className="sec-body">
+    <div className="sec-body lect">
       {s.paraQueSirve && (
-        <motion.div className="callout why sv-why" {...r(0)}>
-          <span className="sv-why-ico" aria-hidden="true">
-            <Icon name="cerebro" size={20} />
-          </span>
-          <span>
-            <b>¿Para qué sirve?</b>
-            <Glosa>{t(s.paraQueSirve)}</Glosa>
-          </span>
-        </motion.div>
+        <p className="lect-lead">
+          <Glosa>{t(s.paraQueSirve)}</Glosa>
+        </p>
       )}
       {s.ruta && s.ruta.length > 0 && (
-        <motion.div className="sec-ruta" {...r(1)}>
-          <span className="small muted">Dónde está</span>
-          <RutaMenu ruta={s.ruta.map(t)} />
-        </motion.div>
+        <p className="lect-donde">
+          En el ERP: <b>{s.ruta.map(t).join(' › ')}</b>
+        </p>
       )}
-      <Ideas parrafos={s.explicacion} ini={ini} />
+      {s.explicacion.length > 0 && (
+        <ul className="lect-lista">
+          {s.explicacion.map((p, i) => (
+            <li key={i}>
+              <Glosa>{t(p)}</Glosa>
+            </li>
+          ))}
+        </ul>
+      )}
       {modulo ? (
         <CapturaCampos s={s} modulo={modulo} ini={ini} />
       ) : (
         s.campos.length > 0 && (
-          <motion.div className="sec-campos sv-campos" {...r(0)}>
-            <table className="fields">
-              <thead>
-                <tr>
-                  <th scope="col">Campo</th>
-                  <th scope="col">Qué significa</th>
-                  <th scope="col">Ejemplo</th>
+          <table className="fields lect-campos">
+            <thead>
+              <tr>
+                <th scope="col">Campo</th>
+                <th scope="col">Qué significa</th>
+                <th scope="col">Ejemplo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {s.campos.map((c, i) => (
+                <tr key={i}>
+                  <td>{t(c.campo)}</td>
+                  <td>
+                    <Glosa>{t(c.significado)}</Glosa>
+                  </td>
+                  <td>{c.ejemplo ? <code>{t(c.ejemplo)}</code> : null}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {campos.map((c, i) => (
-                  <tr key={i}>
-                    <td>{t(c.campo)}</td>
-                    <td><Glosa>{t(c.significado)}</Glosa></td>
-                    <td>{c.ejemplo ? <code>{t(c.ejemplo)}</code> : null}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {s.campos.length > MAX_CAMPOS && (
-              <VerMas abierto={todosCampos} resto={s.campos.length - MAX_CAMPOS} que="filas más" onClick={() => setTodosCampos((v) => !v)} />
-            )}
-          </motion.div>
+              ))}
+            </tbody>
+          </table>
         )
       )}
       {conPasos && s.pasos.length > 0 && (
-        <div>
-          <ol className="sv-pasos">
-            {pasos.map((p, i) => (
-              <motion.li key={i} {...r(i)}>
-                <span className="sv-paso-n" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <span>
-                  <span><Glosa>{t(p.texto)}</Glosa></span>
-                  {p.detalle && <small className="muted"><Glosa>{t(p.detalle)}</Glosa></small>}
-                </span>
-              </motion.li>
-            ))}
-          </ol>
-          {s.pasos.length > MAX_PASOS && <VerMas abierto={todosPasos} resto={s.pasos.length - MAX_PASOS} que="pasos más" onClick={() => setTodosPasos((v) => !v)} />}
-        </div>
-      )}
-      {s.avisos.length > 0 && (
-        <div className={`sv-avisos${s.avisos.length > 1 ? ' varios' : ''}`}>
-          {s.avisos.map((a, i) => (
-            <motion.div key={i} className={`callout ${a.tipo} sv-aviso`} {...r(i)}>
-              <b>
-                <Icon name={a.tipo === 'problema' ? 'aviso' : a.tipo === 'solucion' ? 'check' : 'cerebro'} size={16} /> {TITULO_AVISO[a.tipo] ?? 'Nota'}
-              </b>
-              <Glosa>{t(a.texto)}</Glosa>
-            </motion.div>
+        <ol className="lect-pasos">
+          {s.pasos.map((p, i) => (
+            <li key={i}>
+              <Glosa>{t(p.texto)}</Glosa>
+              {p.detalle && (
+                <small className="muted">
+                  {' '}
+                  <Glosa>{t(p.detalle)}</Glosa>
+                </small>
+              )}
+            </li>
           ))}
-        </div>
+        </ol>
       )}
+      {s.avisos.length > 0 &&
+        s.avisos.map((a, i) => (
+          <p key={i} className={`lect-aviso ${a.tipo}${i === iDestacado ? ' destacado' : ''}`}>
+            {a.tipo !== 'nota' && (
+              <b>
+                {i === iDestacado && <Icon name="aviso" size={16} />} {TITULO_AVISO[a.tipo] ?? 'Nota'}.
+              </b>
+            )}{' '}
+            <Glosa>{t(a.texto)}</Glosa>
+          </p>
+        ))}
     </div>
   );
 }

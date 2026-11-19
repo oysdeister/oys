@@ -1,8 +1,11 @@
-import type { CSSProperties } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useEffect, useRef, type CSSProperties } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Icon } from '../Icon';
 import { Anillo } from './Anillo';
-import { MODULOS, META } from '../../content';
+import { MODULOS, META, getEjercicio } from '../../content';
+import { bloqueAbierto, bloquesDe, pasosDe, esOpcional } from '../../lib/ruta';
+import { ejercicioCompletado } from '../../lib/progress';
+import '../../pages/ruta.css';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal, avanceModulo } from '../../lib/avance';
 
@@ -31,10 +34,31 @@ export function Sidebar({
   onNavegar: () => void;
 }) {
   const p = useProgreso();
+  const loc = useLocation();
+  // Módulo abierto ahora (en su página o en uno de sus bloques): se despliega con sus bloques
+  const mModulo = loc.pathname.match(/^\/modulo\/([^/]+)/)?.[1];
+  const mBloque = loc.pathname.match(/^\/ejercicio\/([^/]+)/)?.[1];
+  const abierto = mBloque ? getEjercicio(mBloque)?.modulo.id : mModulo;
+  const pasoActual = new URLSearchParams(loc.search).get('tab') ?? 'concepto';
   const global = avanceGlobal(p);
   const ini = p.alumno.ini || '··';
   const nombre = p.alumno.nombre || 'Alumno';
   const t = (s: string) => (plegada ? s : undefined);
+  const scrollRef = useRef<HTMLElement>(null);
+
+  // Lleva la barra hasta la lección abierta (o el módulo) para que siempre se vea dónde estás
+  useEffect(() => {
+    const cont = scrollRef.current;
+    if (!cont || plegada) return;
+    const id = window.setTimeout(() => {
+      const el = cont.querySelector<HTMLElement>('.sb-bloques li.actual') ?? cont.querySelector<HTMLElement>('.sb-mod-abierto');
+      if (!el) return;
+      const c = cont.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      if (r.top < c.top + 8 || r.bottom > c.bottom - 8) cont.scrollTop += r.top - c.top - c.height / 3;
+    }, 60);
+    return () => window.clearTimeout(id);
+  }, [loc.pathname, abierto, plegada]);
   return (
     <aside className="sb" aria-label="Navegación de la plataforma" id="barra-lateral">
       <Link to="/" className="sb-brand" onClick={onNavegar} aria-label="Practicando Axional Deister VNext, inicio">
@@ -58,7 +82,7 @@ export function Sidebar({
         </span>
       </Link>
 
-      <nav className="sb-scroll" aria-label="Principal">
+      <nav className="sb-scroll" aria-label="Principal" ref={scrollRef}>
         <NavLink to="/" end className="sb-link" onClick={onNavegar} title={t('Inicio')}>
           <span className="sb-ico">
             <Icon name="inicio" />
@@ -67,27 +91,68 @@ export function Sidebar({
         </NavLink>
 
         <div className="sb-group">Módulos</div>
-        {MODULOS.map((m) => {
+        {MODULOS.map((m, im) => {
           const meta = META[m.id] ?? { color: '#4fbfa5', icono: 'check', corto: m.titulo };
           const v = avanceModulo(p, m.id);
           return (
-            <NavLink
-              key={m.id}
-              to={`/modulo/${m.id}`}
-              className="sb-link sb-mod"
-              onClick={onNavegar}
-              style={{ ['--mod' as string]: meta.color } as CSSProperties}
-              title={t(`${meta.corto} · ${pct(v)}`)}
-            >
-              <span className="sb-ico">
-                <Icon name={meta.icono} size={20} />
-              </span>
-              <span className="sb-label">{meta.corto}</span>
-              <span className={`sb-pct${v >= 1 ? ' full' : ''}`}>{pct(v)}</span>
-              <span className="sb-minibar" aria-hidden="true">
-                <i style={{ width: `${v * 100}%` }} />
-              </span>
-            </NavLink>
+            <div key={m.id} className={abierto === m.id ? 'sb-mod-abierto' : undefined}>
+              <NavLink
+                to={`/modulo/${m.id}`}
+                className={`sb-link sb-mod${abierto === m.id ? ' abierto' : ''}`}
+                onClick={onNavegar}
+                style={{ ['--mod' as string]: meta.color } as CSSProperties}
+                title={t(`${meta.corto} · ${pct(v)}`)}
+              >
+                <span className="sb-ico">
+                  <Icon name={meta.icono} size={20} />
+                </span>
+                <span className="sb-label">
+                  {im + 1}. {meta.corto}
+                </span>
+                <span className={`sb-pct${v >= 1 ? ' full' : ''}`}>{pct(v)}</span>
+                <span className="sb-minibar" aria-hidden="true">
+                  <i style={{ width: `${v * 100}%` }} />
+                </span>
+              </NavLink>
+              {abierto === m.id && !plegada && (
+                <ol className="sb-bloques" aria-label={`Bloques de ${meta.corto}`}>
+                  {bloquesDe(m).map((b, i) => {
+                    const hecho = ejercicioCompletado(p.ejercicios[b.id]);
+                    const actual = mBloque === b.id;
+                    const opc = esOpcional(m, b.id);
+                    return (
+                      <li key={b.id} className={`${hecho ? 'hecho' : ''}${actual ? ' actual' : ''}`}>
+                        {bloqueAbierto(p, m, b.id) ? (
+                          <NavLink to={`/ejercicio/${b.id}`} onClick={onNavegar} title={b.titulo} end>
+                            <b>{hecho ? '✓' : opc ? '+' : i + 1}</b>
+                            <span>{b.titulo}</span>
+                          </NavLink>
+                        ) : (
+                          <span className="sb-bl" title="Se abre al terminar el bloque anterior">
+                            <b>{i + 1}</b>
+                            <span>{b.titulo}</span>
+                          </span>
+                        )}
+                        {actual && (
+                          <ol className="sb-pasos">
+                            {pasosDe(b).map((x) => {
+                              const on = (pasoActual === 'problemas' ? 'demo' : pasoActual) === x.id;
+                              return (
+                                <li key={x.id}>
+                                  <Link to={`/ejercicio/${b.id}${x.id === 'concepto' ? '' : `?tab=${x.id}`}`} onClick={onNavegar} className={on ? 'on' : undefined} aria-current={on ? 'step' : undefined}>
+                                    {x.label}
+                                  </Link>
+                                </li>
+                              );
+                            })}
+                          </ol>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
+            </div>
           );
         })}
 

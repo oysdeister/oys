@@ -18,11 +18,7 @@ export const SERIES_FIN: SerieFin[] = [
     "titulo": "Sesión de finanzas 1: de la factura a la remesa",
     "corto": "Sesión 1",
     "intro": "Contabilizas una factura, creas facturas directas y preparas la primera remesa.",
-    "modulos": [
-      "icon-contabilidad",
-      "carteras",
-      "maestros"
-    ],
+    "modulos": ["icon-contabilidad"],
     "capitulos": [
       {
         "n": 1,
@@ -281,10 +277,7 @@ export const SERIES_FIN: SerieFin[] = [
     "titulo": "Sesión de finanzas 2: remesas paso a paso",
     "corto": "Sesión 2",
     "intro": "Recorres una remesa completa y aprendes por qué una factura no contabiliza o no remesa.",
-    "modulos": [
-      "carteras",
-      "icon-contabilidad"
-    ],
+    "modulos": ["carteras"],
     "capitulos": [
       {
         "n": 1,
@@ -525,9 +518,7 @@ export const SERIES_FIN: SerieFin[] = [
     "titulo": "Sesión de finanzas 3: extracto y conciliación",
     "corto": "Sesión 3",
     "intro": "Del extracto bancario a la conciliación y la contabilización del cobro o el pago.",
-    "modulos": [
-      "carteras"
-    ],
+    "modulos": ["tesoreria"],
     "capitulos": [
       {
         "n": 1,

@@ -1,4 +1,4 @@
-/* Espacio de práctica: ERP en dos tercios de la pantalla y enunciado con corrección automática al lado. */
+/* Espacio de práctica: el ERP a todo el ancho; el enunciado y la corrección se abren encima cuando los pides. */
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { confeti } from '../sims/kit';
@@ -20,7 +20,7 @@ function Nota({ valor }: { valor: number }) {
   );
 }
 
-export function PanelPractica({ practica, ini, compacto }: { practica: Practica; ini: string; compacto?: boolean }) {
+export function PanelPractica({ practica, ini, compacto, onCerrar }: { practica: Practica; ini: string; compacto?: boolean; onCerrar?: () => void }) {
   const db = useDb();
   const reducir = !!useReducedMotion();
   const notas = useNotas();
@@ -43,6 +43,11 @@ export function PanelPractica({ practica, ini, compacto }: { practica: Practica;
           <h2>{practica.titulo}</h2>
         </div>
         <Nota valor={nota} />
+        {onCerrar && (
+          <button type="button" className="pr-cerrar" onClick={onCerrar} aria-label="Cerrar el enunciado">
+            ×
+          </button>
+        )}
       </header>
       {!ini && <p className="pr-alerta">Pon tus iniciales en la plataforma: todos tus códigos las llevan y la corrección las busca.</p>}
       <div className="pr-datos">
@@ -98,30 +103,63 @@ export function PanelPractica({ practica, ini, compacto }: { practica: Practica;
   );
 }
 
-/** ERP + enunciado lado a lado. Con varias prácticas, pestañas para cambiar. */
+/** Tira de arriba: qué práctica es, qué comprobación falta y botón para ver el enunciado */
+function Tira({ practica, ini, abierto, onAbrir }: { practica: Practica; ini: string; abierto: boolean; onAbrir: () => void }) {
+  const db = useDb();
+  const { res, logrado, total, nota } = puntuar(practica, db, ini);
+  const falta = res.find((c) => !c.hecho);
+  const t = (s: string) => txtIni(s, ini || 'XX');
+  return (
+    <div className="pr-tira">
+      <div className="pr-tira-txt">
+        <strong>{practica.titulo}</strong>
+        <span>{nota >= 1 ? 'Práctica superada: todo lo que has grabado cuadra.' : logrado === 0 && practica.enunciado[0] ? `Empieza: ${t(practica.enunciado[0])}` : falta ? `Te falta: ${t(falta.texto)}` : ''}</span>
+      </div>
+      <span className="pr-tira-pt">
+        {logrado}/{total} puntos
+      </span>
+      <button type="button" className="btn sm" aria-expanded={abierto} aria-haspopup="dialog" onClick={onAbrir}>
+        {abierto ? 'Ocultar enunciado' : 'Ver enunciado y corrección'}
+      </button>
+    </div>
+  );
+}
+
+/** ERP a todo el ancho con el enunciado plegable encima. Con varias prácticas, pestañas para cambiar. */
 export function Practicar({ ids, ini, alto }: { ids: string[]; ini: string; alto?: string }) {
   const lista = ids.map((id) => PRACTICAS.find((p) => p.id === id)).filter((p): p is Practica => !!p);
   const [actual, setActual] = useState(lista[0]?.id ?? '');
+  const [abierto, setAbierto] = useState(false);
   const pr = lista.find((p) => p.id === actual) ?? lista[0];
   const notas = useNotas();
   if (!pr) return null;
   return (
-    <div className="pr-espacio" style={alto ? { ['--pr-alto' as string]: alto } : undefined}>
+    <div className="pr-espacio pr-ancho" style={alto ? { ['--pr-alto' as string]: alto } : undefined}>
       {lista.length > 1 && (
-        <div className="pr-selector" role="tablist" aria-label="Prácticas">
-          {lista.map((p, i) => (
-            <button key={p.id} type="button" role="tab" aria-selected={p.id === pr.id} className={p.id === pr.id ? 'on' : ''} onClick={() => setActual(p.id)}>
-              <b>{i + 1}</b> {p.titulo}
-              {(notas[p.id]?.nota ?? 0) >= 1 && <span className="pr-sel-ok">✓</span>}
+        <p className="pr-orden">
+          Práctica {lista.indexOf(pr) + 1} de {lista.length}.
+          {lista.indexOf(pr) < lista.length - 1 ? (
+            <button type="button" className="pr-orden-sig" onClick={() => setActual(lista[lista.indexOf(pr) + 1].id)}>
+              Ir a la práctica {lista.indexOf(pr) + 2}: {lista[lista.indexOf(pr) + 1].titulo}
             </button>
-          ))}
-        </div>
+          ) : (
+            <button type="button" className="pr-orden-sig" onClick={() => setActual(lista[0].id)}>
+              Volver a la práctica 1
+            </button>
+          )}
+          {(notas[pr.id]?.nota ?? 0) >= 1 && <span className="pr-sel-ok"> ✓ superada</span>}
+        </p>
       )}
-      <div className="pr-split">
+      <Tira practica={pr} ini={ini} abierto={abierto} onAbrir={() => setAbierto((v) => !v)} />
+      <div className="pr-lienzo">
         <div className="pr-erp">
           <ErpApp key={pr.id} ini={ini} inicial={pr.pantalla} />
         </div>
-        <PanelPractica practica={pr} ini={ini} />
+        {abierto && (
+          <div className="pr-flota" role="dialog" aria-label={`Enunciado: ${pr.titulo}`}>
+            <PanelPractica practica={pr} ini={ini} onCerrar={() => setAbierto(false)} />
+          </div>
+        )}
       </div>
     </div>
   );

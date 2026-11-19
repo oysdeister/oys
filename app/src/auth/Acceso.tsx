@@ -237,7 +237,7 @@ function BotonGoogle({ alta }: { alta: boolean }) {
 }
 
 const PALABRAS = ['Practicando', 'Axional'];
-const CHIPS = ['Ejercicios guiados', 'Vídeos paso a paso', 'Tu progreso en la nube'];
+const CHIPS = ['Bloques guiados', 'Vídeos paso a paso', 'Tu progreso en la nube'];
 
 function PantallaEntrada() {
   const reduce = useReducedMotion();

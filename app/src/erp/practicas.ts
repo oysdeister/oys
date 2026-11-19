@@ -256,16 +256,13 @@ export function puntuar(p: Practica, d: Db, ini: string) {
 }
 
 /** Prácticas que se ofrecen dentro de cada ejercicio de la plataforma */
+/** Cada práctica vive en un solo bloque: el que enseña justo eso */
 export const PRACTICAS_POR_EJERCICIO: Record<string, string[]> = {
   'maestros-2': ['erp-articulo'],
-  'compras-1': ['erp-proveedor', 'erp-articulo'],
-  'compras-2': ['erp-circuito'],
+  'compras-1': ['erp-proveedor'],
   'compras-3': ['erp-circuito', 'erp-parcial'],
-  'asientos-2': ['erp-asiento'],
   'asientos-6': ['erp-asiento'],
-  'carteras-5': ['erp-pago'],
-  'carteras-7': ['erp-pago'],
-  'tesoreria-4': ['erp-conciliacion'],
+  'icon-cartera-v-5': ['erp-pago'],
   'tesoreria-5': ['erp-conciliacion'],
 };
 

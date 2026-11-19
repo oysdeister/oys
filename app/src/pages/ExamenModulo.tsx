@@ -48,7 +48,7 @@ export default function ExamenModulo() {
     return (
       <div className="wrap" style={{ padding: '60px 0' }}>
         <h1>Este módulo aún no tiene examen</h1>
-        <p className="muted">Vuelve al módulo y sigue con los ejercicios.</p>
+        <p className="muted">Vuelve al módulo y sigue con los bloques.</p>
         <Link className="btn" to={modulo ? `/modulo/${modulo.id}` : '/'}>
           Volver
         </Link>

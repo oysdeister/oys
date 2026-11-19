@@ -13,6 +13,7 @@ const P: Record<string, string> = {
   sol: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
   luna: 'M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z',
   check: 'M5 12l5 5 9-10',
+  candado: 'M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3',
   flecha: 'M5 12h14m-6-6 6 6-6 6',
   atras: 'M19 12H5m6 6-6-6 6-6',
   play: 'M7 4l13 8-13 8z',

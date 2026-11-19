@@ -57,15 +57,15 @@
   {
    "id": "compras-1",
    "numero": 1,
-   "titulo": "Proveedor, artículo y tarifa de compras",
-   "objetivo": "Tendrás dados de alta los datos maestros para comprar: el proveedor T{INI} con su tercero, relaciones, dirección, condiciones y cuenta bancaria, validado; tu artículo {INI}0001 preparado para compras (tipo contable PROD); y la lista y el grupo de precios.",
+   "titulo": "Dar de alta proveedor, artículo y tarifa",
+   "objetivo": "Preparas al proveedor, el artículo y su precio de compra. Sin ellos no puedes hacer pedidos, albaranes ni facturas.",
    "concepto": "Antes de comprar, el ERP necesita saber a quién le compras y qué le compras. Son los maestros: fichas que se escriben una vez y se reutilizan en todos los documentos.\n\nEl proveedor se monta en capas: primero el tercero (la ficha de la empresa, común a finanzas y gestión), sus relaciones contables, direcciones y condiciones de pago, y después la ficha de proveedor. En Maestros ya diste de alta un tercero cliente ({INI}1); ahora repites el proceso para un proveedor (T{INI}) y te fijas en lo que cambia. Después preparas para comprar el artículo que creaste en Maestros y, por último, la tarifa: la lista de precios, el grupo que la contiene y el enlace del grupo con el proveedor.\n\nSi una capa falta o está mal, el fallo aparece más tarde (por ejemplo, al contabilizar una factura). Por eso conviene montarlo todo y comprobar cada pestaña antes de hacer documentos.",
    "duracionMin": 60,
    "secciones": [
     {
      "id": "compras-1-tercero",
      "titulo": "Tercero",
-     "paraQueSirve": "El tercero es la ficha única de cualquier empresa o persona con la que trabajamos: identificación fiscal, direcciones, cuentas bancarias y relaciones contables. Se crea una sola vez y la usan clientes, proveedores, contabilidad y tesorería. Sin tercero no se puede dar de alta el proveedor, y sin sus relaciones contables la factura no podrá contabilizar.",
+     "paraQueSirve": "Ficha única de empresas o personas con las que trabajamos: identificación fiscal, direcciones, cuentas bancarias y relaciones contables. La usan clientes, proveedores, contabilidad y tesorería. Sin tercero no hay proveedor; sin relaciones contables, la factura no contabiliza.",
      "ruta": [
       "Finanzas",
       "Maestros",
@@ -189,7 +189,7 @@
     {
      "id": "compras-1-relaciones",
      "titulo": "Relaciones contables del tercero",
-     "paraQueSirve": "La relación contable dice con qué papel trabaja el tercero (cliente, proveedor, acreedor…) y qué cuenta del plan contable usa. Cuando se contabiliza una factura, el ERP busca la cuenta del tercero según la relación de la tipología de factura; si no la encuentra, la factura no contabiliza.",
+     "paraQueSirve": "Define el papel del tercero (cliente, proveedor, acreedor…) y su cuenta contable. Al contabilizar, el ERP busca esta cuenta según la tipología de factura; si no la encuentra, la factura no contabiliza.",
      "ruta": [
       "Ficha del tercero",
       "pestaña Relaciones",
@@ -257,7 +257,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "La plantilla de asiento de la factura de compra (FC) busca la relación PRO (Proveedores, cuenta 40000). Si el tercero solo tiene ACR, al contabilizar saldrá un error (lo verás en el ejercicio 2). Si quieres evitarlo, añade ya aquí una segunda relación Proveedor / PRO / ES (PGE 2008). En la prueba hecha en la demo, el ERP le asignó una subcuenta propia del tercero (40000.T{INI})."
+       "texto": "La plantilla de asiento de la factura de compra (FC) busca la relación PRO (Proveedores, cuenta 40000). Si el tercero solo tiene ACR, al contabilizar saldrá un error (lo verás en el bloque «Comprar de albarán a factura»). Si quieres evitarlo, añade ya aquí una segunda relación Proveedor / PRO / ES (PGE 2008). En la prueba hecha en la demo, el ERP le asignó una subcuenta propia del tercero (40000.T{INI})."
       }
      ]
     },
@@ -589,7 +589,7 @@
     {
      "id": "compras-1-articulo",
      "titulo": "Artículo preparado para compras",
-     "paraQueSirve": "El artículo es lo que le compras al proveedor: un rodamiento, un tornillo o un servicio. Su ficha guarda la descripción, la unidad, la familia, el tipo contable y la clave fiscal, y así en el pedido no tienes que escribir nada de esto. En Maestros ya creaste el artículo {INI}0001; aquí le pones el dato que necesita para comprar: el tipo contable.",
+     "paraQueSirve": "Artículo que compras al proveedor: rodamiento, tornillo o servicio. Su ficha guarda descripción, unidad, familia, tipo contable y clave fiscal; el pedido no necesita repetirlos. Aquí añades al artículo {INI}0001 el tipo contable para compras.",
      "ruta": [
       "Gestión",
       "Maestros",
@@ -740,7 +740,7 @@
     {
      "id": "compras-1-lista",
      "titulo": "Lista de precios de compra (tarifa)",
-     "paraQueSirve": "La lista de precios guarda el precio pactado con el proveedor para cada artículo y periodo. Sirve para valorar pedidos y albaranes sin teclear precios y para controlar desviaciones en la factura. Cada línea tiene su propia vigencia, así que se pueden cambiar precios sin crear otra tarifa.",
+     "paraQueSirve": "Guarda el precio pactado con el proveedor por artículo y periodo. Sirve para valorar pedidos y albaranes sin teclear precios y controlar desviaciones en factura. Cada línea tiene su propia vigencia, así que puedes cambiar precios sin crear otra tarifa.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -850,7 +850,7 @@
     {
      "id": "compras-1-grupo",
      "titulo": "Grupo de precios de compra",
-     "paraQueSirve": "El proveedor no apunta directamente a una lista de precios, sino a un grupo de precios. El grupo ordena una o varias listas (por ejemplo, una de campaña y otra general) y el ERP toma el precio de la primera que encaja. Así varios proveedores pueden compartir tarifas.",
+     "paraQueSirve": "El proveedor apunta a un grupo de precios, no a una lista directa. El grupo ordena una o varias listas y el ERP toma el precio de la primera que encaja. Así varios proveedores comparten tarifas.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1054,7 +1054,7 @@
     },
     {
      "problema": "La factura no contabilizará si el tercero no tiene la relación contable de la tipología.",
-     "solucion": "Añade en la pestaña Relaciones la relación que pide la tipología de factura (ver ejercicio 2)."
+     "solucion": "Añade en la pestaña Relaciones la relación que pide la tipología de factura (ver el bloque «Comprar de albarán a factura»)."
     },
     {
      "problema": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida».",
@@ -1073,8 +1073,8 @@
   {
    "id": "compras-2",
    "numero": 2,
-   "titulo": "Circuito de compras Albarán - Factura",
-   "objetivo": "Tendrás un albarán de compra validado, su factura conformada con él y contabilizada con el asiento cuadrado.",
+   "titulo": "Comprar de albarán a factura",
+   "objetivo": "Registras un albarán, su factura y el asiento. Es la compra más corta: llega la mercancía y el proveedor te la factura.",
    "concepto": "Recibimos mercancía del proveedor con un albarán, después llega su factura, la conformamos contra el albarán y la contabilizamos. Antes se crean las tipologías de albarán y de factura, que fijan serie, movimiento de stock y tipo de asiento.\n\nConformar es lo que garantiza que solo pagas lo que ha entrado en el almacén. Al contabilizar, el ERP genera el asiento de compras y los vencimientos de pago; si faltan datos maestros del proveedor o del artículo, saltan errores que debes saber leer.\n\nLos números de documento de los ejemplos (0AC000002, 0FC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
    "duracionMin": 60,
    "secciones": [
@@ -1644,7 +1644,7 @@
     {
      "id": "compras-2-contabilizar",
      "titulo": "Contabilizar la factura",
-     "paraQueSirve": "Contabilizar genera el asiento de compras: el gasto (cuenta 600) y el IVA soportado (cuenta 472: el IVA que pagas al proveedor y luego descuentas a Hacienda) al debe, contra la deuda con el proveedor (cuenta 400) al haber, y los vencimientos de pago. Para que funcione, el tercero tiene que tener la relación contable de la factura, la cuenta bancaria si se paga por transferencia, y el artículo un tipo contable con cuenta de compras.",
+     "paraQueSirve": "Contabilizar genera el asiento de compras: gasto (600) e IVA soportado (472) al debe, deuda con proveedor (400) al haber y vencimientos. Requiere relación contable del tercero, cuenta bancaria si hay transferencia y tipo contable de compras en el artículo.",
      "ruta": [
       "Ficha de la factura",
       "botón Contabilizar (morado, barra superior)"
@@ -1792,7 +1792,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "Si en el ejercicio 1 ya diste de alta la relación PRO y la cuenta bancaria, la factura contabilizará a la primera."
+       "texto": "Si en el bloque «Dar de alta proveedor, artículo y tarifa» ya diste de alta la relación PRO y la cuenta bancaria, la factura contabilizará a la primera."
       }
      ]
     }
@@ -1898,8 +1898,8 @@
   {
    "id": "compras-3",
    "numero": 3,
-   "titulo": "Circuito Oferta - Pedido - Albarán - Factura",
-   "objetivo": "Tendrás el circuito completo de compra: oferta validada, pedido, albarán con origen y factura conformada y contabilizada.",
+   "titulo": "Comprar de la oferta a la factura",
+   "objetivo": "Haces la compra completa: oferta, pedido, albarán y factura, cada uno nacido del anterior. Así se sigue una compra de principio a fin.",
    "concepto": "Ahora se hace el circuito completo: se pide oferta al proveedor, se convierte en pedido, se recibe la mercancía con un albarán que viene del pedido y se factura. Cada documento copia las líneas del anterior gracias a la tabla origen de su tipología.\n\nEste circuito te da control: sabes qué se ha ofertado, qué se ha pedido, qué ha llegado y qué se ha facturado. En la base TUTORIAL hay limitaciones (falta el formulario del pedido y el numerador de acuerdos), así que algunos pasos se resuelven a mano; en una base bien configurada la oferta genera un acuerdo y de este salen los pedidos con líneas.\n\nLos números de documento de los ejemplos (0AC000002, 0FC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
    "duracionMin": 60,
    "secciones": [
@@ -2315,7 +2315,7 @@
     {
      "id": "compras-3-tip-albaran-origen",
      "titulo": "Tipología de albarán con origen",
-     "paraQueSirve": "Igual que la tipología de albarán del ejercicio 2, pero con tabla origen Pedidos: al recibir la mercancía se elige el pedido y el albarán copia sus líneas pendientes, descontándolas del pedido (Sumando). Así se controla lo pendiente de recibir.",
+     "paraQueSirve": "Igual que la tipología de albarán del bloque «Comprar de albarán a factura», pero con tabla origen Pedidos: al recibir la mercancía se elige el pedido y el albarán copia sus líneas pendientes, descontándolas del pedido (Sumando). Así se controla lo pendiente de recibir.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -2465,7 +2465,7 @@
     {
      "id": "compras-3-factura",
      "titulo": "Factura, conformar y contabilizar",
-     "paraQueSirve": "Se repite el ejercicio 2 con el nuevo albarán. Como los datos maestros ya están corregidos (relación PRO, cuenta bancaria y tipo contable PROD), la factura debe contabilizar a la primera: es la prueba de que el proveedor está bien configurado.",
+     "paraQueSirve": "Se repite el bloque «Comprar de albarán a factura» con el nuevo albarán. Como los datos maestros ya están corregidos (relación PRO, cuenta bancaria y tipo contable PROD), la factura debe contabilizar a la primera: es la prueba de que el proveedor está bien configurado.",
      "ruta": [
       "Gestión",
       "Compras",

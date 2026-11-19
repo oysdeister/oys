@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Icon } from '../Icon';
 import { Anillo } from './Anillo';
 import { META, getEjercicio, getModulo, todosEjercicios } from '../../content';
+import { numeroBloque } from '../../lib/ruta';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal } from '../../lib/avance';
 
@@ -35,7 +36,7 @@ export function migasDe(pathname: string): Miga[] {
   }
   if (a === 'ejercicio' && b) {
     const r = getEjercicio(b);
-    if (!r) return [inicio, { label: 'Ejercicio' }];
+    if (!r) return [inicio, { label: 'Bloque' }];
     const meta = META[r.modulo.id];
     return [inicio, { label: meta?.corto ?? r.modulo.titulo, to: `/modulo/${r.modulo.id}`, color: meta?.color }, { label: r.ejercicio.titulo }];
   }
@@ -87,8 +88,8 @@ function Buscador() {
       <input
         ref={ref}
         type="search"
-        placeholder="Buscar un ejercicio"
-        aria-label="Buscar un ejercicio"
+        placeholder="Buscar un bloque"
+        aria-label="Buscar un bloque"
         value={q}
         onChange={(e) => {
           setQ(e.target.value);
@@ -115,7 +116,7 @@ function Buscador() {
       <kbd>⌘K</kbd>
       {abierto && q.trim() && (
         <motion.div className="tb-results" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
-          {res.length === 0 && <p className="muted">No hay ejercicios con «{q.trim()}». Prueba con «pedido», «factura» o «asiento».</p>}
+          {res.length === 0 && <p className="muted">No hay bloques con «{q.trim()}». Prueba con «pedido», «factura» o «asiento».</p>}
           {res.map(({ ejercicio, modulo }, i) => (
             <a
               key={ejercicio.id}
@@ -131,7 +132,7 @@ function Buscador() {
               <span>
                 <b>{ejercicio.titulo}</b>
                 <small>
-                  {META[modulo.id]?.corto ?? modulo.titulo} · ejercicio {ejercicio.numero}
+                  {META[modulo.id]?.corto ?? modulo.titulo}, bloque {numeroBloque(modulo, ejercicio.id)}
                 </small>
               </span>
             </a>

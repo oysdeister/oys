@@ -17,7 +17,7 @@
    "id": "icon-contabilidad-v-1",
    "numero": 1,
    "titulo": "Contabilizar una factura de compra y ver qué genera",
-   "objetivo": "Contabilizarás una factura de compra con origen albarán y comprobarás que genera asiento contable, cartera de efectos y registros fiscales. También revisarás la cartera de efectos de la factura FC-012345 y sus datos de pago.",
+   "objetivo": "Contabilizarás una factura de compra y comprobarás que genera asiento, cartera de efectos y registros fiscales para entender la integración contable.",
    "concepto": "Al contabilizar una factura de compra, el ERP genera tres cosas: el asiento contable (Debe y Haber), la cartera de efectos (la deuda pendiente con el proveedor, con su fecha de vencimiento: lo que pagarás más adelante) y los registros fiscales (el IVA de la factura, que después se declara a Hacienda).\n\nEn el vídeo se usa la factura ML0260020 de tipo «FACTURA COMPRA ORIGEN ALBARAN» con proveedor 00027: base 875,00 + IVA 21 % 183,75 = 1.058,75. El asiento cuadra por 1.058,75: Debe la compra (875,00) y el IVA soportado (183,75), Haber el proveedor (1.058,75). La cartera deja un efecto TF (transferencia) pendiente por 1.058,75 y el registro fiscal recoge el IVA deducible de 183,75, el que la empresa paga al proveedor y podrá restar del IVA que cobra a sus clientes.\n\nPara repasar la cartera se usa otra factura de compra ya contabilizada, la FC-012345 del proveedor 00087: su efecto es de clase Pagar, tipo TF, importe 1.815,00, vencimiento 23-07-2026 y estado Pendiente (PE).",
    "duracionMin": 30,
    "secciones": [
@@ -454,8 +454,8 @@
   {
    "id": "icon-contabilidad-v-2",
    "numero": 2,
-   "titulo": "Factura directa de compra (FC) y de venta (FB) desde Finanzas",
-   "objetivo": "Crearás una factura directa de compra FC y una de venta FB y comprobarás los importes necesarios para validar.",
+   "titulo": "Crear factura directa de compra y venta en Finanzas",
+   "objetivo": "Crearás una factura directa de compra y una de venta desde Finanzas y verás los importes necesarios para validarlas.",
    "concepto": "En Finanzas puedes crear facturas directas sin origen de albarán, pedido o solicitud. Para compras se usa el tipo FC; para ventas, el tipo FB.\n\nEn el vídeo se crea una factura de compra de la empresa LIZ (Liz Sport España) con proveedor 00003, línea de 5.000,00 y total 6.050,00. Al validar se activa Contabilizar porque el importe total y el importe factura coinciden. La factura de venta FB se intenta validar y da un error del entorno de formación, no por fallo del alumno.",
    "duracionMin": 12,
    "secciones": [
@@ -463,7 +463,12 @@
      "id": "icon-contabilidad-v-2-fc",
      "titulo": "Factura directa de compra FC",
      "paraQueSirve": "Crear una factura de compra directa desde Finanzas, sin albarán de origen.",
-     "ruta": "Finanzas › Facturación › Compras › Fact. de compra",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Compras",
+      "Fact. de compra"
+     ],
      "explicacion": [
       "Se pulsa «Nuevo documento» y se elige tipo FC (Fact. compra). La factura pide empresa, proveedor y los datos financieros.",
       "En el vídeo se ve la empresa LIZ y proveedor 00003. La cuenta financiera es obligatoria."
@@ -656,7 +661,7 @@
       },
       {
        "texto": "Pulsa Contabilizar y comprueba que se generan asiento contable, cartera de efectos y registros fiscales.",
-       "detalle": "Tras validar se activa el botón «Contabilizar». Una vez contabilizada, en el menú ⌄ junto al número de factura verás, como en el ejercicio 1, Asientos contables, Cartera de efectos y Registros fiscales. El asiento esperado: Debe 60000.00000 5.000,00 y 47200.00000 1.050,00; Haber la cuenta del proveedor 6.050,00."
+       "detalle": "Tras validar se activa el botón «Contabilizar». Una vez contabilizada, en el menú ⌄ junto al número de factura verás, como en el bloque «Contabilizar una factura de compra y ver qué genera», Asientos contables, Cartera de efectos y Registros fiscales. El asiento esperado: Debe 60000.00000 5.000,00 y 47200.00000 1.050,00; Haber la cuenta del proveedor 6.050,00."
       }
      ],
      "avisos": [
@@ -670,7 +675,12 @@
      "id": "icon-contabilidad-v-2-fb",
      "titulo": "Factura directa de venta FB",
      "paraQueSirve": "Crear una factura directa de ventas y reconocer el error de training al validar.",
-     "ruta": "Finanzas › Facturación › Ventas › Factura de venta",
+     "ruta": [
+      "Finanzas",
+      "Facturación",
+      "Ventas",
+      "Factura de venta"
+     ],
      "explicacion": [
       "La factura directa de venta usa tipo FB. En el vídeo se usa cliente 00003 y líneas con cuenta 70000.00000.",
       "Al validar dio «An error occurred … ha sido consolidado», un error del entorno de formación; el formador lo verá con sistemas. No es fallo del alumno."
@@ -836,8 +846,8 @@
   {
    "id": "icon-contabilidad-v-3",
    "numero": 3,
-   "titulo": "Rectificativa frente a sustitutiva",
-   "objetivo": "Decidirás cuándo usar una factura rectificativa y cuándo una sustitutiva según el caso.",
+   "titulo": "Elegir entre factura rectificativa y sustitutiva",
+   "objetivo": "Decidirás cuándo usar una factura rectificativa o una sustitutiva para corregir facturas sin borrar el registro legal.",
    "concepto": "La rectificativa corrige descuentos, importes mal u otros ajustes sin anular la factura original. En España debe quedar registro de todo lo que sucede con la factura; por eso no se elimina y se usa una rectificativa.\n\nLa sustitutiva anula definitivamente la factura inicial, por ejemplo si te equivocaste de proveedor. La rectificativa queda vinculada al documento original y dentro del DocFlow; la sustitutiva es para reemplazar algo que no se puede corregir.\n\nEjemplo: a una factura de 1.000 € + IVA se le olvidó un descuento del 10 %. Se emite una rectificativa de −100 € + IVA; las dos juntas suman 900 € + IVA y la original sigue registrada.",
    "duracionMin": 8,
    "secciones": [
@@ -1022,8 +1032,8 @@
   {
    "id": "icon-contabilidad-v-4",
    "numero": 4,
-   "titulo": "Cuando una factura no contabiliza",
-   "objetivo": "Tendrás identificados los tres motivos que impiden contabilizar o remesar: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.",
+   "titulo": "Identificar por qué una factura no contabiliza",
+   "objetivo": "Identificarás los motivos que impiden contabilizar una factura para corregirlos y dejarla lista.",
    "concepto": "Una factura puede quedarse sin contabilizar o sin cartera de efectos por tres motivos principales: importe total 0, período contable cerrado y tipo de asiento incorrecto en facturas origen pedido.\n\nCon importe total 0 la factura contabiliza y genera asiento y registro fiscal, pero no genera cartera de efectos; por eso no se puede remesar ni conciliar.\n\nUn período cerrado impide contabilizar y se corrige usando una fecha en un período abierto. En facturas origen pedido, pasa primero a provisional para cambiar el tipo de efecto y revisa el tipo de asiento.",
    "duracionMin": 30,
    "secciones": [
@@ -1074,7 +1084,12 @@
      "id": "icon-contabilidad-v-4-periodos",
      "titulo": "Períodos contables cerrados",
      "paraQueSirve": "Revisar el estado de los períodos del ejercicio y usar una fecha contable permitida.",
-     "ruta": "Finanzas › Maestros › Cierres › Ejercicios contables",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cierres",
+      "Ejercicios contables"
+     ],
      "explicacion": [
       "El ejercicio 2026 tiene 12 períodos contables, uno por mes. Cada período está Abierto (admite asientos) o Cerrado (bloqueado, con un candado).",
       "En el vídeo (otra base de datos), enero-junio estaban Cerrado y julio en adelante Abierto. En la demo TUTORIAL de la captura los doce períodos de 2026 están Abierto."
@@ -1294,8 +1309,8 @@
   {
    "id": "icon-contabilidad-1",
    "numero": 5,
-   "titulo": "Estructura del diario: diarios, periodos y plantillas",
-   "objetivo": "Tendrás localizada la organización del diario, la configuración del ejercicio con sus doce periodos contables y de impuestos, y las plantillas de contabilización, además de identificar los procesos masivos de mantenimiento del diario.",
+   "titulo": "Revisar la estructura del diario, periodos y plantillas",
+   "objetivo": "Conocerás la organización del diario, los periodos y las plantillas de contabilización para mantener y procesar el libro contable de la empresa.",
    "concepto": "El diario es el libro con todos los asientos por orden de fecha; el mayor es la misma información ordenada por cuenta. En Axional el diario está orientado al apunte: permite localizar apuntes sueltos dentro de los asientos. La configuración contable define el ejercicio y, al crear el primero, genera doce periodos contables (uno por mes) y doce periodos de impuestos. Las plantillas de contabilización son libros XLS que sirven de patrón por origen para generar apuntes, impuestos, cartera y costes. Además hay procesos masivos que trabajan sobre los apuntes ya hechos.",
    "duracionMin": 30,
    "secciones": [
@@ -1303,7 +1318,12 @@
      "id": "icon-contabilidad-1-diario",
      "titulo": "Organización del diario",
      "paraQueSirve": "Identificar cómo está organizado el diario y qué consultas ofrece para revisar apuntes por asiento o resumidos.",
-     "ruta": "Finanzas › Contabilidad General › Diario contable › Diarios",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Diarios"
+     ],
      "explicacion": [
       "El diario está orientado al apunte: puedes buscar y seleccionar apuntes individuales de distintos asientos para consultarlos o revisarlos. Cada apunte lleva un identificador de proyecto y sección para contabilidad por proyectos u operaciones.",
       "La página describe tres consultas: Diario anual, Diario resumen y Diario por asiento. El Diario resumen construye el diario oficial resumido por periodos; su nivel de consolidación es el número de dígitos con que se agrupan las cuentas (con 3 dígitos, la 62900, la 62902 y la 62903 salen juntas como 629). El Diario por asiento no calcula saldos anteriores, solo muestra asientos."
@@ -1349,7 +1369,12 @@
      "id": "icon-contabilidad-1-configuracion",
      "titulo": "Configuración del ejercicio y periodos",
      "paraQueSirve": "Entender cómo se crea el primer ejercicio contable y qué periodos se generan.",
-     "ruta": "Finanzas › Maestros › Cierres › Ejercicios contables",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Cierres",
+      "Ejercicios contables"
+     ],
      "explicacion": [
       "La documentación de configuración contable indica que, al crear el primer ejercicio contable, se generan doce periodos contables y doce periodos de impuestos.",
       "Cada periodo contable agrupa los movimientos de un mes y cada periodo de impuestos sirve para las declaraciones fiscales. En la ficha del ejercicio los ves en dos pestañas: «Periodos contables» (de enero a diciembre, con fecha inicial y final) y «Periodos fiscales» (Periodo 01 a Periodo 12)."
@@ -1408,7 +1433,13 @@
      "id": "icon-contabilidad-1-plantillas",
      "titulo": "Plantillas de contabilización",
      "paraQueSirve": "Entender los libros maestros XLS que sirven de patrón por origen para generar apuntes, impuestos, cartera y costes.",
-     "ruta": "Finanzas › Contabilidad General › Contabilizadores › Sistema Excel › Modelos XLS",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Contabilizadores",
+      "Sistema Excel",
+      "Modelos XLS"
+     ],
      "explicacion": [
       "Las plantillas de contabilización son libros maestros XLS que definen cómo crear registros en contabilidad según el origen de los datos. Sirven de patrón para generar apuntes, impuestos, carteras, costes y partidas presupuestarias.",
       "Cada hoja puede contener tipos de área como Datos de cabecera, Datos únicos estructurados, Multilínea censado o Multilínea indeterminado. Como viste en Parametrización, las hojas destino son capuntes (asientos), cimpcont (datos fiscales) y cefectos (efectos en cartera).",
@@ -1486,7 +1517,13 @@
      "id": "icon-contabilidad-1-procesos-masivos",
      "titulo": "Procesos masivos de mantenimiento",
      "paraQueSirve": "Identificar los procesos que actúan sobre el diario de forma masiva sin introducir asientos manualmente.",
-     "ruta": "Finanzas › Contabilidad General › Diario contable › Asientos › Procesos",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Diario contable",
+      "Asientos",
+      "Procesos"
+     ],
      "explicacion": [
       "Sobre el diario existen procesos masivos de mantenimiento: la generación de periodificaciones reparte el importe de un apunte entre varios periodos (un seguro anual de 1.200 € pagado en enero se lleva a gasto a 100 € por mes); la auditoría automática marca apuntes como auditados (revisados) por documento o por saldo, y con IA solo propone el punteo P, que acepta alguien con permiso; y el cambio de sistema traslada asientos entre sistemas contables.",
       "Estos procesos se ejecutan desde la ruta de procesos sobre asientos; la generación de periodificaciones puede ejecutarse individual o masiva, mientras que la auditoría automática y el cambio de sistema actúan sobre conjuntos de apuntes. La documentación los describe como procesos con filtros y parámetros, no como pantallas de alta.",
@@ -1662,8 +1699,8 @@
   {
    "id": "icon-contabilidad-2",
    "numero": 6,
-   "titulo": "Procesos periódicos: cierre y apertura del ejercicio",
-   "objetivo": "Tendrás identificados los procesos periódicos en el orden que indica la documentación y sabrás consultar la contabilidad a una fecha pasada con los mecanismos disponibles.",
+   "titulo": "Identificar procesos de cierre y apertura del ejercicio",
+   "objetivo": "Tendrás identificados los procesos periódicos de cierre y apertura y sabrás consultar la contabilidad a una fecha pasada para revisar el cierre anual de la empresa.",
    "concepto": "Al terminar el año se hacen tres cosas, en este orden. Regularizar: llevar todos los gastos e ingresos del año a la cuenta de resultados (129); con 10.000 € de ventas y 7.000 € de gastos, la 129 queda con 3.000 € de beneficio y las cuentas de los grupos 6 y 7 a cero. Cerrar: dejar a cero el resto de cuentas (bancos, clientes, proveedores…) con el asiento de cierre. Abrir: copiar esos mismos saldos al 1 de enero del año siguiente con el asiento de apertura; el banco que acabó con 5.000 € empieza el nuevo año con 5.000 €.\n\nEn el ERP estos pasos son procesos periódicos: regularización de divisas, actualización de deuda, regularización, cierre temporal, cierre definitivo, reapertura, paso a histórico y reclasificación de deuda a largo plazo. La documentación indica un orden recomendado y varios mecanismos para ver la contabilidad a una fecha pasada.",
    "duracionMin": 35,
    "secciones": [
@@ -1671,7 +1708,12 @@
      "id": "icon-contabilidad-2-procesos-periodicos-orden",
      "titulo": "Orden y finalidad de los procesos periódicos",
      "paraQueSirve": "Identificar todos los procesos periódicos y el orden en que la documentación los describe.",
-     "ruta": "Finanzas › Contabilidad General › Procesos › Cerrar ejercicio contable",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Procesos",
+      "Cerrar ejercicio contable"
+     ],
      "explicacion": [
       "La página de procesos periódicos agrupa la regularización contable de cuentas en divisas, la actualización de deuda de cartera en moneda extranjera, la regularización de ejercicios, el cierre temporal, el cierre definitivo, la reapertura, el paso a histórico y la reclasificación de deuda a largo plazo.",
       "El orden que sugiere la documentación es: regularización de divisas, actualización de deuda en divisa, regularización, cierre temporal, reapertura si estaba cerrado temporalmente, cierre definitivo, paso a histórico y reclasificación de deuda a largo plazo. Los procesos de cierre y apertura alteran asientos y saldos; conviene revisarlos antes de ejecutarlos.",
@@ -2090,8 +2132,8 @@
   {
    "id": "icon-contabilidad-3",
    "numero": 7,
-   "titulo": "Balances y consolidación",
-   "objetivo": "Tendrás localizados los balances generales y por agrupación, la generación de cuentas anuales XLS, el motor de consultas Excel y la documentación de consolidación.",
+   "titulo": "Consultar balances, cuentas anuales y consolidación",
+   "objetivo": "Localizarás los balances, la generación de cuentas anuales, las consultas Excel y la consolidación para preparar y revisar los estados financieros de la empresa.",
    "concepto": "Los balances muestran los saldos contables con distintos niveles de detalle. El Estado de Situación Financiera (balance) es la foto, a una fecha, de lo que la empresa tiene (bancos, clientes…) y de lo que debe (proveedores, préstamos); el Estado de Resultados (cuenta de pérdidas y ganancias) resta los gastos de los ingresos de un periodo. Los estados por agrupación se calculan sobre una tabla intermedia. Las cuentas anuales XLS se generan con plantillas de Excel y el motor de consultas Excel permite traer saldos con funciones VBA. La consolidación suma los estados de varias empresas de un grupo como si fueran una.",
    "duracionMin": 35,
    "secciones": [
@@ -2186,7 +2228,12 @@
      "id": "icon-contabilidad-3-cuentas-anuales",
      "titulo": "Cuentas anuales XLS",
      "paraQueSirve": "Generar cuentas anuales e informes en formato XLS mediante plantillas.",
-     "ruta": "Finanzas › Contabilidad General › Balances › Cuentas anuales ( Excel )",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Balances",
+      "Cuentas anuales ( Excel )"
+     ],
      "explicacion": [
       "Las cuentas anuales XLS se generan a partir de una plantilla de hoja de cálculo con 3 hojas: estructura del balance/informe, hoja Input con parámetros y algunos datos, y hoja Datos con los datos filtrados. Las hojas Input y Datos se deben ocultar.",
       "Hay que definir la plantilla, darla de alta en Cuentas Anuales e Informes, configurar la SQL de agrupación y la SQL de consulta de datos, y dar de alta los parámetros. Al pulsar Ejecutar se piden las variables y se genera el XLS, que queda en el histórico de ejecuciones.",
@@ -2270,7 +2317,13 @@
      "id": "icon-contabilidad-3-motor-consultas-excel",
      "titulo": "Motor de consultas Excel",
      "paraQueSirve": "Utilizar funciones VBA para consultar datos contables desde Excel.",
-     "ruta": "Finanzas › Contabilidad General › Balances › Motor de consultas excel › Consultas excel",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Balances",
+      "Motor de consultas excel",
+      "Consultas excel"
+     ],
      "explicacion": [
       "El motor de consultas Excel documenta tres funciones VBA: GetDecimalSeparator devuelve el separador decimal del sistema; AXIONAL procesa comentarios de celda, devolviendo el número si lo contiene o concatenando parámetros separados por |; AX_Saldo construye una cadena @AX_Saldo... o devuelve el valor numérico del comentario.",
       "La función AX_Saldo recibe tipo, ejercicio, periodo, empresa, cuenta y, como opcionales, proyecto, sección, sistema, dimensiones y tercero. Por ejemplo, el saldo de balance de la cuenta 57200.00000 de la empresa 0 en el periodo 12 de 2026 empieza por @AX_SaldoBALANCE|2026|12|0|57200.00000 y sigue con los opcionales, separados por |.",
@@ -2322,7 +2375,11 @@
      "id": "icon-contabilidad-3-consolidacion",
      "titulo": "Consolidación",
      "paraQueSirve": "Conocer las etapas y tareas principales para consolidar estados financieros de varias empresas.",
-     "ruta": "Finanzas › Contabilidad General › Consolidación",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Consolidación"
+     ],
      "explicacion": [
       "La consolidación contable combina los estados financieros de varias empresas de un grupo para presentar uno solo. Ejemplo: si la matriz vende a su filial por 1.000 €, en el consolidado esa venta y esa compra se eliminan, porque el grupo no puede venderse a sí mismo.",
       "La documentación describe siete etapas: preparación (definir periodo y entidades), recopilación de información, eliminación de operaciones intra-grupo, ajustes de consolidación, elaboración de estados financieros consolidados, revisión y validación, y presentación y aprobación.",
