@@ -59,7 +59,7 @@
     {
       "id": "ventas-1",
       "numero": 1,
-      "titulo": "Vender de albarán a factura",
+      "titulo": "Vender del albarán a la factura",
       "objetivo": "Registras un albarán de venta y su factura, la contabilizas y ves el cobro pendiente en la cartera.",
       "concepto": "Un circuito de ventas simple tiene dos documentos: el albarán, que registra la mercancía que sale del almacén, y la factura, que recoge ese albarán y es el documento fiscal con el que se cobra. Cada uno se comporta según su tipología, que dice de dónde viene, qué serie usa y con qué plantilla se contabiliza.\n\nEn este ejercicio se contabilizan los dos documentos: el albarán reconoce la venta como pendiente de facturar (cuenta 43090) y la factura genera el asiento definitivo con cliente, IVA y ventas y crea el vencimiento de cobro. Entender qué plantilla contable corresponde a cada documento evita los errores más habituales.\n\nLos números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
       "duracionMin": 60,
@@ -1075,7 +1075,7 @@
             "Ofertas (objeto gvenofed)"
           ],
           "explicacion": [
-            "En este circuito NO se contabilizan los albaranes, SÍ las facturas. Cada paso tiene su tipología, distinta de las del bloque «Vender de albarán a factura» (salvo la factura, que se reutiliza), y cada tipología tiene como origen la anterior para que la cadena quede unida.",
+            "En este circuito NO se contabilizan los albaranes, SÍ las facturas. Cada paso tiene su tipología, distinta de las del bloque «Vender del albarán a la factura» (salvo la factura, que se reutiliza), y cada tipología tiene como origen la anterior para que la cadena quede unida.",
             "No hay que crear una serie nueva para las ofertas: se usa el numerador OV, que ya existe. La vigencia no se define en la serie, sino en cada oferta (Inicio vigencia y Fin vigencia)."
           ],
           "campos": [
@@ -1267,7 +1267,7 @@
             "Albaranes (objeto gvenmovd)"
           ],
           "explicacion": [
-            "Como este albarán sí tiene origen, aquí «Nuevo como» sobre AV funciona sin el error que aparece en el bloque «Vender de albarán a factura»."
+            "Como este albarán sí tiene origen, aquí «Nuevo como» sobre AV funciona sin el error que aparece en el bloque «Vender del albarán a la factura»."
           ],
           "campos": [
             {
@@ -1355,7 +1355,7 @@
             "Facturas (objeto gvenfacd)"
           ],
           "explicacion": [
-            "Se reutiliza la tipología F{INI} del bloque «Vender de albarán a factura»: tiene el mismo origen (albaranes), contabiliza con FV y su condición de selección tipdoc IN ('A{INI}','A{INI}2') ya admite el albarán A{INI}2."
+            "Se reutiliza la tipología F{INI} del bloque «Vender del albarán a la factura»: tiene el mismo origen (albaranes), contabiliza con FV y su condición de selección tipdoc IN ('A{INI}','A{INI}2') ya admite el albarán A{INI}2."
           ],
           "campos": [],
           "pasos": [
@@ -1730,7 +1730,7 @@
         {
           "id": "ventas-2-factura",
           "titulo": "Factura: conformar y contabilizar",
-          "paraQueSirve": "Igual que en el bloque «Vender de albarán a factura»: la factura recoge el albarán pendiente y, al contabilizarla, registra la venta y el IVA y crea el vencimiento. Es el único asiento del circuito, porque ni la oferta, ni el pedido, ni este albarán contabilizan.",
+          "paraQueSirve": "Igual que en el bloque «Vender del albarán a la factura»: la factura recoge el albarán pendiente y, al contabilizarla, registra la venta y el IVA y crea el vencimiento. Es el único asiento del circuito, porque ni la oferta, ni el pedido, ni este albarán contabilizan.",
           "ruta": [
             "Gestión",
             "Ventas",
@@ -1738,13 +1738,13 @@
             "Facturas (objeto gvenfach)"
           ],
           "explicacion": [
-            "Los campos son los mismos que en el bloque «Vender de albarán a factura» (Factura de ventas: conformar y contabilizar): Tipo documento F{INI}, Cliente T{INI}, dirección 0 (si no se rellena sola, sal del campo Cliente con Tab).",
+            "Los campos son los mismos que en el bloque «Vender del albarán a la factura» (Factura de ventas: conformar y contabilizar): Tipo documento F{INI}, Cliente T{INI}, dirección 0 (si no se rellena sola, sal del campo Cliente con Tab).",
             "Lo habitual es que la tipología de factura solo muestre albaranes validados y pendientes de facturar: los albaranes ya facturados no vuelven a salir en la ventana de conformar."
           ],
           "campos": [
             {
               "campo": "Tipo documento *",
-              "significado": "Tipología de la factura (la misma F{INI} del bloque «Vender de albarán a factura»).",
+              "significado": "Tipología de la factura (la misma F{INI} del bloque «Vender del albarán a la factura»).",
               "ejemplo": "F{INI}"
             },
             {
@@ -1758,11 +1758,11 @@
               "texto": "Abre la ruta Gestión > Ventas > Facturas > Facturas, pulsa «Nuevo», elige F{INI} y el Cliente T{INI} y pulsa «Guardar» (en el ejemplo, factura 0FV000002)."
             },
             {
-              "texto": "Abre el desplegable (⌄) junto al título > «Albaranes de ventas a conformar», como en el bloque «Vender de albarán a factura»."
+              "texto": "Abre el desplegable (⌄) junto al título > «Albaranes de ventas a conformar», como en el bloque «Vender del albarán a la factura»."
             },
             {
               "texto": "Marca tu albarán A{INI}2, pulsa «Conformar» y «Aceptar».",
-              "detalle": "Sale el albarán del bloque «Vender de la oferta a la factura» y ya no el del bloque «Vender de albarán a factura», que está facturado.",
+              "detalle": "Sale el albarán del bloque «Vender de la oferta a la factura» y ya no el del bloque «Vender del albarán a la factura», que está facturado.",
               "imagen": "ventas-d-187.webp",
               "hotspot": {
                 "x": 83.3,
@@ -1805,7 +1805,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "La relación de cliente 43000.00000 ya se añadió en el bloque «Vender de albarán a factura», la empresa 0 y el ejercicio 2026 ya existen en TUTORIAL, y el asiento cuadra porque la cuenta del tercero es la 43000.00000."
+              "texto": "La relación de cliente 43000.00000 ya se añadió en el bloque «Vender del albarán a la factura», la empresa 0 y el ejercicio 2026 ya existen en TUTORIAL, y el asiento cuadra porque la cuenta del tercero es la 43000.00000."
             },
             {
               "tipo": "solucion",
@@ -1886,7 +1886,7 @@
         "El pedido trae la línea de la oferta copiada (5 × 22,00 = 110,00) y está validado.",
         "Tu albarán A{INI}2 tiene como Origen tu pedido y su línea muestra importe neto 110,00 (no 2,50).",
         "El albarán A{INI}2 está validado y no muestra el botón Contabilizar.",
-        "En la ventana de conformar sale tu albarán A{INI}2 y ya no el del bloque «Vender de albarán a factura».",
+        "En la ventana de conformar sale tu albarán A{INI}2 y ya no el del bloque «Vender del albarán a la factura».",
         "El asiento de la factura tiene 43000.00000 Debe 133,10, 47000.00000 IVA 23,10 y 70000.00000 Ventas 110,00, con cuadre 0,00.",
         "En la lista de pedidos, tu pedido está en situación «Servido o Facturado»."
       ],

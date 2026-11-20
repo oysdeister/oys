@@ -30,8 +30,8 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { titulo: 'El plan de cuentas', que: 'Creas una cuenta de gasto y la retocas.', bloques: ['parametrizacion-1', 'parametrizacion-2'] },
     { titulo: 'Auxiliares y analítica', que: 'Creas un grupo auxiliar y lo asignas a la cuenta; después un proyecto y una sección para repartir gastos.', bloques: ['parametrizacion-3', 'parametrizacion-4', 'parametrizacion-5', 'parametrizacion-6'] },
     { titulo: 'Escribir un asiento manual', que: 'Abres los asientos, escribes uno y compruebas que cuadra.', bloques: ['asientos-1', 'asientos-2', 'asientos-3', 'asientos-4', 'asientos-5'] },
-    { titulo: 'Contabilizar y copiar', que: 'Lo pasas a definitivo, lo duplicas y corriges importes.', bloques: ['asientos-6', 'asientos-11', 'asientos-12', 'asientos-13'] },
-    { titulo: 'Consultar', que: 'Ves el asiento en los listados, el extracto y las sumas y saldos.', bloques: ['asientos-7', 'asientos-8', 'asientos-9', 'asientos-10'] },
+    { titulo: 'Contabilizar, copiar y corregir', que: 'Lo pasas a definitivo, lo duplicas, programas copias y corriges importes.', bloques: ['asientos-6', 'asientos-11', 'asientos-12', 'asientos-13'] },
+    { titulo: 'Consultar', que: 'Revisas los descuadres y ves tus asientos y sus copias en los listados, el extracto y las sumas y saldos.', bloques: ['asientos-7', 'asientos-8', 'asientos-9', 'asientos-10'] },
     { titulo: 'Facturas que generan asientos', que: 'Contabilizas facturas, haces facturas directas y corriges errores.', bloques: ['icon-contabilidad-v-1', 'icon-contabilidad-v-2', 'icon-contabilidad-v-3', 'icon-contabilidad-v-4'] },
     { titulo: 'Cerrar el año', que: 'Cierre, apertura, balances y consolidación.', bloques: ['icon-contabilidad-2', 'icon-contabilidad-3'] },
     { titulo: 'Para saber más', que: 'Finanzas sola o junto a compras y ventas, y el asiento que genera un movimiento de banco (se trabaja a fondo en Tesorería).', bloques: ['parametrizacion-icon-2', 'asientos-14'], opcional: true },
@@ -40,7 +40,7 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { titulo: 'Preparar', que: 'Plazos, tipos de efecto y bancos propios.', bloques: ['carteras-1', 'carteras-3'] },
     { titulo: 'Ver la cartera', que: 'De la factura al efecto, y qué estados puede tener.', bloques: ['icon-cartera-v-1', 'icon-cartera-1'] },
     { titulo: 'Cobrar y pagar efectos', que: 'Cobras, pagas en efectivo y pagas con una gestión.', bloques: ['carteras-5', 'icon-cartera-v-2', 'icon-cartera-v-3', 'icon-cartera-2'] },
-    { titulo: 'Remesas', que: 'Agrupas efectos en una remesa y la llevas al banco.', bloques: ['icon-cartera-v-4', 'icon-cartera-v-5', 'icon-cartera-v-7', 'icon-cartera-v-6', 'carteras-7'] },
+    { titulo: 'Remesas', que: 'Agrupas efectos en una remesa y la llevas al banco.', bloques: ['icon-cartera-v-4', 'icon-cartera-v-5', 'icon-cartera-v-7', 'carteras-7', 'icon-cartera-v-6'] },
     { titulo: 'Para saber más', que: 'Anticipos, reclasificaciones y cuadre a una fecha pasada.', bloques: ['icon-cartera-3'], opcional: true },
   ],
   tesoreria: [
@@ -52,12 +52,12 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
   'icon-impuestos': [
     { titulo: 'Entender el IVA', que: 'Qué calcula el ERP y por qué, sin códigos.', bloques: ['icon-impuestos-conceptos'] },
     { titulo: 'Cómo decide el ERP el impuesto', que: 'Maestros fiscales, datos de empresa, tercero y artículo, y la regla que los junta.', bloques: ['icon-impuestos-1', 'icon-impuestos-v-1', 'icon-impuestos-v-2', 'icon-impuestos-v-3'] },
-    { titulo: 'Declarar', que: 'Registro fiscal, liquidación y control antes de presentar.', bloques: ['icon-impuestos-2', 'icon-impuestos-3', 'icon-impuestos-4'] },
+    { titulo: 'Declarar', que: 'Registro fiscal, control antes de presentar y liquidación.', bloques: ['icon-impuestos-2', 'icon-impuestos-4', 'icon-impuestos-3'] },
   ],
   'icon-activos': [
     { titulo: 'Entender el activo fijo', que: 'Qué es y cómo se amortiza, sin abrir el ERP.', bloques: ['icon-activos-conceptos'] },
     { titulo: 'Del bien al componente', que: 'Cómo guarda el ERP un activo.', bloques: ['icon-activos-1'] },
-    { titulo: 'Cómo nace un activo desde una factura', que: 'Lo que hay que preparar para que la factura cree el activo.', bloques: ['icon-activos-v-4', 'icon-activos-v-2', 'icon-activos-v-1', 'icon-activos-v-3'] },
+    { titulo: 'Cómo nace un activo desde una factura', que: 'Lo que hay que preparar para que la factura cree el activo.', bloques: ['icon-activos-v-4', 'icon-activos-v-1', 'icon-activos-v-2', 'icon-activos-v-3'] },
     { titulo: 'Amortizar y dar de baja', que: 'La vida del activo hasta que sale de la empresa.', bloques: ['icon-activos-2', 'icon-activos-3'] },
   ],
 };
