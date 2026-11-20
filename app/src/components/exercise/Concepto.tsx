@@ -4,12 +4,13 @@ import { conIni } from '../../lib/texto';
 import { SeccionVista } from './SeccionVista';
 import { parrafos } from './util';
 import { momentosDeSeccion } from '../../content/videoSeries';
-import { Momentos } from './VideoMomento';
+import { VideoPrimero } from './VideoPrimero';
 
 /**
  * Paso 1 del bloque: lectura de arriba abajo, como una página de documentación.
  * Introducción sin título y un único nivel de títulos (h2), uno por parte del bloque.
  * El primer aviso de «Ojo» del bloque es el único destacado; el resto va como texto.
+ * Cada parte con vídeo empieza por él: vídeo → texto → pantallas clicables.
  */
 export function Concepto({ ej, ini, modulo }: { ej: Ejercicio; ini: string; modulo: string }) {
   const t = (x: string) => conIni(x, ini);
@@ -25,8 +26,8 @@ export function Concepto({ ej, ini, modulo }: { ej: Ejercicio; ini: string; modu
       {ej.secciones.map((s, i) => (
         <section key={s.id} id={`sec-${s.id}`} className="doc-sec">
           <h2>{t(s.titulo)}</h2>
+          <VideoPrimero lista={momentosDeSeccion(s.id)} />
           <SeccionVista s={s} ini={ini} modulo={modulo} destacar={i === primerAviso} />
-          <Momentos lista={momentosDeSeccion(s.id).slice(0, 1)} />
         </section>
       ))}
     </article>

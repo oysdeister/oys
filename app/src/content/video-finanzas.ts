@@ -3143,6 +3143,172 @@ export const MOMENTOS_SECCION_FIN: Record<string, MomentoVideo[]> = {
       "titulo": "El código tras el punto",
       "serie": "fin-maestros"
     }
+  ],
+  "parametrizacion-icon-1-vision-general": [
+    {
+      "capitulo": 1,
+      "t": 30,
+      "tCap": 0,
+      "titulo": "El menú Finanzas y sus áreas",
+      "serie": "fin-maestros"
+    },
+    {
+      "capitulo": 1,
+      "t": 99,
+      "tCap": 99,
+      "titulo": "Contabilizar genera asiento, cartera y registro fiscal",
+      "serie": "fin-icon11"
+    }
+  ],
+  "parametrizacion-icon-1-decisiones-previas": [
+    {
+      "capitulo": 2,
+      "t": 183,
+      "tCap": 35,
+      "titulo": "Parametrizar los maestros antes de facturar",
+      "serie": "fin-icon1"
+    }
+  ],
+  "parametrizacion-icon-1-orden-carga": [
+    {
+      "capitulo": 1,
+      "t": 92,
+      "tCap": 62,
+      "titulo": "La pantalla de planes contables",
+      "serie": "fin-maestros"
+    },
+    {
+      "capitulo": 4,
+      "t": 876,
+      "tCap": 156,
+      "titulo": "Cada empresa apunta a un tercero",
+      "serie": "fin-maestros"
+    }
+  ],
+  "parametrizacion-1-cuenta": [
+    {
+      "capitulo": 2,
+      "t": 209,
+      "tCap": 0,
+      "titulo": "Dónde se crean las cuentas contables",
+      "serie": "fin-maestros"
+    },
+    {
+      "capitulo": 2,
+      "t": 368,
+      "tCap": 159,
+      "titulo": "Debe/haber, terceros y costes de la cuenta",
+      "serie": "fin-maestros"
+    }
+  ],
+  "parametrizacion-icon-2-escenario-solo": [
+    {
+      "capitulo": 1,
+      "t": 17,
+      "tCap": 17,
+      "titulo": "Finanzas sola o con Gestión",
+      "serie": "fin-icon1"
+    },
+    {
+      "capitulo": 3,
+      "t": 604,
+      "tCap": 0,
+      "titulo": "Facturas directas desde Finanzas",
+      "serie": "fin-icon1"
+    }
+  ],
+  "asientos-1-diario": [
+    {
+      "capitulo": 3,
+      "t": 276,
+      "tCap": 26,
+      "titulo": "La lista de diarios",
+      "serie": "tut-contabilidad"
+    }
+  ],
+  "asientos-6-vigencia": [
+    {
+      "capitulo": 4,
+      "t": 790,
+      "tCap": 70,
+      "titulo": "Fecha de inicio de la empresa",
+      "serie": "fin-maestros"
+    },
+    {
+      "capitulo": 2,
+      "t": 367,
+      "tCap": 219,
+      "titulo": "Crear el ejercicio contable 2026",
+      "serie": "fin-icon1"
+    }
+  ],
+  "icon-contabilidad-1-diario": [
+    {
+      "capitulo": 3,
+      "t": 254,
+      "tCap": 4,
+      "titulo": "Diario, ejercicio y periodos",
+      "serie": "tut-contabilidad"
+    },
+    {
+      "capitulo": 3,
+      "t": 276,
+      "tCap": 26,
+      "titulo": "La lista de diarios",
+      "serie": "tut-contabilidad"
+    }
+  ],
+  "icon-contabilidad-1-configuracion": [
+    {
+      "capitulo": 6,
+      "t": 885,
+      "tCap": 0,
+      "titulo": "El ejercicio 2026 de la empresa",
+      "serie": "fin-icon11"
+    },
+    {
+      "capitulo": 3,
+      "t": 296,
+      "tCap": 46,
+      "titulo": "Los 12 periodos y su estado",
+      "serie": "tut-contabilidad"
+    }
+  ],
+  "icon-contabilidad-2-procesos-periodicos-orden": [
+    {
+      "capitulo": 5,
+      "t": 464,
+      "tCap": 4,
+      "titulo": "Cerrar el año: regularizar, cerrar y abrir",
+      "serie": "tut-contabilidad"
+    }
+  ],
+  "icon-contabilidad-2-regularizacion-cierre-temporal": [
+    {
+      "capitulo": 5,
+      "t": 490,
+      "tCap": 30,
+      "titulo": "Regularización y cierre temporal",
+      "serie": "tut-contabilidad"
+    }
+  ],
+  "icon-contabilidad-2-cierre-definitivo-resto": [
+    {
+      "capitulo": 5,
+      "t": 512,
+      "tCap": 52,
+      "titulo": "Cierre definitivo y reapertura",
+      "serie": "tut-contabilidad"
+    }
+  ],
+  "icon-contabilidad-3-balances": [
+    {
+      "capitulo": 5,
+      "t": 538,
+      "tCap": 78,
+      "titulo": "El estado de situación financiera",
+      "serie": "tut-contabilidad"
+    }
   ]
 };
 

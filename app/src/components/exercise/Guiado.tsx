@@ -11,6 +11,17 @@ import { dentro, pasosPlanos, useMedia } from './util';
 
 type Fase = 'jugando' | 'acierto';
 
+/** Saca la ruta «A › B › C» que cite el texto de un paso (null si no cita ninguna) */
+function rutaDeTexto(texto: string): string[] | null {
+  const partes = texto.split('›');
+  if (partes.length < 2) return null;
+  const ini = partes[0].match(/([A-ZÁÉÍÓÚÑ][\p{L}\d]*)\s*$/u);
+  if (!ini) return null;
+  const ult = partes[partes.length - 1].split(/\s*(?:[,;:()«»]|\.(?=\s+[A-ZÁÉÍÓÚÑ]|\s*$)|\s(?:y|o|para|hasta)\s)/)[0];
+  const ruta = [ini[1], ...partes.slice(1, -1), ult].map((x) => x.trim()).filter((x) => x && x !== '…');
+  return ruta.length >= 2 ? ruta : null;
+}
+
 /**
  * Paso «Guiado» en plano: un contador, la instrucción una vez, la captura a todo el ancho.
  * Mientras dura, el único botón para avanzar es el de dentro («Continuar»); al acabar avisa con onListo
@@ -43,19 +54,23 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
   const h = actual?.paso.hotspot;
   const img = actual?.paso.imagen;
   const conClic = !!(h && img);
-  // Paso sin captura propia: se enseña la pantalla de su parte (la anterior con captura; si no, la siguiente)
-  const imgRef = useMemo(() => {
+  // Paso sin captura propia: solo se reutiliza una captura de SU MISMA parte (la anterior; si no, la siguiente,
+  // que es la pantalla a la que llega). Nunca la de otra parte: enseñaría una pantalla que no describe el paso.
+  const ref = useMemo(() => {
     if (!actual || img) return undefined;
-    const conImg = (x: (typeof pasos)[number]) => !!x.paso.imagen;
-    const antes = pasos.slice(0, i).reverse();
-    const despues = pasos.slice(i + 1);
-    return (
-      antes.find((x) => x.secIdx === actual.secIdx && conImg(x)) ??
-      despues.find((x) => x.secIdx === actual.secIdx && conImg(x)) ??
-      antes.find(conImg) ??
-      despues.find(conImg)
-    )?.paso.imagen;
+    const deSuParte = (x: (typeof pasos)[number]) => x.secIdx === actual.secIdx && !!x.paso.imagen;
+    const previa = pasos.slice(0, i).reverse().find(deSuParte);
+    if (previa) return { imagen: previa.paso.imagen!, siguiente: false };
+    const sig = pasos.slice(i + 1).find(deSuParte);
+    return sig ? { imagen: sig.paso.imagen!, siguiente: true } : undefined;
   }, [actual, img, pasos, i]);
+  const imgRef = ref?.imagen;
+  // Sin captura en su parte: la ruta de menú de la parte o, si no hay, la que cite el texto («A › B › C»)
+  const rutaPaso = useMemo(() => {
+    if (!actual) return null;
+    if (actual.seccion.ruta && actual.seccion.ruta.length) return actual.seccion.ruta;
+    return rutaDeTexto(actual.paso.texto);
+  }, [actual]);
   const hecho = actual ? hechos.includes(actual.idx) : false;
 
   // En móvil la captura va ampliada con desplazamiento lateral: céntrala en el punto
@@ -207,11 +222,23 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
         </div>
       ) : imgRef ? (
         <div className="pl-shot pl-shot-ref" key={i}>
-          <p className="pl-ref">Pantalla de esta parte. En este paso no hay que pulsar en ella: lee la instrucción y pulsa «Continuar».</p>
+          <p className="pl-ref">
+            {ref?.siguiente
+              ? 'Esta es la pantalla a la que llegas con este paso. Aquí no hay que pulsar: lee la instrucción y pulsa «Continuar».'
+              : 'Pantalla de esta parte. En este paso no hay que pulsar en ella: lee la instrucción y pulsa «Continuar».'}
+          </p>
           <Captura src={imgSrc(modulo, imgRef)} alt={`Captura del ERP: ${t(actual.seccion.titulo)}`} clicable={false} ampliable />
         </div>
       ) : (
-        !actual.paso.detalle && actual.seccion.ruta && actual.seccion.ruta.length > 0 && <RutaMenu ruta={actual.seccion.ruta.map(t)} />
+        <div className="pl-sin" key={i}>
+          <p className="pl-ref">Este paso se hace sin pantalla de ejemplo: hazlo en el ERP siguiendo la instrucción y pulsa «Continuar».</p>
+          {rutaPaso && rutaPaso.length > 0 && (
+            <>
+              <p className="pl-sin-t">Ruta de menú</p>
+              <RutaMenu ruta={rutaPaso.map(t)} />
+            </>
+          )}
+        </div>
       )}
 
       <p className="pl-fb" aria-live="polite">

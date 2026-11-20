@@ -258,7 +258,17 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
   );
 }
 
-/** Botón «Míralo en el vídeo · cap. N, mm:ss — título» que abre el momento en la ventana modal. */
+/**
+ * Dónde está el momento: «Vídeo «Compras» · cap. 3, 04:12» o, si es un trozo de una grabación
+ * original, el minuto de la sesión para buscarlo a mano («Vídeo «Sesión 1» · 1:02:33»).
+ */
+export function dondeMomento(m: MomentoVideo) {
+  const sv = m.serie ? serieDe(m.serie) : null;
+  if (sv?.original) return `Vídeo «${sv.corto}» · ${mmss(m.t)}`;
+  return `${sv ? `Vídeo «${sv.corto}»` : 'Vídeo de Compras'} · cap. ${m.capitulo}, ${mmss(m.tCap)}`;
+}
+
+/** Botón «Ver el vídeo · cap. N, mm:ss — título» que abre el momento en la ventana modal. */
 export function BotonMomento({ m, className }: { m: MomentoVideo; className?: string }) {
   const [abierto, setAbierto] = useState(false);
   return (
@@ -268,11 +278,9 @@ export function BotonMomento({ m, className }: { m: MomentoVideo; className?: st
           <Icon name="play" />
         </span>
         <span className="vm-boton-txt">
-          <strong>Ver en el vídeo</strong>
+          <strong>Ver el vídeo</strong>
           <span>
-            {m.serie && serieDe(m.serie).original
-              ? `Vídeo «${serieDe(m.serie).corto}» · ${mmss(m.t)} — ${m.titulo}`
-              : `${m.serie ? `Vídeo «${serieDe(m.serie).corto}»` : 'Vídeo de Compras'} · cap. ${m.capitulo}, ${mmss(m.tCap)} — ${m.titulo}`}
+            {dondeMomento(m)} — {m.titulo}
           </span>
         </span>
       </button>

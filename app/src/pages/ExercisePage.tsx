@@ -13,7 +13,7 @@ import { TestEj } from '../components/exercise/TestEj';
 import { DemoReal } from '../components/exercise/DemoReal';
 import { Practicar } from '../erp/Practicar';
 import { PRACTICAS_POR_EJERCICIO } from '../erp/practicas';
-import { bloqueAbierto, bloqueQueToca, bloquesObligatorios, esOpcional, numeroBloque, pasosDe, type PasoId } from '../lib/ruta';
+import { bloqueAbierto, bloqueQueToca, bloquesDe, bloquesObligatorios, esOpcional, numeroBloque, pasosDe, type PasoId } from '../lib/ruta';
 import { MODULOS } from '../content';
 import { ejercicioCompletado } from '../lib/progress';
 import './aprender.css';
@@ -60,11 +60,13 @@ export default function ExercisePage() {
   const k = pasos.findIndex((x) => x.id === tab);
   const practicasEj = PRACTICAS_POR_EJERCICIO[ej.id] ?? [];
 
-  // Lo siguiente: el próximo bloque obligatorio del módulo; si no queda, el examen del módulo
-  const k0 = obligatorios.findIndex((b) => b.id === ej.id);
-  const sigBloque = k0 >= 0 ? obligatorios[k0 + 1] : undefined;
+  // Lo siguiente: el próximo bloque obligatorio del módulo; si no queda, el examen del módulo.
+  // En «Para saber más» se encadenan los bloques de ampliación entre sí (el último vuelve al módulo).
+  const cadena = opcional ? bloquesDe(modulo).filter((b) => esOpcional(modulo, b.id)) : obligatorios;
+  const k0 = cadena.findIndex((b) => b.id === ej.id);
+  const sigBloque = k0 >= 0 ? cadena[k0 + 1] : undefined;
   const sigAbierto = sigBloque ? bloqueAbierto(p, modulo, sigBloque.id) : false;
-  const antBloque = k0 > 0 ? obligatorios[k0 - 1] : undefined;
+  const antBloque = k0 > 0 ? cadena[k0 - 1] : undefined;
   const idxMod = MODULOS.findIndex((m) => m.id === modulo.id);
   const sigMod = MODULOS[idxMod + 1];
 
