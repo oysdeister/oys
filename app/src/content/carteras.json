@@ -48,12 +48,12 @@
    "paraQueSirve": "Aprender a abrir pantallas, dar de alta registros y rellenar campos con autocompletar.",
    "ruta": null,
    "explicacion": [
-    "La ruta de la pantalla (/ctipopag, /cbancpro…) no se escribe en la barra de direcciones. Se usa el menú lateral (botón ☰ arriba a la izquierda, Finanzas › …) o el buscador superior «Buscar» (Cmd/Ctrl + K), escribiendo el nombre de la pantalla.",
+    "La ruta de la pantalla no se escribe en la barra de direcciones. Se usa el menú lateral (botón ☰ arriba a la izquierda, Finanzas › …) o el buscador superior «Buscar» (Cmd/Ctrl + K), escribiendo el nombre de la pantalla.",
     "Las listas tienen un botón rojo arriba a la derecha («Añadir …» o «Nuevo») que abre el alta en una ventana; se guarda con «Guardar» abajo a la derecha. En las fichas, «Nuevo» ofrece «Nuevo registro» (en blanco) o «Nuevo como» (copia del registro que se está viendo).",
     "Los campos con lista (tercero, cuenta, plazo…) son de autocompletar: se escribe el código, se espera a que salga la lista y se elige la fila. Si después no aparece la descripción debajo del campo, se sale del campo con Tab: muchos valores relacionados (dirección, plazo, cuenta) se rellenan al salir.",
     "Las pestañas del registro están arriba, en horizontal, y los botones de acción (Validar, Contabilizar, Evolucionar estado…) en la barra superior. El desplegable (⌄) junto al título lleva a los documentos relacionados: asientos, cartera de efectos, registros fiscales.",
     "Los campos obligatorios llevan un asterisco rojo en la etiqueta y sin ellos no deja guardar (en las tablas de campos de este manual, el * también marca un campo obligatorio). Muchos campos tienen una longitud máxima: si te pasas, el campo se pone en rojo con «Demasiado largo» y el contador de caracteres (por ejemplo 4 / 3).",
-    "En los ejemplos, las iniciales del alumno se escriben {INI} (plazo {INI}1, tipo de efecto T{INI}, tercero T{INI} «Tercero Carteras», banco BBVA_{INI}…): sustitúyelas por tus iniciales."
+    "En los ejemplos, las iniciales del alumno se escriben {INI} (plazo V{INI}, tipo de efecto E{INI}, tercero CAR{INI} «Tercero Carteras», banco BBVA_{INI}…): sustitúyelas por tus iniciales."
    ],
    "campos": [],
    "pasos": [],
@@ -76,7 +76,7 @@
    "secciones": [
     {
      "id": "carteras-1-plazo",
-     "titulo": "Plazo de pago {INI}1",
+     "titulo": "Plazo de pago V{INI}",
      "paraQueSirve": "Define en cuántos vencimientos se divide una factura, a cuántos días o meses vence cada uno y qué porcentaje lleva cada uno. Se asigna al tercero y pasa a sus facturas; al contabilizarlas, el ERP crea un efecto por plazo.",
      "ruta": [
       "Finanzas",
@@ -86,13 +86,13 @@
       "Plazos de pago"
      ],
      "explicacion": [
-      "Objeto ctipopag. La pantalla se llama «Plazos de pago» y el campo de las facturas y del tercero se llama «Plazo pago». Su estructura es: tipo de cálculo, unidad de tiempo y cuatro plazos, cada uno con su porcentaje."
+      "La pantalla se llama «Plazos de pago» (en el buscador: ctipopag) y el campo de las facturas y del tercero se llama «Plazo pago». Su estructura es: tipo de cálculo, unidad de tiempo y cuatro plazos, cada uno con su porcentaje."
      ],
      "campos": [
       {
        "campo": "Plazo pago *",
        "significado": "Código del plazo. Es lo que se elige en el tercero y en las facturas.",
-       "ejemplo": "{INI}1"
+       "ejemplo": "V{INI}"
       },
       {
        "campo": "Descripción plazo *",
@@ -139,7 +139,7 @@
        }
       },
       {
-       "texto": "Escribe el Plazo pago {INI}1 y la descripción",
+       "texto": "Escribe el Plazo pago V{INI} y la descripción",
        "detalle": "Descripción de ejemplo: «3 plazos 40-20-40 en 120 días {INI}».",
        "imagen": "carteras-d-230.webp",
        "hotspot": {
@@ -175,7 +175,7 @@
       },
       {
        "texto": "Pulsa «Guardar»",
-       "detalle": "Sale «Éxito» y {INI}1 aparece en la lista de plazos.",
+       "detalle": "Sale «Éxito» y V{INI} aparece en la lista de plazos.",
        "imagen": "carteras-d-230.webp",
        "hotspot": {
         "x": 71.1,
@@ -195,7 +195,7 @@
     },
     {
      "id": "carteras-1-tipo-efecto",
-     "titulo": "Tipo de efecto T{INI} (transferencia de pago)",
+     "titulo": "Tipo de efecto E{INI} (transferencia de pago)",
      "paraQueSirve": "Instrumento con el que se cobra o paga: recibo, transferencia, cheque, pagaré… Decide estado inicial, si requiere cuenta bancaria, riesgo para el cliente y código fiscal declarado. Hay tipos de cobro y de pago con el mismo código.",
      "ruta": [
       "Finanzas",
@@ -205,7 +205,7 @@
       "Tipos"
      ],
      "explicacion": [
-      "Objeto ctipoefe. El estado inicial no se crea aquí: se elige de la lista de estados que ya existen (PE Pendiente). Los estados están en Finanzas › Cobros y Pagos › Maestros › Efectos › Estados (cefecest). «Domiciliación bancaria» indica si el efecto necesita una cuenta bancaria (IBAN): la del tercero, para cargarle un recibo, o la de la empresa."
+      "Pantalla «Tipos» de efecto (Maestros › Efectos › Tipos; en el buscador: ctipoefe). El estado inicial no se crea aquí: se elige de la lista de estados que ya existen (PE Pendiente). Los estados están en Finanzas › Cobros y Pagos › Maestros › Efectos › Estados. «Domiciliación bancaria» indica si el efecto necesita una cuenta bancaria (IBAN): la del tercero, para cargarle un recibo, o la de la empresa."
      ],
      "campos": [
       {
@@ -216,7 +216,7 @@
       {
        "campo": "Tipo efecto *",
        "significado": "Código del tipo. Máximo 3 caracteres.",
-       "ejemplo": "T{INI}"
+       "ejemplo": "CAR{INI}"
       },
       {
        "campo": "Descripción *",
@@ -273,7 +273,7 @@
        }
       },
       {
-       "texto": "Elige Clase «Pagar», escribe el tipo T{INI} y la descripción, y elige Estado inicial PE",
+       "texto": "Elige Clase «Pagar», escribe el tipo E{INI} y la descripción, y elige Estado inicial PE",
        "detalle": "Para el estado, escribe PE y elige la fila.",
        "imagen": "carteras-d-235.webp",
        "hotspot": {
@@ -321,7 +321,7 @@
       },
       {
        "texto": "Fíjate (solo lectura) en el límite de longitud del código",
-       "detalle": "La captura muestra qué pasa con un código de 4 caracteres (TFCA): el campo Tipo efecto se pone en rojo con «Demasiado largo» y el contador 4 / 3. Por eso tu código es T{INI}, de 3 caracteres.",
+       "detalle": "La captura muestra qué pasa con un código de 4 caracteres (TFCA): el campo Tipo efecto se pone en rojo con «Demasiado largo» y el contador 4 / 3. Por eso tu código es E{INI}, de 3 caracteres.",
        "imagen": "carteras-d-239.webp",
        "hotspot": {
         "x": 26.2,
@@ -335,18 +335,18 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "Con un código de cuatro caracteres como TF{INI} el campo se pone en rojo con «Demasiado largo 4 / 3»."
+       "texto": "Con un código de cuatro caracteres como TR{INI} el campo se pone en rojo con «Demasiado largo 4 / 3»."
       },
       {
        "tipo": "solucion",
-       "texto": "Usa un código de 3 caracteres, por ejemplo T{INI} (T de transferencia + tus iniciales)."
+       "texto": "Usa un código de 3 caracteres, por ejemplo E{INI} (E de efecto + tus iniciales)."
       }
      ]
     },
     {
      "id": "carteras-1-tercero",
-     "titulo": "Tercero T{INI} y sus condiciones de pago y cobro",
-     "paraQueSirve": "Ficha única de la empresa con la que se trabaja. Sus condiciones de pago y cobro indican tipo de efecto y plazo; las facturas las copian. Para contabilizar hacen falta sus relaciones contables (400 proveedor, 430 cliente) y una dirección.",
+     "titulo": "Tercero CAR{INI} y sus condiciones de pago y cobro",
+     "paraQueSirve": "Ficha única de la empresa con la que se trabaja. Sus condiciones de pago y cobro indican tipo de efecto y plazo; las facturas las copian. Para contabilizar hacen falta sus relaciones contables (400 proveedor, 430 cliente) y una dirección. CAR{INI} es un tercero nuevo, solo para cartera: no es el proveedor T{INI} de Compras, que no tocas.",
      "ruta": [
       "Finanzas",
       "Maestros",
@@ -354,13 +354,13 @@
       "Registro de terceros"
      ],
      "explicacion": [
-      "Objeto ctercero. Hay dos pestañas separadas, «Condiciones de pago» y «Condiciones de cobro». En la de cobro el estado del efecto es obligatorio; en la de pago se toma el estado inicial del tipo de efecto."
+      "Pantalla «Registro de terceros» (en el buscador: ctercero). Hay dos pestañas separadas, «Condiciones de pago» y «Condiciones de cobro». En la de cobro el estado del efecto es obligatorio; en la de pago se toma el estado inicial del tipo de efecto."
      ],
      "campos": [
       {
        "campo": "Tercero / Nombre / Nombre comercial *",
        "significado": "Código y razón social.",
-       "ejemplo": "T{INI} / Tercero Carteras"
+       "ejemplo": "CAR{INI} / Tercero Carteras"
       },
       {
        "campo": "País emisor / Tipo ID fiscal / Id. fiscal *",
@@ -385,7 +385,7 @@
       {
        "campo": "Condiciones de pago › Tipo efecto / Plazo pago *",
        "significado": "Cómo y cuándo se le paga como proveedor.",
-       "ejemplo": "T{INI} / {INI}1"
+       "ejemplo": "E{INI} / V{INI}"
       },
       {
        "campo": "Condiciones de cobro › Tipo efecto / Estado efecto / Plazo pago *",
@@ -395,8 +395,8 @@
      ],
      "pasos": [
       {
-       "texto": "Abre la lista de terceros, pulsa «Añadir tercero» y rellena T{INI}, «Tercero Carteras», ES, No censado, 0 y categoría 002",
-       "detalle": "En Categoría escribe 002 y elige «Proveedores». Tipo ID fiscal «No censado» se usa cuando no hay un NIF real y permite poner 0 en Id. fiscal. Después pulsa «Guardar»: el tercero nace en estado Provisional. El aviso naranja «Cif already exists!» es solo informativo: otro tercero también tiene Id. fiscal 0.",
+       "texto": "Abre la lista de terceros, pulsa «Añadir tercero» y rellena CAR{INI}, «Tercero Carteras», ES, No censado, 0 y categoría 002",
+       "detalle": "En Categoría escribe 002 y elige «Proveedores». Tipo ID fiscal «No censado» se usa cuando no hay un NIF real y permite poner 0 en Id. fiscal. Después pulsa «Guardar»: el tercero nace en estado Provisional. El aviso naranja «Cif already exists!» es solo informativo: otro tercero también tiene Id. fiscal 0. Usa el código CAR{INI}, no T{INI}: T{INI} ya es tu proveedor de Compras y tiene otras condiciones.",
        "imagen": "carteras-d-240.webp",
        "hotspot": {
         "x": 9.7,
@@ -407,7 +407,7 @@
        }
       },
       {
-       "texto": "Abre la ficha (fila T{INI}) y, en la pestaña «Relaciones», añade Cliente / CLI / PGE 2008 / 43000.00000 y Proveedor / PRO / PGE 2008 / 40000.00000",
+       "texto": "Abre la ficha (fila CAR{INI}) y, en la pestaña «Relaciones», añade Cliente / CLI / PGE 2008 / 43000.00000 y Proveedor / PRO / PGE 2008 / 40000.00000",
        "detalle": "Pulsa «Añadir relacion» (o usa la fila en blanco de abajo) y rellena Tipo tercero, Tipo relación, Plan contable y Cuenta; repite para la segunda fila. PGE 2008 es el plan contable español (Plan General Contable) cargado en el ERP. «Cuenta repetida» es un aviso informativo: otros terceros usan la misma cuenta.",
        "imagen": "carteras-d-241.webp",
        "hotspot": {
@@ -431,7 +431,7 @@
        "detalle": "Pulsa «Añadir direccion»: tipo de dirección 0, código postal 08001 (rellena solo la provincia y la población) y dirección Carrer de Pelai 2. Guarda."
       },
       {
-       "texto": "En «Condiciones de pago» pulsa «Añadir pago», elige Tipo efecto T{INI} y Plazo pago {INI}1 y guarda",
+       "texto": "En «Condiciones de pago» pulsa «Añadir pago», elige Tipo efecto E{INI} y Plazo pago V{INI} y guarda",
        "detalle": "Es la condición que recuperarán las facturas de compra.",
        "imagen": "carteras-d-243.webp",
        "hotspot": {
@@ -480,7 +480,7 @@
       "Fact. de compra"
      ],
      "explicacion": [
-      "Objeto ccomfach. Los efectos se ven en la propia factura (pestaña «Vencimientos») y, una vez contabilizada, en el asiento (pestaña «Carteras») y en Finanzas › Cobros y Pagos › Cobros y Pagos (cefectos). La factura no tiene pestaña «Apuntes»: el asiento se abre desde el desplegable del título."
+      "Pantalla «Fact. de compra» de Finanzas (en el buscador: ccomfach). Los efectos se ven en la propia factura (pestaña «Vencimientos») y, una vez contabilizada, en el asiento (pestaña «Carteras») y en Finanzas › Cobros y Pagos › Cobros y Pagos. La factura no tiene pestaña «Apuntes»: el asiento se abre desde el desplegable del título."
      ],
      "campos": [
       {
@@ -496,12 +496,12 @@
       {
        "campo": "Proveedor / Tipo de dirección *",
        "significado": "Tercero que factura; trae nombre, Id. fiscal y dirección.",
-       "ejemplo": "T{INI} / 0"
+       "ejemplo": "CAR{INI} / 0"
       },
       {
        "campo": "Factura proveedor *",
        "significado": "Número de la factura del proveedor.",
-       "ejemplo": "PROV-{INI}-001"
+       "ejemplo": "CAR-{INI}-001"
       },
       {
        "campo": "Número factura",
@@ -511,7 +511,7 @@
       {
        "campo": "Datos financieros › Perceptor / Tipo efecto / Plazo pago *",
        "significado": "Se copian de las condiciones de pago del tercero.",
-       "ejemplo": "T{INI} / T{INI} / {INI}1"
+       "ejemplo": "CAR{INI} / E{INI} / V{INI}"
       },
       {
        "campo": "Importe factura *",
@@ -555,7 +555,7 @@
        }
       },
       {
-       "texto": "Elige el Proveedor T{INI} y escribe la Factura proveedor PROV-{INI}-001",
+       "texto": "Elige el Proveedor CAR{INI} y escribe la Factura proveedor CAR-{INI}-001",
        "detalle": "Al elegir el proveedor salen su nombre, Id. fiscal y dirección.",
        "imagen": "carteras-d-245.webp",
        "hotspot": {
@@ -567,8 +567,8 @@
        }
       },
       {
-       "texto": "Abre la pestaña «Datos financieros»: comprueba que salen T{INI} y el plazo {INI}1 sin haberlos escrito",
-       "detalle": "Perceptor T{INI}, tipo efecto T{INI} y plazo {INI}1 se recuperan de las condiciones del tercero.",
+       "texto": "Abre la pestaña «Datos financieros»: comprueba que salen el tipo de efecto E{INI} y el plazo V{INI} sin haberlos escrito",
+       "detalle": "Perceptor CAR{INI}, tipo efecto E{INI} y plazo V{INI} se recuperan de las condiciones del tercero.",
        "imagen": "carteras-d-247.webp",
        "hotspot": {
         "x": 9.9,
@@ -640,14 +640,14 @@
       },
       {
        "texto": "Fíjate en la cartera de efectos",
-       "detalle": "Los tres efectos de pago de T{INI} están en estado PE (Pendiente), con órdenes 1, 2 y 3 e importes 48,40, 24,20 y 48,40. La captura muestra la lista completa de la cartera (filas 14 a 16); en tu base los números de fila serán otros.",
+       "detalle": "Los tres efectos de pago de CAR{INI} están en estado PE (Pendiente), con órdenes 1, 2 y 3 e importes 48,40, 24,20 y 48,40. La captura muestra la lista completa de la cartera (filas 14 a 16); en tu base los números de fila serán otros.",
        "imagen": "carteras-d-251.webp",
        "hotspot": {
         "x": 0.5,
         "y": 45.4,
         "w": 99.0,
         "h": 8.0,
-        "etiqueta": "Efectos de T{INI}"
+        "etiqueta": "Efectos de CAR{INI}"
        }
       },
       {
@@ -693,7 +693,7 @@
    ],
    "test": [
     {
-     "pregunta": "¿Qué porcentajes y días tiene el plazo de pago {INI}1?",
+     "pregunta": "¿Qué porcentajes y días tiene el plazo de pago V{INI}?",
      "opciones": [
       "30/30/40 % a 30, 60 y 90 días",
       "40/20/40 % a 40, 80 y 120 días",
@@ -701,7 +701,7 @@
       "40/40/20 % a 40, 80 y 120 días"
      ],
      "correcta": 1,
-     "explicacion": "El plazo {INI}1 es Variable con plazos 40, 80 y 120 días y porcentajes 40, 20 y 40."
+     "explicacion": "El plazo V{INI} es Variable con plazos 40, 80 y 120 días y porcentajes 40, 20 y 40."
     },
     {
      "pregunta": "¿Cuántos caracteres admite como máximo el código del tipo de efecto?",
@@ -749,22 +749,22 @@
     }
    ],
    "checklist": [
-    "Existe el plazo de pago {INI}1, tipo Variable, en Días, con plazos 40 / 80 / 120 y porcentajes 40 / 20 / 40.",
-    "Existe el tipo de efecto T{INI}, clase Pagar, estado inicial PE Pendiente y domiciliación «No requiere».",
+    "Existe el plazo de pago V{INI}, tipo Variable, en Días, con plazos 40 / 80 / 120 y porcentajes 40 / 20 / 40.",
+    "Existe el tipo de efecto E{INI}, clase Pagar, estado inicial PE Pendiente y domiciliación «No requiere».",
     "El código del tipo de efecto tiene 3 caracteres y se guarda sin error.",
-    "Existe el tercero T{INI} «Tercero Carteras» con categoría 002 Proveedores.",
-    "T{INI} tiene las relaciones Cliente CLI 43000.00000 y Proveedor PRO 40000.00000 y la dirección 0 (08001).",
-    "T{INI} tiene condición de pago T{INI} + {INI}1 y condición de cobro RC + PE + 30D.",
-    "El tercero T{INI} está en estado Validado.",
-    "La factura de compra FC026-000001 (proveedor T{INI}, PROV-{INI}-001, importe 121,00) recupera T{INI} y {INI}1 en Datos financieros.",
+    "Existe el tercero CAR{INI} «Tercero Carteras» con categoría 002 Proveedores.",
+    "CAR{INI} tiene las relaciones Cliente CLI 43000.00000 y Proveedor PRO 40000.00000 y la dirección 0 (08001).",
+    "CAR{INI} tiene condición de pago E{INI} + V{INI} y condición de cobro RC + PE + 30D.",
+    "El tercero CAR{INI} está en estado Validado.",
+    "La factura de compra FC026-000001 (proveedor CAR{INI}, CAR-{INI}-001, importe 121,00) recupera E{INI} y V{INI} en Datos financieros.",
     "La línea de la factura usa el artículo S Servicios, precio 100 y centro de coste y cuenta de explotación 0.",
     "Tras Validar, la pestaña Vencimientos muestra tres vencimientos: 48,40 / 24,20 / 48,40.",
     "Tras Contabilizar, la cartera tiene tres efectos de pago PE y el asiento 10 cuadra (debe 121,00 = haber 121,00)."
    ],
    "problemas": [
     {
-     "problema": "El tipo de efecto con código de 4 caracteres (TF{INI}) se pone en rojo con «Demasiado largo 4 / 3».",
-     "solucion": "Usa un código de 3 caracteres, por ejemplo T{INI}."
+     "problema": "El tipo de efecto con código de 4 caracteres (TR{INI}) se pone en rojo con «Demasiado largo 4 / 3».",
+     "solucion": "Usa un código de 3 caracteres, por ejemplo E{INI}."
     },
     {
      "problema": "Al guardar la línea de la factura sale «Hay errores en los datos del formulario» porque Centro coste y Cuenta explotación son obligatorios con una cuenta de gasto o ingreso.",
@@ -795,7 +795,7 @@
       "Registro de terceros"
      ],
      "explicacion": [
-      "Objeto ctercero."
+      "Pantalla «Registro de terceros» (en el buscador: ctercero)."
      ],
      "campos": [
       {
@@ -822,7 +822,7 @@
      "pasos": [
       {
        "texto": "Abre Registro de terceros, pulsa «Añadir tercero» y rellena B{INI}, «BBVA Carteras {INI}», ES, No censado, 0 y la categoría 008; guarda",
-       "detalle": "Es el mismo formulario que usaste para T{INI} en el bloque «Definir plazos de pago y tipos de efecto» (captura). Cambian el código, el nombre y la categoría: en Categoría escribe 008 y elige «Entidades Financieras».",
+       "detalle": "Es el mismo formulario que usaste para CAR{INI} en el bloque «Definir plazos de pago y tipos de efecto» (captura). Cambian el código, el nombre y la categoría: en Categoría escribe 008 y elige «Entidades Financieras».",
        "imagen": "carteras-d-240.webp",
        "hotspot": {
         "x": 9.7,
@@ -834,7 +834,7 @@
       },
       {
        "texto": "En la ficha de B{INI}, pestaña «Direcciones», pulsa «Añadir direccion» y crea la dirección 0 (08001, Plaça de Catalunya 5); guarda y pulsa «Validar»",
-       "detalle": "La captura es la de T{INI}; la de B{INI} se rellena igual. Sin dirección no podrás elegir este tercero en el banco propio. «Validar» está en la barra superior.",
+       "detalle": "La captura es la de CAR{INI}; la de B{INI} se rellena igual. Sin dirección no podrás elegir este tercero en el banco propio. «Validar» está en la barra superior.",
        "imagen": "carteras-d-242.webp",
        "hotspot": {
         "x": 84.8,
@@ -871,7 +871,7 @@
       "Bancos propios"
      ],
      "explicacion": [
-      "Objeto cbancpro. Si se informa el banco hay que informar también el número de cuenta o IBAN, o ninguno de los dos. En el ejercicio no se escriben datos bancarios reales: el banco se deja vacío; en un caso real, la persona responsable introduce el IBAN de la empresa en esta pantalla.",
+      "Pantalla «Bancos propios» (en el buscador: cbancpro). Si se informa el banco hay que informar también el número de cuenta o IBAN, o ninguno de los dos. En el ejercicio no se escriben datos bancarios reales: el banco se deja vacío; en un caso real, la persona responsable introduce el IBAN de la empresa en esta pantalla.",
       "La ficha del banco tiene las pestañas Banco, Condiciones bancarias, Operaciones por cuenta, Comisiones, Numeradores, Remesas por cuenta y Líneas financieras. Los numeradores están en la pestaña «Numeradores»."
      ],
      "campos": [
@@ -923,7 +923,7 @@
       {
        "campo": "Agrupación cuentas *",
        "significado": "Grupo de tesorería para los informes. Se crea con «+» si no existe.",
-       "ejemplo": "{INI} Bancos y cajas {INI}"
+       "ejemplo": "AG{INI} (la de Maestros)"
       }
      ],
      "pasos": [
@@ -975,7 +975,7 @@
        }
       },
       {
-       "texto": "En Agrupación cuentas pulsa «+» y crea el grupo: Tipo Cuenta, Grupo tesorería {INI}, Descripción «Bancos y cajas {INI}»",
+       "texto": "En Agrupación cuentas elige AG{INI}, la agrupación que creaste en Maestros (bloque «Dar de alta los datos básicos de contabilidad», cuentas financieras). No crees otra",
        "imagen": "carteras-d-255.webp",
        "hotspot": {
         "x": 61.8,
@@ -1032,7 +1032,7 @@
       "Bancos propios"
      ],
      "explicacion": [
-      "Objeto cbancpro."
+      "Pantalla «Bancos propios» (en el buscador: cbancpro)."
      ],
      "campos": [
       {
@@ -1079,7 +1079,7 @@
        }
       },
       {
-       "texto": "Elige Tipo de cuenta «Caja de efectivo», entidad B{INI}, dirección 0, cuenta 57000.00000 y agrupación {INI}",
+       "texto": "Elige Tipo de cuenta «Caja de efectivo», entidad B{INI}, dirección 0, cuenta 57000.00000 y agrupación AG{INI}",
        "detalle": "La caja no lleva banco ni datos bancarios.",
        "imagen": "carteras-d-259.webp",
        "hotspot": {
@@ -1103,7 +1103,7 @@
       },
       {
        "texto": "Fíjate en la lista de bancos propios",
-       "detalle": "Salen BBVA_{INI} (57200) y CAJA_{INI} (57000) en la agrupación {INI}.",
+       "detalle": "Salen BBVA_{INI} (57200) y CAJA_{INI} (57000) en la agrupación AG{INI}.",
        "imagen": "carteras-d-261.webp",
        "hotspot": {
         "x": 0.5,
@@ -1188,10 +1188,10 @@
     "B{INI} tiene la dirección 0 (08001 Plaça de Catalunya 5) y está Validado.",
     "Existe el banco propio BBVA_{INI}, tipo de cuenta Cuenta corriente, con cuenta contable 57200.00000.",
     "BBVA_{INI} tiene Banco, número de cuenta e IBAN vacíos y se guarda sin error.",
-    "Existe la agrupación de cuentas {INI} «Bancos y cajas {INI}» y BBVA_{INI} la usa.",
-    "Existe la caja CAJA_{INI}, tipo Caja de efectivo, con cuenta 57000.00000 y agrupación {INI}.",
+    "BBVA_{INI} usa la agrupación AG{INI} que creaste en Maestros (no hay otra agrupación nueva).",
+    "Existe la caja CAJA_{INI}, tipo Caja de efectivo, con cuenta 57000.00000 y agrupación AG{INI}.",
     "El código CAJA_{INI} tiene como máximo 10 caracteres.",
-    "La lista de Bancos propios muestra BBVA_{INI} (57200) y CAJA_{INI} (57000) en la agrupación {INI}."
+    "La lista de Bancos propios muestra BBVA_{INI} (57200) y CAJA_{INI} (57000) en la agrupación AG{INI}."
    ],
    "problemas": [
     {
@@ -1261,7 +1261,7 @@
      "pasos": [
       {
        "texto": "Abre una factura de compras contabilizada: por ejemplo tu FC026-000001 del bloque «Definir plazos de pago y tipos de efecto»",
-       "detalle": "Ábrela desde Finanzas › Facturación › Compras › Fact. de compra y pulsa el número de su fila. Con la tuya verás tres efectos T{INI}/PE de 48,40, 24,20 y 48,40. En la captura del vídeo: tercero 00041886, justificante FFAR0015486 y documento F001-11902."
+       "detalle": "Ábrela desde Finanzas › Facturación › Compras › Fact. de compra y pulsa el número de su fila. Con la tuya verás tres efectos E{INI}/PE de 48,40, 24,20 y 48,40. En la captura del vídeo: tercero 00041886, justificante FFAR0015486 y documento F001-11902."
       },
       {
        "texto": "Revisa el bloque de datos financieros.",
@@ -1370,7 +1370,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "La tabla que consolida la cartera es cefectos."
+       "texto": "Todos los efectos, de todas las facturas, se ven juntos en Finanzas › Cobros y Pagos › Cobros y Pagos."
       },
       {
        "tipo": "nota",
@@ -1607,7 +1607,7 @@
      ],
      "explicacion": [
       "En Maestros › Efectos › Estados están los estados de la cartera de cobros y de pagos (PE Pendiente, PA Pagado, CO Cobrado, BQ Bloqueado…). Cada estado indica si la deuda está pendiente, liquidada o impagada y si el efecto se puede modificar.",
-      "En Maestros › Efectos › Tipos está cada medio de pago con sus reglas: el estado inicial con el que nace, si genera interés o comisión, si cuenta para el riesgo del cliente, la domiciliación bancaria, la fecha de operación para tesorería, los días post-pago y los días de decalaje. Es la misma pantalla en la que creaste T{INI} en el bloque «Definir plazos de pago y tipos de efecto»: sus campos están explicados allí, en la tabla del tipo de efecto."
+      "En Maestros › Efectos › Tipos está cada medio de pago con sus reglas: el estado inicial con el que nace, si genera interés o comisión, si cuenta para el riesgo del cliente, la domiciliación bancaria, la fecha de operación para tesorería, los días post-pago y los días de decalaje. Es la misma pantalla en la que creaste el tipo de efecto E{INI} en el bloque «Definir plazos de pago y tipos de efecto»: sus campos están explicados allí, en la tabla del tipo de efecto."
      ],
      "campos": [],
      "pasos": [
@@ -1648,19 +1648,19 @@
       "Relación de acciones"
      ],
      "explicacion": [
-      "Cada acción tiene un estado origen (desde dónde se puede aplicar), un estado final y, si genera contabilidad, un código de asiento (cefeacti.codast). Ese código apunta a un enlace contable (cefeplah): la plantilla que reparte los importes en cuentas.",
+      "Cada acción tiene un estado origen (desde dónde se puede aplicar), un estado final y, si genera contabilidad, un código de asiento. Ese código apunta a un enlace contable: la plantilla que reparte los importes en cuentas.",
       "Según la documentación, las líneas del asiento programable tienen Orden, Agrupar (No, Sí, Tercero, Único: si junta en un apunte los efectos del mismo tercero o de toda la gestión), Genera referencias, Proyecto y Sección, Cuenta contable, Posición (debe o haber), Signo y Tipo cuenta. En la ficha del enlace de la demo no se ve esa rejilla: el reparto lo hace la plantilla Excel.",
-      "La fórmula de importe dice qué importe del efecto va a cada línea: el importe (cefectos.import), los gastos, el IVA, la retención o combinaciones. La fórmula 0 no genera apunte contable: genera un movimiento de tesorería.",
+      "La fórmula de importe dice qué importe del efecto va a cada línea: el importe, los gastos, el IVA, la retención o combinaciones. La fórmula 0 no genera apunte contable: genera un movimiento de tesorería.",
       "Por dentro: la plantilla contable (cefeplah.codpla) es un libro Excel de hasta seis hojas, de capuntes10 a capuntes60. La hoja capuntes40 se reserva a los gastos bancarios y solo se evalúa si la gestión tiene gastos. El campo actlog decide qué se hace con ese libro: 0 genera el asiento sin guardar el libro; 1 genera el asiento y guarda el libro; 2 es modo prueba: guarda el libro y no genera asiento."
      ],
      "campos": [
       {
-       "campo": "Acción (cefeacti)",
+       "campo": "Acción (Relación de acciones)",
        "significado": "Paso permitido entre estados; si tiene código de asiento, genera contabilidad.",
        "ejemplo": "PEFE Pago directo en efectivo"
       },
       {
-       "campo": "Enlace contable (cefeplah)",
+       "campo": "Enlace contable",
        "significado": "Plantilla que reparte los importes de la acción en cuentas contables.",
        "ejemplo": ""
       },
@@ -1811,7 +1811,7 @@
    "numero": 5,
    "titulo": "Cobrar efectos sueltos y en remesa",
    "objetivo": "Cobrarás un efecto individual y varios con una remesa bancaria para completar el ciclo de cobro con sus asientos.",
-   "concepto": "El cobro de una factura de venta sigue un ciclo de estados del efecto: nace Pendiente (PE) y termina Cobrado (CO). Hay dos formas de cobrar. Una gestión sobre efectos es un documento que reúne uno o varios efectos y les aplica una acción, aquí COBD Cobro directo (por ejemplo, el cliente te paga por transferencia una factura suelta). Una remesa agrupa varios efectos de cobro para presentarlos juntos al banco (en una remesa de recibos, el banco los carga a los clientes; en una de transferencias, el banco controla las que llegan): recorre PE › PR (propuesto) › OC (ordenado, enviado al banco) › CO. En cada cambio de estado el ERP genera el asiento contable.\n\nEn este ejercicio montas el circuito completo: un artículo financiero, una factura de venta al tercero T{INI}, el cobro individual de su efecto y el cobro de dos efectos juntos mediante una remesa al banco BBVA_{INI}.",
+   "concepto": "El cobro de una factura de venta sigue un ciclo de estados del efecto: nace Pendiente (PE) y termina Cobrado (CO). Hay dos formas de cobrar. Una gestión sobre efectos es un documento que reúne uno o varios efectos y les aplica una acción, aquí COBD Cobro directo (por ejemplo, el cliente te paga por transferencia una factura suelta). Una remesa agrupa varios efectos de cobro para presentarlos juntos al banco (en una remesa de recibos, el banco los carga a los clientes; en una de transferencias, el banco controla las que llegan): recorre PE › PR (propuesto) › OC (ordenado, enviado al banco) › CO. En cada cambio de estado el ERP genera el asiento contable.\n\nEn este ejercicio montas el circuito completo: un artículo financiero, una factura de venta al tercero CAR{INI}, el cobro individual de su efecto y el cobro de dos efectos juntos mediante una remesa al banco BBVA_{INI}.",
    "duracionMin": 75,
    "secciones": [
     {
@@ -1826,7 +1826,7 @@
       "Estados"
      ],
      "explicacion": [
-      "Objetos cefecest (estados) y cefeacti (Maestros › Acciones › Relación de acciones). La Relación de acciones define el estado final, el asiento, la plantilla y si la acción es individual o de remesa. Para el ejercicio se usan las acciones existentes COBD y las de los tipos de remesa."
+      "Pantallas «Estados» (Maestros › Efectos › Estados) y «Relación de acciones» (Maestros › Acciones › Relación de acciones). La Relación de acciones define el estado final, el asiento, la plantilla y si la acción es individual o de remesa. Para el ejercicio se usan las acciones existentes COBD y las de los tipos de remesa."
      ],
      "campos": [],
      "pasos": [
@@ -1859,7 +1859,7 @@
     },
     {
      "id": "carteras-5-articulo",
-     "titulo": "Artículo financiero {INI}1",
+     "titulo": "Artículo financiero ASE{INI}",
      "paraQueSirve": "Conceptos que se facturan sin pasar por gestión: servicios, alquileres, suplidos… Deciden el tipo fiscal (IVA) y la cuenta de compras o ventas de la línea.",
      "ruta": [
       "Finanzas",
@@ -1868,13 +1868,13 @@
       "Artículos"
      ],
      "explicacion": [
-      "Objeto carticul. El tercero T{INI} ya tiene la relación de cliente CLI (43000) y la condición de cobro RC / PE / 30D que creaste en el bloque «Definir plazos de pago y tipos de efecto»."
+      "Pantalla «Artículos» de Finanzas (en el buscador: carticul). El tercero CAR{INI} ya tiene la relación de cliente CLI (43000) y la condición de cobro RC / PE / 30D que creaste en el bloque «Definir plazos de pago y tipos de efecto»."
      ],
      "campos": [
       {
        "campo": "Artículo / Descripción *",
        "significado": "Código y nombre.",
-       "ejemplo": "{INI}1 / Servicios de asesoría {INI}"
+       "ejemplo": "ASE{INI} / Servicios de asesoría {INI}"
       },
       {
        "campo": "Unidad medida / Estado *",
@@ -1907,7 +1907,7 @@
        "texto": "Abre la ruta y pulsa «Añadir artículo»"
       },
       {
-       "texto": "Rellena {INI}1, la descripción, Tipo fiscal «Servicio» y Clave fiscal SOG",
+       "texto": "Rellena ASE{INI}, la descripción, Tipo fiscal «Servicio» y Clave fiscal SOG",
        "imagen": "carteras-d-264.webp",
        "hotspot": {
         "x": 1.6,
@@ -1942,15 +1942,15 @@
        }
       },
       {
-       "texto": "Fíjate en la condición de cobro de T{INI} (ficha del tercero, pestaña «Condiciones de cobro»)",
-       "detalle": "Tipo de efecto RC Recibo, estado PE Pendiente y plazo 30 días: la factura de venta la copiará. La captura es la lista general de condiciones de cobro; la de tu tercero es la fila de T{INI} (en la captura, TCA).",
+       "texto": "Fíjate en la condición de cobro de CAR{INI} (ficha del tercero, pestaña «Condiciones de cobro»)",
+       "detalle": "Tipo de efecto RC Recibo, estado PE Pendiente y plazo 30 días: la factura de venta la copiará. La captura es la lista general de condiciones de cobro; la de tu tercero es la fila de CAR{INI} (en la captura, TCA).",
        "imagen": "carteras-d-267.webp",
        "hotspot": {
         "x": 0.5,
         "y": 21.4,
         "w": 99.0,
         "h": 3.0,
-        "etiqueta": "Condición de T{INI}"
+        "etiqueta": "Condición de CAR{INI}"
        }
       }
      ],
@@ -1967,7 +1967,7 @@
       "Factura de venta"
      ],
      "explicacion": [
-      "Objeto cvenfach. El número definitivo de la factura (FVN026-000001) se asigna al contabilizar; mientras está provisional la ficha se titula «#1». Tras contabilizar, los botones pasan a ser «Descontabilizar», «Copiar» y «eFactura».",
+      "Pantalla «Factura de venta» de Finanzas (en el buscador: cvenfach). El número definitivo de la factura (FVN026-000001) se asigna al contabilizar; mientras está provisional la ficha se titula «#1». Tras contabilizar, los botones pasan a ser «Descontabilizar», «Copiar» y «eFactura».",
       "El ejercicio usa una factura normal porque lo que interesa es el ciclo del efecto en cartera; el anticipo se gestiona con su propio circuito."
      ],
      "campos": [
@@ -1984,17 +1984,17 @@
       {
        "campo": "Cliente *",
        "significado": "Tercero; al salir del campo con Tab copia nombre, dirección y datos financieros.",
-       "ejemplo": "T{INI}"
+       "ejemplo": "CAR{INI}"
       },
       {
        "campo": "Perceptor / Tipo efecto / Plazo pago / Cuenta *",
        "significado": "Datos financieros copiados de la condición de cobro y de la relación CLI.",
-       "ejemplo": "T{INI} / RC / 30 días / 43000.00000"
+       "ejemplo": "CAR{INI} / RC / 30 días / 43000.00000"
       },
       {
        "campo": "Detalle › Artículo / Precio *",
        "significado": "Línea; el precio sale del artículo.",
-       "ejemplo": "{INI}1 / 200,00"
+       "ejemplo": "ASE{INI} / 200,00"
       },
       {
        "campo": "Detalle › Cuenta / Centro coste / Cuenta explotación *",
@@ -2010,7 +2010,7 @@
        "texto": "Elige FV, empresa 0, proyecto 0 y sección 0"
       },
       {
-       "texto": "Escribe T{INI} en Cliente, elige la fila y pulsa Tab",
+       "texto": "Escribe CAR{INI} en Cliente, elige la fila y pulsa Tab",
        "detalle": "Se rellenan dirección, RC, 30 días y la cuenta 43000.00000. Si eliges el cliente con Intro y no sales del campo, esos datos se quedan vacíos. En la captura la factura ya está contabilizada; en la tuya, recién creada, verás los mismos datos de cliente y de Datos financieros.",
        "imagen": "carteras-d-268.webp",
        "hotspot": {
@@ -2026,7 +2026,7 @@
        "detalle": "Mientras es provisional la ficha se titula «#» y un número (#1 en tu base, si es la primera); el número definitivo FVN026-… llega al contabilizar."
       },
       {
-       "texto": "En «Detalle» pulsa «Nuevo»: artículo {INI}1, cuenta 70500.00000, centro de coste 0 y cuenta de explotación 0. Guarda",
+       "texto": "En «Detalle» pulsa «Nuevo»: artículo ASE{INI}, cuenta 70500.00000, centro de coste 0 y cuenta de explotación 0. Guarda",
        "detalle": "La cuenta de la línea no se propone sola desde el mnemotécnico del artículo.",
        "imagen": "carteras-d-269.webp",
        "hotspot": {
@@ -2096,7 +2096,7 @@
       "Gestiones sobre efectos"
      ],
      "explicacion": [
-      "Objeto cefecges_pcs. Lo normal es agrupar los cobros y pagos en gestiones (o en remesas), que dejan rastro del proceso y del asiento generado. «Abrir» deshace una gestión cerrada."
+      "Pantalla «Gestiones sobre efectos» (en el buscador: cefecges_pcs). Lo normal es agrupar los cobros y pagos en gestiones (o en remesas), que dejan rastro del proceso y del asiento generado. «Abrir» deshace una gestión cerrada."
      ],
      "campos": [
       {
@@ -2127,13 +2127,13 @@
       {
        "campo": "Perceptor / Nombre *",
        "significado": "Tercero que paga; el nombre se rellena solo.",
-       "ejemplo": "T{INI} / Tercero Carteras"
+       "ejemplo": "CAR{INI} / Tercero Carteras"
       }
      ],
      "pasos": [
       {
        "texto": "Abre la ficha del efecto de cobro (Finanzas › Cobros y Pagos › Cobros y Pagos, fila de FVN026-000001) y fíjate en ella",
-       "detalle": "Efecto de T{INI}, cuenta 43000, tipo RC, estado PE, 242,00; arriba tiene los botones Evolucionar estado y Retroceder. No cobres desde aquí: mira el PROBLEMA de abajo. En la captura el efecto ya está en CO (cobrado); en tu caso estará PE pendiente.",
+       "detalle": "Efecto de CAR{INI}, cuenta 43000, tipo RC, estado PE, 242,00; arriba tiene los botones Evolucionar estado y Retroceder. No cobres desde aquí: mira el PROBLEMA de abajo. En la captura el efecto ya está en CO (cobrado); en tu caso estará PE pendiente.",
        "imagen": "carteras-d-272.webp",
        "hotspot": {
         "x": 16.2,
@@ -2156,7 +2156,7 @@
        }
       },
       {
-       "texto": "Abre la ruta y pulsa «Nuevo». Rellena empresa 0, clase Cobrar, acción COBD, cuenta financiera BBVA_{INI} y perceptor T{INI} (sal con Tab). Guarda",
+       "texto": "Abre la ruta y pulsa «Nuevo». Rellena empresa 0, clase Cobrar, acción COBD, cuenta financiera BBVA_{INI} y perceptor CAR{INI} (sal con Tab). Guarda",
        "imagen": "carteras-d-274.webp",
        "hotspot": {
         "x": 50.2,
@@ -2165,14 +2165,14 @@
         "h": 6.2,
         "etiqueta": "Acción"
        },
-       "detalle": "Clase Cobrar = cartera de cobros. En Acción escribe COBD y elige «Cobro directo»; Manual se queda en Sí. Perceptor es el tercero que paga (T{INI}): al salir con Tab se rellena su nombre. La fecha de proceso es la de hoy."
+       "detalle": "Clase Cobrar = cartera de cobros. En Acción escribe COBD y elige «Cobro directo»; Manual se queda en Sí. Perceptor es el tercero que paga (CAR{INI}): al salir con Tab se rellena su nombre. La fecha de proceso es la de hoy."
       },
       {
        "texto": "Abre la gestión que acabas de guardar y baja al bloque «Selección de efectos»",
        "detalle": "Salen todos los efectos de cobro pendientes. En las capturas la gestión es la 0-5 o la 0-9; la tuya tendrá su propio número."
       },
       {
-       "texto": "Marca solo el efecto de T{INI} (FVN026-000001, 242,00) y pulsa «Agregar efectos»",
+       "texto": "Marca solo el efecto de CAR{INI} (FVN026-000001, 242,00) y pulsa «Agregar efectos»",
        "imagen": "carteras-d-275.webp",
        "hotspot": {
         "x": 88.4,
@@ -2181,7 +2181,7 @@
         "h": 3.0,
         "etiqueta": "Agregar efectos"
        },
-       "detalle": "Marca la casilla de su fila. La captura es de otra gestión de prueba (cliente TCAPK); en la tuya busca T{INI}, FVN026-000001 y 242,00, y no marques efectos de otros terceros."
+       "detalle": "Marca la casilla de su fila. La captura es de otra gestión de prueba (cliente TCAPK); en la tuya busca CAR{INI}, FVN026-000001 y 242,00, y no marques efectos de otros terceros."
       },
       {
        "texto": "En «Efectos seleccionados» comprueba el efecto",
@@ -2245,19 +2245,19 @@
       "Líneas financieras / Remesas por cuenta"
      ],
      "explicacion": [
-      "Se trabaja desde las pestañas «Líneas financieras» y «Remesas por cuenta» de la ficha del banco BBVA_{INI}. Los tipos de remesa de efectos (cremesad) tienen cada uno su serie (RM), clase y acción inicial.",
+      "Se trabaja desde las pestañas «Líneas financieras» y «Remesas por cuenta» de la ficha del banco BBVA_{INI}. Los tipos de remesa (Remesas › Maestros › Tipos remesas) tienen cada uno su serie (RM), clase y acción inicial.",
       "Cómo leer el código de un tipo de remesa: 1.ª letra C = cobro, P = pago; SCT = transferencia SEPA, SDD = recibo domiciliado SEPA, CHE = cheque; última letra T = con tesorería (crea movimiento de tesorería), S = sin tesorería (confirma con el asiento del banco). Así, CSCTS = cobro por transferencia sin tesorería y PSCTT = pago por transferencia con tesorería."
      ],
      "campos": [
       {
        "campo": "Línea financiera / Descripción *",
        "significado": "Contrato del banco con el que se trabaja.",
-       "ejemplo": "{INI}1 / Remesas de cobro {INI}"
+       "ejemplo": "LRC{INI} / Remesas de cobro {INI}"
       },
       {
        "campo": "Tipo de línea *",
        "significado": "Clase de contrato. En TUTORIAL no hay ninguno: se crea con «+».",
-       "ejemplo": "{INI} Remesas cobro {INI}"
+       "ejemplo": "REM{INI} Remesas cobro {INI}"
       },
       {
        "campo": "Referencia financiera *",
@@ -2282,7 +2282,7 @@
       {
        "campo": "Remesas por cuenta › Línea financiera / Límite",
        "significado": "Línea asociada y límite de importe.",
-       "ejemplo": "{INI}1 / 100.000"
+       "ejemplo": "LRC{INI} / 100.000"
       }
      ],
      "pasos": [
@@ -2290,7 +2290,7 @@
        "texto": "Abre Bancos propios, entra en la ficha de BBVA_{INI} (pulsa su fila) y abre la pestaña «Líneas financieras»; pulsa «Nuevo»"
       },
       {
-       "texto": "Escribe la línea {INI}1 y la descripción; en Tipo de línea pulsa «+» y crea {INI} «Remesas cobro {INI}»",
+       "texto": "Escribe la línea LRC{INI} y la descripción; en Tipo de línea pulsa «+» y crea REM{INI} «Remesas cobro {INI}»",
        "imagen": "carteras-d-278.webp",
        "hotspot": {
         "x": 50.8,
@@ -2371,7 +2371,7 @@
       "Registro de remesas"
      ],
      "explicacion": [
-      "Objeto cremesas. «Evolucionar estado» recorre la secuencia proponer › ordenar › confirmar; «Retroceder» deshace el último paso. Los efectos se añaden desde la pestaña «Selección de efectos», no con un botón fijo."
+      "Pantalla «Registro de remesas» (en el buscador: cremesas). «Evolucionar estado» recorre la secuencia proponer › ordenar › confirmar; «Retroceder» deshace el último paso. Los efectos se añaden desde la pestaña «Selección de efectos», no con un botón fijo."
      ],
      "campos": [
       {
@@ -2402,7 +2402,7 @@
      ],
      "pasos": [
       {
-       "texto": "Crea otra factura de venta a T{INI}: «Nuevo documento», tipo FV, empresa 0, proyecto 0, sección 0 y cliente T{INI} (sal con Tab)",
+       "texto": "Crea otra factura de venta a CAR{INI}: «Nuevo documento», tipo FV, empresa 0, proyecto 0, sección 0 y cliente CAR{INI} (sal con Tab)",
        "detalle": "Igual que en la sección «Factura de venta y su efecto de cobro» (Finanzas › Facturación › Ventas › Factura de venta)."
       },
       {
@@ -2418,7 +2418,7 @@
        }
       },
       {
-       "texto": "En «Detalle» añade la línea {INI}1 (cuenta 70500.00000, centro de coste 0 y cuenta de explotación 0), guarda, pulsa «Validar» y después «Contabilizar»",
+       "texto": "En «Detalle» añade la línea ASE{INI} (cuenta 70500.00000, centro de coste 0 y cuenta de explotación 0), guarda, pulsa «Validar» y después «Contabilizar»",
        "detalle": "La factura toma el número FVN026-000002."
       },
       {
@@ -2624,13 +2624,13 @@
     }
    ],
    "checklist": [
-    "Has localizado en Estados (cefecest) PE, PR, OC y CO, y en Relación de acciones (cefeacti) la acción COBD Cobro directo.",
-    "Existe el artículo {INI}1 (Servicios de asesoría {INI}), tipo fiscal Servicio, clave SOG, precio de venta 200 y mnemotécnicos 62300 / 70500.",
-    "La factura de venta FVN026-000001 a T{INI} está contabilizada y tiene un vencimiento RC / PE de 242,00.",
+    "Has localizado en Estados PE, PR, OC y CO, y en Relación de acciones la acción COBD Cobro directo.",
+    "Existe el artículo ASE{INI} (Servicios de asesoría {INI}), tipo fiscal Servicio, clave SOG, precio de venta 200 y mnemotécnicos 62300 / 70500.",
+    "La factura de venta FVN026-000001 a CAR{INI} está contabilizada y tiene un vencimiento RC / PE de 242,00.",
     "La línea de la factura usa la cuenta 70500.00000 con centro de coste y cuenta de explotación 0.",
-    "La gestión sobre efectos (clase Cobrar, acción COBD, cuenta BBVA_{INI}, perceptor T{INI}) cobra el efecto de 242,00 y este pasa a CO.",
+    "La gestión sobre efectos (clase Cobrar, acción COBD, cuenta BBVA_{INI}, perceptor CAR{INI}) cobra el efecto de 242,00 y este pasa a CO.",
     "El asiento del cobro CA026-000001 tiene 57200.00000 al debe y 43000.00000 al haber por 242,00.",
-    "BBVA_{INI} tiene la línea financiera {INI}1 (CONTRATO-{INI}-001, 01-11-2026 a 31-12-2027, 100.000) y la remesa por cuenta CSCTS.",
+    "BBVA_{INI} tiene la línea financiera LRC{INI} (CONTRATO-{INI}-001, 01-11-2026 a 31-12-2027, 100.000) y la remesa por cuenta CSCTS.",
     "La factura FVN026-000002 con plazo T2D genera 2 efectos de 121,00.",
     "Tu remesa CSCTS agrupa los dos efectos: PE › PR con total 242,00.",
     "Tras «Evolucionar estado» dos veces, los efectos pasan a OC y luego a CO.",
@@ -3282,7 +3282,7 @@
    "numero": 8,
    "titulo": "Entender el cierre de una gestión",
    "objetivo": "Entenderás qué actualiza el sistema al cerrar una gestión y qué errores puede dar para resolver incidencias en la cartera.",
-   "concepto": "En los bloques «Pagar un efecto en efectivo» y «Pagar efectos con una gestión» has pagado efectos con un botón y con una gestión. Aquí ves qué pasa por dentro, útil cuando algo falla. La gestión guarda su cabecera en cefecges_pcs y los efectos que incluye en cefecges_det. Al pulsar «Cerrar», el ERP valida, cambia el estado de los efectos, genera el asiento si la acción lo tiene, apunta cada cambio en el histórico (cefechis) y crea el movimiento de tesorería cuando corresponde.\n\nEn las remesas, «Evolucionar estado» hace lo mismo con todos sus efectos. «Retroceder» lo deshace; si el mes contable ya está cerrado (un periodo cerrado no admite cambios), en lugar de borrar el asiento crea otro que lo compensa.",
+   "concepto": "En los bloques «Pagar un efecto en efectivo» y «Pagar efectos con una gestión» has pagado efectos con un botón y con una gestión. Aquí ves qué pasa por dentro, útil cuando algo falla. La gestión guarda su cabecera y la lista de efectos que incluye. Al pulsar «Cerrar», el ERP valida, cambia el estado de los efectos, genera el asiento si la acción lo tiene, apunta cada cambio en el histórico del efecto y crea el movimiento de tesorería cuando corresponde.\n\nEn las remesas, «Evolucionar estado» hace lo mismo con todos sus efectos. «Retroceder» lo deshace; si el mes contable ya está cerrado (un periodo cerrado no admite cambios), en lugar de borrar el asiento crea otro que lo compensa.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -3295,8 +3295,8 @@
       "Gestiones sobre la cartera de efectos"
      ],
      "explicacion": [
-      "La cabecera de la gestión (tabla cefecges_pcs) guarda empresa, proyecto y sección, clase (cobro o pago), acción, fechas, tipo de efecto, cuenta financiera, perceptor, moneda y cambio, importes y gastos, fecha de proceso y estado.",
-      "El detalle (cefecges_det) contiene los efectos incorporados. «Agregar efectos» y «Desagregar efectos» los meten o los sacan en bloque.",
+      "La cabecera de la gestión guarda empresa, proyecto y sección, clase (cobro o pago), acción, fechas, tipo de efecto, cuenta financiera, perceptor, moneda y cambio, importes y gastos, fecha de proceso y estado.",
+      "El detalle de la gestión contiene los efectos incorporados. «Agregar efectos» y «Desagregar efectos» los meten o los sacan en bloque.",
       "El selector de efectos muestra como máximo 1.000 efectos al empezar; si no pones ningún filtro, no trae nada. Los filtros incluyen vencimiento desde/hasta, perceptor, tipo de efecto, estado, referencia bancaria, cuenta financiera, tipo de documento y número de gestión.",
       "Por dentro: el estado de la gestión (pcs_estado) es A abierta o C cerrada; una gestión abierta no puede tener un fichero bancario asociado. pcs_tipgen indica si se generó automática (0), manual (1) o asíncrona (2)."
      ],
@@ -3378,14 +3378,14 @@
        "ejemplo": ""
       },
       {
-       "campo": "Enlace contable (cefeplah.codpla)",
+       "campo": "Enlace contable",
        "significado": "Plantilla con la que se monta el asiento.",
        "ejemplo": ""
       },
       {
        "campo": "Origen del asiento",
        "significado": "Documento que generó el asiento.",
-       "ejemplo": "cefecges_pcs"
+       "ejemplo": "La gestión de cartera, con su número"
       }
      ],
      "pasos": [
@@ -3440,8 +3440,8 @@
      ],
      "explicacion": [
       "En el efecto (cefectos) el cierre cambia el estado al estado final de la acción, el tipo de efecto si la acción lo cambia (de TF a EF en el pago directo), la caducidad, la cuenta, el número de gestión y las fechas. La fecha de contabilización (feccon) solo se actualiza si hubo asiento o tesorería. Importe y cambio solo cambian si la acción calcula diferencias de cambio (efecto en divisa cuyo tipo de cambio ha variado entre la factura y el pago).",
-      "Cada cambio deja una línea en el histórico del efecto (cefechis). Gracias al histórico se puede reabrir una gestión: se borra el asiento, se recuperan los efectos como estaban y se borran sus movimientos de tesorería.",
-      "Si el estado final requiere tesorería, el cierre crea el movimiento de tesorería (taptcuen) y sus líneas de flujo (taptfluj). Si no se crea ninguna línea, da el error cefecges_estado_ava_05."
+      "Cada cambio deja una línea en el histórico del efecto. Gracias al histórico se puede reabrir una gestión: se borra el asiento, se recuperan los efectos como estaban y se borran sus movimientos de tesorería.",
+      "Si el estado final requiere tesorería, el cierre crea el movimiento de tesorería y sus líneas de flujo. Si no se crea ninguna línea, da el error cefecges_estado_ava_05."
      ],
      "campos": [
       {
@@ -3455,12 +3455,12 @@
        "ejemplo": ""
       },
       {
-       "campo": "Histórico (cefechis)",
+       "campo": "Histórico del efecto",
        "significado": "Una línea por cada cambio del efecto.",
        "ejemplo": "TF/PE/No → EF/PA/Sí"
       },
       {
-       "campo": "Movimiento de tesorería (taptcuen / taptfluj)",
+       "campo": "Movimiento de tesorería y flujos",
        "significado": "Entrada o salida de dinero en el banco y sus flujos con cuenta contable.",
        "ejemplo": "Operación PMICDT"
       }
@@ -3628,13 +3628,13 @@
     {
      "pregunta": "Al reabrir una gestión de cartera cerrada, ¿de dónde se restauran las deudas?",
      "opciones": [
-      "Del histórico de efectos cefechis",
+      "Del histórico del efecto",
       "De la remesa original",
       "Del asiento anulado",
       "No se restauran: se crean efectos nuevos"
      ],
      "correcta": 0,
-     "explicacion": "Al reabrir, se borra el asiento, los efectos se recuperan desde el histórico cefechis, se borran los movimientos de tesorería de la gestión y la gestión queda Abierta."
+     "explicacion": "Al reabrir, se borra el asiento, los efectos se recuperan desde el histórico del efecto, se borran los movimientos de tesorería de la gestión y la gestión queda Abierta."
     },
     {
      "pregunta": "¿Cuándo actualiza el cierre la fecha de contabilización del efecto (feccon)?",
@@ -5085,7 +5085,7 @@
       "Las dos opciones están en Finanzas › Cobros y Pagos › Procesos: «Cambio de titularidad › Registro» y «Especiales › Alinear vencimientos».",
       "El cambio de titularidad hace que lo que debías pagar a un tercero (titular) se pague a otro (sustituto), típicamente por un embargo. Solo vale para efectos de pago. Se indica el porcentaje (de 1 a 100), la prioridad (0 = preferente) y, si quieres, un importe máximo. Si el importe de la línea es menor que el efecto, el efecto se parte en dos; si es mayor, se rechaza.",
       "Alinear vencimientos agrupa efectos pendientes de un mismo tercero (cobros y pagos que se pueden compensar) y les da la misma fecha de vencimiento. Crea una gestión por grupo y la cierra sola. Se deshace abriendo y borrando esa gestión.",
-      "Por dentro: el cambio de titularidad usa cefetith (cabecera) y cefetitl (líneas). Alinear vencimientos crea gestiones (cefecges_pcs) con parámetros como fecha máxima de vencimiento (FVEMAX), clase, acción y tipo de efecto."
+      "Por dentro: el cambio de titularidad usa cefetith (cabecera) y cefetitl (líneas). Alinear vencimientos crea gestiones de cartera con parámetros como fecha máxima de vencimiento (FVEMAX), clase, acción y tipo de efecto."
      ],
      "campos": [
       {
@@ -5226,17 +5226,17 @@
        "ejemplo": ""
       },
       {
-       "campo": "Histórico (cefechis)",
+       "campo": "Histórico del efecto",
        "significado": "Una línea por cada cambio del efecto, con su fecha.",
        "ejemplo": ""
       },
       {
-       "campo": "Fecha proceso (cefecges_pcs.pcs_fecpro)",
+       "campo": "Fecha proceso de la gestión",
        "significado": "Fecha en que se ejecutó la gestión.",
        "ejemplo": "31-12-2025"
       },
       {
-       "campo": "Detalle de la gestión (cefecges_det)",
+       "campo": "Detalle de la gestión",
        "significado": "Valores que tenía cada efecto antes de la operación.",
        "ejemplo": ""
       }
@@ -5339,13 +5339,13 @@
     {
      "pregunta": "¿Dónde se guardan los valores que tenía cada efecto antes de una gestión?",
      "opciones": [
-      "cefechis",
-      "cefectos",
-      "cefecges_det",
-      "cefecges_pcs"
+      "En el histórico del efecto",
+      "En la ficha actual del efecto",
+      "En el detalle de la gestión",
+      "En la cabecera de la gestión"
      ],
      "correcta": 2,
-     "explicacion": "El detalle de la gestión (cefecges_det) guarda det_import, det_cuenta, det_cambio… previos a la operación."
+     "explicacion": "El detalle de la gestión guarda, por cada efecto, el importe, la cuenta y el cambio que tenía antes de la operación. La cabecera solo guarda los datos generales y el histórico, los cambios de estado."
     }
    ],
    "checklist": [
@@ -5379,11 +5379,11 @@
  "datosSimulador": {
   "efectos": [
    {
-    "documento": "PROV-{INI}-001",
+    "documento": "CAR-{INI}-001",
     "factura": "FC026-000001",
     "clase": "Pagar",
-    "tercero": "T{INI} Tercero Carteras",
-    "tipoEfecto": "T{INI}",
+    "tercero": "CAR{INI} Tercero Carteras",
+    "tipoEfecto": "E{INI}",
     "importe": 48.4,
     "vencimiento": "22-12-2026",
     "estado": "PE",
@@ -5391,11 +5391,11 @@
     "idEfecto": 34
    },
    {
-    "documento": "PROV-{INI}-001",
+    "documento": "CAR-{INI}-001",
     "factura": "FC026-000001",
     "clase": "Pagar",
-    "tercero": "T{INI} Tercero Carteras",
-    "tipoEfecto": "T{INI}",
+    "tercero": "CAR{INI} Tercero Carteras",
+    "tipoEfecto": "E{INI}",
     "importe": 24.2,
     "vencimiento": "01-02-2027",
     "estado": "PE",
@@ -5403,11 +5403,11 @@
     "idEfecto": 35
    },
    {
-    "documento": "PROV-{INI}-001",
+    "documento": "CAR-{INI}-001",
     "factura": "FC026-000001",
     "clase": "Pagar",
-    "tercero": "T{INI} Tercero Carteras",
-    "tipoEfecto": "T{INI}",
+    "tercero": "CAR{INI} Tercero Carteras",
+    "tipoEfecto": "E{INI}",
     "importe": 48.4,
     "vencimiento": "12-03-2027",
     "estado": "PE",
@@ -5418,7 +5418,7 @@
     "documento": "FVN026-000001",
     "factura": "FVN026-000001",
     "clase": "Cobrar",
-    "tercero": "T{INI} Tercero Carteras",
+    "tercero": "CAR{INI} Tercero Carteras",
     "tipoEfecto": "RC",
     "importe": 242.0,
     "vencimiento": "14-12-2026",
@@ -5431,7 +5431,7 @@
     "documento": "FVN026-000002",
     "factura": "FVN026-000002",
     "clase": "Cobrar",
-    "tercero": "T{INI} Tercero Carteras",
+    "tercero": "CAR{INI} Tercero Carteras",
     "tipoEfecto": "RC",
     "importe": 121.0,
     "vencimiento": "14-12-2026",
@@ -5444,7 +5444,7 @@
     "documento": "FVN026-000002",
     "factura": "FVN026-000002",
     "clase": "Cobrar",
-    "tercero": "T{INI} Tercero Carteras",
+    "tercero": "CAR{INI} Tercero Carteras",
     "tipoEfecto": "RC",
     "importe": 121.0,
     "vencimiento": "11-01-2027",

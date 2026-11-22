@@ -63,6 +63,24 @@
   animation: ccx-aro 1.6s var(--ease-out, ease-out) infinite;
 }
 
+/* Captura estrecha (< 600 px, solo en la página): punto pequeño centrado en su sitio, con área táctil
+   invisible de 33 px, y línea guía fina hasta la etiqueta cuando el punto se ha apartado al borde. */
+.ccx-frame.compacto .ccx-pin {
+  --ccx-t: translate(-50%, -50%);
+  width: 17px; height: 17px; font-size: 10px; letter-spacing: -0.05em; border-width: 1.5px;
+  box-shadow: 0 1px 3px rgba(11, 18, 32, 0.4), 0 0 0 1px rgba(11, 18, 32, 0.14);
+}
+.ccx-frame.compacto .ccx-pin::after { inset: -8px; }
+.ccx-frame.compacto .ccx-pin.on { box-shadow: 0 0 0 2px var(--ccx-c), 0 3px 10px rgba(11, 18, 32, 0.45); }
+.ccx-guias { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.ccx-guia-h { stroke: rgba(255, 255, 255, 0.9); stroke-width: 3.25; stroke-linecap: round; }
+.ccx-guia-l { stroke: var(--ccx-c); stroke-width: 1.25; stroke-linecap: round; }
+.ccx-guia-p { fill: var(--ccx-c); stroke: #fff; stroke-width: 1.25; }
+.ccx-guia.on .ccx-guia-l { stroke: var(--ccx-tinta); stroke-width: 1.75; }
+.ccx-guia.on .ccx-guia-p { fill: var(--ccx-tinta); }
+/* Con un campo elegido, las guías de los demás se apagan (la captura también) */
+.ccx-frame.con-activo .ccx-guia:not(.on) { opacity: 0.55; }
+
 /* Ampliar: esquina inferior derecha (arriba están los botones del ERP), no compite con los puntos */
 .ccx-ampliar {
   position: absolute; z-index: 4; bottom: 10px; right: 10px;

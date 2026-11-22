@@ -28,6 +28,8 @@ interface Loc {
   caja: Caja;
   px: number;
   py: number;
+  /** Captura estrecha (móvil): centro del punto pequeño y, si se ha apartado al borde, dónde acaba su línea guía. Todo en %. */
+  c?: { px: number; py: number; gx?: number; gy?: number };
 }
 
 const norm = (s: string) =>
@@ -67,6 +69,80 @@ function compuesto(campo: string, etiqueta: string) {
 /** Separación mínima entre centros de dos puntos, en píxeles de la captura tal como se ve (punto de 26 px + aire). */
 const HUECO_PX = 30;
 const lim = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
+/** Por debajo de este ancho (px) la captura de la página usa puntos pequeños y, si chocan, línea guía al borde. */
+const COMPACTO_MAX = 600;
+/** Diámetro del punto pequeño (campos.css: .ccx-frame.compacto .ccx-pin). */
+const PIN_C = 17;
+/** Pequeños desvíos permitidos junto a la etiqueta antes de mandar el punto al borde (px). */
+const CERCA: [number, number][] = [[0, 0], [0, -5], [0, 5], [-5, 0], [0, -9], [0, 9], [-6, -6], [-6, 6], [-11, 0]];
+
+/**
+ * Colocación para capturas estrechas: punto pequeño justo a la izquierda de su etiqueta; si choca con otro punto,
+ * tapa otra etiqueta o el botón de ampliar, se aparta al borde lateral más cercano con una línea guía hasta la etiqueta.
+ */
+function compactar(lista: (Loc | null)[], vistas: Vista[], asp: Record<string, number>, anchos: Record<string, number>) {
+  const R = PIN_C / 2;
+  const PASO = PIN_C + 3;
+  vistas.forEach((v, vi) => {
+    const W = anchos[v.imagen];
+    if (!W || W >= COMPACTO_MAX) return;
+    const H = W * (asp[v.imagen] ?? 9 / 16);
+    const filas = lista.flatMap((l, i) => (l && l.vi === vi ? [i] : []));
+    const et = new Map(filas.map((i) => {
+      const c = lista[i]!.caja;
+      return [i, { x: (c.x / 100) * W, y: (c.y / 100) * H, w: (c.w / 100) * W, h: (c.h / 100) * H }] as const;
+    }));
+    const ampliar = { x: W - 6 - 36, y: H - 6 - 36, w: 36, h: 36 };
+    const puestos: { x: number; y: number }[] = [];
+    const dentro = (x: number, y: number) => x >= R + 1 && x <= W - R - 1 && y >= R + 1 && y <= H - R - 1;
+    const choca = (x: number, y: number) => puestos.some((o) => Math.abs(o.x - x) < PIN_C + 2 && Math.abs(o.y - y) < PIN_C + 2);
+    const tapa = (x: number, y: number, propia: number) =>
+      [...filas.filter((f) => f !== propia).map((f) => et.get(f)!), ampliar].some((e) => x + R > e.x && x - R < e.x + e.w && y + R > e.y && y - R < e.y + e.h);
+    const poner = (i: number, x: number, y: number, guia?: { x: number; y: number }) => {
+      puestos.push({ x, y });
+      lista[i] = { ...lista[i]!, c: { px: (x / W) * 100, py: (y / H) * 100, ...(guia ? { gx: (guia.x / W) * 100, gy: (guia.y / H) * 100 } : {}) } };
+    };
+    const apartados: number[] = [];
+    for (const i of filas) {
+      const e = et.get(i)!;
+      const ax = e.x - R - 2;
+      const ay = e.y + e.h / 2;
+      // A la izquierda de la etiqueta (lo normal) y, si no cabe, justo a su derecha.
+      const bx = e.x + e.w + R + 2;
+      const cerca = [...CERCA.map(([dx, dy]) => [ax + dx, ay + dy] as const), ...CERCA.slice(0, 3).map(([, dy]) => [bx, ay + dy] as const)];
+      const sitio = cerca.find(([x, y]) => dentro(x, y) && !choca(x, y) && !tapa(x, y, i));
+      if (sitio) poner(i, sitio[0], sitio[1]);
+      else apartados.push(i);
+    }
+    /** Distancia de un punto al segmento a-b (para que la guía no pase por encima de otro punto). */
+    const aSeg = (p: { x: number; y: number }, a: { x: number; y: number }, b: { x: number; y: number }) => {
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const t = dx || dy ? lim(((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy), 0, 1) : 0;
+      return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy);
+    };
+    for (const i of apartados) {
+      const e = et.get(i)!;
+      const ay = lim(e.y + e.h / 2, R + 1, H - R - 1);
+      // Se prueban los dos bordes y varias alturas: gana la guía que no cruza otros puntos, no tapa etiquetas y es más corta.
+      let mejor: { x: number; y: number; guia: { x: number; y: number }; coste: number } | null = null;
+      for (const izq of [true, false]) {
+        const x = izq ? R + 3 : W - R - 3;
+        // La guía acaba en el lado de la etiqueta que mira al borde (así no cruza su texto).
+        const guia = { x: izq ? Math.max(e.x - 2, x) : Math.min(e.x + e.w + 2, x), y: ay };
+        for (let k = 0; k < 2 * Math.ceil(H / PASO) + 2; k++) {
+          const y = ay + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * PASO;
+          if (!dentro(x, y) || choca(x, y)) continue;
+          const cruces = puestos.filter((o) => aSeg(o, { x, y }, guia) < R + 2).length;
+          const coste = cruces * 45 + (tapa(x, y, i) ? 40 : 0) + Math.hypot(guia.x - x, guia.y - y) + Math.abs(y - ay) / 2;
+          if (!mejor || coste < mejor.coste) mejor = { x, y, guia, coste };
+        }
+      }
+      const { x, y, guia } = mejor ?? { x: R + 3, y: ay, guia: { x: e.x - 2, y: ay } };
+      poner(i, x, y, Math.hypot(guia.x - x, guia.y - y) > PIN_C ? guia : undefined);
+    }
+  });
+  return lista;
+}
 
 /** Nombre del campo sin el asterisco de obligatorio. */
 const limpio = (campo: string) => campo.replace(/\s*\*\s*$/, '');
@@ -133,7 +209,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
     const desvios: [number, number][] = [[0, 0]];
     for (let k = 1; k <= 6; k++) desvios.push([-k / 2, 0], [0, -k / 2], [0, k / 2], [-k / 2, -k / 2], [-k / 2, k / 2]);
     for (let k = 1; k <= 6; k++) desvios.push([k, 0]);
-    return base.map((b) => {
+    const lista = base.map((b) => {
       if (!b) return null;
       const img = vistas[b.vi].imagen;
       const r = asp[img] ?? 9 / 16;
@@ -161,6 +237,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
       puestos.push(l);
       return l;
     });
+    return compactar(lista, vistas, asp, anchos);
   }, [s.id, s.campos, vistas, asp, anchos]);
 
 
@@ -452,6 +529,8 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
     // Ampliada: la captura entera cabe en la pantalla (sin desplazarse), así el globo siempre se ve encima.
     const ancho = zoom && r ? ({ width: `min(100%, calc((100dvh - 124px) / ${r}))` } as CSSProperties) : undefined;
     const fuera = pos && pos.k === claveSitio && pos.fuera && vistaGlobo === vk && !zoom;
+    // Captura estrecha en la página: puntos pequeños y líneas guía (la ampliada no cambia).
+    const comp = !zoom && (anchos[v.imagen] ?? Infinity) < COMPACTO_MAX;
     return (
       <div
         className="ccx-escena"
@@ -462,7 +541,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
         onKeyDown={teclas}
         style={fuera ? { paddingBottom: `${pos!.h + 14}px` } : undefined}
       >
-        <div className={`cc-frame ccx-frame${zoom ? ' zoom' : ''}${act ? ' con-activo' : ''}`} style={ancho}>
+        <div className={`cc-frame ccx-frame${zoom ? ' zoom' : ''}${comp ? ' compacto' : ''}${act ? ' con-activo' : ''}`} style={ancho}>
           <img
             src={imgSrc(modulo, v.imagen)}
             alt={`Pantalla del ERP: ${t(s.titulo)}`}
@@ -480,6 +559,19 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
               aria-hidden="true"
             />
           )}
+          {comp && (
+            <svg className="ccx-guias" aria-hidden="true" focusable="false">
+              {locs.map((l, fila) =>
+                l && l.vi === vk && l.c?.gx != null ? (
+                  <g key={fila} className={`ccx-guia${activa === fila ? ' on' : ''}`}>
+                    <line className="ccx-guia-h" x1={`${l.c.px}%`} y1={`${l.c.py}%`} x2={`${l.c.gx}%`} y2={`${l.c.gy}%`} />
+                    <line className="ccx-guia-l" x1={`${l.c.px}%`} y1={`${l.c.py}%`} x2={`${l.c.gx}%`} y2={`${l.c.gy}%`} />
+                    <circle className="ccx-guia-p" cx={`${l.c.gx}%`} cy={`${l.c.gy}%`} r="2.75" />
+                  </g>
+                ) : null,
+              )}
+            </svg>
+          )}
           {locs.map((l, fila) =>
             l && l.vi === vk ? (
               <button
@@ -487,7 +579,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
                 type="button"
                 data-fila={fila}
                 className={`ccx-pin${activa === fila ? ' on' : ''}`}
-                style={{ left: `max(32px, ${l.px}%)`, top: `${l.py}%` }}
+                style={comp && l.c ? { left: `${l.c.px}%`, top: `${l.c.py}%` } : { left: `max(32px, ${l.px}%)`, top: `${l.py}%` }}
                 onClick={() => (activa === fila ? cerrarGlobo(false) : elegir(fila, 'ficha'))}
                 aria-label={`Campo ${fila + 1}: ${t(limpio(s.campos[fila].campo))}`}
                 aria-pressed={activa === fila}

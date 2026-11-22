@@ -21,7 +21,7 @@
    "explicacion": [
     "La tesorería es el control del dinero real de la empresa: lo que entra y sale de sus bancos y cajas, día a día. Cada entrada o salida es un «movimiento de tesorería». Sus orígenes son la cartera (efectos y remesas, que viste en Cartera, cobros y pagos), los asientos, los préstamos y la financiación, y los movimientos manuales. La previsión a medio plazo aparece a través de la financiación (ejercicio 7) y del parámetro «Notificar medio plazo» (ejercicio 2).",
     "El banco, por su lado, envía el «extracto»: la lista de movimientos que él ha visto en tu cuenta, normalmente en un fichero de norma 43 (N43), el formato estándar de la banca española. «Conciliar» es casar cada movimiento del extracto con su movimiento de tesorería para comprobar que el banco y el ERP dicen lo mismo. Ejemplo: pagas una remesa de 8.080,15 €; en tesorería hay una salida de 8.080,15 y en el extracto del banco, un cargo de 8.080,15; al conciliarlos, los dos quedan marcados como casados.",
-    "En el esquema: a la izquierda el ERP (factura, cartera y movimientos de tesorería, tabla taptcuen, con sus flujos, taptfluj); a la derecha el banco (el fichero N43 se guarda en el almacén, textract_file, y de él salen los extractos, textract). En medio, la conciliación (tconcili), que se apoya en la correspondencia entre operaciones y flujos (lado ERP) y conceptos común y propio (lado banco).",
+    "En el esquema: a la izquierda el ERP (factura, cartera y movimientos de tesorería, con sus flujos); a la derecha el banco (el fichero N43 se guarda en el «Almacén ficheros» y de él salen los movimientos del extracto). En medio, la conciliación, que se apoya en la correspondencia entre operaciones y flujos (lado ERP) y conceptos común y propio (lado banco).",
     "Regla de oro: un movimiento de tesorería necesita banco propio + operación financiera + flujo, y el flujo debe tener cuenta contable. Sin eso no podrás contabilizar ni conciliar."
    ],
    "campos": [],
@@ -44,7 +44,7 @@
    ],
    "explicacion": [
     "El menú Finanzas › Tesorería tiene, entre otros: Conciliación bancaria, Traspasos bancarios, Ops. corto plazo (los movimientos de tesorería), Ops. medio plazo, Comprobación, Posición, Extractos bancarios (Almacén ficheros, Movimientos…), Líneas financieras, Saldos, Flujos financieros, Financiación, Avales de garantías, Cartera de valores, Procesos (Conciliación automática, Contabilización…) y Maestros.",
-    "En Tesorería › Maestros están Bancos propios, Parametrización tesorería, Flujos financieros, Operaciones (su opción «Registro» son las operaciones financieras), Comisiones y Conceptos (Comunes y Conceptos propios). Cualquier pantalla también se abre con el buscador (⌘K o Ctrl + K) escribiendo su nombre o el del objeto (cbancpro, toperfin, taptcuen, tconcomu, tconprop, titescfg, textract_concaut). Sigue el orden de los ejercicios: del 1 al 5, banco, movimientos y conciliación; del 6 al 8, caja, financiación, cartera de valores, avales y posición."
+    "En Tesorería › Maestros están Bancos propios, Parametrización tesorería, Flujos financieros, Operaciones (su opción «Registro» son las operaciones financieras), Comisiones y Conceptos (Comunes y Conceptos propios). Cualquier pantalla también se abre con el buscador (⌘K o Ctrl + K) escribiendo su nombre (por ejemplo, «Bancos propios» o «Movimientos de tesorería»). Sigue el orden de los ejercicios: del 1 al 5, banco, movimientos y conciliación; del 6 al 8, caja, financiación, cartera de valores, avales y posición."
    ],
    "campos": [],
    "pasos": [],
@@ -57,7 +57,7 @@
    "numero": 1,
    "titulo": "Preparar el banco propio",
    "objetivo": "Dejas el banco propio con su cuenta contable, su extracto y su comisión. Así podrás contabilizar movimientos y conciliar.",
-   "concepto": "El banco propio (cbancpro) es la ficha maestra de cada cuenta bancaria de la empresa. En ella defines la cuenta financiera, la cuenta contable (por ejemplo 57200.00000) a la que irán los movimientos al contabilizar, y el formato de extracto con el que el banco envía los ficheros N43. Sin esta pieza no puede existir tesorería.\n\nAdemás, el banco propio guarda la configuración de comisiones bancarias. Si separas la comisión (campo «Operación comisión» informado), tesorería genera un movimiento adicional para la comisión; si no, la comisión viaja como un flujo más dentro del mismo movimiento. En las pestañas de la parte de arriba de la ficha (Operaciones por cuenta, Comisiones, Numeradores, Remesas por cuenta…) encontrarás la información relacionada con la cuenta.",
+   "concepto": "El banco propio (pantalla «Bancos propios») es la ficha maestra de cada cuenta bancaria de la empresa. En ella defines la cuenta financiera, la cuenta contable (por ejemplo 57200.00000) a la que irán los movimientos al contabilizar, y el formato de extracto con el que el banco envía los ficheros N43. Sin esta pieza no puede existir tesorería.\n\nAdemás, el banco propio guarda la configuración de comisiones bancarias. Si separas la comisión (campo «Operación comisión» informado), tesorería genera un movimiento adicional para la comisión; si no, la comisión viaja como un flujo más dentro del mismo movimiento. En las pestañas de la parte de arriba de la ficha (Operaciones por cuenta, Comisiones, Numeradores, Remesas por cuenta…) encontrarás la información relacionada con la cuenta.",
    "duracionMin": 30,
    "secciones": [
     {
@@ -436,7 +436,7 @@
    "numero": 2,
    "titulo": "Configurar flujos, operaciones y parámetros",
    "objetivo": "Crearás un flujo y una operación financiera y revisarás los parámetros de conciliación para entender cómo se clasifica el dinero.",
-   "concepto": "El flujo financiero clasifica el dinero que se mueve (pago de servicios, de nóminas, cobro de facturas, comisión del banco…) y siempre lleva una cuenta contable: es lo que dice a qué cuenta irá cada importe al contabilizar. Si marcas Tipo flujo «Comisión» (o «Interés»), solo se puede usar en comisiones (o intereses) bancarios; si no marcas ninguno, es un flujo normal que se puede usar en cualquier operación.\n\nLa operación financiera (toperfin) es el tipo de movimiento de tesorería: si el dinero entra o sale, qué asiento hace y con qué flujo. En sus parámetros de conciliación decides cómo se casa con el extracto: por importe, por documento o por referencia, y con cuántos días de margen («float») buscas el apunte en el banco. Los parámetros globales de tesorería (titescfg) fijan reglas para toda la empresa, como tolerancias, fecha contable y búsqueda de flujos.",
+   "concepto": "El flujo financiero clasifica el dinero que se mueve (pago de servicios, de nóminas, cobro de facturas, comisión del banco…) y siempre lleva una cuenta contable: es lo que dice a qué cuenta irá cada importe al contabilizar. Si marcas Tipo flujo «Comisión» (o «Interés»), solo se puede usar en comisiones (o intereses) bancarios; si no marcas ninguno, es un flujo normal que se puede usar en cualquier operación.\n\nLa operación financiera es el tipo de movimiento de tesorería: si el dinero entra o sale, qué asiento hace y con qué flujo. En sus parámetros de conciliación decides cómo se casa con el extracto: por importe, por documento o por referencia, y con cuántos días de margen («float») buscas el apunte en el banco. Los parámetros globales de tesorería (Maestros › Parametrización tesorería) fijan reglas para toda la empresa, como tolerancias, fecha contable y búsqueda de flujos.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -779,7 +779,7 @@
     },
     {
      "id": "tesoreria-2-parametros",
-     "titulo": "Parámetros de tesorería (titescfg)",
+     "titulo": "Parámetros de tesorería",
      "paraQueSirve": "Lee los parámetros globales de tesorería sin modificarlos en una base compartida.",
      "ruta": [
       "Finanzas",
@@ -794,7 +794,7 @@
      "campos": [
       {
        "campo": "Notificar medio plazo",
-       "significado": "Guarda copia del movimiento en tesorería a medio plazo (tmovites).",
+       "significado": "Guarda copia del movimiento en tesorería a medio plazo.",
        "ejemplo": ""
       },
       {
@@ -841,7 +841,7 @@
      "pasos": [
       {
        "texto": "Abre los parámetros y mira «Notificar medio plazo»",
-       "detalle": "Guarda copia de los movimientos en la tesorería a medio plazo (tmovites).",
+       "detalle": "Guarda copia de los movimientos en la tesorería a medio plazo.",
        "imagen": "tesoreria-006.jpg",
        "hotspot": {
         "x": 1.5,
@@ -947,7 +947,7 @@
       "Conciliar estimados"
      ],
      "correcta": 1,
-     "explicacion": "«Notificar medio plazo» guarda copia en tmovites."
+     "explicacion": "«Notificar medio plazo» guarda copia en la tesorería a medio plazo."
     }
    ],
    "checklist": [
@@ -983,7 +983,7 @@
    "numero": 3,
    "titulo": "Registrar un movimiento manual",
    "objetivo": "Crearás y contabilizarás un movimiento manual de salida para registrar una operación real en el banco propio.",
-   "concepto": "El movimiento de tesorería (taptcuen) representa una entrada o salida real de dinero en un banco propio. Lleva fecha operación y fecha valor (obligatoria), operación financiera, importe y una rejilla de flujos con sus cuentas contables. El campo Conciliado queda vacío hasta que el movimiento se casa con el extracto del banco.\n\nLos movimientos también nacen solos desde la cartera, con la acción PTES de un efecto o al ordenar una remesa con tesorería: lo ves en Cartera, cobros y pagos, el bloque «Entender cómo pasan los efectos a tesorería» (Cartera, cobros y pagos). El asiento que deja el movimiento al contabilizar (banco contra las cuentas de los flujos) lo trabajas en Asientos, ejercicio 14.",
+   "concepto": "El movimiento de tesorería representa una entrada o salida real de dinero en un banco propio. Lleva fecha operación y fecha valor (obligatoria), operación financiera, importe y una rejilla de flujos con sus cuentas contables. El campo Conciliado queda vacío hasta que el movimiento se casa con el extracto del banco.\n\nLos movimientos también nacen solos desde la cartera, con la acción PTES de un efecto o al ordenar una remesa con tesorería: lo ves en Cartera, cobros y pagos, el bloque «Entender cómo pasan los efectos a tesorería» (Cartera, cobros y pagos). El asiento que deja el movimiento al contabilizar (banco contra las cuentas de los flujos) lo trabajas en Asientos, ejercicio 14.",
    "duracionMin": 20,
    "secciones": [
     {
@@ -996,7 +996,7 @@
       "Ops. corto plazo"
      ],
      "explicacion": [
-      "Un movimiento manual se crea en Finanzas › Tesorería › Ops. corto plazo (pantalla «Movimientos de tesorería», objeto taptcuen). Debes elegir empresa, cuenta financiera, fechas, posición, importe y operación financiera. La fecha valor es obligatoria: sin ella el movimiento no se graba.",
+      "Un movimiento manual se crea en Finanzas › Tesorería › Ops. corto plazo (pantalla «Movimientos de tesorería»; en el buscador: taptcuen). Debes elegir empresa, cuenta financiera, fechas, posición, importe y operación financiera. La fecha valor es obligatoria: sin ella el movimiento no se graba.",
       "Abajo, la pestaña Flujos muestra los flujos asociados y sus cuentas contables. El campo Conciliado queda vacío hasta que se concilia con el extracto; entonces recibe un número correlativo."
      ],
      "campos": [
@@ -1202,7 +1202,7 @@
     }
    ],
    "checklist": [
-    "Crea un movimiento manual en taptcuen con BBVA_{INI}, fechas, Posición «Salida», importe y operación {INI}COM.",
+    "Crea un movimiento manual en «Movimientos de tesorería» con BBVA_{INI}, fechas, Posición «Salida», importe y operación {INI}COM.",
     "Revisa la pestaña Flujos: cada flujo con su cuenta contable.",
     "Comprueba que el campo Conciliado está vacío.",
     "Contabiliza el movimiento (el asiento lo revisas en Asientos, ejercicio 14)."
@@ -1223,7 +1223,7 @@
    "numero": 4,
    "titulo": "Dar de alta el extracto bancario",
    "objetivo": "Verás un extracto N43 ya cargado, darás de alta a mano el extracto de tu movimiento y revisarás los conceptos del banco para que la conciliación case sola.",
-   "concepto": "El fichero N43 (norma 43 española) trae una cabecera con la cuenta y el saldo inicial, líneas de movimientos con fechas, importe y códigos de concepto común y propio, y un cierre con el saldo final. El cargador valida la continuidad de saldos: el saldo inicial de un extracto debe coincidir con el final del anterior.\n\nLos conceptos comunes (tconcomu) son códigos estándar de la banca española para el tipo de movimiento (por ejemplo 04 = giros, transferencias, traspasos y cheques); los conceptos propios (tconprop) son códigos particulares de cada banco, con su descripción, y vienen en el fichero. Hay que darlos de alta todos. En el concepto propio se configuran las operaciones a conciliar y la integración (Debe/Haber + operación) para los movimientos que solo conoce el banco, como comisiones o impuestos.\n\nOjo con el signo del extracto: depende de la base. En las capturas de la demo TRI (octubre de 2024) los cargos (pagos) salen en negativo, igual que en tesorería; en la base de prácticas (BBDD TUTORIAL) salen en positivo: el pago de 480,00 de la cuenta CAPT_BCO es 480,00 en el extracto y -480,00 en tesorería. Antes de dar de alta un extracto a mano, mira cómo vienen los demás extractos de esa cuenta.",
+   "concepto": "El fichero N43 (norma 43 española) trae una cabecera con la cuenta y el saldo inicial, líneas de movimientos con fechas, importe y códigos de concepto común y propio, y un cierre con el saldo final. El cargador valida la continuidad de saldos: el saldo inicial de un extracto debe coincidir con el final del anterior.\n\nLos conceptos comunes son códigos estándar de la banca española para el tipo de movimiento (por ejemplo 04 = giros, transferencias, traspasos y cheques); los conceptos propios son códigos particulares de cada banco, con su descripción, y vienen en el fichero. Hay que darlos de alta todos. En el concepto propio se configuran las operaciones a conciliar y la integración (Debe/Haber + operación) para los movimientos que solo conoce el banco, como comisiones o impuestos.\n\nOjo con el signo del extracto: depende de la base. En las capturas de la demo TRI (octubre de 2024) los cargos (pagos) salen en negativo, igual que en tesorería; en la base de prácticas (BBDD TUTORIAL) salen en positivo: el pago de 480,00 de la cuenta CAPT_BCO es 480,00 en el extracto y -480,00 en tesorería. Antes de dar de alta un extracto a mano, mira cómo vienen los demás extractos de esa cuenta.",
    "duracionMin": 40,
    "secciones": [
     {
@@ -1272,7 +1272,7 @@
      ],
      "explicacion": [
       "En el almacén de ficheros adjuntas el archivo N43 y eliges el formato de norma 43, la empresa y la cuenta financiera. El nombre se rellena solo con el del fichero y el estado nace en «Pendiente procesar».",
-      "Después pulsas «Cargar extracto bancario» para descomprimir el fichero y generar los registros de extractos bancarios (textract). Si un concepto propio del fichero no existe en tconprop, la carga dará error."
+      "Después pulsas «Cargar extracto bancario» para descomprimir el fichero y generar los movimientos del extracto bancario. Si un concepto propio del fichero no existe en Conceptos propios, la carga dará error."
      ],
      "campos": [
       {
@@ -1386,7 +1386,7 @@
     },
     {
      "id": "tesoreria-4-extractos",
-     "titulo": "Los movimientos del extracto (textract)",
+     "titulo": "Los movimientos del extracto",
      "paraQueSirve": "Revisa los registros del extracto cargado y sus conceptos y referencias.",
      "ruta": [
       "Finanzas",
@@ -1482,7 +1482,7 @@
     },
     {
      "id": "tesoreria-4-comunes",
-     "titulo": "Conceptos comunes (tconcomu)",
+     "titulo": "Conceptos comunes",
      "paraQueSirve": "Conoce los códigos estándar de la banca española y cómo se mapean a operaciones.",
      "ruta": [
       "Finanzas",
@@ -1545,7 +1545,7 @@
     },
     {
      "id": "tesoreria-4-propios",
-     "titulo": "Conceptos propios (tconprop) y operaciones a conciliar",
+     "titulo": "Conceptos propios y operaciones a conciliar",
      "paraQueSirve": "Da de alta los conceptos particulares del banco y configura cómo se integran y con qué operaciones concilian.",
      "ruta": [
       "Finanzas",
@@ -1788,7 +1788,7 @@
      "explicacion": "El fichero se adjunta en Finanzas › Tesorería › Extractos bancarios › Almacén ficheros."
     },
     {
-     "pregunta": "¿Qué significan los conceptos propios (tconprop)?",
+     "pregunta": "¿Qué significan los conceptos propios?",
      "opciones": [
       "Códigos estándar definidos por la AEB para todos los bancos",
       "Códigos particulares de cada banco, con su descripción, que vienen en el N43",
@@ -1827,8 +1827,8 @@
     "Localiza el botón «Cargar extracto bancario», que sale en los ficheros «Pendiente procesar» (no lo pulses: tu banco de prácticas no tiene fichero N43).",
     "Entra en Extractos bancarios › Movimientos y filtra los registros de una cuenta financiera.",
     "Abre un movimiento y anota su concepto común y propio y sus referencias.",
-    "Revisa el concepto común 02 en tconcomu.",
-    "En tconprop, filtra por tu banco y comprueba que existen los conceptos propios del fichero.",
+    "Revisa el concepto común 02 en Conceptos comunes.",
+    "En Conceptos propios, filtra por tu banco y comprueba que existen los conceptos propios del fichero.",
     "En un concepto propio, revisa la integración y la rejilla «Operaciones a conciliar».",
     "Has dado de alta a mano en BBVA_{INI} el extracto de tu movimiento del bloque «Registrar un movimiento manual»."
    ],
@@ -1856,7 +1856,7 @@
    "numero": 5,
    "titulo": "Conciliar el banco",
    "objetivo": "Conciliarás movimientos con extractos a mano y en automático para confirmar que el banco y el ERP dicen lo mismo.",
-   "concepto": "La conciliación bancaria individual (textract_concil_taptcuen_vtab) enfrenta el extracto (izquierda) y la tesorería (derecha). Marca un movimiento de cada lado con el mismo importe y pulsa «Conciliar banco»; ambos pasan a las pestañas de conciliado y quedan huellas cruzadas. Los botones «Cancelar extractos», «Generar tesorería» y «Conciliar cartera» cubren extornos (un cargo y su anulación por el mismo importe con signo contrario), comisiones que solo están en el banco y efectos de cartera que no pasaron por tesorería.\n\nLa conciliación automática (textract_concaut) usa la configuración de conceptos propios (operaciones a conciliar e integración) y los parámetros de conciliación de las operaciones financieras para casar masivamente por empresa, cuenta y rango de fechas. Si los importes no coinciden exactamente, puedes definir tolerancias en los parámetros de tesorería.",
+   "concepto": "La conciliación bancaria individual (Tesorería › Conciliación bancaria) enfrenta el extracto (izquierda) y la tesorería (derecha). Marca un movimiento de cada lado con el mismo importe y pulsa «Conciliar banco»; ambos pasan a las pestañas de conciliado y quedan huellas cruzadas. Los botones «Cancelar extractos», «Generar tesorería» y «Conciliar cartera» cubren extornos (un cargo y su anulación por el mismo importe con signo contrario), comisiones que solo están en el banco y efectos de cartera que no pasaron por tesorería.\n\nLa conciliación automática (Tesorería › Procesos › Conciliación automática) usa la configuración de conceptos propios (operaciones a conciliar e integración) y los parámetros de conciliación de las operaciones financieras para casar masivamente por empresa, cuenta y rango de fechas. Si los importes no coinciden exactamente, puedes definir tolerancias en los parámetros de tesorería.",
    "duracionMin": 45,
    "secciones": [
     {
@@ -2137,7 +2137,7 @@
     },
     {
      "id": "tesoreria-5-automatica",
-     "titulo": "Conciliación automática (textract_concaut)",
+     "titulo": "Conciliación automática",
      "paraQueSirve": "Lanza una conciliación masiva filtrando empresa, cuenta, fechas y concepto propio.",
      "ruta": [
       "Finanzas",
@@ -2261,10 +2261,10 @@
       "Almacén ficheros",
       "Parámetros de tesorería",
       "Conciliación bancaria individual",
-      "textract_concaut (Conciliación automática)"
+      "Conciliación automática"
      ],
      "correcta": 3,
-     "explicacion": "La conciliación automática se lanza desde textract_concaut."
+     "explicacion": "La conciliación automática se lanza desde Tesorería › Procesos › Conciliación automática."
     },
     {
      "pregunta": "¿Qué requiere la conciliación automática para funcionar bien?",
@@ -2334,7 +2334,7 @@
      ],
      "explicacion": [
       "La caja de efectivo permite registrar, controlar y cerrar los movimientos de una caja y relacionarlos con operaciones financieras, información contable, remesas y liquidaciones.",
-      "Cada jornada se registra como un movimiento de caja (tabla ccajamov) que empieza Abierto. Mientras está abierta, recibe operaciones. La liquidación (el recuento) comprueba los datos y, si cuadran, la pasa a Liquidado. La contabilización es un proceso posterior e independiente.",
+      "Cada jornada se registra como un movimiento de caja que empieza Abierto. Mientras está abierta, recibe operaciones. La liquidación (el recuento) comprueba los datos y, si cuadran, la pasa a Liquidado. La contabilización es un proceso posterior e independiente.",
       "Por dentro, las tablas principales son ccajadef (definición de caja), ccajamov (movimientos o jornadas y cierres), ccajaope (operaciones), ccajamon (monedas admitidas), ccajarem (remesas), ccajache (cheques) y ccajalin (detalle de caja)."
      ],
      "campos": [
@@ -2392,17 +2392,17 @@
       "Definición de cajas"
      ],
      "explicacion": [
-      "La definición de caja (ccajadef) es una ficha distinta del banco propio: en su campo Cuenta financiera eliges la caja de efectivo que creaste en Cartera, cobros y pagos (CAJA_{INI}).",
-      "El maestro ccajadef identifica cada caja y reúne la configuración que condiciona su funcionamiento: empresa, cuenta financiera, moneda, cuenta contable, proyecto, sección, justificante, responsable, operaciones de cobro y pago y liquidación.",
+      "La definición de caja (Caja › Maestros › Definición de cajas) es una ficha distinta del banco propio: en su campo Cuenta financiera eliges la caja de efectivo que creaste en Cartera, cobros y pagos (CAJA_{INI}).",
+      "La «Definición de cajas» identifica cada caja y reúne la configuración que condiciona su funcionamiento: empresa, cuenta financiera, moneda, cuenta contable, proyecto, sección, justificante, responsable, operaciones de cobro y pago y liquidación.",
       "La estructura obliga a informar opecob y opepag a la vez, o a dejar ambos vacíos; no se admite uno solo.",
-      "El maestro de tipos de operación de caja (ccajaope) define código, descripción, cuenta, secuencia, forma de pago (campo «Plazo pago»: Efectivo, Tarjeta crédito, Tarjeta débito o Saldo inicial), si afecta a inversiones, si es liquidable, posición Debe/Haber y la operación financiera asociada que ya conoces del bloque «Configurar flujos, operaciones y parámetros».",
-      "El maestro ccajamon mantiene los billetes y monedas admitidos por la caja, con tipo, descripción, moneda e importe.",
+      "El maestro de tipos de operación de caja define código, descripción, cuenta, secuencia, forma de pago (campo «Plazo pago»: Efectivo, Tarjeta crédito, Tarjeta débito o Saldo inicial), si afecta a inversiones, si es liquidable, posición Debe/Haber y la operación financiera asociada que ya conoces del bloque «Configurar flujos, operaciones y parámetros».",
+      "El maestro de monedas de la caja mantiene los billetes y monedas admitidos por la caja, con tipo, descripción, moneda e importe.",
       "Por dentro, ccajadef contiene campos como codcaj, nomcaj, empcode, ctafin, moneda, cuenta, proyec, seccio, opecob y opepag."
      ],
      "campos": [
       {
        "campo": "Código",
-       "significado": "Identificador único de la caja (codcaj).",
+       "significado": "Código que identifica la caja.",
        "ejemplo": "CAJA_{INI}"
       },
       {
@@ -2417,7 +2417,7 @@
       },
       {
        "campo": "Cuenta financiera",
-       "significado": "Cuenta financiera asociada (ctafin).",
+       "significado": "Cuenta financiera asociada.",
        "ejemplo": ""
       },
       {
@@ -2475,7 +2475,7 @@
        "imagen": "icon-tesoreria-003.webp"
       },
       {
-       "texto": "Revisa el maestro ccajaope y comprueba los tipos de operaciones",
+       "texto": "Revisa el maestro de tipos de operación de caja y comprueba los tipos de operaciones",
        "detalle": "Comprueba el código (Operación), la descripción, la cuenta mnemotécnica, la secuencia y el «Plazo pago», que es la forma de pago: Efectivo, Tarjeta crédito, Tarjeta débito o Saldo inicial.",
        "imagen": "icon-tesoreria-004.webp"
       },
@@ -2502,16 +2502,16 @@
       "Registro y operativa"
      ],
      "explicacion": [
-      "El diario de movimientos se registra en ccajamov, como los movimientos manuales de tesorería que viste en el bloque «Registrar un movimiento manual». Cada registro queda identificado por cajaid y asociado a una caja, empresa, proyecto y sección contable. El estado inicial es Abierto (A).",
-      "Las líneas de movimiento (ccajalin) son las contrapartidas contables. Al registrar un movimiento, si existen saldo o movimientos anteriores, el sistema inserta automáticamente una línea de saldo inicial, que puedes modificar, si el tipo de operación está parametrizado como saldo inicial.",
+      "El diario de movimientos se registra en los movimientos de caja (Caja › Registro y operativa), como los movimientos manuales de tesorería que viste en el bloque «Registrar un movimiento manual». Cada registro queda identificado por cajaid y asociado a una caja, empresa, proyecto y sección contable. El estado inicial es Abierto (A).",
+      "Las líneas de movimiento son las contrapartidas contables. Al registrar un movimiento, si existen saldo o movimientos anteriores, el sistema inserta automáticamente una línea de saldo inicial, que puedes modificar, si el tipo de operación está parametrizado como saldo inicial.",
       "Los vales son préstamos de dinero hechos con fondos de la caja (por ejemplo, 50 € a un empleado para un recado). Al cancelar un vale, su importe vuelve al saldo disponible.",
-      "Si la caja tiene activado el control de liquidación (ccajadef.indliq = S), la liquidación comprueba que los billetes y monedas contados coinciden con el saldo de líneas y vales. Si coincide, pasa la jornada a Liquidado (L); si no, muestra el descuadre.",
+      "Si la caja tiene activado el control de liquidación en su definición, la liquidación comprueba que los billetes y monedas contados coinciden con el saldo de líneas y vales. Si coincide, pasa la jornada a Liquidado (L); si no, muestra el descuadre.",
       "Por dentro, ccajamov contiene campos como codcaj, turno, fecmov, jusser y estado. ccajalin tiene tipo de operación, importe en divisa y estado de línea (Inicial, Definitivo o D)."
      ],
      "campos": [
       {
        "campo": "Caja",
-       "significado": "Código de la caja del movimiento (codcaj).",
+       "significado": "Código de la caja del movimiento.",
        "ejemplo": ""
       },
       {
@@ -2536,7 +2536,7 @@
       },
       {
        "campo": "Tipo de operación",
-       "significado": "Clasificación de la línea según ccajaope.",
+       "significado": "Clasificación de la línea según el tipo de operación de caja.",
        "ejemplo": ""
       },
       {
@@ -2552,7 +2552,7 @@
      ],
      "pasos": [
       {
-       "texto": "Navega a Finanzas > Caja > Movimientos y abre el formulario de ccajamov",
+       "texto": "Navega a Finanzas > Caja > Movimientos y abre el formulario de movimientos de caja",
        "detalle": "Abre un movimiento y comprueba los datos de cabecera: caja, turno, fecha, justificante y estado.",
        "imagen": "icon-tesoreria-006.webp"
       },
@@ -2579,7 +2579,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "La restricción de base de datos de ccajamov limita el estado a A, L o C; el proceso de liquidación actualiza el movimiento a L."
+       "texto": "El movimiento de caja solo admite los estados A, L o C; el proceso de liquidación actualiza el movimiento a L."
       }
      ]
     },
@@ -2593,8 +2593,8 @@
       "Cheques y Remesas"
      ],
      "explicacion": [
-      "Las remesas se registran en ccajarem con identificador, fecha, empresa, caja, cuenta financiera, justificante, importe total, moneda y estado (Abierto o Cerrado).",
-      "Los cheques se registran en ccajache asociados a un movimiento de caja. El signo del importe determina si es a cobrar o a pagar. El estado inicial es R (Registrado).",
+      "Las remesas se registran en Caja › Cheques y Remesas con identificador, fecha, empresa, caja, cuenta financiera, justificante, importe total, moneda y estado (Abierto o Cerrado).",
+      "Los cheques se registran en Caja › Cheques y Remesas asociados a un movimiento de caja. El signo del importe determina si es a cobrar o a pagar. El estado inicial es R (Registrado).",
       "Al incluir un cheque en una remesa abierta, pasa a P (Propuesto). La contabilización del diario lo lleva a C (Contabilizado). El cierre de la remesa lo pasa a G (Gestionado). Desde G, el botón «Cheque impagado» lo lleva a I (Impagado); desde I, el botón «Deshacer impagado» lo devuelve a G.",
       "La remesa debe permanecer abierta mientras se completa la contabilización del diario. La contabilización es independiente del cierre de la remesa.",
       "Por dentro, ccajarem contiene campos como remesa, remfec, empcode, codcaj, ctafin, remtot y estado. ccajache gestiona los estados R, P, C, G e I."
@@ -2617,12 +2617,12 @@
       },
       {
        "campo": "Caja",
-       "significado": "Caja que origina la remesa (codcaj).",
+       "significado": "Caja que origina la remesa.",
        "ejemplo": ""
       },
       {
        "campo": "Cuenta financiera",
-       "significado": "Cuenta asociada a la remesa (ctafin).",
+       "significado": "Cuenta financiera asociada a la remesa.",
        "ejemplo": ""
       },
       {
@@ -2643,7 +2643,7 @@
      ],
      "pasos": [
       {
-       "texto": "Navega a Finanzas > Caja > Remesas > Registro y abre el formulario de ccajarem",
+       "texto": "Navega a Finanzas > Caja > Remesas > Registro y abre el formulario de remesas de caja",
        "detalle": "Abre el formulario y comprueba el identificador, la fecha, la empresa, la caja, la cuenta financiera, el total y el estado.",
        "imagen": "icon-tesoreria-010.webp"
       },
@@ -2730,15 +2730,15 @@
    ],
    "test": [
     {
-     "pregunta": "¿Qué tabla registra el diario de movimientos de caja?",
+     "pregunta": "¿Dónde se registra cada jornada de caja?",
      "opciones": [
-      "ccajamov",
-      "ccajalin",
-      "ccajaope",
-      "ccajadef"
+      "Movimientos de caja",
+      "Líneas del movimiento",
+      "Tipos de operación de caja",
+      "Definición de cajas"
      ],
      "correcta": 0,
-     "explicacion": "ccajamov es la tabla de movimientos o jornadas y cierres de caja."
+     "explicacion": "Cada jornada es un movimiento de caja: se abre, recibe operaciones, se liquida y se cierra."
     },
     {
      "pregunta": "¿Qué estados puede tener un cheque de caja?",
@@ -2749,21 +2749,21 @@
       "Abierto, Liquidado, Cerrado"
      ],
      "correcta": 1,
-     "explicacion": "Los estados de ccajache son Registrado, Propuesto, Contabilizado, Gestionado e Impagado."
+     "explicacion": "Los estados de un cheque de caja son Registrado, Propuesto, Contabilizado, Gestionado e Impagado."
     },
     {
-     "pregunta": "¿Qué validación exige que opecob y opepag se informen conjuntamente?",
+     "pregunta": "¿Dónde hay que informar juntas (o dejar vacías las dos) la operación de cobro y la de pago?",
      "opciones": [
-      "En ccajaope",
-      "En ccajamov",
-      "En ccajadef",
-      "En ccajamon"
+      "En los tipos de operación de caja",
+      "En el movimiento de caja",
+      "En la definición de caja",
+      "En las monedas de la caja"
      ],
      "correcta": 2,
-     "explicacion": "La estructura de ccajadef obliga a informar ambas operaciones juntas o ninguna."
+     "explicacion": "La definición de caja obliga a informar las dos operaciones juntas o ninguna."
     },
     {
-     "pregunta": "¿Qué proceso actualiza ccajamov a estado Liquidado?",
+     "pregunta": "¿Qué proceso pasa la jornada de caja a Liquidado?",
      "opciones": [
       "Cierre de remesa",
       "Contabilización",
@@ -2774,15 +2774,15 @@
      "explicacion": "La liquidación comprueba el descuadre y, si es correcto, actualiza el estado a L."
     },
     {
-     "pregunta": "¿Qué tabla contiene las remesas de cheques?",
+     "pregunta": "¿Dónde se registran las remesas de cheques de caja?",
      "opciones": [
-      "ccajarem",
-      "ccajadef",
-      "ccajache",
-      "ccajamon"
+      "En Caja › Cheques y Remesas, como remesa",
+      "En la definición de caja",
+      "En la ficha de cada cheque",
+      "En las monedas de la caja"
      ],
      "correcta": 0,
-     "explicacion": "ccajarem es la tabla de remesas de cheques."
+     "explicacion": "Las remesas de cheques se registran en Finanzas › Caja › Cheques y Remesas."
     }
    ],
    "checklist": [
@@ -2809,8 +2809,8 @@
      "solucion": "Liquida o cierra los movimientos anteriores de la misma caja y empresa con fecha anterior."
     },
     {
-     "problema": "Al guardar ccajadef con solo opecob informado, aparece un error.",
-     "solucion": "Informa opecob y opepag a la vez o deja ambos vacíos."
+     "problema": "Al guardar la definición de caja con solo la operación de cobro informada, aparece un error.",
+     "solucion": "Informa la operación de cobro y la de pago a la vez o deja las dos vacías."
     }
    ]
   },
@@ -2883,7 +2883,7 @@
       "Financiación LP"
      ],
      "explicacion": [
-      "El registro de financiación (menú Financiación LP, pantalla «Financiaciones a largo plazo», objeto cfinconh) permite dar de alta cada préstamo, leasing o financiación intragrupo. Incluye grupo financiación, perfil, empresa, capital, interés anual nominal, cuotas, método de cálculo, modo de cálculo de intereses, fecha inicio de amortización y vencimiento.",
+      "El registro de financiación (menú Financiación LP, pantalla «Financiaciones a largo plazo»; en el buscador: cfinconh) permite dar de alta cada préstamo, leasing o financiación intragrupo. Incluye grupo financiación, perfil, empresa, capital, interés anual nominal, cuotas, método de cálculo, modo de cálculo de intereses, fecha inicio de amortización y vencimiento.",
       "Los estados del contrato son Solicitado, Activo y Cerrado. El estado Solicitado se puede modificar y borrar. El estado Activo ya tiene cuadro de amortización y no se puede modificar ni borrar. El estado Cerrado indica un contrato cancelado; las cuotas pendientes pasan a Anuladas.",
       "Las acciones sobre el contrato incluyen Activar contrato, Desactivar contrato, Cancelar contrato, Reactivar contrato, Copiar contrato, Modificar cuenta y Cambiar Tercero. En la captura, la contabilización automática está desactivada («Nunca»).",
       "Al activar el contrato se calcula el cuadro de amortización y pasa a Activo. Desactivar contrato no se ejecuta si alguna cuota tiene factura o tesorería.",
@@ -2971,9 +2971,9 @@
       "Financiación LP"
      ],
      "explicacion": [
-      "La revisión de intereses guarda cada cambio del tipo de interés y regenera cuotas pendientes. Los estados son Entrada (sin cuotas) y Generada. La tabla cfinrevi guarda las revisiones y cfinrevi_file el fichero Excel bancario.",
+      "La revisión de intereses guarda cada cambio del tipo de interés y regenera cuotas pendientes. Los estados son Entrada (sin cuotas) y Generada. El ERP guarda cada revisión y el fichero Excel que envía el banco.",
       "Al cargar un fichero Excel, las cuotas entran con origen Externa y se anulan las pendientes posteriores de la revisión anterior. Generar amortizaciones solo se ejecuta en estado Entrada.",
-      "El cuadro de amortización está en cfinamor y muestra columnas como Cuota, Estado, Fecha, Capital pendiente, Interés cuota, Amortización capital, Cuota bruta, Impuestos, Retención, Id tesorería, Enlace factura, Enlace asiento.",
+      "El cuadro de amortización muestra columnas como Cuota, Estado, Fecha, Capital pendiente, Interés cuota, Amortización capital, Cuota bruta, Impuestos, Retención, Id tesorería, Enlace factura, Enlace asiento.",
       "Los botones sobre cuotas incluyen Traspasar a tesorería, Retroceder tesorería, Generar factura, Factura interempresa, Liquidar cuota, Eliminar factura, Modificar cambio y Modificar cuenta.",
       "Traspasar a tesorería crea el movimiento bancario, borra la previsión, marca la cuota como Contabilizada y, si el perfil es Financiado, reclasifica a corto plazo la cuota del año siguiente. No se ejecuta si hay cuotas anteriores sin traspasar."
      ],
@@ -3057,10 +3057,10 @@
       "Financiación"
      ],
      "explicacion": [
-      "Los grupos de cuentas de financiación (cfinctas) definen las cuentas contables según la naturaleza de la deuda: préstamos bancarios, leasing y préstamos entre empresas del grupo. Incluyen cuentas de financiación LP y CP, intereses diferidos, intereses acumulados, gastos e ingresos por intereses y diferencias de cambio. Intereses acumulados: los ya devengados (corresponden a tiempo ya pasado) que aún no se han pagado. Intereses diferidos: los pactados que corresponden a periodos futuros y todavía no son gasto. Diferencias de cambio: lo que se gana o se pierde cuando la deuda está en otra moneda y cambia su cotización.",
-      "Los tipos de financiación LP (cfincond) son plantillas de cada tipo de contrato. Definen clasificación, activo/pasivo, cuenta tercero, generación de tesorería, flujo capital e intereses, y tipo de factura. Los flujos de capital e intereses son los que ya viste en el bloque «Configurar flujos, operaciones y parámetros». Generar tesorería Sí crea previsión de tesorería por cuota; No liquida por factura.",
-      "Las cuentas de depósito/préstamo C.P. (tdepmovd) indican por empresa y cuenta bancaria las operaciones y flujos para depósitos/préstamos a corto plazo. Sin esta fila, Confirmar muestra «No especificada parametrización para la cuenta y empresa del registro actual».",
-      "Los componentes de la financiación (cfincomp) vinculan contratos con inmovilizado. Los tipos de cambio (cfincamb) registran cambios por empresa, ejercicio, mes y divisa.",
+      "Los grupos de cuentas de financiación definen las cuentas contables según la naturaleza de la deuda: préstamos bancarios, leasing y préstamos entre empresas del grupo. Incluyen cuentas de financiación LP y CP, intereses diferidos, intereses acumulados, gastos e ingresos por intereses y diferencias de cambio. Intereses acumulados: los ya devengados (corresponden a tiempo ya pasado) que aún no se han pagado. Intereses diferidos: los pactados que corresponden a periodos futuros y todavía no son gasto. Diferencias de cambio: lo que se gana o se pierde cuando la deuda está en otra moneda y cambia su cotización.",
+      "Los tipos de financiación LP son plantillas de cada tipo de contrato. Definen clasificación, activo/pasivo, cuenta tercero, generación de tesorería, flujo capital e intereses, y tipo de factura. Los flujos de capital e intereses son los que ya viste en el bloque «Configurar flujos, operaciones y parámetros». Generar tesorería Sí crea previsión de tesorería por cuota; No liquida por factura.",
+      "Las cuentas de depósito/préstamo C.P. indican por empresa y cuenta bancaria las operaciones y flujos para depósitos/préstamos a corto plazo. Sin esta fila, Confirmar muestra «No especificada parametrización para la cuenta y empresa del registro actual».",
+      "Los componentes de la financiación vinculan contratos con inmovilizado. Los tipos de cambio registran cambios por empresa, ejercicio, mes y divisa.",
       "Los maestros de grupos de cuentas, tipos financiación LP y cuentas de depósito/préstamo C.P. se encuentran en Finanzas > Tesorería > Maestros > Financiación. Tipos de cambio está en Finanzas > Tesorería > Financiación > Tipos de cambio. Estos maestros complementan las operaciones financieras que configuraste en el bloque «Configurar flujos, operaciones y parámetros».",
       "Por dentro: cfinctas, cfincond, tdepmovd, cfincomp y cfincamb son las tablas de configuración."
      ],
@@ -3136,7 +3136,7 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "Flujo capital y Flujo intereses deben ser distintos en cfincond."
+       "texto": "Flujo capital y Flujo intereses deben ser distintos en el tipo de financiación LP."
       },
       {
        "tipo": "nota",
@@ -3199,7 +3199,7 @@
      ],
      "pasos": [
       {
-       "texto": "Abre la parametrización de cuentas de préstamos y depósitos (tabla tdepmovd)",
+       "texto": "Abre la parametrización de cuentas de préstamos y depósitos",
        "detalle": "En la captura, la ficha «Cuentas de préstamos y depósitos»: Operación (Préstamo), Empresa, Cta. financiera y Cta. depósito, y las operaciones y flujos del Debe, del Haber y de los intereses. Los préstamos y depósitos en sí, con su interés y su devengo, se registran en Finanzas › Tesorería › Financiación › Depósitos y préstamos C.P.",
        "imagen": "icon-tesoreria-025.webp"
       },
@@ -3217,7 +3217,7 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "Sin parametrización en tdepmovd, Confirmar da «No especificada parametrización para la cuenta y empresa del registro actual»."
+       "texto": "Sin parametrización de cuentas de préstamos y depósitos, Confirmar da «No especificada parametrización para la cuenta y empresa del registro actual»."
       },
       {
        "tipo": "nota",
@@ -3228,15 +3228,15 @@
    ],
    "test": [
     {
-     "pregunta": "¿Qué tabla guarda la cabecera de cada contrato de financiación?",
+     "pregunta": "¿En qué pantalla das de alta cada contrato de financiación (préstamo, leasing…)?",
      "opciones": [
-      "cfinamor",
-      "cfinconh",
-      "cfinrevi",
-      "cfincond"
+      "Cuadro de amortización",
+      "Financiaciones a largo plazo",
+      "Revisión de intereses",
+      "Tipos de financiación LP"
      ],
      "correcta": 1,
-     "explicacion": "cfinconh guarda la cabecera de cada contrato de financiación."
+     "explicacion": "Cada contrato se da de alta en Financiación LP › «Financiaciones a largo plazo»."
     },
     {
      "pregunta": "¿Qué método de cálculo financiero tiene cuota constante?",
@@ -3304,7 +3304,7 @@
     },
     {
      "problema": "Al confirmar un préstamo/depósito CP aparece «No especificada parametrización para la cuenta y empresa del registro actual».",
-     "solucion": "Define la parametrización en tdepmovd para esa empresa y cuenta financiera."
+     "solucion": "Define la parametrización de cuentas de préstamos y depósitos para esa empresa y cuenta financiera."
     },
     {
      "problema": "No se puede desactivar un contrato.",
@@ -3402,9 +3402,9 @@
       "Maestros"
      ],
      "explicacion": [
-      "Los mercados financieros (cval_mercfin) registran los mercados donde se compran y venden activos. Los productos financieros (cval_prodfin) recogen acciones, bonos, fondos de inversión y derivados. Los sectores de actividad (cval_sectact) sirven para clasificar y analizar.",
-      "Los tipos de cartera (cval_tipcart) definen los tipos de cartera, la entidad gestora, la empresa encargada y la cuenta financiera. La cuenta financiera determina si los cargos y abonos bancarios se registran por contabilidad o por tesorería.",
-      "Las entidades financieras y agentes de cartera recogen la procedencia de la información sobre precios y fluctuaciones. Las cuentas de la cartera de valores (cval_valctas) se usan para el registro contable de las transacciones.",
+      "Los mercados financieros registran los mercados donde se compran y venden activos. Los productos financieros recogen acciones, bonos, fondos de inversión y derivados. Los sectores de actividad sirven para clasificar y analizar.",
+      "Los tipos de cartera definen los tipos de cartera, la entidad gestora, la empresa encargada y la cuenta financiera. La cuenta financiera determina si los cargos y abonos bancarios se registran por contabilidad o por tesorería.",
+      "Las entidades financieras y agentes de cartera recogen la procedencia de la información sobre precios y fluctuaciones. Las cuentas de la cartera de valores se usan para el registro contable de las transacciones.",
       "El registro contable de la cartera y los tipos de operación completan la configuración.",
       "Por dentro, intervienen: cval_mercfin, cval_prodfin, cval_sectact, cval_tipcart, cval_agrcart, cval_valctas, cval_valcont y cval_tipoper."
      ],

@@ -1,7 +1,7 @@
 /* Prácticas transaccionales: enunciado + comprobaciones automáticas sobre los datos del ERP de práctica. */
 import { useSyncExternalStore } from 'react';
 import { avisarCambio } from '../lib/sync';
-import { type Db, type Pantalla, cuadra, importeBanco, baseDe, facturaDeAlbaran, lineasFactura, situacionPedido, stock, totales } from './modelo';
+import { type Db, type Pantalla, cuadra, importeBanco, baseDe, facturaDeAlbaran, lineasFactura, situacionPedido, totales } from './modelo';
 
 export interface Comprobacion {
   texto: string;
@@ -21,17 +21,20 @@ export interface Practica {
 }
 
 const T = (ini: string) => `T${ini}`;
-const ART = (ini: string) => `${ini}001`;
+/** Artículo propio (Maestros): para aprender la ficha. No se compra. */
+const ART = (ini: string) => `ROD${ini}`;
+/** Artículo que se compra en todas las prácticas de compras (como en la demo real). */
+const ART_COMPRA = '13500620';
 const ter = (d: Db, ini: string) => d.terceros.find((t) => t.codigo === T(ini));
 const prov = (d: Db, ini: string) => d.proveedores.find((p) => p.tercero === T(ini));
 const art = (d: Db, ini: string) => d.articulos.find((a) => a.codigo === ART(ini));
 const pedidosDe = (d: Db, ini: string) => d.pedidos.filter((p) => p.proveedor === T(ini) && p.autor === ini);
 const conArt = (d: Db, ini: string, cant: number, precio: number) =>
-  pedidosDe(d, ini).filter((p) => p.lineas.some((l) => l.articulo === ART(ini) && l.cantidad === cant && Math.abs(l.precio - precio) < 0.005));
+  pedidosDe(d, ini).filter((p) => p.lineas.some((l) => l.articulo === ART_COMPRA && l.cantidad === cant && Math.abs(l.precio - precio) < 0.005));
 const albDe = (d: Db, pedido: string) => d.albaranes.filter((a) => a.origen === pedido);
 const casi = (a: number, b: number) => Math.abs(a - b) < 0.005;
 
-/** Pedido de la práctica 3: 10 × 12,50 del artículo propio */
+/** Pedido de la práctica 3: 10 × 12,50 del artículo 13500620 */
 const pedido3 = (d: Db, ini: string) => conArt(d, ini, 10, 12.5)[0];
 /** Pedido de la práctica 4: 20 unidades a 9,80 */
 const pedido4 = (d: Db, ini: string) => conArt(d, ini, 20, 9.8)[0];
@@ -69,11 +72,11 @@ export const PRACTICAS: Practica[] = [
   {
     id: 'erp-articulo',
     titulo: 'Crea y activa tu artículo',
-    resumen: 'Artículo de compra con familia, tipo contable PRODUCTO y precio, listo para pedir.',
+    resumen: 'Tu artículo ROD con familia, tipo contable y precio: practicas la ficha que das de alta en Maestros.',
     minutos: 6,
     pantalla: 'articulos',
     enunciado: [
-      'En Maestros › Artículos pulsa «Nuevo» y crea el artículo {ART}.',
+      'En Maestros › Artículos pulsa «Nuevo» y crea el artículo {ART} (ROD de rodamiento + tus iniciales). Es para aprender la ficha: en las prácticas de compras usas el 13500620 de la demo.',
       'Elige la familia 01.01.001352: fíjate en que propone la clave fiscal BOG (bien).',
       'Tipo contable PRODUCTO (PROD). Con VEN no se puede comprar: el ERP te avisará de que falta la cuenta de compras.',
       'Precio de compra 12,50 € por UNIDAD. Guarda y pulsa «Validar» hasta que quede Activo.',
@@ -99,22 +102,22 @@ export const PRACTICAS: Practica[] = [
     minutos: 15,
     pantalla: 'pedidos',
     enunciado: [
-      'Necesitas tu proveedor {T} y tu artículo {ART} (prácticas 1 y 2).',
-      'Compras › Pedidos › Nuevo: tipo PC, proveedor {T}. Añade una línea de {ART}: 10 unidades a 12,50. Guarda y valida.',
+      'Necesitas tu proveedor {T} (práctica «Da de alta tu proveedor»). El artículo es el 13500620 de la demo, el mismo que en el ERP real: ya tiene tipo contable PRODUCTO y precio de compra 12,50.',
+      'Compras › Pedidos › Nuevo: tipo PC, proveedor {T}. Añade una línea del artículo 13500620: 10 unidades a 12,50. Guarda y valida.',
       'Con el pedido validado pulsa «Generar albaranes»: se crea un albarán ACPC con el pedido como origen. Ábrelo y valídalo (entra el stock).',
       'En el albarán, pulsa «Generar factura» con Factura proveedor PROV-{INI}-001. Se crea una FCOA.',
       'Revisa la prevista del asiento (base 125,00, IVA 26,25, total 151,25), valida la factura y contabilízala.',
     ],
     datos: [
-      { campo: 'Pedido', valor: '{ART} · 10 × 12,50' },
+      { campo: 'Pedido', valor: '13500620 · 10 × 12,50' },
       { campo: 'Factura proveedor', valor: 'PROV-{INI}-001' },
       { campo: 'Total esperado', valor: '151,25 €' },
     ],
     checks: [
-      { texto: 'Pedido PC de {T} con 10 × 12,50 de {ART}', puntos: 15, ok: (d, i) => !!pedido3(d, i), pista: 'Compras › Pedidos › Nuevo.' },
+      { texto: 'Pedido PC de {T} con 10 × 12,50 del artículo 13500620', puntos: 15, ok: (d, i) => !!pedido3(d, i), pista: 'Compras › Pedidos › Nuevo.' },
       { texto: 'Pedido validado', puntos: 10, ok: (d, i) => pedido3(d, i)?.estado === 'Validado', pista: 'Botón «Validar» del pedido.' },
       { texto: 'Albarán ACPC generado desde el pedido (origen informado)', puntos: 15, ok: (d, i) => { const p = pedido3(d, i); return !!p && albDe(d, p.numero).length > 0; }, pista: '«Generar albaranes» desde el pedido validado, no un albarán a mano.' },
-      { texto: 'Albarán validado: 10 unidades de {ART} en stock', puntos: 15, ok: (d, i) => { const p = pedido3(d, i); return !!p && albDe(d, p.numero).some((a) => a.estado === 'Validado') && (stock(d).find((s) => s.articulo === ART(i))?.cantidad ?? 0) >= 10; }, pista: 'Al validar el albarán entra el stock (NSAL › DISP).' },
+      { texto: 'Albarán validado: entran 10 unidades de 13500620 en stock', puntos: 15, ok: (d, i) => { const p = pedido3(d, i); return !!p && albDe(d, p.numero).some((a) => a.estado === 'Validado' && a.lineas.some((l) => l.articulo === ART_COMPRA && l.cantidad >= 10)); }, pista: 'Al validar el albarán entra el stock (NSAL › DISP).' },
       { texto: 'Pedido en situación «Servido o Facturado»', puntos: 5, ok: (d, i) => { const p = pedido3(d, i); return !!p && situacionPedido(d, p) === 'Servido o Facturado'; }, pista: 'Se recibieron todas las unidades.' },
       { texto: 'Factura FCOA con Factura proveedor PROV-{INI}-001 que conforma el albarán', puntos: 15, ok: (d, i) => { const p = pedido3(d, i); return !!p && albDe(d, p.numero).some((a) => facturaDeAlbaran(d, a.numero)?.facturaProveedor.toUpperCase() === `PROV-${i}-001`); }, pista: '«Generar factura» desde el albarán validado.' },
       { texto: 'Factura de 151,25 € validada', puntos: 10, ok: (d, i) => d.facturas.some((f) => f.facturaProveedor.toUpperCase() === `PROV-${i}-001` && f.estado === 'Validado' && casi(totales(lineasFactura(d, f)).total, 151.25)), pista: '125,00 + 21 % = 151,25.' },
@@ -128,19 +131,19 @@ export const PRACTICAS: Practica[] = [
     minutos: 15,
     pantalla: 'pedidos',
     enunciado: [
-      'Crea otro pedido PC a {T} con 20 unidades de {ART} a 9,80. Valídalo.',
+      'Crea otro pedido PC a {T} con 20 unidades del artículo 13500620 a 9,80. Valídalo.',
       'Llega el primer camión con 12 unidades: «Generar albaranes» y, en el albarán, cambia la cantidad a 12 antes de validarlo.',
       'Comprueba que el pedido queda «Parcialmente servido» con 8 pendientes.',
       'Llega el resto: vuelve a «Generar albaranes» (propone las 8 pendientes) y valida el segundo albarán.',
       'Genera una sola factura que agrupe los dos albaranes, con Factura proveedor PROV-{INI}-002 (base 196,00, total 237,16). Valida y contabiliza.',
     ],
     datos: [
-      { campo: 'Pedido', valor: '{ART} · 20 × 9,80' },
+      { campo: 'Pedido', valor: '13500620 · 20 × 9,80' },
       { campo: 'Albaranes', valor: '12 + 8 unidades' },
       { campo: 'Factura proveedor', valor: 'PROV-{INI}-002' },
     ],
     checks: [
-      { texto: 'Pedido validado de 20 × 9,80 de {ART}', puntos: 10, ok: (d, i) => pedido4(d, i)?.estado === 'Validado', pista: 'Nuevo pedido con una sola línea.' },
+      { texto: 'Pedido validado de 20 × 9,80 del artículo 13500620', puntos: 10, ok: (d, i) => pedido4(d, i)?.estado === 'Validado', pista: 'Nuevo pedido con una sola línea.' },
       { texto: 'Primer albarán validado de 12 unidades', puntos: 20, ok: (d, i) => { const p = pedido4(d, i); return !!p && albDe(d, p.numero).some((a) => a.estado === 'Validado' && a.lineas.some((l) => l.cantidad === 12)); }, pista: 'Edita la cantidad de la línea del albarán generado antes de validarlo.' },
       { texto: 'Segundo albarán validado de 8 unidades', puntos: 20, ok: (d, i) => { const p = pedido4(d, i); return !!p && albDe(d, p.numero).some((a) => a.estado === 'Validado' && a.lineas.some((l) => l.cantidad === 8)); }, pista: '«Generar albaranes» propone solo lo pendiente.' },
       { texto: 'Pedido «Servido o Facturado» (20 de 20)', puntos: 10, ok: (d, i) => { const p = pedido4(d, i); return !!p && situacionPedido(d, p) === 'Servido o Facturado'; }, pista: 'Entre los dos albaranes deben sumar 20.' },

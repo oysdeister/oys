@@ -36,10 +36,10 @@ export const FICHAS: Record<string, FichaModulo> = {
     circuito: [
       { t: 'Empresa', d: 'Quién factura. Lleva su plan contable, su moneda y su ejercicio.', ej: 'Empresa S{INI} · ejercicio 2026' },
       { t: 'Plan y cuentas', d: 'Las cuentas donde el ERP apunta cada importe. El mnemotécnico es un alias que el ERP convierte en la cuenta real.', ej: '43000 Clientes · 57200 Bancos' },
-      { t: 'Tercero', d: 'Una sola ficha para clientes y proveedores. Su relación contable dice a qué cuenta va.', ej: 'Tercero {INI}1 · relación CLI' },
-      { t: 'Forma de cobro', d: 'Tipo de efecto y plazo de pago, asignados al tercero.', ej: 'Efecto {INI} + plazo {INI}1 (30/60 días)' },
-      { t: 'Artículo y almacén', d: 'Qué compras o vendes, quién te lo suministra y dónde se guarda.', ej: '{INI}0001 · almacén {INI}1' },
-      { t: 'Stock', d: 'Una entrada de mercancía y su comprobación en el stock y el kardex.', ej: '10 unidades en {INI}1' },
+      { t: 'Tercero', d: 'Una sola ficha para clientes y proveedores. Su relación contable dice a qué cuenta va.', ej: 'Cliente C{INI} · relación CLI' },
+      { t: 'Forma de cobro', d: 'Tipo de efecto y plazo de pago, asignados al tercero.', ej: 'Efecto R{INI} + plazo P{INI} (30/60 días)' },
+      { t: 'Artículo y almacén', d: 'Qué compras o vendes, quién te lo suministra y dónde se guarda.', ej: 'ROD{INI} · almacén ALM{INI}' },
+      { t: 'Stock', d: 'Una entrada de mercancía y su comprobación en el stock y el kardex.', ej: '10 unidades en ALM{INI}' },
     ],
   },
   compras: {
@@ -85,7 +85,7 @@ export const FICHAS: Record<string, FichaModulo> = {
       'Cobrar y pagar efectos sueltos, con una gestión o en una remesa, y llevarlos a tesorería.',
     ],
     circuito: [
-      { t: 'Plazo de pago, tipo de efecto y condiciones del tercero', d: 'Cuándo se paga, con qué tipo de efecto, y la forma de pago y de cobro que recibe el tercero.', ej: 'Plazo {INI}1: 40, 80 y 120 días (40/20/40 %) · pago: efecto T{INI} + plazo {INI}1' },
+      { t: 'Plazo de pago, tipo de efecto y condiciones del tercero', d: 'Cuándo se paga, con qué tipo de efecto, y la forma de pago y de cobro que recibe el tercero.', ej: 'Plazo V{INI}: 40, 80 y 120 días (40/20/40 %) · tercero CAR{INI} · pago: efecto E{INI} + plazo V{INI}' },
       { t: 'Factura y efectos en cartera', d: 'Al contabilizar la factura nacen sus efectos, uno por vencimiento, en estado PE (pendiente). Su estado y su tipo deciden qué acciones admiten.', ej: '121,00 → 48,40 + 24,20 + 48,40' },
       { t: 'Banco propio y tipos de remesa', d: 'La cuenta por la que se cobra o se paga, con los tipos de remesa que admite.', ej: 'BBVA_{INI} (57200) · CAJA_{INI} (57000) · CSCTS' },
       { t: 'Cobro o pago: suelto, con gestión o en remesa', d: 'Un efecto suelto, varios con una gestión o un lote en una remesa.', ej: 'PE › PR › OC › CO · pago directo · gestión masiva' },
@@ -121,7 +121,7 @@ export const FICHAS: Record<string, FichaModulo> = {
     circuito: [
       { t: 'Diario y periodos', d: 'Dónde y en qué mes cae cada asiento. El año se parte en doce periodos.', ej: 'Ejercicio 2026 · periodos 1 a 12' },
       { t: 'Plan de cuentas', d: 'Alta de una cuenta de gastos del grupo 6.', ej: '62999.00000 «Gastos varios {INI}»' },
-      { t: 'Auxiliares y analítica', d: 'Más detalle dentro de la cuenta (por empleado) y a qué parte del negocio va cada gasto.', ej: '{INI}EMP · proyecto {INI}1' },
+      { t: 'Auxiliares y analítica', d: 'Más detalle dentro de la cuenta (por empleado) y a qué parte del negocio va cada gasto.', ej: '{INI}EMP · proyecto DIV{INI}' },
       { t: 'Asiento manual', d: 'Cabecera y líneas; Debe = Haber y «Finalizar» lo contabiliza.', ej: 'Cuadre 0,00 · Contabilizado' },
       { t: 'Consultas', d: 'Lo compruebas en el mayor de cuentas y en los saldos.', ej: '«Mayor de cuentas» y «Saldos cuentas»' },
       { t: 'Facturas', d: 'Al contabilizar una factura nacen su asiento, sus vencimientos y su registro fiscal.', ej: 'Asiento + efectos + IVA' },
