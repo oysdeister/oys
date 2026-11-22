@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as KEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent as KEvent, type ReactNode } from 'react';
 import { Glosa } from '../Glosario';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -73,7 +73,8 @@ const limpio = (campo: string) => campo.replace(/\s*\*\s*$/, '');
 
 /**
  * Captura real de la pantalla con todos los campos numerados y su tabla debajo.
- * Al pulsar un número o una fila, la ficha del campo queda fija debajo de su captura.
+ * Al pulsar un número o una fila, sale un globo con todo el campo encima de la captura,
+ * junto a su punto y sin tapar ni ese punto ni el siguiente (también en la ampliada).
  */
 export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; ini: string }) {
   const t = (x: string) => conIni(x, ini);
@@ -162,6 +163,7 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
     });
   }, [s.id, s.campos, vistas, asp, anchos]);
 
+
   const total = s.campos.length;
   /** La ampliada va en un portal, fuera de la página del bloque: le pasamos el color del módulo. */
   const cMod = META[modulo]?.color ?? META[idModulo(modulo)]?.color;
@@ -170,16 +172,26 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
 
   const [activa, setActiva] = useState<number | null>(null);
   const [grande, setGrande] = useState<number | null>(null);
+  /** Dónde va el globo del campo activo (medido en píxeles tras pintarlo). */
+  const [pos, setPos] = useState<Sitio | null>(null);
 
-  // Tras elegir: llevar la vista a la captura (desde la tabla) o el foco a la ficha (al recorrer).
+  // Tras elegir: llevar la vista a la captura (desde la tabla) o el foco al globo (al pulsar o recorrer).
   const pendiente = useRef<'figura' | 'ficha' | null>(null);
-  const fichaPag = useRef<HTMLDivElement>(null);
-  const fichaLbx = useRef<HTMLDivElement>(null);
-  /** Captura bajo la que estaba la ficha la última vez (para saber si ha saltado). */
+  const raiz = useRef<HTMLDivElement>(null);
+  const raizLbx = useRef<HTMLDivElement>(null);
+  const globoPag = useRef<HTMLDivElement>(null);
+  const globoLbx = useRef<HTMLDivElement>(null);
+  /** Escena (captura + globo) de cada vista en la página y la de la ampliada. */
+  const escenas = useRef<(HTMLDivElement | null)[]>([]);
+  const escenaLbx = useRef<HTMLDivElement | null>(null);
+  /** Captura en la que estaba el globo la última vez (para saber si ha saltado). */
   const ultima = useRef<number | null>(null);
 
-  /** Captura bajo la que va la ficha del campo i (en la página, o en la ampliada que está abierta). */
+  /** Captura en la que va el globo del campo i (en la página, o en la ampliada que está abierta). */
   const casaDe = (i: number, defecto: number) => locs[i]?.vi ?? defecto;
+  /** Vista donde se pinta ahora el globo (o null si no hay globo sobre una captura). */
+  const vistaGlobo = activa == null || !vistas.length ? null : grande !== null ? grande : casaDe(activa, 0);
+  const claveSitio = activa == null || vistaGlobo == null ? '' : `${activa}|${vistaGlobo}|${grande !== null ? 'z' : 'p'}`;
 
   const elegir = (i: number, tras: 'figura' | 'ficha' | null = null) => {
     setActiva(i);
@@ -194,6 +206,78 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
     const i = activa == null ? 0 : (activa + d + total) % total;
     elegir(i, 'ficha');
   };
+  const cerrarGrande = useCallback(() => setGrande(null), []);
+
+  /** Mide y coloca el globo: junto al punto, sin tapar ni el punto activo ni el siguiente. */
+  const colocar = () => {
+    if (activa == null || vistaGlobo == null) return;
+    const zoom = grande !== null;
+    const st = zoom ? escenaLbx.current : escenas.current[vistaGlobo];
+    const g = zoom ? globoLbx.current : globoPag.current;
+    const frame = st?.querySelector<HTMLElement>('.ccx-frame');
+    if (!st || !g || !frame || !st.offsetWidth) return;
+    const R = st.getBoundingClientRect();
+    // La ampliada entra con una animación de escala: todo se pasa a píxeles sin escalar de la escena.
+    const esc = R.width / st.offsetWidth || 1;
+    const aLocal = (r: DOMRect): Rect => ({ x: (r.left - R.left) / esc, y: (r.top - R.top) / esc, w: r.width / esc, h: r.height / esc });
+    const F = aLocal(frame.getBoundingClientRect());
+    const w = Math.round(Math.max(200, Math.min(340, F.w - 16)));
+    g.style.width = `${w}px`;
+    g.style.setProperty('--gmax', 'none');
+    const h = g.offsetHeight;
+    const pinA = st.querySelector<HTMLElement>(`.ccx-pin[data-fila="${activa}"]`);
+    const pinN = activa + 1 < total ? st.querySelector<HTMLElement>(`.ccx-pin[data-fila="${activa + 1}"]`) : null;
+    const caja = st.querySelector<HTMLElement>('.ccx-box');
+    const A = pinA ? aLocal(pinA.getBoundingClientRect()) : null;
+    const N = pinN ? aLocal(pinN.getBoundingClientRect()) : null;
+    const C = caja ? aLocal(caja.getBoundingClientRect()) : null;
+    const dentro: Rect = { x: F.x + 8, y: F.y + 8, w: F.w - 16, h: F.h - 16 };
+    let r = buscarSitio(dentro, w, h, A, N, C);
+    let fuera = false;
+    let gmax: number | undefined;
+    if (!r && zoom) {
+      // Ampliada: siempre encima. Si no cabe en la captura, vale toda la pantalla (sin tapar la X de cerrar).
+      const vw = document.documentElement.clientWidth;
+      const vh = window.innerHeight;
+      const V: Rect = { x: (8 - R.left) / esc, y: (68 - R.top) / esc, w: (vw - 16) / esc, h: (vh - 76) / esc };
+      const hh = Math.min(h, V.h);
+      if (hh < h) gmax = hh;
+      r = buscarSitio(V, w, hh, A, N, C) ?? menosMalo(V, w, hh, A, N);
+    }
+    if (!r) {
+      // Último recurso (captura pequeña en la página): pegado por fuera, justo debajo de la captura.
+      fuera = true;
+      const cx = A ? A.x + A.w / 2 : F.x + F.w / 2;
+      const x = lim(cx - w / 2, F.x + 8, F.x + F.w - 8 - w);
+      r = { x, y: F.y + F.h + 14, lado: A ? 'abajo' : 'libre', pico: lim(cx - x, 18, w - 18) };
+    }
+    const nuevo: Sitio = { k: claveSitio, ...r, w, h: gmax ?? h, fuera, gmax };
+    setPos((p) => (p && p.k === nuevo.k && p.fuera === nuevo.fuera && p.lado === nuevo.lado && p.gmax === nuevo.gmax && Math.abs(p.x - nuevo.x) < 0.6 && Math.abs(p.y - nuevo.y) < 0.6 && Math.abs(p.h - nuevo.h) < 0.6 && p.w === nuevo.w && Math.abs(p.pico - nuevo.pico) < 0.6 ? p : nuevo));
+  };
+  const colocarRef = useRef(colocar);
+  colocarRef.current = colocar;
+
+  useLayoutEffect(() => {
+    colocarRef.current();
+  }, [claveSitio, locs, anchos, asp]);
+
+  // Se vuelve a medir si cambia el tamaño de la escena o del globo, al redimensionar y al acabar la animación de la ampliada.
+  useEffect(() => {
+    if (vistaGlobo == null) return;
+    const st = grande !== null ? escenaLbx.current : escenas.current[vistaGlobo];
+    const g = grande !== null ? globoLbx.current : globoPag.current;
+    const f = () => colocarRef.current();
+    window.addEventListener('resize', f);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(f) : null;
+    if (st) ro?.observe(st.querySelector('.ccx-frame') ?? st);
+    if (g) ro?.observe(g);
+    const tm = window.setTimeout(f, 380);
+    return () => {
+      window.removeEventListener('resize', f);
+      ro?.disconnect();
+      window.clearTimeout(tm);
+    };
+  }, [claveSitio, grande, vistaGlobo]);
 
   useEffect(() => {
     const que = pendiente.current;
@@ -204,22 +288,61 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
       return;
     }
     const comp: ScrollBehavior = reducir ? 'auto' : 'smooth';
+    const g = grande !== null ? globoLbx.current : globoPag.current;
     if (que === 'figura' && grande === null && !vistas.length) {
-      fichaPag.current?.scrollIntoView({ block: 'nearest', behavior: comp });
+      g?.scrollIntoView({ block: 'nearest', behavior: comp });
     } else if (que === 'figura' && grande === null) {
       figs.current[casaDe(activa, 0)]?.scrollIntoView({ block: 'start', behavior: comp });
       ultima.current = casaDe(activa, 0);
     } else if (que === 'ficha') {
-      const f = grande !== null ? fichaLbx.current : fichaPag.current;
-      f?.focus({ preventScroll: true });
-      // Si la ficha ha saltado a otra captura, se muestra esa captura desde arriba; si no, basta con ver la ficha.
+      g?.focus({ preventScroll: true });
+      // Si el globo ha saltado a otra captura, se muestra esa captura desde arriba; si no, basta con ver el globo.
       const vk = casaDe(activa, 0);
       if (grande === null && vistas.length && vk !== ultima.current) figs.current[vk]?.scrollIntoView({ block: 'start', behavior: comp });
-      else f?.scrollIntoView({ block: 'nearest', behavior: comp });
+      else g?.scrollIntoView({ block: 'nearest', behavior: comp });
     }
     ultima.current = grande === null ? casaDe(activa, 0) : ultima.current;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activa, grande]);
+
+  /** Cierra el globo; con teclado, el foco vuelve a su punto. */
+  const cerrarGlobo = (devolverFoco: boolean) => {
+    if (activa == null) return;
+    if (devolverFoco) {
+      const st = grande !== null ? escenaLbx.current : vistaGlobo != null ? escenas.current[vistaGlobo] : null;
+      const pin = st?.querySelector<HTMLElement>(`.ccx-pin[data-fila="${activa}"]`);
+      pin?.focus({ preventScroll: true });
+    }
+    setActiva(null);
+  };
+  const cerrarRef = useRef(cerrarGlobo);
+  cerrarRef.current = cerrarGlobo;
+
+  // Esc cierra el globo antes que la ampliada (se adelanta al Esc del Lightbox); clic fuera también lo cierra.
+  useEffect(() => {
+    if (activa == null) return;
+    const tecla = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if (document.querySelector('.gl-pop')) return; // primero se cierra la definición del glosario
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      cerrarRef.current(true);
+    };
+    const fuera = (e: PointerEvent) => {
+      const n = e.target as Element | null;
+      if (!n || !(n instanceof Element)) return;
+      if (n.closest('.ccx-globo, .ccx-ficha, .gl-pop')) return;
+      const mio = raiz.current?.contains(n) || raizLbx.current?.contains(n);
+      if (mio && n.closest('.ccx-pin, tr.cc-has, .ccx-ampliar')) return;
+      cerrarRef.current(false);
+    };
+    window.addEventListener('keydown', tecla, true);
+    document.addEventListener('pointerdown', fuera, true);
+    return () => {
+      window.removeEventListener('keydown', tecla, true);
+      document.removeEventListener('pointerdown', fuera, true);
+    };
+  }, [activa]);
 
   const teclas = (e: KEvent) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
@@ -231,43 +354,37 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
     }
   };
 
-  const ficha = (vk: number, enLbx: boolean) => {
-    if (activa == null || casaDe(activa, enLbx ? (grande ?? 0) : 0) !== vk) return null;
-    const c = s.campos[activa];
-    const l = locs[activa];
-    const visto = !!l && l.vi === vk;
-    const estilo = visto ? ({ ['--px' as string]: `calc(max(32px, ${l!.px}%) - 16px)` } as CSSProperties) : undefined;
+  /** Todo lo de un campo: número, nombre, obligatorio, qué es, ejemplo y Anterior/Siguiente. */
+  const contenido = (visto: boolean, idNombre: string) => {
+    const c = s.campos[activa!];
     return (
-      <div
-        ref={enLbx ? fichaLbx : fichaPag}
-        className={`ccx-ficha${visto ? ' visto' : ''}`}
-        style={estilo}
-        tabIndex={-1}
-        onKeyDown={teclas}
-        role="region"
-        aria-label={`Campo ${activa + 1} de ${total}`}
-        aria-live="polite"
-        key={activa}
-      >
-        <span className="ccx-num" aria-hidden="true">{activa + 1}</span>
-        <div className="ccx-cuerpo">
-          <p className="ccx-cuenta">
-            Campo {activa + 1} de {total}
-          </p>
-          <h4 className="ccx-nombre">
-            {t(limpio(c.campo))}
-            {/\*\s*$/.test(c.campo) && <span className="ccx-oblig">Obligatorio</span>}
-          </h4>
-          <p className="ccx-que">
-            <Glosa>{t(c.significado)}</Glosa>
-          </p>
-          {c.ejemplo && (
-            <p className="ccx-ej">
-              <span>Ejemplo</span> <b>{t(c.ejemplo)}</b>
+      <>
+        <div className="ccx-g-cab">
+          <span className="ccx-g-num" aria-hidden="true">
+            {activa! + 1}
+          </span>
+          <div className="ccx-g-tit">
+            <p className="ccx-cuenta">
+              Campo {activa! + 1} de {total}
             </p>
-          )}
-          {!visto && vistas.length > 0 && <p className="ccx-nota">Este campo no sale en la captura.</p>}
+            <h4 className="ccx-nombre" id={idNombre}>
+              {t(limpio(c.campo))}
+              {/\*\s*$/.test(c.campo) && <span className="ccx-oblig">Obligatorio</span>}
+            </h4>
+          </div>
+          <button type="button" className="ccx-g-x" onClick={() => cerrarGlobo(true)} aria-label="Cerrar la explicación del campo">
+            <Icon name="cerrar" size={16} />
+          </button>
         </div>
+        <p className="ccx-que">
+          <Glosa>{t(c.significado)}</Glosa>
+        </p>
+        {c.ejemplo && (
+          <p className="ccx-ej">
+            <span>Ejemplo</span> <b>{t(c.ejemplo)}</b>
+          </p>
+        )}
+        {!visto && vistas.length > 0 && <p className="ccx-nota">Este campo no sale en la captura.</p>}
         <div className="ccx-nav">
           <button type="button" className="ccx-btn" onClick={() => mover(-1)} aria-label="Campo anterior">
             <Icon name="atras" size={18} />
@@ -278,6 +395,52 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
             <Icon name="flecha" size={18} />
           </button>
         </div>
+      </>
+    );
+  };
+
+  /** Globo encima de la captura vk, junto al punto del campo activo. */
+  const globo = (vk: number, enLbx: boolean) => {
+    if (activa == null || vistaGlobo !== vk || (!enLbx && grande !== null)) return null;
+    const l = locs[activa];
+    const visto = !!l && l.vi === vk;
+    const listo = pos && pos.k === claveSitio ? pos : null;
+    const idNombre = `ccx-n-${s.id}-${enLbx ? 'z' : 'p'}`;
+    const estilo = {
+      left: listo ? `${listo.x}px` : 0,
+      top: listo ? `${listo.y}px` : 0,
+      width: listo ? `${listo.w}px` : undefined,
+      // Hasta medirlo, invisible pero enfocable (con visibility: hidden no podría recibir el foco).
+      opacity: listo ? undefined : 0,
+      pointerEvents: listo ? undefined : 'none',
+      ['--pico' as string]: listo ? `${listo.pico}px` : undefined,
+      ['--gmax' as string]: listo?.gmax ? `${listo.gmax}px` : 'none',
+    } as CSSProperties;
+    return (
+      <div
+        ref={enLbx ? globoLbx : globoPag}
+        className={`ccx-globo lado-${listo?.lado ?? 'libre'}${listo?.fuera ? ' fuera' : ''}`}
+        style={estilo}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby={idNombre}
+        aria-live="polite"
+        key={activa}
+      >
+        <span className="ccx-pico" aria-hidden="true" />
+        <div className="ccx-globo-in">{contenido(visto, idNombre)}</div>
+      </div>
+    );
+  };
+
+  /** Parte sin capturas: la ficha va encima de la tabla, como siempre. */
+  const fichaSinCaptura = () => {
+    if (activa == null) return null;
+    const idNombre = `ccx-n-${s.id}-t`;
+    return (
+      <div ref={globoPag} className="ccx-ficha" tabIndex={-1} onKeyDown={teclas} role="region" aria-labelledby={idNombre} aria-live="polite" key={activa}>
+        {contenido(false, idNombre)}
       </div>
     );
   };
@@ -285,46 +448,63 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
   const lienzo = (vk: number, zoom: boolean) => {
     const v = vistas[vk];
     const act = activa != null && locs[activa]?.vi === vk ? locs[activa]! : null;
+    const r = asp[v.imagen];
+    // Ampliada: la captura entera cabe en la pantalla (sin desplazarse), así el globo siempre se ve encima.
+    const ancho = zoom && r ? ({ width: `min(100%, calc((100dvh - 124px) / ${r}))` } as CSSProperties) : undefined;
+    const fuera = pos && pos.k === claveSitio && pos.fuera && vistaGlobo === vk && !zoom;
     return (
-      <div className={`cc-frame ccx-frame${zoom ? ' zoom' : ''}${act ? ' con-activo' : ''}`}>
-        <img
-          src={imgSrc(modulo, v.imagen)}
-          alt={`Pantalla del ERP: ${t(s.titulo)}`}
-          draggable={false}
-          loading="lazy"
-          onLoad={(e) => {
-            const im = e.currentTarget;
-            if (im.naturalWidth && !asp[v.imagen]) setAsp((a) => ({ ...a, [v.imagen]: im.naturalHeight / im.naturalWidth }));
-          }}
-        />
-        {act && (
-          <div
-            className="ccx-box"
-            style={{ left: `${act.caja.x}%`, top: `${act.caja.y}%`, width: `${act.caja.w}%`, height: `${act.caja.h}%` }}
-            aria-hidden="true"
+      <div
+        className="ccx-escena"
+        ref={(el) => {
+          if (zoom) escenaLbx.current = el;
+          else escenas.current[vk] = el;
+        }}
+        onKeyDown={teclas}
+        style={fuera ? { paddingBottom: `${pos!.h + 14}px` } : undefined}
+      >
+        <div className={`cc-frame ccx-frame${zoom ? ' zoom' : ''}${act ? ' con-activo' : ''}`} style={ancho}>
+          <img
+            src={imgSrc(modulo, v.imagen)}
+            alt={`Pantalla del ERP: ${t(s.titulo)}`}
+            draggable={false}
+            loading="lazy"
+            onLoad={(e) => {
+              const im = e.currentTarget;
+              if (im.naturalWidth && !asp[v.imagen]) setAsp((a) => ({ ...a, [v.imagen]: im.naturalHeight / im.naturalWidth }));
+            }}
           />
-        )}
-        {locs.map((l, fila) =>
-          l && l.vi === vk ? (
-            <button
-              key={fila}
-              type="button"
-              className={`ccx-pin${activa === fila ? ' on' : ''}`}
-              style={{ left: `max(32px, ${l.px}%)`, top: `${l.py}%` }}
-              onClick={() => elegir(fila)}
-              aria-label={`Campo ${fila + 1}: ${t(limpio(s.campos[fila].campo))}`}
-              aria-pressed={activa === fila}
-            >
-              {fila + 1}
+          {act && (
+            <div
+              className="ccx-box"
+              style={{ left: `${act.caja.x}%`, top: `${act.caja.y}%`, width: `${act.caja.w}%`, height: `${act.caja.h}%` }}
+              aria-hidden="true"
+            />
+          )}
+          {locs.map((l, fila) =>
+            l && l.vi === vk ? (
+              <button
+                key={fila}
+                type="button"
+                data-fila={fila}
+                className={`ccx-pin${activa === fila ? ' on' : ''}`}
+                style={{ left: `max(32px, ${l.px}%)`, top: `${l.py}%` }}
+                onClick={() => (activa === fila ? cerrarGlobo(false) : elegir(fila, 'ficha'))}
+                aria-label={`Campo ${fila + 1}: ${t(limpio(s.campos[fila].campo))}`}
+                aria-pressed={activa === fila}
+                aria-haspopup="dialog"
+              >
+                {fila + 1}
+              </button>
+            ) : null,
+          )}
+          {!zoom && (
+            <button type="button" className="ccx-ampliar" onClick={() => setGrande(vk)} aria-haspopup="dialog" aria-label="Ampliar la captura">
+              <Icon name="buscar" size={16} />
+              <span>Ampliar</span>
             </button>
-          ) : null,
-        )}
-        {!zoom && (
-          <button type="button" className="ccx-ampliar" onClick={() => setGrande(vk)} aria-haspopup="dialog" aria-label="Ampliar la captura">
-            <Icon name="buscar" size={16} />
-            <span>Ampliar</span>
-          </button>
-        )}
+          )}
+        </div>
+        {globo(vk, zoom)}
       </div>
     );
   };
@@ -337,14 +517,14 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
   };
 
   return (
-    <div className="cc cc-plano ccx">
+    <div className="cc cc-plano ccx" ref={raiz}>
       {total > 0 && (
         <p className={`ccx-pista${activa == null ? '' : ' hecho'}`}>
           {activa == null
             ? hayPuntos
               ? 'Pulsa un número para ver qué es cada campo.'
               : 'Pulsa un campo de la lista para ver qué es.'
-            : `Usa ← → o «Siguiente» para recorrer los ${total} campos.`}
+            : `Usa ← → o «Siguiente» para recorrer los ${total} campos. Esc cierra la explicación.`}
         </p>
       )}
       {vistas.map((v, vk) => (
@@ -357,10 +537,9 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
           }}
         >
           {lienzo(vk, false)}
-          {ficha(vk, false)}
         </figure>
       ))}
-      {!vistas.length && ficha(0, false)}
+      {!vistas.length && fichaSinCaptura()}
       {total > 0 && (
         <div className="sec-campos cc-campos">
           <table className="fields ax-table cc-table">
@@ -397,16 +576,118 @@ export function CapturaCampos({ s, modulo, ini }: { s: Seccion; modulo: string; 
           </table>
         </div>
       )}
-      <Lightbox abierto={grande !== null} onCerrar={() => setGrande(null)}>
+      <Lightbox abierto={grande !== null} onCerrar={cerrarGrande}>
         {grande !== null && (
-          <div className="ccx ccx-lbx" style={colorMod}>
+          <div className="ccx ccx-lbx" style={colorMod} ref={raizLbx}>
             {lienzo(grande, true)}
-            {ficha(grande, true)}
           </div>
         )}
       </Lightbox>
     </div>
   );
+}
+
+/** Rectángulo en píxeles de la escena. */
+interface Rect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+type Lado = 'abajo' | 'arriba' | 'derecha' | 'izquierda' | 'libre';
+/** Sitio del globo: esquina, lado del punto en que queda y dónde va el pico (px desde su borde). */
+interface Hueco {
+  x: number;
+  y: number;
+  lado: Lado;
+  pico: number;
+}
+interface Sitio extends Hueco {
+  k: string;
+  w: number;
+  h: number;
+  fuera: boolean;
+  gmax?: number;
+}
+
+const crece = (r: Rect, d: number): Rect => ({ x: r.x - d, y: r.y - d, w: r.w + 2 * d, h: r.h + 2 * d });
+const area = (a: Rect, b: Rect) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+/** Separación entre el punto y el globo (deja sitio al pico). */
+const AIRE = 14;
+const ORDEN: Lado[] = ['abajo', 'arriba', 'derecha', 'izquierda'];
+
+/** Candidatos alrededor del punto: abajo, arriba, derecha, izquierda, corridos a lo largo para esquivar el siguiente. */
+function candidatos(B: Rect, w: number, h: number, A: Rect, pegar: boolean): (Hueco & { coste: number })[] {
+  const cx = A.x + A.w / 2;
+  const cy = A.y + A.h / 2;
+  const out: (Hueco & { coste: number })[] = [];
+  ORDEN.forEach((lado, li) => {
+    const horiz = lado === 'abajo' || lado === 'arriba';
+    const largo = horiz ? w : h;
+    const base = horiz ? cx - w / 2 : cy - h / 2;
+    const pasos = [0];
+    for (let d = 24; d <= largo; d += 24) pasos.push(-d, d);
+    const vistos = new Set<number>();
+    for (const d of pasos) {
+      let x: number;
+      let y: number;
+      if (horiz) {
+        x = lim(base + d, B.x, B.x + B.w - w);
+        y = lado === 'abajo' ? A.y + A.h + AIRE : A.y - AIRE - h;
+        if (pegar) y = lim(y, B.y, B.y + B.h - h);
+      } else {
+        y = lim(base + d, B.y, B.y + B.h - h);
+        x = lado === 'derecha' ? A.x + A.w + AIRE : A.x - AIRE - w;
+        if (pegar) x = lim(x, B.x, B.x + B.w - w);
+      }
+      const clave = Math.round(horiz ? x : y);
+      if (vistos.has(clave)) continue;
+      vistos.add(clave);
+      const pico = horiz ? cx - x : cy - y;
+      const corrido = Math.abs((horiz ? x : y) - base);
+      out.push({ x, y, lado, pico: lim(pico, 18, largo - 18), coste: li * 40 + corrido * 0.25 + (pico < 18 || pico > largo - 18 ? 1000 : 0) });
+    }
+  });
+  return out;
+}
+
+/** El mejor sitio que cabe entero en B sin tapar el punto activo (A) ni el siguiente (N); evita además el recuadro del campo. */
+function buscarSitio(B: Rect, w: number, h: number, A: Rect | null, N: Rect | null, C: Rect | null): Hueco | null {
+  if (w > B.w + 0.5 || h > B.h + 0.5) return null;
+  const Ai = A ? crece(A, 6) : null;
+  const Ni = N ? crece(N, 4) : null;
+  const tapa = (g: Rect) => (Ai && area(g, Ai) > 0) || (Ni && area(g, Ni) > 0);
+  const cabe = (g: Rect) => g.x >= B.x - 0.5 && g.y >= B.y - 0.5 && g.x + g.w <= B.x + B.w + 0.5 && g.y + g.h <= B.y + B.h + 0.5;
+  if (!A) {
+    // Campo que no sale en la captura: abajo en el centro, o arriba, sin tapar el número siguiente.
+    const xs = [B.x + (B.w - w) / 2, B.x, B.x + B.w - w];
+    for (const y of [B.y + B.h - h, B.y])
+      for (const x of xs) {
+        const g = { x, y, w, h };
+        if (!tapa(g)) return { x, y, lado: 'libre', pico: 0 };
+      }
+    return null;
+  }
+  let mejor: (Hueco & { coste: number }) | null = null;
+  for (const c of candidatos(B, w, h, A, false)) {
+    const g = { x: c.x, y: c.y, w, h };
+    if (!cabe(g) || tapa(g)) continue;
+    const coste = c.coste + (C ? (area(g, C) / Math.max(1, C.w * C.h)) * 60 : 0);
+    if (!mejor || coste < mejor.coste) mejor = { ...c, coste };
+  }
+  return mejor;
+}
+
+/** Si nada cabe sin tapar: el que menos tape de los dos puntos (y nunca fuera de B). */
+function menosMalo(B: Rect, w: number, h: number, A: Rect | null, N: Rect | null): Hueco {
+  if (!A) return { x: B.x + (B.w - w) / 2, y: B.y + B.h - h, lado: 'libre', pico: 0 };
+  let mejor: (Hueco & { coste: number }) | null = null;
+  for (const c of candidatos(B, w, h, A, true)) {
+    const g = { x: c.x, y: c.y, w, h };
+    const coste = area(g, crece(A, 6)) * 10 + (N ? area(g, crece(N, 4)) * 10 : 0) + c.coste;
+    if (!mejor || coste < mejor.coste) mejor = { ...c, coste };
+  }
+  return mejor!;
 }
 
 /** Captura ampliada a pantalla completa. Esc o tocar fuera la cierra. */
