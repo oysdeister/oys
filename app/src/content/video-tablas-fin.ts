@@ -438,6 +438,198 @@ export const SERIES_TABLAS_FIN: SerieTablasFin[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "tab-contabilidad",
+    "titulo": "Vídeos por tabla: Contabilidad general",
+    "corto": "Tablas de contabilidad",
+    "porTabla": true as const,
+    "modulos": [
+      "icon-contabilidad"
+    ],
+    "intro": "Un vídeo corto por tabla: para qué sirve y cómo se parametriza, con pantallas reales.",
+    "capitulos": [
+      {
+        "n": 1,
+        "titulo": "Cuentas contables",
+        "inicio": 0,
+        "duracion": 131,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/con-cuentas-contables.mp4",
+        "poster": "video/tablas/con-cuentas-contables.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 30,
+            "titulo": "Lista filtro Cuenta 629*"
+          },
+          {
+            "t": 60,
+            "titulo": "Ficha 62999.00000"
+          },
+          {
+            "t": 114,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "titulo": "Grupos auxiliares",
+        "inicio": 0,
+        "duracion": 98,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/con-grupos-auxiliares.mp4",
+        "poster": "video/tablas/con-grupos-auxiliares.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 25,
+            "titulo": "Lista ECEMP y TERCER; se abre ECEMP"
+          },
+          {
+            "t": 42,
+            "titulo": "Ficha Grupo auxiliar"
+          },
+          {
+            "t": 79,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "titulo": "Proyectos",
+        "inicio": 0,
+        "duracion": 98,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/con-proyectos.mp4",
+        "poster": "video/tablas/con-proyectos.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 27,
+            "titulo": "Lista 0 GENERAL"
+          },
+          {
+            "t": 44,
+            "titulo": "Ficha EC1"
+          },
+          {
+            "t": 81,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "titulo": "Secciones",
+        "inicio": 0,
+        "duracion": 89,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/con-secciones.mp4",
+        "poster": "video/tablas/con-secciones.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 23,
+            "titulo": "Lista 0 General"
+          },
+          {
+            "t": 38,
+            "titulo": "Ficha ECADM"
+          },
+          {
+            "t": 73,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "titulo": "Numeradores de justificantes",
+        "inicio": 0,
+        "duracion": 115,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/con-numeradores-justificantes.mp4",
+        "poster": "video/tablas/con-numeradores-justificantes.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 5,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 31,
+            "titulo": "Lista Tabla origen"
+          },
+          {
+            "t": 55,
+            "titulo": "Ficha EA"
+          },
+          {
+            "t": 96,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "titulo": "Plantillas de contabilización",
+        "inicio": 0,
+        "duracion": 112,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/con-plantillas-contabilizacion.mp4",
+        "poster": "video/tablas/con-plantillas-contabilizacion.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 5,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 30,
+            "titulo": "Lista Tabla origen; fila 4 «Facturas de compra v20"
+          },
+          {
+            "t": 57,
+            "titulo": "Ficha ccomfach"
+          },
+          {
+            "t": 92,
+            "titulo": "Resumen"
+          }
+        ]
+      }
+    ]
   }
 ];
 
@@ -602,6 +794,69 @@ export const MOMENTOS_SECCION_TABLAS_FIN: Record<string, MomentoVideo[]> = {
       "t": 0,
       "tCap": 0,
       "titulo": "Vídeo: Valores de amortización"
+    }
+  ],
+  "parametrizacion-1-cuenta": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 1,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Cuentas contables"
+    }
+  ],
+  "parametrizacion-3-grupo": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 2,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Grupos auxiliares"
+    }
+  ],
+  "parametrizacion-5-proyecto": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 3,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Proyectos"
+    }
+  ],
+  "parametrizacion-6-seccion": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 4,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Secciones"
+    }
+  ],
+  "asientos-2-numerador": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 5,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Numeradores de justificantes"
+    }
+  ],
+  "icon-contabilidad-1-plantillas": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 6,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Plantillas de contabilización"
+    }
+  ],
+  "parametrizacion-icon-2-plantillas-permiso": [
+    {
+      "serie": "tab-contabilidad",
+      "capitulo": 6,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Plantillas de contabilización"
     }
   ],
   "carteras-1-tipo-efecto": [
