@@ -451,27 +451,33 @@ export default function Video() {
           )}
         </AnimatePresence>
 
-        <section className="vd-index" aria-labelledby="vd-index-t">
-          <h2 id="vd-index-t" className="vd-h2">
-            {c ? 'Todos los capítulos' : 'Compras · vídeo de compras, tutorial propio'}
-          </h2>
-          <IndiceCapitulos actual={c?.n} />
-        </section>
+        {c && (
+          <section className="vd-index" aria-labelledby="vd-index-t">
+            <h2 id="vd-index-t" className="vd-h2">Todos los capítulos</h2>
+            <IndiceCapitulos actual={c.n} />
+          </section>
+        )}
 
         {!c &&
           MODULOS.map((m, i) => {
             const series = seriesDeModulo(m.id).filter((x) => x.id !== 'compras');
-            if (!series.length) return null;
+            if (!series.length && m.id !== 'compras') return null;
             return (
               <section key={m.id} className="vd-index vd-otras" aria-labelledby={`vd-mod-${m.id}`}>
                 <h2 id={`vd-mod-${m.id}`} className="vd-h2">
                   {i + 1}. {META[m.id]?.corto ?? m.titulo}
                 </h2>
-                <div className="ax-banner vd-otras-in">
+                {m.id === 'compras' && (
+                  <>
+                    <h3 className="vd-h2">Vídeo de compras · tutorial propio</h3>
+                    <IndiceCapitulos />
+                  </>
+                )}
+                {series.length > 0 && <div className="ax-banner vd-otras-in">
                   {series.map((x) => (
                     <CapitulosSerie key={x.id} serie={x.id} titulo={`${x.titulo} · ${origen(x)}`} intro={x.intro} />
                   ))}
-                </div>
+                </div>}
               </section>
             );
           })}
