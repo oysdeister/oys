@@ -185,7 +185,7 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
   const video = useRef<HTMLVideoElement>(null);
   const lista = useRef<HTMLOListElement>(null);
   const [t, setT] = useState(tInicial);
-  const idx = c.n - 1;
+  const idx = CAPITULOS.findIndex((x) => x.n === c.n);
   const prev = CAPITULOS[idx - 1], next = CAPITULOS[idx + 1];
   useEffect(() => onTiempo(t), [t, onTiempo]);
   const escena = useMemo(() => {
@@ -250,7 +250,7 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
           </span>
           <div>
             <p className="vd-kicker">
-              Capítulo {c.n} de {CAPITULOS.length} · {durTexto(c.duracion)}
+              Capítulo {c.n} de {CAPITULOS[CAPITULOS.length - 1].n} · {durTexto(c.duracion)}
             </p>
             <h1 id="vd-cap-titulo" className="vd-h1">
               {c.titulo}
@@ -408,7 +408,7 @@ export default function Video() {
   const navigate = useNavigate();
   const reducir = !!useReducedMotion();
   const n = cap ? Number(cap) : undefined;
-  const c = n ? CAPITULOS.find((x) => x.n === n) : undefined;
+  const c = n !== undefined ? CAPITULOS.find((x) => x.n === n) : undefined;
   const tInicial = Math.max(0, Number(q.get('t')) || 0);
   const algunoPublicado = CAPITULOS.some(publicado);
   const [tiempo, setTiempo] = useState(tInicial);

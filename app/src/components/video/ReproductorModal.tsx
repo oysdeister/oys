@@ -199,7 +199,7 @@ export function ReproductorModal({ serie, capitulo, t = 0, fin, abierto, onCerra
               </span>
               <div className="vm-cab-txt">
                 <p className="vm-kicker">
-                  {sv.titulo} · capítulo {c.n} de {CAPITULOS.length}
+                  {sv.titulo} · capítulo {c.n} de {CAPITULOS[CAPITULOS.length - 1].n}
                 </p>
                 <h2 id="vm-titulo">{c.titulo}</h2>
               </div>
