@@ -20,6 +20,14 @@ export const PASOS = [
 ] as const;
 export type PasoId = (typeof PASOS)[number]['id'];
 
+/**
+ * Pasos opcionales (decisión de Sergi): «De memoria» no cuenta para terminar el bloque
+ * ni para el porcentaje, y «Te toca» la salta. El «Siguiente» tras Guiado sigue llevando a ella.
+ */
+export function pasoOpcional(id: PasoId) {
+  return id === 'memoria';
+}
+
 /** Pasos que tiene un bloque (la práctica solo si hay una preparada) */
 export function pasosDe(ej: Ejercicio) {
   const conErp = (PRACTICAS_POR_EJERCICIO[ej.id] ?? []).length > 0;
@@ -133,6 +141,7 @@ export function pasosHechos(p: Progreso, ej: Ejercicio, notasErp: Record<string,
   return {
     concepto: empezado(e),
     guiado: !!e?.guiado,
+    // Opcional: se da por hecha al pasar al Test (así no se queda pendiente); el progreso guardado no cambia
     memoria: !!e?.guiado && (e?.test ?? null) !== null,
     test: (e?.test ?? 0) >= APROBADO,
     erp: practicas.length > 0 && practicas.every((x) => (notasErp[x]?.nota ?? 0) >= 1),
@@ -145,5 +154,5 @@ export function pasoQueToca(p: Progreso, ej: Ejercicio, notasErp: Record<string,
   const h = pasosHechos(p, ej, notasErp);
   const lista = pasosDe(ej);
   if (!h.concepto) return 'concepto';
-  return (lista.find((x) => x.id !== 'concepto' && !h[x.id])?.id ?? lista[lista.length - 1].id) as PasoId;
+  return (lista.find((x) => x.id !== 'concepto' && !pasoOpcional(x.id) && !h[x.id])?.id ?? lista[lista.length - 1].id) as PasoId;
 }

@@ -170,7 +170,7 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
     return (
       <div className="pl pl-fin">
         <p className="pl-res">Recorrido terminado: has hecho los {total} pasos sobre las pantallas del ERP.</p>
-        <p className="muted">Ahora repítelo sin ayuda en el paso siguiente.</p>
+        <p className="muted">Si quieres, repítelo sin ayuda en «De memoria» (opcional) o pasa al Test.</p>
         <button type="button" className="pl-link" onClick={() => ir(0)}>
           Repetir el recorrido desde el principio
         </button>

@@ -447,7 +447,7 @@ export default function Home() {
               <b>Cada módulo tiene bloques.</b> Un bloque es una tarea del ERP. Mejor en orden, pero puedes entrar en cualquiera.
             </li>
             <li>
-              <b>Cada bloque, siempre en el mismo orden:</b> Concepto → Guiado → De memoria → Test → Demo real. Algunos añaden una Práctica antes de la Demo real.
+              <b>Cada bloque, siempre en el mismo orden:</b> Concepto → Guiado → De memoria (opcional) → Test → Demo real. Algunos añaden una Práctica antes de la Demo real.
             </li>
           </ol>
           <p>

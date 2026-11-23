@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Icon } from '../Icon';
 import { Anillo } from './Anillo';
 import { MODULOS, META, getEjercicio } from '../../content';
-import { bloqueAbierto, bloquesDe, pasosDe, esOpcional } from '../../lib/ruta';
+import { bloqueAbierto, bloquesDe, pasosDe, pasoOpcional, esOpcional } from '../../lib/ruta';
 import { ejercicioCompletado } from '../../lib/progress';
 import '../../pages/ruta.css';
 import { useProgreso } from '../../lib/progress';
@@ -141,6 +141,7 @@ export function Sidebar({
                                 <li key={x.id}>
                                   <Link to={`/ejercicio/${b.id}${x.id === 'concepto' ? '' : `?tab=${x.id}`}`} onClick={onNavegar} className={on ? 'on' : undefined} aria-current={on ? 'step' : undefined}>
                                     {x.label}
+                                    {pasoOpcional(x.id) && <span className="sb-opc">opcional</span>}
                                   </Link>
                                 </li>
                               );

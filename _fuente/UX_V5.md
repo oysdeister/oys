@@ -43,6 +43,8 @@ Curso
                 (dentro del Concepto, el bloque se divide en «partes»)
 ```
 
+«De memoria» es **opcional** (decisión de Sergi): no cuenta para terminar el bloque ni para el porcentaje; un bloque se termina con Guiado + Test aprobado.
+
 Reglas:
 - **Un número por nivel, y solo uno a la vista por nivel:** «Módulo 3 de 10», «Bloque 1 de 3», «Paso 2 de 6» y «Parte 1 de 8».
 - **Un bloque se abre cuando el anterior está hecho** (Guiado completo y Test aprobado). Uno ya empezado no se vuelve a cerrar. Para revisar el curso entero sin hacerlo: `?libre=1` en la URL; `?libre=0` lo quita.

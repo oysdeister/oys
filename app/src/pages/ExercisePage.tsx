@@ -13,7 +13,7 @@ import { TestEj } from '../components/exercise/TestEj';
 import { DemoReal } from '../components/exercise/DemoReal';
 import { Practicar } from '../erp/Practicar';
 import { PRACTICAS_POR_EJERCICIO } from '../erp/practicas';
-import { bloqueAbierto, bloqueQueToca, bloquesDe, bloquesObligatorios, esOpcional, numeroBloque, pasosDe, type PasoId } from '../lib/ruta';
+import { bloqueAbierto, bloqueQueToca, bloquesDe, bloquesObligatorios, esOpcional, numeroBloque, pasoOpcional, pasosDe, type PasoId } from '../lib/ruta';
 import { MODULOS } from '../content';
 import { ejercicioCompletado } from '../lib/progress';
 import './aprender.css';
@@ -27,7 +27,8 @@ export default function ExercisePage() {
   const p = useProgreso();
   const hallado = getEjercicio(id);
   const tabParam = sp.get('tab');
-  // Pasos con ejercicio interno (Guiado, De memoria, Test): el «Siguiente» del pie solo aparece al terminarlo
+  // Pasos con ejercicio interno (Guiado, Test): el «Siguiente» del pie solo aparece al terminarlo.
+  // «De memoria» es opcional: su «Siguiente: Test» está siempre a mano
   const [listo, setListo] = useState<{ clave: string; ok: boolean }>({ clave: '', ok: false });
   const claveListo = `${id}:${tabParam ?? ''}`;
   const onListo = useCallback((ok: boolean) => setListo({ clave: claveListo, ok }), [claveListo]);
@@ -113,7 +114,9 @@ export default function ExercisePage() {
 
   const anterior = pasos[k - 1];
   const siguiente = pasos[k + 1];
-  const interno = tab === 'guiado' || tab === 'memoria' || tab === 'test';
+  const interno = tab === 'guiado' || tab === 'test';
+  // Tras Guiado el «Siguiente» lleva a «De memoria», pero se puede saltar al Test
+  const saltoTest = siguiente && pasoOpcional(siguiente.id) && pasos.some((x) => x.id === 'test') ? pasos.find((x) => x.id === 'test') : undefined;
   const esperar = interno && !(listo.clave === claveListo && listo.ok);
   const queFalta = tab === 'test' ? 'Aprueba el test' : tab === 'guiado' ? 'Termina el recorrido' : 'Termina las pantallas';
 
@@ -133,7 +136,8 @@ export default function ExercisePage() {
       </header>
 
       <p id="bloque-pasos" className="bq-donde">
-        <b>{pasos[k].label}.</b> {pasos[k].que}
+        <b>{pasos[k].label}.</b>
+        {pasoOpcional(pasos[k].id) && <span className="paso-opc">opcional</span>} {pasos[k].que}
       </p>
 
       <AnimatePresence mode="wait" initial={false}>
@@ -149,6 +153,15 @@ export default function ExercisePage() {
         >
           {tab === 'concepto' && <Concepto ej={ej} ini={ini} modulo={modulo.id} />}
           {tab === 'guiado' && <Guiado ej={ej} modulo={modulo.id} ini={ini} onListo={onListo} />}
+          {tab === 'memoria' && (
+            <p className="bq-opc">
+              <b>Opcional:</b> repasa de memoria dónde está cada cosa. Si ya lo tienes claro,{' '}
+              <button type="button" className="bq-opc-ir" onClick={() => ir('test')}>
+                pasa al Test
+              </button>
+              .
+            </p>
+          )}
           {tab === 'memoria' && <DeMemoria ej={ej} modulo={modulo.id} ini={ini} onListo={onListo} />}
           {tab === 'test' && <TestEj ej={ej} ini={ini} onListo={onListo} onIr={ir} />}
           {tab === 'erp' && <Practicar ids={practicasEj} ini={ini} />}
@@ -193,6 +206,15 @@ export default function ExercisePage() {
               {queFalta} y aparecerá aquí «Siguiente{siguiente ? `: ${siguiente.label}` : ''}».
             </span>
           </p>
+        ) : siguiente && saltoTest ? (
+          <div className="bq-sig-der">
+            <button type="button" className="btn arc lg" onClick={() => ir(siguiente.id)}>
+              Siguiente: {siguiente.label} <span className="paso-opc">opcional</span>
+            </button>
+            <button type="button" className="bq-opc-ir" onClick={() => ir(saltoTest.id)}>
+              O sáltatela y pasa al Test
+            </button>
+          </div>
         ) : siguiente ? (
           <button type="button" className="btn arc lg" onClick={() => ir(siguiente.id)}>
             Siguiente: {siguiente.label}
