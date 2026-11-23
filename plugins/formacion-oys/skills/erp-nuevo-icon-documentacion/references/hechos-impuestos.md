@@ -1,0 +1,90 @@
+# Resumen de referencia — «Impuestos en ICON» (Axional Next) — PAGE 756; PAGE 745
+## 1) Conceptos clave — PAGE 943; PAGE 1081
+- Motor fiscal literal: «Zona fiscal de la empresa + Zona fiscal del tercero + Clave fiscal de artículo (propia o por excepción de zona) → Regla(s) de impuesto(s) → devuelve una Operación y un Tipo de impuesto». PAGE 943
+- Entradas del motor: zona fiscal de la empresa, zona fiscal del tercero, clave fiscal del artículo, clave fiscal del tercero, clase de impuesto y país. PAGE 1081
+- Salida fiscal: operación fiscal (`ctax_operation`) + tipo de impuesto (`ctax_type`), separadas en entrada/compras y salida/ventas. PAGE 1081
+- El resultado se materializa en `ctax_move_head` y `ctax_move_line`; la línea fiscal usa `taxl_oper` y `taxl_code`. PAGE 745; PAGE 949
+- IVA: General `21%`, Reducido `10%`, Superreducido `4%`; modelos `303` Mensual/Trimestral, `390` Anual, `349` Mensual/Trimestral y `SII` según obligación. PAGE 745
+- Prorrata: deducción parcial del IVA soportado; ejemplo base `1.000 €`, IVA `21%`, cuota `210 €`, prorrata `80%`, IVA deducible `168 €`, IVA no deducible `42 €`. PAGE 972
+- ISP: el destinatario declara el IVA y se generan IVA devengado y soportado; en determinadas configuraciones el impuesto inicial puede tener porcentaje efectivo `0 %`. PAGE 954
+- E-Reporting/SII: libros registro, tipos de documento, rectificativas, claves de operación y campos fiscales. PAGE 977
+## 2) Rutas de menú exactas — PAGE 756; PAGE 949
+- `Finanzas/Finanzas/Impuestos` — Ejemplos de registros fiscales. PAGE 756
+- `Finanzas / Impuestos / Registros Fiscales` — Registro Fiscal. PAGE 949
+- `Finanzas / Impuestos / IVA` — Prorrata; Impuestos IVA; Impuesto ISP. PAGE 972; PAGE 745; PAGE 954
+- `Finanzas / Impuestos / Procesos` — Gestión y procesamiento de Impuestos. PAGE 912
+- `Finanzas / Impuestos / Maestros / Operaciones Impositivas`; `Finanzas / Impuestos / Maestros / Clases de impuestos`; `Finanzas / Impuestos / Maestros / Claves impositivas de artículo`; `Finanzas / Impuestos / Maestros / Claves fiscal por terceros`. PAGE 978; PAGE 935; PAGE 936; PAGE 937
+- `Finanzas / Impuestos / Maestros / Zonas fiscales`; `Finanzas / Impuestos / Maestros / Tipos de impuestos`; `Finanzas / Impuestos / Maestros / Clave fiscal por zona fiscal y artículo`; `Finanzas / Impuestos / Maestros / Impuestos por Terceros`. PAGE 942; PAGE 939; PAGE 943; PAGE 945
+- `Finanzas / Impuestos / Maestros / Agencia Tributaria`; `Finanzas / Impuestos / Maestros / Prorrata por Empresa y Actividad`; `Finanzas / Impuestos / Maestros / Grupos fiscales`; `Finanzas / Impuestos / Maestros / Claves fiscales por documento`. PAGE 946; PAGE 947; PAGE 948; PAGE 1038
+- `Finanzas / Impuestos / Maestros / Clave fiscal por tipologías`; `Finanzas / Impuestos / Maestros / Períodos fiscales`; `Finanzas / Impuestos / Maestros / Período Tributario`; `Finanzas / Impuestos / Maestros / Empresas y agencias tributarias`. PAGE 1040; PAGE 1048; PAGE 1051; PAGE 1053
+- `Finanzas / Impuestos / Maestros / Claves de operaciones fiscales`; `Finanzas / Impuestos / Maestros / Tipos de identificador fiscal por jurisdicción`; `Finanzas / Impuestos / Maestros / Bienes inmuebles`; `Finanzas / Impuestos / Maestros / Mapeo de información para e-Reporting`. PAGE 1055; PAGE 1057; PAGE 1059; PAGE 1061
+- `Finanzas / Impuestos / Maestros / Mapeo de datos fiscales`; `Finanzas / Impuestos / Maestros / Reglas de Aplicación de Impuestos`; `Finanzas / Impuestos / E-Reporting`. PAGE 1063; PAGE 1081; PAGE 977
+## 3) Tablas y campos que nombra la documentación — PAGE 978
+- `ctax_operation`: tratamiento fiscal de la operación; campos Código, Descripción, Clase, Naturaleza, Sujeta (`0` no sujeta / `1` sujeta / `2` sujeta con porcentaje de operación destino), Retención, ISP, Grupo IVA, Operación triangular, Operación ISP recibida/emitida, Operación destino, Libro de facturas, Diario, Clave fiscal, Clave e-Reporting, Tipo de exención, Código auxiliar. PAGE 978
+- `ctax_class`: familia fiscal; campos Clase de impuesto, Descripción, Tipo de impuesto (`N` Normal, `R` Retención, `D` Detracción, `E` Equivalencia, `S` Especiales, `M` Medioambientales, `X` Otros), Orden de precedencia (`1, 2, 3, 4`), Computa para base fiscal (`0/1`), Tipo de cálculo (`0` Individual, `1` Máximo, `2` Mínimo, `3` Promedio), Clasificación Factura-e, País. PAGE 935
+- `ctax_artkey`: naturaleza fiscal del artículo; `artk_code` hasta 6 caracteres, `artk_estado` (`A` Activo / `C` Cerrado), `artk_nature` (`B, S, I, R, O, P, X`), `artk_codaux`, `artk_taxmap`. PAGE 936
+- Clave fiscal por tercero: PAGE 937 no nombra tabla técnica; PAGE 1081 cita `ctax_terkey`; campos Clave Fiscal, Descripción, Régimen fiscal, Estado (`A` Abierto / `C` Cerrado), Mapeo fiscal, usuario/fecha de creación y modificación. PAGE 937; PAGE 1081
+- `ctax_zone`: ámbito territorial; `zone_code`, `zone_name`, `zone_codnac` → `ctiponac.codigo`, `zone_codaux`, `zone_intrast` (`0` no INTRASTAT / `1` sí), `zone_taiter` obligatorio con valor predeterminado `1`. PAGE 942
+- `ctax_type`: porcentaje, cálculo, cuentas y prorrata; `type_code`, `type_class`, `type_name`, `type_porcen` entre `-100` y `100`, `type_bascal` (`0` Importe neto, `1` Margen comercial, `2` Margen comercial global, `3` Importe con impuestos, `5` Sobre cantidad, `6` Fijo por unidad), `type_limite`, `type_porded` (`0/1`), `type_porpro` (`0/1`), `type_fecbaj`, `type_status` (`A/C`), `type_ispcode`, `type_valcode`; cuentas `cctanemh`. PAGE 939
+- `ctax_artkey_zone`: excepción artículo/zona; `zone_artk_taxzon`, `zone_artk_codart`, `zone_artk_taxkey`, `zone_artk_vigini`, `zone_artk_vigfin`, `zone_artk_descri`; jerarquía `R01–R06`. PAGE 943
+- Impuesto por tercero: PAGE 945 no nombra tabla técnica; PAGE 1081 cita `ctax_tershift`; campos Tercero, Operación Origen, Impuesto Origen, Fecha Inicio, Fecha Fin, Operación Destino, Impuesto Destino, Justificante. PAGE 945; PAGE 1081
+- `ctax_agencia`: organismo tributario y parámetros SII/TBAI/Zuzendu/Veri*Factu/SIF; campos Agencia, Nombre, Calendario, Tipo de identificador fiscal, País emisor, NIF de la agencia, Zona fiscal, País, Idioma, Dirección, URL producción, URL sello, URL pruebas, XML Namespace LR/SII/TBAI/consulta LR, Versión SII/TBAI, Endpoint SIF. PAGE 946
+- `ctax_prorrata`: prorrata por empresa/actividad; `pror_empcode`, `pror_proyec`, `pror_seccio`, `pror_cnae`, `pror_fecini`, `pror_fecfin`, `pror_porcen` (`0–100`), `pror_pordef`, `pror_ctagas`. PAGE 947
+- `ctax_grpfis`: grupos fiscales; `grpf_grpemp`, `grpf_teremi`, `grpf_terrec`, `grpf_codart`, `grpf_fecini`, `grpf_fecfin`, `grpf_porbas` (`0–100`), `grpf_codope`. PAGE 948
+- `ctax_dockey`: régimen fiscal del documento; `dock_code`, `dock_name`, `dock_reg` valor inicial `0`, `dock_estado` (`A` Activa / `C` Cerrada), `dock_zonfis`, `dock_taxmap` longitud dos caracteres, auditoría. PAGE 1038
+- `ctax_clasif`: clave fiscal por tipologías; `clasif_code`, `clasif_name`, `clasif_codnac`, `clasif_fisc`, `clasif_codaux`, `clasif_notas`, `clasif_estado` (`A/C`); clave primaria `clasif_code + clasif_codnac`. PAGE 1040
+- `ctax_period`: períodos fiscales; Empresa, Ejercicio fiscal, Número de período, `peri_taxref` (`01–12` mensuales, `1T–4T` trimestrales, `0A` anual), Fecha inicio, Fecha fin, Fecha de cierre, `peri_status` (`A/C`). PAGE 1048
+- `ctax_agencia_periodo`: período tributario por agencia; Agencia, Ejercicio, Código período (`01–12`, `T1–T4`, `0A`), Fecha final período, Estado (`A - Abierto`, `C - Cerrado`); `L` (Liquidado) no permitido actualmente. PAGE 1051
+- `ctax_agencia_empresa`: empresa y agencia tributaria; Empresa, Tipo de ID fiscal, País emisor, NIF, Zona fiscal, Origen de datos fiscales, Agencia tributaria, Cuenta bancaria, Contacto, Id sistema informático, Obligación e-Reporting (`0` Sin obligación, `1` SII-Fact., `2` SII-Pagos, `3` SIF, `4` TBAI, `5` SIRE, `6` SAFT-PT, `7` SII-DOI, `8` Otro sistema electrónico, `9` Otros sistemas de e-Reporting), Tipo de URL (`P` Producción, `T` Test, `S` Sello de producción), Keystore, Alias del keystore. PAGE 1053
+- `ctax_operkey`: claves en declaraciones; Código, Descripción, Clase de impuesto, Modelo/Libro/Declaración, Naturaleza factura (`C` compras, `V` ventas o vacío), Clave, Subclave, Desglose de subclave, Orden de precedencia (`> 0`), Tipo (`0` declaraciones periódicas / `1` e-reporting), Indicador estándar (`0/1`), Estado (`A/C`); clave primaria `opek_class + opek_code`. PAGE 1055
+- `ctax_cif_map`: tipos de CIF por país; `cifnac`, `cifori`, Tipo de CIF, `cifper` (`0` persona / `1` empresa), Descripción; clave primaria `cifnac + cifori`. PAGE 1057
+- `ctax_refcat`: bienes inmuebles; `ref_empcode`, `ref_code`, `ref_dec`, `ref_name`, `ref_local`, `ref_type`, `ref_uso`, `ref_suelo`, `ref_estado`, `ref_tippos`, `ref_porcen` (`> 0` y `<= 100`), `ref_fecini/ref_fecfin`. PAGE 1059
+- `ctax_erep_map`: mapeo e-Reporting; `tax_map_seqno`, `tax_map_erep` (`1` SIF, `2` SII, `3–9` reservados), `tax_map_tipdoc`, `tax_map_zondel`, `tax_map_zonter`, `tax_map_oper`, `tax_map_type`, `tax_map_terkey`, `tax_map_dockey`, `tax_map_ciftyp`, `tax_map_js`, `tax_map_field`, `tax_map_valor`, `tax_map_info`. PAGE 1061
+- `cimpcont_2_ctax`: mapeo `cimp` → `ctax`; `code_value` (`T` Transacción, `O` Operación, `I` Impuesto), `cimp_value`, `cimp_name`, `ctax_value`; clave primaria `code_value + cimp_value`; sin CHECK sobre `code_value` ni claves foráneas a catálogos. PAGE 1063
+- `ctax_rule`: reglas de aplicación; `rule_seqno`, `rule_codnac`, `rule_taxclass`, `rule_fecini`, `rule_priori`, `rule_status` (`A` Activo / `C` Cerrado/Bloqueado), `rule_zonemp`, `rule_zonter`, `rule_keyter`, `rule_keyart`, `rule_in_oper`, `rule_in_taxcode`, `rule_out_oper`, `rule_out_taxcode`, `rule_prorrata` (`0` estándar / `1` existe prorrata). PAGE 1081
+- `ctax_move_head`: cabecera de registro fiscal; `taxh_seqno`, `taxh_apteid`, `taxh_seqori`, `taxh_loteid`, `taxh_natfac` (`C` Compras / `V` Ventas), `taxh_tipdoc` por defecto `'F1'`, `taxh_book`, `taxh_fecha`, `taxh_fecdoc`, `taxh_fecope`, `taxh_ejefis`, `taxh_perfis`, `taxh_zondel`, `taxh_zonter`, `taxh_tiprec` (`0` No es rectificación, `1` Anulador, `2` Sustitutiva, `3` Diferencias), `taxh_camope` (`0` dividir / `1` multiplicar), `taxh_ereport` (`0` No procesado, `1` SII–Facturas, `2` SAFT-PT, `3` SIF, `4` SIRE, `5` SII–Pagos, `6` SII–DOI, `7` TicketBAI, `8/9` Otros). PAGE 949
+- `ctax_move_line`: línea fiscal; `taxl_seqno`, `taxl_linori`, `taxl_oper`, `taxl_code`, `taxl_basimp`, `taxl_basnimp`, `taxl_cuoded`, `taxl_cuonded`, `taxl_desgen = 1`, `taxl_exempt` (`E1–E8`), `taxl_type` (`N, R, E, D, M, S, X`), `taxl_nature` (`B, S, I, R, O, P`), `taxl_telsend` (`0` Pendiente envío / `1` Enviado y aceptado). PAGE 745; PAGE 977; PAGE 912
+- Prorrata: campos fiscales citados `tax_porcen`, `tax_porded`, `tax_porpro`, `tax_ctapro`, `tax_cuoded`, `tax_cuonded`, `tax_basimp`, `tax_basnimp`, `facidx`, `tax_oper`, `tax_code`, `tax_mainkey`, `tax_rule`, `tax_manual`. PAGE 972
+- ISP: campos de operación fiscal `oper_isp`, `oper_in_oper`, `oper_out_oper`; `taxl_linori` relaciona la línea derivada con la original. PAGE 954
+## 4) Circuitos y orden de carga o secuencia de pasos — PAGE 943; PAGE 1081
+- Cargar `ctax_zone` y países `ctiponac` referenciados. PAGE 942
+- Cargar `ctax_class` como familia fiscal. PAGE 935
+- Cargar claves fiscales base: `ctax_artkey`, clave fiscal de tercero, `ctax_dockey`, `ctax_clasif`, `ctax_cif_map`. PAGE 936; PAGE 937; PAGE 1038; PAGE 1040; PAGE 1057
+- Cargar `ctax_operkey` y `ctax_operation`, que referencia `ctax_class`, `ctax_book`, `ctax_operkey`, `cdiarios` y operaciones ISP/destino. PAGE 1055; PAGE 978
+- Cargar `ctax_type`, que referencia `ctax_class`, cuentas `cctanemh` y otros `ctax_type`. PAGE 939
+- Cargar `ctax_rule`, que referencia zonas, clase, clave de tercero, clave de artículo, operación y tipo. PAGE 1081
+- Cargar excepciones y segmentaciones: `ctax_artkey_zone`, `ctax_prorrata`, `ctax_grpfis`, impuesto por tercero. PAGE 943; PAGE 947; PAGE 948; PAGE 945
+- Cargar agencia/periodos: `ctax_agencia`, `ctax_period`, `ctax_agencia_periodo`, `ctax_agencia_empresa`. PAGE 946; PAGE 1048; PAGE 1051; PAGE 1053
+- Cargar mapeos e-reporting: `ctax_erep_map`, `cimpcont_2_ctax`. PAGE 1061; PAGE 1063
+- Secuencia del motor: identificar empresa y zona; identificar tercero y zona; determinar clave de artículo; identificar clase; evaluar clave de tercero, tipo CIF y excepciones; determinar prorrata; seleccionar reglas compatibles; aplicar vigencia y prioridad; obtener operación y tipo; aplicar deducibilidad, validación y envío telemático. PAGE 1081
+## 5) Procesos, botones y acciones con su efecto — PAGE 912
+- En los mantenimientos revisados no se documentan botones literales; sí se documentan acciones de mantenimiento, validaciones y procesos masivos. PAGE 978; PAGE 935; PAGE 936
+- Registro Fiscal: define y centraliza registros fiscales generados por documentos con impacto fiscal en `ctax_move_head`, `capuntes`, `ctax_book`, `cterdire`, `cefectos`, `ctercero`; autorreferencia por `taxh_seqori`. PAGE 949
+- Autofacturas/ISP: obtener fechas/parámetros, condición usuario, construir SQL, ejecutar `ctax_move_gen_selfbill`, recuperar asientos, consultar `casientos` y mostrar asientos. PAGE 912
+- Validación: obtener condición, fecha, caducidad, ejecutar `ctax_move_validation`, recuperar asientos, consultar `casientos` y mostrar asientos. PAGE 912
+- Retroceso por movimiento: transacción `beginWork/commitWork/rollbackWork`; si excepción, mensaje indicando el identificador del movimiento que no pudo retrocederse; se cita `LBL_PROCESS_MSG`. PAGE 912
+- SII Facturas/Pagos: seleccionar pendientes, actualizar `taxh_ereport`, ejecutar `ctax_move_head_enviar_sii_facturas` / `ctax_move_head_enviar_sii_pagos` y consultar resultados; PAGE 912 usa `taxh_ereport = 1` SII Facturas y `taxh_ereport = 2` SII Pagos. PAGE 912
+- Carga Excel: tabla `ctax_move_load` con `load_status` (`0` Pendiente, `1` Cargado, `2/3` permitidos pero no documentados funcionalmente), `load_err_message`, `load_proc_time`, `empcode`, `formh_code`, `peri_ejerci`, `peri_code`. PAGE 912
+- ISP: registrar factura de compra; identificar zonas; determinar clave fiscal; la operación determina si aplica ISP; la regla selecciona tratamiento; generar registro fiscal; procesar ISP; obtener IVA devengado y soportado. PAGE 954
+- Prorrata: determinar porcentaje definitivo; comparar con provisional; identificar cuotas afectadas; ajustar deducible/no deducible; reflejar efecto contable. PAGE 972
+- Cambios de estado documentados: `peri_status` (`A/C`), estado de `ctax_agencia_periodo` (`A - Abierto`, `C - Cerrado`), `dock_estado` (`A/C`), `clasif_estado` (`A/C`), `type_status` (`A/C`), `artk_estado` (`A/C`), `rule_status` (`A/C`), `opek` Estado (`A/C`). PAGE 1048; PAGE 1051; PAGE 1038; PAGE 1040; PAGE 939; PAGE 936; PAGE 1081; PAGE 1055
+- Generación de asientos/registros fiscales: PAGE 756 muestra secuencias «Proveedor/Acreedor/Empresa/Motor Fiscal/Contabilidad» y capturas de «registro fiscal generado en Axional ERP». PAGE 756
+- Comprobación IVA: `taxh_seqno = taxl_seqno`; importe fiscal = `taxl_basimp + taxl_basnimp + taxl_cuoded + taxl_cuonded`; para `taxh_natfac` `C` los importes se multiplican por `-1`. PAGE 745
+## 6) Advertencias y errores típicos — PAGE 949; PAGE 943
+- `ctax_move_head`: `c_ctax_move_head1 taxh_natfac IN ('C','V')`; `c_ctax_move_head2 taxh_fecha >= taxh_fecdoc`; `c_ctax_move_head3 taxh_ereport` entre `0` y `9`; `c_ctax_move_head18 taxh_camope IN (0,1)`; `c_ctax_move_head19 taxh_tiprec IN (0,1,2,3)`. PAGE 949
+- `ctax_artkey_zone`: `c_ctax_artkey_zone1 zone_artk_vigfin >= zone_artk_vigini`; no hay restricción que impida solapes de vigencia con distinta clave. PAGE 943
+- `cimpcont_2_ctax`: no hay restricción CHECK sobre `code_value` que garantice `T/O/I` y no hay claves foráneas a catálogos `cimp`/`ctax`. PAGE 1063
+- `ctax_agencia_periodo`: el estado `L` (Liquidado) no forma parte de los valores actualmente permitidos; solo `A - Abierto` y `C - Cerrado`. PAGE 1051
+- `ctax_zone`: `zone_taiter` es obligatorio, con valor predeterminado `1`, y no tiene catálogo cerrado por CHECK. PAGE 942
+- `ctax_type`: `type_porcen` entre `-100` y `100`; `type_bascal` solo `0, 1, 2, 3, 5, 6`; `type_status` solo `A/C`. PAGE 939
+- `ctax_prorrata`: `pror_porcen` entre `0` y `100`; `pror_fecfin >= pror_fecini`; si `pror_cnae` informado, debe existir `pror_proyec` o `pror_seccio`. PAGE 947
+- `ctax_grpfis`: `grpf_teremi != grpf_terrec`; `grpf_porbas` entre `0` y `100`; unicidad grupo+emisor+receptor+fecha inicio. PAGE 948
+- `ctax_rule`: los bloques de compras o ventas deben informarse completos o permanecer vacíos; `c_ctax_rule3` estado `A/C`. PAGE 1081
+- `ctax_operation`: triangular solo `0` y `1`; operaciones ISP recibida y emitida conjuntamente y requieren `oper_isp = 1`; operación destino no puede coincidir con la propia operación. PAGE 978
+- ISP: si la regla identifica ISP pero no existe información fiscal necesaria para generar cuotas derivadas, el tratamiento no podrá completarse correctamente. PAGE 954
+- Prorrata: no modifica el porcentaje de IVA de la operación; puede combinarse con otras restricciones de deducibilidad; el porcentaje final puede ser inferior al de prorrata. PAGE 972
+- SII Facturas: revisar `tipcom` y `msgerr`; en cargas Excel revisar `load_status` y `load_err_message`; si falla retroceso, revisar el identificador del movimiento indicado. PAGE 912
+- `ctax_operkey`: el desglose exige subclave; el orden de precedencia debe ser estrictamente `> 0`; naturaleza factura `C`, `V` o vacío. PAGE 1055
+- `ctax_erep_map`: `tax_map_erep` admite `1` a `9`; unicidad `tax_map_erep + tax_map_field + tax_map_valor`. PAGE 1061
+- `ctax_cif_map`: país debe existir en `ctiponac`; `cifper` solo `0/1`; combinación país + valor origen única. PAGE 1057
+- No se documentan mensajes de error literales en las páginas revisadas; se indican validaciones, restricciones y comprobaciones. PAGE 978; PAGE 935; PAGE 936; PAGE 949
