@@ -9,6 +9,8 @@ export interface MomentoVideo {
   t: number;             // segundo dentro del vídeo completo
   tCap: number;          // segundo dentro del clip del capítulo
   titulo: string;        // qué se explica en ese momento («Alta del proveedor»)
+  /** Segundo del clip en que acaba el momento: el reproductor se para ahí y ofrece seguir viendo */
+  fin?: number;
 }
 
 export interface CapituloVideo {
@@ -81,19 +83,11 @@ export const CAPITULOS: CapituloVideo[] = [
       },
       {
         "t": 376,
-        "titulo": "Qué vamos a ver"
+        "titulo": "Qué vamos a ver: el módulo"
       },
       {
         "t": 394,
-        "titulo": "Qué vamos a ver (2)"
-      },
-      {
-        "t": 411,
-        "titulo": "Un consejo antes de empezar"
-      },
-      {
-        "t": 427,
-        "titulo": "Qué has aprendido"
+        "titulo": "Qué vamos a ver: los bloques"
       }
     ]
   },
@@ -719,18 +713,33 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
       "titulo": "Alta del proveedor"
     }
   ],
-  "compras-2-tip-albaran": [
+  "compras-tipos-numerador": [
+    {
+      "capitulo": 4,
+      "t": 1463,
+      "tCap": 95,
+      "titulo": "Numerador y máscara de serie"
+    },
+    {
+      "capitulo": 4,
+      "t": 1525,
+      "tCap": 157,
+      "titulo": "La rotura"
+    },
+    {
+      "capitulo": 4,
+      "t": 1642,
+      "tCap": 274,
+      "titulo": "Numerador de documentos"
+    }
+  ],
+  "compras-3-tip-oferta": [
     {
       "capitulo": 4,
       "t": 1414,
       "tCap": 46,
-      "titulo": "Qué es el tipo de documento"
-    },
-    {
-      "capitulo": 4,
-      "t": 2087,
-      "tCap": 719,
-      "titulo": "El tipo de albarán"
+      "titulo": "Qué es el tipo de documento",
+      "fin": 95
     }
   ],
   "compras-2-tip-factura": [
@@ -756,6 +765,12 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
     },
     {
       "capitulo": 6,
+      "t": 3053,
+      "tCap": 42,
+      "titulo": "El albarán nace del pedido"
+    },
+    {
+      "capitulo": 6,
       "t": 3207,
       "tCap": 196,
       "titulo": "La cabecera del albarán"
@@ -765,6 +780,12 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
       "t": 3323,
       "tCap": 312,
       "titulo": "Validar el albarán"
+    },
+    {
+      "capitulo": 6,
+      "t": 3501,
+      "tCap": 490,
+      "titulo": "El pedido queda servido"
     }
   ],
   "compras-2-factura": [
@@ -826,7 +847,8 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
       "capitulo": 1,
       "t": 134,
       "tCap": 134,
-      "titulo": "Qué es una oferta"
+      "titulo": "El ciclo puede empezar antes: la oferta",
+      "fin": 167
     }
   ],
   "compras-3-tip-pedido": [
@@ -889,50 +911,48 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
       "titulo": "El tipo de albarán"
     }
   ],
-  "compras-3-albaran-origen": [
+  "maestros-moverte-axional": [
     {
-      "capitulo": 6,
-      "t": 3053,
-      "tCap": 42,
-      "titulo": "El albarán nace del pedido"
+      "capitulo": 1,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Presentación",
+      "fin": 28
     },
     {
-      "capitulo": 6,
-      "t": 3081,
-      "tCap": 70,
-      "titulo": "Generar albaranes"
+      "capitulo": 1,
+      "t": 28,
+      "tCap": 28,
+      "titulo": "Qué es un ERP",
+      "fin": 54
     },
     {
-      "capitulo": 6,
-      "t": 3180,
-      "tCap": 169,
-      "titulo": "Genera el albarán"
+      "capitulo": 1,
+      "t": 167,
+      "tCap": 167,
+      "titulo": "La barra superior",
+      "fin": 201
     },
     {
-      "capitulo": 6,
-      "t": 3501,
-      "tCap": 490,
-      "titulo": "El pedido queda servido"
-    }
-  ],
-  "compras-3-factura": [
-    {
-      "capitulo": 7,
-      "t": 3669,
-      "tCap": 103,
-      "titulo": "Generar la factura"
+      "capitulo": 1,
+      "t": 201,
+      "tCap": 201,
+      "titulo": "El buscador",
+      "fin": 232
     },
     {
-      "capitulo": 7,
-      "t": 3867,
-      "tCap": 301,
-      "titulo": "Validar la factura"
+      "capitulo": 1,
+      "t": 232,
+      "tCap": 232,
+      "titulo": "El menú lateral",
+      "fin": 254
     },
     {
-      "capitulo": 8,
-      "t": 4228,
-      "tCap": 275,
-      "titulo": "Contabilizar la factura"
+      "capitulo": 1,
+      "t": 336,
+      "tCap": 336,
+      "titulo": "Dentro de un bloque",
+      "fin": 376
     }
   ],
   "maestros-1-terceros": [
@@ -1083,6 +1103,14 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
       "titulo": "Alta del proveedor"
     },
     {
+      "capitulo": 2,
+      "t": 901,
+      "tCap": 440,
+      "titulo": "Qué es un artículo"
+    }
+  ],
+  "compras-precios": [
+    {
       "capitulo": 3,
       "t": 1182,
       "tCap": 120,
@@ -1095,7 +1123,19 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
       "titulo": "El grupo de precios"
     }
   ],
-  "compras-2": [
+  "compras-tipos": [
+    {
+      "capitulo": 4,
+      "t": 1463,
+      "tCap": 95,
+      "titulo": "Numerador y máscara de serie"
+    },
+    {
+      "capitulo": 4,
+      "t": 1849,
+      "tCap": 481,
+      "titulo": "Los tipos de pedido"
+    },
     {
       "capitulo": 4,
       "t": 2087,
@@ -1107,13 +1147,50 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
       "t": 2128,
       "tCap": 760,
       "titulo": "El tipo de factura"
+    }
+  ],
+  "compras-3": [
+    {
+      "capitulo": 1,
+      "t": 134,
+      "tCap": 134,
+      "titulo": "El ciclo puede empezar antes: la oferta",
+      "fin": 167
+    },
+    {
+      "capitulo": 5,
+      "t": 2381,
+      "tCap": 110,
+      "titulo": "Crear el pedido"
+    },
+    {
+      "capitulo": 5,
+      "t": 2931,
+      "tCap": 660,
+      "titulo": "Validar el pedido"
+    }
+  ],
+  "compras-2": [
+    {
+      "capitulo": 6,
+      "t": 3053,
+      "tCap": 42,
+      "titulo": "El albarán nace del pedido"
     },
     {
       "capitulo": 6,
       "t": 3207,
       "tCap": 196,
-      "titulo": "El albarán"
+      "titulo": "La cabecera del albarán"
     },
+    {
+      "capitulo": 6,
+      "t": 3323,
+      "tCap": 312,
+      "titulo": "Validar el albarán"
+    }
+  ],
+  "compras-factura": [
     {
       "capitulo": 7,
       "t": 3669,
@@ -1131,50 +1208,12 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
       "t": 4228,
       "tCap": 275,
       "titulo": "Contabilizar la factura"
-    }
-  ],
-  "compras-3": [
-    {
-      "capitulo": 1,
-      "t": 134,
-      "tCap": 134,
-      "titulo": "Qué es una oferta"
-    },
-    {
-      "capitulo": 4,
-      "t": 1888,
-      "tCap": 520,
-      "titulo": "El tipo de pedido"
-    },
-    {
-      "capitulo": 5,
-      "t": 2381,
-      "tCap": 110,
-      "titulo": "Crear el pedido"
-    },
-    {
-      "capitulo": 6,
-      "t": 3081,
-      "tCap": 70,
-      "titulo": "Generar el albarán desde el pedido"
-    },
-    {
-      "capitulo": 7,
-      "t": 3669,
-      "tCap": 103,
-      "titulo": "Generar la factura"
-    },
-    {
-      "capitulo": 8,
-      "t": 4228,
-      "tCap": 275,
-      "titulo": "Contabilizar la factura"
     },
     {
       "capitulo": 9,
       "t": 4841,
       "tCap": 394,
-      "titulo": "Docflow: el rastro del pedido"
+      "titulo": "Docflow: el rastro de la compra"
     }
   ],
   "maestros-1": [
@@ -1245,6 +1284,68 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
       "t": 3806,
       "tCap": 240,
       "titulo": "El vencimiento de la factura de compra"
+    }
+  ]
+};
+
+/** Vídeo de presentación de un módulo: va en «Antes de empezar» de su página, antes de los bloques */
+export const MOMENTOS_MODULO: Record<string, MomentoVideo[]> = {
+  "compras": [
+    {
+      "capitulo": 1,
+      "t": 54,
+      "tCap": 54,
+      "titulo": "Para qué sirve el módulo de compras",
+      "fin": 82
+    },
+    {
+      "capitulo": 1,
+      "t": 82,
+      "tCap": 82,
+      "titulo": "El ciclo de compra",
+      "fin": 114
+    },
+    {
+      "capitulo": 1,
+      "t": 114,
+      "tCap": 114,
+      "titulo": "Docflow: el rastro de cada compra",
+      "fin": 134
+    },
+    {
+      "capitulo": 1,
+      "t": 134,
+      "tCap": 134,
+      "titulo": "El ciclo puede empezar antes",
+      "fin": 167
+    },
+    {
+      "capitulo": 1,
+      "t": 254,
+      "tCap": 254,
+      "titulo": "Recorrido por Compras: el ciclo",
+      "fin": 293
+    },
+    {
+      "capitulo": 1,
+      "t": 293,
+      "tCap": 293,
+      "titulo": "Recorrido por Compras: el resto",
+      "fin": 336
+    },
+    {
+      "capitulo": 1,
+      "t": 376,
+      "tCap": 376,
+      "titulo": "Qué vamos a ver: el módulo",
+      "fin": 394
+    },
+    {
+      "capitulo": 1,
+      "t": 394,
+      "tCap": 394,
+      "titulo": "Qué vamos a ver: los bloques",
+      "fin": 411
     }
   ]
 };

@@ -453,6 +453,9 @@ export default function Home() {
           <p>
             La <b>Práctica</b> es un ERP simulado dentro de esta web, que se corrige solo. La <b>Demo real</b> es el ERP de demostración, en otra pestaña.
           </p>
+          <p className="muted">
+            <b>Antes de empezar:</b> haz el curso de contabilidad (con su examen) y después el de introducción al ERP. Esta plataforma es solo de Axional.
+          </p>
         </section>
 
         <section id="modulos" className="hm-ruta" aria-labelledby="mods-h">

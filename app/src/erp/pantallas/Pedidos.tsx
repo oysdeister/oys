@@ -27,6 +27,7 @@ import {
   eur,
   fechaEs,
   useErp,
+  avisoGuardarAntes,
   type Accion,
   type Col,
 } from '../ui';
@@ -114,7 +115,8 @@ function AltaPedido() {
   const db = useDb();
   const [prov, setProv] = useState('');
 
-  const proveedores = db.proveedores.map((p) => ({
+  // Tu proveedor T{INI} sale el primero del desplegable
+  const proveedores = [...db.proveedores].sort((a, b) => Number(b.tercero === `T${ini}`) - Number(a.tercero === `T${ini}`)).map((p) => ({
     v: p.tercero,
     t: `${p.tercero} · ${db.terceros.find((t) => t.codigo === p.tercero)?.nombre ?? ''}`,
   }));
@@ -163,7 +165,7 @@ function AltaPedido() {
 function FichaPedido({ numero }: { numero: string }) {
   const extraAcc = useAccionesCatalogo('gcompedh');
   const extraMenu = useEnlacesCatalogo('gcompedh');
-  const { ini, ir, hacer } = useErp();
+  const { ini, ir, hacer, aviso } = useErp();
   const db = useDb();
 
   const registro = db.pedidos.find((p) => p.numero === numero);
@@ -212,16 +214,22 @@ function FichaPedido({ numero }: { numero: string }) {
         label: 'Guardar',
         tipo: 'primario',
         onClick: () => {
-          if (hacer(erp.guardarPedido(borrador, ini), 'Pedido guardado')) {
+          const r = erp.guardarPedido(borrador, ini);
+          if (hacer(r, 'Pedido guardado')) {
             syncBorrador();
+          } else if (!r.ok && /^Línea \d+/.test(r.error)) {
+            setPestana('lineas');
           }
         },
       });
       acciones.push({
         label: 'Validar',
         tipo: 'proceso',
-        disabled: cambios,
         onClick: () => {
+          if (cambios) {
+            aviso('error', avisoGuardarAntes('Validar'));
+            return;
+          }
           if (hacer(erp.estadoPedido(registro.numero, 'Validado', ini), 'Pedido validado')) {
             syncBorrador();
           }

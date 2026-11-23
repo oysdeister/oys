@@ -461,3 +461,56 @@ select.erp-input { appearance: none; padding-right: 18px; background: linear-gra
   .pr-ancho .pr-lienzo.con-panel { display: block; }
   .pr-flota { height: auto; margin-top: 12px; }
 }
+
+/* campo señalado por un error de guardado: borde rojo, rótulo rojo y foco */
+.erp-input[aria-invalid='true'] { border-color: var(--ax-rojo); border-bottom-width: 2px; box-shadow: 0 1px 0 var(--ax-rojo); background-color: rgba(211, 47, 47, 0.06); }
+.erp-tabla .erp-input[aria-invalid='true'] { outline: 2px solid var(--ax-rojo); outline-offset: 1px; }
+.erp-campo.con-error .erp-label { color: var(--ax-rojo); font-weight: 700; }
+.erp-error-campo { margin-top: 2px; font-size: 10px; font-weight: 600; color: var(--ax-rojo); }
+
+/* Corrección automática: por qué no se ha conseguido un punto, con el dato real */
+.pr-porque { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: #9a440b; font-weight: 600; }
+:root[data-theme='dark'] .pr-porque { color: #f5b75a; }
+.pr-checks li.ok .pr-porque { display: none; }
+
+/* Pantalla completa del ERP de práctica (Fullscreen API) y modo ampliado de respaldo (iOS) */
+.pr-completa { display: inline-flex; align-items: center; gap: 8px; }
+.pr-completa svg { flex: none; }
+.pr-espacio.pr-completa-on { display: flex; flex-direction: column; margin: 0; padding: 10px 12px 12px; background: var(--paper); color: var(--ink); }
+.pr-espacio.pr-completa-on .pr-orden { margin: 0 0 6px; }
+.pr-espacio.pr-completa-on .pr-tira { margin-bottom: 8px; }
+.pr-espacio.pr-completa-on .pr-lienzo { flex: 1 1 auto; min-height: 0; height: auto; }
+.pr-espacio.pr-completa-on .pr-erp { height: 100%; }
+.pr-espacio:fullscreen { width: 100vw; height: 100vh; overflow: hidden; }
+.pr-espacio.pr-ampliado { position: fixed; inset: 0; z-index: 1000; height: 100dvh; overflow: hidden; padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.pr-espacio.pr-completa-on .pr-flota { overflow: auto; }
+@media (max-width: 760px) {
+  .pr-espacio.pr-completa-on .pr-tira { gap: 8px; padding: 8px 10px; }
+  .pr-espacio.pr-completa-on .pr-tira-txt span { display: none; }
+  .pr-espacio.pr-completa-on .pr-lienzo.con-panel { display: flex; flex-direction: column; }
+  .pr-espacio.pr-completa-on .pr-lienzo.con-panel .pr-erp { flex: 1 1 50%; min-height: 0; height: auto; }
+  .pr-espacio.pr-completa-on .pr-flota { flex: 1 1 50%; min-height: 0; margin-top: 8px; }
+  .pr-espacio.pr-completa-on .pr-erp { height: 100%; }
+}
+/* el artículo de la línea se lee entero (código y nombre) */
+.erp-tabla select.erp-input.mini { min-width: 150px; }
+
+/* Pantalla completa en móvil: cabecera de una línea, botones solo con icono (con aria-label) y búsqueda del ERP entera */
+.pr-solo-ico { display: none; }
+@media (max-width: 760px) {
+  .pr-espacio.pr-completa-on { padding: 6px 8px 8px; }
+  .pr-espacio.pr-completa-on .pr-orden { display: none; }
+  .pr-espacio.pr-completa-on .pr-tira { flex-wrap: nowrap; gap: 6px; margin-bottom: 6px; padding: 4px 6px 4px 10px; }
+  .pr-espacio.pr-completa-on .pr-tira-txt { flex: 1 1 auto; }
+  .pr-espacio.pr-completa-on .pr-tira-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-sm); }
+  .pr-espacio.pr-completa-on .pr-tira-pt { font-size: 13px; }
+  .pr-espacio.pr-completa-on .pr-tira-btn { flex: none; width: 40px; min-width: 40px; padding: 0; justify-content: center; }
+  .pr-espacio.pr-completa-on .pr-btn-txt { display: none; }
+  .pr-espacio.pr-completa-on .pr-solo-ico { display: block; }
+}
+@container erp (max-width: 460px) {
+  .erp-logo { font-size: 16px; padding: 0 4px; }
+  .erp-top-buscar { flex: 1 1 auto; min-width: 0; margin: 0 4px; padding: 0 6px; }
+  .erp-top-buscar kbd { display: none; }
+  .erp-top { gap: 2px; padding: 0 4px; }
+}

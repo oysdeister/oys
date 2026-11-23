@@ -37,6 +37,7 @@ function DondeClic({ pasos, modulo, ini, onListo }: { pasos: PasoPlano[]; modulo
   const t = (x: string) => conIni(x, ini);
   const actual = lista[i];
   const h = actual?.paso.hotspot;
+  const consigna = actual ? t(actual.paso.pregunta ?? actual.paso.texto) : '';
 
   useEffect(() => { onListo(fin); }, [fin, onListo]);
 
@@ -103,9 +104,9 @@ function DondeClic({ pasos, modulo, ini, onListo }: { pasos: PasoPlano[]; modulo
       <div className="pl-barra" aria-hidden="true">
         <i style={{ width: `${((i + 1) / lista.length) * 100}%` }} />
       </div>
-      <p className="pl-instr">{t(actual.paso.texto)}</p>
+      <p className="pl-instr">{consigna}</p>
       <div className="pl-shot" key={i}>
-        <Captura src={imgSrc(modulo, actual.paso.imagen!)} alt="Captura del ERP: busca dónde harías clic" onPunto={onPunto} clicable={res === 'nada'} ampliable instruccion={t(actual.paso.texto)}>
+        <Captura src={imgSrc(modulo, actual.paso.imagen!)} alt="Captura del ERP: busca dónde harías clic" onPunto={onPunto} clicable={res === 'nada'} ampliable instruccion={consigna}>
           {h && res === 'bien' && <CajaHotspot h={h} modo="acierto" />}
           {h && res === 'revelado' && <CajaHotspot h={h} modo="revelar" />}
           <Fallos marcas={marcas} />
@@ -114,7 +115,7 @@ function DondeClic({ pasos, modulo, ini, onListo }: { pasos: PasoPlano[]; modulo
       </div>
       <p className="pl-fb" aria-live="polite">
         {res === 'nada' && intentos === 0 && 'Haz clic en la captura donde lo harías en el ERP. Esta vez no hay marca.'}
-        {res === 'nada' && intentos === 1 && 'No es ahí. Tienes otro intento.'}
+        {res === 'nada' && intentos === 1 && 'No es ahí. Te queda un intento.'}
         {res === 'bien' && (intentos === 0 ? 'Correcto, a la primera.' : 'Correcto.')}
         {res === 'revelado' && h && `Era aquí: «${h.etiqueta}». Fíjate y continúa.`}
       </p>

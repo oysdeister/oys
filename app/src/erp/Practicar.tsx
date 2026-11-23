@@ -1,9 +1,10 @@
 /* Espacio de práctica: el ERP a todo el ancho; el enunciado y la corrección se abren encima cuando los pides. */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { confeti } from '../sims/kit';
+import { getProgreso } from '../lib/progress';
 import { ErpApp } from './ErpApp';
-import { useDb } from './modelo';
+import { erp, useDb } from './modelo';
 import { type Practica, PRACTICAS, puntuar, registrarNota, txtIni, useNotas } from './practicas';
 
 function Nota({ valor }: { valor: number }) {
@@ -74,13 +75,24 @@ export function PanelPractica({ practica, ini, compacto, onCerrar }: { practica:
           <motion.i initial={false} animate={{ width: `${nota * 100}%` }} />
         </div>
         <ul>
-          {res.map((c, i) => (
+          {res.map((c, i) => {
+            // El porqué se ve siempre bajo cada punto no conseguido
+            const motivo = !c.hecho ? c.motivo : null;
+            return (
             <li key={i} className={c.hecho ? 'ok' : ''}>
               <button type="button" onClick={() => setAbierta(abierta === i ? null : i)} aria-expanded={abierta === i}>
                 <motion.span className="pr-tick" animate={c.hecho && !reducir ? { scale: [1, 1.3, 1] } : { scale: 1 }}>
                   {c.hecho ? '✓' : ''}
                 </motion.span>
-                <span className="pr-txt">{t(c.texto)}</span>
+                <span className="pr-txt">
+                  {t(c.texto)}
+                  {motivo && (
+                    <span className="pr-porque">
+                      <span className="sr-only">. </span>
+                      {t(motivo)}
+                    </span>
+                  )}
+                </span>
                 <span className="pr-pt">{c.puntos}</span>
               </button>
               <AnimatePresence>
@@ -91,7 +103,8 @@ export function PanelPractica({ practica, ini, compacto, onCerrar }: { practica:
                 )}
               </AnimatePresence>
             </li>
-          ))}
+            );
+          })}
         </ul>
         {nota >= 1 ? (
           <p className="pr-fin">Práctica superada: todo lo que has grabado cuadra.</p>
@@ -104,7 +117,7 @@ export function PanelPractica({ practica, ini, compacto, onCerrar }: { practica:
 }
 
 /** Tira de arriba: qué práctica es, qué comprobación falta y botón para ver el enunciado */
-function Tira({ practica, ini, abierto, onAbrir }: { practica: Practica; ini: string; abierto: boolean; onAbrir: () => void }) {
+function Tira({ practica, ini, abierto, onAbrir, completa, onCompleta }: { practica: Practica; ini: string; abierto: boolean; onAbrir: () => void; completa: boolean; onCompleta: () => void }) {
   const db = useDb();
   const { res, logrado, total, nota } = puntuar(practica, db, ini);
   const falta = res.find((c) => !c.hecho);
@@ -113,13 +126,22 @@ function Tira({ practica, ini, abierto, onAbrir }: { practica: Practica; ini: st
     <div className="pr-tira">
       <div className="pr-tira-txt">
         <strong>{practica.titulo}</strong>
-        <span>{nota >= 1 ? 'Práctica superada: todo lo que has grabado cuadra.' : logrado === 0 && practica.enunciado[0] ? `Empieza: ${t(practica.enunciado[0])}` : falta ? `Te falta: ${t(falta.texto)}` : ''}</span>
+        <span>{nota >= 1 ? 'Práctica superada: todo lo que has grabado cuadra.' : logrado === 0 && practica.enunciado[0] ? `Empieza: ${t(practica.enunciado[0])}` : falta ? `Te falta: ${t(falta.texto)}.${falta.motivo ? ` ${t(falta.motivo)}` : ''}` : ''}</span>
       </div>
       <span className="pr-tira-pt">
         {logrado}/{total} puntos
       </span>
-      <button type="button" className="btn sm" aria-expanded={abierto} aria-haspopup="dialog" onClick={onAbrir}>
-        {abierto ? 'Ocultar enunciado' : 'Ver enunciado y corrección'}
+      <button type="button" className="btn sm pr-tira-btn" aria-expanded={abierto} aria-haspopup="dialog" onClick={onAbrir} aria-label={abierto ? 'Ocultar enunciado' : 'Ver enunciado y corrección'}>
+        <svg className="pr-solo-ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M7 3h10l3 3v15H4V3zM8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="pr-btn-txt">{abierto ? 'Ocultar enunciado' : 'Ver enunciado y corrección'}</span>
+      </button>
+      <button type="button" className="btn sm ghost pr-completa pr-tira-btn" aria-pressed={completa} onClick={onCompleta} aria-label={completa ? 'Salir de pantalla completa' : 'Pantalla completa'} title={completa ? 'Salir de pantalla completa (Esc)' : 'Ver el ERP a pantalla completa'}>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d={completa ? 'M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5' : 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <span className="pr-btn-txt">{completa ? 'Salir de pantalla completa' : 'Pantalla completa'}</span>
       </button>
     </div>
   );
@@ -132,9 +154,68 @@ export function Practicar({ ids, ini, alto }: { ids: string[]; ini: string; alto
   const [abierto, setAbierto] = useState(false);
   const pr = lista.find((p) => p.id === actual) ?? lista[0];
   const notas = useNotas();
+  const caja = useRef<HTMLDivElement>(null);
+  /** 'api' = Fullscreen API del navegador; 'css' = modo ampliado de respaldo (iOS y navegadores sin la API) */
+  const [completa, setCompleta] = useState<null | 'api' | 'css'>(null);
+
+  // Proveedor T{INI}: las prácticas que lo usan lo traen creado si el alumno aún no lo tiene;
+  // la del bloque 1 quita el que trajo la plataforma (si no tiene documentos) para que el alumno lo cree.
+  const prId = pr?.id;
+  const usaProv = !!pr?.usaProveedor;
+  useEffect(() => {
+    if (!ini || !prId) return;
+    if (prId === 'erp-proveedor') erp.quitarProveedorSembrado(ini);
+    else if (usaProv) erp.asegurarProveedorAlumno(ini, getProgreso().alumno.nombre);
+  }, [ini, prId, usaProv]);
+
+  useEffect(() => {
+    const alCambiar = () => {
+      if (!document.fullscreenElement) setCompleta((c) => (c === 'api' ? null : c));
+    };
+    document.addEventListener('fullscreenchange', alCambiar);
+    return () => document.removeEventListener('fullscreenchange', alCambiar);
+  }, []);
+  // Modo ampliado de respaldo: Esc sale y la página de debajo no se desplaza
+  useEffect(() => {
+    if (completa !== 'css') return;
+    const esc = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (e.key === 'Escape' && !e.defaultPrevented && !el?.closest('input, select, textarea, [role="menu"]')) setCompleta(null);
+    };
+    const previo = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.body.style.overflow = previo;
+      document.removeEventListener('keydown', esc);
+    };
+  }, [completa]);
+  const alternarCompleta = useCallback(async () => {
+    if (completa === 'api') {
+      if (document.fullscreenElement) await document.exitFullscreen().catch(() => undefined);
+      setCompleta(null);
+      return;
+    }
+    if (completa === 'css') {
+      setCompleta(null);
+      return;
+    }
+    const el = caja.current;
+    if (el && document.fullscreenEnabled && typeof el.requestFullscreen === 'function') {
+      try {
+        await el.requestFullscreen();
+        setCompleta('api');
+        return;
+      } catch {
+        /* sin permiso o sin soporte: modo ampliado */
+      }
+    }
+    setCompleta('css');
+  }, [completa]);
+
   if (!pr) return null;
   return (
-    <div className="pr-espacio pr-ancho" style={alto ? { ['--pr-alto' as string]: alto } : undefined}>
+    <div ref={caja} className={`pr-espacio pr-ancho${completa ? ' pr-completa-on' : ''}${completa === 'css' ? ' pr-ampliado' : ''}`} style={alto ? { ['--pr-alto' as string]: alto } : undefined}>
       {lista.length > 1 && (
         <p className="pr-orden">
           Práctica {lista.indexOf(pr) + 1} de {lista.length}.
@@ -150,7 +231,7 @@ export function Practicar({ ids, ini, alto }: { ids: string[]; ini: string; alto
           {(notas[pr.id]?.nota ?? 0) >= 1 && <span className="pr-sel-ok"> ✓ superada</span>}
         </p>
       )}
-      <Tira practica={pr} ini={ini} abierto={abierto} onAbrir={() => setAbierto((v) => !v)} />
+      <Tira practica={pr} ini={ini} abierto={abierto} onAbrir={() => setAbierto((v) => !v)} completa={!!completa} onCompleta={() => void alternarCompleta()} />
       <div className={`pr-lienzo${abierto ? ' con-panel' : ''}`}>
         <div className="pr-erp">
           <ErpApp key={pr.id} ini={ini} inicial={pr.pantalla} />

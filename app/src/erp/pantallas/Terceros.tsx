@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDb, erp, CAT, type Tercero, type Direccion } from '../modelo';
-import { Lista, Ficha, Pestanas, Rejilla, CampoTexto, CampoNum, CampoSel, CampoLectura, Seccion, Estado, useErp, type Accion } from '../ui';
+import { Lista, Ficha, Pestanas, Rejilla, CampoTexto, CampoNum, CampoSel, CampoLectura, Seccion, Estado, useErp, avisoGuardarAntes, type Accion } from '../ui';
 import { useAccionesCatalogo, useEnlacesCatalogo } from '../catalogo/extra';
 
 const PAISES = [
@@ -39,7 +39,7 @@ function nuevoTercero(ini: string): Tercero {
 export default function Terceros() {
   const extraAcc = useAccionesCatalogo('ctercero');
   const extraMenu = useEnlacesCatalogo('ctercero');
-  const { ini, clave, ir, hacer, noDisp } = useErp();
+  const { ini, clave, ir, hacer, noDisp, aviso } = useErp();
   const db = useDb();
 
   const guardado = clave !== null && clave !== '__nuevo'
@@ -137,12 +137,21 @@ export default function Terceros() {
     };
     const r = erp.guardarTercero(aGuardar, ini);
     if (hacer(r, 'Tercero guardado', r.ok ? { pantalla: 'terceros', clave: r.doc } : undefined)) {
-      setBorrador(aGuardar);
+      const { sembrado: _s, ...sinMarca } = aGuardar;
+      void _s;
+      setBorrador(sinMarca);
       if (clave === '__nuevo' && r.ok) ir('terceros', r.doc);
+    } else {
+      // Los campos que comprueba «Guardar» están en la pestaña «Terceros»: se vuelve a ella para marcar el campo
+      setTab('terceros');
     }
   };
 
   const validar = () => {
+    if (cambiosSinGuardar) {
+      aviso('error', avisoGuardarAntes('Validar'));
+      return;
+    }
     const r = erp.validarTercero(borrador.codigo, ini);
     if (hacer(r, 'Tercero validado', r.ok ? { pantalla: 'terceros', clave: r.doc } : undefined)) {
       setBorrador({ ...borrador, estado: 'Validado' });
@@ -213,7 +222,6 @@ export default function Terceros() {
         label: 'Validar',
         onClick: validar,
         tipo: 'proceso',
-        disabled: cambiosSinGuardar,
         title: cambiosSinGuardar ? 'Guarda los cambios antes de validar.' : undefined,
       });
     }
@@ -235,8 +243,22 @@ export default function Terceros() {
     }
   }
 
-  acciones.push({ label: 'Cerrar', onClick: () => noDisp('Cerrar') });
-  acciones.push({ label: 'Activar', onClick: () => noDisp('Activar') });
+  // «Cerrar» y «Activar» bloquean o desbloquean el tercero para documentos nuevos: en la práctica no cambian nada, pero dicen qué harían
+  const procesoEstado = (boton: 'Cerrar' | 'Activar') => {
+    if (clave === '__nuevo' || !guardado) {
+      aviso('error', `Primero guarda el tercero con el disquete («Guardar»); después podrás usar «${boton}».`);
+      return;
+    }
+    if (cambiosSinGuardar) {
+      aviso('error', avisoGuardarAntes(boton));
+      return;
+    }
+    if (boton === 'Activar')
+      aviso('info', `«Activar» deja el tercero ${guardado.codigo} activo para usarlo en pedidos y facturas. Ya lo está: no hay nada que cambiar.`);
+    else aviso('info', `«Cerrar» bloquearía el tercero ${guardado.codigo} para documentos nuevos. En la práctica no se cierra, para que puedas seguir usándolo.`);
+  };
+  acciones.push({ label: 'Cerrar', onClick: () => procesoEstado('Cerrar') });
+  acciones.push({ label: 'Activar', onClick: () => procesoEstado('Activar') });
   acciones.push({ label: 'Añadir tercero', onClick: () => ir('terceros', '__nuevo') });
 
   const menuFicha: Accion[] = [

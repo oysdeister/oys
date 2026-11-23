@@ -4,7 +4,8 @@ import { META, MODULOS, getModulo } from '../content';
 import { ejercicioCompletado, useProgreso, APROBADO } from '../lib/progress';
 import { MAX_PREG, notaExamen, preguntasDe } from '../lib/examenModulo';
 import { conIni } from '../lib/texto';
-import { seriesDeModulo } from '../content/videoSeries';
+import { momentosDeModulo, seriesDeModulo } from '../content/videoSeries';
+import { VideoPrimero } from '../components/exercise/VideoPrimero';
 import { SIMS } from '../sims/registro';
 import { Icon } from '../components/Icon';
 import { SeccionVista } from '../components/exercise/SeccionVista';
@@ -99,6 +100,12 @@ export default function ModulePage() {
       <section className="md-sec" aria-labelledby="antes-h">
         <h2 id="antes-h"> Antes de empezar
         </h2>
+        <VideoPrimero
+          lista={momentosDeModulo(modulo.id)}
+          indice
+          ante="Antes de empezar el módulo"
+          luego="Luego empieza por el bloque 1."
+        />
         
         {ficha && (
           <ul className="md-aprendes">

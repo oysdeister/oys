@@ -32,6 +32,13 @@ export default function ExercisePage() {
   const claveListo = `${id}:${tabParam ?? ''}`;
   const onListo = useCallback((ok: boolean) => setListo({ clave: claveListo, ok }), [claveListo]);
   useEffect(() => { window.scrollTo({ top: 0 }); }, [claveListo]);
+  // Al cambiar de pestaña se olvida el «terminado» anterior (en el mismo render, antes de que el paso nuevo avise):
+  // si vuelves a un paso ya hecho, el «Siguiente» no asoma mientras se anima el cambio
+  const [claveVista, setClaveVista] = useState(claveListo);
+  if (claveVista !== claveListo) {
+    setClaveVista(claveListo);
+    setListo({ clave: '', ok: false });
+  }
 
 
   if (!hallado) {
@@ -148,6 +155,23 @@ export default function ExercisePage() {
           {tab === 'demo' && <DemoReal ej={ej} ini={ini} />}
         </motion.section>
       </AnimatePresence>
+
+      {/* Cierre del bloque: lo que el alumno ha hecho en él, al final del último paso */}
+      {!siguiente && ej.aprendido && ej.aprendido.length > 0 && (
+        <section className="callout why" aria-labelledby="aprendido-h" style={{ marginTop: 32 }}>
+          <h2 id="aprendido-h">Qué has aprendido</h2>
+          <ul className="md-aprendes" style={{ marginBottom: 0 }}>
+            {ej.aprendido.map((x, i) => (
+              <li key={i}>
+                <Icon name="check" size={16} stroke={3} />
+                <span>
+                  <Glosa>{t(x)}</Glosa>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <nav className="bq-sig" aria-label="Seguir">
         {anterior ? (

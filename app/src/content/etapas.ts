@@ -19,8 +19,9 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { titulo: 'El stock', que: 'Registras una entrada de mercancía y la compruebas.', bloques: ['maestros-3'] },
   ],
   compras: [
-    { titulo: 'Preparar la compra', que: 'Proveedor, artículo y tarifa: lo que necesita cualquier compra.', bloques: ['compras-1'] },
-    { titulo: 'Comprar', que: 'Llevas una compra hasta el asiento, primero corta y luego completa.', bloques: ['compras-2', 'compras-3'] },
+    { titulo: 'Preparar los maestros', que: 'Proveedor, artículo y precio de compra: lo que necesita cualquier compra.', bloques: ['compras-1', 'compras-precios'] },
+    { titulo: 'Preparar los documentos', que: 'Cómo se numera y cómo se comporta cada documento del ciclo.', bloques: ['compras-tipos'] },
+    { titulo: 'Comprar', que: 'Llevas una compra de principio a fin: pides, recibes la mercancía y registras y contabilizas la factura.', bloques: ['compras-3', 'compras-2', 'compras-factura'] },
   ],
   ventas: [
     { titulo: 'Vender', que: 'Llevas una venta hasta el asiento y el cobro pendiente. Funciona como en Compras, pero con clientes.', bloques: ['ventas-1', 'ventas-2'] },

@@ -43,20 +43,20 @@ export const FICHAS: Record<string, FichaModulo> = {
     ],
   },
   compras: {
-    frase: 'Das de alta un proveedor con su tarifa y llevas una compra desde la oferta hasta el asiento.',
+    frase: 'Das de alta un proveedor con su tarifa, preparas los tipos de documento y llevas una compra desde la oferta hasta el asiento.',
     recorrido: 'De la oferta al asiento',
     aprendes: [
       'Dar de alta un proveedor completo: tercero, relación contable, condiciones y tarifa.',
-      'Crear las tipologías y recorrer oferta, pedido, albarán y factura.',
+      'Preparar la numeración y las tipologías y recorrer oferta, pedido, albarán y factura.',
       'Conformar la factura con el albarán, contabilizarla y resolver los errores típicos.',
     ],
     circuito: [
-      { t: 'Oferta', d: 'Lo que te ofrece el proveedor, con cantidades y precios.', ej: '0OC000001 · 5 × 12,00 = 60,00' },
-      { t: 'Pedido', d: 'Lo que le compras. Nace de la oferta.', ej: '0PC000001' },
-      { t: 'Albarán', d: 'Entra la mercancía en el almacén: el stock sube.', ej: '0AC000003' },
-      { t: 'Factura', d: 'Lo que te cobra el proveedor, con su número de factura.', ej: '0FC000002 · PROV-{INI}-002' },
+      { t: 'Oferta', d: 'Lo que te ofrece el proveedor, con cantidades y precios.', ej: '0OC000001 · 10 × 12,50 = 125,00' },
+      { t: 'Pedido', d: 'Lo que le compras. Nace de la oferta.', ej: '0PC{INI}01' },
+      { t: 'Albarán', d: 'Entra la mercancía en el almacén: el stock sube.', ej: '0AC000002 · entran 10 unidades' },
+      { t: 'Factura', d: 'Lo que te cobra el proveedor, con su número de factura.', ej: '0FC000001 · FRA-{INI}-001' },
       { t: 'Conformar', d: 'Cruzas la factura con el albarán: el albarán queda facturado y la factura, validada.', ej: 'Desplegable del título › «Conformar»' },
-      { t: 'Contabilizar', d: 'Asiento: gasto (600) e IVA (472) al Debe, proveedor (400) al Haber. Y nacen los vencimientos de pago.', ej: 'Diario DC · 72,60 = 60,00 + 21 % IVA' },
+      { t: 'Contabilizar', d: 'Asiento: gasto (600) e IVA (472) al Debe, proveedor (400) al Haber. Y nacen los vencimientos de pago.', ej: 'Diario DC · 151,25 = 125,00 + 21 % IVA' },
     ],
   },
   ventas: {

@@ -34,6 +34,42 @@ export interface ErpCtx {
   hacer: (r: { ok: true; doc: string } | { ok: false; error: string }, exito?: string, ver?: Aviso['ver']) => boolean;
   /** Aviso estándar para botones, menús y pestañas que existen en Axional pero no en la práctica */
   noDisp: (que: string) => void;
+  /** Campo señalado por el último error de guardado (se marca en rojo y recibe el foco) */
+  campoError?: CampoError | null;
+  /** Quita la marca de error (al corregir el campo) */
+  limpiarError?: () => void;
+}
+/** Campo de un error: el rótulo entre «» del mensaje y, si lo dice, la línea («Línea 2: …») */
+export interface CampoError {
+  label: string;
+  linea?: number;
+  /** cambia en cada error para volver a dar el foco aunque sea el mismo campo */
+  vez: number;
+}
+/** Saca del texto de un error el campo que nombra: «Línea 1: el campo «Artículo» …» → { label: 'Artículo', linea: 1 } */
+export function campoDeError(texto: string, vez: number): CampoError | null {
+  const m = /«([^»]+)»/.exec(texto);
+  if (!m) return null;
+  const l = /^Línea (\d+)/.exec(texto);
+  return { label: m[1], linea: l ? Number(l[1]) : undefined, vez };
+}
+/** Aviso al pulsar un proceso con cambios sin guardar: dice qué hacer. */
+export const avisoGuardarAntes = (accion: string) => `Tienes cambios sin guardar. Guarda primero con el disquete («Guardar») y después pulsa «${accion}».`;
+const normaliza = (s: string) => s.replace(/\*/g, '').trim().toLowerCase();
+/** ¿Este campo es el que señala el último error? */
+function useMarcaError(label: string, linea?: number) {
+  const c = useContext(Ctx);
+  const e = c?.campoError;
+  const marcado = !!e && normaliza(e.label) === normaliza(label) && (e.linea === undefined || linea === undefined || e.linea === linea);
+  const ref = useRef<HTMLLabelElement | null>(null);
+  const vez = marcado ? e!.vez : 0;
+  useEffect(() => {
+    if (!vez) return;
+    const el = ref.current?.querySelector<HTMLElement>('input,select,textarea');
+    el?.focus({ preventScroll: false });
+    el?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+  }, [vez]);
+  return { marcado, ref, limpiar: () => marcado && c?.limpiarError?.() };
 }
 export const Ctx = createContext<ErpCtx | null>(null);
 export function useErp() {
@@ -562,29 +598,44 @@ interface Base {
   ancho?: 1 | 2 | 3 | 4;
 }
 function Envoltorio({ label, req, ayuda, ancho, children, clase = '' }: Base & { children: ReactNode; clase?: string }) {
+  const { marcado, ref, limpiar } = useMarcaError(label);
   return (
-    <label className={`erp-campo${ancho ? ` a${ancho}` : ''} ${clase}`}>
+    <label ref={ref} className={`erp-campo${ancho ? ` a${ancho}` : ''} ${clase}${marcado ? ' con-error' : ''}`} onInput={limpiar} onChange={limpiar}>
       <span className="erp-label">
         {label}
         {req && <i aria-label="obligatorio">*</i>}
       </span>
       {children}
       {ayuda && <small className="erp-ayuda">{ayuda}</small>}
+      {marcado && (
+        <small className="erp-error-campo" role="alert">
+          Revisa este campo
+        </small>
+      )}
     </label>
   );
 }
+/** aria-invalid del control según la marca de error del campo */
+function useInvalido(label: string) {
+  const c = useContext(Ctx);
+  const e = c?.campoError;
+  return !!e && e.linea === undefined && normaliza(e.label) === normaliza(label) ? true : undefined;
+}
 export function CampoTexto({ value, onChange, mono, placeholder, ...b }: Base & { value: string; onChange: (v: string) => void; mono?: boolean; placeholder?: string }) {
+  const inv = useInvalido(b.label);
   return (
     <Envoltorio {...b}>
-      <input className={`erp-input${mono ? ' mono' : ''}`} value={value} onChange={(e) => onChange(e.target.value)} disabled={b.disabled} placeholder={placeholder} required={b.req} />
+      <input aria-invalid={inv} className={`erp-input${mono ? ' mono' : ''}`} value={value} onChange={(e) => onChange(e.target.value)} disabled={b.disabled} placeholder={placeholder} required={b.req} />
     </Envoltorio>
   );
 }
 export function CampoNum({ value, onChange, decimales = 2, ...b }: Base & { value: number; onChange: (v: number) => void; decimales?: number }) {
   const [txt, setTxt] = useState<string | null>(null);
+  const inv = useInvalido(b.label);
   return (
     <Envoltorio {...b}>
       <input
+        aria-invalid={inv}
         className="erp-input num"
         inputMode="decimal"
         value={txt ?? (Number.isFinite(value) ? dec(value, decimales) : '')}
@@ -600,16 +651,18 @@ export function CampoNum({ value, onChange, decimales = 2, ...b }: Base & { valu
   );
 }
 export function CampoFecha({ value, onChange, ...b }: Base & { value: string; onChange: (v: string) => void }) {
+  const inv = useInvalido(b.label);
   return (
     <Envoltorio {...b} clase="fecha">
-      <input type="date" className="erp-input" value={value} onChange={(e) => onChange(e.target.value)} disabled={b.disabled} />
+      <input aria-invalid={inv} type="date" className="erp-input" value={value} onChange={(e) => onChange(e.target.value)} disabled={b.disabled} />
     </Envoltorio>
   );
 }
 export function CampoSel({ value, onChange, opciones, vacio, ...b }: Base & { value: string; onChange: (v: string) => void; opciones: readonly { v: string; t: string }[]; vacio?: string }) {
+  const inv = useInvalido(b.label);
   return (
     <Envoltorio {...b} clase="sel">
-      <select className="erp-input" value={value} onChange={(e) => onChange(e.target.value)} disabled={b.disabled}>
+      <select aria-invalid={inv} className="erp-input" value={value} onChange={(e) => onChange(e.target.value)} disabled={b.disabled}>
         {vacio !== undefined && <option value="">{vacio}</option>}
         {opciones.map((o) => (
           <option key={o.v} value={o.v}>
@@ -660,18 +713,30 @@ export function Lineas({
   /** albaranes generados: solo se puede cambiar la cantidad */
   soloCantidad?: boolean;
 }) {
-  const { noDisp } = useErp();
-  const set = (n: number, cambio: Partial<Linea>) => onChange?.(lineas.map((l) => (l.n === n ? { ...l, ...cambio } : l)));
+  const { noDisp, campoError, limpiarError } = useErp();
+  const caja = useRef<HTMLDivElement>(null);
+  /** ¿El último error señala esta columna de esta línea? */
+  const mal = (label: string, n: number) => (campoError && campoError.linea === n && normaliza(campoError.label) === normaliza(label) ? true : undefined);
+  useEffect(() => {
+    if (!campoError?.linea) return;
+    const el = caja.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+    el?.focus();
+    el?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
+  }, [campoError?.vez, campoError?.linea]);
+  const set = (n: number, cambio: Partial<Linea>) => {
+    if (campoError?.linea === n) limpiarError?.();
+    onChange?.(lineas.map((l) => (l.n === n ? { ...l, ...cambio } : l)));
+  };
   const quitar = (n: number) => onChange?.(lineas.filter((l) => l.n !== n).map((l, i) => ({ ...l, n: i + 1 })));
+  /** La línea nueva sale vacía: el alumno elige el artículo (como en Axional). */
   const anadir = () => {
-    const a = articulos?.[0];
-    onChange?.([...lineas, { n: lineas.length + 1, articulo: a?.v ?? '', descripcion: '', cantidad: 1, precio: a?.precio ?? 0, dto: 0 }]);
+    onChange?.([...lineas, { n: lineas.length + 1, articulo: '', descripcion: '', cantidad: 1, precio: 0, dto: 0 }]);
   };
   const desc = (l: Linea) => l.descripcion || articulos?.find((a) => a.v === l.articulo)?.t.replace(/^\S+\s*[·-]?\s*/, '') || '';
   const t = totales(lineas);
   const editaTodo = editable && !soloCantidad;
   return (
-    <div className="erp-lineas">
+    <div className="erp-lineas" ref={caja}>
       <section className="erp-sec erp-tarjeta">
         <header className="erp-sec-cab">
           <h3>
@@ -731,11 +796,13 @@ export function Lineas({
                         className="erp-input mini"
                         value={l.articulo}
                         aria-label={`Artículo de la línea ${l.n}`}
+                        aria-invalid={mal('Artículo', l.n)}
                         onChange={(e) => {
                           const a = articulos.find((x) => x.v === e.target.value);
                           set(l.n, { articulo: e.target.value, precio: a?.precio ?? l.precio, descripcion: '' });
                         }}
                       >
+                        <option value="">— elige artículo —</option>
                         {articulos.map((a) => (
                           <option key={a.v} value={a.v}>
                             {a.t}
@@ -748,9 +815,9 @@ export function Lineas({
                   </td>
                   <td>{desc(l)}</td>
                   <td>0</td>
-                  <td className="num">{editable ? <NumCelda valor={l.cantidad} onCambio={(v) => set(l.n, { cantidad: v })} etiqueta={`Cantidad de la línea ${l.n}`} /> : dec(l.cantidad)}</td>
+                  <td className="num">{editable ? <NumCelda valor={l.cantidad} onCambio={(v) => set(l.n, { cantidad: v })} etiqueta={`Cantidad de la línea ${l.n}`} invalido={mal('Cantidad', l.n)} /> : dec(l.cantidad)}</td>
                   <td>UNIDAD</td>
-                  <td className="num">{editaTodo ? <NumCelda valor={l.precio} onCambio={(v) => set(l.n, { precio: v })} etiqueta={`Precio de la línea ${l.n}`} /> : dec(l.precio, 6)}</td>
+                  <td className="num">{editaTodo ? <NumCelda valor={l.precio} onCambio={(v) => set(l.n, { precio: v })} etiqueta={`Precio de la línea ${l.n}`} invalido={mal('Precio', l.n)} /> : dec(l.precio, 6)}</td>
                   <td className="num">{editaTodo ? <NumCelda valor={l.dto} onCambio={(v) => set(l.n, { dto: v })} etiqueta={`Descuento de la línea ${l.n}`} /> : dec(l.dto)}</td>
                   <td className="num fuerte">{eur(importeLinea(l))}</td>
                   {pendientes && <td className={`num${(pendientes[l.n] ?? 0) > 0 ? ' aviso' : ''}`}>{dec(pendientes[l.n] ?? 0)}</td>}
@@ -790,10 +857,11 @@ export function Lineas({
     </div>
   );
 }
-function NumCelda({ valor, onCambio, etiqueta }: { valor: number; onCambio: (v: number) => void; etiqueta: string }) {
+function NumCelda({ valor, onCambio, etiqueta, invalido }: { valor: number; onCambio: (v: number) => void; etiqueta: string; invalido?: boolean }) {
   const [txt, setTxt] = useState<string | null>(null);
   return (
     <input
+      aria-invalid={invalido}
       className="erp-input mini num"
       inputMode="decimal"
       aria-label={etiqueta}

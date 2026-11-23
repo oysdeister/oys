@@ -14,6 +14,7 @@ import {
   Enlace,
   eur,
   fechaEs,
+  avisoGuardarAntes,
 } from '../ui';
 import { useAccionesCatalogo, useEnlacesCatalogo } from '../catalogo/extra';
 import { useDb, erp, CAT, stock, type Articulo } from '../modelo';
@@ -26,7 +27,7 @@ const CLAVE_FISCAL_OPCIONES = [
 export default function Articulos() {
   const extraAcc = useAccionesCatalogo('garticul');
   const extraMenu = useEnlacesCatalogo('garticul');
-  const { ini, clave, ir, hacer, noDisp } = useErp();
+  const { ini, clave, ir, hacer, noDisp, aviso } = useErp();
   const db = useDb();
 
   if (clave === null) {
@@ -210,6 +211,10 @@ export default function Articulos() {
         label: 'Validar',
         tipo: 'proceso' as const,
         onClick: () => {
+          if (registro && JSON.stringify(borrador) !== JSON.stringify(registro)) {
+            aviso('error', avisoGuardarAntes('Validar'));
+            return;
+          }
           const exito = hacer(erp.estadoArticulo(borrador.codigo, 'Activo', ini), 'Artículo activo');
           if (exito) setBorrador((prev) => ({ ...prev, estado: 'Activo' }));
         },

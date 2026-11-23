@@ -26,7 +26,7 @@ export function Concepto({ ej, ini, modulo }: { ej: Ejercicio; ini: string; modu
       {ej.secciones.map((s, i) => (
         <section key={s.id} id={`sec-${s.id}`} className="doc-sec">
           <h2>{t(s.titulo)}</h2>
-          <VideoPrimero lista={momentosDeSeccion(s.id)} />
+          <VideoPrimero lista={momentosDeSeccion(s.id)} indice={!!s.videoIndice} />
           <SeccionVista s={s} ini={ini} modulo={modulo} destacar={i === primerAviso} />
         </section>
       ))}

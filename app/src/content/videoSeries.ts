@@ -7,6 +7,7 @@ import {
   CAPITULOS,
   MOMENTOS_EJERCICIO as MOM_EJ_COMPRAS,
   MOMENTOS_SECCION as MOM_SEC_COMPRAS,
+  MOMENTOS_MODULO,
   type CapituloVideo,
   type MomentoVideo,
 } from './videoMapa';
@@ -60,6 +61,11 @@ export function momentosDeSeccion(id: string): MomentoVideo[] {
 
 export function momentosDeEjercicio(id: string): MomentoVideo[] {
   return EJERCICIO[id] ?? [];
+}
+
+/** Vídeo de presentación del módulo (tarjeta «Mira primero el vídeo» de su página) */
+export function momentosDeModulo(id: string): MomentoVideo[] {
+  return MOMENTOS_MODULO[id] ?? [];
 }
 
 /** Series que pertenecen a un módulo (para mostrar sus capítulos en la página del módulo) */

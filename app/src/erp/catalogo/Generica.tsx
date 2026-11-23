@@ -35,7 +35,7 @@ function Lupa({ lov, onElegir, onCerrar }: { lov: CompLov; onElegir: (fila: Fila
     </Dialogo>
   );
 }
-import { useErp, Lista, Ficha, Seccion, Rejilla, CampoTexto, CampoNum, CampoFecha, CampoSel, CampoCheck, CampoLectura, Pestanas, Dialogo, type Col, type Accion, dec, fechaEs } from '../ui';
+import { useErp, Lista, Ficha, Seccion, Rejilla, CampoTexto, CampoNum, CampoFecha, CampoSel, CampoCheck, CampoLectura, Pestanas, Dialogo, type Col, type Accion, dec, fechaEs, avisoGuardarAntes } from '../ui';
 
 export function textoValor(col: CatCol, v: CatValor | undefined): string {
   if (v === null || v === undefined || v === '') return '';
@@ -369,7 +369,7 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
 
   const pulsar = (b: CatBoton) => {
     if (sucio) {
-      aviso('error', msgGenerico('guardarAntes', 'Guarde los cambios antes de ejecutar el proceso.'));
+      aviso('error', avisoGuardarAntes(b.l));
       return;
     }
     const cb = comp?.botones?.[b.c];

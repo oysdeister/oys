@@ -32,6 +32,8 @@ export interface Tercero {
   relaciones: Relacion[];
   estado: EstadoDoc;
   autor: string;
+  /** lo creó la plataforma (práctica del bloque 3) porque el alumno aún no lo tenía: no puntúa en la práctica del bloque 1 */
+  sembrado?: boolean;
 }
 export interface Proveedor {
   tercero: string;
@@ -42,6 +44,7 @@ export interface Proveedor {
   centralCompras: string;
   centralPagos: string;
   autor: string;
+  sembrado?: boolean;
 }
 export interface Articulo {
   codigo: string;
@@ -366,15 +369,72 @@ export const erp = {
     guardar(semilla());
   },
 
+  /** Prácticas de compras y finanzas: si el alumno aún no tiene su proveedor T{INI} (bloque 1), se lo trae creado.
+      Queda marcado como `sembrado` para no dar puntos en la práctica del bloque 1. No toca nada que el alumno ya tenga. */
+  asegurarProveedorAlumno(ini: string, nombre: string): boolean {
+    if (!ini) return false;
+    const codigo = `T${ini}`;
+    let d = db;
+    let cambia = false;
+    if (!d.terceros.some((x) => x.codigo === codigo)) {
+      const t: Tercero = {
+        codigo,
+        nombre: nombre.trim() || `PROVEEDOR ${ini}`,
+        tipoId: 'No censado',
+        nif: '0',
+        categoria: '002 Proveedores',
+        pais: 'ES',
+        direcciones: [{ tipo: 0, direccion: '', cp: '08001', poblacion: 'Barcelona', provincia: '08', zonaImp: 'ESCO' }],
+        relaciones: [
+          { tipo: 'Proveedor', codigo: 'ACR', plan: 'PGE 2008', cuenta: '41000.00000' },
+          { tipo: 'Proveedor', codigo: 'PRO', plan: 'PGE 2008', cuenta: '40000.00000' },
+        ],
+        estado: 'Validado',
+        autor: ini,
+        sembrado: true,
+      };
+      d = conLog({ ...d, terceros: [...d.terceros, t] }, 'crear', `tercero:${codigo}`, ini);
+      cambia = true;
+    }
+    const t = d.terceros.find((x) => x.codigo === codigo)!;
+    const sePuede = t.estado === 'Validado' && t.relaciones.some((r) => r.tipo === 'Proveedor');
+    if (sePuede && !d.proveedores.some((p) => p.tercero === codigo)) {
+      const p: Proveedor = { tercero: codigo, tipo: 'GENERAL', tipoEfecto: 'TF', plazoPago: '30D', fechaBaja: '2099-12-31', centralCompras: codigo, centralPagos: codigo, autor: ini, sembrado: true };
+      d = conLog({ ...d, proveedores: [...d.proveedores, p] }, 'crear', `proveedor:${codigo}`, ini);
+      cambia = true;
+    }
+    if (cambia) guardar(d);
+    return cambia;
+  },
+  /** Práctica del bloque 1: si el proveedor T{INI} lo creó la plataforma y aún no tiene documentos, se quita para que el alumno lo cree. */
+  quitarProveedorSembrado(ini: string): boolean {
+    if (!ini) return false;
+    const codigo = `T${ini}`;
+    const t = db.terceros.find((x) => x.codigo === codigo);
+    const p = db.proveedores.find((x) => x.tercero === codigo);
+    if (!t?.sembrado && !p?.sembrado) return false;
+    const usado = db.pedidos.some((x) => x.proveedor === codigo) || db.albaranes.some((x) => x.proveedor === codigo) || db.facturas.some((x) => x.proveedor === codigo) || db.efectos.some((x) => x.tercero === codigo);
+    if (usado) return false;
+    guardar({
+      ...db,
+      terceros: t?.sembrado ? db.terceros.filter((x) => x.codigo !== codigo) : db.terceros,
+      proveedores: db.proveedores.filter((x) => !(x.tercero === codigo && (x.sembrado || t?.sembrado))),
+    });
+    return true;
+  },
+
   /* ---------- terceros */
   guardarTercero(t: Tercero, autor: string): Res {
     const codigo = up(t.codigo);
     if (!codigo) return err('El campo «Código» es obligatorio.');
     if (!t.nombre.trim()) return err('El campo «Nombre» es obligatorio.');
-    if (t.tipoId === 'NIF-Empresa' && !/^[A-Z]\d{7}[A-Z0-9]$/i.test(t.nif.trim())) return err('Id. fiscal no válido para NIF-Empresa (formato B12345674). Si no lo tienes, usa «No censado» con Id. fiscal 0.');
+    if (t.tipoId === 'NIF-Empresa' && !/^[A-Z]\d{7}[A-Z0-9]$/i.test(t.nif.trim())) return err('El campo «Id. fiscal» no es válido para NIF-Empresa (formato B12345674). Si no tienes NIF, elige «No censado» en «Tipo Id. fiscal» y pon Id. fiscal 0.');
+    if (t.tipoId === 'No censado' && !t.nif.trim()) return err('El campo «Id. fiscal» es obligatorio: con «No censado» pon 0.');
     const existe = db.terceros.find((x) => x.codigo === codigo);
     if (existe && existe.autor === 'TUTORIAL') return err(`El tercero ${codigo} pertenece a la base TUTORIAL y no se puede modificar.`);
-    const nuevo: Tercero = { ...t, codigo, nif: t.nif.trim().toUpperCase(), autor };
+    const { sembrado: _s, ...resto } = t;
+    void _s;
+    const nuevo: Tercero = { ...resto, codigo, nif: t.nif.trim().toUpperCase(), autor };
     const lista = existe ? db.terceros.map((x) => (x.codigo === codigo ? nuevo : x)) : [...db.terceros, nuevo];
     guardar(conLog({ ...db, terceros: lista }, existe ? 'editar' : 'crear', `tercero:${codigo}`, autor));
     return bien(codigo);
@@ -395,14 +455,17 @@ export const erp = {
 
   /* ---------- proveedores */
   guardarProveedor(p: Proveedor, autor: string): Res {
+    if (!p.tercero.trim()) return err('El campo «Tercero» es obligatorio: elige el tercero que das de alta como proveedor.');
     const t = db.terceros.find((x) => x.codigo === up(p.tercero));
-    if (!t) return err(`El tercero ${p.tercero} no existe. Créalo primero en Terceros.`);
+    if (!t) return err(`El «Tercero» ${p.tercero} no existe. Créalo primero en Terceros.`);
     if (!t.relaciones.some((r) => r.tipo === 'Proveedor')) return err(`El tercero ${t.codigo} no tiene relación de tipo Proveedor (ACR o PRO).`);
     if (t.estado !== 'Validado') return err(`El tercero ${t.codigo} está en Provisional. Valídalo antes de darlo de alta como proveedor.`);
-    if (!p.plazoPago) return err('Indica el plazo de pago.');
+    if (!p.plazoPago) return err('El campo «Plazo pago» es obligatorio.');
     const existe = db.proveedores.find((x) => x.tercero === t.codigo);
     if (existe?.autor === 'TUTORIAL') return err('Este proveedor es de la base TUTORIAL y no se puede modificar.');
-    const nuevo = { ...p, tercero: t.codigo, autor };
+    const { sembrado: _s, ...resto } = p;
+    void _s;
+    const nuevo = { ...resto, tercero: t.codigo, autor };
     const lista = existe ? db.proveedores.map((x) => (x.tercero === t.codigo ? nuevo : x)) : [...db.proveedores, nuevo];
     guardar(conLog({ ...db, proveedores: lista }, existe ? 'editar' : 'crear', `proveedor:${t.codigo}`, autor));
     return bien(t.codigo);
@@ -413,7 +476,7 @@ export const erp = {
     const codigo = up(a.codigo);
     if (!codigo) return err('El campo «Código» es obligatorio.');
     if (!a.nombre.trim()) return err('El campo «Descripción» es obligatorio.');
-    if (!a.familia) return err('Elige la familia: propone la clave fiscal y la naturaleza.');
+    if (!a.familia) return err('El campo «Familia» es obligatorio: propone la clave fiscal y la naturaleza.');
     const existe = db.articulos.find((x) => x.codigo === codigo);
     if (existe?.autor === 'TUTORIAL') return err(`El artículo ${codigo} pertenece a la base TUTORIAL y no se puede modificar.`);
     if (existe?.estado === 'Activo') return err('El artículo está Activo. Pásalo a provisional para modificarlo.');
@@ -445,11 +508,12 @@ export const erp = {
     if (!prev) return err('No existe el pedido.');
     if (prev.estado === 'Validado') return err('El pedido está validado. Pulsa «Pasar a provisional» para modificarlo.');
     for (const l of p.lineas) {
+      if (!l.articulo.trim()) return err(`Línea ${l.n}: el campo «Artículo» es obligatorio. Elige el artículo en la lista de la línea.`);
       const a = db.articulos.find((x) => x.codigo === up(l.articulo));
-      if (!a) return err(`Línea ${l.n}: el artículo ${l.articulo} no existe.`);
-      if (a.estado !== 'Activo') return err(`Línea ${l.n}: el artículo ${a.codigo} no está Activo. Valídalo en el Maestro de artículos.`);
-      if (!(l.cantidad > 0)) return err(`Línea ${l.n}: la cantidad debe ser mayor que 0.`);
-      if (!(l.precio >= 0)) return err(`Línea ${l.n}: precio no válido.`);
+      if (!a) return err(`Línea ${l.n}: el «Artículo» ${l.articulo} no existe.`);
+      if (a.estado !== 'Activo') return err(`Línea ${l.n}: el «Artículo» ${a.codigo} no está Activo. Valídalo en el Maestro de artículos.`);
+      if (!(l.cantidad > 0)) return err(`Línea ${l.n}: el campo «Cantidad» debe ser mayor que 0.`);
+      if (!(l.precio >= 0)) return err(`Línea ${l.n}: el campo «Precio» no es válido.`);
     }
     const lineas = p.lineas.map((l) => ({ ...l, articulo: up(l.articulo), descripcion: db.articulos.find((a) => a.codigo === up(l.articulo))?.nombre ?? l.descripcion }));
     guardar(conLog({ ...db, pedidos: db.pedidos.map((x) => (x.numero === p.numero ? { ...p, lineas } : x)) }, 'editar', `pedido:${p.numero}`, autor));
@@ -495,11 +559,11 @@ export const erp = {
     if (!prev) return err('No existe el albarán.');
     if (prev.estado === 'Validado') return err('El albarán está validado. Pulsa «Pasar a provisional» para modificarlo.');
     for (const l of a.lineas) {
-      if (!(l.cantidad > 0)) return err(`Línea ${l.n}: la cantidad debe ser mayor que 0.`);
+      if (!(l.cantidad > 0)) return err(`Línea ${l.n}: el campo «Cantidad» debe ser mayor que 0.`);
       if (l.origenLinea) {
         const pl = db.pedidos.find((p) => p.numero === a.origen)?.lineas.find((x) => x.n === l.origenLinea);
         const pend = (pl?.cantidad ?? 0) - servida(db, a.origen, l.origenLinea);
-        if (l.cantidad > pend) return err(`Línea ${l.n}: recibes ${l.cantidad} pero en el pedido quedan ${pend} pendientes.`);
+        if (l.cantidad > pend) return err(`Línea ${l.n}: en «Cantidad» recibes ${l.cantidad} pero en el pedido quedan ${pend} pendientes.`);
       }
     }
     guardar(conLog({ ...db, albaranes: db.albaranes.map((x) => (x.numero === a.numero ? a : x)) }, 'editar', `albaran:${a.numero}`, autor));
@@ -602,6 +666,8 @@ export const erp = {
     const prev = db.facturas.find((x) => x.numero === f.numero);
     if (!prev) return err('No existe la factura.');
     if (prev.estado !== 'Provisional') return err('La factura está validada. Pásala a provisional para modificarla.');
+    if (!f.facturaProveedor.trim()) return err('El campo «Factura proveedor» es obligatorio: es el número de la factura en papel del proveedor.');
+    if (!f.fecha) return err('El campo «Fecha» es obligatorio.');
     guardar(conLog({ ...db, facturas: db.facturas.map((x) => (x.numero === f.numero ? { ...prev, facturaProveedor: f.facturaProveedor, fecha: f.fecha } : x)) }, 'editar', `factura:${f.numero}`, autor));
     return bien(f.numero);
   },
