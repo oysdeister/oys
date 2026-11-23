@@ -408,11 +408,11 @@ li.hecho .md-b-estado { color: var(--arc-deep); }
 @media (min-width: 1180px) {
   .md { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); column-gap: 56px; align-items: start; }
   .md > .md-volver, .md > .md-cab { grid-column: 1 / -1; }
-  .md > section[aria-labelledby='bloques-h'] { grid-column: 1; grid-row: 3 / span 3; }
+  .md > section[aria-labelledby='bloques-h'] { grid-column: 1; grid-row: 4 / span 3; }
   .md > section:not([aria-labelledby='bloques-h']) { grid-column: 2; }
-  .md > section[aria-labelledby='antes-h'] { grid-row: 3; }
+  .md > section[aria-labelledby='antes-h'] { grid-column: 1 / -1; grid-row: 3; }
   .md > section[aria-labelledby='cierre-h'] { grid-row: 4; }
-  .md > section.md-extra { grid-row: 5; margin-top: 0; }
+  .md > section.md-extra { grid-row: 5; }
   .md > section:not([aria-labelledby='bloques-h']) { background: var(--sheet-2); border-radius: var(--r-l); padding: 22px 24px; margin-top: 28px; }
   .md > section:not([aria-labelledby='bloques-h']) > * { margin-left: 0 !important; }
   .md > section:not([aria-labelledby='bloques-h']) > h2 { font-size: var(--t-block) !important; }
@@ -459,3 +459,12 @@ li.opc .md-b { border-style: dashed; }
 .shot-zoom-instr { color: #fff; font-size: var(--fs-md, 17px); }
 .pl-sin { margin: 12px 0 4px; padding: 14px 16px; border: 1px dashed var(--line); border-radius: 8px; background: var(--paper); }
 .pl-sin-t { margin: 4px 0 0; font-size: var(--fs-xs, 12px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-3); }
+
+/* «Antes de empezar» a todo el ancho, encima de los bloques, sin desbordar */
+.md > section { min-width: 0; }
+.md > section[aria-labelledby='antes-h'] { overflow-wrap: anywhere; }
+.md > section[aria-labelledby='antes-h'] :is(img, video, table, pre, figure) { max-width: 100%; }
+.md > section[aria-labelledby='antes-h'] :is(table, pre) { display: block; overflow-x: auto; }
+@media (min-width: 1180px) {
+  .md > section[aria-labelledby='antes-h'] .md-aprendes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 32px; }
+}
