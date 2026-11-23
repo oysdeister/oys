@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, createContext, useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { META } from '../content';
 import { trocear, type Termino } from '../content/glosario';
@@ -147,25 +147,65 @@ export function TerminoGlosario({ t, children }: { t: Termino; children: string 
   );
 }
 
+/** Ámbito de lectura (una parte del Concepto): qué Glosa marcó primero cada término */
+const AmbitoGlosa = createContext<Map<string, string> | null>(null);
+
 /**
- * Texto con los términos del glosario resaltados (solo la primera aparición de cada uno).
+ * Dentro de un ámbito, cada término del glosario se marca solo la primera vez que sale;
+ * las demás apariciones quedan como texto normal (menos ruido al leer).
+ */
+export function GlosaAmbito({ children }: { children: ReactNode }) {
+  const mapa = useRef<Map<string, string>>(new Map());
+  return <AmbitoGlosa.Provider value={mapa.current}>{children}</AmbitoGlosa.Provider>;
+}
+
+/**
+ * Texto con los términos del glosario resaltados (solo la primera aparición de cada uno,
+ * en el texto o, si hay un GlosaAmbito por encima, en todo el ámbito).
  * Sin glosario cargado devuelve el texto tal cual. No usar dentro de <button> ni <a>.
  */
 export function Glosa({ children }: { children: string | null | undefined }) {
+  const ambito = useContext(AmbitoGlosa);
+  const yo = useId();
   if (!children) return null;
   const trozos = trocear(children);
   if (trozos.length === 1 && typeof trozos[0] === 'string') return <>{children}</>;
-  return (
-    <>
-      {trozos.map((tr, i) =>
-        typeof tr === 'string' ? (
-          <Fragment key={i}>{tr}</Fragment>
-        ) : (
-          <TerminoGlosario key={i} t={tr.t}>
-            {tr.texto}
-          </TerminoGlosario>
-        ),
-      )}
-    </>
-  );
+  const out: ReactNode[] = [];
+  // Signo de puntuación pegado a un término: va con él, para que la línea no empiece por «,» o «)»
+  let pegado = '';
+  trozos.forEach((tr, i) => {
+    if (typeof tr === 'string') {
+      const resto = pegado ? tr.slice(pegado.length) : tr;
+      pegado = '';
+      if (resto) out.push(<Fragment key={i}>{resto}</Fragment>);
+      return;
+    }
+    if (ambito) {
+      // El primer texto que lo usa se queda el término (estable entre renders: se guarda su id)
+      const dueno = ambito.get(tr.t.clave);
+      if (!dueno) ambito.set(tr.t.clave, yo);
+      else if (dueno !== yo) {
+        out.push(<Fragment key={i}>{tr.texto}</Fragment>);
+        return;
+      }
+    }
+    const sig = trozos[i + 1];
+    pegado = typeof sig === 'string' ? (sig.match(/^[.,;:)»?!…]+/)?.[0] ?? '') : '';
+    const termino = (
+      <TerminoGlosario key={i} t={tr.t}>
+        {tr.texto}
+      </TerminoGlosario>
+    );
+    out.push(
+      pegado ? (
+        <span key={i} className="gl-nw">
+          {termino}
+          {pegado}
+        </span>
+      ) : (
+        termino
+      ),
+    );
+  });
+  return <>{out}</>;
 }

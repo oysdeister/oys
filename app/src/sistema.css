@@ -414,3 +414,139 @@ body.modo-examen .sis-suelo { display: none; }
     radial-gradient(400px 300px at 0% 100%, rgba(108, 143, 214, 0.18), transparent 70%);
 }
 .page-host .ax-banner .ax-kicker { color: #8ff3dc; }
+
+/* =====================================================================
+   v6 · LECTURA del Concepto (y textos del Guiado/Test)
+   Medida 60–75 caracteres, cuerpo 17–18 px, interlineado 1,65; partes numeradas;
+   cajas Ejemplo · Fíjate · Ojo · Nota · Solución; glosario discreto; tabla de campos escaneable;
+   cierre «Qué has aprendido». Las capturas y la tarjeta de vídeo siguen a todo el ancho.
+   ===================================================================== */
+:root {
+  --fs-read: clamp(16.5px, 0.35vw + 13px, 18px);
+  --lh-read: 1.68;
+  --measure: 50ch; /* Instrument Sans: ~50ch ≈ 70 caracteres reales */
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  /* tinta de aviso con contraste AA sobre fondo claro */
+  --caja-ojo-ink: #8a4b00;
+  --caja-ojo-line: #e8962a;
+}
+:root[data-theme='dark'] { --caja-ojo-ink: #ffc777; --caja-ojo-line: #f6b65a; }
+
+/* ---- cabecera del bloque: h1 → objetivo (lead) ---- */
+.bq .bq-obj { font-size: clamp(17px, 0.45vw + 13px, 19.5px); line-height: 1.55; color: var(--ink-2); max-width: 60ch; margin-top: 6px; }
+
+/* ---- texto corrido ---- */
+.bq .doc-lectura { font-size: var(--fs-read); line-height: var(--lh-read); }
+.bq .doc-lectura p,
+.bq .doc-lectura .lect-lista,
+.bq .doc-lectura .lect-pasos { max-width: var(--measure); }
+.bq .doc-lectura .doc-intro > p { margin: 0 0 1em; line-height: var(--lh-read); }
+.bq .doc-lectura .doc-intro > p.doc-lead {
+  font-size: clamp(18px, 0.7vw + 12px, 21px); line-height: 1.55; color: var(--ink);
+  max-width: 46ch; margin-bottom: 1.1em; font-weight: 450; letter-spacing: -0.005em;
+}
+.bq .doc-lectura .doc-intro > p:not(.doc-lead) { color: var(--ink); }
+
+/* ---- partes: más aire, separador y «Parte n de N» ---- */
+.bq .doc-lectura .doc-sec { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line); scroll-margin-top: 90px; }
+.bq .doc-lectura .doc-sec-cab { margin: 0 0 18px; }
+.bq .doc-lectura .doc-sec-n {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 8px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--mod, var(--arc-deep)) 45%, var(--ink));
+  font-variant-numeric: tabular-nums;
+}
+.bq .doc-lectura .doc-sec-n::before { content: ''; width: 22px; height: 3px; border-radius: 2px; background: var(--mod, var(--arc-deep)); }
+.bq .doc-lectura .doc-sec-cab h2 { margin: 0; line-height: 1.2; max-width: 32ch; }
+
+/* ---- dentro de cada parte ---- */
+.bq .doc-lectura .lect-lead { font-size: calc(var(--fs-read) * 1.06); line-height: 1.6; color: var(--ink); margin: 18px 0 14px; }
+.bq .doc-lectura .lect-lista { margin: 0 0 20px; padding-left: 0; list-style: none; display: grid; gap: 12px; }
+.bq .doc-lectura .lect-lista li { position: relative; padding-left: 26px; line-height: var(--lh-read); }
+.bq .doc-lectura .lect-lista li::before {
+  content: ''; position: absolute; left: 6px; top: calc(var(--lh-read) * 0.5em - 3.5px);
+  width: 7px; height: 7px; border-radius: 2px; transform: rotate(45deg);
+  background: var(--mod, var(--arc-deep));
+}
+
+/* ---- «En el ERP» como migas ---- */
+.lect-donde { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 20px !important; }
+.lect-donde-k { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+ol.menu-path.migas { list-style: none; margin: 0; padding: 0; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 0; max-width: 100%; }
+ol.menu-path.migas li { display: inline-flex; align-items: center; min-width: 0; }
+ol.menu-path.migas li + li::before { content: '›'; margin: 0 7px; color: var(--ink-3); font-weight: 700; }
+ol.menu-path.migas span {
+  display: inline-block; padding: 3px 10px; border-radius: 7px; border: 1px solid var(--line);
+  background: var(--sheet-2); color: var(--ink); font-size: 14px; font-weight: 600; line-height: 1.45; overflow-wrap: anywhere;
+}
+ol.menu-path.migas li[aria-current] span { border-color: color-mix(in srgb, var(--mod, var(--arc-deep)) 55%, var(--line)); background: color-mix(in srgb, var(--mod, var(--arc)) 12%, var(--sheet-solid, #fff)); }
+
+/* ---- cajas: Ejemplo · Fíjate · Ojo · Nota · Solución ---- */
+.caja {
+  --c-line: var(--line); --c-bg: var(--sheet-2); --c-k: var(--ink-2);
+  max-width: calc(var(--measure) + 6ch); margin: 18px 0 22px; padding: 14px 18px 15px 18px;
+  border: 1px solid var(--c-line); border-left-width: 4px; border-radius: 12px; background: var(--c-bg);
+}
+.caja-k { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 4px; font-size: 12.5px; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-k); }
+.caja-k svg { flex: none; }
+.caja .caja-t { margin: 0; max-width: none; line-height: 1.62; color: var(--ink); }
+.caja-ejemplo { --c-line: color-mix(in srgb, var(--ink) 22%, transparent); --c-bg: color-mix(in srgb, var(--ink) 4%, var(--sheet-solid, #fff)); --c-k: var(--ink-2); font-variant-numeric: tabular-nums lining-nums; }
+.caja-ejemplo .caja-t { font-feature-settings: 'tnum' 1; }
+.caja-fijate { --c-line: color-mix(in srgb, var(--arc-deep) 60%, transparent); --c-bg: color-mix(in srgb, var(--arc) 10%, var(--sheet-solid, #fff)); --c-k: color-mix(in srgb, var(--arc-deep) 72%, var(--ink)); }
+.caja-solucion { --c-line: color-mix(in srgb, var(--arc-deep) 45%, transparent); --c-bg: color-mix(in srgb, var(--arc) 7%, var(--sheet-solid, #fff)); --c-k: color-mix(in srgb, var(--arc-deep) 72%, var(--ink)); }
+.caja-ojo { --c-line: var(--caja-ojo-line); --c-bg: color-mix(in srgb, var(--caja-ojo-line) 11%, var(--sheet-solid, #fff)); --c-k: var(--caja-ojo-ink); }
+.caja-nota { --c-line: color-mix(in srgb, var(--ink-3) 45%, transparent); --c-bg: color-mix(in srgb, var(--ink) 2.5%, var(--sheet-solid, #fff)); --c-k: var(--ink-2); border-left-width: 1px; }
+.caja-ojo.destacado { box-shadow: 0 0 0 3px color-mix(in srgb, var(--caja-ojo-line) 18%, transparent); }
+.bq .doc-lectura .caja { font-size: var(--fs-read); }
+
+/* ---- glosario discreto: punteado fino, se marca la primera vez en cada parte ---- */
+.gl-term {
+  text-decoration-thickness: 1px !important; text-underline-offset: 4px !important;
+  text-decoration-color: color-mix(in srgb, var(--arc-deep) 60%, transparent) !important;
+}
+.gl-term:hover, .gl-term.on { text-decoration-color: var(--arc-deep) !important; }
+.gl-term:focus-visible { outline: none !important; box-shadow: var(--focus-ring); }
+
+/* ---- tabla de campos: separadores suaves, zebra, nombre en negrita, ejemplo en monoespaciada ---- */
+.bq .cc.cc-plano .cc-table { font-size: calc(var(--fs-read) * 0.92); }
+.bq .cc.cc-plano .cc-table th { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent); padding-left: 10px; }
+.bq .cc.cc-plano .cc-table tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--ink) 3.5%, transparent) !important; }
+.bq .cc.cc-plano .cc-table td { line-height: 1.55; padding-left: 10px !important; border-bottom-color: color-mix(in srgb, var(--line) 70%, transparent) !important; }
+.bq .cc.cc-plano .cc-table td:first-child { font-weight: 700; color: var(--ink); }
+.bq .cc.cc-plano .cc-table td:nth-child(2) { color: var(--ink); }
+.bq .cc.cc-plano .cc-table td:last-child { font-family: var(--mono); font-size: 0.9em; color: var(--ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.fields td:last-child code { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .bq .cc.cc-plano .cc-table tbody { display: grid; gap: 8px; }
+  .bq .cc.cc-plano .cc-table tr { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px !important; }
+  .bq .cc.cc-plano .cc-table tbody tr:nth-child(even) td { background: none !important; }
+  .bq .cc.cc-plano .cc-table td { padding: 1px 0 !important; border: 0 !important; }
+  .bq .cc.cc-plano .cc-table td:last-child:not(:empty)::before { content: 'Ejemplo  '; font-family: var(--text); font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); white-space: pre; }
+}
+
+/* ---- Guiado y Test: textos que se leen ---- */
+.pl .pl-det, .pl .pl-expl { font-size: var(--fs-read); line-height: 1.65; max-width: var(--measure); }
+.pl .pl-instr { max-width: 46ch; }
+
+/* ---- cierre del bloque: «Qué has aprendido» ---- */
+.aprendido {
+  margin-top: 40px; padding: 24px 28px 26px; border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--arc-deep) 40%, var(--line));
+  background:
+    radial-gradient(520px 200px at 0% 0%, color-mix(in srgb, var(--arc) 16%, transparent), transparent 70%),
+    color-mix(in srgb, var(--arc) 6%, var(--sheet-solid, #fff));
+}
+.aprendido-cab { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.aprendido-sello { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--arc-deep); color: #fff; box-shadow: 0 0 0 5px color-mix(in srgb, var(--arc) 18%, transparent); }
+:root[data-theme='dark'] .aprendido-sello { color: #03142f; }
+.aprendido-k { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-2); }
+.page-host .aprendido h2, .aprendido h2 { margin: 0; font-size: var(--t-section); line-height: 1.2; }
+.aprendido-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.aprendido-lista li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; font-size: var(--fs-read); line-height: 1.6; color: var(--ink); max-width: calc(var(--measure) + 6ch); }
+.aprendido-lista li svg { margin-top: 0.3em; color: var(--arc-deep); }
+@media (max-width: 700px) {
+  .aprendido { padding: 18px 16px 20px; }
+  .bq .doc-lectura .doc-sec { margin-top: 52px; padding-top: 24px; }
+  .caja { padding: 12px 14px 13px; }
+}
+.gl-nw { white-space: nowrap; }

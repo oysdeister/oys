@@ -3,22 +3,29 @@ import { Glosa } from '../Glosario';
 import { motion } from 'framer-motion';
 import type { Seccion } from '../../types';
 import { conIni } from '../../lib/texto';
-import { Icon } from '../Icon';
 import { CapturaCampos } from './CapturaCampos';
 import { VerMas, partir, useRevela } from './Revela';
+import { Caja } from './Caja';
+import { cajaDe, cajaDeAviso, tramos } from './util';
 
-const TITULO_AVISO = { problema: 'Ojo', solucion: 'Solución', nota: 'Nota' } as const;
 const MAX_IDEAS = 3;
 
 /** Ruta de menú del ERP en forma de migas */
 export function RutaMenu({ ruta }: { ruta: string[] | null }) {
   if (!ruta || !ruta.length) return null;
+  return <Migas ruta={ruta} />;
+}
+
+/** Migas de menú: cada nivel en su pastilla, separados por › (decorativos) */
+function Migas({ ruta }: { ruta: string[] }) {
   return (
-    <div className="menu-path" aria-label={`Ruta de menú: ${ruta.join(', ')}`}>
+    <ol className="menu-path migas" aria-label={`Ruta de menú: ${ruta.join(' › ')}`}>
       {ruta.map((r, i) => (
-        <span key={i}>{r}</span>
+        <li key={i} aria-current={i === ruta.length - 1 ? 'location' : undefined}>
+          <span>{r}</span>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
 
@@ -54,26 +61,39 @@ export function Ideas({ parrafos, ini, max = MAX_IDEAS }: { parrafos: string[]; 
 export function SeccionVista({ s, ini, conPasos = false, modulo, destacar = false }: { s: Seccion; ini: string; conPasos?: boolean; modulo?: string; destacar?: boolean }) {
   const t = (x: string) => conIni(x, ini);
   const iDestacado = destacar ? s.avisos.findIndex((a) => a.tipo === 'problema') : -1;
+  const lead = s.paraQueSirve ? cajaDe(s.paraQueSirve) : null;
   return (
     <div className="sec-body lect">
-      {s.paraQueSirve && (
-        <p className="lect-lead">
-          <Glosa>{t(s.paraQueSirve)}</Glosa>
-        </p>
-      )}
+      {s.paraQueSirve &&
+        (lead ? (
+          <Caja tipo={lead.tipo}>
+            <Glosa>{t(lead.texto)}</Glosa>
+          </Caja>
+        ) : (
+          <p className="lect-lead">
+            <Glosa>{t(s.paraQueSirve)}</Glosa>
+          </p>
+        ))}
       {s.ruta && s.ruta.length > 0 && (
-        <p className="lect-donde">
-          En el ERP: <b>{s.ruta.map(t).join(' › ')}</b>
-        </p>
+        <div className="lect-donde">
+          <span className="lect-donde-k">En el ERP</span>
+          <Migas ruta={s.ruta.map(t)} />
+        </div>
       )}
-      {s.explicacion.length > 0 && (
-        <ul className="lect-lista">
-          {s.explicacion.map((p, i) => (
-            <li key={i}>
-              <Glosa>{t(p)}</Glosa>
-            </li>
-          ))}
-        </ul>
+      {tramos(s.explicacion).map((tr, k) =>
+        'lista' in tr ? (
+          <ul key={k} className="lect-lista">
+            {tr.lista.map((p, i) => (
+              <li key={i}>
+                <Glosa>{t(p)}</Glosa>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Caja key={k} tipo={tr.caja.tipo}>
+            <Glosa>{t(tr.caja.texto)}</Glosa>
+          </Caja>
+        ),
       )}
       {modulo ? (
         <CapturaCampos s={s} modulo={modulo} ini={ini} />
@@ -116,17 +136,11 @@ export function SeccionVista({ s, ini, conPasos = false, modulo, destacar = fals
           ))}
         </ol>
       )}
-      {s.avisos.length > 0 &&
-        s.avisos.map((a, i) => (
-          <p key={i} className={`lect-aviso ${a.tipo}${i === iDestacado ? ' destacado' : ''}`}>
-            {a.tipo !== 'nota' && (
-              <b>
-                {i === iDestacado && <Icon name="aviso" size={16} />} {TITULO_AVISO[a.tipo] ?? 'Nota'}.
-              </b>
-            )}{' '}
-            <Glosa>{t(a.texto)}</Glosa>
-          </p>
-        ))}
+      {s.avisos.map((a, i) => (
+        <Caja key={i} tipo={cajaDeAviso(a.tipo)} destacado={i === iDestacado}>
+          <Glosa>{t(a.texto)}</Glosa>
+        </Caja>
+      ))}
     </div>
   );
 }

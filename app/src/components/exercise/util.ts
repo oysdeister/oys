@@ -105,3 +105,49 @@ export function problemasNuevos(ej: Ejercicio) {
     return !repetido;
   });
 }
+
+/* ---------- Cajas de lectura (convención de _fuente/GUIA_REDACCION.md) ---------- */
+export type TipoCaja = 'ejemplo' | 'fijate' | 'ojo' | 'nota' | 'solucion';
+
+export const ROTULO_CAJA: Record<TipoCaja, string> = {
+  ejemplo: 'Ejemplo',
+  fijate: 'Fíjate',
+  ojo: 'Ojo',
+  nota: 'Nota',
+  solucion: 'Solución',
+};
+
+const PREFIJO_CAJA = /^\s*(ejemplo|f[ií]jate|ojo)\s*:\s+/i;
+
+/**
+ * Si un párrafo del `concepto` o un ítem de `explicacion` empieza por «Ejemplo:», «Fíjate:» u «Ojo:»,
+ * devuelve el tipo de caja y el texto sin el prefijo (que pasa a ser el rótulo). Si no, null.
+ */
+export function cajaDe(texto: string): { tipo: TipoCaja; texto: string } | null {
+  const m = texto.match(PREFIJO_CAJA);
+  if (!m) return null;
+  const p = m[1].toLowerCase();
+  const tipo: TipoCaja = p === 'ejemplo' ? 'ejemplo' : p === 'ojo' ? 'ojo' : 'fijate';
+  const resto = texto.slice(m[0].length).trim();
+  return resto ? { tipo, texto: resto.charAt(0).toUpperCase() + resto.slice(1) } : null;
+}
+
+/** Tipo de caja de un aviso de sección: «problema» → Ojo, «solucion» → Solución, el resto → Nota */
+export function cajaDeAviso(tipo: string): TipoCaja {
+  return tipo === 'problema' ? 'ojo' : tipo === 'solucion' ? 'solucion' : 'nota';
+}
+
+/** Agrupa una lista de textos en tramos: los seguidos sin prefijo forman una lista; cada caja va sola */
+export function tramos(items: string[]): ({ lista: string[] } | { caja: { tipo: TipoCaja; texto: string } })[] {
+  const out: ({ lista: string[] } | { caja: { tipo: TipoCaja; texto: string } })[] = [];
+  for (const x of items) {
+    const c = cajaDe(x);
+    if (c) out.push({ caja: c });
+    else {
+      const ult = out[out.length - 1];
+      if (ult && 'lista' in ult) ult.lista.push(x);
+      else out.push({ lista: [x] });
+    }
+  }
+  return out;
+}

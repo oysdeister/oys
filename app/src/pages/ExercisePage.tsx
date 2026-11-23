@@ -171,9 +171,17 @@ export default function ExercisePage() {
 
       {/* Cierre del bloque: lo que el alumno ha hecho en él, al final del último paso */}
       {!siguiente && ej.aprendido && ej.aprendido.length > 0 && (
-        <section className="callout why" aria-labelledby="aprendido-h" style={{ marginTop: 32 }}>
-          <h2 id="aprendido-h">Qué has aprendido</h2>
-          <ul className="md-aprendes" style={{ marginBottom: 0 }}>
+        <section className="aprendido" aria-labelledby="aprendido-h">
+          <div className="aprendido-cab">
+            <span className="aprendido-sello" aria-hidden="true">
+              <Icon name="check" size={22} stroke={3} />
+            </span>
+            <div>
+              <p className="aprendido-k">Cierre del bloque</p>
+              <h2 id="aprendido-h">Qué has aprendido</h2>
+            </div>
+          </div>
+          <ul className="aprendido-lista">
             {ej.aprendido.map((x, i) => (
               <li key={i}>
                 <Icon name="check" size={16} stroke={3} />

@@ -2,7 +2,7 @@
  "id": "compras",
  "titulo": "Gestión de compras",
  "sesion": "Sesión 7",
- "resumen": "Das de alta un proveedor completo con su tarifa, preparas la numeración y los tipos de documento y recorres un ciclo de compra completo: oferta, pedido, albarán, factura y asiento. Verás qué datos maestros necesita cada documento y cómo resolver los errores típicos al contabilizar.",
+ "resumen": "Darás de alta un proveedor con su tarifa y prepararás la numeración y los tipos de documento. Después recorrerás un ciclo de compra completo: oferta, pedido, albarán, factura y asiento. Verás qué datos maestros pide cada documento y cómo resolver los errores típicos al contabilizar.",
  "circuito": [
   "Oferta",
   "Pedido",
@@ -15,16 +15,20 @@
   {
    "id": "compras-nav-moverte",
    "titulo": "Cómo moverte por el ERP",
-   "paraQueSirve": "Aprender a abrir cualquier pantalla del ERP y reconocer dónde están los botones, para no perder tiempo buscando.",
+   "paraQueSirve": "Sirve para abrir cualquier pantalla del ERP y saber dónde están los botones, sin perder tiempo buscando.",
    "ruta": [
     "Menú lateral"
    ],
    "explicacion": [
-    "Una pantalla se abre de dos formas: con el menú lateral (Finanzas o Gestión › módulo › carpeta › pantalla) o con el buscador superior «Buscar» (Cmd/Ctrl + K), donde escribes el nombre o el código del objeto (ctercero, gcomalbh, «tarifa»…). Intro abre la pantalla en la pestaña actual; Cmd/Ctrl + Intro, en una pestaña nueva.",
-    "Cada lista tiene arriba a la derecha un botón azul oscuro «Añadir …» o «Nuevo», que abre el formulario en una ventana; se guarda con «Guardar» (abajo a la derecha). En la ficha de un registro, los botones de acción (Validar, Cerrar, Contabilizar…) y las pestañas están en la parte superior; los cambios en la ficha se guardan con el icono del disquete de la barra superior.",
-    "En los ejemplos del manual se usan tus iniciales ({INI}) en los códigos (proveedor T{INI}, tarifa TF{INI}, grupo G{INI}, tipología de albarán AO{INI}…; la tabla completa está en «Códigos del alumno»). Los campos obligatorios llevan asterisco rojo: si falta alguno, al guardar sale «Hay errores en los datos del formulario». Ojo: el código de las tipologías de albarán y de factura admite como máximo 4 caracteres (si no, sale «Demasiado largo»). Si tus iniciales tienen 3 o 4 letras, en esos códigos usa solo las 2 primeras (por ejemplo, con «JMA» la tipología de factura será FCJM).",
+    "Una pantalla se abre de dos formas: con el menú lateral (Finanzas o Gestión › módulo › carpeta › pantalla) o con el buscador superior «Buscar» (Cmd/Ctrl + K).",
+    "En el buscador escribes el nombre o el código del objeto (ctercero, gcomalbh, «tarifa»…). Intro abre la pantalla en la pestaña actual; Cmd/Ctrl + Intro, en una pestaña nueva.",
+    "Cada lista tiene arriba a la derecha un botón azul oscuro «Añadir …» o «Nuevo». Abre el formulario en una ventana, que se guarda con «Guardar» (abajo a la derecha).",
+    "En la ficha de un registro, los botones de acción (Validar, Cerrar, Contabilizar…) y las pestañas están arriba. Los cambios de la ficha se guardan con el icono del disquete de la barra superior.",
+    "Los ejemplos usan tus iniciales ({INI}) en los códigos: proveedor T{INI}, tarifa TF{INI}, grupo G{INI}, tipología de albarán AO{INI}… La tabla completa está en «Códigos del alumno».",
+    "Los campos obligatorios llevan asterisco rojo. Si falta alguno, al guardar sale «Hay errores en los datos del formulario».",
+    "Ojo: el código de las tipologías de albarán y de factura admite 4 caracteres como máximo; si no, sale «Demasiado largo». Con iniciales de 3 o 4 letras, usa solo las 2 primeras: con «JMA», la tipología de factura será FCJM.",
     "Los números de documento de los ejemplos (0AC000002, 0FC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
-    "En los desplegables, escribe el código (por ejemplo ESP, 002, TF o 30D) y pulsa en la línea que aparece debajo. En los campos numéricos que ya traen 0,0000, borra ese valor antes de escribir; si no, el número se añade detrás (10 se convierte en 100)."
+    "En los desplegables, escribe el código (por ejemplo ESP, 002, TF o 30D) y pulsa la línea que aparece debajo. En los campos numéricos que traen 0,0000, borra ese valor antes de escribir: si no, 10 se convierte en 100."
    ],
    "campos": [],
    "pasos": [
@@ -44,11 +48,7 @@
    "avisos": [
     {
      "tipo": "nota",
-     "texto": "El circuito de compras completo es: Oferta del proveedor › Pedido › Albarán (la mercancía entra en el almacén) › Factura (se conforma con el albarán) › Contabilización (asiento de compras y deuda con el proveedor)."
-    },
-    {
-     "tipo": "nota",
-     "texto": "Los botones de acción y las pestañas están siempre arriba en la ficha; los de lista («Añadir …», «Nuevo») arriba a la derecha."
+     "texto": "El circuito de compras completo es: oferta del proveedor › pedido › albarán (la mercancía entra en el almacén) › factura (se conforma con el albarán) › contabilización (asiento de compras y deuda con el proveedor)."
     }
    ]
   }
@@ -58,14 +58,14 @@
    "id": "compras-1",
    "numero": 1,
    "titulo": "Dar de alta el proveedor y el artículo",
-   "objetivo": "Preparas al proveedor y revisas el artículo que le vas a comprar. Sin ellos no puedes hacer pedidos, albaranes ni facturas.",
-   "concepto": "Antes de comprar, el ERP necesita saber a quién le compras y qué le compras. Son los maestros: fichas que se escriben una vez y se reutilizan en todos los documentos.\n\nEl proveedor se monta en capas: primero el tercero (la ficha de la empresa, común a finanzas y gestión), sus relaciones contables, direcciones y condiciones de pago, y después la ficha de proveedor. En Maestros ya diste de alta un tercero cliente (C{INI}); ahora repites el proceso para un proveedor (T{INI}) y te fijas en lo que cambia. Después revisas el artículo que vas a comprar. El precio de compra (la tarifa) lo preparas en el bloque siguiente.\n\nPara comprar usas siempre el artículo 13500620 de la demo (rodamiento 6000-2RS ISB). ROD{INI} es el artículo que diste de alta en Maestros para aprender la ficha; para comprar usas el 13500620 porque ya tiene tipo contable PRODUCTO, que es el que lleva cuenta de compras, y es el que venderás después en Ventas. Así la tarifa, la oferta, el pedido, el albarán y la factura usan el mismo artículo de punta a punta.\n\nSi una capa falta o está mal, el fallo aparece más tarde (por ejemplo, al contabilizar una factura). Por eso conviene montarlo todo y comprobar cada pestaña antes de hacer documentos.",
+   "objetivo": "Darás de alta tu proveedor T{INI} y revisarás el artículo que le vas a comprar.",
+   "concepto": "Antes de comprar, el ERP necesita saber a quién compras y qué compras. Esas fichas se llaman maestros: se escriben una vez y se reutilizan en todos los documentos. Es como la agenda del móvil: guardas el contacto una vez y después solo lo eliges.\n\nEn Axional el proveedor se monta en capas. Primero creas el tercero, es decir, la ficha de la empresa, común a finanzas y gestión. Le añades relaciones contables, dirección y condiciones de pago, y al final la ficha de proveedor.\n\nEn Maestros ya diste de alta un tercero cliente (C{INI}). Ahora repites el proceso para un proveedor (T{INI}) y te fijas en lo que cambia. El precio de compra (la tarifa) lo preparas en el bloque siguiente.\n\nPara comprar usas siempre el artículo 13500620 de la demo, el rodamiento 6000-2RS ISB. Tiene tipo contable PRODUCTO, que es el que lleva cuenta de compras. Además, es el que venderás después en Ventas.\n\nFíjate: ROD{INI}, el artículo que creaste en Maestros, sirve para aprender la ficha, no para comprar. Con el 13500620, la tarifa, la oferta, el pedido, el albarán y la factura usan el mismo artículo.\n\nOjo: si una capa falta o está mal, el fallo sale más tarde, por ejemplo al contabilizar la factura. Monta todas las capas y revisa cada pestaña antes de hacer documentos.",
    "duracionMin": 45,
    "secciones": [
     {
      "id": "compras-1-tercero",
      "titulo": "Tercero",
-     "paraQueSirve": "Ficha única de empresas o personas con las que trabajamos: identificación fiscal, direcciones, cuentas bancarias y relaciones contables. La usan clientes, proveedores, contabilidad y tesorería. Sin tercero no hay proveedor; sin relaciones contables, la factura no contabiliza.",
+     "paraQueSirve": "Sirve para tener en una sola ficha los datos de la empresa: identificación fiscal, direcciones, bancos y relaciones contables. La usan clientes, proveedores, contabilidad y tesorería.",
      "ruta": [
       "Finanzas",
       "Maestros",
@@ -73,42 +73,45 @@
       "Registro de terceros"
      ],
      "explicacion": [
-      "El alta se hace en una ventana emergente. El campo Tipo ID fiscal es obligatorio y la Categoría (002 Proveedores) trae la serie y la cuenta contable por defecto."
+      "Es la base de todo: sin tercero no hay proveedor, y sin relaciones contables la factura no contabiliza.",
+      "La ventana tiene dos bloques: «Identificación» y «Más datos».",
+      "Fíjate: elige primero el «País emisor». Hasta que no lo eliges, no puedes elegir el «Tipo ID fiscal».",
+      "La «Categoría» 002 Proveedores trae por defecto la serie y la cuenta contable."
      ],
      "campos": [
       {
        "campo": "Tercero",
-       "significado": "Código del tercero. Es la clave con la que se busca en todos los documentos. La pantalla no lo marca como obligatorio.",
+       "significado": "Código del tercero. Es la clave para buscarlo en todos los documentos, aunque la pantalla no lo marca como obligatorio.",
        "ejemplo": "T{INI} (T + tus iniciales, por ejemplo TJA)"
       },
       {
        "campo": "Nombre *",
-       "significado": "Razón social. Sale en documentos, asientos y modelos fiscales.",
+       "significado": "Razón social, es decir, el nombre legal. Sale en documentos, asientos y modelos fiscales.",
        "ejemplo": "Tu nombre y apellido (por ejemplo, Juan Álvarez)"
       },
       {
        "campo": "Nombre comercial",
-       "significado": "Nombre con el que se conoce. Se copia a las direcciones.",
+       "significado": "Nombre con el que se conoce a la empresa. Se copia a las direcciones.",
        "ejemplo": "Tu nombre y apellido"
       },
       {
        "campo": "País emisor *",
-       "significado": "País que emite el identificador fiscal. Determina el tratamiento de IVA (nacional, UE, extranjero).",
+       "significado": "País que emite el identificador fiscal. Decide el tratamiento del IVA: nacional, UE o extranjero.",
        "ejemplo": "ES (España)"
       },
       {
        "campo": "Tipo ID fiscal *",
-       "significado": "Clase de identificador (NIF empresa, NIF persona, NIF operador UE, pasaporte, no censado…). Va a los libros de IVA y al SII.",
+       "significado": "Clase de identificador: NIF de empresa o de persona, NIF operador UE, pasaporte, no censado… Va a los libros de IVA y al SII, el envío de las facturas a Hacienda.",
        "ejemplo": "No censado"
       },
       {
        "campo": "Id. fiscal *",
-       "significado": "NIF/CIF. Con «No censado» se admite 0.",
+       "significado": "Número de identificación fiscal (NIF/CIF). Con «No censado» se admite 0.",
        "ejemplo": "0"
       },
       {
        "campo": "Categoría *",
-       "significado": "Tipo de tercero. Trae la serie, la relación y la cuenta contable por defecto.",
+       "significado": "Tipo de tercero. Trae por defecto la serie, la relación y la cuenta contable.",
        "ejemplo": "002 Proveedores"
       },
       {
@@ -118,7 +121,7 @@
       },
       {
        "campo": "Idioma *",
-       "significado": "Idioma de los documentos que se le envían.",
+       "significado": "Idioma de los documentos que le envías.",
        "ejemplo": "es (defecto)"
       },
       {
@@ -133,19 +136,19 @@
       },
       {
        "campo": "Holding",
-       "significado": "Tercero cabecera del grupo de empresas al que pertenece. Si no forma parte de ningún grupo, se pone el propio tercero. Se informa en la ficha, cuando el tercero ya existe.",
+       "significado": "Tercero cabecera de su grupo de empresas. Si no pertenece a ningún grupo, se pone el propio tercero. Se rellena en la ficha, cuando el tercero ya existe.",
        "ejemplo": "T{INI}"
       }
      ],
      "pasos": [
       {
        "texto": "Pulsa «Añadir tercero» y rellena el bloque «Identificación»: código T{INI}, tu nombre, Tipo ID fiscal «No censado» e Id. fiscal 0",
-       "detalle": "Menú Finanzas › Maestros › Terceros › Registro de terceros; «Añadir tercero» es el botón azul oscuro de arriba a la derecha. En «Tercero» va el código: T{INI} (T de tercero proveedor + tus iniciales, por ejemplo TJA). En «Nombre» y «Nombre comercial» escribe tu nombre y apellido: así reconoces tu tercero en cualquier listado. En «País emisor» escribe ES y elige «ES España»: el Tipo ID fiscal solo se puede elegir después, y «No censado» es la última opción de su lista. Como es un proveedor de pruebas sin NIF real, en «Tipo ID fiscal» eliges «No censado» y en «Id. fiscal» escribes 0. La captura del paso siguiente muestra la ventana ya rellena."
+       "detalle": "«Añadir tercero» es el botón azul oscuro de arriba a la derecha (Finanzas › Maestros › Terceros › Registro de terceros). En «Tercero» escribe T{INI}: T de tercero proveedor más tus iniciales, por ejemplo TJA. En «Nombre» y «Nombre comercial» pon tu nombre y apellido, para reconocerlo en cualquier listado. En «País emisor» escribe ES y elige «ES España». Es un proveedor de pruebas sin NIF real: en «Tipo ID fiscal» elige «No censado» (la última opción) y en «Id. fiscal» escribe 0. La captura del paso siguiente muestra la ventana ya rellena."
       },
       {
-       "texto": "En Más datos elige Categoría 002 Proveedores, deja los valores por defecto del resto y pulsa «Guardar»",
+       "texto": "En «Más datos» elige Categoría 002 Proveedores, deja el resto por defecto y pulsa «Guardar»",
        "pregunta": "Ya has escrito el código, tu nombre y los datos fiscales del tercero. ¿Dónde indicas que es un proveedor?",
-       "detalle": "«Más datos» es el segundo bloque de la ventana, debajo de «Identificación». En Categoría escribe 002 y pulsa la línea «002 Proveedores». Los campos con asterisco rojo son los obligatorios. Al guardar sale el aviso verde «Éxito» con el enlace «Ver registro».",
+       "detalle": "«Más datos» es el segundo bloque, debajo de «Identificación». En Categoría escribe 002 y pulsa la línea «002 Proveedores». Los campos con asterisco rojo son obligatorios. Al guardar sale el aviso verde «Éxito» con el enlace «Ver registro».",
        "imagen": "compras-n-01.webp",
        "hotspot": {
         "x": 9.7,
@@ -156,9 +159,9 @@
        }
       },
       {
-       "texto": "Abre la ficha con «Ver registro», pon Holding = T{INI} (el propio tercero, porque no pertenece a ningún grupo) y guarda con el disquete de la barra superior",
+       "texto": "Pulsa «Ver registro», pon Holding = T{INI} y guarda con el disquete de la barra superior",
        "pregunta": "Has abierto la ficha del tercero recién guardado. ¿Dónde indicas que no pertenece a ningún grupo de empresas, poniéndose a sí mismo?",
-       "detalle": "En la ficha, Holding está en el bloque «Más datos»: escribe T{INI} y pulsa la línea de tu tercero. El disquete está arriba a la derecha, junto a la papelera. Las pestañas (Relaciones, Datos bancarios, Condiciones de pago, Condiciones de cobro, Direcciones…) están arriba y los botones (Validar, Cerrar, Activar) a la derecha.",
+       "detalle": "Holding está en el bloque «Más datos» de la ficha: escribe T{INI} y pulsa la línea de tu tercero. Es el propio tercero porque no pertenece a ningún grupo. El disquete está arriba a la derecha, junto a la papelera. Arriba ves las pestañas: Relaciones, Datos bancarios, Condiciones de pago, Condiciones de cobro, Direcciones… A la derecha, los botones Validar, Cerrar y Activar.",
        "imagen": "compras-n-02.webp",
        "hotspot": {
         "x": 32.6,
@@ -172,21 +175,23 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "El alta se hace en una ventana emergente; el campo Tipo ID fiscal es obligatorio y la Categoría define el tipo de tercero."
+       "texto": "El alta se hace en una ventana emergente. «Tipo ID fiscal» es obligatorio y la Categoría decide el tipo de tercero."
       }
      ]
     },
     {
      "id": "compras-1-relaciones",
      "titulo": "Relaciones contables del tercero",
-     "paraQueSirve": "Define el papel del tercero (cliente, proveedor, acreedor…) y su cuenta contable. Al contabilizar, el ERP busca esta cuenta según la tipología de factura; si no la encuentra, la factura no contabiliza.",
+     "paraQueSirve": "Aquí dices qué papel tiene el tercero (cliente, proveedor, acreedor…) y con qué cuenta contable se apunta. Al contabilizar, el ERP busca esta cuenta según la tipología (el tipo) de factura: si no la encuentra, la factura no contabiliza.",
      "ruta": [
       "Ficha del tercero",
       "pestaña Relaciones",
       "Añadir relacion"
      ],
      "explicacion": [
-      "Cada tipo de relación lleva su cuenta mnemotécnica: PRO Proveedores 40000, ACR Acreedores 41000, CLI Clientes 43000… La cuenta se propone sola al elegir el tipo de relación. Si quieres una subcuenta propia, créala en el plan contable y selecciónala aquí. A tu proveedor le das dos relaciones: ACR (Acreedores, 41000) y PRO (Proveedores, 40000). La PRO es la que usa la factura de compra para contabilizar."
+      "Cada tipo de relación lleva su cuenta: PRO Proveedores 40000, ACR Acreedores 41000, CLI Clientes 43000… La cuenta se propone sola al elegir el tipo.",
+      "Si quieres una subcuenta propia, créala en el plan contable y selecciónala aquí.",
+      "A tu proveedor le das dos relaciones: ACR (Acreedores, 41000) y PRO (Proveedores, 40000)."
      ],
      "campos": [
       {
@@ -196,12 +201,12 @@
       },
       {
        "campo": "Tipo relación *",
-       "significado": "Papel contable. Cada uno lleva su cuenta mnemotécnica: PRO Proveedores 40000, ACR Acreedores 41000, CLI Clientes 43000…",
+       "significado": "Papel contable del tercero. Cada uno propone su cuenta: PRO Proveedores 40000, ACR Acreedores 41000, CLI Clientes 43000…",
        "ejemplo": "ACR Acreedores y, en una segunda relación, PRO Proveedores"
       },
       {
        "campo": "Plan contable *",
-       "significado": "Plan contable donde vive la cuenta. En la lista se escribe ES; su descripción es PGE 2008.",
+       "significado": "Plan contable donde está la cuenta. En la lista escribes ES; su descripción es PGE 2008.",
        "ejemplo": "ES · PGE 2008"
       },
       {
@@ -211,7 +216,7 @@
       },
       {
        "campo": "Retención",
-       "significado": "Marca si al tercero se le practica retención (IRPF).",
+       "significado": "Márcala si al tercero se le practica retención (IRPF).",
        "ejemplo": "Sin marcar"
       }
      ],
@@ -221,7 +226,7 @@
        "detalle": "Tipo tercero viene en Cliente: cámbialo a Proveedor. En Tipo relación escribe ACR y pulsa la línea «ACR Acreedores 41000». La captura muestra la ventana ya rellena."
       },
       {
-       "texto": "En Plan contable escribe ES, pulsa la línea «ES PGE 2008» y sal del campo con Tab: la Cuenta se rellena sola (41000.00000). Pulsa «Guardar»",
+       "texto": "En Plan contable escribe ES, pulsa la línea «ES PGE 2008» y sal con Tab: la Cuenta se rellena sola (41000.00000). Pulsa «Guardar»",
        "pregunta": "El plan contable ES ya está elegido y has salido del campo con Tab. ¿Dónde ves la cuenta contable que se rellena sola?",
        "detalle": "La cuenta aparece al salir del campo Plan contable, no antes.",
        "imagen": "compras-n-03.webp",
@@ -235,35 +240,38 @@
       },
       {
        "texto": "Fíjate en el resultado: la relación sale en la rejilla",
-       "detalle": "La relación Proveedor / Acreedores / PGE 2008 / 41000.00000 sale en la rejilla. Al guardar puede salir el aviso azul «Cuenta repetida»: es solo informativo (la 41000.00000 la comparten muchos acreedores).",
+       "detalle": "Ves la fila Proveedor / Acreedores / PGE 2008 / 41000.00000. Puede salir el aviso azul «Cuenta repetida»: es solo informativo, porque muchos acreedores comparten la 41000.00000.",
        "imagen": "compras-n-04.webp"
       },
       {
-       "texto": "Pulsa otra vez «Añadir relacion» y añade la relación Proveedor / PRO / ES (PGE 2008): la cuenta 40000 se rellena sola. Pulsa «Guardar»",
-       "detalle": "Es la que usa la factura para contabilizar: sin ella, al contabilizar sale «Cuenta tercero [T{INI}] no existente para relación: [PRO]». En la prueba hecha en la demo, el ERP le asignó una subcuenta propia del tercero (40000.T{INI}). Al acabar, en la rejilla tienes dos relaciones: ACR y PRO."
+       "texto": "Pulsa otra vez «Añadir relacion» y añade Proveedor / PRO / ES (PGE 2008): la cuenta 40000 se rellena sola. Pulsa «Guardar»",
+       "detalle": "Es la relación que usa la factura para contabilizar. Sin ella sale «Cuenta tercero [T{INI}] no existente para relación: [PRO]». En la prueba de la demo, el ERP asignó una subcuenta propia del tercero (40000.T{INI}). Al acabar tienes dos relaciones en la rejilla: ACR y PRO."
       }
      ],
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "La plantilla de asiento de la factura de compra (FC) busca la relación PRO (Proveedores, cuenta 40000). Por eso das de alta las dos: ACR y PRO. Si solo tuvieras ACR, la factura no contabilizaría."
+       "texto": "La plantilla de asiento de la factura de compra (FC) busca la relación PRO, con la cuenta 40000. Por eso das de alta ACR y PRO: solo con ACR, la factura no contabilizaría."
       }
      ]
     },
     {
      "id": "compras-1-direcciones",
      "titulo": "Direcciones",
-     "paraQueSirve": "La dirección es obligatoria para emitir cualquier documento: albaranes, pedidos y facturas se dirigen a una dirección del tercero. Además fija la zona impositiva, que decide el IVA que se aplica en compras y ventas.",
+     "paraQueSirve": "Sin dirección no puedes emitir documentos: pedidos, albaranes y facturas van a una dirección del tercero. Además fija la zona impositiva, que decide qué IVA se aplica en compras y ventas.",
      "ruta": [
       "Ficha del tercero",
       "pestaña Direcciones",
       "Añadir direccion"
      ],
-     "explicacion": [],
+     "explicacion": [
+      "La dirección 0 es el domicilio fiscal: es la que usan los documentos por defecto.",
+      "Al elegir el código postal, el ERP rellena solo la provincia, la población y la zona impositiva."
+     ],
      "campos": [
       {
        "campo": "Tipo de dirección *",
-       "significado": "Uso de la dirección. La 0 es el domicilio fiscal, que es la que se usa por defecto en los documentos.",
+       "significado": "Para qué se usa la dirección. La 0 es el domicilio fiscal, la que usan por defecto los documentos.",
        "ejemplo": "0 Dirección domicilio fiscal (defecto)"
       },
       {
@@ -293,19 +301,19 @@
       },
       {
        "campo": "Zona impositiva *",
-       "significado": "Zona de IVA (península, Canarias, UE…). Decide qué impuestos se calculan en los documentos.",
+       "significado": "Zona de IVA (península, Canarias, UE…). Decide qué impuestos calculan los documentos.",
        "ejemplo": "ESCO (se rellena sola)"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre la pestaña «Direcciones», pulsa «Añadir direccion», comprueba los valores por defecto (tipo 0, es, Abierto, ESP) y en Código Postal escribe 08001 y pulsa la línea de Barcelona",
+       "texto": "Abre la pestaña «Direcciones», pulsa «Añadir direccion» y comprueba los valores por defecto (tipo 0, es, Abierto, ESP). En Código Postal escribe 08001 y pulsa la línea de Barcelona",
        "detalle": "Se rellenan Provincia y Población. La captura muestra la ventana ya rellena."
       },
       {
        "texto": "Escribe la Dirección, comprueba que la Zona impositiva es ESCO y pulsa «Guardar»",
        "pregunta": "El código postal 08001 ya ha rellenado la provincia y la población. ¿Dónde escribes la calle?",
-       "detalle": "El código postal rellena Provincia (08) y Población (Barcelona); la Zona impositiva ESCO (España continental) ya venía puesta.",
+       "detalle": "El código postal ha rellenado Provincia (08) y Población (Barcelona). La Zona impositiva ESCO (España continental) ya venía puesta.",
        "imagen": "compras-n-05.webp",
        "hotspot": {
         "x": 50.4,
@@ -321,35 +329,37 @@
     {
      "id": "compras-1-condiciones",
      "titulo": "Condiciones de cobro y pago, banco y validación",
-     "paraQueSirve": "Las condiciones dicen cómo y cuándo se cobra o se paga al tercero: tipo de efecto (transferencia, recibo, contado…) y plazo. Los albaranes y facturas las copian a sus datos financieros, y al contabilizar la factura generan los vencimientos de la cartera de pagos.",
+     "paraQueSirve": "Aquí decides cómo y cuándo se cobra o se paga al tercero. Eliges el tipo de efecto, es decir, el medio de pago (transferencia, recibo, contado…), y el plazo. Albaranes y facturas copian estas condiciones y, al contabilizar, la factura crea con ellas los vencimientos de pago.",
      "ruta": [
       "Ficha del tercero",
       "pestañas Condiciones de cobro (Añadir cobro), Condiciones de pago (Añadir pago) y Datos bancarios (Añadir banco)"
      ],
      "explicacion": [
-      "Hay dos pestañas separadas: Condiciones de pago (lo que nosotros le pagamos) y Condiciones de cobro (lo que él nos pagaría si también fuera cliente). En compras se usa la de pago. La ventana de cobro se titula «Condiciones de cobro a cliente» aunque el tercero sea proveedor. Rellenas también la de cobro para dejar el tercero completo: es una ficha única y, si algún día ese proveedor también te compra, la venta usará esa condición.",
-      "El campo «Plazo pago» indica el plazo de vencimiento. Con pago por transferencia (TF) hace falta además la cuenta bancaria del tercero, en la pestaña «Datos bancarios».",
-      "Al acabar, se pulsa «Validar» en la ficha del tercero, como hiciste en Maestros."
+      "Hay dos pestañas: «Condiciones de pago» (lo que tú le pagas) y «Condiciones de cobro» (lo que te pagaría si también fuera cliente).",
+      "En compras se usa la de pago. Rellenas también la de cobro para dejar completa la ficha: si algún día ese proveedor te compra, la venta la usará.",
+      "Fíjate: la ventana de cobro se titula «Condiciones de cobro a cliente» aunque el tercero sea proveedor.",
+      "«Plazo pago» es el plazo de vencimiento. Con transferencia (TF) también hace falta la cuenta bancaria del tercero, en la pestaña «Datos bancarios».",
+      "Al acabar, pulsa «Validar» en la ficha del tercero, como hiciste en Maestros."
      ],
      "campos": [
       {
        "campo": "Empresas *",
-       "significado": "Sociedades a las que aplica la condición.",
+       "significado": "Sociedades a las que se aplica la condición.",
        "ejemplo": "ALL"
       },
       {
        "campo": "Prioridad *",
-       "significado": "Orden si hay varias condiciones.",
+       "significado": "Orden de uso si hay varias condiciones.",
        "ejemplo": "0"
       },
       {
        "campo": "Tipo efecto *",
-       "significado": "Medio de cobro o pago. Una transferencia (TF) exigirá la cuenta bancaria del tercero al contabilizar.",
+       "significado": "Medio de cobro o pago. Con transferencia (TF), al contabilizar hará falta la cuenta bancaria del tercero.",
        "ejemplo": "Cobro: EF Al contado · Pago: TF Transferencia"
       },
       {
        "campo": "Plazo pago *",
-       "significado": "Plazo de vencimiento: días o meses, fijo o variable.",
+       "significado": "Plazo de vencimiento: en días o meses, fijo o variable.",
        "ejemplo": "30D (30 días)"
       },
       {
@@ -364,15 +374,15 @@
       },
       {
        "campo": "Banco / IBAN o Cuenta bancaria / BIC (Datos bancarios)",
-       "significado": "Cuenta del tercero a la que le transferiremos los pagos. Banco es la entidad: ES más las cifras 5 a 8 del IBAN. Domiciliación es el número de la cuenta dentro del tercero (la primera es la 0).",
+       "significado": "Cuenta del tercero a la que le transferirás los pagos. Banco es la entidad: ES más las cifras 5 a 8 del IBAN. Domiciliación es el número de la cuenta dentro del tercero; la primera es la 0.",
        "ejemplo": "ES2100 (CAIXABANK) / ES9121000418450200051332 / CAIXESBBXXX · Domiciliación 0"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre la pestaña «Condiciones de cobro» y pulsa «Añadir cobro». Deja Empresas ALL y Prioridad 0; elige Tipo efecto EF y Plazo pago 30D. Pulsa «Guardar»",
+       "texto": "Abre la pestaña «Condiciones de cobro» y pulsa «Añadir cobro». Deja Empresas ALL y Prioridad 0, elige Tipo efecto EF y Plazo pago 30D y pulsa «Guardar»",
        "pregunta": "Ya has elegido el tipo de efecto EF en la condición de cobro. ¿Dónde eliges ahora el plazo de pago de 30 días?",
-       "detalle": "En Tipo efecto escribe EF y pulsa «EF Al contado»; en Plazo pago escribe 30D y pulsa «30D 30 días». Los días fijos se dejan a 0.",
+       "detalle": "En Tipo efecto escribe EF y pulsa «EF Al contado». En Plazo pago escribe 30D y pulsa «30D 30 días». Deja los días fijos a 0.",
        "imagen": "compras-n-06.webp",
        "hotspot": {
         "x": 49.6,
@@ -385,7 +395,7 @@
       {
        "texto": "Abre la pestaña «Condiciones de pago» y pulsa «Añadir pago». Elige Tipo efecto TF (escribe TF para filtrar) y Plazo pago 30D. Pulsa «Guardar»",
        "pregunta": "Estás en la condición de pago, la que copiarán las compras. ¿En qué campo eliges el tipo de efecto (TF, transferencia)?",
-       "detalle": "Esta es la condición de pago que usan las compras: Tipo efecto TF Transferencia, 30D. Albaranes y facturas la copian.",
+       "detalle": "Es la condición que usan las compras: TF Transferencia a 30D. Albaranes y facturas la copian.",
        "imagen": "compras-n-07.webp",
        "hotspot": {
         "x": 1.7,
@@ -396,7 +406,7 @@
        }
       },
       {
-       "texto": "Abre la pestaña «Datos bancarios» y pulsa «Añadir banco». Deja Domiciliación 0, escribe el IBAN ES9121000418450200051332, en Banco escribe ES2100 y pulsa «CAIXABANK», y en BIC escribe CAIXESBBXXX. Pulsa «Guardar»",
+       "texto": "Abre la pestaña «Datos bancarios» y pulsa «Añadir banco». Deja Domiciliación 0 y escribe el IBAN ES9121000418450200051332. En Banco escribe ES2100 y pulsa «CAIXABANK»; en BIC, CAIXESBBXXX. Pulsa «Guardar»",
        "pregunta": "Para pagar por transferencia hace falta la cuenta bancaria del tercero. ¿Dónde escribes el IBAN de ejemplo?",
        "detalle": "Es un IBAN de ejemplo: no uses nunca uno real. Si dejas Banco vacío, al guardar sale «Las siguientes restricciones de verificación fallaron: Entidad y cuenta bancaria, ambos nulos o no nulos».",
        "imagen": "compras-n-08.webp",
@@ -409,9 +419,9 @@
        }
       },
       {
-       "texto": "Vuelve a la primera pestaña («Terceros») y pulsa «Validar» (verde, arriba a la derecha): el Estado pasa a Validado",
+       "texto": "Vuelve a la primera pestaña («Terceros») y pulsa «Validar», el botón verde de arriba a la derecha: el Estado pasa a Validado",
        "pregunta": "Has terminado todas las pestañas y has pulsado «Validar». ¿Dónde compruebas que el tercero ya está validado?",
-       "detalle": "Si después cambias algo en las pestañas del tercero (por ejemplo, otra relación), vuelve a Provisional: pulsa otra vez «Validar».",
+       "detalle": "Si después cambias algo en las pestañas (por ejemplo, otra relación), el tercero vuelve a Provisional. Pulsa otra vez «Validar».",
        "imagen": "compras-n-09.webp",
        "hotspot": {
         "x": 49.2,
@@ -425,14 +435,14 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Con TF (transferencia) la factura necesita la cuenta bancaria del tercero: por eso la das de alta ya. Si la olvidas, al contabilizar saldrá «DOMICILIACIÓN BANCARIA NO INFORMADA»."
+       "texto": "Con TF (transferencia), la factura necesita la cuenta bancaria del tercero: por eso la das de alta ya. Si falta, al contabilizar sale «DOMICILIACIÓN BANCARIA NO INFORMADA»."
       }
      ]
     },
     {
      "id": "compras-1-proveedor",
      "titulo": "Proveedor",
-     "paraQueSirve": "El proveedor es la ficha de compras del tercero: a quién se factura, centrales de compras y pagos, logística y tarifa. Los documentos de compra (oferta, pedido, albarán, factura) se hacen contra el proveedor, no contra el tercero.",
+     "paraQueSirve": "Es la ficha de compras del tercero: a quién se factura, centrales de compras y pagos, logística y tarifa. Oferta, pedido, albarán y factura se hacen contra el proveedor, no contra el tercero.",
      "ruta": [
       "Gestión",
       "Maestros",
@@ -441,14 +451,16 @@
       "Registro"
      ],
      "explicacion": [
-      "El proveedor se da de alta en el «Maestro de proveedores», no como pestaña del tercero. La tarifa no se asigna directamente: se asigna un grupo de precios que contiene la lista.",
-      "El grupo de precios G{INI} aún no existe: lo crearás en el bloque siguiente, «Preparar los precios de compra», y entonces volverás al proveedor para asignarlo.",
-      "La central de compras es el proveedor al que se hacen los pedidos y la central de pagos, el que cobra las facturas. En empresas grandes pueden ser otra ficha (por ejemplo, la central de un grupo); en tu caso las dos son el propio T{INI}."
+      "El proveedor se da de alta en el «Maestro de proveedores», no en una pestaña del tercero.",
+      "La tarifa no se asigna directamente: se asigna un grupo de precios, que contiene la lista de precios.",
+      "El grupo G{INI} aún no existe. Lo crearás en el bloque siguiente, «Preparar los precios de compra», y volverás aquí a asignarlo.",
+      "La central de compras es el proveedor al que se hacen los pedidos. La central de pagos es el que cobra las facturas.",
+      "En empresas grandes, la central puede ser otra ficha (por ejemplo, la central de un grupo). En tu caso, las dos son el propio T{INI}."
      ],
      "campos": [
       {
        "campo": "Proveedor *",
-       "significado": "Tercero que se da de alta como proveedor.",
+       "significado": "Tercero que das de alta como proveedor.",
        "ejemplo": "T{INI}"
       },
       {
@@ -458,12 +470,12 @@
       },
       {
        "campo": "Fecha baja",
-       "significado": "A partir de esta fecha no se le puede comprar. Una fecha lejana lo deja activo.",
+       "significado": "Desde esta fecha ya no se le puede comprar. Una fecha lejana lo deja activo.",
        "ejemplo": "31-12-2099"
       },
       {
        "campo": "Comercial *",
-       "significado": "Tercero que actúa como comercial (persona de contacto) del proveedor. Aquí, el propio T{INI}.",
+       "significado": "Tercero que hace de comercial, es decir, de persona de contacto del proveedor. Aquí, el propio T{INI}.",
        "ejemplo": "T{INI}"
       },
       {
@@ -483,12 +495,12 @@
       },
       {
        "campo": "Tercero / Dirección facturación",
-       "significado": "A quién y dónde factura el proveedor (pestaña Facturación).",
+       "significado": "A quién y a qué dirección factura el proveedor (pestaña Facturación).",
        "ejemplo": "T{INI} / 0"
       },
       {
        "campo": "Divisa",
-       "significado": "Moneda de compra.",
+       "significado": "Moneda en la que compras.",
        "ejemplo": "EUR"
       },
       {
@@ -503,7 +515,7 @@
       },
       {
        "campo": "Descuento comercial 1, 2 y 3 / % Pronto pago",
-       "significado": "Descuentos que nos hace el proveedor y descuento por pagar antes de plazo. Vienen vacíos: pon 0 si no hay.",
+       "significado": "Descuentos que te hace el proveedor y descuento por pagar antes de plazo. Vienen vacíos: pon 0 si no hay.",
        "ejemplo": "0"
       },
       {
@@ -514,13 +526,13 @@
      ],
      "pasos": [
       {
-       "texto": "Abre el Maestro de proveedores, pulsa «Nuevo» y rellena Proveedor T{INI} (escribe T{INI} y pulsa la línea), Comercial T{INI}, Grupo de empresas ALL (ya viene) y Tipo proveedor 0 GENERAL. Deja vacías las centrales",
-       "detalle": "Menú Gestión › Maestros › Terceros › Proveedores › Registro; «Nuevo» está arriba a la derecha. Usa el tercero T{INI} que acabas de crear; no crees otro. La captura muestra la misma ventana ya rellena, más abajo."
+       "texto": "Abre el «Maestro de proveedores», pulsa «Nuevo» y rellena Proveedor T{INI}, Comercial T{INI}, Grupo de empresas ALL y Tipo proveedor 0 GENERAL. Deja vacías las centrales",
+       "detalle": "Ruta: Gestión › Maestros › Terceros › Proveedores › Registro; «Nuevo» está arriba a la derecha. En Proveedor escribe T{INI} y pulsa la línea: es el tercero que acabas de crear, no crees otro. Grupo de empresas ALL ya viene puesto. La captura muestra la misma ventana ya rellena, más abajo."
       },
       {
        "texto": "Baja al bloque «Datos financieros»: elige Divisa EUR, escribe 0 en Descuento comercial 1, 2 y 3 y en % Pronto pago y pulsa «Guardar»",
        "pregunta": "Los descuentos y el pronto pago vienen vacíos, y el ERP no contabiliza la factura con esos campos vacíos. ¿Dónde pones a 0 el «Descuento comercial 1»?",
-       "detalle": "Estos cuatro campos vienen vacíos. Si se quedan vacíos, la factura del proveedor puede no contabilizar (error «Cannot invoke Object.toString() because n is null»). Si informas una central sin su proveedor sale un error de restricciones de verificación; por eso se guarda primero sin centrales. Al guardar, Tercero y Dirección de facturación se rellenan solos (T{INI} y 0) y el proveedor sale Activo en la lista.",
+       "detalle": "Estos cuatro campos vienen vacíos. Si se quedan así, la factura puede no contabilizar (error «Cannot invoke Object.toString() because n is null»). Las centrales se dejan para después: una central sin su proveedor da un error de restricciones de verificación. Al guardar, Tercero y Dirección de facturación se rellenan solos (T{INI} y 0) y el proveedor sale Activo en la lista.",
        "imagen": "compras-n-10.webp",
        "hotspot": {
         "x": 49.6,
@@ -531,9 +543,9 @@
        }
       },
       {
-       "texto": "Abre la ficha del proveedor T{INI} (número de su fila en la lista). Pon Fecha baja 31-12-2099 y, en las pestañas Central de compras y Central de pagos, Central = T{INI} y Proveedor = T{INI}. Guarda con el disquete",
+       "texto": "Abre la ficha de T{INI} pulsando el número de su fila. Pon Fecha baja 31-12-2099 y, en las pestañas Central de compras y Central de pagos, Central = T{INI} y Proveedor = T{INI}. Guarda con el disquete",
        "pregunta": "La central de compras ya está informada. ¿Dónde indicas ahora la central que paga las facturas de este proveedor?",
-       "detalle": "En Fecha baja escribe 31122099 (los guiones se ponen solos). En las pestañas Central de compras y Central de pagos, el campo Central es un desplegable (elige T{INI}) y Proveedor compras / Proveedor pagos es texto (escribe T{INI}).",
+       "detalle": "En Fecha baja escribe 31122099: los guiones se ponen solos. En cada pestaña, Central es un desplegable: elige T{INI}. Proveedor compras y Proveedor pagos son de texto: escribe T{INI}.",
        "imagen": "compras-n-11.webp",
        "hotspot": {
         "x": 13.3,
@@ -551,14 +563,14 @@
       },
       {
        "tipo": "solucion",
-       "texto": "La central y su «Proveedor compras/pagos» van en pareja. Como T{INI} aún no es proveedor al darlo de alta, guarda primero sin centrales y después informa las dos parejas en la ficha."
+       "texto": "La central y su «Proveedor compras/pagos» van en pareja. Al darlo de alta, T{INI} aún no es proveedor: guarda primero sin centrales y después informa las dos parejas en la ficha."
       }
      ]
     },
     {
      "id": "compras-1-articulo",
      "titulo": "Artículo que vas a comprar",
-     "paraQueSirve": "Artículo que compras al proveedor: rodamiento, tornillo o servicio. Su ficha guarda descripción, unidad, familia, tipo contable y clave fiscal; el pedido no necesita repetirlos. En todas las compras usas el artículo 13500620 de la demo: aquí revisas su ficha sin cambiarla.",
+     "paraQueSirve": "Sirve para saber qué compras: un rodamiento, un tornillo o un servicio. Su ficha guarda descripción, unidad, familia, tipo contable y clave fiscal, y el pedido no los repite. En todas las compras usas el 13500620 de la demo: aquí solo revisas su ficha.",
      "ruta": [
       "Gestión",
       "Maestros",
@@ -569,7 +581,8 @@
       "El artículo es un maestro: se da de alta una vez y lo usan todos los documentos de compra y venta.",
       "Para comprar importan cinco datos: descripción, unidad, familia, tipo contable y clave fiscal. La familia propone la clave fiscal y la naturaleza.",
       "El tipo contable decide a qué cuenta va el gasto al contabilizar la factura. Para comprar hace falta PRODUCTO (PROD).",
-      "ROD{INI} es el artículo que diste de alta en Maestros para aprender la ficha. Para comprar usas el 13500620 porque ya tiene tipo contable PRODUCTO (casi todos los demás de la demo tienen Ventas, sin cuenta de compras) y es el que venderás en Ventas. No modifiques el 13500620: la demo es compartida."
+      "El 13500620 es también el artículo que venderás en Ventas.",
+      "Ojo: no modifiques el 13500620. La demo es compartida."
      ],
      "campos": [
       {
@@ -584,7 +597,7 @@
       },
       {
        "campo": "Unidad base *",
-       "significado": "Cómo se cuenta y en qué unidad se lleva el stock.",
+       "significado": "Unidad en la que se cuenta y se lleva el stock.",
        "ejemplo": "UNIDAD (UNI)"
       },
       {
@@ -604,12 +617,12 @@
       },
       {
        "campo": "Tipo contable",
-       "significado": "A qué cuenta de contabilidad va el gasto al comprarlo (bloque «Contabilidad»).",
+       "significado": "A qué cuenta va el gasto al comprarlo. Está en el bloque «Contabilidad».",
        "ejemplo": "PRODUCTO (PROD)"
       },
       {
        "campo": "Clave fiscal / Naturaleza *",
-       "significado": "Qué IVA se aplica y tipo de bien. Se heredan de la familia.",
+       "significado": "Qué IVA se aplica y qué tipo de bien es. Se heredan de la familia.",
        "ejemplo": "BOG (bienes a tipo general, IVA 21 %) / Bien"
       },
       {
@@ -620,9 +633,9 @@
      ],
      "pasos": [
       {
-       "texto": "Abre el «Maestro de artículos» y busca el artículo 13500620 con «Filtros»",
+       "texto": "Abre el «Maestro de artículos» y busca el 13500620 con «Filtros»",
        "pregunta": "Estás en el Maestro de artículos y quieres encontrar el 13500620. ¿Qué pulsas para buscarlo?",
-       "detalle": "Es el rodamiento 6000-2RS ISB de la demo, el que usarás en la tarifa, la oferta, los albaranes y las facturas.",
+       "detalle": "Es el rodamiento 6000-2RS ISB de la demo. Lo usarás en la tarifa, la oferta, los albaranes y las facturas.",
        "imagen": "compras-v-10.webp",
        "hotspot": {
         "x": 42.6,
@@ -635,7 +648,7 @@
       {
        "texto": "Abre su ficha pulsando el número de la fila",
        "pregunta": "Has abierto la ficha. ¿Dónde compruebas que es el rodamiento 6000-2RS ISB que vas a comprar?",
-       "detalle": "Fíjate en el artículo, la descripción, la unidad base, el tipo y la familia.",
+       "detalle": "Fíjate en el código, la descripción, la unidad base, el tipo y la familia.",
        "imagen": "compras-v-11.webp",
        "hotspot": {
         "x": 16.3,
@@ -646,9 +659,9 @@
        }
       },
       {
-       "texto": "En el bloque «Contabilidad», fíjate en que «Tipo contable» es PRODUCTO (PROD). No lo cambies",
+       "texto": "En el bloque «Contabilidad», comprueba que «Tipo contable» es PRODUCTO (PROD). No lo cambies",
        "pregunta": "La factura de compra necesita saber a qué cuenta va el gasto. ¿Dónde compruebas el dato del artículo que decide la cuenta (su tipo contable)?",
-       "detalle": "Con PRODUCTO la factura de compra encuentra la cuenta de gasto. Si algún día compras un artículo con Tipo contable Ventas, aquí es donde se cambia a PROD.",
+       "detalle": "Con PRODUCTO, la factura de compra encuentra la cuenta de gasto. Si un día compras un artículo con Tipo contable Ventas, aquí es donde se cambia a PROD.",
        "imagen": "compras-v-11.webp",
        "hotspot": {
         "x": 16.3,
@@ -661,7 +674,7 @@
       {
        "texto": "Comprueba que «Clave fiscal» es BOG y «Naturaleza» es Bien",
        "pregunta": "El IVA del artículo lo decide un dato que propuso su familia. ¿Dónde compruebas que es el de bienes a tipo general?",
-       "detalle": "BOG significa bienes a tipo general: el IVA normal, del 21 %. Los propuso la familia al crear el artículo.",
+       "detalle": "BOG son los bienes a tipo general: el IVA normal, del 21 %. Los propuso la familia al crear el artículo.",
        "imagen": "compras-v-16.webp",
        "hotspot": {
         "x": 16.3,
@@ -674,7 +687,7 @@
       {
        "texto": "Comprueba que el «Estado» es Activo",
        "pregunta": "Un artículo solo se puede usar en documentos si está activo. ¿Dónde lo compruebas?",
-       "detalle": "Un artículo que no está activo no se puede usar en documentos. Si fuera un artículo tuyo en provisional, lo activarías con el botón «Validar» de arriba.",
+       "detalle": "Un artículo que no está activo no se puede usar en documentos. Si fuera tuyo y estuviera en provisional, lo activarías con el botón «Validar» de arriba.",
        "imagen": "compras-v-11.webp",
        "hotspot": {
         "x": 70.7,
@@ -696,15 +709,15 @@
       },
       {
        "tipo": "problema",
-       "texto": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida». El artículo tiene «Tipo contable» Ventas (o vacío), que no tiene cuenta de compras."
+       "texto": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida». El artículo tiene «Tipo contable» Ventas o vacío, que no tiene cuenta de compras."
       },
       {
        "tipo": "solucion",
-       "texto": "Revisa que el artículo de la línea es el 13500620: en su ficha, bloque «Contabilidad», «Tipo contable» debe ser PRODUCTO (PROD). No lo cambies, la demo es compartida. Si es el 13500620 y aun así sale el error, avisa al formador."
+       "texto": "Comprueba que la línea lleva el 13500620 y que su «Tipo contable» es PRODUCTO (PROD), en el bloque «Contabilidad». No lo cambies: la demo es compartida. Si aun así sale el error, avisa al formador."
       },
       {
        "tipo": "nota",
-       "texto": "Fíjate en la lista: casi todos los artículos de la demo tienen «Tipo contable» Ventas. El 13500620 tiene PRODUCTO; por eso es el que usas en todas las compras."
+       "texto": "Fíjate en la lista: casi todos los artículos de la demo tienen «Tipo contable» Ventas. El 13500620 tiene PRODUCTO: por eso lo usas en todas las compras."
       }
      ]
     }
@@ -719,7 +732,7 @@
       "0 GENERAL"
      ],
      "correcta": 1,
-     "explicacion": "La Categoría 002 Proveedores trae la serie y la cuenta contable por defecto."
+     "explicacion": "La Categoría 002 Proveedores trae por defecto la serie y la cuenta contable del proveedor."
     },
     {
      "pregunta": "¿Por qué el proveedor se guarda primero sin centrales de compras y de pagos?",
@@ -730,7 +743,7 @@
       "Porque la fecha de baja lo impide"
      ],
      "correcta": 1,
-     "explicacion": "Si se informa una central sin su proveedor salta un error de restricción; por eso se guarda y después se informan las dos parejas en la ficha."
+     "explicacion": "Una central sin su proveedor da un error de restricción. Por eso guardas primero y después informas las dos parejas en la ficha."
     },
     {
      "pregunta": "¿Qué hace falta en el tercero si el pago es por transferencia (TF) para poder contabilizar la factura?",
@@ -741,7 +754,7 @@
       "Marcar Retención"
      ],
      "correcta": 1,
-     "explicacion": "Con TF la factura exige la cuenta bancaria; si no, sale «DOMICILIACIÓN BANCARIA NO INFORMADA»."
+     "explicacion": "Con TF la factura exige la cuenta bancaria del tercero. Si falta, sale «DOMICILIACIÓN BANCARIA NO INFORMADA»."
     },
     {
      "pregunta": "¿Qué «Tipo contable» debe tener un artículo para que la factura de compra se contabilice?",
@@ -752,7 +765,7 @@
       "El de la familia, sin elegir nada"
      ],
      "correcta": 1,
-     "explicacion": "La cuenta de compras sale de Relaciones contables según el tipo contable del artículo. Con Ventas sale «tipcon [VEN] cuenta no definida»; con PROD sí hay cuenta de compras."
+     "explicacion": "La cuenta de compras sale de las relaciones contables según el tipo contable del artículo. Con Ventas sale «tipcon [VEN] cuenta no definida»; con PROD hay cuenta de compras."
     },
     {
      "pregunta": "En la ficha del artículo 13500620, ¿qué clave fiscal y qué naturaleza ves?",
@@ -763,7 +776,7 @@
       "EXE y Servicio"
      ],
      "correcta": 0,
-     "explicacion": "BOG significa bienes a tipo general (IVA del 21 %) y la naturaleza es Bien. Los propuso su familia cuando se dio de alta el artículo; tú solo los compruebas."
+     "explicacion": "BOG son los bienes a tipo general (IVA del 21 %) y la naturaleza es Bien. Los propuso la familia al dar de alta el artículo; tú solo los compruebas."
     },
     {
      "pregunta": "¿Por qué en las compras se usa el artículo 13500620 y no tu ROD{INI}?",
@@ -774,7 +787,7 @@
       "Porque no lleva IVA"
      ],
      "correcta": 1,
-     "explicacion": "Con tipo contable PROD la factura encuentra la cuenta de compras. ROD{INI} sirve para aprender la ficha en Maestros; no se compra."
+     "explicacion": "Con tipo contable PROD, la factura encuentra la cuenta de compras. ROD{INI} sirve para aprender la ficha en Maestros; no se compra."
     },
     {
      "pregunta": "¿Qué campos del proveedor hay que poner a 0 para que su factura pueda contabilizar?",
@@ -785,7 +798,7 @@
       "Fecha baja"
      ],
      "correcta": 1,
-     "explicacion": "Vienen vacíos; si se quedan vacíos, la factura no contabiliza. Se ponen a 0 en el bloque Datos financieros del proveedor."
+     "explicacion": "Vienen vacíos y, si se quedan así, la factura no contabiliza. Se ponen a 0 en el bloque Datos financieros del proveedor."
     }
    ],
    "checklist": [
@@ -812,15 +825,15 @@
     },
     {
      "problema": "Al guardar el tercero sale «Hay errores en los datos del formulario».",
-     "solucion": "Falta algún campo obligatorio (asterisco rojo), por ejemplo Tipo ID fiscal, Id. fiscal o Categoría."
+     "solucion": "Falta un campo obligatorio (asterisco rojo), por ejemplo Tipo ID fiscal, Id. fiscal o Categoría. Rellénalo y vuelve a guardar."
     },
     {
-     "problema": "La factura no contabilizará si el tercero no tiene la relación contable de la tipología.",
-     "solucion": "Añade en la pestaña Relaciones la relación que pide la tipología de factura (lo verás en el bloque «Registrar y contabilizar la factura»)."
+     "problema": "La factura no contabiliza porque el tercero no tiene la relación contable que pide la tipología.",
+     "solucion": "Añade en la pestaña Relaciones la relación que pide la tipología de factura. Lo verás en el bloque «Registrar y contabilizar la factura»."
     },
     {
      "problema": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida».",
-     "solucion": "Revisa que compras el 13500620 y que en su ficha (bloque «Contabilidad») el «Tipo contable» es PRODUCTO (PROD). No lo cambies. Si es así y el error sigue, avisa al formador."
+     "solucion": "Comprueba que compras el 13500620 y que su «Tipo contable» es PRODUCTO (PROD), en el bloque «Contabilidad». No lo cambies. Si es así y el error sigue, avisa al formador."
     },
     {
      "problema": "El desplegable de «Familia» del artículo no muestra opciones.",
@@ -828,13 +841,14 @@
     },
     {
      "problema": "Al guardar los datos bancarios sale «Las siguientes restricciones de verificación fallaron: Entidad y cuenta bancaria, ambos nulos o no nulos».",
-     "solucion": "Falta el Banco: escribe ES2100 en Banco y pulsa «CAIXABANK» (son las cifras 5 a 8 del IBAN de ejemplo)."
+     "solucion": "Falta el Banco: escribe ES2100 en Banco y pulsa «CAIXABANK». Son las cifras 5 a 8 del IBAN de ejemplo."
     }
    ],
    "aprendido": [
-    "Das de alta el tercero T{INI} con tu nombre, su relación contable de proveedor, la dirección 0 y las condiciones de cobro y pago a 30 días, y lo validas.",
-    "Creas la ficha de proveedor T{INI} de tipo GENERAL, con sus centrales de compras y pagos.",
-    "Revisas el artículo 13500620: tipo contable PRODUCTO (PROD), clave fiscal BOG y estado Activo.",
+    "Has dado de alta el tercero T{INI} con tu nombre, «No censado» e Id. fiscal 0.",
+    "Le has puesto las relaciones ACR y PRO, la dirección 0 y las condiciones de cobro y pago a 30 días. Después lo has validado.",
+    "Has creado la ficha de proveedor T{INI} de tipo GENERAL, con sus centrales de compras y pagos y los descuentos a 0.",
+    "Has comprobado que el artículo 13500620 tiene tipo contable PRODUCTO (PROD), clave fiscal BOG y estado Activo.",
     "Sabes que el proveedor se monta en capas: primero el tercero, común a todo el ERP, y después la ficha de compras."
    ]
   },
@@ -842,14 +856,14 @@
    "id": "compras-precios",
    "numero": 2,
    "titulo": "Preparar los precios de compra",
-   "objetivo": "Guardas el precio pactado con el proveedor en una lista de precios y se la asignas a través de un grupo. Así los documentos se valoran sin teclear precios.",
-   "concepto": "La tarifa es el precio que has pactado con el proveedor para cada artículo. En el ERP se monta en dos piezas: la lista de precios (los precios, línea a línea, con su vigencia) y el grupo de precios, que reúne una o varias listas en orden.\n\nEl proveedor no apunta a la lista, sino al grupo: así varios proveedores pueden compartir tarifas y cambiar de lista sin tocar su ficha. Creas la lista TF{INI} con una línea, la del artículo 13500620 a 12,50; después el grupo G{INI} con esa lista y, por último, asignas el grupo a tu proveedor T{INI}.\n\nCada línea de la lista tiene su propia fecha de inicio y de fin: si el precio cambia, añades otra línea con la nueva vigencia, sin crear otra tarifa.",
+   "objetivo": "Guardarás el precio pactado con tu proveedor en una tarifa y se la asignarás, para que los documentos se valoren solos.",
+   "concepto": "La tarifa es el precio que has pactado con el proveedor para cada artículo. Es como la carta de un restaurante: el precio está escrito y no lo negocias en cada pedido. Con ella, los pedidos y albaranes se valoran sin teclear precios.\n\nEn Axional la tarifa tiene dos piezas. La lista de precios guarda los precios línea a línea, cada uno con su vigencia, es decir, el periodo en que vale. El grupo de precios reúne una o varias listas en orden.\n\nEl proveedor no apunta a la lista, sino al grupo. Así varios proveedores pueden compartir tarifas y cambiar de lista sin tocar su ficha.\n\nEjemplo: creas la lista TF{INI} con una línea, el artículo 13500620 a 12,50 € la unidad. Después creas el grupo G{INI} con esa lista y se lo asignas a tu proveedor T{INI}. Si compras 10 unidades, el pedido se valora en 125,00 € sin IVA.\n\nFíjate: cada línea de la lista tiene su fecha de inicio y de fin. Si el precio cambia, añades otra línea con la nueva vigencia, sin crear otra tarifa.",
    "duracionMin": 15,
    "secciones": [
     {
      "id": "compras-1-lista",
      "titulo": "Lista de precios de compra (tarifa)",
-     "paraQueSirve": "Guarda el precio pactado con el proveedor por artículo y periodo. Sirve para valorar pedidos y albaranes sin teclear precios y controlar desviaciones en factura. Cada línea tiene su propia vigencia, así que puedes cambiar precios sin crear otra tarifa.",
+     "paraQueSirve": "Sirve para guardar el precio pactado por artículo y periodo. Con él se valoran pedidos y albaranes sin teclear precios y se detectan desviaciones en la factura.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -859,7 +873,8 @@
       "Listas de precios"
      ],
      "explicacion": [
-      "La fecha de fin de vigencia no está en la cabecera: va en cada línea de la lista."
+      "La lista tiene una cabecera (código, descripción, divisa) y líneas, una por artículo y precio.",
+      "Fíjate: la fecha de fin de vigencia no va en la cabecera, sino en cada línea. Así cambias precios sin crear otra tarifa."
      ],
      "campos": [
       {
@@ -894,17 +909,17 @@
       },
       {
        "campo": "Línea · Artículo *",
-       "significado": "Artículo al que aplica el precio.",
+       "significado": "Artículo al que se aplica el precio.",
        "ejemplo": "13500620 (6000-2RS ISB)"
       },
       {
        "campo": "Línea · VL",
-       "significado": "Variante logística: versión del artículo que se controla aparte (por ejemplo, una talla o un color). Los artículos sin variantes usan la 0.",
+       "significado": "Variante logística: versión del artículo que se controla aparte, como una talla o un color. Los artículos sin variantes usan la 0.",
        "ejemplo": "0"
       },
       {
        "campo": "Línea · Estado *",
-       "significado": "Solo las líneas activas se aplican.",
+       "significado": "Solo se aplican las líneas activas.",
        "ejemplo": "Activo"
       },
       {
@@ -914,19 +929,19 @@
       },
       {
        "campo": "Línea · Cantidad mínima *",
-       "significado": "Cantidad desde la que aplica el precio (escalados).",
+       "significado": "Cantidad desde la que se aplica el precio, para precios por tramos (escalados).",
        "ejemplo": "0"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre Listas de precios (se abre en modo ficha), pulsa «Nuevo › Nuevo», rellena Código TF{INI}, Descripción, Agrupación empresas ALL y Divisa EUR y pulsa «Guardar». Después, en la ficha TF{INI}, en «Líneas de lista de precios» pulsa «Nuevo»",
-       "detalle": "TF de tarifa + tus iniciales. Si al guardar no ves la ficha TF{INI}, muévete con las flechas < > de la barra superior. La captura muestra la ventana de la línea."
+       "texto": "Abre Listas de precios, pulsa «Nuevo › Nuevo» y rellena Código TF{INI}, Descripción, Agrupación empresas ALL y Divisa EUR. Pulsa «Guardar». En la ficha TF{INI}, en «Líneas de lista de precios», pulsa «Nuevo»",
+       "detalle": "La pantalla se abre en modo ficha. TF{INI} es TF de tarifa más tus iniciales. Si al guardar no ves la ficha TF{INI}, muévete con las flechas < > de la barra superior. La captura muestra la ventana de la línea."
       },
       {
        "texto": "Rellena Fecha inicio, Fecha fin 31-12-2099, Artículo 13500620, VL 0 y Precio 12,50. Pulsa «Guardar»",
        "pregunta": "La línea ya tiene las fechas de vigencia y el artículo 13500620. ¿Dónde escribes lo que te cobra el proveedor por unidad?",
-       "detalle": "VL es la variante logística: los artículos sin variantes, como este, usan la 0. Las fechas de vigencia van en cada línea, no en la cabecera. El artículo es el 13500620, el mismo que usarás en todas las compras. En la captura se ve una línea de tarifa ya existente (6000-2RS a 4,00); tú rellena la línea nueva con Precio 12,50.",
+       "detalle": "VL es la variante logística: este artículo no tiene variantes y usa la 0. En la captura hay una línea ya existente (6000-2RS a 4,00). Tú rellena la línea nueva con Precio 12,50.",
        "imagen": "compras-v-19.webp",
        "hotspot": {
         "x": 40.4,
@@ -938,7 +953,7 @@
       },
       {
        "texto": "Fíjate en el resultado",
-       "detalle": "Tu lista TF{INI} tendrá una línea: 6000-2RS ISB (13500620) a 12,50, vigente de 01-01-2026 a 31-12-2099. En la captura se ve la lista COM de la demo, con muchos artículos a otros precios.",
+       "detalle": "Tu lista TF{INI} tendrá una sola línea: 6000-2RS ISB (13500620) a 12,50, vigente de 01-01-2026 a 31-12-2099. La captura muestra la lista COM de la demo, con muchos artículos a otros precios.",
        "imagen": "compras-v-20.webp"
       }
      ],
@@ -952,7 +967,7 @@
     {
      "id": "compras-1-grupo",
      "titulo": "Grupo de precios de compra",
-     "paraQueSirve": "El proveedor apunta a un grupo de precios, no a una lista directa. El grupo ordena una o varias listas y el ERP toma el precio de la primera que encaja. Así varios proveedores comparten tarifas.",
+     "paraQueSirve": "Sirve para ordenar una o varias listas de precios. El proveedor apunta al grupo, y el ERP toma el precio de la primera lista que encaja. Así varios proveedores comparten tarifas.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -961,7 +976,10 @@
       "Precios",
       "Grupo de precios"
      ],
-     "explicacion": [],
+     "explicacion": [
+      "El grupo es como un archivador con las listas en orden: el ERP mira primero la de orden 1.",
+      "Tu grupo G{INI} tendrá una sola lista, TF{INI}, en orden 1."
+     ],
      "campos": [
       {
        "campo": "Grupo *",
@@ -975,7 +993,7 @@
       },
       {
        "campo": "Lista · Orden",
-       "significado": "Prioridad de la lista dentro del grupo (1 = la primera que se consulta).",
+       "significado": "Prioridad de la lista dentro del grupo: 1 es la primera que se consulta.",
        "ejemplo": "1"
       },
       {
@@ -997,17 +1015,17 @@
      "pasos": [
       {
        "texto": "Abre Grupo de precios, pulsa «Nuevo», rellena Grupo G{INI} y Nombre y pulsa «Guardar». En la ficha, en «Listas de grupos de precio», pulsa «Nuevo»",
-       "detalle": "G de grupo + tus iniciales. La captura muestra la línea del grupo ya rellena."
+       "detalle": "G{INI} es G de grupo más tus iniciales. La captura muestra la línea del grupo ya rellena."
       },
       {
        "texto": "Rellena Orden 1, Divisa EUR y Lista precio TF{INI}. Pulsa «Guardar»",
-       "detalle": "Grupo G{INI} con la lista TF{INI} en orden 1. En la captura se ve un grupo ya creado con su línea; tú rellena Orden 1, Divisa EUR y Lista precio TF{INI}.",
+       "detalle": "Así el grupo G{INI} lleva la lista TF{INI} en orden 1. La captura muestra un grupo ya creado con su línea; tú rellena Orden 1, Divisa EUR y Lista precio TF{INI}.",
        "imagen": "compras-v-21.webp"
       },
       {
-       "texto": "Vuelve al proveedor T{INI} (Gestión › Maestros › Terceros › Proveedores › Registro, número de su fila): en el bloque Datos financieros, pestaña Tarifas, elige Grupo precio G{INI} y guarda con el disquete",
+       "texto": "Vuelve a la ficha del proveedor T{INI}. En el bloque Datos financieros, pestaña Tarifas, elige Grupo precio G{INI} y guarda con el disquete",
        "pregunta": "Estás en la pestaña Tarifas del proveedor T{INI}. ¿Dónde le asignas el grupo que contiene tu lista de precios?",
-       "detalle": "El grupo G{INI} contiene la lista TF{INI}. En la captura se ve la misma pestaña Tarifas con el grupo 00001 de la demo.",
+       "detalle": "Ruta: Gestión › Maestros › Terceros › Proveedores › Registro, y pulsa el número de su fila. El grupo G{INI} contiene tu lista TF{INI}. La captura muestra la misma pestaña Tarifas con el grupo 00001 de la demo.",
        "imagen": "compras-v-8.webp",
        "hotspot": {
         "x": 59.2,
@@ -1021,7 +1039,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "En la base TUTORIAL la línea del pedido o del albarán no siempre toma el precio de la tarifa: si sale vacío, escribe 12,50 a mano, el precio de tu lista TF{INI}."
+       "texto": "En la base TUTORIAL, la línea del pedido o del albarán no siempre toma el precio de la tarifa. Si sale vacío, escribe 12,50 a mano: es el precio de tu lista TF{INI}."
       }
      ]
     }
@@ -1047,7 +1065,7 @@
       "A la relación contable"
      ],
      "correcta": 2,
-     "explicacion": "El proveedor se asigna a un grupo de precios (Datos financieros › Tarifas) y el grupo contiene la lista."
+     "explicacion": "El proveedor apunta a un grupo de precios (Datos financieros › Tarifas), y el grupo contiene la lista."
     },
     {
      "pregunta": "El proveedor te sube el precio a partir del mes que viene. ¿Qué haces en la lista de precios?",
@@ -1058,7 +1076,7 @@
       "Borras la lista y la vuelves a crear"
      ],
      "correcta": 1,
-     "explicacion": "Cada línea tiene su propia vigencia: la línea nueva empieza cuando acaba la anterior y no hace falta otra tarifa."
+     "explicacion": "Cada línea tiene su propia vigencia: la nueva empieza cuando acaba la anterior. No hace falta otra tarifa."
     },
     {
      "pregunta": "Un grupo de precios tiene dos listas. ¿De cuál toma el precio el ERP?",
@@ -1069,7 +1087,7 @@
       "De las dos, sumadas"
      ],
      "correcta": 2,
-     "explicacion": "El grupo ordena sus listas (campo Orden) y el ERP toma el precio de la primera que encaja."
+     "explicacion": "El grupo ordena sus listas con el campo Orden. El ERP toma el precio de la primera que encaja."
     }
    ],
    "checklist": [
@@ -1080,32 +1098,32 @@
    "problemas": [
     {
      "problema": "Al guardar la lista de precios no ves la ficha TF{INI}.",
-     "solucion": "Muévete con las flechas < > de la barra superior hasta tu lista, o búscala en la lista con «Filtros»."
+     "solucion": "Muévete con las flechas < > de la barra superior hasta tu lista. También puedes buscarla en la lista con «Filtros»."
     },
     {
      "problema": "En la pestaña Tarifas del proveedor no aparece el grupo G{INI}.",
-     "solucion": "Comprueba que guardaste el grupo de precios (Gestión › Compras › Maestros › Tarifas › Precios › Grupo de precios) y vuelve a abrir la ficha del proveedor."
+     "solucion": "Comprueba que guardaste el grupo de precios (Gestión › Compras › Maestros › Tarifas › Precios › Grupo de precios). Después vuelve a abrir la ficha del proveedor."
     }
    ],
    "aprendido": [
-    "Creas la lista de precios TF{INI} con la línea del artículo 13500620 a 12,50 y su vigencia.",
-    "Metes esa lista en el grupo de precios G{INI}, en orden 1.",
-    "Asignas el grupo G{INI} a tu proveedor T{INI} en «Datos financieros» › «Tarifas».",
-    "Sabes que el proveedor apunta a un grupo, no a una lista, y que un cambio de precio es una línea nueva con otra vigencia."
+    "Has creado la lista de precios TF{INI} con la línea del artículo 13500620 a 12,50 y su vigencia.",
+    "Has metido esa lista en el grupo de precios G{INI}, en orden 1.",
+    "Has asignado el grupo G{INI} a tu proveedor T{INI} en «Datos financieros» › «Tarifas».",
+    "Sabes que el proveedor apunta a un grupo, no a una lista, y que un cambio de precio es una línea nueva."
    ]
   },
   {
    "id": "compras-tipos",
    "numero": 3,
    "titulo": "Preparar la numeración y los tipos de documento",
-   "objetivo": "Preparas cómo se numera y cómo se comporta cada documento del ciclo: oferta, pedido, albarán y factura.",
-   "concepto": "Cada documento de compra tiene un tipo, la tipología: una plantilla que dice con qué serie se numera, de qué documento copia las líneas, si mueve stock y con qué asiento se contabiliza. Todos los documentos que crees con ese tipo heredan su comportamiento.\n\nPrimero miras el numerador, que da número a los documentos. Después creas las cuatro tipologías del ciclo, cada una enlazada con la anterior por su «Tabla origen»: la oferta OC{INI} (sin origen, es la primera), el pedido PC{INI} (copia de la oferta), el albarán AO{INI} (copia del pedido y mete la mercancía en el almacén) y la factura FC{INI} (copia de los albaranes).\n\n«Sumando» aparece en todas: cuando un documento copia del anterior, le descuenta lo copiado. Así el ERP sabe qué falta por pedir, por recibir o por facturar.",
+   "objetivo": "Prepararás cómo se numera y cómo se comporta cada documento del ciclo: oferta, pedido, albarán y factura.",
+   "concepto": "Cada documento de compra tiene un tipo: la tipología. Es como un molde: todos los documentos que haces con él salen con la misma forma y el mismo comportamiento.\n\nLa tipología dice con qué serie se numera el documento y de qué documento copia las líneas. También dice si mueve stock y con qué asiento se contabiliza.\n\nEl numerador es el contador que da número a los documentos, como el dispensador de turnos de una tienda. Cada tipología apunta a una serie del numerador, y el ERP pone el número al guardar.\n\nPrimero miras el numerador. Después creas las cuatro tipologías del ciclo, enlazadas por su «Tabla origen», es decir, el documento anterior del que copian.\n\nLa oferta OC{INI} no tiene origen: es la primera. El pedido PC{INI} copia de la oferta, y el albarán AO{INI} copia del pedido y mete la mercancía en el almacén. La factura FC{INI} copia de los albaranes.\n\nFíjate: «Sumando» aparece en todas. Cuando un documento copia del anterior, le descuenta lo copiado. Así el ERP sabe qué falta por pedir, por recibir o por facturar.\n\nEjemplo: con la máscara #e#s#6n, el primer albarán de la empresa 0 con la serie AC sale numerado 0AC000001. Es la empresa 0, la serie AC y un contador de 6 cifras.",
    "duracionMin": 30,
    "secciones": [
     {
      "id": "compras-tipos-numerador",
      "titulo": "Numeración de los documentos",
-     "paraQueSirve": "El numerador da número a cada documento de compra (0OC000001, 0PC000001, 0AC000001, 0FC000001…). Cada tipología apunta a una serie del numerador; tú no tecleas el número, lo pone el ERP al guardar.",
+     "paraQueSirve": "Sirve para que cada documento de compra tenga su número (0OC000001, 0PC000001, 0AC000001, 0FC000001…). Tú no lo tecleas: lo pone el ERP al guardar, según la serie de la tipología.",
      "ruta": [
       "Gestión",
       "Maestros",
@@ -1113,10 +1131,11 @@
       "Numerador de documentos"
      ],
      "explicacion": [
-      "La pantalla se titula «NUMERADORES DE DOCUMENTOS». Cada fila es una serie: OC (oferta de compra), PC (pedido de compra), AC (albarán de compra) y FC (factura de compra), entre otras de ventas y anticipos.",
-      "«Rotura» decide cuándo empieza un contador nuevo. En compras es #e#s: empresa + serie. Por eso hay un contador para la empresa 0 y otro para cada empresa, pero no uno por año.",
-      "«Numerador» es la máscara del número: #e#s#6n es empresa + serie + un contador de 6 cifras. El primer albarán de la empresa 0 sale como 0AC000001.",
-      "La numeración fiscal de las facturas (la que va a los libros de IVA) es otra cosa y está en Finanzas › Maestros › Auxiliares › Identificadores › Series de documentos."
+      "La pantalla se titula «NUMERADORES DE DOCUMENTOS». Cada fila es una serie, es decir, un contador propio.",
+      "En compras usas OC (oferta de compra), PC (pedido de compra), AC (albarán de compra) y FC (factura de compra). También hay series de ventas y anticipos.",
+      "«Rotura» decide cuándo empieza un contador nuevo. En compras es #e#s: empresa + serie. Hay un contador para cada empresa, pero no uno por año.",
+      "«Numerador» es la máscara del número: #e#s#6n es empresa + serie + un contador de 6 cifras.",
+      "Fíjate: la numeración fiscal de las facturas, la de los libros de IVA, es otra. Está en Finanzas › Maestros › Auxiliares › Identificadores › Series de documentos."
      ],
      "campos": [
       {
@@ -1141,7 +1160,7 @@
       },
       {
        "campo": "Control cronológico",
-       "significado": "Si obliga a que fecha y número vayan en orden. En compras está desmarcado.",
+       "significado": "Si obliga a que la fecha y el número vayan en orden. En compras está desmarcado.",
        "ejemplo": "Desmarcado"
       },
       {
@@ -1153,24 +1172,24 @@
      "pasos": [
       {
        "texto": "Abre «Numerador de documentos» y localiza las series OC, PC, AC y FC",
-       "detalle": "Menú Gestión › Maestros › Auxiliares › Numerador de documentos. El buscador superior no la encuentra escribiendo «serie»: entra por el menú."
+       "detalle": "Ruta: Gestión › Maestros › Auxiliares › Numerador de documentos. Entra por el menú: el buscador superior no la encuentra escribiendo «serie»."
       },
       {
        "texto": "Abre la serie AC y fíjate en «Rotura», «Numerador» y, abajo, el «Último número» de cada contador. No cambies nada",
-       "detalle": "La demo es compartida: los numeradores los usa todo el mundo. En la base TUTORIAL la «Rotura» es obligatoria y no editable, así que las tipologías usan las series que ya existen."
+       "detalle": "La demo es compartida y todo el mundo usa estos numeradores. En la base TUTORIAL la «Rotura» es obligatoria y no editable, así que tus tipologías usan las series que ya existen."
       }
      ],
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Si falta el numerador de un tipo de documento, el ERP no puede numerarlo y da un error del tipo «gsernumh_getserie: Sin máscara». Lo verás al intentar generar un acuerdo desde la oferta."
+       "texto": "Si falta el numerador de un tipo de documento, el ERP no puede numerarlo. Sale un error como «gsernumh_getserie: Sin máscara»: lo verás al intentar generar un acuerdo desde la oferta."
       }
      ]
     },
     {
      "id": "compras-3-tip-oferta",
      "titulo": "Tipología de oferta",
-     "paraQueSirve": "La oferta recoge el precio y las condiciones que propone el proveedor antes de comprar. Es el primer documento del circuito, así que su tipología no tiene documento origen. La oferta aceptada será el origen del pedido.",
+     "paraQueSirve": "La oferta recoge el precio y las condiciones que te propone el proveedor antes de comprar. Su tipología no tiene documento origen, porque la oferta es el primer documento. La oferta aceptada será el origen del pedido.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1179,7 +1198,8 @@
       "Ofertas"
      ],
      "explicacion": [
-      "La serie es el numerador OC. La tipología tiene los bloques Valoración, Documento destino, Impresión del documento y Datos generales."
+      "La serie es el numerador OC.",
+      "La tipología tiene los bloques Valoración, Documento destino, Impresión del documento y Datos generales."
      ],
      "campos": [
       {
@@ -1194,12 +1214,12 @@
       },
       {
        "campo": "Serie *",
-       "significado": "Numerador de las ofertas.",
+       "significado": "Numerador que da número a las ofertas.",
        "ejemplo": "OC (OFERTA DE COMPRA)"
       },
       {
        "campo": "Estado *",
-       "significado": "Activa o no.",
+       "significado": "Si la tipología está activa.",
        "ejemplo": "Activo"
       },
       {
@@ -1209,12 +1229,12 @@
       },
       {
        "campo": "Valorar",
-       "significado": "Calcula importes en las líneas.",
+       "significado": "Calcula los importes de las líneas.",
        "ejemplo": "Sí"
       },
       {
        "campo": "Impresión del documento",
-       "significado": "Si imprime al guardar (Sí / No / Preguntar).",
+       "significado": "Si imprime al guardar: Sí, No o Preguntar.",
        "ejemplo": "No"
       }
      ],
@@ -1222,7 +1242,7 @@
       {
        "texto": "Abre las tipologías de oferta, pulsa «Nuevo» y rellena Tipo oferta OC{INI}, Descripción, Serie OC y Estado Activo",
        "pregunta": "Ya has escrito el código y la descripción de la tipología de oferta. ¿Dónde eliges el numerador que dará número a las ofertas?",
-       "detalle": "Tipología OC{INI}: serie OC y documento origen vacío.",
+       "detalle": "OC{INI} es OC de oferta de compra más tus iniciales. Usa la serie OC; el documento origen queda vacío.",
        "imagen": "compras-d-44.webp",
        "hotspot": {
         "x": 58.6,
@@ -1233,7 +1253,8 @@
        }
       },
       {
-       "texto": "Deja vacío el Documento origen; en «Impresión del documento» marca No y pulsa «Guardar»"
+       "texto": "Deja vacío el Documento origen, marca No en «Impresión del documento» y pulsa «Guardar»",
+       "detalle": "Con Impresión No, el ERP no intenta imprimir la oferta cada vez que la guardas."
       }
      ],
      "avisos": []
@@ -1241,7 +1262,7 @@
     {
      "id": "compras-3-tip-pedido",
      "titulo": "Tipología de pedido",
-     "paraQueSirve": "El pedido es el compromiso de compra con el proveedor. Su tipología con origen «Oferta compras» copia las líneas de la oferta aceptada y descuenta lo pedido de la oferta (Sumando). Después el pedido será el origen del albarán.",
+     "paraQueSirve": "El pedido es el compromiso de compra con el proveedor. Su tipología, con origen «Oferta compras» y «Sumando», copia las líneas de la oferta aceptada y le descuenta lo pedido. Después, el pedido será el origen del albarán.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1250,7 +1271,8 @@
       "Pedidos"
      ],
      "explicacion": [
-      "La serie es el numerador PC. El Tipo está en la cabecera y hay una pestaña «Solicitud origen»."
+      "La serie es el numerador PC.",
+      "El Tipo está en la cabecera, y hay una pestaña «Solicitud origen»."
      ],
      "campos": [
       {
@@ -1265,7 +1287,7 @@
       },
       {
        "campo": "Serie *",
-       "significado": "Numerador de los pedidos.",
+       "significado": "Numerador que da número a los pedidos.",
        "ejemplo": "PC (PEDIDO DE COMPRA)"
       },
       {
@@ -1275,7 +1297,7 @@
       },
       {
        "campo": "Estado *",
-       "significado": "Activa o no.",
+       "significado": "Si la tipología está activa.",
        "ejemplo": "Activo"
       },
       {
@@ -1290,7 +1312,7 @@
       },
       {
        "campo": "Actualización tabla origen",
-       "significado": "Sumando: marca en la oferta lo ya pedido.",
+       "significado": "Sumando: marca en la oferta lo que ya se ha pedido.",
        "ejemplo": "Sumando"
       },
       {
@@ -1300,19 +1322,19 @@
       },
       {
        "campo": "Valorar",
-       "significado": "Calcula importes del pedido.",
+       "significado": "Calcula los importes del pedido.",
        "ejemplo": "Sí"
       }
      ],
      "pasos": [
       {
        "texto": "Abre las tipologías de pedido, pulsa «Nuevo» y rellena Tipo pedido PC{INI}, Descripción, Serie PC, Tipo Normal y Estado Activo",
-       "detalle": "Si quieres un modelo, abre una tipología que ya exista en la lista (por ejemplo PC «PEDIDO COMPRA») solo para mirar sus campos; no la cambies."
+       "detalle": "Si quieres un modelo, abre una tipología que ya exista (por ejemplo PC «PEDIDO COMPRA») solo para mirar sus campos. No la cambies."
       },
       {
        "texto": "En Documento origen elige Tabla origen «Oferta compras» y Copiar línea origen «Sí»",
        "pregunta": "Quieres que el pedido nazca de la oferta. ¿Dónde indicas que copia las líneas de la oferta (en la lista, «Oferta compras»)?",
-       "detalle": "Tipología PC{INI}: serie PC, tipo Normal y la lista de tablas origen (se elige Oferta compras). En la captura la Tabla origen está vacía; tú elige «Oferta compras» y Copiar línea origen Sí.",
+       "detalle": "En la captura la Tabla origen está vacía. Tú elige «Oferta compras» en la lista y marca Copiar línea origen Sí.",
        "imagen": "compras-v-45.webp",
        "hotspot": {
         "x": 19.3,
@@ -1325,7 +1347,7 @@
       {
        "texto": "Pulsa la tarjeta «Sumando» de Actualización tabla origen",
        "pregunta": "El pedido ya copia las líneas de la oferta. ¿Dónde marcas la tarjeta «Sumando», para que descuente de la oferta lo ya pedido?",
-       "detalle": "Actualización Sumando y Relación proveedor ACR obligatoria.",
+       "detalle": "Con Sumando, lo que pides se descuenta de la oferta. La Relación proveedor ACR es obligatoria: la pones en el paso siguiente.",
        "imagen": "compras-d-46.webp",
        "hotspot": {
         "x": 18.1,
@@ -1336,7 +1358,8 @@
        }
       },
       {
-       "texto": "En el bloque Impuestos elige Relación proveedor ACR, pon Impresión No y pulsa «Guardar»"
+       "texto": "En el bloque Impuestos elige Relación proveedor ACR, pon Impresión No y pulsa «Guardar»",
+       "detalle": "Si falta la Relación proveedor, al guardar sale «Hay errores en los datos del formulario»."
       }
      ],
      "avisos": []
@@ -1344,7 +1367,7 @@
     {
      "id": "compras-3-tip-albaran-origen",
      "titulo": "Tipología de albarán",
-     "paraQueSirve": "La tipología de albarán decide con qué serie se numera el albarán, qué movimiento de stock hace (entrada en almacén) y de qué documento copia las líneas. La tuya tiene tabla origen Pedidos: al recibir la mercancía se elige el pedido y el albarán copia sus líneas pendientes, descontándolas del pedido (Sumando). Así se controla lo que falta por recibir.",
+     "paraQueSirve": "Decide con qué serie se numera el albarán y de qué documento copia las líneas. También qué movimiento de stock hace: entrada en almacén. Tu tipología copia las líneas pendientes del pedido y se las descuenta: así controlas lo que falta por recibir.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1353,10 +1376,10 @@
       "Albaranes"
      ],
      "explicacion": [
-      "La serie es el numerador AC: el contador que da número a cada albarán (0AC000001, 0AC000002…). El campo «Relación proveedor» es obligatorio; si falta, sale «Hay errores en los datos del formulario».",
-      "El código de la tipología (Tipo movimiento) admite como máximo 4 caracteres: AO{INI} solo cabe con iniciales de 2 letras; si las tuyas son más largas, usa AO más las 2 primeras.",
-      "La pestaña Contabilización de la tipología (Asiento albaranes…) se deja vacía: este albarán no genera asiento propio y el asiento lo hará la factura. Por eso, al validarlo, no aparece el botón «Contabilizar».",
-      "Un albarán sin origen (sin pedido detrás) usa una tipología igual pero con «Tabla origen» vacía. En la demo, como tu pedido no tiene líneas, acabarás haciendo el albarán a mano con esta tipología: en la práctica, como uno sin origen."
+      "La serie es el numerador AC, el contador que da número a cada albarán (0AC000001, 0AC000002…).",
+      "Ojo: el código de la tipología (Tipo movimiento) admite como máximo 4 caracteres. AO{INI} solo cabe con iniciales de 2 letras; si no, usa AO más tus 2 primeras.",
+      "La pestaña Contabilización (Asiento albaranes…) se deja vacía: este albarán no genera asiento propio, lo hará la factura. Por eso, al validarlo, no aparece el botón «Contabilizar».",
+      "Fíjate: un albarán sin origen, sin pedido detrás, usa una tipología igual pero con «Tabla origen» vacía. En la demo tu pedido no tiene líneas, así que harás el albarán a mano con esta tipología, como uno sin origen."
      ],
      "campos": [
       {
@@ -1366,22 +1389,22 @@
       },
       {
        "campo": "Descripción *",
-       "significado": "Nombre que se ve al elegir el tipo de documento.",
+       "significado": "Nombre que ves al elegir el tipo de documento.",
        "ejemplo": "Albarán con origen {INI}"
       },
       {
        "campo": "Serie *",
-       "significado": "Numerador de los albaranes.",
+       "significado": "Numerador que da número a los albaranes.",
        "ejemplo": "AC (ALBARÁN DE COMPRA)"
       },
       {
        "campo": "Suministro albarán *",
-       "significado": "Si el documento es un suministro (albarán).",
+       "significado": "Indica si el documento es un suministro, es decir, un albarán.",
        "ejemplo": "Suministro (defecto)"
       },
       {
        "campo": "Tipo movimiento *",
-       "significado": "Efecto en stock: Entrada suma unidades al almacén.",
+       "significado": "Efecto en el stock: Entrada suma unidades al almacén.",
        "ejemplo": "Entrada"
       },
       {
@@ -1391,22 +1414,22 @@
       },
       {
        "campo": "Estado *",
-       "significado": "Solo las tipologías activas se pueden usar.",
+       "significado": "Solo se pueden usar las tipologías activas.",
        "ejemplo": "Activo"
       },
       {
        "campo": "Tabla origen",
-       "significado": "Documento del que copia las líneas. Pedidos: el albarán nace del pedido.",
+       "significado": "Documento del que copia las líneas. Con Pedidos, el albarán nace del pedido.",
        "ejemplo": "Pedidos"
       },
       {
        "campo": "Relación proveedor *",
-       "significado": "Relación contable del proveedor. Debe ser una relación que tenga el tercero.",
+       "significado": "Relación contable del proveedor. Tiene que ser una relación que tenga el tercero.",
        "ejemplo": "ACR Acreedores"
       },
       {
        "campo": "Valorar / Valoración inventario *",
-       "significado": "Cómo se pone precio a las líneas y cómo valora el stock.",
+       "significado": "Cómo se pone precio a las líneas y cómo se valora el stock.",
        "ejemplo": "Tarifa / Normal"
       },
       {
@@ -1424,7 +1447,7 @@
       {
        "texto": "Abre Albaranes (tipologías), pulsa «Nuevo» y rellena código AO{INI}, Descripción y Serie AC",
        "pregunta": "Ya tienes el código AO{INI} y la descripción. ¿Dónde eliges el numerador de los albaranes?",
-       "detalle": "AO de albarán con origen + tus iniciales (máximo 4 caracteres). En Serie escribe AC y pulsa «AC ALBARÁN DE COMPRA». En la captura se ve la tipología ACPC de la demo, que también copia del pedido.",
+       "detalle": "AO{INI} es AO de albarán con origen más tus iniciales, con 4 caracteres como máximo. En Serie escribe AC y pulsa «AC ALBARÁN DE COMPRA». La captura muestra la tipología ACPC de la demo, que también copia del pedido.",
        "imagen": "compras-v-23.webp",
        "hotspot": {
         "x": 56.1,
@@ -1436,7 +1459,7 @@
       },
       {
        "texto": "Elige Tipo movimiento Entrada, Cuenta origen NSAL y Cuenta destino DISP",
-       "detalle": "NSAL (no saldo) es la mercancía que aún no está en el almacén; DISP (disponible) es el stock que se puede usar. La entrada la pasa de una a otra."
+       "detalle": "NSAL (no saldo) es la mercancía que aún no está en el almacén. DISP (disponible) es el stock que se puede usar. La entrada pasa la mercancía de una a otra."
       },
       {
        "texto": "En Documento origen elige Tabla origen Pedidos, Copiar líneas Sí y Actualizar origen Sumando",
@@ -1454,7 +1477,7 @@
       {
        "texto": "Baja al bloque Valoración, en Relación proveedor escribe ACR y pulsa «ACR Acreedores». Pulsa «Guardar»",
        "pregunta": "El resto del bloque Valoración ya viene puesto. ¿Dónde eliges la relación contable del proveedor, obligatoria para poder guardar?",
-       "detalle": "Campo obligatorio de la tipología. El resto del bloque (Valorar Tarifa, Valoración inventario Normal, Abono No) ya viene puesto.",
+       "detalle": "Es un campo obligatorio. El resto del bloque ya viene puesto: Valorar Tarifa, Valoración inventario Normal y Abono No.",
        "imagen": "compras-n-12.webp",
        "hotspot": {
         "x": 57.9,
@@ -1468,14 +1491,14 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Si falta la Relación proveedor, sale «Hay errores en los datos del formulario»."
+       "texto": "Si falta la Relación proveedor, al guardar sale «Hay errores en los datos del formulario»."
       }
      ]
     },
     {
      "id": "compras-2-tip-factura",
      "titulo": "Tipología de factura",
-     "paraQueSirve": "La tipología de factura decide con qué serie se numeran las facturas, de qué documento toman las líneas (los albaranes) y con qué tipo de asiento contabilizan. El enlace Suministros + Sumando es lo que permite conformar albaranes y marcarlos como facturados.",
+     "paraQueSirve": "Decide con qué serie se numeran las facturas, de dónde toman las líneas (los albaranes) y con qué asiento se contabilizan. El enlace Suministros + Sumando permite conformar los albaranes, es decir, pasarlos a la factura y marcarlos como facturados.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1484,9 +1507,10 @@
       "Tipos de facturas"
      ],
      "explicacion": [
-      "Las series son «Numeradores de documentos». El botón «+» del campo Serie abre un alta rápida, pero en la base TUTORIAL la «Rotura» es obligatoria y no editable: se usa la serie existente FC.",
-      "El código (Tipo factura) admite como máximo 4 caracteres: con iniciales de 3 o 4 letras usa FC más las 2 primeras.",
-      "Las opciones de Conformar solo aparecen en la factura si su tipología tiene Tabla origen Suministros, como la tuya. La tipología FC de la demo no tiene tabla origen y no las ofrece."
+      "Las series están en «Numeradores de documentos». El botón «+» del campo Serie abre un alta rápida de serie.",
+      "En la base TUTORIAL ese alta no se puede completar: la «Rotura» es obligatoria y no editable. Usa la serie FC que ya existe.",
+      "Ojo: el código (Tipo factura) admite como máximo 4 caracteres. Con iniciales de 3 o 4 letras, usa FC más las 2 primeras.",
+      "Fíjate: las opciones de Conformar solo salen en la factura si su tipología tiene Tabla origen Suministros, como la tuya. La tipología FC de la demo no tiene tabla origen y no las ofrece."
      ],
      "campos": [
       {
@@ -1501,27 +1525,27 @@
       },
       {
        "campo": "Serie *",
-       "significado": "Numerador de las facturas. En la base TUTORIAL se usa uno existente.",
+       "significado": "Numerador que da número a las facturas. En la base TUTORIAL se usa uno existente.",
        "ejemplo": "FC (FACTURA DE COMPRA)"
       },
       {
        "campo": "Estado *",
-       "significado": "Activa o no.",
+       "significado": "Si la tipología está activa.",
        "ejemplo": "Activo"
       },
       {
        "campo": "Tabla origen",
-       "significado": "Documento del que se copian las líneas. Suministros = albaranes. Si se deja vacío, la factura no se enlaza con el albarán.",
+       "significado": "Documento del que se copian las líneas: Suministros son los albaranes. Si se deja vacío, la factura no se enlaza con el albarán.",
        "ejemplo": "Suministros"
       },
       {
        "campo": "Copiar líneas",
-       "significado": "Sí: copia las líneas del albarán a la factura al conformar.",
+       "significado": "Sí: al conformar, copia las líneas del albarán a la factura.",
        "ejemplo": "Sí"
       },
       {
        "campo": "Actualización tabla origen",
-       "significado": "Sumando: marca en el albarán las cantidades ya facturadas, para no facturarlas dos veces.",
+       "significado": "Sumando: marca en el albarán lo ya facturado, para no facturarlo dos veces.",
        "ejemplo": "Sumando"
       },
       {
@@ -1539,7 +1563,7 @@
       {
        "texto": "Abre Tipos de facturas, pulsa «Nuevo» y rellena Tipo factura FC{INI}, Descripción y Serie FC",
        "pregunta": "Ya tienes el código FC{INI} y la descripción. ¿Dónde eliges el numerador de las facturas?",
-       "detalle": "Si pulsas «+» en Serie se abre un alta rápida de numerador, pero Rotura sale bloqueada y obligatoria: no se puede crear aquí, usa la serie FC existente.",
+       "detalle": "Si pulsas «+» en Serie se abre un alta rápida de numerador, pero Rotura sale bloqueada y obligatoria. No se puede crear aquí: usa la serie FC existente.",
        "imagen": "compras-v-25.webp",
        "hotspot": {
         "x": 63.3,
@@ -1552,7 +1576,7 @@
       {
        "texto": "En Documento origen elige Tabla origen Suministros y Copiar líneas Sí",
        "pregunta": "¿Dónde indicas que la factura copia de los albaranes (en el ERP se llaman «Suministros»)?",
-       "detalle": "Tabla origen: elige «Suministros» en la lista. Copiar líneas: marca el botón redondo «Sí».",
+       "detalle": "En Tabla origen elige «Suministros» en la lista. En Copiar líneas marca el botón redondo «Sí».",
        "imagen": "compras-n-13.webp",
        "hotspot": {
         "x": 10.9,
@@ -1589,7 +1613,7 @@
        }
       },
       {
-       "texto": "Más abajo, en el bloque Impuestos, pon Relación proveedor ACR; en «Impresión del documento» pulsa la tarjeta No y pulsa «Guardar»",
+       "texto": "Más abajo, en el bloque Impuestos, pon Relación proveedor ACR. En «Impresión del documento» pulsa la tarjeta No y pulsa «Guardar»",
        "pregunta": "Estás en el bloque Impuestos de la tipología. ¿Dónde eliges la relación contable del proveedor?",
        "detalle": "Con Impresión No el ERP no intenta imprimir la factura cada vez que la guardas.",
        "imagen": "compras-n-15.webp",
@@ -1603,7 +1627,7 @@
       },
       {
        "texto": "Fíjate en el resultado en la lista de tipos de facturas",
-       "detalle": "FC{INI} con serie FC, origen Suministros, Sumando y copiar líneas Sí. En la captura, compárala con FCCL y FCOA (también con origen Suministros) y con FC (sin origen).",
+       "detalle": "Ves FC{INI} con serie FC, origen Suministros, Sumando y Copiar líneas Sí. Compárala en la captura con FCCL y FCOA, que también tienen origen Suministros, y con FC, que no tiene origen.",
        "imagen": "compras-v-27.webp"
       }
      ],
@@ -1631,7 +1655,7 @@
       "Contabiliza la factura"
      ],
      "correcta": 1,
-     "explicacion": "Sumando actualiza la tabla origen (los albaranes) marcando lo ya facturado."
+     "explicacion": "Sumando actualiza la tabla origen, es decir, los albaranes: marca lo ya facturado."
     },
     {
      "pregunta": "¿Qué «Tabla origen» tiene tu tipología de albarán AO{INI}?",
@@ -1642,7 +1666,7 @@
       "Suministros"
      ],
      "correcta": 1,
-     "explicacion": "El albarán copia las líneas pendientes del pedido; la factura es la que tiene Suministros (los albaranes)."
+     "explicacion": "El albarán copia las líneas pendientes del pedido. La que tiene Suministros (los albaranes) es la factura."
     },
     {
      "pregunta": "Con el numerador #e#s#6n, ¿qué número tendrá el primer albarán de serie AC de la empresa 0?",
@@ -1664,7 +1688,7 @@
       "Porque la serie la pone el proveedor"
      ],
      "correcta": 1,
-     "explicacion": "El «+» del campo Serie abre un alta rápida de numerador, pero en la TUTORIAL no se puede completar: se usa la serie FC."
+     "explicacion": "El «+» del campo Serie abre un alta rápida de numerador, pero en la TUTORIAL no se puede completar. Por eso se usa la serie FC."
     }
    ],
    "checklist": [
@@ -1677,7 +1701,7 @@
    "problemas": [
     {
      "problema": "Al crear la tipología de factura no se puede crear una serie nueva desde el «+» del campo Serie.",
-     "solucion": "En la base TUTORIAL la «Rotura» es obligatoria y no editable: usa la serie existente FC."
+     "solucion": "En la base TUTORIAL la «Rotura» es obligatoria y no editable. Usa la serie existente FC."
     },
     {
      "problema": "Al escribir el código de la tipología (OC{INI}, PC{INI}, AO{INI}, FC{INI}) sale «Demasiado largo».",
@@ -1689,9 +1713,9 @@
     }
    ],
    "aprendido": [
-    "Localizas las series OC, PC, AC y FC en el numerador y lees su rotura y su máscara (#e#s#6n).",
-    "Creas las tipologías OC{INI}, PC{INI}, AO{INI} y FC{INI}, cada una con su serie.",
-    "Las enlazas con «Tabla origen»: el pedido copia de la oferta, el albarán del pedido y la factura de los albaranes.",
+    "Has localizado las series OC, PC, AC y FC en el numerador y has leído su rotura y su máscara (#e#s#6n).",
+    "Has creado las tipologías OC{INI}, PC{INI}, AO{INI} y FC{INI}, cada una con su serie.",
+    "Las has enlazado con «Tabla origen»: el pedido copia de la oferta, el albarán del pedido y la factura de los albaranes.",
     "Sabes qué decide una tipología: cómo se numera, de dónde copia las líneas, si mueve stock y con qué asiento se contabiliza."
    ]
   },
@@ -1699,14 +1723,14 @@
    "id": "compras-3",
    "numero": 4,
    "titulo": "Pedir: de la oferta al pedido",
-   "objetivo": "Registras la oferta del proveedor y la conviertes en pedido. Es el principio del ciclo de compra: lo que acuerdas antes de que llegue la mercancía.",
-   "concepto": "El ciclo de compra empieza antes de que llegue nada: pides precio al proveedor (oferta) y, si te convence, le haces el pedido. Usas las tipologías OC{INI} y PC{INI} del bloque anterior, el proveedor T{INI} y el artículo 13500620 a 12,50, el precio de tu tarifa.\n\nLa oferta recoge cantidades, precio y vigencia. Al validarla, su línea queda Adjudicada. El pedido es el compromiso de compra: en una base bien configurada nace de la oferta (Oferta › Generar acuerdo › Generación de pedidos desde acuerdos) y copia sus líneas.\n\nEn la base TUTORIAL hay dos limitaciones: falta el numerador de los acuerdos y el pedido no tiene formulario propio. Por eso aquí intentas el camino estándar para verlo y después creas el pedido a mano, con tu oferta como origen.\n\nLos números de documento de los ejemplos (0OC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
+   "objetivo": "Registrarás la oferta de tu proveedor y la convertirás en pedido, el primer paso del ciclo de compra.",
+   "concepto": "El ciclo de compra empieza antes de que llegue nada: pides precio al proveedor (la oferta) y, si te convence, le haces el pedido. Es como pedir presupuesto al fontanero y después encargarle el trabajo.\n\nLa oferta recoge cantidades, precio y vigencia, es decir, hasta cuándo vale. Al validarla, su línea queda Adjudicada: aceptada. El pedido es el compromiso de compra. En una base bien configurada, copia las líneas de la oferta.\n\nEl camino estándar para que el pedido nazca de la oferta es: Oferta › Generar acuerdo › Generación de pedidos desde acuerdos. Usas las tipologías OC{INI} y PC{INI} del bloque anterior, tu proveedor T{INI} y el artículo 13500620.\n\nOjo: en la base TUTORIAL falta el numerador de los acuerdos y el pedido no tiene formulario propio. Por eso primero creas el pedido a mano, con tu oferta como origen. Después pruebas el camino estándar, solo para verlo.\n\nEjemplo: la oferta es de 10 unidades a 12,50, el precio de tu tarifa. La línea suma 10 × 12,50 = 125,00 sin IVA. Cada unidad con IVA cuesta 12,50 + 21 % = 15,125.\n\nFíjate: los números de documento de los ejemplos (0OC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
    "duracionMin": 25,
    "secciones": [
     {
      "id": "compras-3-oferta",
      "titulo": "Oferta de compras",
-     "paraQueSirve": "Registras la oferta del proveedor con su precio y su periodo de vigencia. Al validarla queda aceptada y lista para generar el pedido (o un acuerdo de compra). Cada línea tiene su propio estado (por ejemplo, Adjudicada).",
+     "paraQueSirve": "Aquí registras la oferta del proveedor con su precio y su vigencia. Al validarla queda aceptada y lista para generar el pedido o un acuerdo de compra.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1714,6 +1738,7 @@
       "Ofertas"
      ],
      "explicacion": [
+      "Cada línea de la oferta tiene su propio estado; por ejemplo, Adjudicada cuando la aceptas.",
       "Los bloques de la línea incluyen Cantidades procesadas y Concurso."
      ],
      "campos": [
@@ -1724,7 +1749,7 @@
       },
       {
        "campo": "Empresa / Delegación / Departamento *",
-       "significado": "Unidad de negocio.",
+       "significado": "Unidad de negocio: qué parte de tu empresa hace el documento.",
        "ejemplo": "0 / CENTRAL / COMPRAS (defecto)"
       },
       {
@@ -1739,17 +1764,17 @@
       },
       {
        "campo": "Pedir a · Proveedor / Dirección *",
-       "significado": "Proveedor que oferta.",
+       "significado": "Proveedor que hace la oferta y su dirección.",
        "ejemplo": "T{INI} (el del bloque 1) / 0"
       },
       {
        "campo": "Recepcionar en · Tercero *",
-       "significado": "Dónde se recibirá la mercancía (nuestra empresa).",
+       "significado": "Dónde se recibirá la mercancía: tu empresa.",
        "ejemplo": "0 DEISTER SOFTWARE"
       },
       {
        "campo": "Línea · Artículo / VLP *",
-       "significado": "Artículo ofertado.",
+       "significado": "Artículo ofertado y su variante (0 si no tiene).",
        "ejemplo": "13500620 / 0"
       },
       {
@@ -1764,15 +1789,15 @@
       },
       {
        "campo": "Línea · Precio con IVA / Importe dto. *",
-       "significado": "Como en el albarán, hay que informarlos.",
+       "significado": "Precio unitario con IVA e importe de descuento. Son obligatorios: hay que informarlos.",
        "ejemplo": "15,125 / 0"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre Ofertas, pulsa «Nuevo» y elige Tipo documento OC{INI} (comprueba la unidad de negocio y las fechas). En «Pedir a» elige Proveedor T{INI} y Dirección 0. Pulsa «Guardar»",
+       "texto": "Abre Ofertas, pulsa «Nuevo» y elige Tipo documento OC{INI}. En «Pedir a» elige Proveedor T{INI} y Dirección 0. Pulsa «Guardar»",
        "pregunta": "Ya tienes el tipo de documento OC{INI} y las fechas de la oferta. ¿Dónde eliges a quién le pides la oferta?",
-       "detalle": "Al guardar, el ERP le da número (en el ejemplo, 0OC000001). La cabecera tiene tres fechas: oferta, inicio y fin de vigencia.",
+       "detalle": "Antes de guardar, comprueba la unidad de negocio y las tres fechas: oferta, inicio y fin de vigencia. Al guardar, el ERP le da número (en el ejemplo, 0OC000001).",
        "imagen": "compras-d-47.webp",
        "hotspot": {
         "x": 0.8,
@@ -1785,7 +1810,7 @@
       {
        "texto": "En la pestaña «Líneas» pulsa «Nuevo» y rellena Artículo 13500620, Cantidad ofertada 10, Precio 12,50, Precio con IVA 15,125 e Importe dto. 0. Pulsa «Guardar»",
        "pregunta": "La línea ya tiene el artículo, 10 unidades y el precio 12,50. ¿Dónde escribes el precio unitario con el 21 % de IVA incluido?",
-       "detalle": "Línea de la oferta: 10 unidades a 12,50 = 125,00, el precio de tu tarifa. Precio con IVA: 12,50 + 21 % = 15,125. En la captura se ve otra línea (5 × 12,00); tú pon 10 a 12,50.",
+       "detalle": "10 unidades a 12,50 son 125,00, al precio de tu tarifa. El precio con IVA es 12,50 + 21 % = 15,125. En la captura se ve otra línea (5 × 12,00); tú pon 10 a 12,50.",
        "imagen": "compras-d-48.webp",
        "hotspot": {
         "x": 12.2,
@@ -1797,7 +1822,7 @@
       },
       {
        "texto": "Pulsa «Validar»",
-       "detalle": "Con la oferta validada aparecen «Cerrar» y «Pasar a provisional»; la línea queda Adjudicada.",
+       "detalle": "Aparecen los botones «Cerrar» y «Pasar a provisional», y la línea queda Adjudicada.",
        "imagen": "compras-d-49.webp"
       }
      ],
@@ -1806,7 +1831,7 @@
     {
      "id": "compras-3-pedido",
      "titulo": "Pedido de compras",
-     "paraQueSirve": "El pedido formaliza la compra al proveedor a partir de la oferta. Con la tipología PC{INI} y Origen = la oferta, copia sus líneas. El camino estándar es Oferta › Generar acuerdo › Generación de pedidos desde acuerdos.",
+     "paraQueSirve": "El pedido formaliza la compra al proveedor a partir de la oferta. En una base bien configurada, con tu oferta en Origen, copia sus líneas. El camino estándar es Oferta › Generar acuerdo › Generación de pedidos desde acuerdos.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -1814,8 +1839,10 @@
       "Pedidos"
      ],
      "explicacion": [
-      "Un acuerdo de compra recoge lo pactado con el proveedor en la oferta (artículos, precios y vigencia); de él salen después los pedidos. «Generar acuerdo» crea ese acuerdo a partir de la oferta adjudicada.",
-      "En la base TUTORIAL el pedido no tiene formulario diseñado, por lo que sale el formulario genérico (una pantalla automática que el ERP monta cuando el documento no tiene una diseñada) con todos los campos de la tabla y sin valores por defecto; no aplica el numerador (el campo Pedido viene vacío) ni copia líneas, y la tabla de líneas no tiene botón Nuevo. Por eso en este bloque se escribe a mano un número que no exista, por ejemplo 0PC{INI}01 (con tus iniciales, para no chocar con otros alumnos) al pedido genérico."
+      "Un acuerdo de compra recoge lo pactado en la oferta: artículos, precios y vigencia. De él salen después los pedidos. «Generar acuerdo» lo crea a partir de la oferta adjudicada.",
+      "En la base TUTORIAL el pedido no tiene formulario diseñado. Sale el formulario genérico: una pantalla automática con todos los campos de la tabla y sin valores por defecto.",
+      "Como el campo Pedido viene vacío, escribes a mano un número que no exista, por ejemplo 0PC{INI}01. Con tus iniciales no chocas con otros alumnos.",
+      "Fíjate: en la TUTORIAL tu pedido se queda sin líneas, y es normal. La línea la metes a mano en el albarán, en el bloque siguiente."
      ],
      "campos": [
       {
@@ -1835,27 +1862,27 @@
       },
       {
        "campo": "Pedido *",
-       "significado": "Número del pedido. En el formulario genérico es obligatorio y viene vacío: se escribe a mano.",
+       "significado": "Número del pedido. En el formulario genérico es obligatorio y viene vacío: lo escribes a mano.",
        "ejemplo": "0PC{INI}01 (a mano, un número que no exista)"
       },
       {
        "campo": "Proveedor / Dirección *",
-       "significado": "Proveedor al que se pide.",
+       "significado": "Proveedor al que pides y su dirección.",
        "ejemplo": "T{INI} (el del bloque 1) / 0"
       },
       {
        "campo": "Divisa / Cambio *",
-       "significado": "Moneda.",
+       "significado": "Moneda y tipo de cambio.",
        "ejemplo": "EUR / 1"
       },
       {
        "campo": "Tipo efecto / Forma pago",
-       "significado": "Condiciones de pago.",
+       "significado": "Condiciones de pago: medio y plazo.",
        "ejemplo": "TF / 30D"
       },
       {
        "campo": "Receptor / Facturador",
-       "significado": "Quién recibe (nuestra empresa) y quién factura.",
+       "significado": "Quién recibe (tu empresa) y quién factura.",
        "ejemplo": "0 / T{INI} (el del bloque 1)"
       },
       {
@@ -1865,7 +1892,7 @@
       },
       {
        "campo": "Almacén",
-       "significado": "Almacén donde se recibirá.",
+       "significado": "Almacén donde se recibirá la mercancía.",
        "ejemplo": "CENTRAL"
       }
      ],
@@ -1873,7 +1900,7 @@
       {
        "texto": "Abre Pedidos, pulsa «Nuevo» y rellena a mano los campos con asterisco rojo: Tipo documento PC{INI}, Empresa 0, Delegación CENTRAL, Departamento COMPRAS, Fecha pedido, Proveedor T{INI} y Dirección 0, Divisa EUR y Cambio 1, Tipo efecto TF y Forma pago 30D, Receptor 0 y Facturador T{INI}",
        "pregunta": "Has abierto el formulario genérico del pedido, sin valores por defecto. ¿Dónde empiezas eligiendo tu tipología PC{INI}?",
-       "detalle": "Formulario genérico del pedido: todos los campos de la tabla, sin valores por defecto. Si al guardar sale «Hay errores en los datos del formulario», busca el campo con asterisco rojo que sigue vacío.",
+       "detalle": "Es el formulario genérico: todos los campos, sin valores por defecto. Si al guardar sale «Hay errores en los datos del formulario», busca el campo con asterisco rojo que sigue vacío.",
        "imagen": "compras-v-50.webp",
        "hotspot": {
         "x": 39.1,
@@ -1884,12 +1911,13 @@
        }
       },
       {
-       "texto": "En el campo Pedido escribe 0PC{INI}01, pon Origen = tu oferta (en el ejemplo, 0OC000001) y pulsa «Guardar»"
+       "texto": "En el campo Pedido escribe 0PC{INI}01, pon Origen = tu oferta (en el ejemplo, 0OC000001) y pulsa «Guardar»",
+       "detalle": "Con tus iniciales en el número no chocas con otros alumnos. En Origen va tu oferta: así el pedido queda enlazado con ella."
       },
       {
-       "texto": "Camino estándar (solo para verlo): en la oferta validada, Acciones › «Generar acuerdo» (tipo ACC, vigencia)",
+       "texto": "Camino estándar, solo para verlo: en la oferta validada pulsa Acciones › «Generar acuerdo» (tipo ACC, vigencia)",
        "pregunta": "Estás en la ventana «Generar acuerdo» de la oferta validada. ¿Dónde eliges el tipo de acuerdo ACC?",
-       "detalle": "Tipo ACC y vigencia del acuerdo.",
+       "detalle": "Eliges el tipo ACC y la vigencia del acuerdo.",
        "imagen": "compras-d-51.webp",
        "hotspot": {
         "x": 37.5,
@@ -1900,27 +1928,27 @@
        }
       },
       {
-       "texto": "Fíjate en el error de numerador al generar el acuerdo: en la TUTORIAL este camino no sigue, así que continúa con el pedido a mano de los pasos anteriores",
-       "detalle": "Falta el numerador (máscara de serie) de los acuerdos de compra de tipo ACC. En una base bien configurada seguirías con «Generación de pedidos desde acuerdos».",
+       "texto": "Fíjate en el error de numerador: en la TUTORIAL este camino no sigue. Continúa con el pedido a mano de los pasos anteriores",
+       "detalle": "Falta el numerador (la máscara de serie) de los acuerdos de compra de tipo ACC. En una base bien configurada seguirías con «Generación de pedidos desde acuerdos».",
        "imagen": "compras-d-52.webp"
       }
      ],
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "En la base TUTORIAL el pedido no tiene formulario diseñado (el título muestra «Failed to parse the expression [${Pedidos compras}]»). Sale el formulario genérico con todos los campos de la tabla y sin valores por defecto."
+       "texto": "En la base TUTORIAL el pedido no tiene formulario diseñado: el título muestra «Failed to parse the expression [${Pedidos compras}]». Sale el formulario genérico, sin valores por defecto."
       },
       {
        "tipo": "problema",
-       "texto": "El formulario genérico no aplica el numerador (el campo Pedido viene vacío) ni copia las líneas de la oferta. La tabla de líneas no tiene botón Nuevo."
+       "texto": "El formulario genérico no aplica el numerador (el campo Pedido viene vacío) ni copia las líneas de la oferta. Su tabla de líneas no tiene botón Nuevo."
       },
       {
        "tipo": "problema",
-       "texto": "Oferta › Acciones › Generar acuerdo da «gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]»: no existe numerador para los acuerdos de tipo ACC."
+       "texto": "Oferta › Acciones › Generar acuerdo da «gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]». No existe numerador para los acuerdos de tipo ACC."
       },
       {
        "tipo": "solucion",
-       "texto": "En una base bien configurada, el administrador da de alta el numerador de los acuerdos de compra (tipo ACC) en Numeradores de documentos. En la TUTORIAL, escribe a mano el número 0PC{INI}01 en el pedido genérico y sigue con el albarán metiendo la línea a mano."
+       "texto": "En una base bien configurada, el administrador da de alta el numerador de los acuerdos de compra (tipo ACC) en Numeradores de documentos. En la TUTORIAL, escribe a mano 0PC{INI}01 en el pedido genérico y sigue con el albarán, metiendo la línea a mano."
       }
      ]
     }
@@ -1935,7 +1963,7 @@
       "Porque falta la relación PRO"
      ],
      "correcta": 1,
-     "explicacion": "El error «gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]» indica que falta el numerador; lo da de alta el administrador en Numeradores de documentos."
+     "explicacion": "El error «gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]» indica que falta el numerador. Lo da de alta el administrador en Numeradores de documentos."
     },
     {
      "pregunta": "¿Cómo queda el pedido creado con el formulario genérico de la base TUTORIAL?",
@@ -1968,7 +1996,7 @@
       "Almacén"
      ],
      "correcta": 1,
-     "explicacion": "En «Origen» se pone la oferta; en una base bien configurada el pedido copia así sus líneas."
+     "explicacion": "En «Origen» va la oferta. En una base bien configurada, así el pedido copia sus líneas."
     }
    ],
    "checklist": [
@@ -1980,32 +2008,32 @@
    "problemas": [
     {
      "problema": "El pedido sale con el formulario genérico (título «Failed to parse the expression [${Pedidos compras}]»), sin numerador y sin líneas.",
-     "solucion": "Es una limitación de la base TUTORIAL: escribe a mano el número 0PC{INI}01 en el campo Pedido y continúa con el albarán metiendo la línea a mano."
+     "solucion": "Es una limitación de la base TUTORIAL. Escribe a mano el número 0PC{INI}01 en el campo Pedido y continúa con el albarán, metiendo la línea a mano."
     },
     {
      "problema": "Oferta › Acciones › Generar acuerdo da «gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]».",
-     "solucion": "Falta el numerador de acuerdos: en una base bien configurada el administrador da de alta el numerador de los acuerdos de compra (tipo ACC) en Numeradores de documentos."
+     "solucion": "Falta el numerador de acuerdos. En una base bien configurada, el administrador da de alta el numerador de los acuerdos de compra (tipo ACC) en Numeradores de documentos."
     }
    ],
    "aprendido": [
-    "Registras una oferta de tipo OC{INI} para T{INI}: 10 unidades del artículo 13500620 a 12,50.",
-    "La validas y compruebas que su línea queda Adjudicada.",
-    "Intentas «Generar acuerdo» y sabes leer el error del numerador de acuerdos de la demo.",
-    "Creas el pedido de tipo PC{INI} con tu oferta como origen."
+    "Has registrado una oferta de tipo OC{INI} para T{INI}: 10 unidades del artículo 13500620 a 12,50.",
+    "La has validado y has comprobado que su línea queda Adjudicada.",
+    "Has intentado «Generar acuerdo» y sabes leer el error del numerador de acuerdos de la demo.",
+    "Has creado el pedido de tipo PC{INI} con tu oferta como origen."
    ]
   },
   {
    "id": "compras-2",
    "numero": 5,
    "titulo": "Recibir la mercancía con el albarán",
-   "objetivo": "Registras la llegada de la mercancía con un albarán. En una base bien configurada nace del pedido; en la demo lo creas a mano. Al validarlo, el stock sube y queda pendiente de facturar.",
-   "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán. En una base bien configurada el albarán nace del pedido: con el proceso «Generación de albaranes desde pedidos» (en la Práctica, el botón «Generar albaranes») o eligiendo el pedido en el campo «Origen». Así copia sus líneas y descuenta del pedido lo recibido (Sumando), y se sabe qué falta por llegar.\n\nEn la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío: creas el albarán a mano con tu tipología AO{INI} y escribes la línea, 10 unidades a 12,50, como en la oferta. Es lo mismo que un albarán sin origen.\n\nAl validar el albarán, el stock del artículo 13500620 sube 10 unidades: pasa de NSAL (no saldo: mercancía que aún no está en el almacén) a DISP (disponible: stock que se puede usar). El albarán queda pendiente de facturar. Este albarán no hace asiento: el asiento lo hará la factura.\n\nLos números de documento de los ejemplos (0AC000002…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
+   "objetivo": "Registrarás la llegada de la mercancía con un albarán y comprobarás que el stock sube.",
+   "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán: el papel que viene con la caja y dice qué te han traído. Al validarlo, el stock sube y la compra queda pendiente de facturar.\n\nEn una base bien configurada, el albarán nace del pedido. Lo generas con el proceso «Generación de albaranes desde pedidos»; en la Práctica, con el botón «Generar albaranes». También puedes elegir el pedido en el campo «Origen».\n\nAsí el albarán copia las líneas del pedido y le descuenta lo recibido (Sumando). Así sabes qué falta por llegar.\n\nOjo: en la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío. Creas el albarán a mano con tu tipología AO{INI} y escribes la línea, como en un albarán sin origen.\n\nEjemplo: escribes 10 unidades a 12,50, como en la oferta. El albarán vale 125,00 sin IVA. Al validarlo, el stock del artículo 13500620 sube 10 unidades.\n\nEsas unidades pasan de NSAL (no saldo: mercancía que aún no está en el almacén) a DISP (disponible: stock que se puede usar). Este albarán no hace asiento: el asiento lo hará la factura.\n\nFíjate: los números de documento de los ejemplos (0AC000002…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
    "duracionMin": 25,
    "secciones": [
     {
      "id": "compras-2-albaran",
      "titulo": "Albarán de compras",
-     "paraQueSirve": "El albarán registra la mercancía que entra en el almacén. En una base bien configurada nace del pedido y copia sus líneas pendientes; en la demo lo creas a mano. Al validarlo, el stock del artículo aumenta y el albarán queda pendiente de facturar.",
+     "paraQueSirve": "Aquí registras la mercancía que entra en el almacén. Al validar el albarán, el stock del artículo aumenta y el albarán queda pendiente de facturar.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -2013,9 +2041,10 @@
       "Albaranes"
      ],
      "explicacion": [
-      "Con una tipología con origen, el campo «Origen» del albarán es un desplegable con los pedidos validados del proveedor que tienen líneas pendientes. Al elegir uno, el albarán copia sus líneas y no hay que teclear artículos ni precios.",
-      "En la base TUTORIAL tu pedido 0PC{INI}01 no tiene líneas ni está validado, así que el desplegable sale vacío: guardas el albarán sin origen y metes la línea a mano.",
-      "En la línea son obligatorios «Precio con IVA» e «Importe dto.» (0 si no hay descuento). El botón Validar está arriba a la derecha de la ficha."
+      "Con una tipología con origen, «Origen» es un desplegable con los pedidos validados del proveedor que tienen líneas pendientes. Al elegir uno, el albarán copia sus líneas: no tecleas artículos ni precios.",
+      "En la base TUTORIAL tu pedido 0PC{INI}01 no tiene líneas ni está validado. El desplegable sale vacío: guardas el albarán sin origen y metes la línea a mano.",
+      "Fíjate: en la línea son obligatorios «Precio con IVA» e «Importe dto.» (0 si no hay descuento).",
+      "El botón Validar está arriba a la derecha de la ficha."
      ],
      "campos": [
       {
@@ -2030,12 +2059,12 @@
       },
       {
        "campo": "Fecha albarán / Fecha proveedor *",
-       "significado": "Fecha del documento y del albarán del proveedor.",
+       "significado": "Fecha del documento y fecha del albarán del proveedor.",
        "ejemplo": "Hoy"
       },
       {
        "campo": "Proveedor / Dirección *",
-       "significado": "A quién compramos.",
+       "significado": "Proveedor al que compras y su dirección.",
        "ejemplo": "T{INI} (el del bloque 1) / 0"
       },
       {
@@ -2045,17 +2074,17 @@
       },
       {
        "campo": "Tipo efecto / Forma pago *",
-       "significado": "Se copian de las condiciones de pago del tercero.",
+       "significado": "Medio y plazo de pago. Se copian de las condiciones de pago del tercero.",
        "ejemplo": "TF / 30 días"
       },
       {
        "campo": "Divisa / Cambio *",
-       "significado": "Moneda del documento.",
+       "significado": "Moneda del documento y tipo de cambio.",
        "ejemplo": "EUR / 1"
       },
       {
        "campo": "Línea · Artículo / VLP *",
-       "significado": "Artículo y variante que se recibe.",
+       "significado": "Artículo y variante que recibes.",
        "ejemplo": "13500620 / 0"
       },
       {
@@ -2065,7 +2094,7 @@
       },
       {
        "campo": "Línea · Precio",
-       "significado": "Precio unitario. En el formulario no lo propone la tarifa: se escribe.",
+       "significado": "Precio unitario. En este formulario no lo propone la tarifa: lo escribes tú.",
        "ejemplo": "12,50"
       },
       {
@@ -2086,9 +2115,9 @@
      ],
      "pasos": [
       {
-       "texto": "Abre Albaranes, pulsa «Nuevo» y elige Tipo documento AO{INI}. Comprueba empresa, almacén, delegación y departamento por defecto",
+       "texto": "Abre Albaranes, pulsa «Nuevo» y elige Tipo documento AO{INI}. Comprueba la empresa, el almacén, la delegación y el departamento por defecto",
        "pregunta": "Abres un albarán nuevo. ¿Dónde eliges tu tipología AO{INI}?",
-       "detalle": "Cabecera: tipo AO{INI} y unidad de negocio por defecto (empresa 0, almacén ALMACEN CENTRAL, delegación CENTRAL, departamento COMPRAS). En la captura se ve otra tipología.",
+       "detalle": "Por defecto salen empresa 0, almacén ALMACEN CENTRAL, delegación CENTRAL y departamento COMPRAS. En la captura se ve otra tipología.",
        "imagen": "compras-n-16.webp",
        "hotspot": {
         "x": 1.6,
@@ -2101,7 +2130,7 @@
       {
        "texto": "Elige Proveedor T{INI}: la Dirección 0 y los datos financieros (TF, 30 días, EUR) se rellenan solos. Comprueba la Fecha recepción",
        "pregunta": "Ya has elegido el proveedor T{INI}. ¿Dónde compruebas que se han copiado sus condiciones de pago?",
-       "detalle": "Datos financieros copiados de la condición de pago del tercero: Tipo efecto TF y Forma pago 30 días.",
+       "detalle": "Tipo efecto TF y Forma pago 30 días se copian de la condición de pago del tercero.",
        "imagen": "compras-n-16.webp",
        "hotspot": {
         "x": 50.2,
@@ -2112,9 +2141,9 @@
        }
       },
       {
-       "texto": "Abre el desplegable «Origen»: en una base bien configurada elegirías tu pedido y el albarán copiaría sus líneas. En la TUTORIAL sale vacío: déjalo así y pulsa «Guardar»",
+       "texto": "Abre el desplegable «Origen». En la TUTORIAL sale vacío: déjalo así y pulsa «Guardar»",
        "pregunta": "Tu tipología copia las líneas de un pedido. ¿Dónde elegirías el pedido del que viene el albarán?",
-       "detalle": "Sale vacío porque el pedido 0PC{INI}01 no tiene líneas pendientes ni está validado.",
+       "detalle": "En una base bien configurada elegirías tu pedido y el albarán copiaría sus líneas. Aquí sale vacío porque el pedido 0PC{INI}01 no tiene líneas pendientes ni está validado.",
        "imagen": "compras-v-28.webp",
        "hotspot": {
         "x": 66.1,
@@ -2125,7 +2154,7 @@
        }
       },
       {
-       "texto": "Abre la ficha: en la lista, pulsa el número de tu albarán y, en el menú que se abre, «Albaranes compras». Ve a la pestaña «Líneas»",
+       "texto": "En la lista, pulsa el número de tu albarán y, en el menú que se abre, «Albaranes compras». Ve a la pestaña «Líneas»",
        "pregunta": "En el menú que sale al pulsar el número, ¿qué opción abre la ficha del albarán?",
        "detalle": "El menú ofrece «Albaranes compras» (la ficha) y «Líneas».",
        "imagen": "compras-n-17.webp",
@@ -2140,7 +2169,7 @@
       {
        "texto": "Pulsa «Nuevo» y rellena Artículo 13500620, VLP 0, Cantidad 10, Precio 12,50, Precio con IVA 15,125 e Importe dto. 0. Pulsa «Guardar»",
        "pregunta": "La línea ya tiene el artículo, 10 unidades y el precio 12,50. ¿Dónde escribes el precio con IVA (15,125), obligatorio aunque salga en rojo?",
-       "detalle": "VLP es la variante logística del artículo: con la 0 basta. Cantidad trae 0,0000: bórralo antes de escribir 10. Precio con IVA (12,50 + 21 % = 15,125) e Importe dto. salen en rojo porque son obligatorios. El Importe neto (125,00) se calcula al guardar la línea. Al escribir la cantidad puede salir el aviso «ELResolver no manejó el tipo: null con propiedad de 'null'»: ciérralo, vuelve a escribirla y guarda.",
+       "detalle": "VLP es la variante logística: con la 0 basta. Cantidad trae 0,0000: bórralo antes de escribir 10. Precio con IVA (12,50 + 21 % = 15,125) e Importe dto. salen en rojo porque son obligatorios. El Importe neto (125,00) se calcula al guardar. Si sale «ELResolver no manejó el tipo: null con propiedad de 'null'», ciérralo, vuelve a escribir la cantidad y guarda.",
        "imagen": "compras-n-18.webp",
        "hotspot": {
         "x": 15.6,
@@ -2153,7 +2182,7 @@
       {
        "texto": "Pulsa «Validar» (botón verde, arriba a la derecha)",
        "pregunta": "Tras validar, el botón «Validar» cambia de nombre. ¿Dónde lo ves?",
-       "detalle": "El Estado pasa a Validado y arriba aparecen «Pasar a provisional» (para deshacer), «Anular» y «No facturable». El stock del artículo sube 10 unidades.",
+       "detalle": "El Estado pasa a Validado. Arriba aparecen «Pasar a provisional» (para deshacer), «Anular» y «No facturable». El stock del artículo sube 10 unidades.",
        "imagen": "compras-n-19.webp",
        "hotspot": {
         "x": 78.5,
@@ -2167,7 +2196,7 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "Al escribir la cantidad sale «ELResolver no manejó el tipo: null con propiedad de 'null'»: la tipología espera los datos del pedido origen."
+       "texto": "Al escribir la cantidad sale «ELResolver no manejó el tipo: null con propiedad de 'null'». La tipología espera los datos del pedido origen."
       },
       {
        "tipo": "solucion",
@@ -2175,7 +2204,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "En la demo acabas haciendo un albarán sin origen: el que se usa cuando llega mercancía sin pedido. La tipología es la misma; solo cambia que la línea se escribe a mano en vez de copiarse del pedido."
+       "texto": "En la demo acabas haciendo un albarán sin origen, el que se usa cuando llega mercancía sin pedido. La tipología es la misma: solo cambia que la línea se escribe a mano en vez de copiarse del pedido."
       }
      ]
     }
@@ -2190,7 +2219,7 @@
       "Se anula el pedido"
      ],
      "correcta": 2,
-     "explicacion": "Al validar, el stock sube (en el ejemplo, 10 unidades del artículo 13500620) y queda pendiente de facturar."
+     "explicacion": "Al validar, el stock sube (en el ejemplo, 10 unidades del 13500620) y el albarán queda pendiente de facturar. El asiento lo hará la factura."
     },
     {
      "pregunta": "¿Para qué sirve el campo Origen en un albarán con tipología con origen Pedidos?",
@@ -2201,7 +2230,7 @@
       "Para indicar la factura"
      ],
      "correcta": 1,
-     "explicacion": "El desplegable muestra los pedidos validados del proveedor con líneas pendientes; al elegir uno se copian sus líneas."
+     "explicacion": "El desplegable muestra los pedidos validados del proveedor con líneas pendientes. Al elegir uno, se copian sus líneas."
     },
     {
      "pregunta": "¿Entre qué cuentas de stock mueve la mercancía tu tipología de albarán de entrada?",
@@ -2212,7 +2241,7 @@
       "De ALMACEN CENTRAL a COMPRAS"
      ],
      "correcta": 1,
-     "explicacion": "NSAL (no saldo) es la mercancía que aún no está en el almacén; DISP (disponible) es el stock que se puede usar."
+     "explicacion": "NSAL (no saldo) es la mercancía que aún no está en el almacén. DISP (disponible) es el stock que se puede usar."
     },
     {
      "pregunta": "¿Qué dos campos de la línea del albarán son obligatorios aunque no haya descuento?",
@@ -2240,39 +2269,43 @@
     },
     {
      "problema": "El desplegable Origen del albarán sale vacío.",
-     "solucion": "El pedido 0PC{INI}01 no tiene líneas pendientes ni está validado: guarda el albarán sin origen y mete la línea a mano."
+     "solucion": "El pedido 0PC{INI}01 no tiene líneas pendientes ni está validado. Guarda el albarán sin origen y mete la línea a mano."
     },
     {
      "problema": "Al guardar la línea del albarán sale «Hay errores en los datos del formulario».",
-     "solucion": "Faltan «Precio con IVA» (15,125) e «Importe dto.» (0): son obligatorios aunque no haya descuento."
+     "solucion": "Faltan «Precio con IVA» (15,125) e «Importe dto.» (0). Son obligatorios aunque no haya descuento."
     }
    ],
    "aprendido": [
-    "Registras un albarán de tipo AO{INI} para T{INI} y ves que copia la dirección y las condiciones de pago del proveedor.",
+    "Has registrado un albarán de tipo AO{INI} para T{INI} y has visto que copia la dirección y las condiciones de pago del proveedor.",
     "Sabes que «Origen» une el albarán con el pedido y por qué en la demo sale vacío.",
-    "Metes la línea de 10 unidades a 12,50 y validas el albarán por 125,00.",
-    "Compruebas en el «Stock global» que el artículo 13500620 tiene 10 unidades más."
+    "Has metido la línea de 10 unidades a 12,50 y has validado el albarán por 125,00.",
+    "Has comprobado en el «Stock global» que el artículo 13500620 tiene 10 unidades más."
    ]
   },
   {
    "id": "compras-factura",
    "numero": 6,
    "titulo": "Registrar y contabilizar la factura",
-   "objetivo": "Registras la factura del proveedor, la cruzas con el albarán y generas el asiento. Cierras el ciclo: oferta, pedido, albarán y factura.",
-   "concepto": "Después del albarán llega la factura del proveedor. La registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor: las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nAl contabilizar, el ERP genera el asiento de compras (gasto 60000 e IVA 47200 al debe, proveedor 40000 al haber) y los vencimientos de pago. Si falta algún dato maestro del proveedor o del artículo, salen errores que debes saber leer; si lo montaste todo en el bloque 1, la factura contabiliza a la primera.\n\nLos números de documento de los ejemplos (0FC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
+   "objetivo": "Registrarás la factura del proveedor, la cruzarás con el albarán y generarás el asiento: así cierras el ciclo de compra.",
+   "concepto": "Después de la mercancía llega la factura: el documento con el que el proveedor te cobra lo que te ha servido. Antes de aceptarla, compruebas que coincide con lo que recibiste, como cuando repasas el tique del súper con la compra.\n\nEn Axional la registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nContabilizar es pasar la factura a la contabilidad. El ERP genera el asiento de compras: gasto 60000 e IVA 47200 al debe, y proveedor 40000 al haber. También crea los vencimientos de pago.\n\nEjemplo: tu albarán es de 10 × 12,50 = 125,00 de base. El IVA del 21 % son 26,25, y la factura suma 151,25. En el asiento, 125,00 + 26,25 van al debe y 151,25 al haber del proveedor.\n\nFíjate: si falta un dato maestro del proveedor o del artículo, salen errores que aprenderás a leer. Si lo montaste todo en el bloque 1, la factura contabiliza a la primera.\n\nLos números de documento de los ejemplos (0FC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
    "duracionMin": 40,
    "secciones": [
     {
      "id": "compras-2-factura",
      "titulo": "Factura de compras",
-     "paraQueSirve": "La factura recoge lo que el proveedor nos cobra. Se crea la cabecera con el número de factura del proveedor y después se conforma con los albaranes recibidos, que aportan las líneas. Así se comprueba que se paga solo lo que ha entrado.",
+     "paraQueSirve": "Aquí registras lo que el proveedor te cobra. Creas la cabecera con su número de factura y después la conformas con los albaranes recibidos, que aportan las líneas.",
      "ruta": [
       "Gestión",
       "Compras",
       "Facturas",
       "Facturas"
      ],
-     "explicacion": [],
+     "explicacion": [
+      "Primero guardas la cabecera: proveedor, número de factura del proveedor y datos de pago.",
+      "El número interno (campo Factura) lo pone el numerador al guardar: déjalo vacío.",
+      "Las líneas no se escriben: llegan del albarán al conformar, en la parte siguiente."
+     ],
      "campos": [
       {
        "campo": "Tipo documento *",
@@ -2281,12 +2314,12 @@
       },
       {
        "campo": "Factura",
-       "significado": "Número interno. Lo pone el numerador de la serie: se deja vacío.",
+       "significado": "Número interno. Lo pone el numerador de la serie: déjalo vacío.",
        "ejemplo": "Vacío › 0FC000001"
       },
       {
        "campo": "Proveedor / Dirección *",
-       "significado": "Proveedor que factura.",
+       "significado": "Proveedor que factura y su dirección.",
        "ejemplo": "T{INI} (el del bloque 1) / 0"
       },
       {
@@ -2306,7 +2339,7 @@
       },
       {
        "campo": "Tipo efecto / Forma pago *",
-       "significado": "Generan los vencimientos de pago al contabilizar.",
+       "significado": "Medio y plazo de pago. Generan los vencimientos de pago al contabilizar.",
        "ejemplo": "TF / 30 días"
       },
       {
@@ -2316,19 +2349,19 @@
       },
       {
        "campo": "Divisa / Cambio *",
-       "significado": "Moneda.",
+       "significado": "Moneda y tipo de cambio.",
        "ejemplo": "EUR / 1"
       }
      ],
      "pasos": [
       {
        "texto": "Abre Facturas, pulsa «Nuevo» y elige Tipo documento FC{INI} y Proveedor T{INI}: la Dirección 0 y el bloque «Facturado por» se rellenan solos",
-       "detalle": "Menú Gestión › Compras › Facturas › Facturas. Usa el proveedor T{INI} del bloque «Dar de alta el proveedor y el artículo». La captura muestra la ventana ya rellena."
+       "detalle": "Ruta: Gestión › Compras › Facturas › Facturas. Usa el proveedor T{INI} del bloque «Dar de alta el proveedor y el artículo». La captura muestra la ventana ya rellena."
       },
       {
        "texto": "Escribe la Factura proveedor (FRA-{INI}-001) y deja vacío el campo Factura. Comprueba los datos financieros (TF, 30 días, EUR) y, en la pestaña «Datos financieros (2)», que Banco es 0. Pulsa «Guardar»",
        "pregunta": "Ya has elegido la tipología y el proveedor. ¿Dónde escribes el número que trae la factura en papel del proveedor?",
-       "detalle": "Factura proveedor es obligatoria (bloque Información general). Tipo de identificación, País emisor y CIF se copian del tercero.",
+       "detalle": "Factura proveedor es obligatoria y está en el bloque Información general. Tipo de identificación, País emisor y CIF se copian del tercero.",
        "imagen": "compras-n-20.webp",
        "hotspot": {
         "x": 1.6,
@@ -2344,19 +2377,20 @@
     {
      "id": "compras-2-conformar",
      "titulo": "Conformar la factura con el albarán",
-     "paraQueSirve": "Conformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura, el albarán queda marcado como facturado (actualización «Sumando») y la factura queda validada, lista para contabilizar.",
+     "paraQueSirve": "Conformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda marcado como facturado («Sumando»). La factura queda validada, lista para contabilizar.",
      "ruta": [
       "Ficha de la factura",
       "desplegable (⌄) junto al título",
       "Conformar"
      ],
      "explicacion": [
-      "Las opciones del desplegable del título son: Conformar, por tercero comercial, por CIF, por delegación, por otros proveedores y Copiar líneas de pedido."
+      "Conformar se elige en el desplegable (⌄) del título de la factura. Sus opciones son: Conformar, por tercero comercial, por CIF, por delegación, por otros proveedores y Copiar líneas de pedido.",
+      "Ojo: solo salen con la factura en Provisional y con una tipología con Tabla origen Suministros, como la tuya."
      ],
      "campos": [
       {
        "campo": "Albaranes pendientes (casilla) *",
-       "significado": "Albaranes validados del proveedor que aún no están facturados. Se marca el que corresponde a la factura.",
+       "significado": "Albaranes validados del proveedor que aún no están facturados. Marca el que corresponde a la factura.",
        "ejemplo": "Tu albarán validado (en el ejemplo, 0AC000002 de T{INI}, 125,00)"
       },
       {
@@ -2367,7 +2401,7 @@
      ],
      "pasos": [
       {
-       "texto": "Abre la ficha de tu factura (en la lista, pulsa su número y luego «Facturas compras»). Abre el desplegable (⌄) junto al título y elige «Conformar»",
+       "texto": "Abre la ficha de tu factura: en la lista, pulsa su número y luego «Facturas compras». Abre el desplegable (⌄) junto al título y elige «Conformar»",
        "pregunta": "Has abierto el desplegable junto al título de tu factura. ¿Qué opción eliges para cruzarla con tus albaranes?",
        "detalle": "El ⌄ está a la derecha de la estrella del título. Las opciones de conformar solo salen con la factura en Provisional y una tipología con Tabla origen Suministros.",
        "imagen": "compras-n-21.webp",
@@ -2382,7 +2416,7 @@
       {
        "texto": "Marca la casilla de tu albarán (el que validaste, de 125,00) y revisa sus líneas abajo",
        "pregunta": "Se ha abierto la ventana con los albaranes pendientes del proveedor. ¿Dónde marcas el tuyo, el de 125,00?",
-       "detalle": "En «Albaranes pendientes» marca la casilla de tu albarán (125,00); en «Líneas», debajo, ves su línea 13500620 × 10.",
+       "detalle": "En «Albaranes pendientes» marca la casilla de tu albarán (125,00). En «Líneas», debajo, ves su línea 13500620 × 10.",
        "imagen": "compras-n-22.webp",
        "hotspot": {
         "x": 5.3,
@@ -2395,7 +2429,7 @@
       {
        "texto": "Pulsa «Conformar» (botón verde de arriba a la derecha de la ventana)",
        "pregunta": "Has pulsado «Conformar» y ha salido «Éxito». ¿Dónde ves que tu albarán ya está conformado?",
-       "detalle": "Sale el aviso «Éxito» y el albarán pasa a «Albaranes conformados», con Estado documento Facturado.",
+       "detalle": "Sale el aviso «Éxito». El albarán pasa a «Albaranes conformados», con Estado documento Facturado.",
        "imagen": "compras-n-23.webp",
        "hotspot": {
         "x": 5.3,
@@ -2412,7 +2446,7 @@
       {
        "texto": "Comprueba en la pestaña «Líneas» la línea del albarán y, arriba, los botones «Pasar a provisional» y «Contabilizar»",
        "pregunta": "Has recargado la factura y ya está validada. ¿Qué botón pulsas para generar el asiento?",
-       "detalle": "Tras recargar, el Estado es Validado, la pestaña Líneas tiene la línea del albarán (10 × 12,50 = 125,00), el Importe total es 151,25 y arriba están «Pasar a provisional» y «Contabilizar».",
+       "detalle": "Tras recargar, el Estado es Validado y la pestaña Líneas tiene la línea del albarán (10 × 12,50 = 125,00). El Importe total es 151,25, y arriba están «Pasar a provisional» y «Contabilizar».",
        "imagen": "compras-n-24.webp",
        "hotspot": {
         "x": 80.9,
@@ -2428,22 +2462,22 @@
     {
      "id": "compras-2-contabilizar",
      "titulo": "Contabilizar la factura",
-     "paraQueSirve": "Contabilizar genera el asiento de compras: gasto (600) e IVA soportado (472) al debe, deuda con proveedor (400) al haber y vencimientos. Requiere relación contable del tercero, cuenta bancaria si hay transferencia y tipo contable de compras en el artículo.",
+     "paraQueSirve": "Contabilizar genera el asiento de compras y los vencimientos de pago. Gasto (600) e IVA soportado (472) van al debe, y la deuda con el proveedor (400) al haber.",
      "ruta": [
       "Ficha de la factura",
       "botón Contabilizar (morado, barra superior)"
      ],
      "explicacion": [
-      "La prevista es una simulación: marcando «Prevista de Asiento Contable», el ERP te enseña el asiento que haría, o el error que lo impide, sin grabar nada.",
-      "La cuenta de compras de la línea sale de Relaciones contables, combinando tipo de asiento, tipo de línea, relación y Tipo contable del artículo.",
-      "También pueden salir errores de fechas de la empresa o del periodo contable. Revísalos en las pantallas «Empresas» y «Ejercicios contables» (búscalas como cempresa y cejercic).",
-      "En la demo el IVA soportado va a la cuenta 47200.00000, que el plan de la demo rotula «HP, IVA exento»; en el Plan General Contable es la 472 «Hacienda Pública, IVA soportado».",
-      "Para ver el recorrido de la factura, abre el desplegable (⌄) junto a la estrella del título y elige «Docflow»: muestra los documentos enlazados (el albarán del que viene y, si este nació de un pedido, el pedido y la oferta)."
+      "Para contabilizar hacen falta tres cosas: la relación contable del tercero, la cuenta bancaria si pagas por transferencia y un tipo contable de compras en el artículo.",
+      "La prevista es una simulación: marcas «Prevista de Asiento Contable» y el ERP te enseña el asiento que haría. Si algo lo impide, te enseña el error. No graba nada.",
+      "La cuenta de compras de la línea sale de las relaciones contables. Se combinan el tipo de asiento, el tipo de línea, la relación y el Tipo contable del artículo.",
+      "Fíjate: en la demo el IVA soportado va a la 47200.00000, que el plan de la demo rotula «HP, IVA exento». En el Plan General Contable es la 472 «Hacienda Pública, IVA soportado».",
+      "Para ver el recorrido de la factura usa Docflow, el mapa de documentos enlazados: desplegable (⌄) junto a la estrella del título › «Docflow». Muestra el albarán del que viene y, si nació de un pedido, el pedido y la oferta."
      ],
      "campos": [
       {
        "campo": "Fecha registro contable *",
-       "significado": "Fecha del asiento. Debe caer en un periodo contable abierto.",
+       "significado": "Fecha del asiento. Tiene que caer en un periodo contable abierto.",
        "ejemplo": "Hoy (12-11-2026)"
       },
       {
@@ -2456,7 +2490,7 @@
       {
        "texto": "Pulsa «Contabilizar», marca «Prevista de Asiento Contable» y pulsa «Aceptar» para revisar el asiento",
        "pregunta": "Se ha abierto el diálogo «Contabilizar». ¿Dónde pides ver el asiento antes de grabarlo?",
-       "detalle": "Se abre el diálogo «Contabilizar» con la Fecha registro contable (hoy). La prevista no graba nada: abre la ventana «Esquema de Asiento Contable» con el asiento que se haría o con el error que lo impide. Si sale un error, los pasos siguientes te dicen cómo resolverlo.",
+       "detalle": "Se abre el diálogo «Contabilizar» con la Fecha registro contable de hoy. La prevista no graba nada: abre la ventana «Esquema de Asiento Contable» con el asiento o con el error que lo impide. Si sale un error, los pasos siguientes te dicen cómo resolverlo.",
        "imagen": "compras-n-25.webp",
        "hotspot": {
         "x": 37.3,
@@ -2469,7 +2503,7 @@
       {
        "texto": "Si aun así sale «Cuenta tercero [T{INI}] no existente para relación: [PRO]», añade al tercero la relación PRO",
        "pregunta": "La prevista no muestra el asiento sino un error. ¿Dónde lees qué relación contable le falta al tercero?",
-       "detalle": "El error sale dentro de la prevista (o en un aviso rojo si contabilizas sin ella). El tercero solo tiene ACR y la plantilla FC pide PRO: Terceros › T{INI} › Relaciones › Añadir relacion Proveedor / PRO / ES (PGE 2008); la cuenta se rellena sola (en la prueba, la subcuenta 40000.T{INI}). Pulsa «Validar» en el tercero y repite la prevista.",
+       "detalle": "El error sale en la prevista, o en un aviso rojo si contabilizas sin ella. El tercero solo tiene ACR y la plantilla FC pide PRO. Ve a Terceros › T{INI} › Relaciones › Añadir relacion y añade Proveedor / PRO / ES (PGE 2008). La cuenta se rellena sola (en la prueba, la subcuenta 40000.T{INI}). Pulsa «Validar» en el tercero y repite la prevista.",
        "imagen": "compras-n-26.webp",
        "hotspot": {
         "x": 8.6,
@@ -2481,7 +2515,7 @@
       },
       {
        "texto": "Si sale «DOMICILIACIÓN BANCARIA NO INFORMADA», da de alta la cuenta bancaria del tercero",
-       "detalle": "Aparece con efecto TF si el tercero no tiene cuenta bancaria. En Terceros › T{INI} › Datos bancarios › Añadir banco usa el IBAN de ejemplo ES91 2100 0418 4502 0005 1332 (Banco ES2100); después, en la factura, «Pasar a provisional», Datos financieros (2) › Banco 0, guardar y «Validar».",
+       "detalle": "Sale con efecto TF si el tercero no tiene cuenta bancaria. En Terceros › T{INI} › Datos bancarios › Añadir banco usa el IBAN de ejemplo ES91 2100 0418 4502 0005 1332 (Banco ES2100). Después, en la factura: «Pasar a provisional», Datos financieros (2) › Banco 0, guardar y «Validar».",
        "imagen": "compras-d-38.webp"
       },
       {
@@ -2505,7 +2539,7 @@
       {
        "texto": "Fíjate en la prevista del asiento: despliega la fila con la flecha ⌄",
        "pregunta": "Has desplegado la fila de la prevista. ¿Dónde ves los apuntes con sus cuentas e importes?",
-       "detalle": "Proceso de Apuntes: proveedor 40000.T{INI} al haber 151,25; IVA 47200.00000 al debe 26,25; Compras 60000.00000 al debe 125,00.",
+       "detalle": "En «Proceso de Apuntes» ves: proveedor 40000.T{INI} al haber 151,25; IVA 47200.00000 al debe 26,25; Compras 60000.00000 al debe 125,00.",
        "imagen": "compras-n-27.webp",
        "hotspot": {
         "x": 10.6,
@@ -2522,7 +2556,7 @@
       {
        "texto": "En la pestaña «Líneas de apuntes» comprueba que debe = haber",
        "pregunta": "Se ha abierto el asiento generado. ¿Dónde ves el «Cuadre» del asiento?",
-       "detalle": "Asiento generado (diario DC Compras): 3 líneas, debe 151,25 = haber 151,25, cuadre 0,00.",
+       "detalle": "El asiento del diario DC Compras tiene 3 líneas: debe 151,25 = haber 151,25, cuadre 0,00.",
        "imagen": "compras-n-28.webp",
        "hotspot": {
         "x": 5.3,
@@ -2553,35 +2587,35 @@
       },
       {
        "tipo": "solucion",
-       "texto": "En Terceros › T{INI} › Relaciones › Añadir relacion: Proveedor / PRO / ES (PGE 2008); la cuenta 40000 se rellena sola."
+       "texto": "En Terceros › T{INI} › Relaciones › Añadir relacion, añade Proveedor / PRO / ES (PGE 2008). La cuenta 40000 se rellena sola."
       },
       {
        "tipo": "problema",
-       "texto": "«DOMICILIACIÓN BANCARIA NO INFORMADA». Con efecto TF el pago es por transferencia y hace falta la cuenta bancaria del tercero."
+       "texto": "«DOMICILIACIÓN BANCARIA NO INFORMADA». Con efecto TF pagas por transferencia y hace falta la cuenta bancaria del tercero."
       },
       {
        "tipo": "solucion",
-       "texto": "En Terceros › T{INI} › Datos bancarios › Añadir banco da de alta la cuenta con el IBAN de ejemplo ES91 2100 0418 4502 0005 1332 (Banco ES2100; nunca uno real). En la factura: «Pasar a provisional», Datos financieros (2) › Banco 0, guardar y «Validar»."
+       "texto": "En Terceros › T{INI} › Datos bancarios › Añadir banco, da de alta el IBAN de ejemplo ES91 2100 0418 4502 0005 1332 (Banco ES2100; nunca uno real). En la factura: «Pasar a provisional», Datos financieros (2) › Banco 0, guardar y «Validar»."
       },
       {
        "tipo": "problema",
-       "texto": "«gcomfach [15]: tipast [FC] tipcta [L] relaci [M] tiprel [] tipcon [VEN] cuenta no definida». No hay cuenta contable para asiento FC + línea de artículo + tipo contable VEN: el artículo tiene Tipo contable «Ventas» (lo habitual en la demo; el 13500620 ya tiene PROD)."
+       "texto": "«gcomfach [15]: tipast [FC] tipcta [L] relaci [M] tiprel [] tipcon [VEN] cuenta no definida». No hay cuenta para asiento FC + línea de artículo + tipo contable VEN. El artículo tiene Tipo contable «Ventas», lo habitual en la demo; el 13500620 ya tiene PROD."
       },
       {
        "tipo": "solucion",
-       "texto": "Revisa que el artículo de la línea es el 13500620 y, en su ficha (Gestión › Maestros › Artículos, bloque Contabilidad), que el Tipo contable es PRODUCTO (PROD). No lo cambies: la demo es compartida. Si la línea lleva otro artículo, corrígela al 13500620; si ya es el 13500620, avisa al formador."
+       "texto": "Revisa que la línea lleva el 13500620 y que su Tipo contable es PRODUCTO (PROD) (Gestión › Maestros › Artículos, bloque Contabilidad). No lo cambies: la demo es compartida. Si la línea lleva otro artículo, corrígela; si ya es el 13500620, avisa al formador."
       },
       {
        "tipo": "nota",
-       "texto": "Los pasos de corrección (relación PRO, datos bancarios, revisión del tipo contable) solo hacen falta si aparece el error correspondiente."
+       "texto": "Los pasos de corrección (relación PRO, datos bancarios, tipo contable) solo hacen falta si sale el error correspondiente."
       },
       {
        "tipo": "nota",
-       "texto": "Como en el bloque «Dar de alta el proveedor y el artículo» diste de alta la relación PRO y la cuenta bancaria, la factura debe contabilizar a la primera: es la prueba de que el proveedor está bien configurado. Los pasos de corrección solo hacen falta si te saltaste algo."
+       "texto": "En el bloque «Dar de alta el proveedor y el artículo» ya diste de alta la relación PRO y la cuenta bancaria. Por eso la factura debe contabilizar a la primera: es la prueba de que el proveedor está bien montado."
       },
       {
        "tipo": "nota",
-       "texto": "Cuando acabes el módulo, haz los ejercicios del documento «Ejercicios Gestión de Compras» que te dará tu formador: son parecidos a la práctica, pero no iguales."
+       "texto": "Cuando acabes el módulo, haz los ejercicios del documento «Ejercicios Gestión de Compras» que te dará tu formador. Son parecidos a la práctica, pero no iguales."
       }
      ]
     }
@@ -2596,7 +2630,7 @@
       "El periodo contable está cerrado"
      ],
      "correcta": 1,
-     "explicacion": "La factura contabiliza con la relación PRO (Proveedores, 40000) y el tercero solo tenía ACR."
+     "explicacion": "La factura contabiliza con la relación PRO (Proveedores, 40000), y el tercero solo tenía ACR."
     },
     {
      "pregunta": "¿Dónde se encuentra la opción Conformar de la factura?",
@@ -2607,7 +2641,7 @@
       "En el menú Finanzas"
      ],
      "correcta": 2,
-     "explicacion": "Conformar y el resto de opciones están en el desplegable del título de la factura."
+     "explicacion": "Conformar y el resto de opciones están en el desplegable (⌄) del título de la factura."
     },
     {
      "pregunta": "En el asiento de la factura de este bloque (10 × 12,50 más IVA), ¿cuánto suman el debe y el haber?",
@@ -2618,7 +2652,7 @@
       "138,75"
      ],
      "correcta": 1,
-     "explicacion": "Compras 125,00 + IVA 26,25 al debe = 151,25 contra el proveedor 40000 al haber 151,25; cuadre 0,00."
+     "explicacion": "Al debe, Compras 125,00 + IVA 26,25 = 151,25. Al haber, el proveedor 40000 por 151,25. El cuadre es 0,00."
     },
     {
      "pregunta": "Conformas la factura con tu albarán. ¿Qué le pasa al albarán?",
@@ -2629,7 +2663,7 @@
       "Se contabiliza solo"
      ],
      "correcta": 1,
-     "explicacion": "Con «Sumando» en la tipología de factura, el albarán queda marcado como facturado y no se puede facturar dos veces."
+     "explicacion": "Con «Sumando» en la tipología de factura, el albarán queda marcado como facturado. Así no se puede facturar dos veces."
     }
    ],
    "checklist": [
@@ -2645,7 +2679,7 @@
    "problemas": [
     {
      "problema": "«Cuenta tercero [T{INI}] no existente para relación: [PRO]» al contabilizar.",
-     "solucion": "En Terceros › T{INI} › Relaciones › Añadir relacion: Proveedor / PRO / ES (PGE 2008); la cuenta 40000 se rellena sola. Vuelve a «Validar» el tercero."
+     "solucion": "En Terceros › T{INI} › Relaciones › Añadir relacion, añade Proveedor / PRO / ES (PGE 2008): la cuenta 40000 se rellena sola. Después vuelve a «Validar» el tercero."
     },
     {
      "problema": "«DOMICILIACIÓN BANCARIA NO INFORMADA» al contabilizar.",
@@ -2653,19 +2687,19 @@
     },
     {
      "problema": "«gcomfach [15]: tipast [FC] tipcta [L] relaci [M] tiprel [] tipcon [VEN] cuenta no definida».",
-     "solucion": "Revisa que el artículo es el 13500620 y que su Tipo contable es PRODUCTO (PROD) (Gestión › Maestros › Artículos, bloque Contabilidad). No lo cambies. Si la línea lleva otro artículo, corrígela; si ya es el 13500620, avisa al formador."
+     "solucion": "Revisa que el artículo es el 13500620 y que su Tipo contable es PRODUCTO (PROD), en Gestión › Maestros › Artículos, bloque Contabilidad. No lo cambies. Si la línea lleva otro artículo, corrígela; si ya es el 13500620, avisa al formador."
     },
     {
      "problema": "Errores de fechas de la empresa o del periodo contable al contabilizar.",
-     "solucion": "Revísalos en las pantallas «Empresas» y «Ejercicios contables» (búscalas como cempresa y cejercic)."
+     "solucion": "Revísalos en las pantallas «Empresas» y «Ejercicios contables». Búscalas como cempresa y cejercic."
     }
    ],
    "aprendido": [
-    "Registras la factura de tipo FC{INI} con el número del proveedor FRA-{INI}-001.",
-    "La conformas con tu albarán: sus líneas (10 × 12,50 = 125,00) pasan a la factura.",
-    "Revisas la prevista del asiento antes de contabilizar: compras e IVA al debe, proveedor al haber por 151,25.",
-    "Contabilizas la factura y sabes resolver los errores de datos maestros que pueden salir.",
-    "Sigues con Docflow el rastro de la factura hasta el albarán del que viene."
+    "Has registrado la factura de tipo FC{INI} con el número del proveedor FRA-{INI}-001.",
+    "La has conformado con tu albarán: sus líneas (10 × 12,50 = 125,00) han pasado a la factura.",
+    "Has revisado la prevista del asiento: compras e IVA al debe, proveedor al haber por 151,25.",
+    "Has contabilizado la factura y sabes resolver los errores de datos maestros que pueden salir.",
+    "Has seguido con Docflow el rastro de la factura hasta el albarán del que viene."
    ]
   }
  ],
