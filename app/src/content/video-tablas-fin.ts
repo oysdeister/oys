@@ -630,6 +630,174 @@ export const SERIES_TABLAS_FIN: SerieTablasFin[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "tab-impuestos",
+    "titulo": "Vídeos por tabla: Impuestos",
+    "corto": "Tablas de impuestos",
+    "porTabla": true as const,
+    "modulos": [
+      "icon-impuestos"
+    ],
+    "intro": "Un vídeo corto por tabla: para qué sirve y cómo se parametriza, con pantallas reales.",
+    "capitulos": [
+      {
+        "n": 1,
+        "titulo": "Zonas fiscales",
+        "inicio": 0,
+        "duracion": 141,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/imp-zonas-fiscales.mp4",
+        "poster": "video/tablas/imp-zonas-fiscales.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 31,
+            "titulo": "Lista Zonas fiscales"
+          },
+          {
+            "t": 75,
+            "titulo": "En la empresa"
+          },
+          {
+            "t": 95,
+            "titulo": "En las direcciones del tercero"
+          },
+          {
+            "t": 124,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "titulo": "Clases de impuestos",
+        "inicio": 0,
+        "duracion": 130,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/imp-clases-impuestos.mp4",
+        "poster": "video/tablas/imp-clases-impuestos.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 32,
+            "titulo": "Lista Clases de impuestos"
+          },
+          {
+            "t": 66,
+            "titulo": "Ficha IVA"
+          },
+          {
+            "t": 110,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "titulo": "Tipos de impuestos",
+        "inicio": 0,
+        "duracion": 165,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/mej-tipos-impuesto.mp4",
+        "poster": "video/tablas/mej-tipos-impuesto.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Tipos de impuestos (sesión de Deister)"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "titulo": "Reglas de asignación de impuestos",
+        "inicio": 0,
+        "duracion": 164,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/mej-reglas-impuesto.mp4",
+        "poster": "video/tablas/mej-reglas-impuesto.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Reglas de asignación de impuestos (sesión de Deister)"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "titulo": "Operaciones impositivas",
+        "inicio": 0,
+        "duracion": 151,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/imp-operaciones-impositivas.mp4",
+        "poster": "video/tablas/imp-operaciones-impositivas.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 5,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 38,
+            "titulo": "Buscador CL* › lista"
+          },
+          {
+            "t": 79,
+            "titulo": "Ficha CLBISP"
+          },
+          {
+            "t": 130,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "titulo": "Claves fiscales",
+        "inicio": 0,
+        "duracion": 153,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/imp-claves-fiscales.mp4",
+        "poster": "video/tablas/imp-claves-fiscales.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 32,
+            "titulo": "Clave fiscal por artículo (BO*)"
+          },
+          {
+            "t": 77,
+            "titulo": "La clave en la ficha del artículo"
+          },
+          {
+            "t": 95,
+            "titulo": "Clave fiscal por terceros"
+          },
+          {
+            "t": 133,
+            "titulo": "Resumen"
+          }
+        ]
+      }
+    ]
   }
 ];
 
@@ -902,6 +1070,76 @@ export const MOMENTOS_SECCION_TABLAS_FIN: Record<string, MomentoVideo[]> = {
       "t": 0,
       "tCap": 0,
       "titulo": "Vídeo de los ponentes, mejorado: Grupos contables y fiscales del activo"
+    }
+  ],
+  "icon-impuestos-1-zonas": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 1,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Zonas fiscales"
+    }
+  ],
+  "icon-impuestos-1-clases-tipos": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 2,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Clases de impuestos"
+    },
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 3,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo de los ponentes, mejorado: Tipos de impuestos"
+    }
+  ],
+  "icon-impuestos-v-2-tipo-impuesto": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 3,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo de los ponentes, mejorado: Tipos de impuestos"
+    }
+  ],
+  "icon-impuestos-v-2-regla-2586": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 4,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo de los ponentes, mejorado: Reglas de asignación de impuestos"
+    }
+  ],
+  "icon-impuestos-1-reglas-agencia": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 4,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo de los ponentes, mejorado: Reglas de asignación de impuestos"
+    }
+  ],
+  "icon-impuestos-1-operaciones": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 5,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Operaciones impositivas"
+    }
+  ],
+  "icon-impuestos-1-claves": [
+    {
+      "serie": "tab-impuestos",
+      "capitulo": 6,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Claves fiscales"
     }
   ]
 };
