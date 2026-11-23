@@ -80,4 +80,39 @@ Elementos y componentes del activo no son tablas de parametrización (son el act
 
 ## Resultado
 
-(se rellena al publicar: tabla, vídeo nuevo / mejorado / sin cambios, duración)
+Publicado el 23-11-2026 en 4 tandas (Tesorería; Cartera; Activos; Contabilidad; Impuestos). 22 nuevos, 6 mejorados, 2 sin cambios.
+Regenerar la serie: `python3 _fuente/gen_video_tablas.py`; prueba de humo: `node _fuente/humo_tablas.mjs http://localhost:4791/` con `vite preview` (92 rutas, 37 tarjetas, 0 errores).
+Fuentes de trabajo (fuera de git): `optimistic-blackwell-254536/nueva/fin/tab-{con,car,tes,imp,act}` (guiones, grabaciones, ENTREGA.md) y `tab-mej` (prep.py, subs.py, plantilla Remotion de los mejorados).
+
+| Módulo | Tabla | Resultado | Duración | Fichero en la release |
+|---|---|---|---|---|
+| Contabilidad general | Cuentas contables | Nuevo | 2:11 | `con-cuentas-contables.mp4` |
+| Contabilidad general | Grupos auxiliares | Nuevo | 1:38 | `con-grupos-auxiliares.mp4` |
+| Contabilidad general | Proyectos | Nuevo | 1:38 | `con-proyectos.mp4` |
+| Contabilidad general | Secciones | Nuevo | 1:29 | `con-secciones.mp4` |
+| Contabilidad general | Numeradores de justificantes | Nuevo | 1:55 | `con-numeradores-justificantes.mp4` |
+| Contabilidad general | Plantillas de contabilización | Nuevo | 1:52 | `con-plantillas-contabilizacion.mp4` |
+| Contabilidad general | Diarios | Sin cambios (tutorial con-cap03, 0:26) | 1:36 (capítulo) | `video-tutoriales-fin-v1/con-cap03.mp4` |
+| Contabilidad general | Ejercicios y periodos | Sin cambios (tutorial con-cap03, 0:46) | 1:36 (capítulo) | `video-tutoriales-fin-v1/con-cap03.mp4` |
+| Cartera, cobros y pagos | Plazos de pago | Nuevo | 2:24 | `car-plazos-pago.mp4` |
+| Cartera, cobros y pagos | Bancos propios y cajas | Nuevo | 2:16 | `car-bancos-propios-cajas.mp4` |
+| Cartera, cobros y pagos | Remesas por cuenta | Nuevo | 2:04 | `car-remesas-por-cuenta.mp4` |
+| Cartera, cobros y pagos | Tipos de efecto | Mejorado | 1:45 | `mej-tipos-efecto.mp4` |
+| Cartera, cobros y pagos | Estados de efecto | Mejorado | 3:37 | `mej-estados-efecto.mp4` |
+| Cartera, cobros y pagos | Acciones sobre efectos | Mejorado | 3:51 | `mej-acciones-efecto.mp4` |
+| Tesorería | Comisiones del banco | Nuevo | 2:08 | `tes-comisiones-banco.mp4` |
+| Tesorería | Flujos financieros | Nuevo | 2:00 | `tes-flujos-financieros.mp4` |
+| Tesorería | Operaciones financieras | Nuevo | 2:04 | `tes-operaciones-financieras.mp4` |
+| Tesorería | Parámetros de tesorería | Nuevo | 1:50 | `tes-parametros-tesoreria.mp4` |
+| Tesorería | Conceptos comunes | Nuevo | 1:57 | `tes-conceptos-comunes.mp4` |
+| Tesorería | Conceptos propios | Nuevo | 2:07 | `tes-conceptos-propios.mp4` |
+| Tesorería | Definición de cajas | Nuevo | 1:32 | `tes-definicion-cajas.mp4` |
+| Impuestos | Zonas fiscales | Nuevo | 2:21 | `imp-zonas-fiscales.mp4` |
+| Impuestos | Clases de impuestos | Nuevo | 2:10 | `imp-clases-impuestos.mp4` |
+| Impuestos | Tipos de impuestos | Mejorado | 2:45 | `mej-tipos-impuesto.mp4` |
+| Impuestos | Reglas de asignación de impuestos | Mejorado | 2:44 | `mej-reglas-impuesto.mp4` |
+| Impuestos | Operaciones impositivas | Nuevo | 2:31 | `imp-operaciones-impositivas.mp4` |
+| Impuestos | Claves fiscales | Nuevo | 2:33 | `imp-claves-fiscales.mp4` |
+| Activos fijos | Bienes | Nuevo | 2:10 | `act-bienes.mp4` |
+| Activos fijos | Valores de amortización | Nuevo | 1:52 | `act-valores-amortizacion.mp4` |
+| Activos fijos | Grupos contables y fiscales del activo | Mejorado | 3:48 | `mej-grupos-activo.mp4` |
