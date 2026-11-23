@@ -1,6 +1,6 @@
 /** Botón de usuario, estado de la copia en la cuenta y botón de salir (en la barra superior). */
 import { useState } from 'react';
-import { UserButton, useClerk } from '@clerk/react';
+import { useClerk, useUser } from '@clerk/react';
 import { CLERK_ACTIVO, useEstadoSync } from './Acceso';
 import { vaciarPendiente } from './sincronizar';
 
@@ -25,7 +25,7 @@ function Salir() {
         try {
           await vaciarPendiente();
         } finally {
-          await signOut();
+          await signOut({ redirectUrl: window.location.origin + window.location.pathname });
         }
       }}
     >
@@ -34,12 +34,32 @@ function Salir() {
   );
 }
 
+/** Avatar propio (sin el menú de Clerk): foto de la cuenta o iniciales, con el nombre y el correo al pasar el ratón */
+function Avatar() {
+  const { user } = useUser();
+  if (!user) return null;
+  const nombre = user.fullName || user.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Tú';
+  const correo = user.primaryEmailAddress?.emailAddress ?? '';
+  const iniciales = nombre
+    .split(/[\s._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((p) => p[0]!.toUpperCase())
+    .join('');
+  const etiqueta = correo ? `${nombre} · ${correo}` : nombre;
+  return (
+    <span className="acc-avatar" title={etiqueta} aria-label={`Has entrado como ${etiqueta}`} role="img">
+      {user.hasImage ? <img src={user.imageUrl} alt="" width={32} height={32} /> : iniciales}
+    </span>
+  );
+}
+
 function CuentaClerk() {
   const estado = useEstadoSync();
   return (
     <div className="acc-cuenta">
       {estado && <span className={`acc-sync acc-sync-${estado}`} role="status" title={TEXTO[estado]} aria-label={TEXTO[estado]} />}
-      <UserButton />
+      <Avatar />
       <Salir />
     </div>
   );
