@@ -199,7 +199,7 @@ export function ReproductorModal({ serie, capitulo, t = 0, fin, abierto, onCerra
               </span>
               <div className="vm-cab-txt">
                 <p className="vm-kicker">
-                  {sv.titulo} · capítulo {c.n} de {CAPITULOS[CAPITULOS.length - 1].n}
+                  {sv.titulo}{CAPITULOS.length > 1 ? ` · capítulo ${c.n} de ${CAPITULOS.length}` : ''}
                 </p>
                 <h2 id="vm-titulo">{c.titulo}</h2>
               </div>
@@ -330,6 +330,8 @@ export function dondeMomento(m: MomentoVideo) {
     return `Vídeo corto de la tabla${c ? ` · ${mmss(c.duracion)}` : ''}`;
   }
   const tramo = m.fin !== undefined ? `${mmss(m.tCap)}–${mmss(m.fin)}` : mmss(m.tCap);
+  // Vídeo de un solo capítulo (p. ej. «Introducción a Axional»): sin «cap. 1»
+  if (sv && sv.capitulos.length === 1) return `Vídeo «${sv.corto}» · ${tramo}`;
   return `${sv ? `Vídeo «${sv.corto}»` : 'Vídeo de Compras'} · cap. ${m.capitulo}, ${tramo}`;
 }
 

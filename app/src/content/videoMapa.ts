@@ -5,7 +5,7 @@
 export interface MomentoVideo {
   /** Serie de vídeo (ver videoSeries.ts); sin ella es el vídeo de compras */
   serie?: string;
-  capitulo: number;      // 0-10 (0: introducción y navegación)
+  capitulo: number;      // 1-10
   t: number;             // segundo dentro del vídeo completo
   tCap: number;          // segundo dentro del clip del capítulo
   titulo: string;        // qué se explica en ese momento («Alta del proveedor»)
@@ -23,48 +23,14 @@ export interface CapituloVideo {
   escenas: { t: number; titulo: string }[]; // t relativo al capítulo
 }
 
-/** Clips de la Release «video-v1» de GitHub (cap. 0, 1 y 2 en «video-compras-v2»). Tiempos medidos sobre el guion renderizado (±1 s). */
+/** Clips de la Release «video-v1» de GitHub (cap. 1 y 2 recortados en «video-v2»: la navegación general está en el vídeo de introducción, video-intro.ts). Tiempos medidos sobre el guion renderizado (±1 s). */
 export const CAPITULOS: CapituloVideo[] = [
-  {
-    "n": 0,
-    "titulo": "Introducción y navegación en Axional",
-    "inicio": 0,
-    "duracion": 200,
-    "url": "https://github.com/oysdeister/oys/releases/download/video-compras-v2/cap00.mp4",
-    "poster": "video/cap00.jpg",
-    "escenas": [
-      {
-        "t": 0,
-        "titulo": "Qué es un ERP"
-      },
-      {
-        "t": 28,
-        "titulo": "La barra superior"
-      },
-      {
-        "t": 62,
-        "titulo": "El buscador"
-      },
-      {
-        "t": 93,
-        "titulo": "El menú lateral"
-      },
-      {
-        "t": 114,
-        "titulo": "Dentro de un bloque"
-      },
-      {
-        "t": 154,
-        "titulo": "Qué es un maestro"
-      }
-    ]
-  },
   {
     "n": 1,
     "titulo": "Bienvenida: el módulo de compras",
-    "inicio": 200,
+    "inicio": 0,
     "duracion": 309,
-    "url": "https://github.com/oysdeister/oys/releases/download/video-compras-v2/cap01.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v2/cap01.mp4",
     "poster": "video/cap01.jpg",
     "escenas": [
       {
@@ -108,9 +74,9 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 2,
     "titulo": "Los maestros: el proveedor y el artículo",
-    "inicio": 509,
+    "inicio": 309,
     "duracion": 554,
-    "url": "https://github.com/oysdeister/oys/releases/download/video-compras-v2/cap02.mp4",
+    "url": "https://github.com/oysdeister/oys/releases/download/video-v2/cap02.mp4",
     "poster": "video/cap02.jpg",
     "escenas": [
       {
@@ -158,7 +124,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 3,
     "titulo": "Los precios: listas y grupos de precios",
-    "inicio": 1063,
+    "inicio": 863,
     "duracion": 305,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap03.mp4",
     "poster": "video/cap03.jpg",
@@ -200,7 +166,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 4,
     "titulo": "Cómo se numeran y clasifican los documentos",
-    "inicio": 1368,
+    "inicio": 1168,
     "duracion": 903,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap04.mp4",
     "poster": "video/cap04.jpg",
@@ -286,7 +252,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 5,
     "titulo": "El pedido de compra",
-    "inicio": 2271,
+    "inicio": 2071,
     "duracion": 741,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap05.mp4",
     "poster": "video/cap05.jpg",
@@ -376,7 +342,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 6,
     "titulo": "El albarán: recibir la mercancía",
-    "inicio": 3012,
+    "inicio": 2812,
     "duracion": 554,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap06.mp4",
     "poster": "video/cap06.jpg",
@@ -450,7 +416,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 7,
     "titulo": "La factura del proveedor",
-    "inicio": 3566,
+    "inicio": 3366,
     "duracion": 387,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap07.mp4",
     "poster": "video/cap07.jpg",
@@ -496,7 +462,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 8,
     "titulo": "Contabilizar: qué es un asiento",
-    "inicio": 3953,
+    "inicio": 3753,
     "duracion": 495,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap08.mp4",
     "poster": "video/cap08.jpg",
@@ -534,7 +500,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 9,
     "titulo": "Docflow: seguir el rastro de una compra",
-    "inicio": 4448,
+    "inicio": 4248,
     "duracion": 638,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap09.mp4",
     "poster": "video/cap09.jpg",
@@ -596,7 +562,7 @@ export const CAPITULOS: CapituloVideo[] = [
   {
     "n": 10,
     "titulo": "Resumen y cierre",
-    "inicio": 5086,
+    "inicio": 4886,
     "duracion": 169,
     "url": "https://github.com/oysdeister/oys/releases/download/video-v1/cap10.mp4",
     "poster": "video/cap10.jpg",
@@ -634,13 +600,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-tercero": [
     {
       "capitulo": 2,
-      "t": 572,
+      "t": 372,
       "tCap": 63,
       "titulo": "Qué es un tercero"
     },
     {
       "capitulo": 2,
-      "t": 605,
+      "t": 405,
       "tCap": 96,
       "titulo": "Alta del tercero"
     }
@@ -648,7 +614,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-relaciones": [
     {
       "capitulo": 8,
-      "t": 4159,
+      "t": 3959,
       "tCap": 206,
       "titulo": "La subcuenta del proveedor en el asiento"
     }
@@ -656,7 +622,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-direcciones": [
     {
       "capitulo": 2,
-      "t": 694,
+      "t": 494,
       "tCap": 185,
       "titulo": "La dirección del tercero"
     }
@@ -664,13 +630,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-condiciones": [
     {
       "capitulo": 2,
-      "t": 762,
+      "t": 562,
       "tCap": 253,
       "titulo": "Condiciones de pago del tercero"
     },
     {
       "capitulo": 2,
-      "t": 746,
+      "t": 546,
       "tCap": 237,
       "titulo": "Validar el tercero"
     }
@@ -678,19 +644,19 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-lista": [
     {
       "capitulo": 3,
-      "t": 1073,
+      "t": 873,
       "tCap": 10,
       "titulo": "Qué es una lista de precios"
     },
     {
       "capitulo": 3,
-      "t": 1183,
+      "t": 983,
       "tCap": 120,
       "titulo": "La lista COM"
     },
     {
       "capitulo": 3,
-      "t": 1230,
+      "t": 1030,
       "tCap": 167,
       "titulo": "La línea de precio del artículo"
     }
@@ -698,13 +664,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-grupo": [
     {
       "capitulo": 3,
-      "t": 1145,
+      "t": 945,
       "tCap": 82,
       "titulo": "Del proveedor al precio"
     },
     {
       "capitulo": 3,
-      "t": 1284,
+      "t": 1084,
       "tCap": 221,
       "titulo": "El grupo de precios"
     }
@@ -712,13 +678,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-1-proveedor": [
     {
       "capitulo": 2,
-      "t": 522,
+      "t": 322,
       "tCap": 13,
       "titulo": "Qué contiene la ficha de un proveedor"
     },
     {
       "capitulo": 2,
-      "t": 804,
+      "t": 604,
       "tCap": 295,
       "titulo": "Alta del proveedor"
     }
@@ -726,19 +692,19 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-tipos-numerador": [
     {
       "capitulo": 4,
-      "t": 1463,
+      "t": 1263,
       "tCap": 95,
       "titulo": "Numerador y máscara de serie"
     },
     {
       "capitulo": 4,
-      "t": 1525,
+      "t": 1325,
       "tCap": 157,
       "titulo": "La rotura"
     },
     {
       "capitulo": 4,
-      "t": 1642,
+      "t": 1442,
       "tCap": 274,
       "titulo": "Numerador de documentos"
     }
@@ -746,7 +712,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-3-tip-oferta": [
     {
       "capitulo": 4,
-      "t": 1414,
+      "t": 1214,
       "tCap": 46,
       "titulo": "Qué es el tipo de documento",
       "fin": 48
@@ -755,13 +721,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-2-tip-factura": [
     {
       "capitulo": 4,
-      "t": 1613,
+      "t": 1413,
       "tCap": 245,
       "titulo": "La numeración legal de las facturas"
     },
     {
       "capitulo": 4,
-      "t": 2128,
+      "t": 1928,
       "tCap": 760,
       "titulo": "El tipo de factura"
     }
@@ -769,31 +735,31 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-2-albaran": [
     {
       "capitulo": 6,
-      "t": 3020,
+      "t": 2820,
       "tCap": 8,
       "titulo": "Qué es un albarán"
     },
     {
       "capitulo": 6,
-      "t": 3054,
+      "t": 2854,
       "tCap": 42,
       "titulo": "El albarán nace del pedido"
     },
     {
       "capitulo": 6,
-      "t": 3208,
+      "t": 3008,
       "tCap": 196,
       "titulo": "La cabecera del albarán"
     },
     {
       "capitulo": 6,
-      "t": 3324,
+      "t": 3124,
       "tCap": 312,
       "titulo": "Validar el albarán"
     },
     {
       "capitulo": 6,
-      "t": 3502,
+      "t": 3302,
       "tCap": 490,
       "titulo": "El pedido queda servido"
     }
@@ -801,19 +767,19 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-2-factura": [
     {
       "capitulo": 7,
-      "t": 3573,
+      "t": 3373,
       "tCap": 7,
       "titulo": "Qué es una factura de compra"
     },
     {
       "capitulo": 7,
-      "t": 3669,
+      "t": 3469,
       "tCap": 103,
       "titulo": "Generar la factura"
     },
     {
       "capitulo": 7,
-      "t": 3867,
+      "t": 3667,
       "tCap": 301,
       "titulo": "Validar la factura"
     }
@@ -821,13 +787,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-2-conformar": [
     {
       "capitulo": 7,
-      "t": 3669,
+      "t": 3469,
       "tCap": 103,
       "titulo": "La factura nace del albarán"
     },
     {
       "capitulo": 7,
-      "t": 3822,
+      "t": 3622,
       "tCap": 256,
       "titulo": "Importe declarado frente a calculado"
     }
@@ -835,19 +801,19 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-2-contabilizar": [
     {
       "capitulo": 6,
-      "t": 3459,
+      "t": 3259,
       "tCap": 447,
       "titulo": "Contabilizar el albarán"
     },
     {
       "capitulo": 8,
-      "t": 4228,
+      "t": 4028,
       "tCap": 275,
       "titulo": "Contabilizar la factura"
     },
     {
       "capitulo": 8,
-      "t": 4280,
+      "t": 4080,
       "tCap": 327,
       "titulo": "Leer el asiento de la factura"
     }
@@ -855,7 +821,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-3-oferta": [
     {
       "capitulo": 1,
-      "t": 308,
+      "t": 108,
       "tCap": 108,
       "titulo": "El ciclo puede empezar antes: la oferta",
       "fin": 139
@@ -864,19 +830,19 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-3-tip-pedido": [
     {
       "capitulo": 4,
-      "t": 1690,
+      "t": 1490,
       "tCap": 322,
       "titulo": "El numerador del pedido"
     },
     {
       "capitulo": 4,
-      "t": 1849,
+      "t": 1649,
       "tCap": 481,
       "titulo": "Los tipos de pedido"
     },
     {
       "capitulo": 4,
-      "t": 1888,
+      "t": 1688,
       "tCap": 520,
       "titulo": "El tipo de pedido por dentro"
     }
@@ -884,25 +850,25 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-3-pedido": [
     {
       "capitulo": 5,
-      "t": 2278,
+      "t": 2078,
       "tCap": 7,
       "titulo": "Qué es un pedido"
     },
     {
       "capitulo": 5,
-      "t": 2381,
+      "t": 2181,
       "tCap": 110,
       "titulo": "Crear el pedido"
     },
     {
       "capitulo": 5,
-      "t": 2784,
+      "t": 2584,
       "tCap": 513,
       "titulo": "Las líneas del pedido"
     },
     {
       "capitulo": 5,
-      "t": 2931,
+      "t": 2731,
       "tCap": 660,
       "titulo": "Validar el pedido"
     }
@@ -910,71 +876,27 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "compras-3-tip-albaran-origen": [
     {
       "capitulo": 4,
-      "t": 1974,
+      "t": 1774,
       "tCap": 606,
       "titulo": "El tipo de albarán dentro del pedido"
     },
     {
       "capitulo": 4,
-      "t": 2087,
+      "t": 1887,
       "tCap": 719,
       "titulo": "El tipo de albarán"
-    }
-  ],
-  "maestros-moverte-axional": [
-    {
-      "capitulo": 0,
-      "t": 0,
-      "tCap": 0,
-      "titulo": "Qué es un ERP",
-      "fin": 28
-    },
-    {
-      "capitulo": 0,
-      "t": 28,
-      "tCap": 28,
-      "titulo": "La barra superior",
-      "fin": 62
-    },
-    {
-      "capitulo": 0,
-      "t": 62,
-      "tCap": 62,
-      "titulo": "El buscador",
-      "fin": 93
-    },
-    {
-      "capitulo": 0,
-      "t": 93,
-      "tCap": 93,
-      "titulo": "El menú lateral",
-      "fin": 114
-    },
-    {
-      "capitulo": 0,
-      "t": 114,
-      "tCap": 114,
-      "titulo": "Dentro de un bloque",
-      "fin": 154
-    },
-    {
-      "capitulo": 0,
-      "t": 154,
-      "tCap": 154,
-      "titulo": "Qué es un maestro",
-      "fin": 200
     }
   ],
   "maestros-1-terceros": [
     {
       "capitulo": 2,
-      "t": 605,
+      "t": 405,
       "tCap": 96,
       "titulo": "Alta del tercero"
     },
     {
       "capitulo": 2,
-      "t": 746,
+      "t": 546,
       "tCap": 237,
       "titulo": "Validar el tercero"
     }
@@ -982,7 +904,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "maestros-1-plazos": [
     {
       "capitulo": 2,
-      "t": 776,
+      "t": 576,
       "tCap": 267,
       "titulo": "Plazo de pago del tercero"
     }
@@ -990,7 +912,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "maestros-1-tipos-efecto": [
     {
       "capitulo": 2,
-      "t": 768,
+      "t": 568,
       "tCap": 259,
       "titulo": "Tipo de efecto del tercero"
     }
@@ -998,13 +920,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "maestros-1-cuentas-perfil": [
     {
       "capitulo": 8,
-      "t": 3995,
+      "t": 3795,
       "tCap": 42,
       "titulo": "Qué es una cuenta contable"
     },
     {
       "capitulo": 8,
-      "t": 4159,
+      "t": 3959,
       "tCap": 206,
       "titulo": "La subcuenta del proveedor"
     }
@@ -1012,13 +934,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "maestros-2-articulos-log": [
     {
       "capitulo": 2,
-      "t": 902,
+      "t": 702,
       "tCap": 393,
       "titulo": "Qué es un artículo"
     },
     {
       "capitulo": 2,
-      "t": 955,
+      "t": 755,
       "tCap": 446,
       "titulo": "La ficha del artículo"
     }
@@ -1026,13 +948,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "asientos-2-lineas": [
     {
       "capitulo": 8,
-      "t": 4006,
+      "t": 3806,
       "tCap": 53,
       "titulo": "El debe y el haber"
     },
     {
       "capitulo": 8,
-      "t": 4280,
+      "t": 4080,
       "tCap": 327,
       "titulo": "Leer las líneas de un asiento"
     }
@@ -1040,13 +962,13 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "asientos-3-cuadre": [
     {
       "capitulo": 8,
-      "t": 4021,
+      "t": 3821,
       "tCap": 68,
       "titulo": "La regla de oro: el asiento cuadra"
     },
     {
       "capitulo": 8,
-      "t": 4362,
+      "t": 4162,
       "tCap": 409,
       "titulo": "Comprobar el cuadre"
     }
@@ -1054,7 +976,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "carteras-1-plazo": [
     {
       "capitulo": 2,
-      "t": 776,
+      "t": 576,
       "tCap": 267,
       "titulo": "Plazo de pago del tercero"
     }
@@ -1062,7 +984,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "carteras-1-tipo-efecto": [
     {
       "capitulo": 2,
-      "t": 768,
+      "t": 568,
       "tCap": 259,
       "titulo": "Tipo de efecto del tercero"
     }
@@ -1070,7 +992,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "carteras-1-tercero": [
     {
       "capitulo": 2,
-      "t": 762,
+      "t": 562,
       "tCap": 253,
       "titulo": "Condiciones de pago del tercero"
     }
@@ -1078,7 +1000,7 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
   "carteras-1-factura-compra": [
     {
       "capitulo": 7,
-      "t": 3806,
+      "t": 3606,
       "tCap": 240,
       "titulo": "El vencimiento de la factura de compra"
     }
@@ -1090,31 +1012,31 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "compras-1": [
     {
       "capitulo": 2,
-      "t": 605,
+      "t": 405,
       "tCap": 96,
       "titulo": "Alta del tercero"
     },
     {
       "capitulo": 2,
-      "t": 694,
+      "t": 494,
       "tCap": 185,
       "titulo": "La dirección del tercero"
     },
     {
       "capitulo": 2,
-      "t": 762,
+      "t": 562,
       "tCap": 253,
       "titulo": "Condiciones de pago"
     },
     {
       "capitulo": 2,
-      "t": 804,
+      "t": 604,
       "tCap": 295,
       "titulo": "Alta del proveedor"
     },
     {
       "capitulo": 2,
-      "t": 902,
+      "t": 702,
       "tCap": 393,
       "titulo": "Qué es un artículo"
     }
@@ -1122,13 +1044,13 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "compras-precios": [
     {
       "capitulo": 3,
-      "t": 1183,
+      "t": 983,
       "tCap": 120,
       "titulo": "La lista de precios"
     },
     {
       "capitulo": 3,
-      "t": 1284,
+      "t": 1084,
       "tCap": 221,
       "titulo": "El grupo de precios"
     }
@@ -1136,25 +1058,25 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "compras-tipos": [
     {
       "capitulo": 4,
-      "t": 1463,
+      "t": 1263,
       "tCap": 95,
       "titulo": "Numerador y máscara de serie"
     },
     {
       "capitulo": 4,
-      "t": 1849,
+      "t": 1649,
       "tCap": 481,
       "titulo": "Los tipos de pedido"
     },
     {
       "capitulo": 4,
-      "t": 2087,
+      "t": 1887,
       "tCap": 719,
       "titulo": "El tipo de albarán"
     },
     {
       "capitulo": 4,
-      "t": 2128,
+      "t": 1928,
       "tCap": 760,
       "titulo": "El tipo de factura"
     }
@@ -1162,20 +1084,20 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "compras-3": [
     {
       "capitulo": 1,
-      "t": 308,
+      "t": 108,
       "tCap": 108,
       "titulo": "El ciclo puede empezar antes: la oferta",
       "fin": 139
     },
     {
       "capitulo": 5,
-      "t": 2381,
+      "t": 2181,
       "tCap": 110,
       "titulo": "Crear el pedido"
     },
     {
       "capitulo": 5,
-      "t": 2931,
+      "t": 2731,
       "tCap": 660,
       "titulo": "Validar el pedido"
     }
@@ -1183,19 +1105,19 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "compras-2": [
     {
       "capitulo": 6,
-      "t": 3054,
+      "t": 2854,
       "tCap": 42,
       "titulo": "El albarán nace del pedido"
     },
     {
       "capitulo": 6,
-      "t": 3208,
+      "t": 3008,
       "tCap": 196,
       "titulo": "La cabecera del albarán"
     },
     {
       "capitulo": 6,
-      "t": 3324,
+      "t": 3124,
       "tCap": 312,
       "titulo": "Validar el albarán"
     }
@@ -1203,25 +1125,25 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "compras-factura": [
     {
       "capitulo": 7,
-      "t": 3669,
+      "t": 3469,
       "tCap": 103,
       "titulo": "Generar la factura"
     },
     {
       "capitulo": 7,
-      "t": 3822,
+      "t": 3622,
       "tCap": 256,
       "titulo": "Importe declarado frente a calculado"
     },
     {
       "capitulo": 8,
-      "t": 4228,
+      "t": 4028,
       "tCap": 275,
       "titulo": "Contabilizar la factura"
     },
     {
       "capitulo": 9,
-      "t": 4842,
+      "t": 4642,
       "tCap": 394,
       "titulo": "Docflow: el rastro de la compra"
     }
@@ -1229,19 +1151,19 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "maestros-1": [
     {
       "capitulo": 2,
-      "t": 605,
+      "t": 405,
       "tCap": 96,
       "titulo": "Alta del tercero"
     },
     {
       "capitulo": 2,
-      "t": 768,
+      "t": 568,
       "tCap": 259,
       "titulo": "Tipo de efecto y plazo de pago"
     },
     {
       "capitulo": 8,
-      "t": 3995,
+      "t": 3795,
       "tCap": 42,
       "titulo": "Qué es una cuenta contable"
     }
@@ -1249,7 +1171,7 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "maestros-2": [
     {
       "capitulo": 2,
-      "t": 955,
+      "t": 755,
       "tCap": 446,
       "titulo": "La ficha del artículo"
     }
@@ -1257,13 +1179,13 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "asientos-2": [
     {
       "capitulo": 8,
-      "t": 4006,
+      "t": 3806,
       "tCap": 53,
       "titulo": "El debe y el haber"
     },
     {
       "capitulo": 8,
-      "t": 4280,
+      "t": 4080,
       "tCap": 327,
       "titulo": "Leer las líneas de un asiento"
     }
@@ -1271,13 +1193,13 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "asientos-3": [
     {
       "capitulo": 8,
-      "t": 4021,
+      "t": 3821,
       "tCap": 68,
       "titulo": "La regla de oro: el asiento cuadra"
     },
     {
       "capitulo": 8,
-      "t": 4362,
+      "t": 4162,
       "tCap": 409,
       "titulo": "Comprobar el cuadre"
     }
@@ -1285,13 +1207,13 @@ export const MOMENTOS_EJERCICIO: Record<string, MomentoVideo[]> = {
   "carteras-1": [
     {
       "capitulo": 2,
-      "t": 762,
+      "t": 562,
       "tCap": 253,
       "titulo": "Condiciones de pago del tercero"
     },
     {
       "capitulo": 7,
-      "t": 3806,
+      "t": 3606,
       "tCap": 240,
       "titulo": "El vencimiento de la factura de compra"
     }
@@ -1303,56 +1225,56 @@ export const MOMENTOS_MODULO: Record<string, MomentoVideo[]> = {
   "compras": [
     {
       "capitulo": 1,
-      "t": 228,
+      "t": 28,
       "tCap": 28,
       "titulo": "Para qué sirve el módulo de compras",
       "fin": 56
     },
     {
       "capitulo": 1,
-      "t": 256,
+      "t": 56,
       "tCap": 56,
       "titulo": "El ciclo de compra",
       "fin": 88
     },
     {
       "capitulo": 1,
-      "t": 288,
+      "t": 88,
       "tCap": 88,
       "titulo": "Docflow: el rastro de cada compra",
       "fin": 108
     },
     {
       "capitulo": 1,
-      "t": 308,
+      "t": 108,
       "tCap": 108,
       "titulo": "El ciclo puede empezar antes",
       "fin": 139
     },
     {
       "capitulo": 1,
-      "t": 340,
+      "t": 140,
       "tCap": 140,
       "titulo": "Recorrido por Compras: el ciclo",
       "fin": 179
     },
     {
       "capitulo": 1,
-      "t": 379,
+      "t": 179,
       "tCap": 179,
       "titulo": "Recorrido por Compras: el resto",
       "fin": 222
     },
     {
       "capitulo": 1,
-      "t": 423,
+      "t": 223,
       "tCap": 223,
       "titulo": "Qué vamos a ver: el módulo",
       "fin": 241
     },
     {
       "capitulo": 1,
-      "t": 441,
+      "t": 241,
       "tCap": 241,
       "titulo": "Qué vamos a ver: los bloques",
       "fin": 258

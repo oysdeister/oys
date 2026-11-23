@@ -15,6 +15,7 @@ import { SERIES_FIN, MOMENTOS_SECCION_FIN, MOMENTOS_EJERCICIO_FIN } from './vide
 import { SERIES_TUT_FIN, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_EJERCICIO_TUT_FIN } from './video-tutoriales-fin';
 import { SERIES_TABLAS_FIN, MOMENTOS_SECCION_TABLAS_FIN } from './video-tablas-fin';
 import { SERIES_TESORERIA, MOMENTOS_SECCION_TESORERIA, MOMENTOS_EJERCICIO_TESORERIA } from './video-tesoreria';
+import { SERIES_INTRO, MOMENTOS_SECCION_INTRO, MOMENTOS_MODULO_INTRO } from './video-intro';
 
 export interface SerieVideo {
   id: string;
@@ -34,6 +35,7 @@ export interface SerieVideo {
 }
 
 export const SERIES: Record<string, SerieVideo> = {
+  ...Object.fromEntries(SERIES_INTRO.map((s) => [s.id, s])),
   compras: { id: 'compras', titulo: 'Vídeo de compras', corto: 'Compras', pagina: '/video', capitulos: CAPITULOS },
   ...Object.fromEntries(SERIES_TABLAS_FIN.map((s) => [s.id, s])),
   ...Object.fromEntries(SERIES_TUT_FIN.map((s) => [s.id, s])),
@@ -52,7 +54,7 @@ function juntar(...mapas: Record<string, MomentoVideo[]>[]) {
 }
 
 // El vídeo de la tabla va primero: es la tarjeta «Mira primero el vídeo» de la sección que explica esa tabla
-const SECCION = juntar(MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
+const SECCION = juntar(MOMENTOS_SECCION_INTRO, MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
 const EJERCICIO = juntar(MOM_EJ_COMPRAS, MOMENTOS_EJERCICIO_TUT_FIN, MOMENTOS_EJERCICIO_TESORERIA, MOMENTOS_EJERCICIO_FIN);
 
 export function momentosDeSeccion(id: string): MomentoVideo[] {
@@ -65,11 +67,11 @@ export function momentosDeEjercicio(id: string): MomentoVideo[] {
 
 /** Vídeo de presentación del módulo (tarjeta «Mira primero el vídeo» de su página) */
 export function momentosDeModulo(id: string): MomentoVideo[] {
-  return MOMENTOS_MODULO[id] ?? [];
+  return MOMENTOS_MODULO_INTRO[id] ?? MOMENTOS_MODULO[id] ?? [];
 }
 
 /** Series que pertenecen a un módulo (para mostrar sus capítulos en la página del módulo) */
 export function seriesDeModulo(modulo: string): SerieVideo[] {
   if (modulo === 'compras') return [SERIES.compras];
-  return [...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
+  return [...SERIES_INTRO, ...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
 }
