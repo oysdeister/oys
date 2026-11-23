@@ -1,19 +1,20 @@
 /**
  * Formularios propios de acceso sobre la API de Clerk (sin componentes ni pantallas de Clerk).
  * - Entrar: correo → código de 6 cifras por correo → dentro.
- * - Crear cuenta: Google (redirección y vuelta propia) o nombre + correo → código → dentro.
+ * - Crear cuenta: nombre, apellidos y correo → código → dentro (sin Google, por decisión de Sergi).
+ * - Si llega una vuelta antigua de Google (?acceso=google), se termina igualmente.
  * - Invitación de Clerk (__clerk_ticket en la URL): se acepta con un botón.
  */
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useClerk } from '@clerk/react';
 import { useSignIn, useSignUp } from '@clerk/react/legacy';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { DOMINIO, PARAM_VUELTA, URL_APP, URL_VUELTA, correoPermitido, correoValido } from './config';
+import { DOMINIO, PARAM_VUELTA, URL_APP, correoPermitido, correoValido } from './config';
 import type { FaseEscena } from './EscenaAcceso';
 
 type Modo = 'entrar' | 'registro';
 type Paso = 'correo' | 'codigo' | 'completar' | 'hecho';
-type Ocupado = null | 'enviar' | 'verificar' | 'google' | 'reenviar' | 'vuelta';
+type Ocupado = null | 'enviar' | 'verificar' | 'reenviar' | 'vuelta';
 
 interface Aviso {
   texto: string;
@@ -77,17 +78,6 @@ function leerInvitacion() {
 /** Quita de la barra de direcciones los parámetros del acceso (vuelta de Google, invitación) */
 function limpiarUrl() {
   window.history.replaceState(null, '', URL_APP + window.location.hash);
-}
-
-function LogoGoogle() {
-  return (
-    <svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true">
-      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z" />
-      <path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
-      <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" />
-      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" />
-    </svg>
-  );
 }
 
 function Spinner() {
@@ -174,7 +164,7 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
   useEffect(() => {
     if (paso === 'hecho') onFase('ok');
     else if (aviso) onFase('error');
-    else if (ocupado === 'enviar' || ocupado === 'verificar' || ocupado === 'google' || ocupado === 'vuelta') onFase('enviando');
+    else if (ocupado === 'enviar' || ocupado === 'verificar' || ocupado === 'vuelta') onFase('enviando');
     else if (paso === 'codigo') onFase('codigo');
     else if (correo || nombre) onFase('escribiendo');
     else onFase('reposo');
@@ -256,20 +246,6 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listo]);
 
-  /* ---------- Google ---------- */
-  const conGoogle = async () => {
-    if (!listo || ocupado) return;
-    setAviso(null);
-    setOcupado('google');
-    try {
-      const recurso = modo === 'registro' ? signUp : signIn;
-      await recurso.authenticateWithRedirect({ strategy: 'oauth_google', redirectUrl: URL_VUELTA, redirectUrlComplete: URL_APP });
-    } catch (e) {
-      setOcupado(null);
-      fallo(e);
-    }
-  };
-
   /* ---------- Invitación ---------- */
   const aceptarInvitacion = async () => {
     if (!listo || !invitacion || ocupado) return;
@@ -307,7 +283,7 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
     const c = correo.trim();
     if (!correoValido(c)) return setAviso({ texto: 'Escribe tu correo completo, por ejemplo nombre@' + (DOMINIO || 'empresa.com') + '.' });
     if (!correoPermitido(c)) return setAviso({ texto: `Ese correo no es de O&S. Usa tu correo @${DOMINIO}.` });
-    if (modo === 'registro' && !nombre.trim()) return setAviso({ texto: 'Escribe tu nombre.' });
+    if (modo === 'registro' && (!nombre.trim() || !apellidos.trim())) return setAviso({ texto: 'Escribe tu nombre y tus apellidos.' });
     setAviso(null);
     setOcupado('enviar');
     try {
@@ -317,7 +293,7 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
         if (!f || !('emailAddressId' in f)) throw { code: 'sin_codigo' };
         await signIn.prepareFirstFactor({ strategy: 'email_code', emailAddressId: f.emailAddressId });
       } else {
-        const datos = { emailAddress: c, firstName: nombre.trim(), ...(apellidos.trim() ? { lastName: apellidos.trim() } : {}) };
+        const datos = { emailAddress: c, firstName: nombre.trim(), lastName: apellidos.trim() };
         // Si la instancia no tiene activados nombre y apellidos, se crea sin ellos
         await signUp.create(datos).catch((e) => (codigoError(e).code === 'form_param_unknown' ? signUp.create({ emailAddress: c }) : Promise.reject(e)));
         await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
@@ -387,7 +363,7 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
   const completar = async (ev: FormEvent) => {
     ev.preventDefault();
     if (!listo || ocupado) return;
-    if (!nombre.trim()) return setAviso({ texto: 'Escribe tu nombre para terminar.' });
+    if (!nombre.trim() || !apellidos.trim()) return setAviso({ texto: 'Escribe tu nombre y tus apellidos para terminar.' });
     setAviso(null);
     setOcupado('enviar');
     try {
@@ -488,7 +464,7 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
             </motion.div>
           ) : paso === 'completar' ? (
             <motion.form key="completar" {...anim()} className="acc-pasos" onSubmit={(e) => void completar(e)} noValidate>
-              <p className="acc-ayuda">Google no nos ha dado tu nombre. Escríbelo para terminar.</p>
+              <p className="acc-ayuda">Nos falta tu nombre. Escríbelo para terminar.</p>
               <CamposNombre nombre={nombre} apellidos={apellidos} setNombre={setNombre} setApellidos={setApellidos} />
               <Boton type="submit" ocupado={ocupado === 'enviar'} textoOcupado="Guardando…">
                 Terminar y entrar
@@ -517,17 +493,7 @@ export function FormularioAcceso({ onFase }: { onFase: (f: FaseEscena) => void }
             </motion.form>
           ) : (
             <motion.div key={modo} {...anim()} className="acc-pasos">
-              {
-                <>
-                  <button type="button" className="acc-google" onClick={() => void conGoogle()} disabled={!!ocupado} aria-busy={ocupado === 'google'}>
-                    <span className="acc-google-logo">{ocupado === 'google' ? <Spinner /> : <LogoGoogle />}</span>
-                    <span>{ocupado === 'google' ? 'Abriendo Google…' : modo === 'entrar' ? 'Entrar con Google' : 'Crear cuenta con Google'}</span>
-                  </button>
-                  <div className="acc-sep" role="separator">
-                    <span>o con tu correo</span>
-                  </div>
-                </>
-              }
+              {modo === 'registro' && <p className="acc-ayuda">Escribe tu nombre, tus apellidos y tu correo de O&amp;S. Te enviamos un código y entras. Sin contraseñas.</p>}
               {modo === 'entrar' && (
                 <p className="acc-ayuda">
                   Te enviamos un código a tu correo de O&amp;S para entrar. Sin contraseñas. ¿Es tu primer día?{' '}
@@ -614,7 +580,7 @@ function CamposNombre({ nombre, apellidos, setNombre, setApellidos }: { nombre: 
       </div>
       <div className="acc-campo">
         <label htmlFor={b}>
-          Apellidos <span className="acc-opcional">(opcional)</span>
+          Apellidos
         </label>
         <input id={b} className="acc-input" autoComplete="family-name" value={apellidos} onChange={(e) => setApellidos(e.target.value)} />
       </div>

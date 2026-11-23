@@ -19,7 +19,8 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
 - **Clave:** se lee de `VITE_CLERK_PUBLISHABLE_KEY`. Si no está definida, la app funciona como antes: sin login y con el progreso solo en el navegador.
 - **Sin pantallas de Clerk:** el alumno no ve nunca componentes, ventanas ni páginas alojadas de Clerk. Los formularios son de la plataforma y usan la API (`useSignIn`/`useSignUp` de `@clerk/react/legacy`):
   - **Ya tengo cuenta:** correo → `signIn.create` + `prepareFirstFactor('email_code')` → código de 6 cifras → `attemptFirstFactor` → `setActive`.
-  - **Soy nuevo:** nombre (+ apellidos opcionales) y correo → `signUp.create` + `prepareEmailAddressVerification('email_code')` → código → `attemptEmailAddressVerification` → `setActive`. O **Crear cuenta con Google**: `authenticateWithRedirect` con vuelta a `…/oys/?acceso=google`, que la propia pantalla resuelve con `handleRedirectCallback` (si Google no da el nombre, se pide en un paso propio).
+  - **Crear cuenta:** nombre, apellidos y correo → `signUp.create` + `prepareEmailAddressVerification('email_code')` → código → `attemptEmailAddressVerification` → `setActive`.
+  - **Sin Google** (decisión de Sergi, 24-11-2026): no hay botón de Google para entrar ni para registrarse. Si llega una vuelta antigua de Google (`…/oys/?acceso=google`), la pantalla la termina con `handleRedirectCallback`.
   - Invitaciones de Clerk (`__clerk_ticket` en la URL): botón «Aceptar invitación y entrar».
   - Antes de llamar a Clerk se comprueba que el correo sea `@oysconsultores.com` (o de `CORREOS_EXTRA`).
   - El avatar de la barra superior es propio (foto o iniciales); ya no se usa `<UserButton>`.
@@ -74,13 +75,12 @@ En el panel de Clerk, aplicación **OYS**, instancia de desarrollo:
 
 1. **Configure → User & authentication → Email:** activa *Sign-up with email*, *Verify at sign-up* con **Email verification code**, y *Sign-in with email* con **Email verification code**.
 2. **Configure → User & authentication → Password:** desactiva *Sign-up with password* (el acceso nuevo no usa contraseñas; si se deja obligatoria, el registro por correo se queda a medias).
-3. **Configure → User & authentication → Personal information** (o *Name*): activa **First and last name**, sin marcarlos obligatorios.
-4. **Configure → SSO connections → Google:** activa *Enable for sign-up and sign-in*.
-5. **Configure → Restrictions / Access mode:** cambia **Invite-only** a **Public** para que «Soy nuevo» funcione. La app solo abre la plataforma a correos `@oysconsultores.com` (y `CORREOS_EXTRA`); quien se registre con otro correo verá «Solo cuentas de O&S». Para que Clerk ni siquiera cree esas cuentas hace falta **Allowlist** (de pago).
+3. **Configure → User & authentication → Personal information** (o *Name*): activa **First and last name** (la pantalla los pide siempre).
+4. **Configure → SSO connections → Google:** desactívalo, porque la plataforma ya no ofrece entrar con Google. Si lo dejas activo no pasa nada visible, pero sobra.
+5. **Configure → Restrictions / Access mode:** cambia **Invite-only** a **Public** para que «Crear cuenta» funcione. La app solo abre la plataforma a correos `@oysconsultores.com` (y `CORREOS_EXTRA`); quien se registre con otro correo verá «Solo cuentas de O&S». Para que Clerk ni siquiera cree esas cuentas hace falta **Allowlist** (de pago).
 6. **Bot protection:** si está activa, no hay nada que hacer: el formulario de registro ya incluye el hueco `clerk-captcha`.
-7. **Cuando se pase a producción** (dominio propio): en **Paths / Allowed redirect URLs**, añade `https://formacion.oysconsultores.com/?acceso=google`. En Google Cloud, el cliente OAuth propio necesita el *Authorized redirect URI* que muestra Clerk en la conexión de Google.
 
-Google Cloud no necesita nada mientras se use la instancia de desarrollo (credenciales compartidas de Clerk).
+Sin Google, no hace falta configurar nada en Google Cloud para el acceso.
 
 ## Lo que tienes que hacer tú
 
