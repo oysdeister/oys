@@ -4,8 +4,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icon } from '../Icon';
 import { Anillo } from './Anillo';
-import { META, getEjercicio, getModulo, todosEjercicios } from '../../content';
-import { numeroBloque } from '../../lib/ruta';
+import { META, MODULOS, getEjercicio, getModulo, todosEjercicios } from '../../content';
+import { bloqueQueToca, numeroBloque } from '../../lib/ruta';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal } from '../../lib/avance';
 
@@ -148,6 +148,15 @@ export function Topbar({ onMenu, abierto = false }: { onMenu: () => void; abiert
   const p = useProgreso();
   const pct = avanceGlobal(p);
   const migas = migasDe(loc.pathname);
+  // En la portada, junto a «Inicio»: por dónde vas (solo texto; la acción está en la portada)
+  const vasPor = useMemo(() => {
+    if (loc.pathname !== '/') return null;
+    for (const m of MODULOS) {
+      const b = bloqueQueToca(p, m);
+      if (b) return { color: META[m.id]?.color, t: `${META[m.id]?.corto ?? m.titulo}, bloque ${numeroBloque(m, b.id)}` };
+    }
+    return null;
+  }, [loc.pathname, p]);
   return (
     <header className="tb">
       <button type="button" className="tb-menu" onClick={onMenu} aria-label="Abrir menú" aria-controls="barra-lateral" aria-expanded={abierto}>
@@ -172,6 +181,12 @@ export function Topbar({ onMenu, abierto = false }: { onMenu: () => void; abiert
             </span>
           );
         })}
+        {vasPor && (
+          <span className="tb-vaspor">
+            <span className="dot" style={{ ['--mod' as string]: vasPor.color } as CSSProperties} aria-hidden="true" />
+            Vas por {vasPor.t}
+          </span>
+        )}
       </nav>
       <div className="tb-right">
         <Buscador />

@@ -61,11 +61,11 @@ export function Sidebar({
   }, [loc.pathname, abierto, plegada]);
   return (
     <aside className="sb" aria-label="Navegación de la plataforma" id="barra-lateral">
-      <Link to="/" className="sb-brand" onClick={onNavegar} aria-label="Practicando Axional Deister VNext, inicio">
+      <Link to="/" className="sb-brand" onClick={onNavegar} aria-label="Formación Axional Deister VNext, inicio">
         <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="" />
         <span>
-          <b>Practicando Axional Deister VNext</b>
-          <small>Práctica guiada del ERP</small>
+          <b>Formación Axional Deister VNext</b>
+          <small>O&amp;S Consultores</small>
         </span>
       </Link>
 
