@@ -352,6 +352,92 @@ export const SERIES_TABLAS_FIN: SerieTablasFin[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "tab-activos",
+    "titulo": "Vídeos por tabla: Activos fijos",
+    "corto": "Tablas de activos",
+    "porTabla": true as const,
+    "modulos": [
+      "icon-activos"
+    ],
+    "intro": "Un vídeo corto por tabla: para qué sirve y cómo se parametriza, con pantallas reales.",
+    "capitulos": [
+      {
+        "n": 1,
+        "titulo": "Bienes",
+        "inicio": 0,
+        "duracion": 130,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/act-bienes.mp4",
+        "poster": "video/tablas/act-bienes.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 3,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 35,
+            "titulo": "Lista de bienes"
+          },
+          {
+            "t": 64,
+            "titulo": "Ficha de CAPASC"
+          },
+          {
+            "t": 111,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "titulo": "Valores de amortización",
+        "inicio": 0,
+        "duracion": 112,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/act-valores-amortizacion.mp4",
+        "poster": "video/tablas/act-valores-amortizacion.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Título"
+          },
+          {
+            "t": 4,
+            "titulo": "Para qué sirve"
+          },
+          {
+            "t": 33,
+            "titulo": "Componente CAPASC 0000001"
+          },
+          {
+            "t": 58,
+            "titulo": "Valores de los componentes"
+          },
+          {
+            "t": 94,
+            "titulo": "Resumen"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "titulo": "Grupos contables y fiscales del activo",
+        "inicio": 0,
+        "duracion": 228,
+        "url": "https://github.com/oysdeister/oys/releases/download/video-tablas-fin-v1/mej-grupos-activo.mp4",
+        "poster": "video/tablas/mej-grupos-activo.jpg",
+        "escenas": [
+          {
+            "t": 0,
+            "titulo": "Grupos contables y fiscales del activo (sesión de Deister)"
+          }
+        ]
+      }
+    ]
   }
 ];
 
@@ -500,6 +586,24 @@ export const MOMENTOS_SECCION_TABLAS_FIN: Record<string, MomentoVideo[]> = {
       "titulo": "Vídeo: Remesas por cuenta"
     }
   ],
+  "icon-activos-1-bien": [
+    {
+      "serie": "tab-activos",
+      "capitulo": 1,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Bienes"
+    }
+  ],
+  "icon-activos-2-sistemas": [
+    {
+      "serie": "tab-activos",
+      "capitulo": 2,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo: Valores de amortización"
+    }
+  ],
   "carteras-1-tipo-efecto": [
     {
       "serie": "tab-cartera",
@@ -534,6 +638,15 @@ export const MOMENTOS_SECCION_TABLAS_FIN: Record<string, MomentoVideo[]> = {
       "t": 0,
       "tCap": 0,
       "titulo": "Vídeo de los ponentes, mejorado: Acciones sobre efectos"
+    }
+  ],
+  "icon-activos-1-config": [
+    {
+      "serie": "tab-activos",
+      "capitulo": 3,
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Vídeo de los ponentes, mejorado: Grupos contables y fiscales del activo"
     }
   ]
 };
