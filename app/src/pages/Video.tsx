@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerE
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import { CAPITULOS, MOMENTOS_SECCION, type CapituloVideo } from '../content/videoMapa';
-import { META, todosEjercicios } from '../content';
-import { serieDe } from '../content/videoSeries';
+import { META, MODULOS, todosEjercicios } from '../content';
+import { seriesDeModulo, type SerieVideo } from '../content/videoSeries';
 import { mmss } from '../lib/config';
 import { baseUrl, conIni } from '../lib/texto';
 import { useProgreso } from '../lib/progress';
@@ -453,23 +453,36 @@ export default function Video() {
 
         <section className="vd-index" aria-labelledby="vd-index-t">
           <h2 id="vd-index-t" className="vd-h2">
-            {c ? 'Todos los capítulos' : 'Elige un capítulo'}
+            {c ? 'Todos los capítulos' : 'Compras · vídeo de compras, tutorial propio'}
           </h2>
           <IndiceCapitulos actual={c?.n} />
         </section>
 
-        {!c && (
-          <section className="vd-index vd-otras" aria-labelledby="vd-tes-t">
-            <h2 id="vd-tes-t" className="vd-h2">
-              Tesorería: las dos sesiones de formación
-            </h2>
-            <div className="ax-banner vd-otras-in">
-              <CapitulosSerie serie="tesoreria-1" intro={serieDe('tesoreria-1').intro} />
-              <CapitulosSerie serie="tesoreria-2" intro={serieDe('tesoreria-2').intro} />
-            </div>
-          </section>
-        )}
+        {!c &&
+          MODULOS.map((m, i) => {
+            const series = seriesDeModulo(m.id).filter((x) => x.id !== 'compras');
+            if (!series.length) return null;
+            return (
+              <section key={m.id} className="vd-index vd-otras" aria-labelledby={`vd-mod-${m.id}`}>
+                <h2 id={`vd-mod-${m.id}`} className="vd-h2">
+                  {i + 1}. {META[m.id]?.corto ?? m.titulo}
+                </h2>
+                <div className="ax-banner vd-otras-in">
+                  {series.map((x) => (
+                    <CapitulosSerie key={x.id} serie={x.id} titulo={`${x.titulo} · ${origen(x)}`} intro={x.intro} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
       </div>
     </div>
   );
+}
+
+/** De dónde sale el vídeo: grabación de una sesión, tutorial propio o vídeo por tabla */
+function origen(x: SerieVideo): string {
+  if (x.porTabla) return 'un vídeo por tabla';
+  if (x.original || x.id.startsWith('fin-')) return 'sesión de formación grabada';
+  return 'tutorial propio';
 }
