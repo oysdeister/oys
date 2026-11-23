@@ -79,7 +79,7 @@ export function Onboarding() {
                 Tu nombre y apellidos
               </label>
               <input id="onb-nombre" className="onb2-input" autoFocus value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" placeholder="Nombre Apellido" />
-              <p className="onb2-nota">Con él te saludamos y firmamos tus códigos en la demo.</p>
+              <p className="onb2-nota">Con él te saludamos y sacamos tus iniciales para los códigos de la demo.</p>
               <button className="btn arc lg onb-go" type="submit" disabled={!ok}>
                 Empezar
               </button>

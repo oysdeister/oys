@@ -13,12 +13,19 @@ export function Bienvenida() {
   const [ver, setVer] = useState(false);
 
   useEffect(() => {
-    if (!listo || bienvenidaVista()) return;
+    // Solo al llegar a la portada: un enlace directo a un bloque no se tapa
+    const enPortada = /^#?\/?$/.test(window.location.hash);
+    if (!listo || bienvenidaVista() || !enPortada) return;
     marcaBienvenida();
     setVer(true);
+  }, [listo]);
+
+  // Se cierra sola (efecto aparte: el doble montaje de StrictMode no la deja fija)
+  useEffect(() => {
+    if (!ver) return;
     const t = window.setTimeout(() => setVer(false), reduce ? 1800 : 2600);
     return () => window.clearTimeout(t);
-  }, [listo, reduce]);
+  }, [ver, reduce]);
 
   useEffect(() => {
     if (!ver) return;
@@ -72,8 +79,8 @@ export function Bienvenida() {
             </p>
             <motion.p
               className="bnv-nombre"
-              initial={reduce ? false : { opacity: 0, y: 24, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.6 }}
             >
               {pila}

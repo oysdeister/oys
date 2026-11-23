@@ -164,43 +164,53 @@ const PulsoCtx = createContext<(ok: boolean) => void>(() => {});
 
 /* ---------- Marco común de un simulador ---------- */
 
-/** Contador de rondas como una órbita: un planeta por ronda alrededor del número */
-function OrbitaRondas({ total, ronda, fin, resuelta, reducido }: { total: number; ronda: number; fin: boolean; resuelta: boolean; reducido: boolean }) {
+/** Icono de cada simulador (pastilla de la lista y del HUD) */
+const ICONO_SIM: Record<string, string> = {
+  asiento: 'balanza',
+  numerador: 'numeros',
+  circuito: 'circuito',
+  docflow: 'docflow',
+  factura: 'factura',
+  concilia: 'concilia',
+  cartera: 'cartera',
+};
+export const iconoSim = (id: string) => ICONO_SIM[id] ?? 'taller';
+
+/** Contador de rondas: «Ronda X de N» y una barra con un tramo por ronda */
+function RondasHud({ total, ronda, fin, resuelta, reducido }: { total: number; ronda: number; fin: boolean; resuelta: boolean; reducido: boolean }) {
   const hechas = fin ? total : ronda + (resuelta ? 1 : 0);
-  const R = 40;
-  const C = 2 * Math.PI * R;
   return (
-    <div className="tlx-orbita" role="img" aria-label={fin ? 'Todas las rondas superadas' : `Ronda ${ronda + 1} de ${total}`}>
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r={R} className="tlx-orbita-trk" />
-        <motion.circle
-          cx="50"
-          cy="50"
-          r={R}
-          className="tlx-orbita-val"
-          strokeDasharray={C}
-          initial={false}
-          animate={{ strokeDashoffset: C * (1 - hechas / total) }}
-          transition={{ type: 'spring', stiffness: 60, damping: 16 }}
-          transform="rotate(-90 50 50)"
-        />
+    <div className="tlx-rondas" role="img" aria-label={fin ? 'Todas las rondas superadas' : `Ronda ${ronda + 1} de ${total}`}>
+      <span className="tlx-rondas-txt" aria-hidden="true">
+        Ronda{' '}
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.b
+            key={fin ? total : ronda + 1}
+            initial={reducido ? { opacity: 0 } : { y: 14, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={reducido ? { opacity: 0 } : { y: -14, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+          >
+            {fin ? total : ronda + 1}
+          </motion.b>
+        </AnimatePresence>{' '}
+        de {total}
+      </span>
+      <span className="tlx-rondas-seg" aria-hidden="true">
         {Array.from({ length: total }, (_, i) => {
-          const a = -Math.PI / 2 + (2 * Math.PI * i) / total;
-          const x = 50 + R * Math.cos(a);
-          const y = 50 + R * Math.sin(a);
-          const hecho = fin || i < hechas;
+          const hecho = i < hechas;
           const actual = !fin && i === ronda && !resuelta;
           return (
-            <g key={i}>
-              {actual && !reducido && <circle cx={x} cy={y} r="9" className="tlx-orbita-halo" />}
-              <motion.circle cx={x} cy={y} initial={false} animate={{ r: actual ? 7 : hecho ? 5.5 : 4.5 }} className={`tlx-orbita-p ${hecho ? 'hecho' : actual ? 'actual' : ''}`} />
-            </g>
+            <i key={i} className={actual ? 'actual' : ''}>
+              <motion.b
+                className={hecho ? 'hecho' : ''}
+                initial={false}
+                animate={{ scaleX: hecho ? 1 : 0, opacity: hecho ? 1 : 0 }}
+                transition={reducido ? { duration: 0 } : { type: 'spring', stiffness: 160, damping: 22 }}
+              />
+            </i>
           );
         })}
-      </svg>
-      <span className="tlx-orbita-num">
-        <b>{fin ? total : ronda + 1}</b>
-        <small>de {total}</small>
       </span>
     </div>
   );
@@ -280,6 +290,9 @@ export function Marco({
           <Link to="/taller" className="btn ghost sm tlx-volver" aria-label="Volver al Taller">
             <Icon name="atras" size={20} /> <span className="tlx-volver-txt">Taller</span>
           </Link>
+          <span className="tlx-hud-ico" aria-hidden="true">
+            <Icon name={iconoSim(sim.id)} size={28} />
+          </span>
           <div className="tlx-hud-txt">
             <h1>{titulo}</h1>
             {instruccion && (
@@ -307,7 +320,7 @@ export function Marco({
                 <small>racha</small>
               </motion.span>
             </AnimatePresence>
-            <OrbitaRondas total={sim.total} ronda={sim.ronda} fin={sim.fin} resuelta={sim.resuelta} reducido={r} />
+            <RondasHud total={sim.total} ronda={sim.ronda} fin={sim.fin} resuelta={sim.resuelta} reducido={r} />
           </div>
         </header>
 
@@ -315,7 +328,7 @@ export function Marco({
           <button className="tl-concepto-btn" onClick={() => setVerConcepto((v) => !v)} aria-expanded={verConcepto}>
             <Icon name="cerebro" size={18} /> En llano: qué estás practicando
             <span className="tl-concepto-flecha" aria-hidden="true" style={{ transform: verConcepto ? 'rotate(90deg)' : 'none' }}>
-              <Icon name="flecha" size={16} />
+              <Icon name="chevron" size={16} />
             </span>
           </button>
           <AnimatePresence initial={false}>
@@ -338,6 +351,7 @@ export function Marco({
             >
               <motion.div className="tlx-trofeo" initial={r ? false : { scale: 0.2, rotate: -40, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 12 }}>
                 <span className="tlx-rayos" aria-hidden="true" />
+                <span className="tlx-trofeo-aro" aria-hidden="true" />
                 <Medal color={color} label="Medalla del simulador" />
               </motion.div>
               <div className="tlx-fin-txt">
@@ -371,10 +385,10 @@ export function Marco({
             <motion.section
               key={`${sim.partida}-${sim.ronda}`}
               className="glass tl-ronda tlx-ronda"
-              initial={r ? { opacity: 0 } : { opacity: 0, rotateY: -14, x: 40 }}
-              animate={{ opacity: 1, rotateY: 0, x: 0 }}
-              exit={r ? { opacity: 0 } : { opacity: 0, rotateY: 14, x: -40 }}
-              transition={{ duration: 0.38, ease: [0.2, 0.7, 0.2, 1] }}
+              initial={r ? { opacity: 0 } : { opacity: 0, x: 48, scale: 0.985 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={r ? { opacity: 0 } : { opacity: 0, x: -48, scale: 0.985 }}
+              transition={r ? { duration: 0.15 } : { duration: 0.34, ease: [0.2, 0.7, 0.2, 1] }}
             >
               {destello && <span key={destello.n} className={`tlx-destello ${destello.ok ? 'ok flash-ok' : 'ko flash-ko'}`} aria-hidden="true" />}
               <div className="tl-ronda-num">
@@ -414,9 +428,12 @@ export function Marco({
         {!sim.fin && (
           <AnimatePresence>
             {sim.resuelta && (
-              <motion.div className="tl-siguiente tlx-siguiente" initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}>
+              <motion.div className="tl-siguiente tlx-siguiente" initial={r ? { opacity: 0 } : { y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}>
                 <span>
-                  <Icon name="check" size={20} /> {racha >= 3 ? `¡Ronda superada! Llevas ${racha} aciertos seguidos` : 'Ronda superada'}
+                  <motion.span className="tlx-siguiente-ico" initial={r ? false : { scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: 0.1, type: 'spring', stiffness: 420, damping: 14 }} aria-hidden="true">
+                    <Icon name="check" size={18} stroke={3} />
+                  </motion.span>{' '}
+                  {racha >= 3 ? `¡Ronda superada! Llevas ${racha} aciertos seguidos` : 'Ronda superada'}
                 </span>
                 <button
                   className="btn arc"
@@ -427,7 +444,7 @@ export function Marco({
                   }}
                   autoFocus
                 >
-                  {sim.ronda + 1 >= sim.total ? 'Terminar' : 'Siguiente'} <Icon name="flecha" size={18} />
+                  {sim.ronda + 1 >= sim.total ? 'Terminar' : 'Siguiente'}
                 </button>
               </motion.div>
             )}
@@ -471,9 +488,15 @@ export function MensajeVeredicto({ v }: { v: Veredicto }) {
             exit={{ opacity: 0, y: -6 }}
             transition={v.ok ? { type: 'spring', stiffness: 380, damping: 16 } : { duration: 0.45 }}
           >
-            <span className="tl-veredicto-ico" aria-hidden="true">
+            <motion.span
+              className="tl-veredicto-ico"
+              aria-hidden="true"
+              initial={r ? false : v.ok ? { scale: 0, rotate: -45 } : { scale: 0.6 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.06, type: 'spring', stiffness: 500, damping: 14 }}
+            >
               {v.ok ? <Icon name="check" size={20} stroke={3} /> : <Icon name="aviso" size={20} />}
-            </span>
+            </motion.span>
             <div>{v.texto}</div>
           </motion.div>
         )}
