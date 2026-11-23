@@ -5,6 +5,7 @@ import '@fontsource-variable/instrument-sans';
 import './styles.css';
 import App from './App';
 import './sistema.css';
+import './app-ux.css';
 import { Acceso } from './auth/Acceso';
 
 createRoot(document.getElementById('root')!).render(

@@ -32,6 +32,16 @@ const P: Record<string, string> = {
   cobros: 'M7 7h11l-3-3M17 17H6l3 3M12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z',
   impuestos: 'M19 5 5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm9 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
   activos: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6M9 10h.01M15 10h.01',
+  repetir: 'M4 4v6h6M20 20v-6h-6M5.6 15a7 7 0 0 0 12.2 2.2M18.4 9A7 7 0 0 0 6.2 6.8',
+  rayo: 'M13 2 4 14h7l-1 8 9-12h-7z',
+  estrella: 'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3l-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z',
+  destello: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 1.8 1.8.7-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z',
+  balanza: 'M12 3v18M8 21h8M5 7h14M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z',
+  numeros: 'M5 9h14M5 15h14M10 3 8 21M16 3l-2 18',
+  circuito: 'M4 4h5v5H4zM15 15h5v5h-5zM9 6.5h4.5a2 2 0 0 1 2 2V15M15 4h5v5h-5zM17.5 9v6',
+  docflow: 'M4 4h6v5H4zM14 4h6v5h-6zM14 15h6v5h-6zM7 9v3h10M17 9v6',
+  factura: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3',
+  concilia: 'M3 6h6M3 12h6M3 18h6M15 6h6M15 12h6M15 18h6M9 6l6 6M9 12l6-6M9 18h6',
 };
 
 export function Icon({ name, size = 22, stroke = 2 }: { name: string; size?: number; stroke?: number }) {

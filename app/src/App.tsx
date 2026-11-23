@@ -7,6 +7,7 @@ import { Topbar } from './components/shell/Topbar';
 import { BottomNav } from './components/shell/BottomNav';
 import { Espacio } from './components/shell/Espacio';
 import { Onboarding } from './components/Onboarding';
+import { Bienvenida } from './components/Bienvenida';
 import { useProgreso } from './lib/progress';
 import { useInclinacion } from './lib/inclinar';
 import { CLERK_ACTIVO } from './auth/Acceso';
@@ -173,6 +174,7 @@ function Marco() {
       <BottomNav />
       <AvisoInsignias />
       <AnimatePresence>{(!p.alumno.ini || !p.alumno.usuario) && <Onboarding key="onb" />}</AnimatePresence>
+      <Bienvenida />
     </div>
   );
 }
