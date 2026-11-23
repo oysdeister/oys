@@ -7,6 +7,13 @@ import { Icon } from '../Icon';
 import { ReproductorModal, dondeMomento } from '../video';
 import './video-primero.css';
 
+/** Minuto del botón: en los vídeos por tabla, su duración; en las sesiones originales, el minuto de la grabación */
+function minuto(m: MomentoVideo) {
+  const sv = serieDe(m.serie);
+  if (sv.porTabla) return mmss(sv.capitulos.find((c) => c.n === m.capitulo)?.duracion ?? 0);
+  return mmss(sv.original && m.serie ? m.t : m.tCap);
+}
+
 function posterDe(m: MomentoVideo) {
   const p = serieDe(m.serie).capitulos.find((c) => c.n === m.capitulo)?.poster;
   return p ? baseUrl(p) : '';
@@ -40,7 +47,7 @@ export function VideoPrimero({ lista }: { lista: MomentoVideo[] }) {
             <span className="vp-anillo" />
             <Icon name="play" size={26} />
           </span>
-          <span className="vp-min">{mmss(serieDe(m.serie).original && m.serie ? m.t : m.tCap)}</span>
+          <span className="vp-min">{minuto(m)}</span>
         </span>
         <span className="vp-txt">
           <span className="vp-ante">Antes de leer</span>

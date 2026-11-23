@@ -143,4 +143,11 @@ export const MOMENTOS_EJERCICIO_TUT_FIN: Record<string, MomentoVideo[]> = {
   ],
 };
 
-export const MOMENTOS_SECCION_TUT_FIN: Record<string, MomentoVideo[]> = {};
+/** Tablas que ya explica el tutorial (diarios, ejercicios y periodos): su tarjeta «Mira primero el vídeo» */
+export const MOMENTOS_SECCION_TUT_FIN: Record<string, MomentoVideo[]> = {
+  'asientos-1-diario': [m('tut-contabilidad', 3, 26, 'Vídeo: la tabla de diarios')],
+  'icon-contabilidad-1-diario': [m('tut-contabilidad', 3, 26, 'Vídeo: la tabla de diarios')],
+  'icon-contabilidad-1-configuracion': [m('tut-contabilidad', 3, 46, 'Vídeo: ejercicios y periodos')],
+  'icon-contabilidad-v-4-periodos': [m('tut-contabilidad', 3, 46, 'Vídeo: ejercicios y periodos')],
+  'asientos-6-vigencia': [m('tut-contabilidad', 3, 46, 'Vídeo: ejercicios y periodos')],
+};

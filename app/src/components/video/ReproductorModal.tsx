@@ -265,6 +265,10 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
 export function dondeMomento(m: MomentoVideo) {
   const sv = m.serie ? serieDe(m.serie) : null;
   if (sv?.original) return `Vídeo «${sv.corto}» · ${mmss(m.t)}`;
+  if (sv?.porTabla) {
+    const c = sv.capitulos.find((x) => x.n === m.capitulo);
+    return `Vídeo corto de la tabla${c ? ` · ${mmss(c.duracion)}` : ''}`;
+  }
   return `${sv ? `Vídeo «${sv.corto}»` : 'Vídeo de Compras'} · cap. ${m.capitulo}, ${mmss(m.tCap)}`;
 }
 
