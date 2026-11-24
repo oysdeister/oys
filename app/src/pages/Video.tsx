@@ -388,7 +388,7 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
                     ))}
                   </ul>
                   <Link className="btn sm arc" to={`/ejercicio/${pr.id}?tab=guiado`}>
-                    Abrir el ejercicio
+                    Abrir el bloque
                   </Link>
                 </motion.li>
               ))}

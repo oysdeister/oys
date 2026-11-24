@@ -33,6 +33,16 @@ export default function ExercisePage() {
   const claveListo = `${id}:${tabParam ?? ''}`;
   const onListo = useCallback((ok: boolean) => setListo({ clave: claveListo, ok }), [claveListo]);
   useEffect(() => { window.scrollTo({ top: 0 }); }, [claveListo]);
+  // ?sec=<id>: baja hasta esa sección del Concepto (viene de la búsqueda)
+  const secParam = sp.get('sec');
+  useEffect(() => {
+    if (!secParam || tabParam) return;
+    const id = window.setTimeout(() => {
+      const el = document.getElementById(`sec-${secParam}`);
+      if (el) el.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
+    }, 350);
+    return () => window.clearTimeout(id);
+  }, [secParam, tabParam, id, reducir]);
   // Al cambiar de pestaña se olvida el «terminado» anterior (en el mismo render, antes de que el paso nuevo avise):
   // si vuelves a un paso ya hecho, el «Siguiente» no asoma mientras se anima el cambio
   const [claveVista, setClaveVista] = useState(claveListo);

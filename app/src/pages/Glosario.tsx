@@ -204,7 +204,7 @@ export default function Glosario() {
             <p className="kick">Diccionario del curso</p>
             <h1 className="gls-h1">Glosario</h1>
             <p className="lead">
-              Las palabras de finanzas y del ERP explicadas para quien viene de programar. En los ejercicios aparecen <span className="gls-demo">subrayadas así</span>: pasa el ratón por encima o tócalas para leer qué significan.
+              Las palabras de finanzas y del ERP explicadas en lenguaje llano, sin dar nada por sabido. En los bloques aparecen <span className="gls-demo">subrayadas así</span>: pasa el ratón por encima o tócalas para leer qué significan.
             </p>
           </div>
           {!vacio && (

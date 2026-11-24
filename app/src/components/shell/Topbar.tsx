@@ -4,7 +4,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icon } from '../Icon';
 import { Anillo } from './Anillo';
-import { META, MODULOS, getEjercicio, getModulo, todosEjercicios } from '../../content';
+import { META, MODULOS, getEjercicio, getModulo } from '../../content';
+import { buscar, TIPOS } from '../../lib/buscar';
+import { conIni } from '../../lib/texto';
+import './buscador.css';
 import { bloqueQueToca, numeroBloque } from '../../lib/ruta';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal } from '../../lib/avance';
@@ -20,6 +23,7 @@ const SECCIONES: Record<string, string> = {
   taller: 'Taller',
   video: 'Vídeos',
   glosario: 'Glosario',
+  errores: 'Índice de errores',
   logros: 'Logros',
   examen: 'Examen',
   certificado: 'Certificado',
@@ -45,24 +49,20 @@ export function migasDe(pathname: string): Miga[] {
   return [inicio, { label: nombre }];
 }
 
-const normal = (s: string) =>
-  s
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
-
 function Buscador() {
   const [q, setQ] = useState('');
   const [abierto, setAbierto] = useState(false);
   const [sel, setSel] = useState(0);
   const ref = useRef<HTMLInputElement>(null);
   const nav = useNavigate();
-  const todos = useMemo(() => todosEjercicios(), []);
-  const res = useMemo(() => {
-    const t = normal(q.trim());
-    if (!t) return [];
-    return todos.filter(({ ejercicio, modulo }) => normal(`${ejercicio.titulo} ${ejercicio.objetivo} ${modulo.titulo}`).includes(t)).slice(0, 8);
-  }, [q, todos]);
+  const ini = useProgreso().alumno.ini;
+  // el índice se construye la primera vez que se busca; la búsqueda se retrasa un instante al teclear
+  const [qBusca, setQBusca] = useState('');
+  useEffect(() => {
+    const id = window.setTimeout(() => setQBusca(q), q ? 80 : 0);
+    return () => window.clearTimeout(id);
+  }, [q]);
+  const res = useMemo(() => buscar(qBusca, 30), [qBusca]);
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
@@ -75,8 +75,8 @@ function Buscador() {
     return () => window.removeEventListener('keydown', k);
   }, []);
 
-  const ir = (id: string) => {
-    nav(`/ejercicio/${id}`);
+  const ir = (to: string) => {
+    nav(to);
     setQ('');
     setAbierto(false);
     ref.current?.blur();
@@ -88,8 +88,13 @@ function Buscador() {
       <input
         ref={ref}
         type="search"
-        placeholder="Buscar un bloque"
-        aria-label="Buscar un bloque"
+        placeholder="Buscar en el curso"
+        aria-label="Buscar en bloques, secciones, errores y glosario"
+        role="combobox"
+        aria-expanded={abierto && !!q.trim()}
+        aria-controls="tb-resultados"
+        aria-activedescendant={res[sel] ? `tb-res-${sel}` : undefined}
+        aria-autocomplete="list"
         value={q}
         onChange={(e) => {
           setQ(e.target.value);
@@ -106,7 +111,7 @@ function Buscador() {
             e.preventDefault();
             setSel((s) => Math.max(s - 1, 0));
           } else if (e.key === 'Enter' && res[sel]) {
-            ir(res[sel].ejercicio.id);
+            ir(res[sel].to);
           } else if (e.key === 'Escape') {
             setQ('');
             ref.current?.blur();
@@ -115,25 +120,30 @@ function Buscador() {
       />
       <kbd>⌘K</kbd>
       {abierto && q.trim() && (
-        <motion.div className="tb-results" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
-          {res.length === 0 && <p className="muted">No hay bloques con «{q.trim()}». Prueba con «pedido», «factura» o «asiento».</p>}
-          {res.map(({ ejercicio, modulo }, i) => (
+        <motion.div className="tb-results" id="tb-resultados" role="listbox" aria-label="Resultados" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
+          {res.length === 0 && qBusca === q && <p className="muted">No hay nada con «{q.trim()}». Prueba con «pedido», «factura» o «asiento».</p>}
+          {res.map((r, i) => (
             <a
-              key={ejercicio.id}
-              href={`#/ejercicio/${ejercicio.id}`}
+              key={`${r.to}-${i}`}
+              id={`tb-res-${i}`}
+              role="option"
+              aria-selected={i === sel}
+              href={`#${r.to}`}
               className={i === sel ? 'sel' : undefined}
-              style={{ ['--mod' as string]: META[modulo.id]?.color } as CSSProperties}
+              style={{ ['--mod' as string]: META[r.modulo]?.color } as CSSProperties}
               onMouseDown={(e) => {
                 e.preventDefault();
-                ir(ejercicio.id);
+                ir(r.to);
               }}
             >
               <span className="dot" />
-              <span>
-                <b>{ejercicio.titulo}</b>
-                <small>
-                  {META[modulo.id]?.corto ?? modulo.titulo}, bloque {numeroBloque(modulo, ejercicio.id)}
-                </small>
+              <span className="tb-res-txt">
+                <b>
+                  <em className={`tb-tipo ${r.tipo}`}>{TIPOS[r.tipo]}</em>
+                  {conIni(r.titulo, ini)}
+                </b>
+                {r.fragmento && <span className="tb-frag">{conIni(r.fragmento, ini)}</span>}
+                <small>{r.donde}</small>
               </span>
             </a>
           ))}

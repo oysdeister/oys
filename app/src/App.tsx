@@ -25,6 +25,7 @@ import Examinador from './pages/Examinador';
 import Video from './pages/Video';
 import ErpPractica from './pages/ErpPractica';
 import Glosario from './pages/Glosario';
+import Errores from './pages/Errores';
 
 function useTema() {
   const [oscuro, setOscuro] = useState(() => document.documentElement.dataset.theme === 'dark');
@@ -125,6 +126,7 @@ function Rutas() {
           <Route path="/video" element={<Video />} />
           <Route path="/video/:cap" element={<Video />} />
           <Route path="/glosario" element={<Glosario />} />
+          <Route path="/errores" element={<Errores />} />
           <Route path="/logros" element={<Logros />} />
           <Route path="/examen" element={<Examen />} />
           <Route path="/certificado" element={<Certificado />} />
@@ -167,7 +169,7 @@ function Marco() {
           <div className="wrap">
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo.png`} alt="O&S Consultores" className="logo-claro" />
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="O&S Consultores" className="logo-oscuro" />
-            <span>Ejercicios sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
+            <span>Bloques sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
           </div>
         </footer>
       </div>

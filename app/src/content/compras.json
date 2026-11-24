@@ -24,7 +24,7 @@
     "En el buscador escribes el nombre o el código del objeto (ctercero, gcomalbh, «tarifa»…). Intro abre la pantalla en la pestaña actual; Cmd/Ctrl + Intro, en una pestaña nueva.",
     "Cada lista tiene arriba a la derecha un botón azul oscuro «Añadir …» o «Nuevo». Abre el formulario en una ventana, que se guarda con «Guardar» (abajo a la derecha).",
     "En la ficha de un registro, los botones de acción (Validar, Cerrar, Contabilizar…) y las pestañas están arriba. Los cambios de la ficha se guardan con el icono del disquete de la barra superior.",
-    "Los ejemplos usan tus iniciales ({INI}) en los códigos: proveedor T{INI}, tarifa TF{INI}, grupo G{INI}, tipología de albarán AO{INI}… La tabla completa está en «Códigos del alumno».",
+    "Los ejemplos usan tus iniciales ({INI}) en los códigos: proveedor T{INI}, tarifa TF{INI}, grupo G{INI}, tipología de albarán AO{INI}… La tabla completa está en la página del módulo «Datos maestros», en «Antes de empezar», dentro de «Qué son los datos básicos».",
     "Los campos obligatorios llevan asterisco rojo. Si falta alguno, al guardar sale «Hay errores en los datos del formulario».",
     "Ojo: el código de las tipologías de albarán y de factura admite 4 caracteres como máximo; si no, sale «Demasiado largo». Con iniciales de 3 o 4 letras, usa solo las 2 primeras: con «JMA», la tipología de factura será FCJM.",
     "Los números de documento de los ejemplos (0AC000002, 0FC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
@@ -73,7 +73,7 @@
       "Registro de terceros"
      ],
      "explicacion": [
-      "Es la base de todo: sin tercero no hay proveedor, y sin relaciones contables la factura no contabiliza.",
+      "Es la base de todo: sin tercero no hay proveedor, y sin relaciones contables la factura no contabiliza. El tercero guarda también sus datos fiscales, que deciden su IVA (el impuesto que se suma al precio de lo que compras o vendes).",
       "La ventana tiene dos bloques: «Identificación» y «Más datos».",
       "Fíjate: elige primero el «País emisor». Hasta que no lo eliges, no puedes elegir el «Tipo ID fiscal».",
       "La «Categoría» 002 Proveedores trae por defecto la serie y la cuenta contable."
@@ -216,7 +216,7 @@
       },
       {
        "campo": "Retención",
-       "significado": "Márcala si al tercero se le practica retención (IRPF).",
+       "significado": "Márcala si al tercero se le practica retención de IRPF (el impuesto sobre la renta de las personas): un porcentaje de la base de su factura que le descuentas al pagarle e ingresas en Hacienda a cuenta de su IRPF. Es típico de profesionales y alquileres.",
        "ejemplo": "Sin marcar"
       }
      ],
@@ -251,7 +251,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "La plantilla de asiento de la factura de compra (FC) busca la relación PRO, con la cuenta 40000. Por eso das de alta ACR y PRO: solo con ACR, la factura no contabilizaría."
+       "texto": "La plantilla de asiento de la factura de compra (FC) (la regla que dice qué cuentas lleva el asiento) busca la relación PRO, con la cuenta 40000. Por eso das de alta ACR y PRO: solo con ACR, la factura no contabilizaría."
       }
      ]
     },
@@ -579,7 +579,7 @@
      ],
      "explicacion": [
       "El artículo es un maestro: se da de alta una vez y lo usan todos los documentos de compra y venta.",
-      "Para comprar importan cinco datos: descripción, unidad, familia, tipo contable y clave fiscal. La familia propone la clave fiscal y la naturaleza.",
+      "Para comprar importan cinco datos: descripción, unidad, familia, tipo contable y clave fiscal. La clave fiscal dice cómo tributa el artículo en el IVA (el impuesto que se suma al precio): bien o servicio, tipo general, reducido… La familia propone la clave fiscal y la naturaleza.",
       "El tipo contable decide a qué cuenta va el gasto al contabilizar la factura. Para comprar hace falta PRODUCTO (PROD).",
       "El 13500620 es también el artículo que venderás en Ventas.",
       "Ojo: no modifiques el 13500620. La demo es compartida."
@@ -2027,7 +2027,7 @@
    "numero": 5,
    "titulo": "Recibir la mercancía con el albarán",
    "objetivo": "Registrarás la llegada de la mercancía con un albarán y comprobarás que el stock sube.",
-   "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán: el papel que viene con la caja y dice qué te han traído. Al validarlo, el stock sube y la compra queda pendiente de facturar.\n\nEn una base bien configurada, el albarán nace del pedido. Lo generas con el proceso «Generación de albaranes desde pedidos»; en la Práctica, con el botón «Generar albaranes». También puedes elegir el pedido en el campo «Origen».\n\nAsí el albarán copia las líneas del pedido y le descuenta lo recibido (Sumando). Así sabes qué falta por llegar.\n\nOjo: en la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío. Creas el albarán a mano con tu tipología AO{INI} y escribes la línea, como en un albarán sin origen.\n\nEjemplo: escribes 10 unidades a 12,50, como en la oferta. El albarán vale 125,00 sin IVA. Al validarlo, el stock del artículo 13500620 sube 10 unidades.\n\nEsas unidades pasan de NSAL (no saldo: mercancía que aún no está en el almacén) a DISP (disponible: stock que se puede usar). Este albarán no hace asiento: el asiento lo hará la factura.\n\nFíjate: los números de documento de los ejemplos (0AC000002…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
+   "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán: el papel que viene con la caja y dice qué te han traído. Al validarlo, el stock sube y la compra queda pendiente de facturar.\n\nEn una base bien configurada, el albarán nace del pedido. Lo generas con el proceso «Generación de albaranes desde pedidos». Más adelante, en la Práctica del bloque 6, «Registrar y contabilizar la factura», lo harás con el botón «Generar albaranes». También puedes elegir el pedido en el campo «Origen».\n\nEl albarán copia las líneas del pedido y le descuenta lo recibido. «Sumando» es el modo de «Actualizar origen» que marca en el pedido lo que ya ha llegado. Con eso sabes qué falta por llegar.\n\nOjo: en la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío. Creas el albarán a mano con tu tipología AO{INI} y escribes la línea, como en un albarán sin origen.\n\nEjemplo: escribes 10 unidades a 12,50, como en la oferta. El albarán vale 125,00 sin IVA. Al validarlo, el stock del artículo 13500620 sube 10 unidades.\n\nEsas unidades pasan de NSAL (no saldo: mercancía que aún no está en el almacén) a DISP (disponible: stock que se puede usar). Este albarán no hace asiento: el asiento lo hará la factura.\n\nFíjate: los números de documento de los ejemplos (0AC000002…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
    "duracionMin": 25,
    "secciones": [
     {
@@ -2288,7 +2288,7 @@
    "numero": 6,
    "titulo": "Registrar y contabilizar la factura",
    "objetivo": "Registrarás la factura del proveedor, la cruzarás con el albarán y generarás el asiento: así cierras el ciclo de compra.",
-   "concepto": "Después de la mercancía llega la factura: el documento con el que el proveedor te cobra lo que te ha servido. Antes de aceptarla, compruebas que coincide con lo que recibiste, como cuando repasas el tique del súper con la compra.\n\nEn Axional la registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nContabilizar es pasar la factura a la contabilidad. El ERP genera el asiento de compras: gasto 60000 e IVA 47200 al debe, y proveedor 40000 al haber. También crea los vencimientos de pago.\n\nEjemplo: tu albarán es de 10 × 12,50 = 125,00 de base. El IVA del 21 % son 26,25, y la factura suma 151,25. En el asiento, 125,00 + 26,25 van al debe y 151,25 al haber del proveedor.\n\nFíjate: si falta un dato maestro del proveedor o del artículo, salen errores que aprenderás a leer. Si lo montaste todo en el bloque 1, la factura contabiliza a la primera.\n\nLos números de documento de los ejemplos (0FC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
+   "concepto": "Después de la mercancía llega la factura: el documento con el que el proveedor te cobra lo que te ha servido. Antes de aceptarla, compruebas que coincide con lo que recibiste, como cuando repasas el tique del súper con la compra.\n\nEn Axional la registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nContabilizar es pasar la factura a la contabilidad. El ERP genera el asiento de compras. Un asiento es la anotación contable de una operación: cada importe va al debe o al haber, y las dos columnas suman lo mismo. Aquí, gasto 60000 e IVA 47200 al debe, y proveedor 40000 al haber. También crea los vencimientos de pago.\n\nEjemplo: tu albarán es de 10 × 12,50 = 125,00 de base. El IVA del 21 % son 26,25, y la factura suma 151,25. En el asiento, 125,00 + 26,25 van al debe y 151,25 al haber del proveedor.\n\nFíjate: si falta un dato maestro del proveedor o del artículo, salen errores que aprenderás a leer. Si lo montaste todo en el bloque 1, la factura contabiliza a la primera.\n\nLos números de documento de los ejemplos (0FC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.",
    "duracionMin": 40,
    "secciones": [
     {

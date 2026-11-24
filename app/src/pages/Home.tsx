@@ -15,6 +15,7 @@ import type { Modulo } from "../types";
 import { ejercicioCompletado, useProgreso } from "../lib/progress";
 import { avanceGlobal, avanceModulo } from "../lib/avance";
 import { useExamen } from "../lib/examen";
+import { PRACTICAS_POR_EJERCICIO } from "../erp/practicas";
 import { conIni } from "../lib/texto";
 import {
   bloqueQueToca,
@@ -44,6 +45,9 @@ const metaDe = (m: Modulo) =>
   META[m.id] ?? { color: "#4fbfa5", icono: "maestros", corto: m.titulo };
 
 /** Icono de cada paso del bloque (tira «Cómo funciona» y pasos de la tarjeta de seguir) */
+/** Bloques con práctica en el ERP de práctica (se calcula para que no se desfase) */
+const NUM_PRACTICAS = Object.keys(PRACTICAS_POR_EJERCICIO).length;
+
 const ICONO_PASO: Record<PasoId, string> = {
   concepto: "libro",
   guiado: "play",
@@ -208,7 +212,7 @@ export default function Home() {
   const lead = !continuar
     ? "Has terminado todos los bloques. Te queda el examen final."
     : !empezado
-      ? `Son ${MODULOS.length} módulos, en orden. Cada bloque es una tarea del ERP: lees la idea, la haces paso a paso y la repites en la demo.`
+      ? `Son ${MODULOS.length} módulos, en orden. Cada bloque es una tarea del ERP: lees la idea, la haces paso a paso y la repites en la Demo real.`
       : "Sigue donde lo dejaste.";
 
   const examenEstado = ex.aprobado
@@ -220,7 +224,7 @@ export default function Home() {
     : ex.actual && !ex.actual.fin
       ? { t: "Tienes un examen a medias.", to: "/examen", b: "Examen final" }
       : {
-          t: "Teoría y un caso práctico completo en la demo.",
+          t: "Teoría y un caso práctico completo en la Demo real.",
           to: "/examen",
           b: "Examen final",
         };
@@ -231,8 +235,8 @@ export default function Home() {
       <header className="ini-sec-cab">
         <h2 id="como-h">Cómo funciona un bloque</h2>
         <p>
-          Un bloque es una tarea del ERP. Siempre sigue estos pasos, en este
-          orden.
+          Un bloque es una tarea del ERP. Sigue estos pasos, en este orden. La
+          Práctica solo está en {NUM_PRACTICAS} bloques; el resto va del Test a la Demo real.
         </p>
       </header>
       <ol className="ini-pasos">
@@ -260,17 +264,17 @@ export default function Home() {
         <p>
           <Icon name="engranaje" size={18} />
           <span>
-            La <b>Práctica</b> es un ERP simulado dentro de esta web y se
-            corrige solo. La <b>Demo real</b> es el ERP de demostración de
+            La <b>Práctica</b> es el ERP de práctica: un ERP simulado dentro de
+            esta web que se corrige solo. La <b>Demo real</b> es el ERP de demostración de
             Deister, en otra pestaña.
           </span>
         </p>
         <p>
           <Icon name="aviso" size={18} />
           <span>
-            <b>Antes de esta formación</b> van dos cursos que no están en esta
-            web: el de contabilidad (con su examen) y el de introducción al ERP.
-            Si ya los has hecho, empieza aquí.
+            <b>No necesitas formación previa.</b> El curso empieza por lo
+            básico en «Datos maestros». Si ya conoces el ERP o la contabilidad,
+            empieza donde quieras.
           </span>
         </p>
       </div>

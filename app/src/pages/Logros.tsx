@@ -208,7 +208,7 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
     const m = MODULOS.find((x) => x.id === id);
     const hechos = m ? bloquesObligatorios(m).filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length : 0;
     const total = m ? bloquesObligatorios(m).length || 1 : 1;
-    return { color: META[id]?.color ?? b.color, icono: META[id]?.icono ?? 'check', valor: hechos / total, cuenta: `${hechos} de ${total} ejercicios` };
+    return { color: META[id]?.color ?? b.color, icono: META[id]?.icono ?? 'check', valor: hechos / total, cuenta: `${hechos} de ${total} bloques` };
   }
   if (b.id.startsWith('exm-')) {
     const clave = b.id.slice(4);

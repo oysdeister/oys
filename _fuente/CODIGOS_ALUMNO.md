@@ -13,7 +13,7 @@ Regla: **un código, una cosa**. Si dos bloques necesitan lo mismo, el segundo l
 | ctercero, galmacen, tagrupac | 12 | |
 | garticul, carticul (artículos) | 16 | |
 
-Con iniciales de 3 letras, en los códigos de 3 o 4 caracteres se usan solo las 2 primeras.
+Con iniciales de 3 letras, en los códigos de 3 o 4 caracteres se usan solo las 2 primeras (el campo `codigo` no admite más: si no, sale «Demasiado largo»).
 
 Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos códigos. En la plataforma, el artículo que se compra es siempre el 13500620 (también en el ERP simulado: prácticas «Pedido › albarán › factura» y «Entregas parciales»).
 
@@ -36,15 +36,15 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `S{INI}` | Empresa «Empresa prácticas {INI}» | maestros-v-4 | — |
 | `CAIXA{INI}` | Banco propio de la empresa S{INI} | maestros-v-4 | — |
 | `T{INI}` | Tercero **proveedor** «Tercero {INI}» (No censado, Id. 0, categoría 002) y su ficha de proveedor | Compras › compras-1 «Tercero» y «Proveedor» | compras-2, compras-3, Ventas (lo da de alta como cliente: mismo tercero), Cartera **no** (usa su tercero CAR{INI}), ERP simulado (prácticas de compras y pago) |
-| `TF{INI}` | Lista de precios de compra (tarifa) | compras-1 | compras-1 (grupo G{INI}) |
-| `G{INI}` | Grupo de precios de compra | compras-1 | compras-1 (proveedor T{INI}) |
+| `TF{INI}` | Lista de precios de compra (tarifa) | compras-precios | compras-precios (grupo G{INI}) |
+| `G{INI}` | Grupo de precios de compra | compras-precios | compras-precios (proveedor T{INI}) |
 | `13500620` | Artículo **de la demo** que se compra (6000-2RS ISB, tipo contable PRODUCTO). No se modifica | ya existe | compras-1 (tarifa), compras-2 y compras-3 (oferta, albaranes, factura), Ventas, ERP simulado (pedido › albarán › factura) |
-| `AC{INI}` | Tipología de albarán de compra sin origen (antes `A{INI}`, chocaba con la de Ventas) | compras-2 | compras-2 |
-| `FC{INI}` | Tipología de factura de compra | compras-2 | compras-2, compras-3 |
-| `OC{INI}` | Tipología de oferta de compra | compras-3 | compras-3 |
-| `PC{INI}` | Tipología de pedido de compra | compras-3 | compras-3 |
+| `AC{INI}` | Tipología de albarán de compra sin origen (antes `A{INI}`, chocaba con la de Ventas). **Ningún bloque la crea ya**: solo aparece en `datosSimulador` y en el glosario de compras | — | simulador, glosario |
+| `FC{INI}` | Tipología de factura de compra | compras-tipos | compras-factura |
+| `OC{INI}` | Tipología de oferta de compra | compras-tipos | compras-3 |
+| `PC{INI}` | Tipología de pedido de compra | compras-tipos | compras-3, compras-2 |
 | `0PC{INI}01` | Número del pedido (a mano, formulario genérico) | compras-3 | compras-3 |
-| `AO{INI}` | Tipología de albarán de compra con origen pedido | compras-3 | compras-3 |
+| `AO{INI}` | Tipología de albarán de compra con origen pedido | compras-tipos | compras-2 |
 | `PROV-{INI}-001` / `-002` | Número de factura del proveedor | compras-2 / compras-3 | Cartera (pago de la factura) |
 
 ## Cartera, Ventas, Tesorería, Contabilidad, Impuestos y Activos (cerrado)

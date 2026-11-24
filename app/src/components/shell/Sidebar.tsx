@@ -14,6 +14,7 @@ const PRACTICA = [
   { to: '/taller', label: 'Taller', icon: 'taller' },
   { to: '/video', label: 'Vídeos', icon: 'video' },
   { to: '/glosario', label: 'Glosario', icon: 'libro' },
+  { to: '/errores', label: 'Errores', icon: 'aviso' },
   { to: '/examen', label: 'Examen', icon: 'examen' },
   { to: '/logros', label: 'Logros', icon: 'logros' },
 ];
