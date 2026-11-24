@@ -1249,59 +1249,9 @@ export const MOMENTOS_MODULO: Record<string, MomentoVideo[]> = {
   "compras": [
     {
       "capitulo": 1,
-      "t": 54,
-      "tCap": 54,
-      "titulo": "Para qué sirve el módulo de compras",
-      "fin": 82
-    },
-    {
-      "capitulo": 1,
-      "t": 82,
-      "tCap": 82,
-      "titulo": "El ciclo de compra",
-      "fin": 114
-    },
-    {
-      "capitulo": 1,
-      "t": 114,
-      "tCap": 114,
-      "titulo": "Docflow: el rastro de cada compra",
-      "fin": 134
-    },
-    {
-      "capitulo": 1,
-      "t": 134,
-      "tCap": 134,
-      "titulo": "El ciclo puede empezar antes",
-      "fin": 167
-    },
-    {
-      "capitulo": 1,
-      "t": 254,
-      "tCap": 254,
-      "titulo": "Recorrido por Compras: el ciclo",
-      "fin": 293
-    },
-    {
-      "capitulo": 1,
-      "t": 293,
-      "tCap": 293,
-      "titulo": "Recorrido por Compras: el resto",
-      "fin": 336
-    },
-    {
-      "capitulo": 1,
-      "t": 376,
-      "tCap": 376,
-      "titulo": "Qué vamos a ver: el módulo",
-      "fin": 394
-    },
-    {
-      "capitulo": 1,
-      "t": 394,
-      "tCap": 394,
-      "titulo": "Qué vamos a ver: los bloques",
-      "fin": 411
+      "t": 0,
+      "tCap": 0,
+      "titulo": "Bienvenida: el módulo de compras"
     }
   ]
 };
