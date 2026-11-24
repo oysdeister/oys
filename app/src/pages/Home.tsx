@@ -21,6 +21,9 @@ import {
   bloqueQueToca,
   bloquesDe,
   bloquesObligatorios,
+  FASE_UI,
+  fasesDe,
+  conSelectorDeFases,
   numeroBloque,
   pasoOpcional,
   pasoQueToca,
@@ -192,7 +195,7 @@ export default function Home() {
     ? `/ejercicio/${continuar.ejercicio.id}${pasoCont === "concepto" ? "" : `?tab=${pasoCont}`}`
     : "/examen";
   const metaCont = continuar ? metaDe(continuar.modulo) : null;
-  const nMod = continuar ? MODULOS.indexOf(continuar.modulo) + 1 : 0;
+  const nMod = continuar ? MODULOS.indexOf(continuar.modulo) : 0;
   const nBloque = continuar
     ? numeroBloque(continuar.modulo, continuar.ejercicio.id)
     : 0;
@@ -212,7 +215,7 @@ export default function Home() {
   const lead = !continuar
     ? "Has terminado todos los bloques. Te queda el examen final."
     : !empezado
-      ? `Son ${MODULOS.length} módulos, en orden. Cada bloque es una tarea del ERP: lees la idea, la haces paso a paso y la repites en la Demo real.`
+      ? `El ERP es donde la empresa apunta todo: un fallo aquí es un cobro que se pierde. Son ${MODULOS.length} módulos, en orden; empieza por el 0, Fundamentos. Cada bloque es una tarea del ERP: lees la idea, la haces paso a paso y la repites en la Demo real.`
       : "Sigue donde lo dejaste.";
 
   const examenEstado = ex.aprobado
@@ -265,16 +268,17 @@ export default function Home() {
           <Icon name="engranaje" size={18} />
           <span>
             La <b>Práctica</b> es el ERP de práctica: un ERP simulado dentro de
-            esta web que se corrige solo. La <b>Demo real</b> es el ERP de demostración de
-            Deister, en otra pestaña.
+            esta web que se corrige solo; si el bloque la tiene, haz primero esa. La{" "}
+            <b>Demo real</b> es el ERP de demostración de Deister, en otra
+            pestaña. «De memoria» es el único paso opcional.
           </span>
         </p>
         <p>
           <Icon name="aviso" size={18} />
           <span>
-            <b>No necesitas formación previa.</b> El curso empieza por lo
-            básico en «Datos maestros». Si ya conoces el ERP o la contabilidad,
-            empieza donde quieras.
+            <b>No necesitas formación previa.</b> El curso empieza por
+            «Fundamentos» (módulo 0): qué es un ERP, debe y haber, IVA. Si ya
+            conoces el ERP o la contabilidad, empieza donde quieras.
           </span>
         </p>
       </div>
@@ -303,18 +307,20 @@ export default function Home() {
           ).length;
           const hecho = hechos === bloques.length && hechos > 0;
           const toca = m.id === continuar?.modulo.id;
+          const grs = fasesDe(m);
+          const conSel = conSelectorDeFases(grs);
           return (
             <li
               key={m.id}
               className={`${hecho ? "hecho" : ""}${toca ? " toca" : ""}`}
               style={{ ["--mod" as string]: meta.color } as CSSProperties}
             >
-              <Link to={`/modulo/${m.id}`} className="ini-mod">
+              <div className="ini-mod">
                 <span className="ini-mod-cab">
                   <span className="ini-mod-ico" aria-hidden="true">
                     <Icon name={meta.icono} size={22} />
                   </span>
-                  <span className="ini-mod-n">Módulo {i + 1}</span>
+                  <span className="ini-mod-n">Módulo {i}</span>
                   {hecho ? (
                     <em className="ini-chip ok">
                       <Icon name="check" size={14} stroke={3} /> Hecho
@@ -325,10 +331,34 @@ export default function Home() {
                     </em>
                   ) : null}
                 </span>
-                <strong>{meta.corto}</strong>
+                <strong>
+                  <Link to={`/modulo/${m.id}`} className="ini-mod-link">
+                    {meta.corto}
+                  </Link>
+                </strong>
                 <span className="ini-mod-frase">
                   {ficha ? conIni(ficha.frase, ini) : conIni(m.resumen, ini)}
                 </span>
+                {conSel && (
+                  <span className="ini-mod-fases">
+                    {grs
+                      .filter((g) => g.id !== "saber")
+                      .map((g) => (
+                        <Link
+                          key={g.id}
+                          to={`/modulo/${m.id}?fase=${g.id}`}
+                          className={`ini-fase-chip ${g.id}`}
+                          aria-label={`${FASE_UI[g.id].titulo} de ${meta.corto}: ${g.bloques.length === 0 ? "sin bloques nuevos" : `${g.bloques.length} bloques`}`}
+                        >
+                          <Icon name={FASE_UI[g.id].icono} size={14} />
+                          {FASE_UI[g.id].titulo} ·{" "}
+                          {g.bloques.length === 0
+                            ? "ya lo tienes"
+                            : `${g.bloques.length} ${g.bloques.length === 1 ? "bloque" : "bloques"}`}
+                        </Link>
+                      ))}
+                  </span>
+                )}
                 <span className="ini-mod-pie">
                   <span className="ini-barra" aria-hidden="true">
                     <i style={{ width: `${av * 100}%` }} />
@@ -341,7 +371,7 @@ export default function Home() {
                     <b>{Math.round(av * 100)} %</b>
                   </span>
                 </span>
-              </Link>
+              </div>
             </li>
           );
         })}
@@ -438,6 +468,14 @@ export default function Home() {
           </div>
 
           <dl className="ini-datos">
+            {continuar && (
+              <div>
+                <dt>Hoy</dt>
+                <dd>
+                  1<small> bloque · {continuar.ejercicio.duracionMin} min</small>
+                </dd>
+              </div>
+            )}
             <div>
               <dt>Bloques hechos</dt>
               <dd>

@@ -1,0 +1,1828 @@
+{
+  "id": "contabilidad-avanzada",
+  "titulo": "Contabilidad avanzada y cierre",
+  "sesion": "Sesión 11",
+  "resumen": "Cierras el ejercicio y abres el siguiente, consultas los balances y las cuentas anuales y conoces la consolidación. Es la parte de la contabilidad que se hace una vez al año, cuando ya tienes todo el trabajo diario hecho.",
+  "circuito": [
+    "Cierre del ejercicio",
+    "Apertura del siguiente",
+    "Balances",
+    "Cuentas anuales",
+    "Consolidación"
+  ],
+  "ejercicios": [
+    {
+      "id": "icon-contabilidad-2",
+      "numero": 6,
+      "titulo": "Cerrar y abrir el ejercicio",
+      "objetivo": "Sabrás en qué orden se lanzan los procesos que cierran y abren el ejercicio y los localizarás en el menú.",
+      "concepto": "Cerrar el año contable es como hacer inventario y cerrar la caja el 31 de diciembre. Calculas cuánto has ganado, dejas las cuentas a cero y al día siguiente arrancas con lo que tenías. Si el cierre se hace mal o fuera de orden, el beneficio sale equivocado y el año siguiente empieza con saldos que no son los tuyos.\n\nAl terminar el año se hacen tres cosas, en este orden. Primero, regularizar: llevar todos los gastos e ingresos del año a la cuenta de resultados (129). Después, cerrar: dejar a cero el resto de cuentas (bancos, clientes, proveedores…) con el asiento de cierre, la anotación que deja a cero los saldos del balance.\n\nPor último, abrir: copiar esos mismos saldos al 1 de enero del año siguiente con el asiento de apertura.\n\nUna cuenta es un cajón con número donde se guarda un tipo de importe. Su saldo es lo que queda en ella: la suma del debe menos la suma del haber (o al revés). Los grupos 6 y 7 son los gastos y los ingresos.\n\nEjemplo: con 10.000 € de ventas y 7.000 € de gastos, la 129 queda con 3.000 € de beneficio. Las cuentas de los grupos 6 y 7 quedan a cero. El banco que acabó con 5.000 € empieza el nuevo año con 5.000 €.\n\nEjemplo: en tu caso, a 31-12 las ventas son 200,00 y los gastos, 125,00 + 3,50 + 10,00 = 138,50. La 129 queda con 61,50 de beneficio y el banco empieza 2027 con 3.077,25. En este bloque el ejemplo es de 10.000 y 7.000 solo porque son cifras redondas para ver el mecanismo; el mecanismo es el mismo.\n\nEn el ERP estos pasos son procesos periódicos. Son la regularización de divisas, la actualización de deuda, la regularización, el cierre temporal, el cierre definitivo, la reapertura, el paso a histórico y la reclasificación de deuda a largo plazo.\n\nTienen un orden recomendado. Además, hay varias formas de ver la contabilidad a una fecha pasada.\n\nDónde: «Finanzas › Contabilidad General › Procesos › Cerrar ejercicio contable».",
+      "duracionMin": 35,
+      "secciones": [
+        {
+          "id": "icon-contabilidad-2-procesos-periodicos-orden",
+          "titulo": "Ordenar los procesos de cierre",
+          "paraQueSirve": "Sirve para conocer todos los procesos de cierre y apertura, y el orden en que se lanzan.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Procesos",
+            "Cerrar ejercicio contable"
+          ],
+          "explicacion": [
+            "Los procesos periódicos son: regularización de cuentas en divisas, actualización de deuda de cartera en moneda extranjera, regularización de ejercicios, cierre temporal, cierre definitivo, reapertura, paso a histórico y reclasificación de deuda a largo plazo.",
+            "El orden recomendado es: regularización de divisas, actualización de deuda en divisa, regularización y cierre temporal. Luego, reapertura si estaba cerrado temporalmente, cierre definitivo, paso a histórico y reclasificación de deuda a largo plazo.",
+            "Ojo: los procesos de cierre y apertura cambian asientos y saldos. Revísalos antes de lanzarlos.",
+            "En la demo, la carpeta «Cerrar ejercicio contable» contiene: Ajuste de cuentas en divisas, Ajuste cartera en divisas, Regularización ejercicio, Cierre temporal del ejercicio contable, Cierre definitivo del ejercicio contable, Reapertura de ejercicio y Reclasificación deuda largo plazo.",
+            "Fíjate: el paso a histórico no está en esa carpeta."
+          ],
+          "campos": [
+            {
+              "campo": "regularización de divisas",
+              "significado": "Ajusta al cambio de cierre las cuentas en moneda extranjera. Una deuda de 1.000 $ vale distinto en euros en enero que en diciembre. En el menú: «Ajuste de cuentas en divisas».",
+              "ejemplo": "proceso"
+            },
+            {
+              "campo": "actualización de deuda en divisa",
+              "significado": "Pone al cambio del día la deuda de cartera en moneda extranjera. En el menú: «Ajuste cartera en divisas».",
+              "ejemplo": "proceso"
+            },
+            {
+              "campo": "regularización de ejercicio",
+              "significado": "Pasa los saldos de ingresos y gastos a la cuenta de resultados (129 Resultado del ejercicio).",
+              "ejemplo": "asiento 99999998"
+            },
+            {
+              "campo": "cierre temporal",
+              "significado": "Prepara los saldos de apertura sin crear asientos reales.",
+              "ejemplo": "repetible"
+            },
+            {
+              "campo": "cierre definitivo",
+              "significado": "Crea el asiento de cierre y el de apertura. El ejercicio queda cerrado.",
+              "ejemplo": "asientos 99999999 y 0"
+            },
+            {
+              "campo": "reapertura",
+              "significado": "Borra los asientos de regularización y cierre. El ejercicio vuelve a quedar abierto.",
+              "ejemplo": "proceso"
+            },
+            {
+              "campo": "paso a histórico",
+              "significado": "Pasa los apuntes de un ejercicio cerrado a un área histórica.",
+              "ejemplo": "solo consulta"
+            },
+            {
+              "campo": "reclasificación de deuda a largo plazo",
+              "significado": "Salda las cuentas de deuda a largo plazo (más de un año). Pasa a corto plazo la parte que vence en los próximos 12 meses.",
+              "ejemplo": "asiento"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Contabilidad General › Procesos › Cerrar ejercicio contable.",
+              "detalle": "Despliega la carpeta con la flecha ▸ y revisa los siete procesos que contiene."
+            },
+            {
+              "texto": "Localiza cada proceso y comprueba su lugar en el orden recomendado.",
+              "detalle": "La regularización va antes del cierre definitivo."
+            },
+            {
+              "texto": "Abre también la ficha del ejercicio 2026 (Finanzas › Maestros › Cierres › Ejercicios contables) y mira los botones de arriba.",
+              "pregunta": "Has abierto la ficha del ejercicio 2026. ¿Dónde ves los botones de cierre y apertura?",
+              "detalle": "Lanzan los mismos procesos sobre ese ejercicio: Reclasificación de deuda, Reapertura de ejercicio, Cierre definitivo, Cierre temporal y Regularización por ejercicio. Los que salen en gris no se pueden usar en el estado actual del ejercicio. No pulses ninguno.",
+              "imagen": "icon-contabilidad-n-01.webp",
+              "hotspot": {
+                "x": 34.8,
+                "y": 16.1,
+                "w": 50.6,
+                "h": 3.8,
+                "etiqueta": "Botones de cierre y apertura"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El cierre temporal no sustituye a la regularización ni al cierre definitivo."
+            },
+            {
+              "tipo": "nota",
+              "texto": "No lances estos procesos en la demo: cambian el ejercicio para todo el mundo. Basta con localizarlos y leer qué piden."
+            }
+          ]
+        },
+        {
+          "id": "icon-contabilidad-2-regularizacion-cierre-temporal",
+          "titulo": "Regularizar y cerrar temporalmente",
+          "paraQueSirve": "Sirve para saber qué hacen la regularización y el cierre temporal, y qué necesitan.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Procesos",
+            "Cerrar ejercicio contable"
+          ],
+          "explicacion": [
+            "La regularización crea apuntes que pasan los saldos de ingresos y gastos a una cuenta de Pérdidas y Ganancias.",
+            "El asiento que genera lleva siempre el número 99999998, un número que el ERP reserva para la regularización, y sus saldos van al periodo 98, un periodo especial para esa operación. El ejercicio pasa a estado regularizado.",
+            "El cierre temporal prepara los saldos de apertura del ejercicio siguiente. No lanza antes la regularización ni crea asientos reales. Copia el asiento de resultados a origen y pasa los saldos a csaldos del ejercicio siguiente.",
+            "Exige que exista el ejercicio siguiente en estado A (Abierto). Si no existe, el ERP para el proceso con el error «EJERCICIO DE APERTURA INEXISTENTE O NO ACTIVO». Los saldos de apertura quedan en los periodos especiales -1 y 0.",
+            "La regularización usa las definiciones de regularización de la empresa. El cierre temporal lee los ejercicios y sus saldos y guarda el resultado en el ejercicio siguiente."
+          ],
+          "campos": [
+            {
+              "campo": "asiento de regularización",
+              "significado": "Número fijo del asiento de regularización.",
+              "ejemplo": "99999998"
+            },
+            {
+              "campo": "periodo de regularización",
+              "significado": "Periodo donde van los saldos acumulados de la regularización.",
+              "ejemplo": "98"
+            },
+            {
+              "campo": "estado tras regularización",
+              "significado": "Tras regularizar, el ejercicio pasa a regularizado.",
+              "ejemplo": "R"
+            },
+            {
+              "campo": "cierre temporal",
+              "significado": "Prepara los saldos de apertura sin asientos reales. Se puede repetir.",
+              "ejemplo": "repetible"
+            },
+            {
+              "campo": "validación ejercicio siguiente",
+              "significado": "Tiene que existir el ejercicio siguiente en estado A (Abierto). En la demo existe 2027 Abierto.",
+              "ejemplo": "A"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Localiza el proceso de regularización de ejercicio.",
+              "pregunta": "Estás localizando el proceso de regularización de ejercicio. ¿Dónde ves la explicación de qué hace?",
+              "detalle": "El aviso morado explica qué hace. Según el patrón de cierre elegido, genera el asiento que deja a cero las cuentas de ingresos y gastos. Además marca el ejercicio como regularizado. Pide Empresa y Ejercicio.",
+              "imagen": "icon-contabilidad-004.webp",
+              "hotspot": {
+                "x": 14.8,
+                "y": 14.9,
+                "w": 74.3,
+                "h": 17.6,
+                "etiqueta": "Qué hace la regularización"
+              }
+            },
+            {
+              "texto": "Recuerda qué deja la regularización: el asiento 99999998, sus saldos en el periodo 98 y el ejercicio en estado R (regularizado).",
+              "detalle": "No la lances en la demo: basta con saber qué genera."
+            },
+            {
+              "texto": "Localiza el proceso de cierre temporal.",
+              "pregunta": "Estás localizando el proceso de cierre temporal. ¿Dónde ves que no genera asientos?",
+              "detalle": "El aviso dice que no genera asientos. Calcula los saldos de apertura de todas las cuentas con valor y los guarda directamente en Saldos Contables. Exige que exista el ejercicio siguiente en estado A (Abierto).",
+              "imagen": "icon-contabilidad-005.webp",
+              "hotspot": {
+                "x": 14.8,
+                "y": 14.4,
+                "w": 74.3,
+                "h": 17.2,
+                "etiqueta": "No genera asientos"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El cierre temporal se puede repetir. Al repetirlo, se recalculan los saldos de apertura y los resultados a origen, y se pierden los ajustes manuales previos."
+            },
+            {
+              "tipo": "problema",
+              "texto": "Si el cierre temporal da «EJERCICIO DE APERTURA INEXISTENTE O NO ACTIVO», falta el ejercicio siguiente en estado A."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Crea el ejercicio siguiente o actívalo antes de lanzar el cierre temporal."
+            }
+          ]
+        },
+        {
+          "id": "icon-contabilidad-2-cierre-definitivo-resto",
+          "titulo": "Cerrar, reabrir, pasar a histórico y reclasificar",
+          "paraQueSirve": "Sirve para entender los procesos que cierran del todo, reabren, pasan al histórico y reclasifican deuda.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Procesos",
+            "Cerrar ejercicio contable"
+          ],
+          "explicacion": [
+            "El cierre definitivo genera el asiento de cierre: el 99999999, en el periodo 99 y con la última fecha del último periodo.",
+            "También genera el asiento de apertura del ejercicio siguiente: el 0, en el periodo 0 y con la primera fecha del primer periodo. El ejercicio queda cerrado definitivamente.",
+            "Si el ejercicio estaba cerrado temporalmente, reábrelo antes del cierre definitivo. La reapertura borra los asientos de regularización y de cierre temporal o definitivo, y deja el ejercicio abierto.",
+            "El paso a histórico lleva los apuntes de un ejercicio cerrado a un área histórica. Allí solo se consultan, y quedan fuera de la mayoría de los informes.",
+            "La reclasificación de deuda a largo plazo salda las cuentas de largo plazo. Pasa a corto plazo la parte que corresponde según el maestro de deuda a largo plazo."
+          ],
+          "campos": [
+            {
+              "campo": "asiento de cierre definitivo",
+              "significado": "Número fijo del asiento de cierre.",
+              "ejemplo": "99999999"
+            },
+            {
+              "campo": "periodo de cierre",
+              "significado": "Periodo donde van los saldos de cierre.",
+              "ejemplo": "99"
+            },
+            {
+              "campo": "asiento de apertura",
+              "significado": "Número fijo del asiento de apertura.",
+              "ejemplo": "0"
+            },
+            {
+              "campo": "periodo de apertura",
+              "significado": "Periodo donde van los saldos de apertura.",
+              "ejemplo": "0"
+            },
+            {
+              "campo": "estado final",
+              "significado": "Situación final: ejercicio cerrado definitivamente.",
+              "ejemplo": "cerrado"
+            },
+            {
+              "campo": "paso a histórico",
+              "significado": "Solo para ejercicios cerrados. Después, solo se consultan.",
+              "ejemplo": "histórico"
+            },
+            {
+              "campo": "reclasificación deuda",
+              "significado": "Salda el largo plazo y pasa a corto plazo lo que vence.",
+              "ejemplo": "asiento"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Localiza el cierre definitivo y lee qué asientos genera.",
+              "pregunta": "Estás leyendo el cierre definitivo. ¿Dónde ves los asientos de cierre y de apertura que genera?",
+              "detalle": "El aviso dice que, si el ejercicio está regularizado, genera el asiento de cierre de balance (período 99) y el de apertura (período 0). El ejercicio pasa a estado «cerrado». El de cierre es el asiento 99999999 y el de apertura, el 0.",
+              "imagen": "icon-contabilidad-006.webp",
+              "hotspot": {
+                "x": 14.8,
+                "y": 10.4,
+                "w": 74.3,
+                "h": 12.6,
+                "etiqueta": "Asiento de cierre y de apertura"
+              }
+            },
+            {
+              "texto": "Localiza la reapertura de ejercicio.",
+              "pregunta": "Estás localizando la reapertura de ejercicio. ¿Dónde ves que elimina asientos?",
+              "detalle": "El aviso en rojo avisa de que borra el asiento de apertura, el de cierre y el de regularización de PyG (pérdidas y ganancias). El ejercicio pasa a «abierto».",
+              "imagen": "icon-contabilidad-007.webp",
+              "hotspot": {
+                "x": 15.0,
+                "y": 15.4,
+                "w": 75.3,
+                "h": 17.7,
+                "etiqueta": "Elimina asientos"
+              }
+            },
+            {
+              "texto": "Localiza el paso a histórico.",
+              "detalle": "La captura es la consulta «HISTÓRICO DE APUNTES» con datos de 1999 de otra base. Los apuntes del histórico solo se consultan, no se modifican.",
+              "imagen": "icon-contabilidad-008.webp"
+            },
+            {
+              "texto": "Localiza la reclasificación de deuda a largo plazo.",
+              "pregunta": "Estás localizando la reclasificación de deuda a largo plazo. ¿Dónde ves el traspaso de LP a CP?",
+              "detalle": "El aviso dice «Genera asiento contable para traspaso de LP a CP». LP es largo plazo (más de un año) y CP, corto plazo. Pide Empresa, Diario, Justificante y Vencimiento.",
+              "imagen": "icon-contabilidad-009.webp",
+              "hotspot": {
+                "x": 14.8,
+                "y": 12.4,
+                "w": 75.4,
+                "h": 11.1,
+                "etiqueta": "Traspaso de LP a CP"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Solo puedes pasar al histórico los ejercicios cerrados."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Lo que está en el histórico de apuntes no sale en la mayoría de los informes."
+            }
+          ]
+        },
+        {
+          "id": "icon-contabilidad-2-ver-fecha-pasada",
+          "titulo": "Ver la contabilidad a una fecha pasada",
+          "paraQueSirve": "Sirve para consultar cómo estaba la contabilidad en una fecha anterior, por ejemplo a 31-12.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Saldos"
+          ],
+          "explicacion": [
+            "Tienes tres formas de ver la contabilidad a una fecha pasada: los saldos por periodo, el histórico de saldos y los extractos con filtro de fechas.",
+            "Fíjate: el cierre temporal no sirve para consultar. Solo prepara los saldos de apertura del ejercicio siguiente.",
+            "Para una foto exacta a 31-12, usa los saldos por periodo o los extractos filtrando hasta esa fecha."
+          ],
+          "campos": [
+            {
+              "campo": "saldos por periodo",
+              "significado": "Saldos acumulados por periodo contable.",
+              "ejemplo": "consulta"
+            },
+            {
+              "campo": "histórico de saldos",
+              "significado": "Saldos de ejercicios pasados.",
+              "ejemplo": "consulta"
+            },
+            {
+              "campo": "extractos con filtro de fechas",
+              "significado": "Lista de apuntes entre dos fechas.",
+              "ejemplo": "consulta"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Contabilidad General › Saldos y consulta un periodo pasado, por ejemplo el periodo 12 de 2025.",
+              "pregunta": "Has abierto la consulta de saldos por período. ¿Dónde ves las columnas de Periodo 1 a 12?",
+              "detalle": "En la carpeta Saldos están, entre otras, «Saldos cuentas» y «Saldos mensualizados». La captura tiene una columna por periodo (Periodo 1 a Periodo 12) y la columna Total, que suma la apertura y los doce periodos. El saldo a 31-12 es ese Total.",
+              "imagen": "icon-contabilidad-010.webp",
+              "hotspot": {
+                "x": 48.6,
+                "y": 3.0,
+                "w": 47.3,
+                "h": 3.8,
+                "etiqueta": "Columnas Periodo 1 a 12"
+              }
+            },
+            {
+              "texto": "Si el ejercicio ya se cerró, consulta el histórico de saldos.",
+              "detalle": "Verás los saldos de ejercicios ya cerrados. El saldo a 31-12 es el último periodo."
+            },
+            {
+              "texto": "Abre Finanzas › Contabilidad General › Extractos › Mayor de cuentas y filtra las fechas hasta el 31-12.",
+              "detalle": "Comprueba que el extracto muestra el saldo acumulado a esa fecha.",
+              "imagen": "asientos-n-03.webp"
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "No hay un informe específico aparte para ver la contabilidad a una fecha pasada."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué número de asiento genera la regularización?",
+          "opciones": [
+            "1",
+            "99999998",
+            "0",
+            "99999999"
+          ],
+          "correcta": 1,
+          "explicacion": "La regularización genera siempre el asiento 99999998."
+        },
+        {
+          "pregunta": "¿Qué proceso prepara saldos de apertura sin generar asientos reales?",
+          "opciones": [
+            "Cierre definitivo",
+            "Reapertura",
+            "Cierre temporal",
+            "Regularización"
+          ],
+          "correcta": 2,
+          "explicacion": "El cierre temporal prepara los saldos de apertura sin crear asientos reales."
+        },
+        {
+          "pregunta": "¿Qué condición exige el cierre temporal sobre el ejercicio siguiente?",
+          "opciones": [
+            "Tener saldo cero",
+            "Ser el mismo ejercicio",
+            "Estar cerrado",
+            "Existir en estado A"
+          ],
+          "correcta": 3,
+          "explicacion": "Tiene que existir el ejercicio siguiente en estado A (Abierto)."
+        },
+        {
+          "pregunta": "¿Qué asiento genera el cierre definitivo como apertura?",
+          "opciones": [
+            "0",
+            "1",
+            "99999998",
+            "99999999"
+          ],
+          "correcta": 0,
+          "explicacion": "El asiento de apertura es el número 0."
+        },
+        {
+          "pregunta": "¿Qué mecanismo sirve para ver la contabilidad a 31-12?",
+          "opciones": [
+            "Cierre definitivo",
+            "Saldos por periodo",
+            "Paso a histórico",
+            "Reclasificación"
+          ],
+          "correcta": 1,
+          "explicacion": "Los saldos por periodo enseñan la contabilidad a una fecha pasada."
+        }
+      ],
+      "checklist": [
+        "Abres los procesos periódicos y localizas la regularización de divisas.",
+        "Localizas la actualización de deuda en divisa (pone al cambio del día lo que debes o te deben en moneda extranjera).",
+        "Localizas la regularización de ejercicio y compruebas que genera el asiento 99999998.",
+        "Localizas el cierre temporal y compruebas que exige el ejercicio+1 activo.",
+        "Sabes que el cierre temporal deja los saldos de apertura del ejercicio siguiente en los periodos especiales -1 y 0 (no lo lances en la demo).",
+        "Localizas el cierre definitivo y revisas los asientos 99999999 y 0.",
+        "Localizas la reapertura y compruebas que borra los asientos de cierre.",
+        "Localizas el paso a histórico y compruebas que solo admite ejercicios cerrados.",
+        "Localizas la reclasificación de deuda a largo plazo y compruebas que usa el maestro de deuda.",
+        "Abres los saldos por periodo y consultas un periodo pasado."
+      ],
+      "problemas": [
+        {
+          "problema": "El cierre temporal sale con el error «EJERCICIO DE APERTURA INEXISTENTE O NO ACTIVO».",
+          "solucion": "Crea el ejercicio siguiente en estado A para la misma empresa en «Finanzas › Maestros › Cierres › Ejercicios contables» y repite el cierre temporal."
+        },
+        {
+          "problema": "Quieres lanzar el cierre definitivo, pero el ejercicio está cerrado temporalmente.",
+          "solucion": "Lanza antes la reapertura. Borra los asientos del cierre temporal y deja el ejercicio abierto."
+        },
+        {
+          "problema": "Quieres ver la contabilidad a 31-12 y no encuentras un informe específico.",
+          "solucion": "Usa los saldos por periodo, el histórico de saldos o los extractos filtrando hasta el 31-12."
+        },
+        {
+          "problema": "No encuentro la carpeta de los procesos de cierre.",
+          "solucion": "Abre «Finanzas › Contabilidad General › Procesos › Cerrar ejercicio contable». Si no sale, escribe «Cerrar ejercicio» en el buscador del menú."
+        }
+      ],
+      "aprendido": [
+        "Has aprendido el orden del cierre: regularizar, cerrar y abrir. En tu caso deja 61,50 de beneficio en la 129 y 3.077,25 en el banco de 2027.",
+        "Has localizado los procesos de la carpeta «Cerrar ejercicio contable» sin lanzarlos.",
+        "Has visto que la regularización crea el asiento 99999998 y el cierre definitivo, los asientos 99999999 y 0.",
+        "Has aprendido que el cierre temporal exige el ejercicio siguiente en estado A.",
+        "Has consultado los saldos por periodo para ver la contabilidad a 31-12."
+      ]
+    },
+    {
+      "id": "contab-cierre-practica",
+      "numero": 8,
+      "titulo": "Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre",
+      "objetivo": "Regularizarás el ejercicio 2026 de tu empresa S{INI} y comprobarás que su estado pasa a «Regularizado».",
+      "concepto": "Cerrar el año contable es como hacer inventario el 31 de diciembre. Se calcula cuánto has ganado o perdido y se deja todo listo para empezar el año siguiente. Si no cierras, los gastos y los ingresos de un año se mezclan con los del siguiente y no sabes cuánto ha ganado la empresa.\n\nEn tu empresa S{INI} el cierre son tres pasos. Primero, regularizar: pasar el saldo de los gastos y los ingresos a la cuenta de resultados (129, «Resultado del ejercicio»), que es ingresos menos gastos del año. Después, el cierre definitivo: el ERP crea el asiento de cierre (99999999) y el de apertura del año siguiente (periodo 0). Por último, si te equivocas, la reapertura deshace el cierre.\n\nPara cerrar necesitas dos ejercicios, es decir, dos años contables de la empresa: el que cierras (2026) y el siguiente (2027), abierto. Si falta el 2027, el ERP no puede crear la apertura.\n\nEsta práctica usa la empresa que creaste en «Crear una empresa» (módulo Maestros). No la hagas en la empresa 0: su ejercicio 2026 lo comparten todos.\n\nEjemplo: en tu caso, la regularización lleva a la 129 las ventas de 200,00, las compras de 125,00 y los gastos bancarios de 13,50. Resultado: 200,00 − 125,00 − 13,50 = 61,50 de beneficio. En esta práctica cierras la empresa S{INI}, que solo tiene el asiento de saldos iniciales de 5.000,00 € que hiciste antes, porque las operaciones del caso se graban en la empresa 0 de la demo. Las cifras son otras; el mecanismo es el mismo.\n\nQué resultado es el bueno: al acabar, el Estado del ejercicio 2026 de S{INI} es Regularizado y los periodos de enero a noviembre están en Cerrado. Eso es hacerlo bien. Si además ves el asiento 99999998, mejor; si no lo ves, es un límite de la demo (la empresa no tiene «Programa regularización») y no es un error tuyo.\n\nAviso: en la demo se comprobó hasta la regularización. El cierre definitivo no se ha comprobado paso a paso: se explica con la documentación.\n\nDónde: «Finanzas › Maestros › Cierres › Ejercicios contables».",
+      "duracionMin": 30,
+      "secciones": [
+        {
+          "id": "contab-cierre-practica-ejercicios",
+          "titulo": "Tener el ejercicio que cierras y el siguiente",
+          "paraQueSirve": "Sirve para dejar listos los dos ejercicios que intervienen en el cierre: el 2026 y el 2027.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cierres",
+            "Ejercicios contables"
+          ],
+          "explicacion": [
+            "El ejercicio 2026 de S{INI} ya lo creaste al crear tu empresa (módulo Maestros). Aquí añades el 2027.",
+            "El 2027 tiene que estar Abierto. El cierre definitivo copiará en él los saldos de apertura.",
+            "Antes de cerrar, tu empresa debería tener al menos un asiento de saldos iniciales y alguno de gasto o ingreso. Sin movimientos no hay nada que regularizar."
+          ],
+          "campos": [
+            {
+              "campo": "Empresa *",
+              "significado": "Tu empresa.",
+              "ejemplo": "S{INI}"
+            },
+            {
+              "campo": "Ejercicio *",
+              "significado": "Año contable que creas.",
+              "ejemplo": "2027"
+            },
+            {
+              "campo": "Descripción *",
+              "significado": "Texto del ejercicio.",
+              "ejemplo": "EJERCICIO 2027"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Maestros › Cierres › Ejercicios contables y pulsa «Añadir ejercicio».",
+              "detalle": "Verás una lista con los ejercicios de la empresa 0, de DIS y los tuyos. Si no ves los tuyos, filtra por tu empresa S{INI}."
+            },
+            {
+              "texto": "Elige Empresa S{INI}, Ejercicio 2027 y Descripción «EJERCICIO 2027».",
+              "detalle": "El Estado sale Abierto y el Último asiento 0.",
+              "imagen": "cob-ejer-alta.webp",
+              "hotspot": {
+                "x": 41.6,
+                "y": 41.5,
+                "w": 8.3,
+                "h": 4.6,
+                "etiqueta": "Ejercicio"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar».",
+              "pregunta": "Has rellenado empresa, año y descripción del ejercicio 2027. ¿Qué pulsas para crearlo?",
+              "detalle": "Sale «Éxito». Tu empresa ya tiene los ejercicios 2026 y 2027, los dos Abiertos.",
+              "imagen": "cob-ejer-alta.webp",
+              "hotspot": {
+                "x": 59.4,
+                "y": 67.5,
+                "w": 6.4,
+                "h": 3.5,
+                "etiqueta": "Guardar"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Los asientos de esta práctica son de tu empresa S{INI}. El 5.000,00 € de saldos iniciales de «Registrar los saldos iniciales de una empresa» es lo que se cierra y se abre."
+            }
+          ]
+        },
+        {
+          "id": "contab-cierre-practica-regularizar",
+          "titulo": "Regularizar el ejercicio 2026",
+          "paraQueSirve": "Sirve para pasar los gastos e ingresos del año a la cuenta de resultados y bloquear los periodos ya revisados.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cierres",
+            "Ejercicios contables"
+          ],
+          "explicacion": [
+            "Abre el ejercicio 2026 de tu empresa. Arriba hay cinco botones: Reclasificación de deuda, Reapertura de ejercicio, Cierre definitivo, Cierre temporal y Regularización por ejercicio.",
+            "Con el ejercicio Abierto solo están activos Reclasificación de deuda, Cierre temporal y Regularización por ejercicio. Reapertura y Cierre definitivo salen en gris.",
+            "«Regularización por ejercicio» se ejecuta al pulsarla, sin pedirte confirmación. Compruébalo antes de pulsar.",
+            "Resultado comprobado en la demo: el Estado del ejercicio pasa de Abierto a Regularizado y los periodos contables de enero a noviembre pasan a Cerrado. Diciembre sigue Abierto.",
+            "Ahora se activan «Reapertura de ejercicio» y «Cierre definitivo»; se apagan «Regularización por ejercicio» y «Reclasificación de deuda»."
+          ],
+          "campos": [
+            {
+              "campo": "Estado del ejercicio",
+              "significado": "Abierto antes de regularizar. Regularizado después.",
+              "ejemplo": "Regularizado"
+            },
+            {
+              "campo": "Estado contable del periodo",
+              "significado": "Abierto o Cerrado. Con el periodo cerrado no se puede contabilizar.",
+              "ejemplo": "Cerrado"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Antes de regularizar, comprueba que en tu empresa están los asientos de 2026 contabilizados.",
+              "detalle": "Mira la lista de asientos: tu asiento de saldos iniciales y, si has hecho el de un gasto, ese también."
+            },
+            {
+              "texto": "Abre el ejercicio 2026 de tu empresa y localiza los botones de cierre.",
+              "detalle": "Los de la derecha son los que se pueden usar. Los grises no.",
+              "imagen": "cob-cierre-ficha.webp",
+              "hotspot": {
+                "x": 45.0,
+                "y": 16.3,
+                "w": 34.0,
+                "h": 3.5,
+                "etiqueta": "Botones de cierre"
+              }
+            },
+            {
+              "texto": "Pulsa «Regularización por ejercicio».",
+              "pregunta": "Los gastos e ingresos del 2026 ya están contabilizados. ¿Qué botón pulsas para regularizar el ejercicio?",
+              "detalle": "Se ejecuta al momento, sin ventana de confirmación. Vuelve a esta pantalla si necesitas desandar el camino con la reapertura.",
+              "imagen": "cob-cierre-ficha.webp",
+              "hotspot": {
+                "x": 67.7,
+                "y": 16.4,
+                "w": 10.9,
+                "h": 3.4,
+                "etiqueta": "Regularización por ejercicio"
+              }
+            },
+            {
+              "texto": "Comprueba el resultado: Estado Regularizado y periodos de enero a noviembre en Cerrado.",
+              "detalle": "El de diciembre queda Abierto. Fíjate en que ahora se activan Reapertura de ejercicio y Cierre definitivo.",
+              "imagen": "cob-cierre-regularizado.webp",
+              "hotspot": {
+                "x": 70.0,
+                "y": 34.5,
+                "w": 21.5,
+                "h": 3.5,
+                "etiqueta": "Estado Regularizado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Resultado bueno: Estado Regularizado y periodos de enero a noviembre en Cerrado. En la demo la regularización de una empresa nueva cambió el estado y cerró los periodos, pero no se vio ningún asiento de regularización (99999998) en la lista de asientos. La ficha de la empresa tiene vacío el campo «Programa regularización»."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Si te pasa igual, no es un fallo tuyo y lo has hecho bien: la empresa no tiene configurado el programa que genera ese asiento. Si lo necesitas, consulta con el equipo de la demo. No lances «Cierre definitivo» sin comprobarlo."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Si regularizas por error, el botón «Reapertura de ejercicio» deja el ejercicio otra vez abierto. No se ha comprobado qué hace con los periodos que ya estaban cerrados."
+            }
+          ]
+        },
+        {
+          "id": "contab-cierre-practica-definitivo",
+          "titulo": "Cierre definitivo y reapertura (explicado)",
+          "paraQueSirve": "Sirve para entender qué hace el cierre definitivo y cómo se deshace. Se explica con la documentación: no se ha ejecutado en la demo.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cierres",
+            "Ejercicios contables"
+          ],
+          "explicacion": [
+            "El Cierre definitivo genera el asiento de cierre (número 99999999, periodo 99) y el asiento de apertura del ejercicio siguiente (periodo 0). El ejercicio queda cerrado.",
+            "La Reapertura de ejercicio borra los asientos de regularización y de cierre y devuelve el ejercicio a Abierto.",
+            "El Cierre temporal prepara los saldos de apertura sin crear asientos reales y se puede repetir. Un cierre temporal repetido recalcula los saldos de apertura y borra los ajustes manuales hechos sobre ellos.",
+            "Para el cierre temporal el ejercicio siguiente tiene que existir y estar Abierto. Si no, sale el error «EJERCICIO DE APERTURA [empresa / ejercicio] INEXISTENTE O NO ACTIVO»."
+          ],
+          "campos": [
+            {
+              "campo": "Asiento de cierre",
+              "significado": "Lo crea el cierre definitivo.",
+              "ejemplo": "99999999"
+            },
+            {
+              "campo": "Asiento de apertura",
+              "significado": "Lo crea el cierre definitivo en el ejercicio siguiente.",
+              "ejemplo": "periodo 0"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Localiza el botón «Cierre definitivo» en la ficha del ejercicio. No lo pulses todavía.",
+              "detalle": "Se activa cuando el ejercicio está Regularizado.",
+              "imagen": "cob-cierre-ficha.webp",
+              "hotspot": {
+                "x": 54.3,
+                "y": 16.4,
+                "w": 6.4,
+                "h": 3.4,
+                "etiqueta": "Cierre definitivo"
+              }
+            },
+            {
+              "texto": "Localiza «Reapertura de ejercicio». Es el botón que deshace el cierre.",
+              "detalle": "Se activa a la vez que el Cierre definitivo.",
+              "imagen": "cob-cierre-ficha.webp",
+              "hotspot": {
+                "x": 45.1,
+                "y": 16.4,
+                "w": 8.9,
+                "h": 3.4,
+                "etiqueta": "Reapertura de ejercicio"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Este apartado es solo de lectura. El cierre definitivo no se ha probado en la demo y cambiaría el ejercicio de tu empresa."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Después de cerrar, consulta los asientos 99999999 y de apertura en la lista de asientos de tu empresa."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué hace la regularización?",
+          "opciones": [
+            "Borra el ejercicio",
+            "Pasa gastos e ingresos a la cuenta de resultados",
+            "Crea un tercero",
+            "Cambia el plan contable"
+          ],
+          "correcta": 1,
+          "explicacion": "Lleva los saldos de los grupos 6 y 7 a la cuenta de resultados."
+        },
+        {
+          "pregunta": "¿Qué se activa tras regularizar un ejercicio?",
+          "opciones": [
+            "Solo Cierre temporal",
+            "Reapertura de ejercicio y Cierre definitivo",
+            "Ninguno",
+            "Añadir ejercicio"
+          ],
+          "correcta": 1,
+          "explicacion": "Los botones Reapertura y Cierre definitivo pasan de gris a activos."
+        },
+        {
+          "pregunta": "¿Qué necesitas para que el cierre cree la apertura?",
+          "opciones": [
+            "Dos terceros",
+            "Un ejercicio siguiente abierto",
+            "Un diario nuevo",
+            "Una remesa"
+          ],
+          "correcta": 1,
+          "explicacion": "El 2027 tiene que existir y estar Abierto."
+        },
+        {
+          "pregunta": "¿Qué botón deshace el cierre?",
+          "opciones": [
+            "Reclasificación de deuda",
+            "Reapertura de ejercicio",
+            "Cierre temporal",
+            "Guardar"
+          ],
+          "correcta": 1,
+          "explicacion": "La reapertura borra los asientos de regularización y cierre."
+        },
+        {
+          "pregunta": "¿Dónde haces la práctica de cierre?",
+          "opciones": [
+            "En la empresa 0",
+            "En tu empresa S{INI}",
+            "En DIS",
+            "Da igual"
+          ],
+          "correcta": 1,
+          "explicacion": "La empresa 0 la comparten todos los usuarios."
+        }
+      ],
+      "checklist": [
+        "Tu empresa S{INI} tiene los ejercicios 2026 y 2027, los dos Abiertos.",
+        "Tienes contabilizado tu asiento de saldos iniciales.",
+        "Has abierto el ejercicio 2026 de S{INI} y has localizado los cinco botones.",
+        "Sabes que «Regularización por ejercicio» se ejecuta sin confirmación.",
+        "Has pulsado «Regularización por ejercicio» en tu empresa, no en la 0.",
+        "El Estado del ejercicio es Regularizado.",
+        "Los periodos de enero a noviembre están Cerrados.",
+        "Has localizado Cierre definitivo y Reapertura de ejercicio, sin pulsarlos."
+      ],
+      "problemas": [
+        {
+          "problema": "Los botones de Reapertura y Cierre definitivo salen en gris.",
+          "solucion": "El ejercicio sigue Abierto. Regularízalo primero."
+        },
+        {
+          "problema": "He regularizado y no veo el asiento 99999998.",
+          "solucion": "En la demo no se generó y no es un error tuyo: tu ejercicio en Regularizado ya es el resultado bueno. La empresa no tiene «Programa regularización». No sigas con el cierre definitivo."
+        },
+        {
+          "problema": "Sale «EJERCICIO DE APERTURA INEXISTENTE O NO ACTIVO».",
+          "solucion": "Falta el ejercicio siguiente o no está Abierto. Créalo en Ejercicios contables."
+        },
+        {
+          "problema": "Quiero deshacer la regularización.",
+          "solucion": "Usa «Reapertura de ejercicio». Hazlo solo en tu empresa."
+        },
+        {
+          "problema": "Mi ejercicio 2027 no sale en la lista de ejercicios.",
+          "solucion": "Filtra la lista por tu empresa S{INI}. Si sigue sin salir, vuelve a «Añadir ejercicio» y comprueba que has pulsado «Guardar»."
+        }
+      ],
+      "aprendido": [
+        "Cerrar requiere el ejercicio actual y el siguiente, abiertos.",
+        "La regularización pasa el resultado a la cuenta 129. En tu caso serían 61,50 de beneficio.",
+        "El cierre definitivo crea el asiento de cierre y el de apertura.",
+        "La reapertura deshace el cierre.",
+        "Hacerlo bien es dejar el ejercicio en Regularizado, con enero a noviembre en Cerrado. El asiento 99999998 no sale en la demo y no es un error tuyo."
+      ]
+    },
+    {
+      "id": "icon-contabilidad-3",
+      "numero": 7,
+      "titulo": "Consultar balances y cuentas anuales",
+      "objetivo": "Sabrás encontrar en el menú el balance y la cuenta de pérdidas y ganancias y leer qué dice cada columna.",
+      "concepto": "Los estados financieros son el resumen de la contabilidad que leen la dirección, los bancos y Hacienda. Son como el boletín de notas de la empresa. Si no los revisas antes de cerrar, no sabes si la contabilidad cuadra ni cuánto ha ganado la empresa.\n\nEl Estado de Situación Financiera (balance) es una foto a una fecha. Muestra lo que la empresa tiene (bancos, clientes…) y lo que debe (proveedores, préstamos).\n\nEjemplo: en tu caso, al 31-12 el balance dice banco 3.077,25 = capital 3.000,00 + beneficio 61,50 + Hacienda 15,75. Es decir, activo 3.077,25 = patrimonio neto 3.061,50 + pasivo 15,75.\n\nEl Estado de Resultados (cuenta de pérdidas y ganancias) resta los gastos de los ingresos de un periodo. En tu caso: 200,00 − 125,00 − 13,50 = 61,50 de beneficio. Los balances del ERP muestran los saldos con distintos niveles de detalle.\n\nLos estados por agrupación se calculan antes de abrir el informe, a partir de los saldos de cada cuenta. Las cuentas anuales XLS se generan con plantillas de Excel. El motor de consultas Excel trae saldos a una hoja de cálculo con macros, es decir, pequeños programas de Excel.\n\nLa consolidación suma los estados de varias empresas de un grupo como si fueran una sola.\n\nEn la demo los importes de las tablas (10.000,00, 5.000,00…) son de práctica; las cifras de tu caso son las de arriba.\n\nDónde: «Finanzas › Contabilidad General › Balances».",
+      "duracionMin": 35,
+      "secciones": [
+        {
+          "id": "icon-contabilidad-3-balances",
+          "titulo": "Consultar los balances y los estados por agrupación",
+          "paraQueSirve": "Sirve para generar y consultar balances de saldos y estados financieros por agrupación.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Balances"
+          ],
+          "explicacion": [
+            "Balances genera y consulta balances de saldos de la contabilidad general.",
+            "Muestra Saldo anterior, Importe deudor, Importe acreedor, Saldo del período y Saldo acumulado. Puedes analizarlo por fechas o periodos, con niveles Cuentas, Niveles o Jerarquías.",
+            "La carpeta Por agrupación tiene dos informes: «Situación financiera» (el Estado de Situación Financiera) y «Resultados integrales» (el Estado de Resultados).",
+            "Los dos salen de los saldos por agrupación que el ERP calcula para la empresa, el ejercicio y los periodos que eliges. El balance y la cuenta de resultados usan un clasificador distinto cada uno.",
+            "El ERP parte de los saldos de cada cuenta y del plan contable, y de los grupos que definen qué cuentas suma cada línea del estado."
+          ],
+          "campos": [
+            {
+              "campo": "Saldo anterior",
+              "significado": "Saldo acumulado antes del periodo.",
+              "ejemplo": "10.000,00"
+            },
+            {
+              "campo": "Importe deudor",
+              "significado": "Movimientos al Debe en el periodo. Deudor es el lado del debe.",
+              "ejemplo": "5.000,00"
+            },
+            {
+              "campo": "Importe acreedor",
+              "significado": "Movimientos al Haber en el periodo. Acreedor es el lado del haber.",
+              "ejemplo": "3.000,00"
+            },
+            {
+              "campo": "Saldo del período",
+              "significado": "Diferencia entre Debe y Haber del periodo.",
+              "ejemplo": "2.000,00"
+            },
+            {
+              "campo": "Saldo acumulado",
+              "significado": "Saldo total acumulado: el anterior más el del periodo.",
+              "ejemplo": "12.000,00"
+            },
+            {
+              "campo": "clasif",
+              "significado": "Clasificador interno: BALANCE08 para el ESF y CTEPIG08 para el ER.",
+              "ejemplo": "BALANCE08"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Contabilidad General › Balances. Localiza las carpetas Agregados, Por agrupación, Por empresa, Divisas, Planes auxiliares, Cuentas anuales ( Excel ) y Motor de consultas excel.",
+              "pregunta": "Estás en Contabilidad General. ¿Dónde localizas la carpeta Balances?",
+              "detalle": "Despliega Balances con la flecha ▸. Los nombres largos salen recortados con «…».",
+              "imagen": "icon-contabilidad-n-08.webp",
+              "hotspot": {
+                "x": 2.9,
+                "y": 16.0,
+                "w": 9.1,
+                "h": 27.0,
+                "etiqueta": "Carpeta Balances"
+              }
+            },
+            {
+              "texto": "Entra en Por agrupación y abre «Situación financiera». Fíjate en que al lado está «Resultados integrales».",
+              "pregunta": "Has abierto «Situación financiera». ¿Dónde ves los campos de empresa, ejercicio y períodos?",
+              "detalle": "La pantalla pide Empresa, Ejercicio, Periodo inicial y Periodo final; no hace falta ejecutarla. Los clasificadores BALANCE08 (balance) y CTEPIG08 (pérdidas y ganancias) son configuración interna: no salen en esta pantalla.",
+              "imagen": "icon-contabilidad-n-08.webp",
+              "hotspot": {
+                "x": 34.3,
+                "y": 48.8,
+                "w": 43.8,
+                "h": 11.4,
+                "etiqueta": "Empresa, ejercicio y periodos"
+              }
+            },
+            {
+              "texto": "Revisa con qué datos se calculan los saldos por agrupación.",
+              "detalle": "Son la empresa, el ejercicio, los periodos inicial y final y un filtro opcional. No los escribes aparte: son los mismos datos que pide la pantalla."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Calcula los saldos por agrupación antes de abrir el informe."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Una cuenta que no está en ningún grupo de la agrupación no sale en los estados financieros, aunque tenga saldo."
+            }
+          ]
+        },
+        {
+          "id": "icon-contabilidad-3-cuentas-anuales",
+          "titulo": "Generar las cuentas anuales en Excel",
+          "paraQueSirve": "Sirve para generar cuentas anuales e informes en Excel a partir de plantillas.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Balances",
+            "Cuentas anuales ( Excel )"
+          ],
+          "explicacion": [
+            "Las cuentas anuales XLS salen de una plantilla de hoja de cálculo con 3 hojas.",
+            "La primera tiene la estructura del balance o informe. La hoja Input tiene los parámetros y algunos datos. La hoja Datos tiene los datos filtrados.",
+            "Para montarlo: define la plantilla y dala de alta en Cuentas Anuales e Informes. Luego configura la SQL de agrupación, la SQL de consulta de datos y los parámetros.",
+            "Al pulsar Ejecutar, el ERP pide las variables y genera el XLS. El fichero queda en el histórico de ejecuciones.",
+            "La plantilla del Excel queda guardada en el ERP. Las consultas leen la empresa, los periodos y los saldos."
+          ],
+          "campos": [
+            {
+              "campo": "hoja estructura",
+              "significado": "Hoja con la estructura y las fórmulas del balance.",
+              "ejemplo": "Balance"
+            },
+            {
+              "campo": "hoja Input",
+              "significado": "Hoja con los parámetros. Se oculta.",
+              "ejemplo": "Input"
+            },
+            {
+              "campo": "hoja Datos",
+              "significado": "Hoja con los datos filtrados. Se oculta.",
+              "ejemplo": "Datos"
+            },
+            {
+              "campo": "SQL de agrupación",
+              "significado": "Decide cuántos libros distintos se generan.",
+              "ejemplo": "SELECT ..."
+            },
+            {
+              "campo": "SQL de consulta de datos",
+              "significado": "Trae los datos que van a la hoja Datos.",
+              "ejemplo": "SELECT ..."
+            },
+            {
+              "campo": "parámetros",
+              "significado": "Variables que se piden al ejecutar.",
+              "ejemplo": "ejercicio"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Examina la estructura del Excel de cuentas anuales.",
+              "detalle": "Fíjate en las tres hojas y en las columnas de búsquedas.",
+              "imagen": "icon-contabilidad-011.webp"
+            },
+            {
+              "texto": "Localiza la pantalla de Cuentas Anuales e Informes y sus parámetros.",
+              "pregunta": "Estás en la pantalla de Cuentas Anuales e Informes. ¿Dónde ves el botón para ejecutar el XLS?",
+              "detalle": "Arriba a la derecha, el botón «Ejecutar XLS» abre la ventana que pide las variables: Empresa, Ejercicio, Periodo, Proyecto, Sección y Sistema.",
+              "imagen": "icon-contabilidad-012.webp",
+              "hotspot": {
+                "x": 58.0,
+                "y": 1.2,
+                "w": 8.1,
+                "h": 5.1,
+                "etiqueta": "Ejecutar XLS"
+              }
+            },
+            {
+              "texto": "Revisa el histórico de ejecuciones y la descarga del Excel.",
+              "pregunta": "En el histórico de ejecuciones, ¿dónde ves el icono para descargar el fichero de salida?",
+              "detalle": "Cada fila del «Histórico de ejecuciones» es un Excel generado, con los argumentos usados. El icono de disquete de «Fichero salida» lo descarga.",
+              "imagen": "icon-contabilidad-013.webp",
+              "hotspot": {
+                "x": 84.0,
+                "y": 32.5,
+                "w": 5.0,
+                "h": 65.0,
+                "etiqueta": "Fichero salida"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Oculta las hojas Input y Datos: pulsa con el botón derecho sobre la pestaña y elige ocultar."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Cada ejecución se guarda en un repositorio de ejecuciones. Desde ahí descargas el Excel generado."
+            }
+          ]
+        },
+        {
+          "id": "icon-contabilidad-3-motor-consultas-excel",
+          "titulo": "Usar el motor de consultas Excel",
+          "paraQueSirve": "Sirve para traer datos contables a Excel con funciones VBA.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Balances",
+            "Motor de consultas excel",
+            "Consultas excel"
+          ],
+          "explicacion": [
+            "Hay tres funciones VBA. GetDecimalSeparator devuelve el separador decimal del sistema.",
+            "AX_Saldo construye una cadena @AX_Saldo... o devuelve el valor numérico del comentario. Recibe tipo, ejercicio, periodo, empresa y cuenta; además, como opcionales, proyecto, sección, sistema, dimensiones y tercero.",
+            "AX_Saldo construye una cadena @AX_Saldo... o devuelve el valor numérico del comentario. Recibe tipo, ejercicio, periodo, empresa y cuenta; además, como opcionales, proyecto, sección, sistema, dimensiones y tercero.",
+            "Ejemplo: el saldo de balance de la cuenta 57200.00000 de la empresa 0 en el periodo 12 de 2026 empieza por @AX_SaldoBALANCE|2026|12|0|57200.00000. Sigue con los opcionales, separados por |.",
+            "Con estas funciones sacas saldos contables sin salir de Excel."
+          ],
+          "campos": [
+            {
+              "campo": "GetDecimalSeparator",
+              "significado": "Devuelve el separador decimal del sistema.",
+              "ejemplo": "función VBA"
+            },
+            {
+              "campo": "AXIONAL",
+              "significado": "Lee los comentarios de celda y junta los parámetros con |.",
+              "ejemplo": "función VBA"
+            },
+            {
+              "campo": "AX_Saldo",
+              "significado": "Construye una cadena @AX_Saldo... o devuelve el valor numérico.",
+              "ejemplo": "@AX_SaldoBALANCE|2026|12|0|57200.00000…"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Contabilidad General › Balances › Motor de consultas excel › Consultas excel.",
+              "pregunta": "Estás en Motor de consultas excel. ¿Dónde pulsas para abrir las consultas excel?",
+              "detalle": "Se abre «MOTOR DE CONSULTAS EXCEL»: una lista de ficheros de consulta (Código, Nombre, Tipo, Información, Estado, Tipo fichero, Fichero) con el botón «Añadir consulta». En la demo está vacía («Sin datos»). Las funciones VBA (las macros de Excel) se usan dentro del propio Excel.",
+              "imagen": "icon-contabilidad-n-09.webp",
+              "hotspot": {
+                "x": 4.0,
+                "y": 30.3,
+                "w": 8.1,
+                "h": 4.7,
+                "etiqueta": "Consultas excel"
+              }
+            },
+            {
+              "texto": "Examina el ejemplo de salida de AX_Saldo.",
+              "detalle": "Verás que la cadena empieza por @AX_SaldoBALANCE y sigue con ejercicio, periodo, empresa y cuenta separados por |."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "La pantalla del ERP solo guarda los ficheros de consulta. Las funciones se usan dentro de Excel."
+            }
+          ]
+        },
+        {
+          "id": "icon-contabilidad-3-consolidacion",
+          "titulo": "Conocer la consolidación",
+          "paraQueSirve": "Sirve para conocer las etapas para consolidar los estados financieros de varias empresas.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Consolidación"
+          ],
+          "explicacion": [
+            "La consolidación junta los estados financieros de varias empresas de un grupo en uno solo.",
+            "Ejemplo: si la matriz vende a su filial por 1.000 €, en el consolidado esa venta y esa compra se eliminan. El grupo no puede venderse a sí mismo.",
+            "Hay siete etapas: preparación (definir periodo y entidades), recopilación de información, eliminación de operaciones intra-grupo, ajustes de consolidación, elaboración de estados financieros consolidados, revisión y validación, y presentación y aprobación.",
+            "Cada etapa tiene tareas: uniformizar estados, eliminar inversiones en filiales y saldos recíprocos, ajustar participaciones no dominantes y diferencias de valoración, y elaborar balance, pérdidas y ganancias y flujos de efectivo consolidados.",
+            "En el menú, la carpeta Consolidación tiene cinco opciones: Grupos consolidación, Integración datos, Auditoría interempresa, Ajustes de consolidación y Balances consolidados."
+          ],
+          "campos": [
+            {
+              "campo": "preparación",
+              "significado": "Definir el periodo de consolidación e identificar las empresas.",
+              "ejemplo": "etapa 1"
+            },
+            {
+              "campo": "eliminación intra-grupo",
+              "significado": "Quitar inversiones, saldos y operaciones entre empresas del grupo.",
+              "ejemplo": "etapa 3"
+            },
+            {
+              "campo": "ajustes de consolidación",
+              "significado": "Ajustar participaciones no dominantes y diferencias de valoración.",
+              "ejemplo": "etapa 4"
+            },
+            {
+              "campo": "estados financieros consolidados",
+              "significado": "Balance, cuenta de pérdidas y ganancias y flujos de efectivo del grupo.",
+              "ejemplo": "etapa 5"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre Finanzas › Contabilidad General › Consolidación y revisa sus cinco opciones.",
+              "pregunta": "En Contabilidad General, ¿dónde localizas la carpeta Consolidación?",
+              "detalle": "En el menú verás Grupos consolidación, Integración datos, Auditoría interempresa, Ajustes de consolidación y Balances consolidados. Las etapas y tareas están en la documentación (Visión general).",
+              "imagen": "icon-contabilidad-n-08.webp",
+              "hotspot": {
+                "x": 2.9,
+                "y": 46.1,
+                "w": 9.1,
+                "h": 13.1,
+                "etiqueta": "Carpeta Consolidación"
+              }
+            },
+            {
+              "texto": "Revisa la etapa de eliminación de operaciones intra-grupo.",
+              "detalle": "Fíjate en que incluye los saldos y las operaciones recíprocas."
+            },
+            {
+              "texto": "Revisa la etapa de elaboración de estados financieros consolidados.",
+              "detalle": "Comprueba que incluye el balance, las pérdidas y ganancias y los flujos."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "En la demo no hay datos de consolidación preparados. Basta con localizar las opciones del menú."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿De dónde salen los datos de los estados financieros por agrupación?",
+          "opciones": [
+            "De la plantilla Excel del informe",
+            "Directamente de los saldos de cada cuenta",
+            "De los saldos por agrupación calculados para el periodo",
+            "Del plan de cuentas"
+          ],
+          "correcta": 2,
+          "explicacion": "Los dos estados salen de los saldos por agrupación. El ERP los calcula antes para la empresa, el ejercicio y los periodos elegidos."
+        },
+        {
+          "pregunta": "¿Qué clasificador usa el Estado de Resultados?",
+          "opciones": [
+            "ER08",
+            "BALANCE08",
+            "CTAPIG08",
+            "CTEPIG08"
+          ],
+          "correcta": 3,
+          "explicacion": "El Estado de Resultados usa el clasificador CTEPIG08."
+        },
+        {
+          "pregunta": "¿Cuántas hojas debe tener la plantilla de cuentas anuales XLS?",
+          "opciones": [
+            "3",
+            "4",
+            "2",
+            "5"
+          ],
+          "correcta": 0,
+          "explicacion": "La plantilla tiene 3 hojas: estructura, Input y Datos."
+        },
+        {
+          "pregunta": "¿Qué función VBA devuelve el separador decimal del sistema?",
+          "opciones": [
+            "AXIONAL",
+            "GetDecimalSeparator",
+            "AX_Saldo",
+            "AX_Decimal"
+          ],
+          "correcta": 1,
+          "explicacion": "GetDecimalSeparator devuelve el separador decimal del sistema."
+        },
+        {
+          "pregunta": "¿Qué etapa de consolidación incluye eliminar saldos y transacciones intra-grupo?",
+          "opciones": [
+            "Preparación",
+            "Ajustes de consolidación",
+            "Eliminación de operaciones intra-grupo",
+            "Recopilación"
+          ],
+          "correcta": 2,
+          "explicacion": "En esa etapa se eliminan los saldos y las operaciones recíprocas entre empresas del grupo."
+        }
+      ],
+      "checklist": [
+        "Abres Balances y compruebas las categorías Agregados, Por agrupación, Por empresa, Divisas, Planes auxiliares, Cuentas anuales (Excel) y Motor de consultas Excel.",
+        "En Balances, abres un informe y compruebas que muestra Saldo anterior, Importe deudor, Importe acreedor, Saldo del período y Saldo acumulado.",
+        "Abres Por agrupación y localizas Situación financiera y Resultados integrales.",
+        "Sabes que, por dentro, el ESF usa clasif = 'BALANCE08' y el ER 'CTEPIG08'.",
+        "Abres Por agrupación, lanzas el Estado de Situación Financiera y anotas los parámetros que pide.",
+        "En Cuentas anuales XLS, examinas las tres hojas: estructura, Input y Datos.",
+        "Localizas la pantalla Cuentas Anuales e Informes y compruebas que tiene el botón Ejecutar y el histórico.",
+        "En Motor de consultas Excel, localizas las funciones GetDecimalSeparator, AXIONAL y AX_Saldo.",
+        "En Consolidación, repasas las siete etapas y localizas la eliminación de operaciones intra-grupo.",
+        "En Cuentas Anuales e Informes, abres un informe y localizas su plantilla XLS."
+      ],
+      "problemas": [
+        {
+          "problema": "El Estado de Situación Financiera no muestra datos al abrirlo.",
+          "solucion": "Calcula antes los saldos por agrupación del periodo. Comprueba también que las cuentas están en algún grupo de la agrupación."
+        },
+        {
+          "problema": "En cuentas anuales XLS, la ejecución no genera el fichero.",
+          "solucion": "Revisa la SQL de agrupación, la SQL de datos y los parámetros. Comprueba que la plantilla está dada de alta en «Cuentas Anuales e Informes»."
+        },
+        {
+          "problema": "En el motor de consultas Excel no encuentras una pantalla para ejecutar las funciones.",
+          "solucion": "Las funciones VBA se usan dentro de las hojas de cálculo. En Motor de consultas Excel solo revisas qué hacen GetDecimalSeparator, AXIONAL y AX_Saldo."
+        },
+        {
+          "problema": "No encuentro la pantalla de balances.",
+          "solucion": "Abre «Finanzas › Contabilidad General › Balances» y despliega la carpeta con la flecha ▸. Si no sale, escribe «Balances» en el buscador del menú."
+        }
+      ],
+      "aprendido": [
+        "Has localizado las carpetas de Balances y los informes Situación financiera y Resultados integrales. En tu caso, el balance cuadra: 3.077,25 = 3.061,50 + 15,75.",
+        "Has visto que los estados por agrupación salen de los saldos por agrupación calculados antes.",
+        "Has aprendido que la plantilla de cuentas anuales XLS tiene 3 hojas: estructura, Input y Datos.",
+        "Has conocido las funciones GetDecimalSeparator, AXIONAL y AX_Saldo del motor de consultas Excel.",
+        "Has repasado las siete etapas de la consolidación y las opciones de su menú."
+      ]
+    },
+    {
+      "id": "caso-final",
+      "numero": 9,
+      "titulo": "Caso final: tu empresa de principio a fin",
+      "objetivo": "Repasarás las 13 operaciones de tu empresa, de la aportación al cierre, y comprobarás que el banco, el IVA, el beneficio y el balance cuadran.",
+      "concepto": "Este caso junta todo lo que has aprendido, como un examen de conducir en la calle y no en el circuito. Recorres tu empresa de principio a fin: configurar, comprar, vender, cobrar y pagar, declarar el IVA y cerrar el año. Si una operación sale mal, el error se arrastra y el banco, el IVA o el balance no cuadran.\n\nSon 13 operaciones del cuarto trimestre de 2026, con IVA general del 21 %. Mira primero el resumen de la primera parte: son 13 filas y las repartes en 4 unidades (preparar, comprar, vender y cobrar/pagar, y cerrar y comprobar). Haz una unidad cada vez. Cada una dice su ruta de menú y el bloque del curso donde la aprendiste. Al final comparas tus cifras con una tabla: banco 3.077,25, IVA a pagar 15,75, beneficio 61,50 y balance cuadrado.\n\nEs un caso de repaso: se hace en la Demo real y no lleva capturas. Las operaciones se graban en la empresa 0 «Deister Software» de la demo, la que comparten todos los alumnos. Tu empresa S{INI} es la que creaste en Maestros y donde practicas el cierre real. En la empresa 0 nunca lances «Regularización», ni el cierre ni la apertura: el cierre del caso lo repasas sobre el papel, con 200,00 − 125,00 − 13,50 = 61,50.\n\nEjemplo: tu compra a T{INI} es de 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25. Tu venta a C{INI} es de 10 × 20,00 = 200,00 más 42,00 de IVA, 242,00. El resultado del año es 200,00 − 125,00 − 3,50 − 10,00 = 61,50.\n\nDónde: cada operación indica su ruta, por ejemplo «Gestión › Compras › Pedidos › Pedidos» o «Finanzas › Tesorería › Conciliación bancaria».",
+      "duracionMin": 90,
+      "secciones": [
+        {
+          "id": "caso-final-resumen",
+          "titulo": "Resumen: las 13 operaciones de un vistazo",
+          "paraQueSirve": "Sirve para ver todo el caso en una tabla antes de empezar y saber en qué bloque aprendiste cada operación.",
+          "ruta": null,
+          "explicacion": [
+            "El caso son 4 unidades: preparar y comprar (operaciones 1 a 4), vender (5 y 6), pagar y cobrar (7 a 10) y, por último, conciliar, liquidar el IVA, cerrar y comprobar (11 a 13). Haz una unidad cada vez y comprueba las cifras al acabar cada una.",
+            "En la tabla, «Operación» es lo que haces, «Importe» es la cifra clave y «Bloque» es el bloque del curso donde lo aprendiste."
+          ],
+          "campos": [
+            {
+              "campo": "1 · Aportación de los socios",
+              "significado": "Bloque: Registrar los saldos iniciales de una empresa",
+              "ejemplo": "3.000,00"
+            },
+            {
+              "campo": "2 · Oferta y pedido a T{INI}",
+              "significado": "Bloque: Pedir: de la oferta al pedido",
+              "ejemplo": "10 × 12,50 = 125,00"
+            },
+            {
+              "campo": "3 · Albarán de entrada",
+              "significado": "Bloque: Recibir la mercancía con el albarán",
+              "ejemplo": "125,00"
+            },
+            {
+              "campo": "4 · Factura de T{INI}",
+              "significado": "Bloque: Registrar y contabilizar la factura",
+              "ejemplo": "125,00 + 26,25 = 151,25"
+            },
+            {
+              "campo": "5 · Venta a C{INI}",
+              "significado": "Bloque: Vender del albarán a la factura",
+              "ejemplo": "200,00 + 42,00 = 242,00"
+            },
+            {
+              "campo": "6 · Efectos de la venta",
+              "significado": "Bloque: Ver los efectos de una factura",
+              "ejemplo": "121,00 + 121,00"
+            },
+            {
+              "campo": "7 · Pago a T{INI} por remesa",
+              "significado": "Bloque: Crear una remesa de pago",
+              "ejemplo": "151,25 + 3,50 de comisión"
+            },
+            {
+              "campo": "8 · Comisión de mantenimiento",
+              "significado": "Bloque: Registrar un movimiento manual",
+              "ejemplo": "10,00"
+            },
+            {
+              "campo": "9 · Cobro del efecto 1",
+              "significado": "Bloque: Cobrar efectos sueltos y en remesa",
+              "ejemplo": "121,00"
+            },
+            {
+              "campo": "10 · Remesa de cobro SEPA del efecto 2",
+              "significado": "Bloque: Domiciliar un cliente: mandato SEPA y remesa de cobro",
+              "ejemplo": "121,00"
+            },
+            {
+              "campo": "11 · Conciliar el extracto de BBVA_{INI}",
+              "significado": "Bloque: Dar de alta el extracto bancario y Conciliar el banco",
+              "ejemplo": "termina en 3.077,25"
+            },
+            {
+              "campo": "12 · Liquidar el IVA del 4T",
+              "significado": "Bloque: Liquidar y presentar las declaraciones",
+              "ejemplo": "42,00 − 26,25 = 15,75"
+            },
+            {
+              "campo": "13 · Cerrar el año (sobre el papel)",
+              "significado": "Bloque: Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre",
+              "ejemplo": "200,00 − 125,00 − 13,50 = 61,50"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Lee la tabla de arriba de principio a fin, sin tocar el ERP.",
+              "detalle": "Así sabes qué cifra esperas en cada operación. El caso termina con banco 3.077,25, IVA 15,75 y beneficio 61,50."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Las operaciones 1 a 12 se graban en la empresa 0. La 13 no se lanza en la empresa 0: se repasa sobre el papel y el cierre real lo practicas en tu empresa S{INI}."
+            }
+          ]
+        },
+        {
+          "id": "caso-final-preparar",
+          "titulo": "Antes de empezar: prepara tu empresa y tus códigos",
+          "paraQueSirve": "Sirve para comprobar que tienes a mano todo lo que el caso necesita antes de la primera operación.",
+          "ruta": null,
+          "explicacion": [
+            "Los códigos del caso llevan tus iniciales en lugar de {INI}. Si tus iniciales son JP, T{INI} es TJP.",
+            "Tu empresa es S{INI}. En la demo grabas las operaciones del caso dentro de la empresa 0 «Deister Software», porque S{INI} no tiene tipologías ni plantillas. La empresa S{INI} la usas para practicar su alta y su cierre real.",
+            "Todas las operaciones son de 2026, en el cuarto trimestre (4T), con IVA general del 21 %."
+          ],
+          "campos": [
+            {
+              "campo": "Tu empresa",
+              "significado": "Empresa de prácticas que creaste en Maestros.",
+              "ejemplo": "S{INI}, ejercicio 2026"
+            },
+            {
+              "campo": "Tu proveedor",
+              "significado": "Te vende el artículo 13500620.",
+              "ejemplo": "T{INI}"
+            },
+            {
+              "campo": "Tu cliente",
+              "significado": "Te compra; tiene el plazo P{INI} y el tipo de efecto R{INI}.",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Tu banco",
+              "significado": "Por él pasa todo el dinero del caso.",
+              "ejemplo": "BBVA_{INI} (cuenta 57200)"
+            },
+            {
+              "campo": "Tu diario",
+              "significado": "Diario de tus asientos manuales.",
+              "ejemplo": "{INI}"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Comprueba tu empresa: abre «Finanzas › Maestros › Parametrización › Empresas» y busca S{INI}.",
+              "detalle": "Verás tu empresa con el ejercicio 2026. La creaste en «Crear una empresa»."
+            },
+            {
+              "texto": "Comprueba tu proveedor T{INI}: abre «Finanzas › Maestros › Terceros › Registro terceros».",
+              "detalle": "Verás el tercero T{INI} «Tercero {INI}». Lo creaste en «Dar de alta el proveedor y el artículo»."
+            },
+            {
+              "texto": "Comprueba tu cliente C{INI}: abre «Finanzas › Maestros › Terceros › Registro terceros».",
+              "detalle": "Verás C{INI} con el plazo P{INI} (50 % a 30 días y 50 % a 60 días) y el tipo de efecto R{INI}. Los creaste en «Dar de alta los datos básicos de contabilidad»."
+            },
+            {
+              "texto": "Comprueba tu banco BBVA_{INI}: abre «Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios».",
+              "detalle": "Verás BBVA_{INI}, unido a la cuenta 57200. Lo creaste en «Dar de alta bancos propios y cajas»."
+            },
+            {
+              "texto": "Comprueba tu diario {INI}: abre «Finanzas › Maestros › Auxiliares › Diarios».",
+              "detalle": "Verás el diario {INI} «Entrada de asientos {INI}». Lo creaste en «Crear un diario»."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Si te falta algo, vuelve al bloque que lo explica y créalo antes de seguir. Sin estos códigos no puedes hacer las operaciones."
+            }
+          ]
+        },
+        {
+          "id": "caso-final-comprar",
+          "titulo": "Poner el dinero y comprar (operaciones 1 a 4)",
+          "paraQueSirve": "Sirve para repasar el dinero que aportan los socios y la compra a tu proveedor, de la oferta a la factura.",
+          "ruta": [
+            "Finanzas",
+            "Contabilidad General",
+            "Diario contable",
+            "Asientos",
+            "Asientos"
+          ],
+          "explicacion": [
+            "Una compra completa tiene cuatro documentos: oferta, pedido, albarán y factura. Cada uno se apoya en el anterior.",
+            "Los bloques de Compras practican con 10 unidades a 12,50, que son las del caso. Los de «Contabilizar el albarán de compra» y «Generar la factura desde el albarán» usan 4 unidades (50,00 y 60,50); el mecanismo es el mismo."
+          ],
+          "campos": [
+            {
+              "campo": "Aportación",
+              "significado": "Sube el banco.",
+              "ejemplo": "3.000,00"
+            },
+            {
+              "campo": "Compra",
+              "significado": "Base de la compra.",
+              "ejemplo": "10 × 12,50 = 125,00"
+            },
+            {
+              "campo": "IVA soportado",
+              "significado": "Lo podrás restar.",
+              "ejemplo": "125,00 × 21 % = 26,25"
+            },
+            {
+              "campo": "Factura",
+              "significado": "Lo que debes a T{INI}.",
+              "ejemplo": "125,00 + 26,25 = 151,25"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Operación 1 · 01-10 · Aportación de los socios. Abre «Finanzas › Contabilidad General › Diario contable › Asientos › Asientos» y crea un asiento con el banco 57200.00000 al debe por 3.000,00 y el capital (cuenta 100 del plan) al haber por 3.000,00.",
+              "detalle": "El asiento cuadra: 3.000,00 − 3.000,00 = 0,00. Lo aprendiste en «Registrar los saldos iniciales de una empresa»; allí practicas con 5.000,00 y aquí son 3.000,00. La aportación es un asiento manual y no crea movimiento de tesorería. Para conciliar la línea de +3.000,00 del extracto, genera su tesorería con «Generar tesorería» al conciliar (bloque «Conciliar el banco»)."
+            },
+            {
+              "texto": "Operación 2 · 05-10 · Oferta y pedido a T{INI}. Abre «Gestión › Compras › Ofertas › Ofertas» y luego «Gestión › Compras › Pedidos › Pedidos». Pide 10 unidades del artículo 13500620 a 12,50 y deja el pedido 0PC{INI}01.",
+              "detalle": "La línea suma 10 × 12,50 = 125,00 más IVA. El precio sale de tu tarifa TF{INI}. Lo aprendiste en «Pedir: de la oferta al pedido» y en «Preparar los precios de compra»."
+            },
+            {
+              "texto": "Operación 3 · 07-10 · Llega la mercancía. Abre «Gestión › Compras › Albaranes › Albaranes», crea el albarán del pedido y valídalo.",
+              "detalle": "El stock sube 10 y el albarán vale 125,00. Con tu tipología AO{INI} el albarán no genera asiento: el gasto se anota con la factura. Si una tipología contabilizara el albarán, el asiento llevaría 60000.00000 Compras 125,00 al debe y 40090 Compras pendientes de factura 125,00 al haber. Lo aprendiste en «Recibir la mercancía con el albarán» y en «Contabilizar el albarán de compra»."
+            },
+            {
+              "texto": "Operación 4 · 09-10 · Factura PROV-{INI}-001 de T{INI}. Abre «Gestión › Compras › Facturas › Facturas», regístrala, conforma la factura con el albarán y pulsa «Contabilizar».",
+              "detalle": "Verás base 125,00 + IVA 26,25 = 151,25. El asiento lleva 60000.00000 Compras 125,00 y 47200.00000 IVA soportado 26,25 al debe, y 40000.T{INI} 151,25 al haber. Si el albarán se hubiera contabilizado, en lugar de la 60000 iría la 40090, que así queda saldada. Lo aprendiste en «Registrar y contabilizar la factura»."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Si tu tipología no contabiliza el albarán, el debe de la compra va a 60000.00000 con la factura y no pasa por 40090."
+            }
+          ]
+        },
+        {
+          "id": "caso-final-vender",
+          "titulo": "Vender y ver los efectos (operaciones 5 y 6)",
+          "paraQueSirve": "Sirve para repasar la venta a tu cliente y los dos cobros pendientes que deja.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Albaranes",
+            "Albaranes"
+          ],
+          "explicacion": [
+            "Vendes a tu cliente C{INI}. En el bloque «Vender del albarán a la factura» das de alta como cliente a T{INI} solo para practicar; en tu caso el cliente es C{INI}.",
+            "Un efecto es cada cobro pendiente que deja una factura, con su importe y su vencimiento. La venta se cobra en dos efectos porque el plazo P{INI} es 50 % a 30 días y 50 % a 60 días."
+          ],
+          "campos": [
+            {
+              "campo": "Venta",
+              "significado": "Base de la venta.",
+              "ejemplo": "10 × 20,00 = 200,00"
+            },
+            {
+              "campo": "IVA repercutido",
+              "significado": "Lo debes a Hacienda.",
+              "ejemplo": "200,00 × 21 % = 42,00"
+            },
+            {
+              "campo": "Factura",
+              "significado": "Lo que te debe C{INI}.",
+              "ejemplo": "200,00 + 42,00 = 242,00"
+            },
+            {
+              "campo": "Efectos",
+              "significado": "Vencen el 14-11 y el 14-12.",
+              "ejemplo": "121,00 + 121,00"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Operación 5 · 15-10 · Venta a C{INI}. Abre «Gestión › Ventas › Albaranes › Albaranes», crea el albarán de 10 unidades a 20,00 y valídalo. Después abre «Gestión › Ventas › Facturas › Facturas» y factura el albarán.",
+              "detalle": "El stock baja a 0 y la factura suma 200,00 + 42,00 = 242,00. El asiento lleva 43000.00901 Cliente C{INI} 242,00 al debe y 47000.00000 42,00 más 43090 (o 70000.00000) 200,00 al haber. Esa 47000.00000 es el IVA repercutido en la demo, que su plan rotula «Hacienda Pública, deudora por IVA». En el PGC el IVA repercutido va a la 477. Es configuración de la demo: no la copies. Ojo: en «Vender del albarán a la factura» la factura usa la plantilla FV y la venta queda dos veces (70000 con 400,00 y 43090 con 200,00 al debe). En tu caso cuenta la venta una sola vez: 200,00. Con una plantilla que salde la 43090 (FVOA), el asiento sería 43000.00901 242,00 al debe, y 47000.00000 42,00 y 43090 200,00 al haber. Lo aprendiste en «Vender del albarán a la factura»."
+            },
+            {
+              "texto": "Operación 6 · 15-10 · Mira los efectos de la factura de venta. Abre «Finanzas › Cobros y Pagos › Movimientos» y busca tus efectos.",
+              "detalle": "Verás dos efectos de C{INI}: 121,00 que vence el 14-11 y 121,00 que vence el 14-12, del tipo R{INI}, en estado PE (pendiente). Lo aprendiste en «Ver los efectos de una factura»."
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "caso-final-pagar-cobrar",
+          "titulo": "Pagar y cobrar (operaciones 7 a 10)",
+          "paraQueSirve": "Sirve para repasar los pagos y cobros reales que mueven el banco.",
+          "ruta": [
+            "Finanzas",
+            "Cobros y Pagos",
+            "Remesas",
+            "Registro de remesas"
+          ],
+          "explicacion": [
+            "Pagar y cobrar mueve dinero de verdad: cada operación deja un movimiento en BBVA_{INI} y su asiento.",
+            "Una remesa es un paquete de efectos que mandas junto al banco para que los cobre o los pague."
+          ],
+          "campos": [
+            {
+              "campo": "Pago a T{INI}",
+              "significado": "Sale del banco.",
+              "ejemplo": "151,25 + 3,50 = 154,75"
+            },
+            {
+              "campo": "Comisión manual",
+              "significado": "Gasto bancario.",
+              "ejemplo": "10,00"
+            },
+            {
+              "campo": "Cobro del efecto 1",
+              "significado": "Entra en el banco.",
+              "ejemplo": "121,00"
+            },
+            {
+              "campo": "Cobro del efecto 2",
+              "significado": "Entra en el banco.",
+              "ejemplo": "121,00"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Operación 7 · 06-11 · Pago a T{INI} por remesa. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas», crea una remesa de pago por transferencia con el efecto de T{INI} y ciérrala.",
+              "detalle": "El efecto de 151,25 pasa a pagado y el banco cobra 3,50 de comisión. En el ERP lo ves en dos momentos. Al ordenar la remesa: 40000.T{INI} 151,25 al debe contra la cuenta puente de la acción. Al conciliar el cargo del banco: la cuenta puente al debe y 57200.00000 al haber, más la comisión (626 Servicios bancarios (en la demo, la cuenta de tu flujo {INI}COM, por ejemplo la 62999.00000 que creaste en «Dar de alta una cuenta contable») 3,50 al debe y 57200.00000 al haber). Neto: 400 151,25 y 626 3,50 al debe, 572 154,75 al haber. Lo aprendiste en «Crear una remesa de pago» y en «Preparar el banco propio»."
+            },
+            {
+              "texto": "Operación 8 · 12-11 · Comisión de mantenimiento. Abre «Finanzas › Tesorería › Ops. corto plazo» y registra un movimiento manual con el flujo {INI}COM de 10,00.",
+              "detalle": "El movimiento sale en negativo: −10,00. El asiento lleva la 626 Servicios bancarios al debe (en la demo, la cuenta de tu flujo {INI}COM) y 57200.00000 al haber, por 10,00. Lo aprendiste en «Registrar un movimiento manual»."
+            },
+            {
+              "texto": "Operación 9 · 14-11 · Cobro del efecto 1. Abre «Finanzas › Cobros y Pagos › Gestiones › Gestiones sobre efectos», crea una gestión COBD con el efecto de 121,00 y ciérrala.",
+              "detalle": "El efecto pasa de PE a CO (cobrado). El asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. Lo aprendiste en «Cobrar efectos sueltos y en remesa»."
+            },
+            {
+              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» y crea la remesa LRC{INI} con el efecto de 121,00. El banco la cobra el 14-12.",
+              "detalle": "Cuando el banco cobra, el efecto pasa a CO y el asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. Lo aprendiste en «Domiciliar un cliente: mandato SEPA y remesa de cobro»."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Con el efecto 2 cobrado, la cuenta de tu cliente queda a cero: 242,00 − 121,00 − 121,00 = 0,00."
+            }
+          ]
+        },
+        {
+          "id": "caso-final-banco-iva",
+          "titulo": "Conciliar el banco y declarar el IVA (operaciones 11 y 12)",
+          "paraQueSirve": "Sirve para repasar que el banco cuadra con el ERP y para calcular el IVA que debes a Hacienda.",
+          "ruta": [
+            "Finanzas",
+            "Tesorería",
+            "Conciliación bancaria"
+          ],
+          "explicacion": [
+            "Conciliar es casar cada línea del extracto del banco con su movimiento en el ERP. El extracto es la lista de movimientos que manda el banco.",
+            "Liquidar el IVA es restar el soportado del repercutido. El modelo 303 es la declaración trimestral del IVA."
+          ],
+          "campos": [
+            {
+              "campo": "Saldo del banco",
+              "significado": "Debe coincidir con el extracto.",
+              "ejemplo": "3.077,25"
+            },
+            {
+              "campo": "IVA repercutido",
+              "significado": "Tus ventas.",
+              "ejemplo": "42,00"
+            },
+            {
+              "campo": "IVA soportado",
+              "significado": "Tus compras.",
+              "ejemplo": "26,25"
+            },
+            {
+              "campo": "IVA a ingresar",
+              "significado": "Antes del 30-01-2027.",
+              "ejemplo": "42,00 − 26,25 = 15,75"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Operación 11 · 31-12 · Concilia el extracto de BBVA_{INI}. Da de alta el extracto en «Finanzas › Tesorería › Extractos bancarios › Almacén ficheros» y concílialo en «Finanzas › Tesorería › Conciliación bancaria».",
+              "detalle": "El extracto tiene seis líneas y termina en 3.077,25: 3.000,00 − 151,25 − 3,50 − 10,00 + 121,00 + 121,00. Todas quedan conciliadas. Lo aprendiste en «Dar de alta el extracto bancario» y en «Conciliar el banco»."
+            },
+            {
+              "texto": "Operación 12 · 31-12 · Liquida el IVA del 4T. Abre «Finanzas › Impuestos › IVA › Borrador autoliquidación IVA (Modelo 303)» (o escribe 303 en el buscador) y prepara el modelo del cuarto trimestre.",
+              "detalle": "El 303 da 42,00 − 26,25 = 15,75 a ingresar antes del 30-01-2027. El asiento que anota la liquidación lleva 47000.00000 (IVA repercutido en la demo; 477 en el PGC) 42,00 al debe, y 47200.00000 26,25 y 47500 (475, Hacienda Pública acreedora por IVA) 15,75 al haber. Lo aprendiste en «Liquidar y presentar las declaraciones»."
+            }
+          ],
+          "avisos": []
+        },
+        {
+          "id": "caso-final-cerrar",
+          "titulo": "Cerrar el año (operación 13)",
+          "paraQueSirve": "Sirve para repasar sobre el papel la regularización, el cierre y la apertura del ejercicio.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Cierres",
+            "Ejercicios contables"
+          ],
+          "explicacion": [
+            "Regularizar es llevar todos los gastos y los ingresos del año a la cuenta de resultados (129). Cerrar es dejar a cero las demás cuentas con el asiento de cierre. Abrir es copiar los saldos al 01-01 del año siguiente.",
+            "El cierre real lo practicas en tu empresa S{INI}, en «Cerrar el ejercicio de tu empresa». Aquí lo repasas sobre el papel con las cifras de tu caso: 200,00 − 125,00 − 13,50 = 61,50. En la empresa 0 no se lanza."
+          ],
+          "campos": [
+            {
+              "campo": "Resultado",
+              "significado": "Beneficio del año.",
+              "ejemplo": "200,00 − 125,00 − 3,50 − 10,00 = 61,50"
+            },
+            {
+              "campo": "Regularización",
+              "significado": "Lleva ingresos y gastos a resultados.",
+              "ejemplo": "129 con 61,50"
+            },
+            {
+              "campo": "Cierre",
+              "significado": "Deja el balance a cero.",
+              "ejemplo": "banco 3.077,25 al haber"
+            },
+            {
+              "campo": "Apertura 2027",
+              "significado": "El banco empieza el año con su saldo.",
+              "ejemplo": "banco 3.077,25 al debe"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Operación 13 · 31-12 · Repasa la regularización de tu caso sin lanzarla. Abre «Finanzas › Maestros › Cierres › Ejercicios contables» y localiza «Regularización por ejercicio». No la pulses en la empresa 0: su ejercicio es de todos los alumnos.",
+              "detalle": "La regularizaste en tu empresa S{INI} en «Cerrar el ejercicio de tu empresa», con otras cifras. Con las cifras del caso, la regularización llevaría 70000.00000 Ventas 200,00 al debe y, al haber, 60000.00000 125,00, la 626 Servicios bancarios 13,50 y la 129 61,50. Lo aprendiste en «Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre» y en «Cerrar y abrir el ejercicio»."
+            },
+            {
+              "texto": "Repasa el cierre definitivo y la apertura sin lanzarlos: localiza «Cierre definitivo» y «Reapertura de ejercicio» en la misma ficha.",
+              "detalle": "El cierre deja el banco al haber por 3.077,25 y capital, 129 y Hacienda al debe. La apertura copia 3.077,25 al banco de 2027. En la demo el cierre definitivo se explica sin ejecutarlo."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "No lances la regularización ni el cierre definitivo en la empresa 0: su ejercicio lo comparten todos los alumnos. El cierre real se practica en tu empresa S{INI}."
+            }
+          ]
+        },
+        {
+          "id": "caso-final-comprobar",
+          "titulo": "Comprobar tus cifras",
+          "paraQueSirve": "Sirve para saber si tu caso está bien hecho: si las cifras coinciden, todo cuadra.",
+          "ruta": null,
+          "explicacion": [
+            "Compara lo que ves en el ERP con esta tabla. Filtra siempre por tus documentos y tu diario {INI}: la empresa 0 la comparten todos los alumnos y sus saldos globales no son los tuyos. Si una cifra no coincide, vuelve a la operación que la genera.",
+            "Banco: 3.000,00 − 151,25 − 3,50 − 10,00 + 121,00 + 121,00 = 3.077,25. Resultado: 200,00 − 125,00 − 3,50 − 10,00 = 61,50. IVA: 42,00 − 26,25 = 15,75.",
+            "Balance al 31-12: activo (banco) 3.077,25 = patrimonio neto 3.061,50 (3.000,00 + 61,50) + pasivo 15,75 (Hacienda). Cuadra."
+          ],
+          "campos": [
+            {
+              "campo": "Banco BBVA_{INI} (57200)",
+              "significado": "Saldo tras las seis líneas del extracto.",
+              "ejemplo": "3.077,25"
+            },
+            {
+              "campo": "IVA a pagar (modelo 303 del 4T)",
+              "significado": "Repercutido 42,00 menos soportado 26,25.",
+              "ejemplo": "15,75"
+            },
+            {
+              "campo": "Beneficio del año (cuenta 129)",
+              "significado": "Ventas 200,00 menos compras 125,00 y gastos 13,50.",
+              "ejemplo": "61,50"
+            },
+            {
+              "campo": "Balance cuadrado",
+              "significado": "Banco = capital 3.000,00 + beneficio 61,50 + Hacienda 15,75.",
+              "ejemplo": "3.077,25 = 3.061,50 + 15,75"
+            },
+            {
+              "campo": "Cliente C{INI} y proveedor T{INI}",
+              "significado": "242,00 − 121,00 − 121,00 y 151,25 − 151,25.",
+              "ejemplo": "0,00 y 0,00"
+            },
+            {
+              "campo": "Stock del artículo 13500620",
+              "significado": "0 + 10 − 10.",
+              "ejemplo": "0"
+            },
+            {
+              "campo": "Sumas y saldos antes de liquidar el IVA",
+              "significado": "Los saldos deudores suman lo mismo que los acreedores.",
+              "ejemplo": "3.242,00 = 3.242,00"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Finanzas › Contabilidad General › Extractos › Mayor de cuentas» con la cuenta 57200.00000 y filtra por tus documentos (tu diario {INI} y tus justificantes).",
+              "detalle": "Suma solo tus movimientos: +3.000,00 − 151,25 − 3,50 − 10,00 + 121,00 + 121,00 = 3.077,25. El saldo total de la cuenta es otro, porque la empresa 0 la comparten todos los alumnos. Si no sale, repasa las operaciones 1, 7, 8, 9 y 10."
+            },
+            {
+              "texto": "Mira tus apuntes de IVA: 47000.00000 (IVA repercutido en la demo; 477 en el PGC) con 42,00 y 47200.00000 con 26,25.",
+              "detalle": "Filtra también por tus documentos. La diferencia es 15,75 a ingresar. Si no sale, repasa las operaciones 4, 5 y 12."
+            },
+            {
+              "texto": "Comprueba que el resultado del año es 61,50 y que el balance cuadra.",
+              "detalle": "Calcúlalo con tus movimientos, sin lanzar ningún cierre en la empresa 0. Banco 3.077,25 = capital 3.000,00 + beneficio 61,50 + Hacienda 15,75. Si no cuadra, busca el asiento que no está contabilizado."
+            }
+          ],
+          "avisos": []
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Cuánto IVA soportado deja la compra de 10 unidades a 12,50?",
+          "opciones": [
+            "12,50",
+            "26,25",
+            "42,00",
+            "151,25"
+          ],
+          "correcta": 1,
+          "explicacion": "La base es 10 × 12,50 = 125,00. El IVA es 125,00 × 21 % = 26,25. El total de la factura es 151,25."
+        },
+        {
+          "pregunta": "¿Cuánto IVA repercutido deja la venta de 10 unidades a 20,00?",
+          "opciones": [
+            "26,25",
+            "200,00",
+            "42,00",
+            "242,00"
+          ],
+          "correcta": 2,
+          "explicacion": "La base es 200,00 y el IVA, 200,00 × 21 % = 42,00. El total de la factura es 242,00."
+        },
+        {
+          "pregunta": "¿Cuánto IVA ingresas en el modelo 303 del 4T?",
+          "opciones": [
+            "15,75",
+            "42,00",
+            "26,25",
+            "68,25"
+          ],
+          "correcta": 0,
+          "explicacion": "Repercutido menos soportado: 42,00 − 26,25 = 15,75 a ingresar antes del 30-01-2027."
+        },
+        {
+          "pregunta": "¿Cuál es el saldo final del banco BBVA_{INI}?",
+          "opciones": [
+            "3.000,00",
+            "2.835,25",
+            "3.077,25",
+            "3.242,00"
+          ],
+          "correcta": 2,
+          "explicacion": "3.000,00 − 151,25 (pago) − 3,50 (comisión del pago) − 10,00 (comisión manual) + 121,00 + 121,00 (los dos cobros) = 3.077,25."
+        },
+        {
+          "pregunta": "¿Qué beneficio deja el año?",
+          "opciones": [
+            "75,00",
+            "61,50",
+            "200,00",
+            "138,50"
+          ],
+          "correcta": 1,
+          "explicacion": "Ingresos 200,00 menos compras 125,00, comisión bancaria 3,50 y comisión manual 10,00: 200,00 − 138,50 = 61,50."
+        },
+        {
+          "pregunta": "¿Por qué cuadra el balance al 31-12?",
+          "opciones": [
+            "Porque el banco es igual al capital",
+            "Porque el banco 3.077,25 es igual a capital 3.000,00 más beneficio 61,50 más Hacienda 15,75",
+            "Porque las ventas son iguales a las compras",
+            "Porque el IVA es cero"
+          ],
+          "correcta": 1,
+          "explicacion": "Lo que la empresa tiene (3.077,25 en el banco) es igual a lo que es de los socios (3.061,50) más lo que debe (15,75 a Hacienda)."
+        }
+      ],
+      "checklist": [
+        "Tu empresa S{INI}, tu proveedor T{INI}, tu cliente C{INI}, tu banco BBVA_{INI} y tu diario {INI} existen.",
+        "Has aportado 3.000,00 al banco con un asiento que cuadra.",
+        "Has comprado 10 unidades a 12,50 y tu factura PROV-{INI}-001 suma 151,25.",
+        "El stock del artículo 13500620 pasa por +10 y −10 y acaba en 0.",
+        "Has vendido a C{INI} y tu factura suma 242,00, con dos efectos de 121,00.",
+        "Has pagado 151,25 a T{INI} con una remesa y el banco ha cobrado 3,50 de comisión.",
+        "Has cobrado los dos efectos de 121,00: uno suelto y otro en remesa SEPA.",
+        "El extracto de BBVA_{INI} tiene seis líneas y termina en 3.077,25.",
+        "El IVA del 4T da 15,75 a ingresar.",
+        "El beneficio es 61,50 y el balance cuadra: 3.077,25 = 3.061,50 + 15,75."
+      ],
+      "problemas": [
+        {
+          "problema": "El banco no termina en 3.077,25.",
+          "solucion": "Repasa las operaciones 1, 7, 8, 9 y 10 en «Finanzas › Contabilidad General › Extractos › Mayor de cuentas», con la cuenta 57200.00000 filtrada por tus documentos y tu diario {INI}. Busca el asiento o el movimiento que falta o que está por duplicado."
+        },
+        {
+          "problema": "Falta tu cliente C{INI} o tu banco BBVA_{INI}.",
+          "solucion": "Vuelve al bloque donde se crean («Dar de alta los datos básicos de contabilidad» y «Dar de alta bancos propios y cajas») y créalos antes de seguir."
+        },
+        {
+          "problema": "No me deja contabilizar un documento por «Fecha fuera de periodo».",
+          "solucion": "El periodo de esa fecha está cerrado. Revisa los periodos en «Finanzas › Maestros › Cierres › Ejercicios contables» o usa una fecha de un periodo abierto."
+        },
+        {
+          "problema": "No encuentro la pantalla de una operación.",
+          "solucion": "Abre la ruta que lleva el paso, con el menú de la izquierda. Si no sale, escribe el nombre de la pantalla en el buscador del menú."
+        },
+        {
+          "problema": "Mi registro no sale en la lista.",
+          "solucion": "Revisa el filtro y la empresa de la consulta: los documentos del caso están en la empresa 0, no en S{INI}."
+        }
+      ],
+      "aprendido": [
+        "Has recorrido tu empresa de principio a fin: configurar, comprar, vender, cobrar y pagar, declarar el IVA y cerrar.",
+        "Has comprobado que las cifras del caso cuadran: banco 3.077,25, IVA a pagar 15,75 y beneficio 61,50.",
+        "Has visto que el balance cuadra: 3.077,25 = 3.061,50 + 15,75.",
+        "Sabes en qué bloque del curso se explica cada operación y puedes volver a él si algo no cuadra."
+      ]
+    }
+  ]
+}

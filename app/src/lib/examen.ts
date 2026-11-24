@@ -214,8 +214,10 @@ function rutasDeMenu() {
   const vistos = new Set<string>();
   for (const m of MODULOS) {
     // Las rutas de finanzas salen del árbol de la documentación, no de un menú comprobado en la demo
-    if (esFinanzas(m.id)) continue;
+    // (los bloques «maestros-*» que ahora viven en Contabilidad básica o en Compras sí vienen de la demo)
+    const finanzas = esFinanzas(m.id);
     for (const e of m.ejercicios) {
+      if (finanzas && !e.id.startsWith('maestros-')) continue;
       // Los ejercicios que vienen de finanzas (ids icon-*) conservan esa regla aunque su módulo se haya fusionado
       if (esFinanzas(e.id)) continue;
       for (const s of e.secciones) {
@@ -794,7 +796,7 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   // Ordenar: un circuito del vídeo y otro de un manual
   const cvs = [...CIRCUITOS_VIDEO.map((c) => ({ origen: `vídeo cap. ${c.cap}`, pregunta: c.pregunta, pasos: c.pasos, explicacion: c.explicacion })), CIRCUITO_TESORERIA];
   const cv = r.pick(cvs);
-  const mods = MODULOS.filter((m) => !esFinanzas(m.id) && m.circuito.length >= 4 && m.circuito.length <= 7);
+  const mods = MODULOS.filter((m) => !esFinanzas(m.id) && m.id !== 'fundamentos' && m.ejercicios.length > 0 && m.circuito.length >= 4 && m.circuito.length <= 7);
   const cm = r.pick(mods);
   // En la versión nueva del ERP no hay paso «Conformar»: no se pide ordenarlo.
   const pasosCm = cm.circuito.filter((x) => !/conformar/i.test(x));

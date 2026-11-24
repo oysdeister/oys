@@ -1,0 +1,197 @@
+{
+ "id": "compras-workflow",
+ "numero": 10,
+ "titulo": "Aprobación de pedidos: workflow",
+ "objetivo": "Sabrás dónde se gestionan, autorizan y retroceden los pedidos bloqueados y consultarás los pendientes de autorización.",
+ "concepto": "Una empresa no quiere que cualquiera compre cualquier cosa. Por eso un pedido puede quedar bloqueado hasta que alguien con permiso lo autorice. Ese circuito de aprobación se llama workflow.\n\nUn pedido se bloquea por las reglas de validación estándares o por el workflow. Quien tiene permiso lo ve en «Autorizar» y lo aprueba. Si ya estaba autorizado y hay que corregirlo, «Retroceder» lo devuelve al estado anterior.\n\nEn la demo el menú existe, pero no hay pedidos bloqueados: las consultas salen vacías. Aquí aprendes dónde está cada pantalla.",
+ "duracionMin": 10,
+ "secciones": [
+  {
+   "id": "compras-workflow-menu",
+   "titulo": "Dónde está el workflow de pedidos",
+   "paraQueSirve": "Aquí localizas las pantallas de aprobación. Son tres: gestionar, autorizar y retroceder.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Pedidos",
+    "Work Flow"
+   ],
+   "explicacion": [
+    "Gestionar es «Gestión de workflow de pedido de compras». Autorizar es «Pedidos de compras pendientes de autorización». Retroceder es «Pedidos de compra con autorizaciones emitidas».",
+    "Autorizar muestra los pedidos bloqueados por las reglas de validación o por el workflow que tú puedes autorizar.",
+    "Retroceder muestra los pedidos autorizados en alguna ocasión, del más reciente al más antiguo."
+   ],
+   "campos": [],
+   "pasos": [
+    {
+     "texto": "En el menú abre Gestión › Compras › Pedidos › Work Flow.",
+     "pregunta": "¿Dónde está el menú con las tres pantallas del workflow?",
+     "detalle": "Verás Gestionar, Autorizar, Retroceder y dos listas de pendientes.",
+     "imagen": "cob-workflow-1.webp"
+    },
+    {
+     "texto": "Abre «Autorizar».",
+     "detalle": "Se abre una pantalla de consulta con filtros: Empresa, Tipo documento, Fecha pedido, Proveedor, Validación…"
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "Estas tres pantallas son consultas: se rellenan los filtros y se pulsa «Ejecutar consulta»."
+    },
+    {
+     "tipo": "nota",
+     "texto": "El bloqueo de un pedido depende de las reglas de validación y del workflow que configure cada empresa. En la base tutorial no hemos creado ninguna."
+    }
+   ]
+  },
+  {
+   "id": "compras-workflow-consulta",
+   "titulo": "Consultar pedidos pendientes de autorización",
+   "paraQueSirve": "Aquí ves qué pedidos están esperando que alguien los autorice.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Pedidos",
+    "Work Flow",
+    "Autorizar"
+   ],
+   "explicacion": [
+    "El único filtro obligatorio es la Fecha pedido. El resto es opcional.",
+    "El resultado trae las columnas Validación, Desc. validación y Descripción workflow: dicen por qué está bloqueado el pedido.",
+    "Desde el resultado se autoriza. Para ello hace falta el permiso de autorización de tu usuario."
+   ],
+   "campos": [
+    {
+     "campo": "Fecha pedido *",
+     "significado": "Fecha del pedido. Es el único filtro obligatorio.",
+     "ejemplo": "01-01-2026"
+    },
+    {
+     "campo": "Validación",
+     "significado": "Regla que bloquea el pedido.",
+     "ejemplo": "Sin filtrar"
+    },
+    {
+     "campo": "Proveedor",
+     "significado": "Limita la consulta a un proveedor.",
+     "ejemplo": "T{INI}"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "En «Fecha pedido» pon una fecha. Por ejemplo, 01-01-2026.",
+     "pregunta": "Estás en la consulta Autorizar. ¿Qué filtro es obligatorio?",
+     "detalle": "Sin ella, la consulta no se ejecuta.",
+     "imagen": "cob-workflow-1.webp",
+     "hotspot": {
+      "x": 34.8,
+      "y": 42.4,
+      "w": 13.2,
+      "h": 5.0,
+      "etiqueta": "Fecha pedido"
+     }
+    },
+    {
+     "texto": "Pulsa «Ejecutar consulta».",
+     "pregunta": "¿Qué botón lanza la consulta?",
+     "detalle": "El resultado se abre en una tabla.",
+     "imagen": "cob-workflow-1.webp",
+     "hotspot": {
+      "x": 68.4,
+      "y": 21.5,
+      "w": 8.0,
+      "h": 3.4,
+      "etiqueta": "Ejecutar consulta"
+     }
+    },
+    {
+     "texto": "Lee el resultado. Si no hay pedidos bloqueados, la tabla sale vacía.",
+     "detalle": "Fíjate en las columnas Validación, Desc. validación y Descripción workflow.",
+     "imagen": "cob-workflow-2.webp"
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "En la demo el resultado sale vacío: ningún pedido está bloqueado ni pendiente de autorización."
+    },
+    {
+     "tipo": "nota",
+     "texto": "No hemos autorizado ni retrocedido ningún pedido."
+    }
+   ]
+  }
+ ],
+ "test": [
+  {
+   "pregunta": "¿Para qué sirve el workflow de pedidos?",
+   "opciones": [
+    "Para imprimir pedidos",
+    "Para que un pedido bloqueado sea aprobado por quien tiene permiso",
+    "Para crear albaranes",
+    "Para pagar"
+   ],
+   "correcta": 1,
+   "explicacion": "El workflow es el circuito de aprobación."
+  },
+  {
+   "pregunta": "¿Qué pantalla usas para aprobar un pedido bloqueado?",
+   "opciones": [
+    "Gestionar",
+    "Autorizar",
+    "Retroceder",
+    "Impresión"
+   ],
+   "correcta": 1,
+   "explicacion": "Autorizar lista los pedidos que puedes aprobar."
+  },
+  {
+   "pregunta": "¿Qué pantalla devuelve al estado anterior un pedido ya autorizado?",
+   "opciones": [
+    "Autorizar",
+    "Retroceder",
+    "Pendientes",
+    "Docflow"
+   ],
+   "correcta": 1,
+   "explicacion": "Retroceder trabaja con pedidos con autorizaciones emitidas."
+  },
+  {
+   "pregunta": "¿Qué filtro es obligatorio en «Autorizar»?",
+   "opciones": [
+    "Proveedor",
+    "Fecha pedido",
+    "Tipo documento",
+    "Validación"
+   ],
+   "correcta": 1,
+   "explicacion": "La Fecha pedido lleva asterisco."
+  }
+ ],
+ "checklist": [
+  "Abre Gestión › Compras › Pedidos › Work Flow.",
+  "Localiza Gestionar, Autorizar y Retroceder.",
+  "Abre «Autorizar» y lee la descripción.",
+  "Pon una Fecha pedido.",
+  "Pulsa «Ejecutar consulta».",
+  "Anota si hay pedidos bloqueados o la tabla sale vacía.",
+  "Abre «Retroceder» y lee su descripción."
+ ],
+ "problemas": [
+  {
+   "problema": "La consulta no se ejecuta.",
+   "solucion": "Falta la Fecha pedido, que es obligatoria."
+  },
+  {
+   "problema": "La tabla sale vacía.",
+   "solucion": "No hay pedidos bloqueados con esos filtros. Es normal en la demo."
+  }
+ ],
+ "aprendido": [
+  "Has localizado las tres pantallas del workflow de pedidos.",
+  "Sabes que Autorizar aprueba y Retroceder devuelve al estado anterior.",
+  "Has ejecutado la consulta de pedidos pendientes de autorización.",
+  "Sabes que en la demo no hay pedidos bloqueados."
+ ]
+}

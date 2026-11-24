@@ -24,7 +24,7 @@ export const SERIES_TUT_FIN: SerieTutorialFin[] = [
     titulo: 'Introducción a Deister Axional VNext',
     corto: 'Vídeo de introducción',
     intro: 'Qué es un ERP y cómo moverte por él: la pantalla de inicio, el buscador, el menú lateral y qué es un maestro.',
-    modulos: ['maestros'],
+    modulos: ['fundamentos', 'maestros'],
     capitulos: [
       {
         n: 1,
@@ -173,6 +173,7 @@ export const MOMENTOS_EJERCICIO_TUT_FIN: Record<string, MomentoVideo[]> = {
 
 /** Tablas que ya explica el tutorial (diarios, ejercicios y periodos): su tarjeta «Mira primero el vídeo» */
 export const MOMENTOS_SECCION_TUT_FIN: Record<string, MomentoVideo[]> = {
+  'fundamentos-navegar-entrar': [{ serie: 'tut-intro', capitulo: 1, t: 0, tCap: 0, titulo: 'Introducción: qué es un ERP y cómo moverte por él' }],
   'maestros-moverte-axional': [{ serie: 'tut-intro', capitulo: 1, t: 0, tCap: 0, titulo: 'Introducción: qué es un ERP y cómo moverte por él' }],
   'asientos-1-diario': [m('tut-contabilidad', 3, 26, 'Vídeo: la tabla de diarios')],
   'icon-contabilidad-1-diario': [m('tut-contabilidad', 3, 26, 'Vídeo: la tabla de diarios')],

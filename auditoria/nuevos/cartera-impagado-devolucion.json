@@ -1,0 +1,287 @@
+{
+  "id": "cartera-impagado-devolucion",
+  "numero": 92,
+  "titulo": "Registrar un recibo devuelto (impagado)",
+  "objetivo": "Registrarás la devolución de un efecto ya cobrado, verás cómo pasa a estado DV y leerás el asiento que se genera.",
+  "concepto": "El banco puede devolver un recibo que ya cobraste: el cliente no tenía saldo o lo rechazó. Es un impagado. El cobro anterior deja de valer.\n\nEn el ERP se registra con una gestión de clase Cobrar y acción CDEV (Cobro, devolución). El efecto pasa de CO (Cobrado) a DV (Devuelto). El estado DV se cuenta como Impagado.\n\nAl cerrar la gestión, el asiento mueve el importe entre la cuenta del banco, 57200.00000, y la cuenta 43150.00000 Efectos comerciales impagados. El efecto cambia su cuenta a 43150.00000.\n\nHay otras acciones de cobro relacionadas: CPED (Cobro devuelto, a pendiente), CDUD (Cobro, dudoso) y CCIN (Cobro, crédito incobrable). Aquí solo practicas CDEV.",
+  "duracionMin": 25,
+  "secciones": [
+    {
+      "id": "cartera-impagado-devolucion-gestion",
+      "titulo": "Crear la gestión de devolución",
+      "paraQueSirve": "Sirve para abrir la gestión que devolverá el cobro. Es una gestión como la del cobro, pero con otra acción.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Gestiones",
+        "Gestiones sobre efectos"
+      ],
+      "explicacion": [
+        "Necesitas un efecto cobrado (CO) de CAR{INI}. Sirve el de «Cobrar efectos sueltos y en remesa» o el de «Cobrar solo una parte de un efecto».",
+        "Abre la ruta y pulsa «Nuevo». Rellena empresa 0, clase Cobrar y acción CDEV (Cobro, devolución). Pon la cuenta BBVA_{INI} y el perceptor CAR{INI}.",
+        "Las capturas son de la base de demo: allí el cliente es «Cliente captura CAPK» (TCAPK) y el banco BBVA_CA. Tú usas CAR{INI} y BBVA_{INI}."
+      ],
+      "campos": [
+        {
+          "campo": "Clase",
+          "significado": "Cobrar.",
+          "ejemplo": "Cobrar"
+        },
+        {
+          "campo": "Acción",
+          "significado": "Cobro, devolución.",
+          "ejemplo": "CDEV"
+        },
+        {
+          "campo": "Cuenta financiera",
+          "significado": "Banco donde se cobró.",
+          "ejemplo": "BBVA_{INI}"
+        },
+        {
+          "campo": "Perceptor",
+          "significado": "Cliente que devuelve el recibo.",
+          "ejemplo": "CAR{INI}"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la ruta y pulsa «Nuevo»"
+        },
+        {
+          "texto": "Elige la clase Cobrar y escribe la acción CDEV"
+        },
+        {
+          "texto": "Elige la cuenta financiera BBVA_{INI} y el perceptor CAR{INI}"
+        },
+        {
+          "texto": "Pulsa «Guardar» y abre la gestión que sale la primera de la lista"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "CDEV pertenece a la clase Cobrar. Con clase Pagar no aparece."
+        }
+      ]
+    },
+    {
+      "id": "cartera-impagado-devolucion-efecto",
+      "titulo": "Elegir el efecto devuelto",
+      "paraQueSirve": "Sirve para decir qué recibo ha devuelto el banco. Aquí salen los efectos cobrados, no los pendientes.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Gestiones",
+        "Gestiones sobre efectos"
+      ],
+      "explicacion": [
+        "En «Selección de efectos» salen efectos en estado CO. Con la acción COBD solo salían los PE.",
+        "Marca el efecto de CAR{INI} y pulsa «Agregar efectos».",
+        "«Cerrar» y «Aceptar» contabilizan la devolución."
+      ],
+      "campos": [
+        {
+          "campo": "Estado",
+          "significado": "Los efectos a devolver están cobrados.",
+          "ejemplo": "CO"
+        },
+        {
+          "campo": "Importe",
+          "significado": "Importe del recibo devuelto.",
+          "ejemplo": "100,00 en la captura"
+        },
+        {
+          "campo": "Documento",
+          "significado": "Factura del efecto.",
+          "ejemplo": "FVN026-000006"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la pestaña «Selección de efectos» y marca el efecto de CAR{INI}",
+          "detalle": "Marca solo el tuyo. Hay efectos de otros clientes.",
+          "imagen": "cob-devol-seleccion.webp",
+          "hotspot": {
+            "x": 88.6,
+            "y": 55.6,
+            "w": 5.8,
+            "h": 3.2,
+            "etiqueta": "Agregar efectos"
+          }
+        },
+        {
+          "texto": "Pulsa «Agregar efectos»"
+        },
+        {
+          "texto": "Pulsa «Cerrar» y acepta la confirmación",
+          "detalle": "La gestión queda Cerrada y con la banda CONTABILIZADO."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "No sale mi efecto en la selección."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Comprueba que está cobrado (CO) y que el perceptor de la gestión es el suyo."
+        }
+      ]
+    },
+    {
+      "id": "cartera-impagado-devolucion-asiento",
+      "titulo": "Leer el asiento y el estado DV",
+      "paraQueSirve": "Sirve para comprobar el efecto de la devolución: el efecto pasa a DV y el asiento mueve el importe a impagados.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Cobros y Pagos"
+      ],
+      "explicacion": [
+        "En la cartera de efectos, el efecto pasa a estado DV y su cuenta cambia a 43150.00000.",
+        "El asiento (desplegable ⌄ › «Asientos contables») tiene dos líneas de 100,00: 43150.00000 «Efectos comerciales impagados» y 57200.00000 «Bancos e instituciones de crédito c/c vista, euros». El concepto es «Devolución de cobro de Cliente captura CAPK».",
+        "En la demo, el asiento CA026-000004 apunta 57200.00000 al debe y 43150.00000 al haber. Mira siempre el sentido de cada línea en tu asiento."
+      ],
+      "campos": [
+        {
+          "campo": "Estado del efecto",
+          "significado": "DV es Devuelto. Se cuenta como impagado.",
+          "ejemplo": "DV"
+        },
+        {
+          "campo": "Cuenta del efecto",
+          "significado": "Pasa a efectos comerciales impagados.",
+          "ejemplo": "43150.00000"
+        },
+        {
+          "campo": "Asiento",
+          "significado": "Devolución de 100,00.",
+          "ejemplo": "CA026-000004 en la demo"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre el asiento: desplegable (⌄) junto al título › «Asientos contables»",
+          "detalle": "El asiento tiene el concepto «Devolución de cobro de …».",
+          "imagen": "cob-devol-asiento.webp"
+        },
+        {
+          "texto": "Abre la pestaña «Líneas de apuntes» y lee las dos líneas",
+          "detalle": "43150.00000 Efectos comerciales impagados y 57200.00000 Bancos e instituciones de crédito c/c vista, euros, ambas de 100,00.",
+          "imagen": "cob-devol-apuntes.webp"
+        },
+        {
+          "texto": "Abre Finanzas › Cobros y Pagos › Cobros y Pagos y busca tu factura",
+          "detalle": "El efecto sale en estado DV y con la cuenta 43150.00000.",
+          "imagen": "cob-efectos-estado.webp"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "En la demo, el asiento de CDEV apunta 57200.00000 al debe y 43150.00000 al haber. Lo habitual en una devolución es lo contrario: 43150.00000 al debe y 57200.00000 al haber."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Es la plantilla de la demo. Anótalo y pregunta a la persona responsable de contabilidad antes de usarla en una base real. La plantilla se llama cefectos_c_devol."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Para reclamar al cliente, la ruta Emisión de documentos › Cobros › «Carta de aviso de impagado» emite la carta. No se probó en la demo."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Para volver el efecto a pendiente existe la acción CPED, «Cobro devuelto, a pendiente». No se probó."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "¿Qué acción registra la devolución de un cobro?",
+      "opciones": [
+        "COBD",
+        "CDEV",
+        "CPED",
+        "CCIN"
+      ],
+      "correcta": 1,
+      "explicacion": "CDEV es «Cobro, devolución»."
+    },
+    {
+      "pregunta": "¿En qué estado queda el efecto tras la devolución?",
+      "opciones": [
+        "CO",
+        "PE",
+        "DV",
+        "PR"
+      ],
+      "correcta": 2,
+      "explicacion": "DV es Devuelto, y se cuenta como impagado."
+    },
+    {
+      "pregunta": "¿Qué efectos salen en la selección de una gestión CDEV?",
+      "opciones": [
+        "Los efectos cobrados (CO)",
+        "Solo los pendientes",
+        "Solo los de pagos",
+        "Ninguno"
+      ],
+      "correcta": 0,
+      "explicacion": "La devolución se aplica sobre un cobro ya hecho."
+    },
+    {
+      "pregunta": "¿A qué cuenta pasa el efecto devuelto?",
+      "opciones": [
+        "57200.00000",
+        "43000.00000",
+        "43150.00000 Efectos comerciales impagados",
+        "70500.00000"
+      ],
+      "correcta": 2,
+      "explicacion": "La demo lo pasa a 43150.00000."
+    },
+    {
+      "pregunta": "¿Qué haces si el sentido del asiento no te cuadra?",
+      "opciones": [
+        "Lo borras",
+        "Lo anotas y lo consultas con contabilidad",
+        "Cambias la factura",
+        "Nada"
+      ],
+      "correcta": 1,
+      "explicacion": "La plantilla de la demo puede no seguir el criterio habitual. Se consulta."
+    }
+  ],
+  "checklist": [
+    "Tienes un efecto cobrado (CO) de CAR{INI}.",
+    "Has creado una gestión de clase Cobrar y acción CDEV.",
+    "Has visto que la selección ofrece efectos CO.",
+    "Has marcado solo el efecto de CAR{INI}.",
+    "Has cerrado la gestión y ha salido la banda CONTABILIZADO.",
+    "El efecto está ahora en estado DV.",
+    "La cuenta del efecto es 43150.00000.",
+    "Has abierto el asiento y has leído sus dos líneas.",
+    "Has anotado en qué línea va cada cuenta (debe o haber).",
+    "Conoces CPED, CDUD y CCIN, aunque no las hayas usado."
+  ],
+  "problemas": [
+    {
+      "problema": "No sale mi efecto en la gestión CDEV.",
+      "solucion": "Tiene que estar cobrado (CO). Comprueba también el perceptor."
+    },
+    {
+      "problema": "El asiento de la devolución tiene el debe y el haber al revés de lo esperado.",
+      "solucion": "Es la plantilla de la demo. Anótalo y consulta a contabilidad."
+    },
+    {
+      "problema": "Quieres volver a cobrar el efecto devuelto.",
+      "solucion": "Existe la acción CPED (Cobro devuelto, a pendiente). No se probó en la demo."
+    }
+  ],
+  "aprendido": [
+    "Has registrado una devolución con una gestión CDEV.",
+    "Has visto que el efecto pasa de CO a DV y a la cuenta 43150.00000.",
+    "Has leído el asiento de la devolución y sus dos cuentas, 57200.00000 y 43150.00000."
+  ]
+}

@@ -12,6 +12,8 @@ export function avanceModulo(p: Progreso, id: string) {
 }
 
 export function avanceGlobal(p: Progreso) {
-  if (!MODULOS.length) return 0;
-  return MODULOS.reduce((s, m) => s + avanceModulo(p, m.id), 0) / MODULOS.length;
+  // Un módulo sin bloques todavía (Próximamente) no cuenta
+  const con = MODULOS.filter((m) => bloquesObligatorios(m).length > 0);
+  if (!con.length) return 0;
+  return con.reduce((s, m) => s + avanceModulo(p, m.id), 0) / con.length;
 }

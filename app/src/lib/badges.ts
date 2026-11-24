@@ -25,7 +25,7 @@ export const INSIGNIAS: Insignia[] = [
     } },
   { id: 'cuadrado', titulo: 'Asiento cuadrado', texto: 'Cuadra un asiento en el simulador.', color: '#8a7be0', ganada: (p) => !!p.sims['asiento'] },
   { id: 'taller', titulo: 'Taller completo', texto: 'Supera todos los simuladores.', color: '#e0708a', ganada: (p) => ['asiento', 'numerador', 'circuito', 'docflow', 'factura', 'cartera'].every((s) => p.sims[s]) },
-  ...MODULOS.map((m) => ({
+  ...MODULOS.filter((m) => m.ejercicios.length > 0).map((m) => ({
     id: `mod-${m.id}`,
     titulo: META[m.id]?.corto ?? m.titulo,
     texto: 'Termina todos los bloques del módulo.',
@@ -39,7 +39,7 @@ export const INSIGNIAS: Insignia[] = [
     color: META[moduloId]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => (p.examenes?.[clave] ?? 0) >= APROBADO,
   })),
-  { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa todos los módulos.', color: '#1f2738', ganada: (p) => MODULOS.length > 0 && MODULOS.every((m) => modCompleto(p, m.id)) },
+  { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa todos los módulos.', color: '#1f2738', ganada: (p) => MODULOS.some((m) => m.ejercicios.length > 0) && MODULOS.filter((m) => m.ejercicios.length > 0).every((m) => modCompleto(p, m.id)) },
 ];
 
 export function insigniasGanadas(p: Progreso) {

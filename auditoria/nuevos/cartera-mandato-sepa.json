@@ -1,0 +1,468 @@
+{
+  "id": "cartera-mandato-sepa",
+  "numero": 90,
+  "titulo": "Domiciliar un cliente: mandato SEPA y remesa de cobro",
+  "objetivo": "Prepararás el IBAN y el mandato SEPA de CAR{INI}, cobrarás un recibo domiciliado con una remesa CSDDS y sabrás dónde se genera el fichero SEPA.",
+  "concepto": "Un recibo domiciliado se cobra cargando el importe en la cuenta del cliente. Para eso el banco necesita dos cosas: el IBAN del cliente y su permiso firmado. Ese permiso es el mandato SEPA.\n\nEl mandato lleva una referencia única, el tipo de orden (Core para particulares y empresas, B2B solo entre empresas), el tipo de operación (pago único o recurrente) y la fecha de firma. Se guarda en la ficha del tercero, pestaña «Mandato».\n\nLa remesa agrupa los recibos que van juntos al banco. Con el tipo CSDDS (cobro por débitos directos, sin Tesorería) pasa por tres estados: propuesta, ordenada y cobrada. Al cerrarla se puede generar el fichero SEPA (XML) que se envía al banco.\n\nEn la demo, el cobro de la remesa se apunta con la cuenta 57200.00000 al debe y la cuenta del cliente al haber. No usa una cuenta 431 de efectos en gestión de cobro.",
+  "duracionMin": 35,
+  "secciones": [
+    {
+      "id": "cartera-mandato-sepa-iban",
+      "titulo": "Dar de alta el IBAN del cliente",
+      "paraQueSirve": "Sirve para que el ERP sepa a qué cuenta cargar el recibo. Sin IBAN, el recibo domiciliado no se puede ordenar.",
+      "ruta": [
+        "Finanzas",
+        "Maestros",
+        "Terceros",
+        "Registro terceros"
+      ],
+      "explicacion": [
+        "Abre la ficha de CAR{INI} y entra en la pestaña «Datos bancarios».",
+        "Pulsa «Añadir banco». El IBAN y el banco van juntos: si rellenas uno, tienes que rellenar el otro.",
+        "Al guardar, el tercero vuelve a estado Provisional. Pulsa «Validar» para dejarlo Validado.",
+        "Las capturas son de la base de demo: allí el cliente es «Cliente captura CAPK» (TCAPK) y el banco BBVA_CA. Tú usas CAR{INI} y BBVA_{INI}."
+      ],
+      "campos": [
+        {
+          "campo": "Domiciliación",
+          "significado": "Número de la cuenta dentro del tercero. Es obligatorio.",
+          "ejemplo": "1"
+        },
+        {
+          "campo": "Banco",
+          "significado": "Entidad. Se busca escribiendo «ES21».",
+          "ejemplo": "ES2100 CAIXABANK, S.A"
+        },
+        {
+          "campo": "IBAN o Cuenta bancaria",
+          "significado": "Cuenta del cliente. Usa un IBAN de prueba.",
+          "ejemplo": "ES9121000418450200051332"
+        },
+        {
+          "campo": "Tipo de cuenta",
+          "significado": "Viene por defecto.",
+          "ejemplo": "Cuenta corriente"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la ficha de CAR{INI} y pulsa la pestaña «Datos bancarios»"
+        },
+        {
+          "texto": "Pulsa «Añadir banco»"
+        },
+        {
+          "texto": "Rellena «Domiciliación» con 1 y «IBAN o Cuenta bancaria» con el IBAN de prueba",
+          "detalle": "Escribe el IBAN completo y sal con Tab."
+        },
+        {
+          "texto": "Pulsa en «Banco», escribe ES21 y elige ES2100 CAIXABANK, S.A"
+        },
+        {
+          "texto": "Pulsa «Guardar»",
+          "detalle": "Si falta el banco sale «Entidad y cuenta bancaria, ambos nulos o no nulos»."
+        },
+        {
+          "texto": "Pulsa «Validar» en la barra superior",
+          "detalle": "El tercero vuelve a Validado."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "Al guardar sale «Las siguientes restricciones de verificación fallaron: Entidad y cuenta bancaria, ambos nulos o no nulos.»"
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Elige también el «Banco». IBAN y banco se rellenan a la vez."
+        },
+        {
+          "tipo": "nota",
+          "texto": "No uses el IBAN de un cliente real. Es una base de formación."
+        }
+      ]
+    },
+    {
+      "id": "cartera-mandato-sepa-mandato",
+      "titulo": "Crear el mandato SEPA",
+      "paraQueSirve": "Sirve para registrar el permiso del cliente. Es lo que el banco comprueba al cargar un adeudo directo.",
+      "ruta": [
+        "Finanzas",
+        "Maestros",
+        "Terceros",
+        "Registro terceros"
+      ],
+      "explicacion": [
+        "En la ficha de CAR{INI}, pestaña «Mandato», pulsa «Nuevo».",
+        "El formulario se llama «Órdenes SEPA de domiciliación de débito directo (Mandate)». El titular y la domiciliación se rellenan con el IBAN que acabas de dar de alta.",
+        "El estado «Solicitado» pasa a «Activo» cuando el mandato está firmado. Los estados son Solicitado, Activo y Cancelado.",
+        "Fíjate: el campo «Identificador del acreedor» no se escribe. Lo calcula el botón «Calcular ID del acreedor» a partir de la empresa."
+      ],
+      "campos": [
+        {
+          "campo": "Empresa",
+          "significado": "Sociedad que cobra.",
+          "ejemplo": "0"
+        },
+        {
+          "campo": "Estado",
+          "significado": "Solicitado, Activo o Cancelado.",
+          "ejemplo": "Activo"
+        },
+        {
+          "campo": "Clase de cartera",
+          "significado": "Cobrar, porque es un cobro.",
+          "ejemplo": "Cobrar"
+        },
+        {
+          "campo": "Fecha firma",
+          "significado": "Día en que el cliente firmó.",
+          "ejemplo": "24-11-2026"
+        },
+        {
+          "campo": "Tipo de orden",
+          "significado": "SEPA Direct Debit Core o B2B.",
+          "ejemplo": "SEPA Direct Debit Core"
+        },
+        {
+          "campo": "Tipo operación",
+          "significado": "Pago único, pago recurrente o último pago recurrente.",
+          "ejemplo": "Pago recurrente"
+        },
+        {
+          "campo": "Referencia mandato",
+          "significado": "Código único del mandato.",
+          "ejemplo": "MAN{INI}001"
+        },
+        {
+          "campo": "Titular y Domiciliación",
+          "significado": "Quién paga y con qué IBAN.",
+          "ejemplo": "CAR{INI} / ES9121000418450200051332"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Pulsa la pestaña «Mandato» y después «Nuevo»"
+        },
+        {
+          "texto": "Escribe la empresa 0 y elige la fila",
+          "detalle": "Al cambiar la empresa, el titular se borra. Rellénalo después."
+        },
+        {
+          "texto": "Elige el estado «Activo» y el tipo de operación «Pago recurrente»"
+        },
+        {
+          "texto": "Escribe la «Referencia mandato» MAN{INI}001"
+        },
+        {
+          "texto": "Elige el «Titular» CAR{INI}. En «Domiciliación» escribe 1 y elige la fila con el IBAN",
+          "detalle": "Con titular y domiciliación puestos, el formulario queda así.",
+          "imagen": "cob-mandato-form.webp"
+        },
+        {
+          "texto": "Pulsa «Guardar»",
+          "detalle": "En la demo no se llega a guardar: sale el error de la imagen.",
+          "imagen": "cob-mandato-error.webp"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "En la demo, al guardar el mandato de la empresa 0 sale «El código comercial del acreedor [0] debe tener exactamente 3 caracteres.» (ID 15486)."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Es un dato de la empresa, no tuyo: su código comercial de acreedor no está bien parametrizado. No lo cambies. Avisa a quien administre la base. Con el código de 3 caracteres, el mandato se guarda."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Por eso en la demo no se pudo comprobar el mandato guardado. Su efecto sí se comprobó: la remesa de abajo se ordena con solo el IBAN en el tercero."
+        }
+      ]
+    },
+    {
+      "id": "cartera-mandato-sepa-factura",
+      "titulo": "Facturar con recibo domiciliado",
+      "paraQueSirve": "Sirve para tener un efecto de cobro que lleve la domiciliación. La factura la copia del tercero.",
+      "ruta": [
+        "Finanzas",
+        "Facturación",
+        "Ventas",
+        "Factura de venta"
+      ],
+      "explicacion": [
+        "Crea una factura de venta a CAR{INI} como en «Cobrar efectos sueltos y en remesa». Usa el tipo de efecto RC y el plazo 30 días.",
+        "Al elegir el cliente, el campo «Domiciliación» se rellena solo con el IBAN del tercero.",
+        "Valida y contabiliza. El efecto RC queda en estado PE."
+      ],
+      "campos": [
+        {
+          "campo": "Tipo efecto",
+          "significado": "Medio de pago. Para el recibo, RC.",
+          "ejemplo": "RC"
+        },
+        {
+          "campo": "Plazo pago",
+          "significado": "Días hasta el vencimiento.",
+          "ejemplo": "30 días"
+        },
+        {
+          "campo": "Domiciliación",
+          "significado": "Se rellena sola con el IBAN del tercero.",
+          "ejemplo": "ES9121000418450200051332"
+        },
+        {
+          "campo": "Cuenta",
+          "significado": "Cuenta del cliente.",
+          "ejemplo": "43000.TCAPK en la demo"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre Facturación › Ventas › Factura de venta y pulsa «Nuevo documento»"
+        },
+        {
+          "texto": "Elige FV, empresa 0, proyecto 0, sección 0 y cliente CAR{INI}. Sal con Tab",
+          "detalle": "Comprueba que «Domiciliación» lleva el IBAN. Si sale vacío, vuelve al paso del IBAN."
+        },
+        {
+          "texto": "Guarda, añade la línea con el artículo ASE{INI} y valida y contabiliza",
+          "detalle": "Los pasos de la línea son los de «Cobrar efectos sueltos y en remesa»."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "No repitas el artículo ni el cliente: usa los que ya creaste en Cartera."
+        }
+      ]
+    },
+    {
+      "id": "cartera-mandato-sepa-remesa",
+      "titulo": "Crear la remesa CSDDS y ordenarla",
+      "paraQueSirve": "Sirve para mandar los recibos al banco y cobrarlos. Con el IBAN puesto, la remesa se ordena sin error.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Remesas",
+        "Registro de remesas"
+      ],
+      "explicacion": [
+        "Crea una remesa de clase Cobrar, tipo CSDDS (Cobro débitos directos - domiciliaciones, sin Tesorería) y cuenta BBVA_{INI}. La «Línea financiera» no es obligatoria.",
+        "Agrega el efecto desde la pestaña «Selección de efectos». Solo salen los efectos que llevan domiciliación.",
+        "«Evolucionar estado» la ordena: acción «Remesa cobro débito directo, ordenar (s/Tes)». La remesa pasa a Cerrado y el efecto a OC.",
+        "Una segunda vez, «Remesa, confirmar pago por bancos (s/Tes)» la cobra y genera el asiento."
+      ],
+      "campos": [
+        {
+          "campo": "Tipo remesa",
+          "significado": "CSDDS, cobro por débito directo.",
+          "ejemplo": "CSDDS"
+        },
+        {
+          "campo": "Acción inicial",
+          "significado": "Proponer el efecto.",
+          "ejemplo": "RCSDDP"
+        },
+        {
+          "campo": "Estado de la remesa",
+          "significado": "Abierto, y Cerrado tras ordenar.",
+          "ejemplo": "Cerrado"
+        },
+        {
+          "campo": "Importe banco",
+          "significado": "Importe que va al banco.",
+          "ejemplo": "142,00 en la captura"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre «Registro de remesas» y pulsa «Nuevo»"
+        },
+        {
+          "texto": "Rellena empresa 0, clase Cobrar, cuenta BBVA_{INI} y tipo CSDDS. Guarda"
+        },
+        {
+          "texto": "Abre la remesa. En «Selección de efectos» marca el efecto y pulsa «Agregar efectos»"
+        },
+        {
+          "texto": "Pulsa «Evolucionar estado» y acepta «Remesa cobro débito directo, ordenar (s/Tes)»",
+          "detalle": "La remesa pasa a Cerrado. El efecto, a OC.",
+          "imagen": "cob-sdd-remesa.webp"
+        },
+        {
+          "texto": "Pulsa de nuevo «Evolucionar estado» y acepta «Remesa, confirmar pago por bancos (s/Tes)»",
+          "detalle": "Deja la fecha de contabilización y los importes de intereses y comisiones a 0,00.",
+          "imagen": "cob-sdd-confirmar.webp"
+        },
+        {
+          "texto": "Mira la pestaña «Apuntes»: 57200.00000 al debe y la cuenta del cliente al haber",
+          "detalle": "En la demo el asiento 83 apunta 142,00 a 57200.00000 (debe) y 142,00 a 23000.TCAPK (haber).",
+          "imagen": "cob-sdd-apuntes.webp"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "Sin IBAN en el tercero, al ordenar sale «Requiere la domiciliación bancaria del tercero!»."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Da de alta el IBAN en «Datos bancarios» y vuelve a facturar. La factura lleva la domiciliación."
+        },
+        {
+          "tipo": "nota",
+          "texto": "En la demo la contrapartida de esta remesa es la cuenta 23000, no una 431 de efectos en gestión de cobro. Mira siempre el asiento antes de dar nada por hecho."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Una remesa ya guardada no cambia de tipo."
+        }
+      ]
+    },
+    {
+      "id": "cartera-mandato-sepa-fichero",
+      "titulo": "Generar el fichero SEPA",
+      "paraQueSirve": "Sirve para obtener el XML que se envía al banco. Hace falta que la remesa esté Cerrada.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Soportes electrónicos",
+        "Cobros",
+        "Emisión de adeudos directos SEPA Core y B2B (XML v.02)"
+      ],
+      "explicacion": [
+        "Esta pantalla pide dos datos: la remesa y el tipo de adeudo (CORE o B2B). Solo funciona con remesas Cerradas.",
+        "En la ficha de la remesa, el botón «Soportes electrónicos 2025» lanza el mismo proceso. Se activa cuando la remesa está cerrada.",
+        "«Remesas › Verificar Mandates» es un informe que comprueba los mandatos de una remesa antes de enviarla.",
+        "No se ejecutó en la demo: genera un fichero descargable. Prueba tú el proceso con tu remesa."
+      ],
+      "campos": [
+        {
+          "campo": "Remesa",
+          "significado": "Número de la remesa cerrada.",
+          "ejemplo": "RM026-000008 en la captura"
+        },
+        {
+          "campo": "Adeudos directos",
+          "significado": "Core o B2B. Debe coincidir con el tipo de orden del mandato.",
+          "ejemplo": "CORE"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la ruta Soportes electrónicos › Cobros y mira las dos variables",
+          "detalle": "Remesa es obligatoria y Adeudos directos viene en CORE.",
+          "imagen": "cob-sdd-soporte.webp"
+        },
+        {
+          "texto": "Elige tu remesa cerrada y pulsa «Ejecutar consulta»",
+          "detalle": "Esto no se comprobó en la demo."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "La captura es de solo lectura. El fichero real lo genera la persona responsable de tesorería."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Si el mandato es B2B, elige B2B. Core y B2B van en ficheros distintos."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "¿Qué dos cosas necesita el banco para cargar un recibo domiciliado?",
+      "opciones": [
+        "El IBAN del cliente y su mandato SEPA",
+        "Solo el NIF del cliente",
+        "La factura impresa y el albarán",
+        "El código postal y el IBAN de la empresa"
+      ],
+      "correcta": 0,
+      "explicacion": "El IBAN dice dónde cargar. El mandato es el permiso firmado."
+    },
+    {
+      "pregunta": "¿Qué estado tiene que tener la remesa para generar el fichero SEPA?",
+      "opciones": [
+        "Abierto",
+        "Cerrado",
+        "Anulado",
+        "Cualquiera"
+      ],
+      "correcta": 1,
+      "explicacion": "Al ordenarla pasa a Cerrado y entonces se puede emitir el soporte electrónico."
+    },
+    {
+      "pregunta": "Al ordenar una remesa CSDDS sin IBAN en el tercero, ¿qué pasa?",
+      "opciones": [
+        "Se ordena igualmente",
+        "Sale «Requiere la domiciliación bancaria del tercero!»",
+        "Se cobra por transferencia",
+        "Se borra el efecto"
+      ],
+      "correcta": 1,
+      "explicacion": "El recibo domiciliado se carga en la cuenta del cliente. Sin IBAN no se puede ordenar."
+    },
+    {
+      "pregunta": "¿Qué tipos de orden tiene el mandato?",
+      "opciones": [
+        "Core y B2B",
+        "Solo Core",
+        "Débito y crédito",
+        "Nacional e internacional"
+      ],
+      "correcta": 0,
+      "explicacion": "SEPA Direct Debit Core y SEPA Direct Debit B2B."
+    },
+    {
+      "pregunta": "En el asiento del cobro de la remesa, ¿qué cuenta va al debe?",
+      "opciones": [
+        "23000",
+        "43000",
+        "57200.00000",
+        "431"
+      ],
+      "correcta": 2,
+      "explicacion": "Entra dinero en el banco: 57200.00000 al debe. La del cliente va al haber."
+    }
+  ],
+  "checklist": [
+    "Has dado de alta el IBAN de CAR{INI} en «Datos bancarios» y has validado el tercero.",
+    "Has abierto la pestaña «Mandato» y has visto el formulario completo.",
+    "Sabes que el estado del mandato pasa de Solicitado a Activo.",
+    "Has visto el error del código comercial del acreedor y no has tocado la empresa.",
+    "Has facturado a CAR{INI} con tipo de efecto RC y has visto la domiciliación rellena.",
+    "Has creado una remesa CSDDS con la cuenta BBVA_{INI}.",
+    "Has agregado el efecto y has ordenado la remesa: queda Cerrada.",
+    "Has confirmado el cobro y has leído el asiento: 57200.00000 al debe.",
+    "Has abierto la pantalla de adeudos directos SEPA y conoces sus dos variables.",
+    "Sabes dónde está «Verificar Mandates»."
+  ],
+  "problemas": [
+    {
+      "problema": "«Entidad y cuenta bancaria, ambos nulos o no nulos» al guardar el banco.",
+      "solucion": "Rellena «Banco» además del IBAN."
+    },
+    {
+      "problema": "«El código comercial del acreedor [0] debe tener exactamente 3 caracteres.» al guardar el mandato.",
+      "solucion": "Es un parámetro de la empresa. No lo cambies tú: avisa a quien administre la base."
+    },
+    {
+      "problema": "«Requiere la domiciliación bancaria del tercero!» al ordenar la remesa.",
+      "solucion": "Falta el IBAN en el tercero o la domiciliación en la factura."
+    },
+    {
+      "problema": "Al cambiar la empresa en el mandato se borra el titular.",
+      "solucion": "Rellena primero la empresa y después el titular y la domiciliación."
+    }
+  ],
+  "aprendido": [
+    "Has dado de alta un IBAN y has visto el formulario del mandato SEPA.",
+    "Has cobrado un recibo domiciliado con una remesa CSDDS: propuesta, ordenada y cobrada.",
+    "Has leído el asiento del cobro: 57200.00000 al debe.",
+    "Sabes dónde se genera el fichero SEPA y qué comprueba «Verificar Mandates»."
+  ]
+}

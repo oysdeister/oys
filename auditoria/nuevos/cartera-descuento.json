@@ -1,0 +1,214 @@
+{
+  "id": "cartera-descuento",
+  "numero": 93,
+  "titulo": "Descuento de efectos (concepto)",
+  "objetivo": "Entenderás qué es descontar letras y qué piezas tiene el ERP para hacerlo. Es un bloque de concepto: no se ejecutó en la demo.",
+  "concepto": "Descontar efectos es cobrar por adelantado. En vez de esperar al vencimiento, entregas las letras al banco y este te adelanta el dinero, menos intereses y comisiones. Si el cliente no paga, el banco te lo reclama.\n\nEl ERP lo gestiona con una remesa de tipo Descuento. Tiene tres tipos de remesa «Descuento letras»: LCDTO, LCDTS y LCDTT. La acción LCDCAP propone las letras. La acción RCDLCA, «Remesa cobro descuento letras, ordenar», las ordena y las deja en OC.\n\nEl estado DC, «Doc. descontado», dice que la letra está descontada. La acción CDEB, «Cancelación descuento bancario», cierra el descuento cuando el cliente paga al vencimiento.\n\nImportante: solo se comprobaron los maestros. No se ejecutó ninguna remesa de descuento en la demo.",
+  "duracionMin": 15,
+  "secciones": [
+    {
+      "id": "cartera-descuento-maestros",
+      "titulo": "Localizar los tipos de remesa de descuento",
+      "paraQueSirve": "Sirve para saber qué tipos de remesa existen y reconocerlos en la lista.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Remesas",
+        "Maestros",
+        "Tipos remesas"
+      ],
+      "explicacion": [
+        "Abre la lista. Las remesas de descuento tienen tipo «Descuento» y clase Cobrar.",
+        "Son tres: LCDTO y LCDTS (Descuento letras, s/tesoreria) y LCDTT (Descuento letras, c/tesoreria).",
+        "La acción inicial es RCLDCP en LCDTO y LCDCAP en LCDTS y LCDTT, y el estado final es PR Propuesto."
+      ],
+      "campos": [
+        {
+          "campo": "Código",
+          "significado": "Tipo de remesa.",
+          "ejemplo": "LCDTS"
+        },
+        {
+          "campo": "Tipo remesa",
+          "significado": "D es Descuento. C es Cobro.",
+          "ejemplo": "Descuento"
+        },
+        {
+          "campo": "Acción",
+          "significado": "Primera acción de la remesa.",
+          "ejemplo": "LCDCAP"
+        },
+        {
+          "campo": "Estado final",
+          "significado": "Estado de los efectos al proponerlos.",
+          "ejemplo": "PR Propuesto"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la ruta Remesas › Maestros › Tipos remesas"
+        },
+        {
+          "texto": "Busca LCDTO, LCDTS y LCDTT en la lista"
+        },
+        {
+          "texto": "Mira las columnas «Tipo remesa», «Acción» y «Estado final» de cada una"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "LCDTO y LCDTS comparten descripción en la demo, «Descuento letras (s/tesoreria)». Fíjate en el código, no en el nombre."
+        }
+      ]
+    },
+    {
+      "id": "cartera-descuento-acciones",
+      "titulo": "Reconocer las acciones y el estado del descuento",
+      "paraQueSirve": "Sirve para saber qué hace cada paso del descuento y en qué estado queda la letra.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Maestros",
+        "Acciones",
+        "Relación de acciones"
+      ],
+      "explicacion": [
+        "LCAC, «Letra de cambio, aceptar», deja la letra en AC (aceptada) y tipo LE.",
+        "LCDCAP, «Remesa de descuento letras de cambio, proponer», la pasa a PR.",
+        "RCDLCA, «Remesa cobro descuento letras, ordenar», la pasa a OC y genera asiento.",
+        "CDEB, «Cancelación descuento bancario», cancela el descuento. En la lista no lleva estado final.",
+        "El estado DC, «Doc. descontado», existe en la clase Cobrar."
+      ],
+      "campos": [
+        {
+          "campo": "LCAC",
+          "significado": "Aceptar la letra.",
+          "ejemplo": "AC"
+        },
+        {
+          "campo": "LCDCAP",
+          "significado": "Proponer la remesa de descuento.",
+          "ejemplo": "PR"
+        },
+        {
+          "campo": "RCDLCA",
+          "significado": "Ordenar la remesa de descuento.",
+          "ejemplo": "OC"
+        },
+        {
+          "campo": "CDEB",
+          "significado": "Cancelar el descuento.",
+          "ejemplo": "sin estado final"
+        },
+        {
+          "campo": "DC",
+          "significado": "Documento descontado.",
+          "ejemplo": "Doc. descontado"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre Maestros › Acciones › Relación de acciones"
+        },
+        {
+          "texto": "Localiza LCAC, LCDCAP, RCDLCA y CDEB"
+        },
+        {
+          "texto": "Abre Maestros › Efectos › Estados y localiza DC «Doc. descontado»"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "No se ejecutó ningún descuento en la demo. Los asientos de RCDLCA y CDEB no se han leído, así que este bloque no da cuentas."
+        },
+        {
+          "tipo": "nota",
+          "texto": "Para practicar, hace falta tener letras de cambio aceptadas. Pregunta a quien administre la base si hay un entorno preparado."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "¿Qué es descontar efectos?",
+      "opciones": [
+        "Cobrar por adelantado cediendo las letras al banco",
+        "Pagar una factura antes",
+        "Anular un efecto",
+        "Cambiar el plazo de pago"
+      ],
+      "correcta": 0,
+      "explicacion": "El banco anticipa el dinero, menos intereses y comisiones."
+    },
+    {
+      "pregunta": "¿Qué tipos de remesa de descuento tiene la demo?",
+      "opciones": [
+        "LCDTO, LCDTS y LCDTT",
+        "CSCTS y CSDDS",
+        "PSCTS y PSCTT",
+        "CCHES y CCHET"
+      ],
+      "correcta": 0,
+      "explicacion": "Son los tres «Descuento letras»."
+    },
+    {
+      "pregunta": "¿Qué acción ordena la remesa de descuento?",
+      "opciones": [
+        "RCDLCA",
+        "CDEV",
+        "COBD",
+        "LCAC"
+      ],
+      "correcta": 0,
+      "explicacion": "RCDLCA es «Remesa cobro descuento letras, ordenar»."
+    },
+    {
+      "pregunta": "¿Qué indica el estado DC?",
+      "opciones": [
+        "Documento descontado",
+        "Devuelto",
+        "Dudoso",
+        "Compensado"
+      ],
+      "correcta": 0,
+      "explicacion": "DC es «Doc. descontado»."
+    },
+    {
+      "pregunta": "¿Qué parte de este bloque se comprobó en la demo?",
+      "opciones": [
+        "Los maestros: tipos de remesa, acciones y estados",
+        "Los asientos del descuento",
+        "La remesa completa",
+        "El fichero al banco"
+      ],
+      "correcta": 0,
+      "explicacion": "Solo se leyeron los maestros."
+    }
+  ],
+  "checklist": [
+    "Has abierto «Tipos remesas» y has localizado LCDTO, LCDTS y LCDTT.",
+    "Has leído la acción inicial de cada una.",
+    "Has abierto «Relación de acciones» y has localizado LCDCAP y RCDLCA.",
+    "Has localizado CDEB, «Cancelación descuento bancario».",
+    "Has abierto «Estados» y has localizado DC «Doc. descontado».",
+    "Sabes que descontar es cobrar por adelantado cediendo las letras al banco.",
+    "Sabes que este bloque no ejecuta ninguna remesa."
+  ],
+  "problemas": [
+    {
+      "problema": "No encuentro letras de cambio para practicar.",
+      "solucion": "Hacen falta letras aceptadas. Consulta con quien administre la base: este bloque no las crea."
+    },
+    {
+      "problema": "LCDTO y LCDTS tienen la misma descripción.",
+      "solucion": "Distínguelas por el código."
+    }
+  ],
+  "aprendido": [
+    "Sabes qué es descontar efectos.",
+    "Has localizado los tres tipos de remesa de descuento.",
+    "Conoces las acciones LCDCAP, RCDLCA y CDEB y el estado DC."
+  ]
+}

@@ -1,0 +1,363 @@
+{
+  "id": "contab-saldos-iniciales",
+  "numero": 30,
+  "titulo": "Registrar los saldos iniciales de una empresa",
+  "objetivo": "Tendrás contabilizado el asiento de saldos iniciales de tu empresa S{INI}: 5.000,00 € en el banco y 5.000,00 € de capital.",
+  "concepto": "Una empresa nueva puede arrancar vacía o con saldos. Si ya tenía dinero en el banco o deudas, la contabilidad tiene que empezar reflejándolo. Es como abrir una libreta nueva y apuntar en la primera página lo que ya tenías.\n\nEso se hace con un asiento de saldos iniciales. Es un asiento manual normal, con fecha del primer día del ejercicio. Cada cuenta de balance entra con su saldo: las de activo (banco, clientes) al Debe y las de pasivo y neto (capital, proveedores) al Haber. El asiento cuadra cuando el Debe es igual al Haber.\n\nEjemplo de esta práctica: tu empresa empieza el 01-01-2026 con 5.000,00 € en el banco (57200.00000), aportados por los socios como capital (10000.00000). Debe 57200.00000 5.000,00 / Haber 10000.00000 5.000,00.\n\nNo confundas este asiento con el de apertura. El asiento de apertura lo crea el ERP al cerrar un ejercicio (lo verás en «Cerrar el ejercicio de tu empresa»). El de saldos iniciales lo escribes tú, una sola vez, cuando la empresa arranca con saldos.\n\nEl ejercicio 2026 de la empresa S{INI} ya lo creaste en el módulo de Maestros. Si no lo hiciste, vuelve allí antes de empezar.",
+  "duracionMin": 25,
+  "secciones": [
+    {
+      "id": "contab-saldos-iniciales-cabecera",
+      "titulo": "Crear la cabecera del asiento de saldos iniciales",
+      "paraQueSirve": "Sirve para abrir un asiento provisional en tu empresa con fecha del primer día del ejercicio. Las líneas con los saldos las añades después.",
+      "ruta": [
+        "Finanzas",
+        "Contabilidad General",
+        "Diario contable",
+        "Asientos",
+        "Asientos"
+      ],
+      "explicacion": [
+        "Usa tu empresa S{INI}, no la 0. La 0 es la empresa compartida de la demo y sus saldos no son tuyos.",
+        "La fecha decide el ejercicio y el periodo. Con 01-01-2026 el asiento cae en el ejercicio 2026, periodo 1.",
+        "El número del asiento (el 1 en tu empresa nueva) lo pone el ERP al guardar. El asiento nace «Provisional»."
+      ],
+      "campos": [
+        {
+          "campo": "Empresa *",
+          "significado": "Sociedad donde registras los saldos iniciales.",
+          "ejemplo": "S{INI}"
+        },
+        {
+          "campo": "Diario",
+          "significado": "Libro donde se anota el asiento. Propone DG General. Puedes dejarlo o usar tu diario {INI}.",
+          "ejemplo": "DG"
+        },
+        {
+          "campo": "Fecha *",
+          "significado": "Primer día del ejercicio. De ella salen Ejercicio y Período.",
+          "ejemplo": "01-01-2026"
+        },
+        {
+          "campo": "Ejercicio / Período",
+          "significado": "Se calculan solos a partir de la fecha.",
+          "ejemplo": "2026 / 1"
+        },
+        {
+          "campo": "Notas",
+          "significado": "Texto libre para reconocer el asiento.",
+          "ejemplo": "{INI} Saldos iniciales"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre Finanzas › Contabilidad General › Diario contable › Asientos › Asientos y pulsa «Nuevo».",
+          "pregunta": "Vas a crear el asiento de saldos iniciales desde la lista de asientos. ¿Qué botón pulsas para empezar?",
+          "detalle": "Se abre la ventana «Asientos contables» con los bloques Identificación, Fechas y Referencias."
+        },
+        {
+          "texto": "En Empresa escribe S{INI} y elige tu fila. Deja el Diario en DG.",
+          "detalle": "Al elegir la empresa aparece debajo su nombre, «Empresa prácticas {INI}».",
+          "imagen": "cob-saldos-cabecera.webp"
+        },
+        {
+          "texto": "Borra la fecha de hoy y escribe 01-01-2026.",
+          "pregunta": "Tu empresa empieza el 01-01-2026. ¿Qué campo cambias para que el asiento caiga en el periodo 1?",
+          "detalle": "Escribe solo los números (01012026): el campo pone los guiones. Comprueba que Ejercicio sale 2026 y Período 1.",
+          "imagen": "cob-saldos-cabecera.webp",
+          "hotspot": {
+            "x": 34.1,
+            "y": 32.1,
+            "w": 21.4,
+            "h": 5.1,
+            "etiqueta": "Fecha"
+          }
+        },
+        {
+          "texto": "En Notas escribe «{INI} Saldos iniciales» y pulsa «Guardar».",
+          "detalle": "El asiento aparece en la lista como Provisional, con el número 1 de tu empresa."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "Si la fecha queda en 24-11-2026, el asiento cae en el periodo 11 y no es de saldos iniciales. Revisa que Período diga 1 antes de guardar."
+        },
+        {
+          "tipo": "nota",
+          "texto": "El Justificante se rellena solo (AC). No hace falta que crees un numerador para este ejercicio."
+        }
+      ]
+    },
+    {
+      "id": "contab-saldos-iniciales-lineas",
+      "titulo": "Añadir las líneas: banco al Debe y capital al Haber",
+      "paraQueSirve": "Sirve para anotar cada saldo en su cuenta. Los activos van al Debe y el neto y el pasivo, al Haber.",
+      "ruta": [
+        "Finanzas",
+        "Contabilidad General",
+        "Diario contable",
+        "Asientos",
+        "Asientos"
+      ],
+      "explicacion": [
+        "Las líneas se añaden desde la pestaña «Líneas de apuntes» del asiento guardado.",
+        "Cada línea pide Proyecto (0 General), Cuenta, importe en Debe divisa o Haber divisa y una Descripción. La Sección y el Debe/Haber en euros se rellenan solos.",
+        "Tras la primera línea, el Cuadre sale en rojo con 5.000,00. Es normal: falta la otra mitad del asiento. Cuando el Debe iguala al Haber, el Cuadre vuelve a 0,00."
+      ],
+      "campos": [
+        {
+          "campo": "Proyecto *",
+          "significado": "Proyecto de la línea. Usa 0 (General).",
+          "ejemplo": "0"
+        },
+        {
+          "campo": "Cuenta *",
+          "significado": "Cuenta del plan PGE 2008. Escribe el inicio y elige la fila.",
+          "ejemplo": "57200.00000 Bancos e instituciones de crédito c/c vista, euros"
+        },
+        {
+          "campo": "Debe divisa",
+          "significado": "Importe al Debe, en la moneda del asiento (euros).",
+          "ejemplo": "5.000,00"
+        },
+        {
+          "campo": "Haber divisa",
+          "significado": "Importe al Haber.",
+          "ejemplo": "5.000,00"
+        },
+        {
+          "campo": "Descripción",
+          "significado": "Texto de la línea.",
+          "ejemplo": "Saldo inicial bancos"
+        },
+        {
+          "campo": "Cuenta del capital",
+          "significado": "Segunda línea, al Haber.",
+          "ejemplo": "10000.00000 Capital social"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre tu asiento y entra en la pestaña «Líneas de apuntes».",
+          "pregunta": "El asiento ya está guardado. ¿Qué pestaña abres para añadir los saldos?",
+          "detalle": "Verás los totales a cero y la tabla vacía.",
+          "imagen": "cob-saldos-asiento.webp",
+          "hotspot": {
+            "x": 17.5,
+            "y": 12.2,
+            "w": 15.7,
+            "h": 3.8,
+            "etiqueta": "Líneas de apuntes"
+          }
+        },
+        {
+          "texto": "Pulsa «Nuevo» sobre la tabla. Elige Proyecto 0 y la Cuenta 57200.00000.",
+          "detalle": "Escribe 57200 y elige la fila «Bancos e instituciones de crédito c/c vista, euros».",
+          "imagen": "cob-saldos-linea2.webp",
+          "hotspot": {
+            "x": 11.8,
+            "y": 34.6,
+            "w": 18.4,
+            "h": 4.1,
+            "etiqueta": "Cuenta"
+          }
+        },
+        {
+          "texto": "Escribe 5000 en Debe divisa y la Descripción «Saldo inicial bancos». Pulsa «Guardar».",
+          "detalle": "El campo muestra 5.000,00. El Debe y el Haber en euros se calculan solos.",
+          "imagen": "cob-saldos-linea1-ok.webp",
+          "hotspot": {
+            "x": 88.7,
+            "y": 30.9,
+            "w": 3.0,
+            "h": 2.0,
+            "etiqueta": "Nuevo"
+          }
+        },
+        {
+          "texto": "Pulsa «Nuevo» otra vez. Proyecto 0, Cuenta 10000.00000 (Capital social).",
+          "detalle": "Es la segunda mitad del asiento: de dónde sale el dinero.",
+          "imagen": "cob-saldos-linea2.webp",
+          "hotspot": {
+            "x": 11.8,
+            "y": 34.6,
+            "w": 18.4,
+            "h": 4.1,
+            "etiqueta": "Cuenta"
+          }
+        },
+        {
+          "texto": "Escribe 5000 en Haber divisa, Descripción «Capital inicial» y «Guardar».",
+          "detalle": "El Haber divisa es el campo de la derecha. El de Debe divisa se queda en 0,00 y de solo lectura.",
+          "imagen": "cob-saldos-linea2.webp",
+          "hotspot": {
+            "x": 80.9,
+            "y": 34.6,
+            "w": 16.7,
+            "h": 4.1,
+            "etiqueta": "Haber divisa"
+          }
+        },
+        {
+          "texto": "Comprueba que el Cuadre dice 0,00 y que el Debe y el Haber suman 5.000,00.",
+          "detalle": "Si no cuadra, revisa los importes y pulsa «Recalcular cuadre».",
+          "imagen": "cob-saldos-cuadra.webp"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "Si eliges una cuenta que tiene grupo auxiliar (por ejemplo, la 62999.00000 de Contabilidad básica), la línea no guarda y marca «Auxiliar» como obligatorio."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Elige otra cuenta de balance o rellena el Grupo auxiliar y el Auxiliar. Para los saldos iniciales de esta práctica no hace falta: usa 57200.00000 y 10000.00000."
+        }
+      ]
+    },
+    {
+      "id": "contab-saldos-iniciales-finalizar",
+      "titulo": "Finalizar el asiento y comprobar que está contabilizado",
+      "paraQueSirve": "Sirve para dar los saldos por buenos. Al finalizar, el asiento pasa a Contabilizado y sus importes entran en el mayor y en los saldos.",
+      "ruta": [
+        "Finanzas",
+        "Contabilidad General",
+        "Diario contable",
+        "Asientos",
+        "Asientos"
+      ],
+      "explicacion": [
+        "El botón «Finalizar» solo aparece si el asiento cuadra.",
+        "Al pulsarlo sale el aviso «Éxito». El asiento muestra la banda FINALIZADO y el Estado pasa a Contabilizado.",
+        "Si más adelante necesitas corregir un importe, el botón «Abrir a provisional» devuelve el asiento a borrador."
+      ],
+      "campos": [
+        {
+          "campo": "Estado",
+          "significado": "Provisional mientras lo editas. Contabilizado al finalizar.",
+          "ejemplo": "Contabilizado"
+        },
+        {
+          "campo": "Resumen de apuntes",
+          "significado": "Lista de apuntes con sus totales. Debe y Haber deben coincidir.",
+          "ejemplo": "5.000,00 / 5.000,00"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Con el Cuadre en 0,00, pulsa «Finalizar» en la barra superior.",
+          "pregunta": "El asiento cuadra a 0,00. ¿Qué botón pulsas para contabilizarlo?",
+          "detalle": "Es el botón morado. La captura muestra el asiento ya cuadrado, con el botón a la vista.",
+          "imagen": "cob-saldos-cuadra.webp",
+          "hotspot": {
+            "x": 76.2,
+            "y": 6.2,
+            "w": 4.2,
+            "h": 3.2,
+            "etiqueta": "Finalizar"
+          }
+        },
+        {
+          "texto": "Comprueba el resultado: banda FINALIZADO, Estado Contabilizado y Resumen de apuntes con dos líneas.",
+          "detalle": "Debe 5.000,00 y Haber 5.000,00. En la lista de asientos tu asiento 1 aparece como Contabilizado, periodo 1.",
+          "imagen": "cob-saldos-contabilizado.webp"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "Los saldos iniciales se anotan una sola vez. Si te equivocas, abre el asiento a provisional y corrígelo; no crees otro igual."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "¿A qué lado del asiento va el saldo del banco en unos saldos iniciales?",
+      "opciones": [
+        "Al Haber",
+        "Al Debe",
+        "Da igual",
+        "A ninguno"
+      ],
+      "correcta": 1,
+      "explicacion": "El banco es un activo: sale al Debe. El capital, que es neto, va al Haber."
+    },
+    {
+      "pregunta": "¿Qué fecha pones en el asiento de saldos iniciales de una empresa que empieza en 2026?",
+      "opciones": [
+        "La de hoy",
+        "31-12-2026",
+        "01-01-2026",
+        "Cualquiera"
+      ],
+      "correcta": 2,
+      "explicacion": "Primer día del ejercicio: así cae en el periodo 1."
+    },
+    {
+      "pregunta": "Has guardado una línea con 5.000,00 al Debe y el Cuadre sale en rojo. ¿Qué pasa?",
+      "opciones": [
+        "El ERP falló",
+        "Falta la contrapartida del Haber",
+        "Hay que borrar el asiento",
+        "El asiento ya está contabilizado"
+      ],
+      "correcta": 1,
+      "explicacion": "El asiento aún no cuadra. Al añadir el Haber de 5.000,00 el Cuadre vuelve a 0,00."
+    },
+    {
+      "pregunta": "¿Qué botón contabiliza el asiento?",
+      "opciones": [
+        "Guardar",
+        "Copiar asiento",
+        "Recalcular cuadre",
+        "Finalizar"
+      ],
+      "correcta": 3,
+      "explicacion": "Finalizar contabiliza el asiento: pasa a Contabilizado."
+    },
+    {
+      "pregunta": "¿Quién crea el asiento de apertura de un ejercicio?",
+      "opciones": [
+        "Tú, siempre a mano",
+        "El ERP, al cerrar el ejercicio anterior",
+        "El banco",
+        "Nadie"
+      ],
+      "correcta": 1,
+      "explicacion": "El ERP lo genera con el cierre del ejercicio anterior. El de saldos iniciales sí lo escribes tú."
+    }
+  ],
+  "checklist": [
+    "Has abierto el asiento desde Finanzas › Contabilidad General › Diario contable › Asientos › Asientos.",
+    "El asiento es de la empresa S{INI}, no de la 0.",
+    "La fecha es 01-01-2026, el Ejercicio 2026 y el Período 1.",
+    "Hay una línea de 57200.00000 con 5.000,00 en Debe divisa.",
+    "Hay una línea de 10000.00000 con 5.000,00 en Haber divisa.",
+    "El Cuadre dice 0,00.",
+    "Has pulsado «Finalizar» y ha salido «Éxito».",
+    "El asiento muestra FINALIZADO y Estado Contabilizado.",
+    "En el Resumen de apuntes, Debe y Haber suman 5.000,00."
+  ],
+  "problemas": [
+    {
+      "problema": "El asiento queda en el periodo 11 en vez del 1.",
+      "solucion": "La fecha es la de hoy. Cámbiala a 01-01-2026 antes de guardar la cabecera."
+    },
+    {
+      "problema": "La línea no guarda y marca «Auxiliar» como obligatorio.",
+      "solucion": "La cuenta elegida tiene grupo auxiliar. Usa 57200.00000 y 10000.00000, que no lo tienen."
+    },
+    {
+      "problema": "No aparece el botón «Finalizar».",
+      "solucion": "El asiento no cuadra o ya está finalizado. Mira el Cuadre y el Estado."
+    }
+  ],
+  "aprendido": [
+    "Un asiento de saldos iniciales es un asiento manual con fecha del primer día del ejercicio.",
+    "Activos al Debe; neto y pasivo al Haber.",
+    "El asiento tiene que cuadrar antes de finalizar.",
+    "Finalizar lo deja Contabilizado."
+  ]
+}

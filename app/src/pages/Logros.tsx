@@ -239,8 +239,9 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
       return { color: b.color, icono: 'taller', valor: n / SIMS_INSIGNIA.length, cuenta: `${n} de ${SIMS_INSIGNIA.length} simuladores de la insignia` };
     }
     case 'listo': {
-      const n = MODULOS.filter((m) => bloquesObligatorios(m).length > 0 && bloquesObligatorios(m).every((e) => ejercicioCompletado(p.ejercicios[e.id]))).length;
-      return { color: 'var(--arc-deep)', icono: 'examen', valor: n / Math.max(1, MODULOS.length), cuenta: `${n} de ${MODULOS.length} módulos` };
+      const conBloques = MODULOS.filter((m) => bloquesObligatorios(m).length > 0);
+      const n = conBloques.filter((m) => bloquesObligatorios(m).length > 0 && bloquesObligatorios(m).every((e) => ejercicioCompletado(p.ejercicios[e.id]))).length;
+      return { color: 'var(--arc-deep)', icono: 'examen', valor: n / Math.max(1, conBloques.length), cuenta: `${n} de ${conBloques.length} módulos` };
     }
     default:
       return { color: b.color, icono: 'logros', valor: b.ganada(p) ? 1 : 0, cuenta: '' };

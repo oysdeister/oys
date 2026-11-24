@@ -1,0 +1,288 @@
+{
+  "id": "cartera-cobro-parcial",
+  "numero": 91,
+  "titulo": "Cobrar solo una parte de un efecto",
+  "objetivo": "Cobrarás 100,00 de un efecto de 242,00 y comprobarás que el resto sigue pendiente en un efecto nuevo.",
+  "concepto": "A veces el cliente paga solo una parte. El efecto no se cobra entero: se cobra el importe recibido y el resto queda pendiente.\n\nEn la gestión sobre efectos, la rejilla de selección permite cambiar el «Importe divisa» antes de agregar el efecto. Si escribes menos que el total, el ERP parte el efecto en dos. El primero queda cobrado por lo recibido. El segundo lleva el resto, en estado PE y con un número de orden alto (101).\n\nEl asiento del cobro usa solo el importe cobrado: la cuenta del banco al debe y la cuenta del cliente al haber.",
+  "duracionMin": 25,
+  "secciones": [
+    {
+      "id": "cartera-cobro-parcial-gestion",
+      "titulo": "Crear la gestión de cobro",
+      "paraQueSirve": "Sirve para abrir la gestión que cobrará el efecto. Es la misma gestión COBD del cobro individual.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Gestiones",
+        "Gestiones sobre efectos"
+      ],
+      "explicacion": [
+        "Usa un efecto de cobro en estado PE de CAR{INI}, por ejemplo el de 242,00 de tu factura de venta. Si no tienes ninguno, factura de nuevo como en «Cobrar efectos sueltos y en remesa».",
+        "Abre la ruta y pulsa «Nuevo». Rellena empresa 0, clase Cobrar y acción COBD (Cobro directo). Pon la cuenta financiera BBVA_{INI} y el perceptor CAR{INI}.",
+        "Cambiar la clase borra la acción: elige antes la clase.",
+        "Las capturas son de la base de demo: allí el cliente es «Cliente captura CAPK» (TCAPK) y el banco BBVA_CA. Tú usas CAR{INI} y BBVA_{INI}."
+      ],
+      "campos": [
+        {
+          "campo": "Clase",
+          "significado": "Cobrar.",
+          "ejemplo": "Cobrar"
+        },
+        {
+          "campo": "Acción",
+          "significado": "Cobro directo.",
+          "ejemplo": "COBD"
+        },
+        {
+          "campo": "Cuenta financiera",
+          "significado": "Banco donde entra el dinero.",
+          "ejemplo": "BBVA_{INI}"
+        },
+        {
+          "campo": "Perceptor",
+          "significado": "Cliente que paga.",
+          "ejemplo": "CAR{INI}"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la ruta y pulsa «Nuevo»"
+        },
+        {
+          "texto": "Rellena empresa 0, elige la clase Cobrar y escribe la acción COBD"
+        },
+        {
+          "texto": "Elige la cuenta financiera BBVA_{INI} y el perceptor CAR{INI}. Sal con Tab"
+        },
+        {
+          "texto": "Pulsa «Guardar» y abre la gestión que sale la primera de la lista",
+          "detalle": "Se abre con estado Abierto."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "No cambies los efectos de otros clientes. Marca solo el de CAR{INI}."
+        }
+      ]
+    },
+    {
+      "id": "cartera-cobro-parcial-importe",
+      "titulo": "Cambiar el importe y agregar el efecto",
+      "paraQueSirve": "Sirve para decir cuánto se cobra de verdad. Aquí está el truco del cobro parcial.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Gestiones",
+        "Gestiones sobre efectos"
+      ],
+      "explicacion": [
+        "Baja a «Selección de efectos» y marca solo el efecto de CAR{INI}.",
+        "Pulsa dos veces en su «Importe divisa» y escribe 100. El «Importe local» y el total se ajustan solos.",
+        "«Agregar efectos» lo pasa a «Efectos seleccionados». En la cabecera, «Importe divisa deuda» pasa a 100,00."
+      ],
+      "campos": [
+        {
+          "campo": "Importe divisa",
+          "significado": "Importe que se cobra. Se puede bajar.",
+          "ejemplo": "100,00 en lugar de 242,00"
+        },
+        {
+          "campo": "Importe divisa deuda",
+          "significado": "Total de la gestión.",
+          "ejemplo": "100,00"
+        },
+        {
+          "campo": "Documento",
+          "significado": "Factura del efecto.",
+          "ejemplo": "FVN026-000006 en la captura"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la pestaña «Selección de efectos» y marca la casilla del efecto de CAR{INI}"
+        },
+        {
+          "texto": "Pulsa dos veces en «Importe divisa», escribe 100 y pulsa Intro",
+          "detalle": "El total de abajo cambia a 100,00.",
+          "imagen": "cob-parcial-seleccion.webp",
+          "hotspot": {
+            "x": 43.8,
+            "y": 69.4,
+            "w": 4.0,
+            "h": 3.2,
+            "etiqueta": "Importe divisa"
+          }
+        },
+        {
+          "texto": "Pulsa «Agregar efectos»",
+          "detalle": "Comprueba en «Efectos seleccionados» que el importe es 100,00."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "problema",
+          "texto": "El importe vuelve a 242,00."
+        },
+        {
+          "tipo": "solucion",
+          "texto": "Pulsa Intro después de escribir 100. Si no, la celda no se guarda."
+        },
+        {
+          "tipo": "nota",
+          "texto": "No puedes cobrar más que el importe del efecto."
+        }
+      ]
+    },
+    {
+      "id": "cartera-cobro-parcial-cerrar",
+      "titulo": "Cerrar la gestión y ver el resto",
+      "paraQueSirve": "Sirve para contabilizar el cobro y comprobar que el resto sigue pendiente.",
+      "ruta": [
+        "Finanzas",
+        "Cobros y Pagos",
+        "Gestiones",
+        "Gestiones sobre efectos"
+      ],
+      "explicacion": [
+        "Pulsa «Cerrar» y confirma. La gestión queda Cerrada y con la banda CONTABILIZADO.",
+        "En la cartera de efectos, la factura tiene ahora dos efectos: uno CO de 100,00 y otro PE de 142,00 con orden 101.",
+        "El asiento: desplegable (⌄) del título › «Asientos contables». Tiene dos líneas: 57200.00000 al debe y la cuenta del cliente al haber, ambas de 100,00."
+      ],
+      "campos": [
+        {
+          "campo": "Efecto cobrado",
+          "significado": "Parte cobrada.",
+          "ejemplo": "CO, 100,00, orden 1"
+        },
+        {
+          "campo": "Efecto nuevo",
+          "significado": "Resto pendiente.",
+          "ejemplo": "PE, 142,00, orden 101"
+        },
+        {
+          "campo": "Asiento",
+          "significado": "Cobro de 100,00.",
+          "ejemplo": "CA026-000003 en la demo"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Pulsa «Cerrar» y acepta la confirmación"
+        },
+        {
+          "texto": "Abre el asiento: desplegable (⌄) junto al título › «Asientos contables»",
+          "detalle": "El asiento sale en el diario DG, con 100,00 al debe y 100,00 al haber.",
+          "imagen": "cob-parcial-asiento.webp"
+        },
+        {
+          "texto": "Abre la pestaña «Líneas de apuntes»",
+          "detalle": "Línea 1: 57200.00000 al debe, 100,00. Línea 2: 43000.TCAPK al haber, 100,00. En tu caso, la cuenta del cliente CAR{INI}.",
+          "imagen": "cob-parcial-apuntes.webp"
+        },
+        {
+          "texto": "Abre Finanzas › Cobros y Pagos › Cobros y Pagos y busca tu factura",
+          "detalle": "Verás un efecto CO de 100,00 y otro PE de 142,00 con orden 101.",
+          "imagen": "cob-efectos-estado.webp"
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "El efecto de 142,00 se puede cobrar con otra gestión, o remesar. Es un efecto normal."
+        },
+        {
+          "tipo": "nota",
+          "texto": "En la captura, la cuenta del cliente es 43000.TCAPK porque ese cliente tiene su propia subcuenta."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "Quieres cobrar 100,00 de un efecto de 242,00. ¿Dónde escribes el importe?",
+      "opciones": [
+        "En el campo «Importe divisa» de la selección de efectos",
+        "En el asiento",
+        "En la factura de venta",
+        "En la ficha del tercero"
+      ],
+      "correcta": 0,
+      "explicacion": "La rejilla de selección permite bajar el «Importe divisa» antes de agregar el efecto."
+    },
+    {
+      "pregunta": "Tras el cobro parcial, ¿qué ocurre con los 142,00 restantes?",
+      "opciones": [
+        "Se pierden",
+        "Quedan en un efecto nuevo en estado PE",
+        "Se cobran solos al día siguiente",
+        "Se pasan a impagado"
+      ],
+      "correcta": 1,
+      "explicacion": "El ERP parte el efecto: uno CO por lo cobrado y otro PE con el resto."
+    },
+    {
+      "pregunta": "¿Qué cuenta va al debe en el asiento del cobro?",
+      "opciones": [
+        "43000",
+        "57200.00000",
+        "23000",
+        "70500"
+      ],
+      "correcta": 1,
+      "explicacion": "Entra dinero en el banco."
+    },
+    {
+      "pregunta": "¿Qué acción usas para cobrar un efecto suelto?",
+      "opciones": [
+        "CDEV",
+        "COBD",
+        "LCDCAP",
+        "CPED"
+      ],
+      "correcta": 1,
+      "explicacion": "COBD es «Cobro directo». CDEV es la devolución."
+    },
+    {
+      "pregunta": "¿Qué número de orden lleva el efecto del resto?",
+      "opciones": [
+        "1",
+        "2",
+        "101",
+        "0"
+      ],
+      "correcta": 2,
+      "explicacion": "En la demo, el efecto del resto sale con orden 101."
+    }
+  ],
+  "checklist": [
+    "Tienes un efecto de cobro PE de CAR{INI}.",
+    "Has creado una gestión COBD con la cuenta BBVA_{INI}.",
+    "Has marcado solo el efecto de CAR{INI}.",
+    "Has escrito 100 en «Importe divisa» y has pulsado Intro.",
+    "El «Importe divisa deuda» de la cabecera es 100,00.",
+    "Has cerrado la gestión y ha salido la banda CONTABILIZADO.",
+    "Has abierto el asiento y has visto 57200.00000 al debe por 100,00.",
+    "En la cartera ves un efecto CO de 100,00 y otro PE con el resto.",
+    "Sabes que el efecto nuevo lleva el número de orden 101."
+  ],
+  "problemas": [
+    {
+      "problema": "Al escribir el importe, vuelve al valor anterior.",
+      "solucion": "Pulsa Intro tras escribir. Sin Intro no se guarda."
+    },
+    {
+      "problema": "No aparece el efecto en la selección.",
+      "solucion": "Comprueba que el perceptor es el de la gestión y que el efecto está PE."
+    },
+    {
+      "problema": "Al cambiar la clase se borra la acción.",
+      "solucion": "Elige primero la clase y luego la acción."
+    }
+  ],
+  "aprendido": [
+    "Has cobrado 100,00 de un efecto de 242,00 cambiando el «Importe divisa».",
+    "Has visto que el efecto se parte en uno CO de 100,00 y otro PE con el resto.",
+    "Has leído el asiento: 57200.00000 al debe y la cuenta del cliente al haber."
+  ]
+}

@@ -1,6 +1,5 @@
 import { META, MODULOS } from '../content';
 import { GLOSARIO } from '../content/glosario';
-import { numeroBloque } from './ruta';
 
 /** Tipo de resultado de la búsqueda global (⌘K) */
 export type TipoBusqueda = 'bloque' | 'seccion' | 'problema' | 'glosario';
@@ -10,7 +9,7 @@ export interface Resultado {
   /** ruta a la que lleva (con su query o ancla) */
   to: string;
   titulo: string;
-  /** dónde está: «Compras, bloque 3» o «Glosario» */
+  /** dónde está: «Compras · Pedir y recibir» (módulo y título del bloque) o «Glosario» */
   donde: string;
   /** módulo (para el color) */
   modulo: string;
@@ -28,6 +27,8 @@ interface Entrada {
   modulo: string;
   nTitulo: string;
   nTexto: string;
+  /** definición (solo glosario): el fragmento arranca por su principio */
+  def?: string;
 }
 
 export const TIPOS: Record<TipoBusqueda, string> = {
@@ -53,9 +54,8 @@ function indice(): Entrada[] {
   MODULOS.forEach((m) => {
     const nombre = META[m.id]?.corto ?? m.titulo;
     m.ejercicios.forEach((ej) => {
-      const donde = `${nombre}, bloque ${numeroBloque(m, ej.id)}`;
-      const base = { modulo: m.id, donde };
-      add({ ...base, tipo: 'bloque', to: `/ejercicio/${ej.id}`, titulo: ej.titulo, texto: ej.objetivo ?? '' });
+      const base = { modulo: m.id, donde: `${nombre} · ${ej.titulo}` };
+      add({ modulo: m.id, donde: nombre, tipo: 'bloque', to: `/ejercicio/${ej.id}`, titulo: ej.titulo, texto: ej.objetivo ?? '' });
       for (const s of ej.secciones ?? []) {
         add({ ...base, tipo: 'seccion', to: `/ejercicio/${ej.id}?sec=${encodeURIComponent(s.id)}`, titulo: s.titulo, texto: [s.paraQueSirve, ...(s.explicacion ?? [])].filter(Boolean).join(' ') });
       }
@@ -72,6 +72,7 @@ function indice(): Entrada[] {
       texto: [g.alias.join(' '), g.definicion].filter(Boolean).join(' '),
       donde: 'Glosario',
       modulo: g.modulos[0] ?? '',
+      def: g.definicion,
     });
   }
   INDICE = out;
@@ -139,16 +140,20 @@ export function buscar(consulta: string, max = 30): Resultado[] {
     }
     if (!ok) continue;
     // el título entero igual a lo buscado va primero
-    if (e.nTitulo === palabras.join(' ')) puntos += 20;
+    const lo = palabras.join(' ');
+    if (e.nTitulo === lo) puntos += 40;
+    else if (e.nTitulo.startsWith(lo)) puntos += 10; // «IVA repercutido» antes que «Cuentas de IVA»
     res.push({ tipo: e.tipo, to: e.to, titulo: e.titulo, donde: e.donde, modulo: e.modulo, fragmento: '', puntos });
   }
-  res.sort((a, b) => b.puntos - a.puntos);
+  // a igualdad de puntos, el título más corto (el concepto básico) va primero
+  res.sort((a, b) => b.puntos - a.puntos || a.titulo.length - b.titulo.length);
   const top = res.slice(0, max);
   // el fragmento solo se calcula para los que se enseñan
   const porClave = new Map(indice().map((e) => [e.to + e.titulo, e]));
   for (const r of top) {
     const e = porClave.get(r.to + r.titulo);
-    if (e) r.fragmento = fragmento(e.texto, e.nTexto, palabras);
+    if (!e) continue;
+    r.fragmento = e.def ? recorte(e.def, 0, 120) : fragmento(e.texto, e.nTexto, palabras);
   }
   return top;
 }

@@ -5,7 +5,7 @@
  */
 import type { Ejercicio, Modulo } from '../types';
 import { MODULOS } from '../content';
-import { ETAPAS } from '../content/etapas';
+import { ETAPAS, type Fase } from '../content/etapas';
 import { APROBADO, ejercicioCompletado, type EstadoEjercicio, type Progreso } from './progress';
 import { PRACTICAS_POR_EJERCICIO } from '../erp/practicas';
 
@@ -43,6 +43,11 @@ export interface Etapa {
   que: string;
   bloques: Ejercicio[];
   opcional?: boolean;
+  /** «Configurar» u «Operar»; sin fase, el módulo no se divide (Fundamentos) */
+  fase?: Fase;
+  /** Etapa sin bloques: qué reutilizas ya configurado, y el módulo donde lo preparaste */
+  nota?: string;
+  enlace?: string;
 }
 
 /** Etapas del módulo con sus bloques en orden. Sin definición: una sola etapa con todos. */
@@ -55,6 +60,9 @@ export function etapasDe(m: Modulo): Etapa[] {
     titulo: d.titulo,
     que: d.que,
     opcional: d.opcional,
+    fase: d.fase,
+    nota: d.nota,
+    enlace: d.enlace,
     bloques: d.bloques.map((id) => porId.get(id)).filter((e): e is Ejercicio => {
       if (!e) return false;
       usados.add(e.id);
@@ -64,7 +72,8 @@ export function etapasDe(m: Modulo): Etapa[] {
   // Lo que no esté en ninguna etapa no se pierde: va al final
   const resto = m.ejercicios.filter((e) => !usados.has(e.id));
   if (resto.length) etapas.push({ titulo: 'Más bloques', que: '', bloques: resto });
-  return etapas.filter((e) => e.bloques.length);
+  // Una etapa sin bloques solo se muestra si trae una nota (qué reutilizas de otro módulo)
+  return etapas.filter((e) => e.bloques.length || e.nota);
 }
 
 /** Bloques del módulo en el orden del recorrido */
@@ -155,4 +164,93 @@ export function pasoQueToca(p: Progreso, ej: Ejercicio, notasErp: Record<string,
   const lista = pasosDe(ej);
   if (!h.concepto) return 'concepto';
   return (lista.find((x) => x.id !== 'concepto' && !pasoOpcional(x.id) && !h[x.id])?.id ?? lista[lista.length - 1].id) as PasoId;
+}
+
+/* ---------- Fases del módulo: Configurar / Operar / Para saber más ---------- */
+export type FaseId = Fase | 'saber';
+
+/** Cómo se presenta cada fase (selector de la página de módulo y menú lateral) */
+export const FASE_UI: Record<FaseId, { titulo: string; corto: string; icono: string }> = {
+  configurar: { titulo: 'Configurar', corto: 'Dejas el ERP preparado: maestros, códigos y parámetros.', icono: 'engranaje' },
+  operar: { titulo: 'Operar', corto: 'Trabajas el día a día: documentos, asientos, cobros y pagos.', icono: 'rayo' },
+  saber: { titulo: 'Para saber más', corto: 'Ampliación opcional: no bloquea el avance.', icono: 'libro' },
+};
+
+export interface GrupoFase {
+  id: FaseId;
+  etapas: Etapa[];
+  /** Bloques de la fase (sin las etapas que solo traen una nota) */
+  bloques: Ejercicio[];
+}
+
+/**
+ * Las etapas del módulo agrupadas por fase, en el orden Configurar, Operar, Para saber más.
+ * Las ampliaciones (opcional) van a «Para saber más»; lo que no tiene fase se suma a la última fase obligatoria.
+ */
+export function fasesDe(m: Modulo): GrupoFase[] {
+  const mapa: Record<FaseId, Etapa[]> = { configurar: [], operar: [], saber: [] };
+  let ultima: Fase = 'operar';
+  for (const e of etapasDe(m)) {
+    if (e.opcional) mapa.saber.push(e);
+    else {
+      if (e.fase) ultima = e.fase;
+      mapa[e.fase ?? ultima].push(e);
+    }
+  }
+  return (['configurar', 'operar', 'saber'] as FaseId[])
+    .filter((id) => mapa[id].length > 0)
+    .map((id) => ({ id, etapas: mapa[id], bloques: mapa[id].flatMap((e) => e.bloques) }));
+}
+
+/** ¿El módulo tiene las dos fases (Configurar y Operar)? Solo entonces hay selector de fases */
+export function conSelectorDeFases(grupos: GrupoFase[]) {
+  return grupos.some((g) => g.id === 'configurar' && g.bloques.length + g.etapas.length > 0) && grupos.some((g) => g.id === 'operar');
+}
+
+export function esFaseId(x: unknown): x is FaseId {
+  return x === 'configurar' || x === 'operar' || x === 'saber';
+}
+
+/** Fase a la que pertenece un bloque */
+export function faseDeBloque(m: Modulo, id: string): FaseId | undefined {
+  return fasesDe(m).find((g) => g.bloques.some((b) => b.id === id))?.id;
+}
+
+const CLAVE_FASE = 'oys-fase:';
+export function faseGuardada(moduloId: string): FaseId | undefined {
+  try {
+    const v = localStorage.getItem(CLAVE_FASE + moduloId);
+    return esFaseId(v) ? v : undefined;
+  } catch {
+    return undefined;
+  }
+}
+export function guardarFase(moduloId: string, fase: FaseId) {
+  try {
+    localStorage.setItem(CLAVE_FASE + moduloId, fase);
+  } catch {
+    /* sin almacenamiento */
+  }
+}
+
+/**
+ * Fase que se abre al entrar al módulo: la del siguiente bloque pendiente si ya has empezado;
+ * si no has empezado o está todo hecho, Configurar.
+ */
+export function faseQueToca(p: Progreso, m: Modulo, grupos: GrupoFase[]): FaseId {
+  const obligatorios = bloquesObligatorios(m);
+  const empezadoAlgo = obligatorios.some((e) => p.ejercicios[e.id]);
+  const toca = bloqueQueToca(p, m);
+  if (!empezadoAlgo || !toca) return 'configurar';
+  const f = grupos.find((g) => g.bloques.some((b) => b.id === toca.id))?.id;
+  return f ?? 'configurar';
+}
+
+/** Fase activa de un módulo: la de la URL, si no la recordada, si no la que toca */
+export function faseActiva(p: Progreso, m: Modulo, grupos: GrupoFase[], url: string | null): FaseId {
+  const hay = (f: unknown): f is FaseId => esFaseId(f) && grupos.some((g) => g.id === f);
+  if (hay(url)) return url;
+  const g = faseGuardada(m.id);
+  if (hay(g)) return g;
+  return faseQueToca(p, m, grupos);
 }

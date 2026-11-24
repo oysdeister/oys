@@ -1,18 +1,18 @@
-import type { Ejercicio, Modulo } from '../types';
+import type { Ejercicio, Modulo, Seccion } from '../types';
 
 // Cada manual convertido vive en src/content/<slug>.json (mismo esquema, ver types.ts)
 const ficheros = import.meta.glob<{ default: Modulo }>('./*.json', { eager: true });
 
 /**
- * Orden pedagógico para un junior: primero los datos maestros; luego el circuito comercial (compras → ventas);
- * después la contabilidad general (con la parametrización y los asientos manuales dentro); la cartera y
- * el banco (cartera, cobros y pagos → tesorería) y, al final, impuestos y activos fijos.
+ * Orden pedagógico para un junior (cada módulo con dos fases, «Configurar» y «Operar», ver etapas.ts):
+ * 0 Fundamentos; 1 Datos maestros (la empresa); 2 Contabilidad básica; 3 Compras; 4 Ventas; 5 Cartera;
+ * 6 Tesorería; 7 Impuestos; 8 Activos fijos y 9 Contabilidad avanzada y cierre.
  * Los ids icon-* son internos (vienen de la documentación oficial de Finanzas): el alumno nunca los ve.
  */
-export const ORDEN = ['maestros', 'compras', 'ventas', 'icon-contabilidad', 'carteras', 'tesoreria', 'icon-impuestos', 'icon-activos'] as const;
+export const ORDEN = ['fundamentos', 'maestros', 'icon-contabilidad', 'compras', 'ventas', 'carteras', 'tesoreria', 'icon-impuestos', 'icon-activos', 'contabilidad-avanzada'] as const;
 
 /** Módulos de finanzas (documentación oficial de Finanzas) */
-export const esFinanzas = (id: string) => id.startsWith('icon-');
+export const esFinanzas = (id: string) => id.startsWith('icon-') || id === 'contabilidad-avanzada';
 
 export const MODULOS: Modulo[] = ORDEN.map((id) => ficheros[`./${id}.json`]?.default).filter(Boolean) as Modulo[];
 
@@ -48,19 +48,53 @@ export function todosEjercicios() {
   return MODULOS.flatMap((m) => m.ejercicios.map((e) => ({ modulo: m, ejercicio: e })));
 }
 
-/** Ruta pública de una captura: public/img/<slug>/<fichero> */
+/**
+ * Bloques que se movieron de módulo: sus capturas siguen en public/img/<módulo de origen>/.
+ * (Los ids de bloque no cambian; solo cambia en qué módulo se muestran.)
+ */
+const CARPETA_ORIGEN: Record<string, string> = {
+  'maestros-v-1': 'maestros', 'maestros-v-2': 'maestros', 'maestros-1': 'maestros', 'maestros-2': 'maestros', 'maestros-3': 'maestros',
+  'icon-contabilidad-2': 'icon-contabilidad', 'icon-contabilidad-3': 'icon-contabilidad', 'contab-cierre-practica': 'icon-contabilidad',
+};
+let carpetaPorFichero: Map<string, string[]> | null = null;
+function carpetas() {
+  if (carpetaPorFichero) return carpetaPorFichero;
+  const mapa = new Map<string, string[]>();
+  const anota = (fichero: unknown, dir: string) => {
+    if (typeof fichero !== 'string') return;
+    const l = mapa.get(fichero) ?? [];
+    if (!l.includes(dir)) l.push(dir);
+    mapa.set(fichero, l);
+  };
+  const secciones = (ss: Seccion[], dir: string) => {
+    for (const s of ss) for (const p of s.pasos) anota(p.imagen, dir);
+  };
+  for (const m of MODULOS) {
+    secciones(m.navegacion ?? [], m.id);
+    for (const e of m.ejercicios) secciones(e.secciones, CARPETA_ORIGEN[e.id] ?? m.id);
+  }
+  carpetaPorFichero = mapa;
+  return mapa;
+}
+
+/** Ruta pública de una captura: public/img/<slug>/<fichero> (para un bloque movido, la carpeta de su módulo de origen) */
 export function imgSrc(modulo: string, fichero: string) {
-  return `${import.meta.env.BASE_URL}img/${idModulo(modulo)}/${fichero}`;
+  const real = idModulo(modulo);
+  const dirs = carpetas().get(fichero);
+  const dir = dirs && !dirs.includes(real) ? dirs[0] : real;
+  return `${import.meta.env.BASE_URL}img/${dir}/${fichero}`;
 }
 
 /** Metadatos visuales por módulo; «corto» es el nombre que ve el alumno en menú, ruta y planetas */
 export const META: Record<string, { color: string; icono: string; corto: string }> = {
+  fundamentos: { color: '#6c8fd6', icono: 'cerebro', corto: 'Fundamentos' },
   maestros: { color: '#4fbfa5', icono: 'maestros', corto: 'Datos maestros' },
   compras: { color: '#f2a93b', icono: 'compras', corto: 'Compras' },
   ventas: { color: '#e0708a', icono: 'ventas', corto: 'Ventas' },
   carteras: { color: '#3fa7c9', icono: 'cartera', corto: 'Cartera, cobros y pagos' },
   tesoreria: { color: '#8bc34a', icono: 'banco', corto: 'Tesorería y bancos' },
-  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad general' },
+  'icon-contabilidad': { color: '#5b6fd8', icono: 'libro', corto: 'Contabilidad básica' },
   'icon-impuestos': { color: '#d9824b', icono: 'impuestos', corto: 'Impuestos' },
   'icon-activos': { color: '#b06fc4', icono: 'activos', corto: 'Activos fijos' },
+  'contabilidad-avanzada': { color: '#7a5bd8', icono: 'balanza', corto: 'Contabilidad avanzada y cierre' },
 };

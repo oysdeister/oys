@@ -26,27 +26,24 @@ export interface FichaModulo {
 
 export const FICHAS: Record<string, FichaModulo> = {
   maestros: {
-    frase: 'Las fichas que usan todos los documentos: empresa, cuentas, terceros y artículos. Si un maestro está mal, el error se arrastra a cada pedido, factura y asiento.',
-    recorrido: 'De la empresa al stock',
+    frase: 'La empresa: la ficha que usan todos los documentos. Si está mal, el error se arrastra a cada pedido, factura y asiento. Lees una y creas la tuya.',
+    recorrido: 'De la ficha de empresa a tu empresa',
     aprendes: [
-      'Leer y crear una empresa, y entender su plan contable y sus cuentas.',
-      'Dar de alta un tercero con su cuenta contable y su forma de cobro.',
-      'Preparar un artículo y un almacén, y comprobar una entrada de stock.',
+      'Leer la ficha de una empresa: su tercero, su plan contable y su moneda.',
+      'Crear una empresa nueva con su ejercicio contable y su banco.',
+      'Saber qué empresa de práctica usarás en el resto del curso.',
     ],
     circuito: [
       { t: 'Empresa', d: 'Quién factura. Lleva su plan contable, su moneda y su ejercicio.', ej: 'Empresa S{INI} · ejercicio 2026' },
-      { t: 'Plan y cuentas', d: 'Las cuentas donde el ERP apunta cada importe. El mnemotécnico es un alias que el ERP convierte en la cuenta real.', ej: '43000 Clientes · 57200 Bancos' },
-      { t: 'Tercero', d: 'Una sola ficha para clientes y proveedores. Su relación contable dice a qué cuenta va.', ej: 'Cliente C{INI} · relación CLI' },
-      { t: 'Forma de cobro', d: 'Tipo de efecto y plazo de pago, asignados al tercero.', ej: 'Efecto R{INI} + plazo P{INI} (30/60 días)' },
-      { t: 'Artículo y almacén', d: 'Qué compras o vendes, quién te lo suministra y dónde se guarda.', ej: 'ROD{INI} · almacén ALM{INI}' },
-      { t: 'Stock', d: 'Una entrada de mercancía y su comprobación en el stock y el kardex.', ej: '10 unidades en ALM{INI}' },
+      { t: 'Ejercicio y periodos', d: 'El año contable de la empresa, partido en doce periodos.', ej: 'Ejercicio 2026' },
+      { t: 'Banco', d: 'La cuenta bancaria propia, con su cuenta contable 57200.', ej: 'CAIXA{INI}' },
     ],
   },
   compras: {
     frase: 'Das de alta un proveedor con su tarifa, preparas los tipos de documento y llevas una compra desde la oferta hasta el asiento.',
     recorrido: 'De la oferta al asiento',
     aprendes: [
-      'Dar de alta un proveedor completo: tercero, relación contable, condiciones y tarifa.',
+      'Dar de alta los datos básicos de gestión (artículo, almacén) y un proveedor completo: tercero, relación contable, condiciones y tarifa.',
       'Preparar la numeración y las tipologías y recorrer oferta, pedido, albarán y factura.',
       'Conformar la factura con el albarán, contabilizarla y resolver los errores típicos.',
     ],
@@ -60,8 +57,8 @@ export const FICHAS: Record<string, FichaModulo> = {
     ],
   },
   ventas: {
-    frase: 'Montas los documentos de venta y llevas una venta de la oferta al cobro pendiente en cartera.',
-    recorrido: 'De la oferta al vencimiento',
+    frase: 'Montas los documentos de venta y llevas una venta del albarán a la factura y, en el circuito completo, de la oferta a la factura; el vencimiento queda en cartera.',
+    recorrido: 'Del albarán y la oferta a la factura',
     aprendes: [
       'Crear las tipologías que deciden cómo se comporta cada documento.',
       'Dar de alta un cliente y recorrer oferta, pedido, albarán y factura.',
@@ -111,21 +108,52 @@ export const FICHAS: Record<string, FichaModulo> = {
     ],
   },
   'icon-contabilidad': {
-    frase: 'Montas la contabilidad de la empresa y la usas: plan de cuentas y analítica, asientos manuales, los asientos de las facturas y el cierre del año.',
-    recorrido: 'Del plan de cuentas al cierre del año',
+    frase: 'Dejas lista la contabilidad (tu cuenta y tu diario) y trabajas con ella: asientos manuales, los asientos de las facturas y sus consultas.',
+    recorrido: 'De la cuenta y el diario al asiento',
     aprendes: [
-      'Dar de alta una cuenta, un grupo auxiliar y la analítica (proyecto y sección).',
+      'Configurar lo imprescindible: dar de alta y retocar una cuenta, y crear tu diario.',
       'Escribir un asiento manual, comprobar que cuadra, contabilizarlo y consultarlo en el mayor y los saldos.',
-      'Contabilizar y corregir facturas, y localizar el cierre, la apertura y los balances.',
+      'Contabilizar y corregir facturas. Como ampliación: auxiliares, analítica y la parametrización completa.',
     ],
     circuito: [
+      { t: 'Plan de cuentas', d: 'Consulta del plan y alta de una cuenta de gastos del grupo 6.', ej: '62999.00000 «Gastos varios {INI}»' },
       { t: 'Diario y periodos', d: 'Dónde y en qué mes cae cada asiento. El año se parte en doce periodos.', ej: 'Ejercicio 2026 · periodos 1 a 12' },
-      { t: 'Plan de cuentas', d: 'Alta de una cuenta de gastos del grupo 6.', ej: '62999.00000 «Gastos varios {INI}»' },
-      { t: 'Auxiliares y analítica', d: 'Más detalle dentro de la cuenta (por empleado) y a qué parte del negocio va cada gasto.', ej: '{INI}EMP · proyecto DIV{INI}' },
       { t: 'Asiento manual', d: 'Cabecera y líneas; Debe = Haber y «Finalizar» lo contabiliza.', ej: 'Cuadre 0,00 · Contabilizado' },
       { t: 'Consultas', d: 'Lo compruebas en el mayor de cuentas y en los saldos.', ej: '«Mayor de cuentas» y «Saldos cuentas»' },
       { t: 'Facturas', d: 'Al contabilizar una factura nacen su asiento, sus vencimientos y su registro fiscal.', ej: 'Asiento + efectos + IVA' },
-      { t: 'Cierre y balances', d: 'Al acabar el año se cierran las cuentas, se abren en el siguiente y salen los balances.', ej: 'Cierre · apertura · balance' },
+      { t: 'Auxiliares y analítica (ampliación)', d: 'Más detalle dentro de la cuenta (por empleado) y a qué parte del negocio va cada gasto.', ej: '{INI}EMP · proyecto DIV{INI}' },
+    ],
+  },
+  'contabilidad-avanzada': {
+    frase: 'Cierras el ejercicio, abres el siguiente y consultas balances, cuentas anuales y consolidación.',
+    recorrido: 'Del cierre del año a las cuentas anuales',
+    aprendes: [
+      'Saber qué procesos cierran y abren el ejercicio, y en qué orden van.',
+      'Ver la contabilidad a una fecha pasada.',
+      'Localizar los balances, las cuentas anuales, las consultas Excel y la consolidación.',
+    ],
+    circuito: [
+      { t: 'Cierre', d: 'Se cierran las cuentas del ejercicio.', ej: 'Cierre del ejercicio' },
+      { t: 'Apertura', d: 'Se abren las cuentas en el ejercicio siguiente.', ej: 'Apertura' },
+      { t: 'Balances', d: 'Sumas y saldos, balance de situación y cuenta de resultados.', ej: 'Balance · cuentas anuales' },
+      { t: 'Consolidación', d: 'Se juntan las cuentas de varias empresas del grupo.', ej: 'Consolidación' },
+    ],
+  },
+  fundamentos: {
+    frase: 'Los conceptos que usarás en todo el curso, antes de abrir el ERP: debe y haber, asiento, IVA, efecto y contabilizar.',
+    recorrido: 'De qué es un ERP a contabilizar',
+    aprendes: [
+      'Entender qué es un ERP y cómo está organizado este curso.',
+      'Distinguir debe y haber, asiento y apunte.',
+      'Saber qué son el IVA, un efecto y contabilizar.',
+    ],
+    circuito: [
+      { t: 'ERP', d: 'El programa donde se guardan los datos de la empresa y se trabaja con ellos.', ej: 'Deister Axional VNext' },
+      { t: 'Debe y haber', d: 'Cada importe se anota en dos cuentas a la vez.', ej: '100 al Debe · 100 al Haber' },
+      { t: 'Asiento y apunte', d: 'El asiento es la operación completa; cada línea es un apunte.', ej: '1 asiento · 2 apuntes' },
+      { t: 'IVA', d: 'El impuesto que se suma a cada compra y venta.', ej: '21 %' },
+      { t: 'Efecto', d: 'Un cobro o un pago pendiente con su fecha.', ej: 'Vence a 30 días' },
+      { t: 'Contabilizar', d: 'Pasar un documento a asientos definitivos.', ej: 'Provisional → Contabilizado' },
     ],
   },
   'icon-impuestos': {

@@ -124,8 +124,9 @@ const PATRON: RegExp | null = (() => {
     .sort((a, b) => b.length - a.length)
     .map(patronDe);
   if (!formas.length) return null;
+  // «base de datos» no es «Base imponible»: la forma «base» no se marca delante de «de datos» ni «de pruebas»
   // Sin lookbehind (Safari < 16.4): el carácter previo va en el grupo 1 y el término en el 2
-  return new RegExp(`(^|[^\\p{L}\\p{N}])(${formas.join('|')})(?![\\p{L}\\p{N}])`, 'giu');
+  return new RegExp(`(^|[^\\p{L}\\p{N}])(${formas.join('|')})(?![\\p{L}\\p{N}])(?!\\s+de\\s+(?:datos|pruebas))`, 'giu');
 })();
 
 /** Busca el término al que corresponde un trozo de texto encontrado por el patrón (quita plurales) */

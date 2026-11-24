@@ -51,9 +51,6 @@ function juntar(...mapas: Record<string, MomentoVideo[]>[]) {
   return r;
 }
 
-// El vídeo de la tabla va primero: es la tarjeta «Mira primero el vídeo» de la sección que explica esa tabla
-const SECCION_BRUTA = juntar(MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
-
 /**
  * Tramos que no se enseñan en una sección porque ya los enseña la del módulo «dueño» del concepto
  * (auditoría H30). Formato: «serie|capítulo|t» (serie vacía = compras). El tramo sigue en los ficheros de origen.
@@ -67,7 +64,16 @@ const QUITAR_POR_DUPLICADO: Record<string, string[]> = {
   'asientos-2-lineas': ['compras|8|4128'],
   'maestros-1-plazos': ['compras|2|623'],
   'maestros-1-cuentas-perfil': ['compras|8|4007'],
+  // Auditoría H32: «Contabilizar la factura» se grabó en otra base (fin-icon1, factura ML0260020); el capítulo 8 de Compras lo enseña en TUTORIAL
+  'icon-contabilidad-v-1-contabilizar': ['fin-icon1|1|44'],
 };
+
+/** Tramos de Compras que sustituyen a uno grabado en otra base (H32): se añaden a la sección y al bloque */
+const CONTABILIZAR_COMPRAS: MomentoVideo = { capitulo: 8, t: 4076, tCap: 275, fin: 327, titulo: 'Contabilizar la factura (con los datos de la demo)' };
+const ANADIR_SECCION: Record<string, MomentoVideo[]> = { 'icon-contabilidad-v-1-contabilizar': [CONTABILIZAR_COMPRAS] };
+
+// El vídeo de la tabla va primero: es la tarjeta «Mira primero el vídeo» de la sección que explica esa tabla
+const SECCION_BRUTA = juntar(MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, ANADIR_SECCION, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
 
 const claveTramo = (m: MomentoVideo) => `${m.serie ?? 'compras'}|${m.capitulo}|${m.t}`;
 
@@ -92,6 +98,11 @@ function ordenar(id: string, lista: MomentoVideo[]): MomentoVideo[] {
 
 const SECCION: Record<string, MomentoVideo[]> = Object.fromEntries(Object.entries(SECCION_BRUTA).map(([id, l]) => [id, ordenar(id, l)]));
 const EJERCICIO = juntar(MOM_EJ_COMPRAS, MOMENTOS_EJERCICIO_TUT_FIN, MOMENTOS_EJERCICIO_TESORERIA, MOMENTOS_EJERCICIO_FIN);
+// H32: en el bloque, el tramo de «Contabilizar la factura» de otra base pasa a ser el del capítulo 8 de Compras
+EJERCICIO['icon-contabilidad-v-1'] = [
+  ...(EJERCICIO['icon-contabilidad-v-1'] ?? []).filter((m) => claveTramo(m) !== 'fin-icon1|1|44'),
+  CONTABILIZAR_COMPRAS,
+];
 
 export function momentosDeSeccion(id: string): MomentoVideo[] {
   return SECCION[id] ?? [];
