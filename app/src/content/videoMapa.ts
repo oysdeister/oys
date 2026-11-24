@@ -911,50 +911,6 @@ export const MOMENTOS_SECCION: Record<string, MomentoVideo[]> = {
       "titulo": "El tipo de albarán"
     }
   ],
-  "maestros-moverte-axional": [
-    {
-      "capitulo": 1,
-      "t": 0,
-      "tCap": 0,
-      "titulo": "Presentación",
-      "fin": 28
-    },
-    {
-      "capitulo": 1,
-      "t": 28,
-      "tCap": 28,
-      "titulo": "Qué es un ERP",
-      "fin": 54
-    },
-    {
-      "capitulo": 1,
-      "t": 167,
-      "tCap": 167,
-      "titulo": "La barra superior",
-      "fin": 201
-    },
-    {
-      "capitulo": 1,
-      "t": 201,
-      "tCap": 201,
-      "titulo": "El buscador",
-      "fin": 232
-    },
-    {
-      "capitulo": 1,
-      "t": 232,
-      "tCap": 232,
-      "titulo": "El menú lateral",
-      "fin": 254
-    },
-    {
-      "capitulo": 1,
-      "t": 336,
-      "tCap": 336,
-      "titulo": "Dentro de un bloque",
-      "fin": 376
-    }
-  ],
   "maestros-1-terceros": [
     {
       "capitulo": 2,

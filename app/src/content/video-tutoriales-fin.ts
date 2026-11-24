@@ -20,6 +20,34 @@ const clip = (f: string) => `${RELEASE}/${f}.mp4`;
 
 export const SERIES_TUT_FIN: SerieTutorialFin[] = [
   {
+    id: 'tut-intro',
+    titulo: 'Introducción a Deister Axional VNext',
+    corto: 'Vídeo de introducción',
+    intro: 'Qué es un ERP y cómo moverte por él: la pantalla de inicio, el buscador, el menú lateral y qué es un maestro.',
+    modulos: ['maestros'],
+    capitulos: [
+      {
+        n: 1,
+        titulo: 'Qué es un ERP y cómo moverte por él',
+        inicio: 0,
+        duracion: 148,
+        // Servido por GitHub Pages desde app/public/video/intro/
+        url: `${import.meta.env.BASE_URL}video/intro/intro.mp4`,
+        poster: 'video/intro/intro.jpg',
+        escenas: [
+          { t: 0, titulo: 'Presentación' },
+          { t: 15, titulo: 'Qué es un ERP' },
+          { t: 30, titulo: 'La pantalla de inicio' },
+          { t: 55, titulo: 'El buscador' },
+          { t: 90, titulo: 'El menú lateral' },
+          { t: 105, titulo: 'Qué es un maestro' },
+          { t: 120, titulo: 'Un consejo antes de empezar' },
+          { t: 135, titulo: 'Qué has aprendido' },
+        ],
+      },
+    ],
+  },
+  {
     id: 'tut-contabilidad',
     titulo: 'Tutorial: Contabilidad general',
     corto: 'Tutorial de contabilidad',
@@ -145,6 +173,7 @@ export const MOMENTOS_EJERCICIO_TUT_FIN: Record<string, MomentoVideo[]> = {
 
 /** Tablas que ya explica el tutorial (diarios, ejercicios y periodos): su tarjeta «Mira primero el vídeo» */
 export const MOMENTOS_SECCION_TUT_FIN: Record<string, MomentoVideo[]> = {
+  'maestros-moverte-axional': [{ serie: 'tut-intro', capitulo: 1, t: 0, tCap: 0, titulo: 'Introducción: qué es un ERP y cómo moverte por él' }],
   'asientos-1-diario': [m('tut-contabilidad', 3, 26, 'Vídeo: la tabla de diarios')],
   'icon-contabilidad-1-diario': [m('tut-contabilidad', 3, 26, 'Vídeo: la tabla de diarios')],
   'icon-contabilidad-1-configuracion': [m('tut-contabilidad', 3, 46, 'Vídeo: ejercicios y periodos')],
