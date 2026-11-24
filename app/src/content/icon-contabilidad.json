@@ -8670,68 +8670,15 @@
   {
    "id": "contab-plantilla-alta",
    "numero": 17,
-   "titulo": "Plantillas de contabilización y tipo de asiento: dónde se configuran",
-   "objetivo": "Sabrás dónde están las plantillas de contabilización en el ERP y qué es lo que hay que configurar para que un documento genere su asiento.",
-   "concepto": "Cuando contabilizas una factura, el ERP crea solo el asiento. Lo hace con una plantilla de contabilización: una receta que dice qué cuentas, qué importes y qué impuestos genera cada documento.\n\nLa plantilla se asocia a la tipología del documento. Sin plantilla, el documento no se puede contabilizar. Por eso al crear una tipología de factura hay que decir qué plantilla usa.\n\nEn Axional hay dos sistemas. El sistema Excel usa libros XLS como modelos. El sistema clásico usa un repositorio de integración con sus propias plantillas y mensajes de contabilización.\n\nEn este bloque no creas una plantilla desde cero: en la demo es un trabajo de implantación, no de usuario final. Aprendes a localizarlas y a saber qué hoja se usa para cada destino.\n\nAviso: en esta versión de la plataforma el alta de plantillas y de tipos de asiento no se ha comprobado paso a paso en la demo.",
+   "titulo": "Tipo de asiento y plantillas de contabilización: dónde se configuran",
+   "objetivo": "Sabrás qué configura el ERP para que una factura genere sola su asiento: el tipo de asiento de la tipología, sus líneas y su diario, y dónde están las plantillas de contabilización.",
+   "concepto": "Cuando contabilizas una factura de compra, el ERP crea solo el asiento. Para saber qué cuentas e importes usar sigue una receta: el **tipo de asiento**.\n\nCada tipología de factura dice qué tipo de asiento usa, en su pestaña «Contabilización». Por ejemplo, la tipología FC (Factura compra) usa el tipo de asiento FC «FACTURA DE COMPRA».\n\nEl tipo de asiento tiene un **diario** (DC Compras) y unas **líneas**: cada línea dice qué cuenta se mueve y con qué importe. En FC, el proveedor va con el total de la factura (`-cabecera.imptot`: el signo menos lo lleva al haber) y la compra con el neto de cada línea (`lineas.impnet`, al debe).\n\nEjemplo: factura de 100 € + 21 € de IVA. Línea del proveedor: 121 al haber. Línea de compras: 100 al debe. El IVA no está en estas líneas: lo añade el ERP con los impuestos que calcula la factura (lo ves en Impuestos).\n\nAparte están las **plantillas de contabilización** (Finanzas › Contabilidad General › Contabilizadores): otro mecanismo, por libros Excel o sistema clásico, que usan las integraciones. No las tocas en el día a día.\n\nMini comprobación: si una tipología de factura no tiene tipo de asiento, ¿puede contabilizarse? (No: el ERP no sabría qué cuentas usar.)",
    "duracionMin": 20,
    "secciones": [
     {
-     "id": "contab-plantilla-alta-localizar",
-     "titulo": "Localizar las plantillas de contabilización",
-     "paraQueSirve": "Sirve para saber en qué carpetas del menú se guardan las plantillas y cuál de los dos sistemas usa tu empresa.",
-     "ruta": [
-      "Finanzas",
-      "Contabilidad General",
-      "Contabilizadores"
-     ],
-     "explicacion": [
-      "Dentro de «Contabilizadores» hay dos carpetas: «Sistema Excel» y «Sistema Clásico».",
-      "«Sistema Excel» tiene «Modelos XLS» y «Procesos». Los modelos son los libros maestros XLS.",
-      "«Sistema Clásico» tiene «Repositorio de integración», «Plantillas de contabilización», «Proceso de integración», «Mensajes de contabilización» y «Carga de fichero a repositorio».",
-      "Las plantillas XLS tienen hojas destino: capuntes (apuntes), cimpcont (impuestos) y cefectos (cartera). El origen puede ser una factura de compra o de venta."
-     ],
-     "campos": [
-      {
-       "campo": "Hoja capuntes",
-       "significado": "Genera los apuntes del asiento.",
-       "ejemplo": "Apuntes"
-      },
-      {
-       "campo": "Hoja cimpcont",
-       "significado": "Genera el registro de impuestos.",
-       "ejemplo": "Impuestos"
-      },
-      {
-       "campo": "Hoja cefectos",
-       "significado": "Genera los efectos de cartera.",
-       "ejemplo": "Cartera"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre Finanzas › Contabilidad General › Contabilizadores.",
-       "detalle": "Despliega la carpeta con la flecha ▸."
-      },
-      {
-       "texto": "Abre «Sistema Excel › Modelos XLS» y mira la lista de modelos.",
-       "detalle": "Solo mira. No edites ningún modelo: los comparten todos los usuarios."
-      },
-      {
-       "texto": "Abre «Sistema Clásico › Plantillas de contabilización».",
-       "detalle": "Es la lista de plantillas del sistema clásico. Tampoco las edites."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "No modifiques plantillas de la demo. Cambiarían la contabilización de todos los documentos."
-      }
-     ]
-    },
-    {
      "id": "contab-plantilla-alta-tipologia",
-     "titulo": "Asociar una plantilla a una tipología",
-     "paraQueSirve": "Sirve para entender por qué un documento no contabiliza si su tipología no tiene plantilla.",
+     "titulo": "Ver el tipo de asiento de tu tipología de factura",
+     "paraQueSirve": "Sirve para saber qué receta usa tu factura para crear el asiento y por qué una factura no contabiliza si falta.",
      "ruta": [
       "Gestión",
       "Compras",
@@ -8740,114 +8687,196 @@
       "Tipos de facturas"
      ],
      "explicacion": [
-      "La plantilla se elige en la tipología del documento, en la pestaña Contabilización (esta pestaña no se ha comprobado en la demo: es lo que indica la documentación).",
-      "Las facturas de venta contabilizadas generan asiento, cartera de efectos y registros fiscales.",
-      "Las facturas de compra hacen lo mismo según la configuración de la cuenta contable.",
-      "El diario por defecto de las facturas de venta es VE. En compras el asiento usa la fecha contable de la cabecera."
+      "La tipología de factura tiene una pestaña «Contabilización» (al lado de «Anticipos»).",
+      "Ahí está el campo «Tipo asiento». En la tipología FC vale «FACTURA DE COMPRA» (código FC).",
+      "El diario no se elige en la tipología: lo trae el tipo de asiento (DC en compras, DV en ventas).",
+      "El tipo de asiento se define en Gestión › Maestros › Contabilización › Asientos. Allí ves sus líneas."
      ],
      "campos": [
       {
-       "campo": "Plantilla de contabilización",
-       "significado": "Libro XLS que usa la tipología para crear el asiento.",
-       "ejemplo": "Plantilla de la tipología"
+       "campo": "Tipo asiento",
+       "significado": "Receta que usa la factura para crear su asiento.",
+       "ejemplo": "FACTURA DE COMPRA (FC)"
+      },
+      {
+       "campo": "Diario",
+       "significado": "Libro donde se anota el asiento. Va en el tipo de asiento.",
+       "ejemplo": "DC Compras"
+      },
+      {
+       "campo": "Importe (línea)",
+       "significado": "Fórmula del importe de cada línea. El signo menos lo lleva al haber.",
+       "ejemplo": "-cabecera.imptot"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre la tipología de factura que creaste en Compras (FC{INI}).",
-       "detalle": "La ruta es la de «Preparar la numeración y los tipos de documento» (Gestión › Compras › Maestros › Documentos › Tipos de facturas)."
+       "texto": "Abre Gestión › Compras › Maestros › Documentos › Tipos de facturas.",
+       "detalle": "Verás la lista de tipologías de factura de compra.",
+       "imagen": "cob-plantilla-tipofac-lista.webp"
       },
       {
-       "texto": "Busca el campo de la plantilla de contabilización en la pestaña Contabilización (ubicación no comprobada).",
-       "detalle": "Si está vacío, la factura no se podrá contabilizar. Comprueba que tu tipología la tiene."
+       "texto": "Abre la tipología FC (o tu FC{INI}) y ve a la pestaña «Contabilización».",
+       "detalle": "El campo «Tipo asiento» vale FACTURA DE COMPRA (FC). Si estuviera vacío, la factura no se podría contabilizar.",
+       "imagen": "cob-plantilla-tipofac.webp",
+       "hotspot": {
+        "x": 24.5,
+        "y": 24.5,
+        "w": 20,
+        "h": 4,
+        "etiqueta": "Tipo asiento"
+       }
+      },
+      {
+       "texto": "Abre Gestión › Maestros › Contabilización › Asientos y entra en FC «FACTURA DE COMPRA».",
+       "detalle": "Arriba ves el diario DC. En «Líneas de asiento» ves la línea del proveedor (Tercero, -cabecera.imptot) y la de compras (Líneas, lineas.impnet). Abajo, las tipologías que lo usan. Solo mira: no lo edites.",
+       "imagen": "cob-plantilla-tipoasiento.webp"
       }
      ],
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Este paso no se ha comprobado en la demo con el alta de una plantilla propia. Úsalo como lectura guiada."
+       "texto": "No modifiques tipos de asiento de la demo: los usan las facturas de todos los alumnos."
+      }
+     ]
+    },
+    {
+     "id": "contab-plantilla-alta-localizar",
+     "titulo": "Localizar las plantillas de contabilización",
+     "paraQueSirve": "Sirve para saber dónde están las plantillas, el otro mecanismo de contabilización, aunque no las uses en el día a día.",
+     "ruta": [
+      "Finanzas",
+      "Contabilidad General",
+      "Contabilizadores"
+     ],
+     "explicacion": [
+      "Dentro de «Contabilizadores» hay dos carpetas: «Sistema Excel» y «Sistema Clásico».",
+      "«Sistema Excel › Modelos XLS» guarda libros Excel que dicen cómo pasar un documento (por ejemplo, ccomfach) a contabilidad.",
+      "«Sistema Clásico › Plantillas de contabilización» guarda plantillas con registros y campos: qué valor va a cada campo del apunte.",
+      "Las usan sobre todo las integraciones con otros programas. La contabilización de tus facturas va por el tipo de asiento."
+     ],
+     "campos": [
+      {
+       "campo": "Plantilla",
+       "significado": "Código de la plantilla clásica.",
+       "ejemplo": "ccomfach"
+      },
+      {
+       "campo": "Tabla origen",
+       "significado": "Documento del que sale el asiento.",
+       "ejemplo": "Facturas de compra"
+      },
+      {
+       "campo": "Modelo XLS",
+       "significado": "Libro Excel con las reglas de paso a contabilidad.",
+       "ejemplo": "capuntes"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre Finanzas › Contabilidad General › Contabilizadores.",
+       "detalle": "Despliega la carpeta con la flecha ▸."
+      },
+      {
+       "texto": "Abre «Sistema Clásico › Plantillas de contabilización».",
+       "detalle": "Es la lista de plantillas clásicas. No las edites.",
+       "imagen": "cob-plantilla-lista.webp"
+      },
+      {
+       "texto": "Abre «Sistema Excel › Modelos XLS» y mira la lista.",
+       "detalle": "Solo mira. No edites ningún modelo: los comparten todos los usuarios.",
+       "imagen": "cob-plantilla-modelos-xls.webp"
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "No modifiques plantillas ni modelos de la demo. Cambiarían la contabilización de todos."
       }
      ]
     }
    ],
    "test": [
     {
-     "pregunta": "¿Qué es una plantilla de contabilización?",
+     "pregunta": "¿Dónde dice una factura de compra qué tipo de asiento usa?",
      "opciones": [
-      "Un informe",
-      "Una receta que dice qué asiento genera cada documento",
-      "Un diario",
-      "Un tipo de tercero"
-     ],
-     "correcta": 1,
-     "explicacion": "Define cuentas, importes e impuestos del asiento que se genera."
-    },
-    {
-     "pregunta": "¿Dónde se asocia la plantilla a un documento?",
-     "opciones": [
-      "En el tercero",
-      "En la tipología del documento",
+      "En el proveedor",
+      "En la pestaña «Contabilización» de su tipología",
       "En el banco",
       "En el ejercicio"
      ],
      "correcta": 1,
-     "explicacion": "Cada tipología indica su plantilla."
+     "explicacion": "Campo «Tipo asiento» de la tipología (FC usa FACTURA DE COMPRA)."
     },
     {
-     "pregunta": "¿Qué hojas destino tiene una plantilla XLS?",
+     "pregunta": "¿De dónde sale el diario del asiento de una factura de compra?",
      "opciones": [
-      "Solo apuntes",
-      "Apuntes, impuestos y cartera",
-      "Solo cartera",
-      "Ninguna"
+      "Del tipo de asiento (DC Compras)",
+      "Lo escribes en cada factura",
+      "Del proveedor",
+      "No tiene diario"
+     ],
+     "correcta": 0,
+     "explicacion": "El diario va en el tipo de asiento."
+    },
+    {
+     "pregunta": "Una línea del tipo de asiento tiene importe «-cabecera.imptot». ¿Qué significa el signo menos?",
+     "opciones": [
+      "Que se resta del IVA",
+      "Que el importe va al haber",
+      "Que es un error",
+      "Que no se contabiliza"
      ],
      "correcta": 1,
-     "explicacion": "capuntes, cimpcont y cefectos."
+     "explicacion": "Es el total de la factura al haber: la deuda con el proveedor."
     },
     {
-     "pregunta": "¿Debes editar los modelos XLS de la demo?",
+     "pregunta": "Factura de 100 € + 21 € de IVA. ¿Qué importe lleva la línea de compras (lineas.impnet)?",
+     "opciones": [
+      "121",
+      "100",
+      "21",
+      "0"
+     ],
+     "correcta": 1,
+     "explicacion": "impnet es el neto sin IVA: 100 al debe."
+    },
+    {
+     "pregunta": "¿Debes editar tipos de asiento o plantillas de la demo?",
      "opciones": [
       "Sí, para practicar",
-      "No: los comparten todos los usuarios",
-      "Solo los lunes",
-      "Solo los de venta"
+      "No: los comparten todos",
+      "Solo los de ventas",
+      "Solo los lunes"
      ],
      "correcta": 1,
-     "explicacion": "Cambiarían la contabilización de todos."
-    },
-    {
-     "pregunta": "Una factura no contabiliza porque su tipología no tiene plantilla. ¿Qué haces?",
-     "opciones": [
-      "Borrar la factura",
-      "Asignar una plantilla a la tipología",
-      "Cambiar de empresa",
-      "Cerrar el ejercicio"
-     ],
-     "correcta": 1,
-     "explicacion": "La plantilla es imprescindible para contabilizar."
+     "explicacion": "Cambiarían la contabilización de todos los alumnos."
     }
    ],
    "checklist": [
-    "Has abierto Finanzas › Contabilidad General › Contabilizadores.",
-    "Has localizado «Sistema Excel › Modelos XLS».",
-    "Has localizado «Sistema Clásico › Plantillas de contabilización».",
-    "Sabes qué tres hojas destino tiene una plantilla XLS.",
-    "Has comprobado que tu tipología FC{INI} tiene plantilla de contabilización."
+    "Has abierto la pestaña «Contabilización» de la tipología FC y has visto su «Tipo asiento».",
+    "Has abierto el tipo de asiento FC en Gestión › Maestros › Contabilización › Asientos.",
+    "Sabes qué línea lleva al proveedor y cuál a la compra, y por qué una va al haber.",
+    "Has localizado las plantillas en Finanzas › Contabilidad General › Contabilizadores."
    ],
    "problemas": [
     {
      "problema": "Una factura no contabiliza y no sé por qué.",
-     "solucion": "Mira la tipología del documento: tiene que tener plantilla de contabilización."
+     "solucion": "Mira la pestaña «Contabilización» de su tipología: tiene que tener «Tipo asiento». Después revisa que las cuentas de sus líneas existan."
     },
     {
-     "problema": "La plantilla da un error del tipo #¡REF! o JavaNull.",
+     "problema": "El asiento sale en un diario que no esperaba.",
+     "solucion": "El diario lo pone el tipo de asiento, no la factura. Mira el campo «Diario» del tipo de asiento."
+    },
+    {
+     "problema": "Una plantilla Excel da un error del tipo #¡REF! o JavaNull.",
      "solucion": "Es un fallo del libro XLS. No lo edites tú: avisa a quien lo mantiene."
     }
    ],
    "aprendido": [
-    "La plantilla de contabilización se asocia a la tipología del documento.",
-    "Hay dos sistemas: Excel y Clásico.",
-    "Una plantilla tiene hojas para apuntes, impuestos y cartera."
+    "La tipología de factura dice qué tipo de asiento usa, en su pestaña «Contabilización».",
+    "El tipo de asiento trae el diario y las líneas: qué cuenta y qué importe (el signo menos va al haber).",
+    "Las plantillas de contabilización (Excel y Clásico) son otro mecanismo, en Contabilizadores."
    ]
   }
  ],

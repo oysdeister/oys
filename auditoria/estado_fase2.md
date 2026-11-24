@@ -16,3 +16,7 @@ Pendiente:
 3. Caso continuo.
 4. Revisión con tres juniors simulados y con el senior.
 5. Build, prueba de humo, publicación y comprobación en Pages.
+
+## 25-11-2026: cierre de pendientes de la demo
+- Empresa SCAP: ejercicio 2026 reabierto (Regularizado → Abierto) con «Reapertura de ejercicio» en Finanzas › Maestros › Parametrización › Empresas › SCAP › Ejercicio. Los 12 periodos siguen cerrados.
+- `contab-plantilla-alta` comprobado en la demo y reescrito: la tipología de factura elige el «Tipo asiento» (pestaña Contabilización); el tipo de asiento (Gestión › Maestros › Contabilización › Asientos) trae el diario (DC) y las líneas. Las plantillas de Contabilizadores quedan como mecanismo aparte. Capturas `cob-plantilla-*`.
