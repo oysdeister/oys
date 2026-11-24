@@ -17,6 +17,26 @@ export const esFinanzas = (id: string) => id.startsWith('icon-') || id === 'cont
 export const MODULOS: Modulo[] = ORDEN.map((id) => ficheros[`./${id}.json`]?.default).filter(Boolean) as Modulo[];
 
 /**
+ * Bloques que se muestran en otro módulo que el de su JSON (mismos ids; el orden lo fija etapas.ts):
+ * las facturas que generan asientos van a Compras y el asiento de un movimiento de banco, a Tesorería.
+ */
+const MOVIDOS: Record<string, string> = {
+  'icon-contabilidad-v-1': 'compras', 'icon-contabilidad-v-2': 'compras', 'icon-contabilidad-v-3': 'compras', 'icon-contabilidad-v-4': 'compras',
+  'asientos-14': 'tesoreria',
+};
+{
+  const movidos: Ejercicio[] = [];
+  for (const m of MODULOS) {
+    m.ejercicios = m.ejercicios.filter((e) => {
+      if (!MOVIDOS[e.id]) return true;
+      movidos.push(e);
+      return false;
+    });
+  }
+  for (const e of movidos) MODULOS.find((m) => m.id === MOVIDOS[e.id])?.ejercicios.push(e);
+}
+
+/**
  * Módulos antiguos que se fusionaron en otro: los enlaces #/modulo/<viejo> redirigen al nuevo.
  * «Cobros y pagos» (icon-cartera) se unió a «Cartera de efectos» (carteras) en «Cartera, cobros y pagos»;
  * los ids de ejercicio no cambian, así que el progreso guardado y los momentos de vídeo siguen enlazados.
@@ -55,6 +75,7 @@ export function todosEjercicios() {
 const CARPETA_ORIGEN: Record<string, string> = {
   'maestros-v-1': 'maestros', 'maestros-v-2': 'maestros', 'maestros-1': 'maestros', 'maestros-2': 'maestros', 'maestros-3': 'maestros',
   'icon-contabilidad-2': 'icon-contabilidad', 'icon-contabilidad-3': 'icon-contabilidad', 'contab-cierre-practica': 'icon-contabilidad',
+  'icon-contabilidad-v-1': 'icon-contabilidad', 'icon-contabilidad-v-2': 'icon-contabilidad', 'icon-contabilidad-v-3': 'icon-contabilidad', 'icon-contabilidad-v-4': 'icon-contabilidad', 'asientos-14': 'icon-contabilidad',
 };
 let carpetaPorFichero: Map<string, string[]> | null = null;
 function carpetas() {

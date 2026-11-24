@@ -164,7 +164,22 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
     return () => window.removeEventListener('keydown', f);
   }, [i, conClic, hecho, fin, ir, avanzar]);
 
-  if (!total) return <p className="muted">Este bloque no tiene pasos guiados.</p>;
+  // Bloque sin pasos con clic (p. ej. Fundamentos): se da por hecho con un botón, para que se pueda completar
+  if (!total) {
+    return (
+      <div className="pl pl-fin">
+        <p className="pl-res">{fin ? 'Hecho: ya puedes pasar al Test.' : 'Este bloque no tiene pasos con clic: es de lectura.'}</p>
+        {!fin && (
+          <>
+            <p className="muted">Cuando hayas leído el Concepto, márcalo como hecho y pasa al Test.</p>
+            <button type="button" className="btn" onClick={terminar}>
+              Lo he leído: marcar como hecho
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
 
   if (fin) {
     return (

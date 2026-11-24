@@ -21,7 +21,7 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 
 | Código | Qué es | Dónde se crea | Dónde se reutiliza |
 |---|---|---|---|
-| `C{INI}` | Tercero **cliente** «Cliente Maestros {INI}» (antes `{INI}1`) (NIF de prueba B12345674, categoría 001) | Maestros › maestros-1 «Terceros» | maestros-1 (perfil contable 43000.00901), maestros-2 (cliente y comercial en Gestión, condiciones de cobro), maestros-v-4 (identificación de la empresa S{INI}) |
+| `C{INI}` | Tercero **cliente** «Cliente Maestros {INI}» (antes `{INI}1`) (NIF de prueba B12345674, categoría 001) | Maestros › maestros-1 «Terceros» | maestros-1 (perfil contable 43000.00901), maestros-2 (cliente y comercial en Gestión, condiciones de cobro), Ventas (cliente del caso) |
 | `FOR{INI}` | Artículo financiero «Servicios de formacion {INI}» (antes `{INI}`) | maestros-1 «Artículos financieros» | — |
 | `P{INI}` | Plazo de pago 30/60 días (50 % / 50 %) «2 Vtos. 30 y 60 dias {INI}» (antes `{INI}1`) | maestros-1 «Plazos de pago» | maestros-2 (condición de cobro de C{INI}). Ventas pasó su pedido a `PV{INI}` y Cartera usa `V{INI}` para su plazo 40/80/120 |
 | `R{INI}` | Tipo de efecto **a cobrar** «Recibo domiciliado {INI}» (antes `{INI}`) | maestros-1 «Tipos de efectos» | maestros-2 (condición de cobro de C{INI}) |
@@ -33,6 +33,7 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `ALM{INI}` | Almacén «Almacen Maestros {INI}» (antes `{INI}1`) | maestros-2 «Almacenes» | maestros-3 |
 | `RS{INI}` | Cuenta logística «Stock reservado Maestros {INI}» (antes `{INI}1`) | maestros-2 «Cuentas logísticas» | — |
 | `{INI}000001` | Número del movimiento interno RIDP (a mano) | maestros-3 | maestros-3 (kardex) |
+| `TS{INI}` | Tercero **de la empresa** S{INI} «Empresa prácticas {INI}» (NIF de prueba B76543214, sin relaciones contables). No es cliente ni proveedor | maestros-v-4 «Crear el tercero de tu empresa» | maestros-v-4 (identificación social de S{INI}) |
 | `S{INI}` | Empresa «Empresa prácticas {INI}» | maestros-v-4 | — |
 | `CAIXA{INI}` | Banco propio de la empresa S{INI} | maestros-v-4 | — |
 | `T{INI}` | Tercero **proveedor** «Tercero {INI}» (No censado, Id. 0, categoría 002) y su ficha de proveedor | Compras › compras-1 «Tercero» y «Proveedor» | compras-2, compras-3, Ventas (lo da de alta como cliente: mismo tercero), Cartera **no** (usa su tercero CAR{INI}), ERP simulado (prácticas de compras y pago) |

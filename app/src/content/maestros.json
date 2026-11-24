@@ -29,7 +29,7 @@
         "OC{INI}, PC{INI}, AO{INI} y FC{INI} — tipologías de oferta, pedido, albarán con origen pedido y factura de compra. Se crean en Compras, bloque «Preparar la numeración y los tipos de documento».",
         "A{INI}, F{INI} y PV{INI} — tipologías de albarán, factura y pedido de venta. Se crean en Ventas, al empezar cada bloque de Operar.",
         "V{INI}, E{INI}, CAR{INI} y BBVA_{INI} — plazo, tipo de efecto a pagar, tercero y banco de Cartera. Se crean en Cartera, Configurar.",
-        "S{INI} — empresa de práctica. Se crea en «Crear una empresa» (Maestros, Configurar).",
+        "S{INI} y TS{INI} — empresa de práctica y su tercero. Se crean en «Crear una empresa» (Maestros, Configurar). S{INI} solo sirve para practicar su alta, sus saldos iniciales y su cierre; las operaciones del caso se graban en la empresa 0 de la demo.",
         "Regla: un código, una cosa. Si un bloque necesita algo que ya creaste, lo reutiliza y te lo dice. Algunos campos de código admiten pocos caracteres: 3 en el plazo (P) y el tipo de efecto (R), y 4 en las tipologías de compra (OC, PC, AO, FC). Si tus iniciales son de 3 letras, en esos códigos usa solo las 2 primeras; con «JMA», el plazo sería PJM. Si no, el ERP da «Demasiado largo».",
         "Fíjate: en las tablas de campos, un asterisco rojo (*) indica que la pantalla marca el campo como obligatorio.",
         "Tabla de referencia: cada maestro, el código con el que lo encuentras en el buscador y la ruta del menú.",
@@ -153,7 +153,7 @@
       "numero": 1,
       "titulo": "Consultar la ficha de la empresa",
       "objetivo": "Sabrás abrir la ficha de una empresa y leer su tercero, su plan contable y su moneda.",
-      "concepto": "Una empresa (o sociedad) es la entidad legal que lleva su propia contabilidad. Es como el titular de una cuenta del banco: cada factura, asiento o movimiento de stock tiene un dueño. Si un documento se graba en la empresa equivocada, sus importes acaban en la contabilidad de otra sociedad.\n\nAxional es multiempresa: guarda varias sociedades en la misma base de datos. También es multimoneda: puede trabajar con varias divisas, como el euro o el dólar.\n\nLa ficha de la empresa guarda su identificación fiscal y su fecha de inicio. También guarda la zona impositiva, que decide qué impuestos se le aplican. Y guarda el tercero (la ficha de la persona o sociedad con su nombre, su NIF y su dirección), el plan contable (la lista ordenada de todas las cuentas; en España, el PGC) y la moneda.\n\nFíjate: en la base TUTORIAL hay dos empresas, 0 Deister Software y DIS Distribuidora S.L. La mayoría de los bloques del curso trabajan en la empresa 0. Los módulos Impuestos y Activos fijos consultan datos de ejemplo de la demo de los vídeos, sobre todo de la empresa «Triathlon [ALA] S.L.» (ALA), y avisan de ello.\n\nEjemplo: tu empresa del caso es S{INI}, que crearás en el bloque siguiente. La demo trabaja en la empresa 0, y esa es la empresa donde graban tus documentos. Aquí lees su ficha: moneda EUR y plan contable PGE 2008. La tuya tendrá los mismos datos.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas».",
+      "concepto": "Una empresa (o sociedad) es la entidad legal que lleva su propia contabilidad. Es como el titular de una cuenta del banco: cada factura, asiento o movimiento de stock tiene un dueño. Si un documento se graba en la empresa equivocada, sus importes acaban en la contabilidad de otra sociedad.\n\nAxional es multiempresa: guarda varias sociedades en la misma base de datos. También es multimoneda: puede trabajar con varias divisas, como el euro o el dólar.\n\nLa ficha de la empresa guarda su identificación fiscal y su fecha de inicio. También guarda la zona impositiva, que decide qué impuestos se le aplican. Y guarda el tercero (la ficha de la persona o sociedad con su nombre, su NIF y su dirección), el plan contable (la lista ordenada de todas las cuentas; en España, el PGC) y la moneda.\n\nFíjate: en la base TUTORIAL hay dos empresas, 0 Deister Software y DIS Distribuidora S.L. La mayoría de los bloques del curso trabajan en la empresa 0. Los módulos Impuestos y Activos fijos consultan datos de ejemplo de la demo de los vídeos, sobre todo de la empresa «Triathlon [ALA] S.L.» (ALA), y avisan de ello.\n\nEjemplo: aquí lees la ficha de la empresa 0: moneda EUR y plan contable PGE 2008. En el bloque siguiente creas tu empresa S{INI} con los mismos datos. Tus operaciones del caso se graban en la empresa 0 «Deister Software» de la demo, porque es la que tiene tipologías y plantillas configuradas. Tu empresa S{INI} solo sirve para practicar su alta, sus saldos iniciales y su cierre.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas».",
       "duracionMin": 30,
       "secciones": [
         {
@@ -270,7 +270,7 @@
             "Un tercero es cualquier persona o empresa con la que trabajas: su nombre, su NIF y su dirección. El mismo tercero puede ser cliente y proveedor.",
             "Cada empresa está unida a un tercero que guarda esos datos. En la lista de empresas, la columna Tercero muestra 0 para Deister Software y 00003 para Distribuidora S.L. Son terceros de la demo.",
             "La relación es uno a uno. Una empresa tiene un solo tercero, y ese tercero solo representa a esa empresa.",
-            "Tu empresa S{INI} se unirá al tercero C{INI} en el bloque siguiente."
+            "En el bloque siguiente creas tu empresa S{INI} y, antes, su propio tercero TS{INI}. No la unes a un cliente ni a un proveedor: el tercero de una empresa solo representa a esa empresa."
           ],
           "campos": [
             {
@@ -475,7 +475,7 @@
       "aprendido": [
         "Te has movido por Axional con la barra superior, el buscador «Buscar» y el menú lateral.",
         "Has abierto la empresa 0 Deister Software y has leído su código, su fecha de inicio y su zona impositiva ESCO.",
-        "Has comprobado que cada empresa va unida a un solo tercero: la 0 al tercero 0 y la DIS al 00003, terceros de la demo. Tu S{INI} se unirá a C{INI}.",
+        "Has comprobado que cada empresa va unida a un solo tercero: la 0 al tercero 0 y la DIS al 00003, terceros de la demo. Tu S{INI} irá unida a su propio tercero, TS{INI}.",
         "Has localizado el plan contable PGE 2008, la moneda EUR, las cuentas de diferencias de cambio y el calendario.",
         "Has visto que no se puede contabilizar con una fecha anterior a la de inicio de la empresa."
       ]
@@ -485,9 +485,72 @@
       "numero": 7,
       "titulo": "Crear una empresa",
       "objetivo": "Crearás una empresa con su ejercicio contable y su banco: lo mínimo para facturar, cobrar y pagar.",
-      "concepto": "Crear una empresa es como abrir un negocio nuevo: necesitas registrarlo, decidir cómo llevarás las cuentas, abrir el año y tener un banco. El maestro de empresas, que ya conoces, también sirve para crear sociedades nuevas. Sin ejercicio abierto no se puede contabilizar, y sin banco no se puede cobrar ni pagar.\n\nUna empresa nueva necesita, como mínimo, su identificación, que se copia de un tercero, y su plan contable y su moneda. También necesita un ejercicio contable abierto, es decir, el año en que se va a contabilizar. Y un banco propio: la ficha de cada cuenta bancaria de la empresa, unida a su cuenta contable.\n\nEjemplo: crearás la empresa S{INI} con el ejercicio 2026 y el banco propio CAIXA{INI}. Son solo para aprender a crear una empresa: S{INI} no tiene tipologías ni configuración, así que el caso no la usa. Las operaciones las grabas en la empresa 0 de la demo y mueves el dinero por el banco BBVA_{INI}, que crearás en Cartera.\n\nOjo: usa siempre tus iniciales. La base TUTORIAL es compartida y así no pisas los datos de otros alumnos.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas».",
+      "concepto": "Crear una empresa es como abrir un negocio nuevo: necesitas registrarlo, decidir cómo llevarás las cuentas, abrir el año y tener un banco. El maestro de empresas, que ya conoces, también sirve para crear sociedades nuevas. Sin ejercicio abierto no se puede contabilizar, y sin banco no se puede cobrar ni pagar.\n\nUna empresa nueva necesita, como mínimo, su identificación, que se copia de un tercero, y su plan contable y su moneda. También necesita un ejercicio contable abierto, es decir, el año en que se va a contabilizar. Y un banco propio: la ficha de cada cuenta bancaria de la empresa, unida a su cuenta contable.\n\nEjemplo: crearás el tercero TS{INI}, la empresa S{INI} unida a él, el ejercicio 2026 y el banco propio CAIXA{INI}. Tus operaciones del caso se graban en la empresa 0 «Deister Software» de la demo, porque es la que tiene tipologías y plantillas configuradas. Tu empresa S{INI} solo sirve para practicar su alta, sus saldos iniciales y su cierre. El dinero del caso se mueve por el banco BBVA_{INI}, que crearás en Cartera.\n\nOjo: usa siempre tus iniciales. La base TUTORIAL es compartida y así no pisas los datos de otros alumnos.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas».",
       "duracionMin": 14,
       "secciones": [
+        {
+          "id": "maestros-v-4-tercero",
+          "titulo": "Crear el tercero de tu empresa",
+          "paraQueSirve": "Aquí creas el tercero TS{INI}: la ficha con el nombre, el NIF y la dirección de tu empresa. La empresa los copia de él.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Registro terceros"
+          ],
+          "explicacion": [
+            "Cada empresa va unida a un tercero propio (relación 1 a 1, lo viste en el bloque anterior). Por eso, antes de crear S{INI}, creas su tercero TS{INI}: T de tercero, S de sociedad.",
+            "Este tercero no es cliente ni proveedor: solo guarda los datos de tu empresa. No le añadas relaciones contables.",
+            "La ficha de terceros la verás a fondo en «Dar de alta los datos básicos de contabilidad» (módulo Contabilidad básica). Aquí solo rellenas lo mínimo."
+          ],
+          "campos": [
+            {
+              "campo": "Tercero",
+              "significado": "Código del tercero.",
+              "ejemplo": "TS{INI}"
+            },
+            {
+              "campo": "Nombre",
+              "significado": "Razón social de tu empresa.",
+              "ejemplo": "Empresa prácticas {INI}"
+            },
+            {
+              "campo": "Tipo ID fiscal / Id. fiscal",
+              "significado": "Clase y número de identificación fiscal. Es un NIF de prueba.",
+              "ejemplo": "NIF-Empresa / B76543214"
+            },
+            {
+              "campo": "Categoría",
+              "significado": "Grupo de terceros. Es obligatoria.",
+              "ejemplo": "La misma que el tercero 0 de la empresa 0"
+            },
+            {
+              "campo": "Dirección 0",
+              "significado": "Domicilio fiscal. La empresa lo copia en «Identificación social».",
+              "ejemplo": "CP 08001 y tu dirección"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Finanzas › Maestros › Terceros › Registro terceros» y pulsa «Añadir tercero». Escribe Tercero TS{INI}, Nombre «Empresa prácticas {INI}», País emisor ES, Tipo ID fiscal NIF-Empresa e Id. fiscal B76543214.",
+              "detalle": "Son obligatorios, con asterisco rojo: País emisor, Nombre, Tipo ID fiscal, Id. fiscal y Categoría."
+            },
+            {
+              "texto": "En «Más datos» elige la Categoría que tenga el tercero 0 (el de la empresa 0; míralo en la lista). Pulsa «Guardar» y abre la ficha con «Ver registro».",
+              "detalle": "Si al guardar se crea sola una relación contable, déjala: no la usarás. No añadas otras."
+            },
+            {
+              "texto": "En la pestaña Direcciones pulsa «Añadir dirección», escribe el código postal 08001 y la dirección, y guarda. Después pulsa «Validar».",
+              "detalle": "Es la dirección 0, «domicilio fiscal». El estado del tercero pasa a Validado y ya puedes unirlo a tu empresa."
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "No uses tu cliente C{INI} ni tu proveedor T{INI} como tercero de la empresa: mezclarías la sociedad con sus clientes o proveedores."
+            }
+          ]
+        },
         {
           "id": "maestros-v-4-alta-empresa",
           "titulo": "Alta de la empresa S{INI}",
@@ -501,7 +564,7 @@
           "explicacion": [
             "Desde la pantalla «MAESTRO DE EMPRESAS» pulsas «Añadir empresa».",
             "Los datos de identificación y dirección no se teclean: se copian del tercero que eliges en la pestaña «Identificación social».",
-            "Usa el tercero C{INI} que creaste en «Dar de alta los datos básicos de contabilidad»; no crees otro. En un caso real sería un tercero creado para la propia sociedad."
+            "Usa el tercero TS{INI} que acabas de crear en «Crear el tercero de tu empresa». Es el tercero de la sociedad: no uses tu cliente ni tu proveedor, porque una empresa y su tercero van unidos 1 a 1."
           ],
           "campos": [
             {
@@ -552,7 +615,7 @@
             {
               "campo": "Tercero",
               "significado": "Tercero del que se copian la dirección y la identificación. Se elige en la pestaña «Identificación social», con su Dirección fiscal.",
-              "ejemplo": "C{INI}, dirección fiscal 0"
+              "ejemplo": "TS{INI}, dirección fiscal 0"
             }
           ],
           "pasos": [
@@ -587,9 +650,9 @@
               "detalle": "Prorrata No significa que la empresa puede descontar todo el IVA deducible de sus compras. Lo tienes en «Prorrata de IVA» en el glosario."
             },
             {
-              "texto": "Pulsa la pestaña «Identificación social» del mismo formulario. Elige tu Tercero (C{INI}) y la Dirección fiscal 0.",
-              "pregunta": "Estás en la pestaña «Identificación social». ¿Dónde vinculas la empresa con tu tercero C{INI}?",
-              "detalle": "Se copian el Id. fiscal, el país, la dirección, la provincia, la población y el CP. Si al guardar te pide el NIF empresa (en «Datos fiscales»), escribe el mismo Id. fiscal del tercero (B12345674).",
+              "texto": "Pulsa la pestaña «Identificación social» del mismo formulario. Elige tu Tercero (TS{INI}) y la Dirección fiscal 0.",
+              "pregunta": "Estás en la pestaña «Identificación social». ¿Dónde vinculas la empresa con tu tercero TS{INI}?",
+              "detalle": "Se copian el Id. fiscal, el país, la dirección, la provincia, la población y el CP. Si al guardar te pide el NIF empresa (en «Datos fiscales»), escribe el mismo Id. fiscal del tercero (B76543214). La captura es de ejemplo: el tercero que sale en ella no es el tuyo; tú eliges TS{INI}.",
               "imagen": "maestros-n-14.webp",
               "hotspot": {
                 "x": 23.0,
@@ -616,7 +679,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Usa el código S{INI} con tu propio tercero para no pisar los datos de otros alumnos."
+              "texto": "Usa el código S{INI} con su propio tercero TS{INI} para no pisar los datos de otros alumnos."
             },
             {
               "tipo": "nota",
@@ -745,7 +808,7 @@
             {
               "campo": "Agrupación cuentas",
               "significado": "Grupo de tesorería de la cuenta. Tesorería es el control del dinero real que entra y sale del banco y la caja; la agrupación junta tus cuentas allí. Va en el bloque «Información auxiliar» y es obligatorio.",
-              "ejemplo": "Tu agrupación AG{INI} (el bloque «Dar de alta los datos básicos de contabilidad», en Contabilidad básica) o CA"
+              "ejemplo": "CA, que ya existe (tu agrupación AG{INI} la crearás después, en Contabilidad básica)"
             }
           ],
           "pasos": [
@@ -764,7 +827,7 @@
             },
             {
               "texto": "Escribe 0 en Proyecto y Sección (no los usamos), la Cuenta financiera CAIXA{INI} y una descripción, por ejemplo «Banco Caixa {INI}». Elige de la lista el Banco y la Entidad financiera.",
-              "detalle": "Tipo de dirección déjalo en 0. En «Información auxiliar» elige la Agrupación cuentas, obligatoria: AG{INI}, que creaste en Contabilidad básica, o CA, que ya existe."
+              "detalle": "Tipo de dirección déjalo en 0. En «Información auxiliar» elige la Agrupación cuentas, obligatoria: elige CA, que ya existe. Tu agrupación AG{INI} la crearás después, en Contabilidad básica."
             },
             {
               "texto": "Rellena a la vez el Banco y el IBAN (bloque «Datos cuenta bancaria»). Usa el IBAN de ejemplo ES9121000418450200051332.",
@@ -854,6 +917,7 @@
         }
       ],
       "checklist": [
+        "Creas y validas el tercero TS{INI} «Empresa prácticas {INI}», con su dirección 0.",
         "Abres «Finanzas › Maestros › Parametrización › Empresas».",
         "Pulsas «Añadir empresa» y creas S{INI}.",
         "Rellenas fecha, moneda, plan contable, tipo ID fiscal, estado emisor y prorrata, y eliges tu tercero en «Identificación social».",
@@ -883,7 +947,7 @@
       ],
       "aprendido": [
         "Has creado la empresa S{INI} con el plan contable ES (PGE 2008) y la moneda EUR.",
-        "Has copiado su identificación y su dirección del tercero C{INI} desde la pestaña «Identificación social».",
+        "Has copiado su identificación y su dirección de su propio tercero TS{INI} desde la pestaña «Identificación social».",
         "Has abierto el ejercicio contable 2026 en la pestaña Ejercicio.",
         "Has creado el banco propio CAIXA{INI} con la cuenta 57200.00000 y un IBAN de ejemplo.",
         "Sabes que Banco e IBAN se rellenan a la vez, o los dos o ninguno."
