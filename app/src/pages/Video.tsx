@@ -417,19 +417,11 @@ export default function Video() {
   return (
     <div className="vd">
       <div className="wrap">
-        <header className={`vd-hero${c ? ' compact' : ''}`}>
-          {!c && (
-            <motion.div initial={reducir ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <h1 className="vd-title">
-                El vídeo de compras, <em>por capítulos</em>
-              </h1>
-              <p className="lead muted">
-                {Math.round(TOTAL / 60)} minutos partidos en {CAPITULOS.length} capítulos. Ve directo a lo que necesitas mientras practicas: cada capítulo tiene su índice de escenas.
-              </p>
-            </motion.div>
-          )}
-          <ArcoCapitulos actual={c?.n} progreso={fraccion} onIr={(k) => navigate(`/video/${k}`)} />
-        </header>
+        {c && (
+          <header className="vd-hero compact">
+            <ArcoCapitulos actual={c.n} progreso={fraccion} onIr={(k) => navigate(`/video/${k}`)} />
+          </header>
+        )}
 
         {!algunoPublicado && (
           <p className="callout nota vd-aviso" role="status">

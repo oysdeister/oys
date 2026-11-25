@@ -36,7 +36,7 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `TS{INI}` | Tercero **de la empresa** S{INI} «Empresa prácticas {INI}» (NIF de prueba B76543214, sin relaciones contables). No es cliente ni proveedor | maestros-v-4 «Crear el tercero de tu empresa» | maestros-v-4 (identificación social de S{INI}) |
 | `S{INI}` | Empresa «Empresa prácticas {INI}» | maestros-v-4 | — |
 | `CAIXA{INI}` | Banco propio de la empresa S{INI} | maestros-v-4 | — |
-| `T{INI}` | Tercero **proveedor** «Tercero {INI}» (No censado, Id. 0, categoría 002) y su ficha de proveedor | Compras › compras-1 «Tercero» y «Proveedor» | compras-2, compras-3, Ventas (lo da de alta como cliente: mismo tercero), Cartera **no** (usa su tercero CAR{INI}), ERP simulado (prácticas de compras y pago) |
+| `T{INI}` | Tercero **proveedor** «Tercero {INI}» (No censado, Id. 0, categoría 002) y su ficha de proveedor | Compras › compras-1 «Tercero» y «Proveedor» | compras-2, compras-3, Ventas **no** (su cliente es C{INI}), Cartera **no** (usa su tercero CAR{INI}), ERP simulado (prácticas de compras y pago) |
 | `TF{INI}` | Lista de precios de compra (tarifa) | compras-precios | compras-precios (grupo G{INI}) |
 | `G{INI}` | Grupo de precios de compra | compras-precios | compras-precios (proveedor T{INI}) |
 | `13500620` | Artículo **de la demo** que se compra (6000-2RS ISB, tipo contable PRODUCTO). No se modifica | ya existe | compras-1 (tarifa), compras-2 y compras-3 (oferta, albaranes, factura), Ventas, ERP simulado (pedido › albarán › factura) |
@@ -46,6 +46,11 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `PC{INI}` | Tipología de pedido de compra | compras-tipos | compras-3, compras-2 |
 | `0PC{INI}01` | Número del pedido (a mano, formulario genérico) | compras-3 | compras-3 |
 | `AO{INI}` | Tipología de albarán de compra con origen pedido | compras-tipos | compras-2 |
+| `GW{INI}` | Grupo de validaciones «WORKFLOW PEDIDOS {INI}» sobre «Pedidos de compras», con la validación 36 | compras-workflow «Crear el grupo de validaciones y su línea» | compras-workflow (tipología PW{INI}) |
+| `RW{INI}` | Rol de workflow «APROBADOR PEDIDOS {INI}» (descripción de 20 caracteres como máximo: con 2 iniciales; asignado al usuario `public`) | compras-workflow «Crear el rol que autoriza» | compras-workflow (etapa «Usuario» del circuito WF{INI}) |
+| `WF{INI}` | Circuito de workflow «APROBACION PEDIDOS {INI}» (Inicio, Usuario con el rol RW{INI}, Fin) | compras-workflow «Crear el circuito» | compras-workflow (línea del grupo GW{INI}) |
+| `PW{INI}` | Tipología de pedido de compra con workflow (serie PC, «Grupo validación» GW{INI}). No sustituye a PC{INI} | compras-workflow «Enlazar el grupo a la tipología de pedido» | compras-workflow (pedido de prueba) |
+| `0PW{INI}0001` | Número del pedido de prueba con PW{INI} (a mano, formulario genérico); su Identificador pedido lo asigna el ERP y va en el CSV de líneas | compras-workflow «Probar» | compras-workflow (revalidación y autorización) |
 | `PROV-{INI}-001` / `-002` | Número de factura del proveedor | compras-2 / compras-3 | Cartera (pago de la factura) |
 
 ## Cartera, Ventas, Tesorería, Contabilidad, Impuestos y Activos (cerrado)
@@ -73,9 +78,12 @@ Longitudes comprobadas en el diccionario (wic_table_object): `tlinefin.linfin` 1
 
 | Código | Qué es | Dónde se crea | Dónde se reutiliza |
 |---|---|---|---|
-| `T{INI}` | **El proveedor de Compras**: Ventas lo da de alta como cliente, no crea otro tercero | Compras › compras-1 | ventas-1, ventas-2 |
-| `A{INI}` / `A{INI}2` | Tipologías de albarán de venta (sin origen / desde pedido) | ventas-1 / ventas-2 | F{INI}, examen práctico |
-| `F{INI}` | Tipología de factura de venta | ventas-1 | ventas-2, examen práctico |
+| `C{INI}` | **El cliente de Ventas**: el tercero cliente de Maestros. Ventas no crea otro: en `ventas-cliente` lo **comprueba y completa** (relación CLI, datos del Maestro de clientes, condición de cobro R{INI} + P{INI} de Maestros sin cambiarla, validación). El proveedor T{INI} de Compras ya no se usa como cliente | Maestros › maestros-1 «Terceros» y maestros-2 «El tercero en Gestión: cliente y condiciones de cobro» | ventas-cliente, ventas-pedido, ventas-1, ventas-2 |
+| `PD{INI}` | Tipología de pedido de venta sin origen (copia de PED, serie PV, destino albarán AP{INI}) | ventas-documentos | ventas-pedido |
+| `AP{INI}` | Tipología de albarán de venta desde pedido (copia de ACL2, serie AV, origen «Pedidos de venta», «Copiar líneas» Sí, Sumando, sin asiento, Tipo factura FP{INI}) | ventas-documentos | ventas-pedido, condición `tipdoc IN ('AP{INI}')` de FP{INI} |
+| `FP{INI}` | Tipología de factura de venta desde albaranes (copia de FV, serie FV, origen Expediciones con condición `tipdoc IN ('AP{INI}')`, «Copiar líneas» Sí, asiento FACTURA DE VENTAS) | ventas-documentos | ventas-pedido |
+| `A{INI}` / `A{INI}2` | Tipologías de albarán de venta de práctica (sin origen / desde pedido) | ventas-1 / ventas-2 | F{INI}, examen práctico |
+| `F{INI}` | Tipología de factura de venta de práctica | ventas-1 | ventas-2, examen práctico |
 | `O{INI}` | Tipología de oferta de venta | ventas-2 | examen práctico |
 | `PV{INI}` | Tipología de pedido de venta (antes `P{INI}`, chocaba con el plazo de Maestros) | ventas-2 | examen práctico (lib/examen.ts) |
 
@@ -105,7 +113,7 @@ Sin códigos propios del alumno (solo `{INI}` en notas de factura de Impuestos).
 
 | Código | Módulo | Qué es |
 |---|---|---|
-| `A{INI}`, `A{INI}2`, `F{INI}`, `PV{INI}`, `O{INI}` | Ventas | Tipologías de venta (ver tabla de Ventas) |
+| `PD{INI}`, `AP{INI}`, `FP{INI}`, `A{INI}`, `A{INI}2`, `F{INI}`, `PV{INI}`, `O{INI}` | Ventas | Tipologías de venta (ver tabla de Ventas) |
 | `DIV{INI}` | Contabilidad (icon-contabilidad) | Proyecto «División 1 {INI}» |
 | `{INI}EMP`, `{INI}0001` | Contabilidad | Grupo auxiliar y código auxiliar «José Gómez» (por eso el artículo de Maestros pasa a ROD{INI}) |
 | `{INI}ADM` | Contabilidad | Sección |

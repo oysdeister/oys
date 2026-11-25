@@ -57,7 +57,7 @@ function juntar(...mapas: Record<string, MomentoVideo[]>[]) {
  * Si quitarlo dejaba la sección sin vídeo, se mantiene (parametrizacion-icon-1-orden-carga, carteras-1-tercero, tesoreria-1-banco, maestros-1-tipos-efecto, asientos-14-comision).
  */
 const QUITAR_POR_DUPLICADO: Record<string, string[]> = {
-  'asientos-6-vigencia': ['fin-maestros|4|790', 'fin-icon1|2|367'],
+  'asientos-6-vigencia': ['fin-maestros|4|790', 'fin-icon1|2|367', 'tut-contabilidad|3|296'],
   'parametrizacion-1-cuenta': ['fin-maestros|2|368'],
   'compras-1-tercero': ['compras|2|452'],
   'compras-1-condiciones': ['compras|2|593'],
@@ -66,11 +66,33 @@ const QUITAR_POR_DUPLICADO: Record<string, string[]> = {
   'maestros-1-cuentas-perfil': ['compras|8|4007'],
   // Auditoría H32: «Contabilizar la factura» se grabó en otra base (fin-icon1, factura ML0260020); el capítulo 8 de Compras lo enseña en TUTORIAL
   'icon-contabilidad-v-1-contabilizar': ['fin-icon1|1|44'],
+  // Cada vídeo o tramo en un solo punto del menú (petición de Sergi, 25-11-2026): se queda donde se enseña el concepto por primera vez
+  'parametrizacion-icon-1-orden-carga': ['fin-maestros|4|876', 'fin-maestros|1|92'], // en maestros-v-3 y maestros-v-1
+  'carteras-1-tipo-efecto': ['compras|2|615'], // en maestros-1 (Tipos de efectos)
+  'carteras-1-tercero': ['compras|2|609'], // en compras-1 (Condiciones)
+  'icon-contabilidad-v-1-factura-origen': ['fin-icon1|1|17'], // en parametrizacion-icon-2
+  'parametrizacion-icon-2-plantillas-permiso': ['tab-contabilidad|6|0'], // en icon-contabilidad-1 (plantillas)
+  'icon-contabilidad-1-diario': ['tut-contabilidad|3|276'], // en asientos-1 (crear el diario)
+  'icon-contabilidad-v-4-periodos': ['tut-contabilidad|3|296', 'fin-icon11|6|885'], // en icon-contabilidad-1 (ejercicio y periodos)
+  'compras-2-conformar': ['compras|7|3517'], // en compras-2-factura
+  'carteras-3-caja': ['tab-cartera|2|0'], // en carteras-3-banco
+  'tesoreria-1-banco': ['tab-cartera|2|0'],
+  'carteras-5-estados': ['tab-cartera|5|0'], // en icon-cartera-1
+  'carteras-5-remesa-banco': ['tab-cartera|3|0'], // en icon-cartera-v-4 (tipos de remesa)
+  'icon-cartera-v-5-remesas-por-cuenta': ['tab-cartera|3|0'],
+  'icon-cartera-v-7-domiciliacion': ['fin-icon11|8|1340'], // «Mezclar cheque y TF» va en tipos de efecto
+  'icon-cartera-v-7-tipos-efecto': ['fin-icon11|8|1267'], // «Domiciliación no informada» va en su sección
+  'asientos-14-comision': ['tab-tesoreria|1|0'], // en tesoreria-1 (comisiones)
+  'tesoreria-2-conciliacion': ['tab-tesoreria|3|0'], // en tesoreria-2-operacion
+  'tesoreria-nav-moverse': ['tesoreria-2|5|1868'], // en tesoreria-4 (conceptos propios)
+  'icon-impuestos-v-2-tipo-impuesto': ['tab-impuestos|3|0'], // en icon-impuestos-1
+  'icon-impuestos-v-2-regla-2586': ['tab-impuestos|4|0'],
 };
 
 /** Tramos de Compras que sustituyen a uno grabado en otra base (H32): se añaden a la sección y al bloque */
 const CONTABILIZAR_COMPRAS: MomentoVideo = { capitulo: 8, t: 4076, tCap: 275, fin: 327, titulo: 'Contabilizar la factura (con los datos de la demo)' };
-const ANADIR_SECCION: Record<string, MomentoVideo[]> = { 'icon-contabilidad-v-1-contabilizar': [CONTABILIZAR_COMPRAS] };
+// Ya no se añade a icon-contabilidad-v-1-contabilizar: el mismo tramo está en compras-factura (un tramo, un sitio)
+const ANADIR_SECCION: Record<string, MomentoVideo[]> = {};
 
 // El vídeo de la tabla va primero: es la tarjeta «Mira primero el vídeo» de la sección que explica esa tabla
 const SECCION_BRUTA = juntar(MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, ANADIR_SECCION, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);

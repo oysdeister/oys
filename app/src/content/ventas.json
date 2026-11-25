@@ -2,7 +2,7 @@
   "id": "ventas",
   "titulo": "Gestión de ventas",
   "sesion": "Sesión 8",
-  "resumen": "Aprenderás a montar y recorrer el circuito de ventas del ERP, de la oferta al cobro. Crearás las tipologías de cada documento y darás de alta un cliente. Después generarás albaranes y facturas y, en el circuito completo, ofertas y pedidos. Verás qué asiento genera cada documento al contabilizarlo y cómo entra el vencimiento en la cartera de cobros.",
+  "resumen": "Aprenderás a preparar y recorrer el circuito de ventas del ERP. Darás de alta tu cliente, configurarás los documentos (pedido, albarán y factura) y harás una venta completa hasta el asiento y el cobro pendiente. Después practicarás otros circuitos: del albarán a la factura y de la oferta a la factura. Verás qué asiento genera cada documento al contabilizarlo y cómo entra el vencimiento en la cartera de cobros.",
   "circuito": [
     "Oferta",
     "Pedido",
@@ -15,18 +15,19 @@
     {
       "id": "ventas-nav-circuito",
       "titulo": "El circuito de ventas",
-      "paraQueSirve": "Sirve para entender qué documentos forman una venta y cómo se encadenan. Así verás por qué cada bloque empieza creando tipologías.",
+      "paraQueSirve": "Sirve para entender qué documentos forman una venta y cómo se encadenan. Así verás por qué antes de vender hay que preparar las tipologías.",
       "ruta": null,
       "explicacion": [
         "Una venta pasa por varios documentos encadenados, como las etapas de un encargo:",
         "La oferta es lo que propones al cliente: producto, cantidad y precio. No mueve nada.",
         "El pedido es lo que el cliente te compra en firme. El almacén lo prepara.",
-        "El albarán es la mercancía que sale del almacén hacia el cliente. Al validarlo baja el stock.",
+        "El albarán es la mercancía que sale del almacén hacia el cliente. En este curso no genera asiento: lo generará la factura (en otras empresas, el albarán también se puede contabilizar).",
         "La factura es el documento fiscal con el que cobras. Suma el IVA, el impuesto que cobras al cliente y luego ingresas a Hacienda.",
         "Cada documento nace del anterior copiando sus líneas. Así el ERP sabe en todo momento qué falta por servir y qué falta por facturar.",
-        "Al contabilizar la factura se genera el asiento (cliente, IVA y ventas). También se crea el vencimiento, es decir, el cobro pendiente que entra en la cartera de cobros.",
-        "Cada documento se comporta según su tipología, el «tipo de documento». Decide de qué documento viene, si copia las líneas, qué serie lo numera, si mueve stock y con qué plantilla se contabiliza. Por eso cada bloque empieza creando las tipologías y después los documentos.",
-        "Ejemplo: en el bloque 1 vas de Albarán > Factura y contabilizas los dos. En el bloque 2 vas de Oferta > Pedido > Albarán > Factura y contabilizas solo la factura."
+        "Al contabilizar la factura se genera el asiento: la anotación contable de la venta, con una línea para el cliente, otra para el IVA y otra para las ventas. También se crea el vencimiento, es decir, el cobro pendiente que entra en la cartera de cobros. Docflow es el gráfico que dibuja toda la cadena (pedido, albarán, factura); lo verás al final de «Vender: pedido, albarán y factura».",
+        "Cada documento se comporta según su tipología, el «tipo de documento». Decide de qué documento viene, si copia las líneas, qué serie lo numera, si mueve stock y con qué plantilla se contabiliza. Por eso primero configuras las tipologías y después creas los documentos.",
+        "Ejemplo: primero preparas tu cliente y los tres documentos (pedido, albarán y factura). Después vendes de Pedido > Albarán > Factura y contabilizas solo la factura. En los bloques de práctica recorres otros circuitos: Albarán > Factura, contabilizando los dos, y Oferta > Pedido > Albarán > Factura, contabilizando solo la factura.",
+        "Ojo: antes de empezar, comprueba que ya tienes lo que se reutiliza en este módulo. El tercero C{INI}, con su relación «Clientes» (CLI), se creó en «Dar de alta los datos básicos de contabilidad» (módulo Contabilidad). El cliente C{INI} y su condición de cobro (tipo de efecto R{INI} y plazo P{INI}) se crearon en «Dar de alta los datos básicos de gestión» (módulo Compras). El artículo 13500620 y el agente A01 ya existen en la demo. Si algo falta, vuelve a ese bloque: no lo crees en Ventas."
       ],
       "campos": [],
       "pasos": [],
@@ -41,12 +42,12 @@
         "Abre las pantallas con el menú lateral (Gestión › Ventas › …) o con el buscador superior «Buscar» (Cmd/Ctrl + K). Escribe el nombre o el código del objeto. No escribas la ruta en la barra de direcciones.",
         "En cada parte, la «Ruta» dice qué carpetas abrir en el menú lateral.",
         "Algunos pasos acaban con «En el buscador: gvenalbh» (o similar). Es el nombre técnico de la pantalla, aparte de la ruta del menú: escríbelo en «Buscar» y te lleva directo.",
-        "Ojo: los códigos de las tipologías admiten como máximo 4 caracteres. Si escribes más, el campo se pone en rojo con «Demasiado largo». Con iniciales de dos letras (por ejemplo, CL) salen ACL, FCL, ACL2, OCL y PVCL.",
-        "Las tipologías se abren en modo ficha con el primer registro, o en modo lista según la pantalla.",
+        "Ojo: el código de una tipología admite como máximo 4 caracteres. Si escribes más, el campo se pone en rojo con «Demasiado largo». Usa PD, AP o FP más tus dos iniciales (por ejemplo, PDJP). En los bloques de práctica se usan A{INI}, A{INI}2, F{INI}, O{INI} y PV{INI}.",
+        "Para abrir un registro que ya existe, ve a su lista y pulsa su código o su número en azul (o el número de fila, a su izquierda): se abre su ficha. Si la lista es larga, usa «Filtros» (arriba, junto a «Ordenar») para encontrarlo. «Nuevo» sirve para crear uno nuevo: no lo pulses si el registro ya existe. Las tipologías se abren en modo ficha con el primer registro, o en modo lista según la pantalla; en una ficha, las flechas ‹ › de la barra superior pasan al registro anterior o al siguiente.",
         "Para crear una tipología pulsa el botón azul oscuro «Nuevo», arriba a la derecha. «Nuevo» abre un formulario en blanco. «Nuevo como» copia el registro que estás viendo y lo abre en una ventana con «Guardar» abajo a la derecha.",
         "En las listas de documentos, «Nuevo» abre el formulario en una ventana. Se guarda con «Guardar», abajo a la derecha.",
-        "Los cambios en una ficha se guardan con el icono del disquete de la barra superior.",
-        "Los botones de acción (Validar, Contabilizar, Anular…) están en la barra superior de la ficha. Las pestañas del registro (Líneas, Vencimientos…) están arriba, en horizontal.",
+        "Los cambios en una ficha se guardan con el icono del disquete (el de guardar), arriba a la derecha. A su lado, el icono ⟳ «Recargar» vuelve a leer el registro.",
+        "Los botones de acción (Validar, Contabilizar, Anular…) están en la barra superior de la ficha. Las pestañas del registro (Líneas, Vencimientos…) están arriba, en horizontal. «Provisional» es un documento o una ficha en borrador, que aún se puede cambiar; «Validar» lo da por bueno y lo deja «Validado». Cada ficha tiene además sus propios estados: el cliente queda «Activo» y la factura, «Contabilizada».",
         "Los campos con lista (cliente, artículo, plantilla…) se autocompletan: escribe el código y elige la fila. Si no aparece la descripción debajo del campo, sal del campo con Tab.",
         "Fíjate: los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos. La demo es compartida y el ERP te dará otros. Usa siempre los tuyos."
       ],
@@ -59,18 +60,1931 @@
         },
         {
           "tipo": "nota",
-          "texto": "Los ejemplos usan las iniciales {INI} (tipologías A{INI}, F{INI}…, tercero «C{INI}»): cámbialas por las tuyas. Reutilizas el tercero C{INI} y el artículo 13500620 (6000-2RS ISB) de la sesión anterior. En las tablas de campos, un asterisco indica que la pantalla marca el campo como obligatorio."
+          "texto": "Los ejemplos usan las iniciales {INI} (tipologías A{INI}, F{INI}…, tercero «C{INI}»): cámbialas por las tuyas. {INI} son tus dos iniciales (por ejemplo, JP). Si tienes tres, usa siempre las dos primeras, también en la condición tipdoc IN (…) de la factura. Reutilizas el tercero C{INI} y el artículo 13500620 (6000-2RS ISB) de la sesión anterior. En las tablas de campos, un asterisco indica que la pantalla marca el campo como obligatorio."
         }
       ]
     }
   ],
   "ejercicios": [
     {
+      "id": "ventas-cliente",
+      "numero": 3,
+      "titulo": "Preparar el cliente",
+      "objetivo": "Comprobarás que tu tercero C{INI} es cliente y completarás lo que le falte para venderle: tipo, comercial, facturación, divisa, condición de cobro y relación contable.",
+      "concepto": "Un cliente es una persona o empresa a la que le vendes. Si el ERP no tiene bien sus datos, no te deja hacerle un pedido, o la factura sale sin vencimiento o sin cuenta contable. En el ERP el cliente son dos fichas que se complementan: el tercero y el cliente.\n\nOjo: antes de empezar, comprueba que ya tienes lo que se reutiliza aquí. Este bloque no crea nada de cero. El tercero C{INI}, con su relación «Clientes» (CLI), se creó en el bloque «Dar de alta los datos básicos de contabilidad» (módulo Contabilidad). El cliente C{INI} y su condición de cobro (tipo de efecto R{INI} y plazo P{INI}) se crearon en «Dar de alta los datos básicos de gestión» (módulo Compras). Si algo falta, vuelve a ese bloque y hazlo allí: aquí no lo crees.\n\nEl tercero es la ficha de identidad: nombre, NIF, direcciones y su relación contable, es decir, la cuenta que le corresponde en la contabilidad. Se guarda una sola vez en Finanzas, aunque a esa persona le compres y le vendas. El cliente es la ficha comercial: tipo de cliente, comercial, a quién se factura, cómo se agrupan los albaranes y en qué moneda. Vive en Gestión. El ERP los separa para que Finanzas y Ventas compartan la identidad sin pisarse.\n\nDos datos mandan sobre los documentos de venta.\n\nPrimero, la condición de cobro del tercero: dice con qué tipo de efecto y en cuántos días cobras. El pedido, el albarán y la factura la copian. Un efecto es un cobro pendiente: el recibo que cobrarás más adelante.\n\nSegundo, la relación contable «Clientes» (CLI): dice a qué cuenta del cliente, la 43000, va el asiento de la factura. El asiento es la anotación contable de la venta. Sus líneas van al debe (columna izquierda: lo que tienes o te deben, como el cliente) o al haber (columna derecha: lo que ingresas o debes, como las ventas y el IVA), y las dos columnas suman lo mismo.\n\nEjemplo: tu cliente del caso es C{INI}. Aquí lo compruebas y completas lo que falte, sin crear otro. Después le venderás 10 unidades a 20,00: 200,00 más 42,00 de IVA, 242,00 a cobrar.\n\nFíjate: «Estado» significa cosas distintas según la ficha. En el tercero, «Provisional» es un borrador que aún se puede cambiar y «Validado», una ficha comprobada; se pasa de uno a otro con el botón «Validar». En el cliente, al guardar queda «Activo».\n\nFíjate: las capturas son del cliente CCP de la demo, no del tuyo. Cambia solo el código; los pasos son los mismos.\n\nOjo: al tocar la condición de cobro, el tercero vuelve a «Provisional» y hay que validarlo otra vez. Por eso se valida al final. La condición de C{INI} es la que creaste en «Dar de alta los datos básicos de gestión»: aquí no la cambias, solo la compruebas.\n\nDónde: «Finanzas › Maestros › Terceros › Registro terceros» y «Gestión › Maestros › Terceros › Clientes › Registro».",
+      "duracionMin": 35,
+      "secciones": [
+        {
+          "id": "ventas-cliente-tercero",
+          "titulo": "Comprobar el tercero y su relación contable",
+          "paraQueSirve": "Sirve para asegurarte de que C{INI} existe como tercero y tiene su cuenta de cliente. Sin la relación contable «Clientes» (CLI), la factura no sabe a qué cuenta 43000 apuntar.",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Registro terceros"
+          ],
+          "explicacion": [
+            "La pantalla se titula «TERCEROS». La ficha tiene pestañas en horizontal: «Terceros», «Relaciones», «Datos bancarios», «Condiciones de pago», «Condiciones de cobro», «Direcciones», «Contactos», «Mandato», «Impuestos» y «E-mails».",
+            "C{INI} ya existe: lo creaste en «Dar de alta los datos básicos de contabilidad». Ábrelo desde la lista: pulsa su código en azul (o el número de fila) y se abre su ficha. Para encontrarlo entre muchos, usa «Filtros». No pulses «Nuevo»: no crees otro tercero. Si C{INI} no aparece, vuelve a ese bloque.",
+            "En la pestaña «Terceros», la «Categoría» es «Clientes» (001). Con esa categoría el ERP ofrece la relación de cliente (CLI) y la cuenta contable de cliente (43000).",
+            "La relación contable une al tercero con su cuenta del plan contable. Para un cliente, el «Tipo relación» es «Clientes» (CLI) y la cuenta es una 43000 propia de ese cliente.",
+            "Si «Cuenta» está vacía, déjala así: al guardar, el ERP crea la cuenta del cliente. Si C{INI} ya tiene la suya (la que diste de alta en Maestros), no la toques."
+          ],
+          "campos": [
+            {
+              "campo": "Tercero",
+              "significado": "Código del tercero (máximo 12 caracteres).",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Categoría *",
+              "significado": "Tipo de tercero. Con «Clientes» (001) el ERP ofrece la relación de cliente.",
+              "ejemplo": "Clientes (001)"
+            },
+            {
+              "campo": "Tipo tercero *",
+              "significado": "Si la relación es de cliente, de proveedor…",
+              "ejemplo": "Cliente"
+            },
+            {
+              "campo": "Tipo relación *",
+              "significado": "Relación contable. Para un cliente, «Clientes» (CLI).",
+              "ejemplo": "Clientes (CLI)"
+            },
+            {
+              "campo": "Plan contable *",
+              "significado": "Plan de cuentas al que pertenece la cuenta.",
+              "ejemplo": "ES (PGE 2008)"
+            },
+            {
+              "campo": "Cuenta",
+              "significado": "Cuenta del cliente. Vacía, la pone el ERP al guardar.",
+              "ejemplo": "43000.00… del cliente"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Registro terceros», entra en la ficha de C{INI} y pulsa la pestaña «Relaciones»",
+              "pregunta": "Tienes abierta la ficha del tercero C{INI}. ¿Qué pestaña abres para ver su cuenta de cliente?",
+              "detalle": "Ruta: Finanzas › Maestros › Terceros › Registro terceros. En el buscador: ctercero. En la lista, pulsa el código azul de C{INI} para abrir su ficha. La captura es del tercero CCP de la demo; la tuya es C{INI}.",
+              "imagen": "ventas-n-03.webp",
+              "hotspot": {
+                "x": 17.0,
+                "y": 11.3,
+                "w": 5.9,
+                "h": 3.4,
+                "etiqueta": "Relaciones"
+              }
+            },
+            {
+              "texto": "Comprueba que hay una fila «Cliente» › «Clientes» › «PGE 2008» con una cuenta 43000",
+              "detalle": "En la captura sale 43000.00CCP. En tu rejilla verás la cuenta de C{INI}, por ejemplo 43000.00901 si es la que creaste en Maestros.",
+              "imagen": "ventas-n-04.webp",
+              "hotspot": {
+                "x": 71.4,
+                "y": 31.4,
+                "w": 13.9,
+                "h": 3.2,
+                "etiqueta": "Cuenta"
+              }
+            },
+            {
+              "texto": "Si no hay fila, pulsa «Añadir relacion», comprueba «Tipo tercero» «Cliente» (viene puesto), elige «Tipo relación» «Clientes» y «Plan contable» ES, deja «Cuenta» vacía y pulsa «Guardar»",
+              "detalle": "El desplegable de «Tipo relación» muestra «Clientes» y debajo su código, CLI. Al guardar, el ERP pone la cuenta 43000 del cliente.",
+              "imagen": "ventas-n-05.webp",
+              "hotspot": {
+                "x": 33.9,
+                "y": 44.0,
+                "w": 8.4,
+                "h": 4.9,
+                "etiqueta": "Tipo relación"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "El botón se llama «Añadir relacion», sin tilde: es el rótulo del ERP."
+            },
+            {
+              "tipo": "nota",
+              "texto": "El tercero también necesita una dirección (pestaña «Direcciones», dirección 0): el pedido la propone al elegir el cliente. Si falta, pulsa «Añadir direccion»."
+            }
+          ]
+        },
+        {
+          "id": "ventas-cliente-maestro",
+          "titulo": "Completar el cliente en el Maestro de clientes",
+          "paraQueSirve": "Sirve para que el ERP sepa cómo venderle y facturarle: tipo de cliente, comercial, a quién se factura, cómo se agrupan los albaranes y en qué moneda.",
+          "ruta": [
+            "Gestión",
+            "Maestros",
+            "Terceros",
+            "Clientes",
+            "Registro"
+          ],
+          "explicacion": [
+            "La pantalla es el «MAESTRO DE CLIENTES». La lista muestra cada cliente con su tipo, su agrupación de empresas, su tercero de facturación y su divisa.",
+            "C{INI} ya es cliente: lo diste de alta en «Dar de alta los datos básicos de gestión» (módulo Compras). Ábrelo desde la lista pulsando su código en azul y comprueba cada dato de la tabla. Rellena solo lo que falte; no crees otro cliente. Si no está en la lista, vuelve a ese bloque.",
+            "La ficha son cajas con pestañas internas: «Identificación»; «Información general», «Facturación», «Cobros», «Agente» y «Riesgo»; y «Datos financieros», «Tarifas» y «Reservas».",
+            "«Agrupación albaranes» decide cómo salen juntos en una factura los albaranes de un mismo cliente: «Tercero y más campos», «Tercero facturación», «Tercero comercial», «Por tipos de IVA» o «No agrupar».",
+            "«Método facturación» dice cuántos documentos entran en cada factura, por ejemplo «1 Albarán-1 Factura»: cada albarán genera su propia factura.",
+            "Aquí no hay «Tipo efecto» ni «Forma pago»: los documentos de venta los copian de la condición de cobro del tercero (siguiente parte). «Modalidad facturación» (cada cuánto se factura) y «Método facturación» (qué entra en cada factura) son datos del cliente; en este caso facturas a mano conformando el albarán, y sale una factura por albarán.",
+            "El «Comercial» del cliente es su responsable interno y se propone con el mismo código del cliente. No es el «Agente» del pedido: el agente es quien lleva cada venta, es obligatorio y se elige a mano al hacer el pedido (A01 «Agente 01»). Son dos campos distintos."
+          ],
+          "campos": [
+            {
+              "campo": "Cliente *",
+              "significado": "Tercero que pasa a ser cliente. Se busca por Tercero, Nombre o Id. fiscal.",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Fecha alta *",
+              "significado": "Fecha de alta del cliente.",
+              "ejemplo": "La de hoy"
+            },
+            {
+              "campo": "Estado *",
+              "significado": "Provisional al dar de alta; al guardar queda «Activo».",
+              "ejemplo": "Activo"
+            },
+            {
+              "campo": "Comercial *",
+              "significado": "Responsable comercial. Al elegir el cliente se propone el mismo código.",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Agrupación empresas *",
+              "significado": "Empresas en las que opera el cliente. ALL es «Holding de todas las sociedades».",
+              "ejemplo": "ALL"
+            },
+            {
+              "campo": "Tipo cliente *",
+              "significado": "Clasificación del cliente (pestaña «Información general»). La demo solo ofrece 0 GENERAL.",
+              "ejemplo": "0 GENERAL"
+            },
+            {
+              "campo": "Tercero facturación *",
+              "significado": "A quién se factura (pestaña «Facturación»).",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Dirección facturación *",
+              "significado": "Dirección que sale en la factura.",
+              "ejemplo": "0"
+            },
+            {
+              "campo": "Agrupación albaranes *",
+              "significado": "Cómo se agrupan los albaranes en la factura.",
+              "ejemplo": "Tercero y más campos"
+            },
+            {
+              "campo": "Modalidad facturación *",
+              "significado": "Cada cuánto se factura: diaria, semanal, decenal, quincenal, mensual o no facturable.",
+              "ejemplo": "Mensual"
+            },
+            {
+              "campo": "Método facturación *",
+              "significado": "Cuántos documentos entran en cada factura.",
+              "ejemplo": "1 Albarán-1 Factura"
+            },
+            {
+              "campo": "Divisa *",
+              "significado": "Moneda del cliente (pestaña «Datos financieros»).",
+              "ejemplo": "EUR"
+            },
+            {
+              "campo": "Portes *",
+              "significado": "Quién paga el transporte: debidos o pagados.",
+              "ejemplo": "Debidos"
+            },
+            {
+              "campo": "Grupo precio",
+              "significado": "Grupo de precios (pestaña «Tarifas»). Vacío, el precio se teclea en el pedido.",
+              "ejemplo": "(vacío)"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Registro» de Clientes y, en la lista, pulsa el código azul de C{INI}. No pulses «Nuevo»: el cliente ya existe",
+              "pregunta": "Estás en el Maestro de clientes. ¿Qué pulsas en la lista para abrir un cliente que ya existe?",
+              "detalle": "Ruta: Gestión › Maestros › Terceros › Clientes › Registro. En el buscador: gcliente. Cada código de la columna «Cliente» es un enlace azul: púlsalo (o el número de fila de su izquierda) y se abre la ficha. En la captura salen los clientes de la demo; tu C{INI} saldrá entre ellos. Si la lista es larga, «Filtros» (arriba, junto a «Ordenar») te ayuda a encontrarlo. «Nuevo» crea un cliente: aquí no lo necesitas. Si C{INI} no está, vuelve a «Dar de alta los datos básicos de gestión».",
+              "imagen": "ventas-n-06.webp",
+              "hotspot": {
+                "x": 18.2,
+                "y": 14.2,
+                "w": 3.0,
+                "h": 2.8,
+                "etiqueta": "Código del cliente"
+              }
+            },
+            {
+              "texto": "En «Identificación» comprueba Cliente C{INI}, Comercial C{INI} y Agrupación empresas ALL. En «Información general», Tipo cliente 0 GENERAL",
+              "detalle": "Los obligatorios llevan asterisco rojo. Al elegir el Cliente, el Comercial se propone solo con el mismo código. La captura es la ficha abierta del cliente CCP de la demo; la tuya es C{INI}.",
+              "imagen": "ventas-n-10.webp",
+              "hotspot": {
+                "x": 13.8,
+                "y": 49.0,
+                "w": 27.2,
+                "h": 4.3,
+                "etiqueta": "Tipo cliente"
+              }
+            },
+            {
+              "texto": "Abre la pestaña «Facturación»: Tercero facturación C{INI}, Dirección facturación 0, Agrupación albaranes «Tercero y más campos», Modalidad «Mensual» y Método «1 Albarán-1 Factura»",
+              "detalle": "Estos valores se proponen solos. Solo tienes que comprobarlos.",
+              "imagen": "ventas-n-08.webp",
+              "hotspot": {
+                "x": 41.7,
+                "y": 47.3,
+                "w": 16.3,
+                "h": 4.9,
+                "etiqueta": "Agrupación albaranes"
+              }
+            },
+            {
+              "texto": "Baja hasta «Datos financieros» y comprueba Portes «Debidos» y Divisa EUR",
+              "detalle": "La «Divisa» es obligatoria: sin ella no te deja guardar.",
+              "imagen": "ventas-n-09.webp",
+              "hotspot": {
+                "x": 25.7,
+                "y": 69.9,
+                "w": 12.4,
+                "h": 4.9,
+                "etiqueta": "Divisa"
+              }
+            },
+            {
+              "texto": "Si has cambiado algo, guarda con el disquete. Comprueba que el Estado es «Activo»",
+              "detalle": "En la ficha guardada salen los botones «Pedir datos», «Validar» y «Nuevo». No hace falta pulsar «Validar»: el Estado ya es «Activo» y «Validaciones» marca 0.",
+              "imagen": "ventas-n-10.webp",
+              "hotspot": {
+                "x": 68.7,
+                "y": 16.5,
+                "w": 14.2,
+                "h": 4.9,
+                "etiqueta": "Estado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Las pestañas «Cobros», «Agente» y «Riesgo» no hace falta tocarlas para vender. En «Cobros», «Tercero cobro» es el mismo C{INI}. En «Riesgo» los límites quedan vacíos."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Si «Grupo precio» está vacío, el precio no viene de ninguna tarifa: lo tecleas en la línea del pedido, como harás en este caso."
+            }
+          ]
+        },
+        {
+          "id": "ventas-cliente-cobro",
+          "titulo": "Comprobar la condición de cobro y validar el tercero",
+          "paraQueSirve": "Sirve para entender cómo y cuándo te paga el cliente y comprobar que C{INI} tiene su condición de cobro. El pedido, el albarán y la factura la copian en «Tipo efecto» y «Forma pago».",
+          "ruta": [
+            "Finanzas",
+            "Maestros",
+            "Terceros",
+            "Registro terceros"
+          ],
+          "explicacion": [
+            "Vuelves a la ficha del tercero C{INI}, pestaña «Condiciones de cobro». Ahí se dice con qué tipo de efecto cobras y en qué plazo.",
+            "El tipo de efecto es la forma de cobro: EF «Al contado», RC «Recibo», DD «Recibo domiciliado», TF «Transferencia», CH «Cheque»… El plazo dice cuándo vence: por ejemplo 30D «30 días», o T2D «2 Vtos. 30 y 60 días», que reparte el cobro en dos.",
+            "C{INI} ya tiene su condición: la que creaste en «Dar de alta los datos básicos de gestión», con el tipo de efecto R{INI} y el plazo P{INI}, que reparte el cobro en dos vencimientos (30 y 60 días). No la cambies: el caso del curso necesita esos dos vencimientos, de 121,00 cada uno.",
+            "Las capturas son del cliente CCP de la demo, que tiene una sola condición con 30 días. Sirven como ejemplo de dónde está la condición y cómo se ve; en la tuya verás R{INI} y P{INI}.",
+            "Cada vez que añades o cambias una condición de cobro, el tercero vuelve a «Provisional» (workflow del tercero). Por eso lo validas el último, cuando ya tiene relación, dirección y condición de cobro."
+          ],
+          "campos": [
+            {
+              "campo": "Empresas *",
+              "significado": "Empresas a las que se aplica la condición.",
+              "ejemplo": "ALL"
+            },
+            {
+              "campo": "Tipo efecto *",
+              "significado": "Cómo se cobra. El desplegable sale «Datos no disponibles» hasta que tecleas letras del código.",
+              "ejemplo": "R{INI}"
+            },
+            {
+              "campo": "Descripción *",
+              "significado": "Se rellena sola al elegir el tipo de efecto.",
+              "ejemplo": "El del tipo de efecto"
+            },
+            {
+              "campo": "Plazo pago *",
+              "significado": "Plazo de vencimiento: 30D «30 días», T2D «2 Vtos. 30 y 60 días»…",
+              "ejemplo": "P{INI} «2 Vtos. 30 y 60 dias {INI}»"
+            },
+            {
+              "campo": "Estado *",
+              "significado": "Estado del tercero: «Provisional» al crear o cambiar; «Validado» con el botón «Validar».",
+              "ejemplo": "Validado"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la pestaña «Condiciones de cobro» y comprueba que hay una fila con tu tipo de efecto R{INI} y tu plazo P{INI}",
+              "detalle": "La rejilla de la captura es de CCP, con una condición TF y «30 días». La tuya tendrá R{INI} y P{INI}. Si falta, no la inventes: vuelve a «Dar de alta los datos básicos de gestión», donde se crea (tipo de efecto R{INI} y plazo P{INI}).",
+              "imagen": "ventas-n-11.webp",
+              "hotspot": {
+                "x": 86.0,
+                "y": 25.2,
+                "w": 6.1,
+                "h": 2.8,
+                "etiqueta": "Añadir cobro"
+              }
+            },
+            {
+              "texto": "Abre la fila para ver el diálogo «Condiciones de cobro a cliente»: «Tipo efecto» y «Plazo pago». No cambies nada y cierra con «Cancelar»",
+              "pregunta": "Estás en «Condiciones de cobro a cliente». ¿Qué campo dice cuántos vencimientos y a cuántos días cobras?",
+              "detalle": "«Plazo pago» dice cuándo vence el cobro (30D: a 30 días; el tuyo, P{INI}: dos vencimientos, a 30 y 60 días). «Tipo efecto» dice cómo se cobra (TF: transferencia; el tuyo, R{INI}). La captura es del alta de la condición de CCP, con «30D» recién escrito en «Plazo pago»; sirve para ver dónde están los campos, aunque tú solo abres y cierras.",
+              "imagen": "ventas-n-12.webp",
+              "hotspot": {
+                "x": 50.0,
+                "y": 31.0,
+                "w": 47.4,
+                "h": 4.9,
+                "etiqueta": "Plazo pago"
+              }
+            },
+            {
+              "texto": "Pulsa «Validar» en la barra superior y comprueba que el «Estado» es «Validado»",
+              "detalle": "Si no validas al final, el tercero se queda «Provisional». Valida cuando ya tiene relación, dirección y condición de cobro.",
+              "imagen": "ventas-n-13.webp",
+              "hotspot": {
+                "x": 55.5,
+                "y": 20.9,
+                "w": 20.7,
+                "h": 4.9,
+                "etiqueta": "Estado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "Tras tocar la condición de cobro, el tercero vuelve a «Provisional» (workflow TER)."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Pulsa «Validar» otra vez al final."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Domiciliación bancaria es la autorización para cobrar el recibo directamente en la cuenta del cliente. La empresa de la demo no tiene configurada la suya, y tu tipo de efecto R{INI} es un recibo domiciliado, así que es probable que al contabilizar la factura salga «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.» Se resuelve en la factura, como verás en «Vender: pedido, albarán y factura»; el cliente no se cambia."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿De dónde copian el pedido, el albarán y la factura el «Tipo efecto» y la «Forma pago»?",
+          "opciones": [
+            "Del Maestro de clientes",
+            "De la condición de cobro del tercero",
+            "De la tipología del documento",
+            "Del artículo"
+          ],
+          "correcta": 1,
+          "explicacion": "El cliente no tiene «Tipo efecto» ni «Forma pago». Salen de la condición de cobro del tercero."
+        },
+        {
+          "pregunta": "Has cambiado la condición de cobro del tercero. ¿Qué pasa con su estado?",
+          "opciones": [
+            "Sigue «Validado»",
+            "Vuelve a «Provisional» y hay que validarlo otra vez",
+            "Se borra el cliente",
+            "Pasa a «Anulado»"
+          ],
+          "correcta": 1,
+          "explicacion": "El workflow del tercero lo devuelve a «Provisional». Por eso se valida el último."
+        },
+        {
+          "pregunta": "C{INI} ya tiene condición de cobro de Maestros (R{INI} y P{INI}). ¿Qué haces con ella en este bloque?",
+          "opciones": [
+            "La borras y creas una con EF",
+            "La compruebas y no la cambias: el caso necesita sus dos vencimientos",
+            "La cambias a TF",
+            "Creas otro cliente con otra condición"
+          ],
+          "correcta": 1,
+          "explicacion": "La condición se comprueba, no se cambia. P{INI} reparte el cobro en dos vencimientos de 30 y 60 días."
+        },
+        {
+          "pregunta": "¿Qué relación contable lleva a un tercero a la cuenta 43000?",
+          "opciones": [
+            "PRO",
+            "ACR",
+            "Clientes (CLI)",
+            "Bancos"
+          ],
+          "correcta": 2,
+          "explicacion": "La relación «Clientes» (CLI) apunta a una cuenta 43000 propia del cliente."
+        },
+        {
+          "pregunta": "¿Qué decide el campo «Agrupación albaranes» del cliente?",
+          "opciones": [
+            "La divisa de la factura",
+            "Cómo salen juntos los albaranes del cliente en una factura",
+            "El almacén de salida",
+            "El agente comercial"
+          ],
+          "correcta": 1,
+          "explicacion": "Elige si los albaranes se agrupan por tercero, por tercero de facturación, por tipos de IVA o no se agrupan."
+        },
+        {
+          "pregunta": "¿Cuál es la diferencia entre el tercero y el cliente?",
+          "opciones": [
+            "Ninguna: son la misma ficha",
+            "El tercero es la identidad (nombre, NIF, direcciones, cuenta) y el cliente son las condiciones comerciales",
+            "El tercero solo vale para comprar",
+            "El cliente se crea en Finanzas y el tercero en Gestión"
+          ],
+          "correcta": 1,
+          "explicacion": "El tercero se guarda una vez en Finanzas. El cliente, en Gestión, añade cómo se le vende y se le factura."
+        }
+      ],
+      "checklist": [
+        "El tercero C{INI} tiene la categoría «Clientes» (001) y la relación «Clientes» (CLI) con su cuenta 43000.",
+        "C{INI} aparece en el Maestro de clientes con Comercial C{INI}, Agrupación empresas ALL, Tipo cliente 0 GENERAL y Divisa EUR.",
+        "En «Facturación» el Tercero facturación es C{INI}, con Agrupación albaranes y Método «1 Albarán-1 Factura».",
+        "La condición de cobro de C{INI} es la de Maestros (tipo de efecto R{INI} y plazo P{INI}), sin cambios.",
+        "El tercero C{INI} está en estado «Validado» (valídalo el último)."
+      ],
+      "problemas": [
+        {
+          "problema": "El desplegable de «Tipo efecto» sale con «Datos no disponibles».",
+          "solucion": "Teclea las primeras letras del código (EF). La lista solo se llena cuando escribes."
+        },
+        {
+          "problema": "Tras guardar la condición de cobro, el tercero vuelve a «Provisional».",
+          "solucion": "Es el workflow del tercero. Pulsa «Validar» otra vez, ya con relación, dirección y condición de cobro puestas."
+        },
+        {
+          "problema": "Al contabilizar más adelante sale «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.»",
+          "solucion": "El tipo de efecto de la factura exige una domiciliación bancaria (autorización para cobrar el recibo en la cuenta del cliente) y la empresa de la demo no la tiene. No toques el cliente: en la cabecera de la factura cambia solo «Tipo efecto» a EF (deja «Forma pago» P{INI}), guarda y vuelve a contabilizar (se explica en «Vender: pedido, albarán y factura»)."
+        }
+      ],
+      "aprendido": [
+        "Has comprobado que C{INI} es tercero con la categoría «Clientes» y su relación contable «Clientes» (CLI) con la cuenta 43000.",
+        "Has completado el cliente en el Maestro de clientes: comercial, agrupación de empresas, tipo, facturación, agrupación de albaranes y divisa.",
+        "Has comprobado la condición de cobro de C{INI} (tipo de efecto R{INI}, plazo P{INI}), que los documentos de venta proponen solos.",
+        "Sabes que al cambiar las condiciones el tercero vuelve a «Provisional» y que se valida al final."
+      ]
+    },
+    {
+      "id": "ventas-documentos",
+      "numero": 4,
+      "titulo": "Configurar los documentos de venta",
+      "objetivo": "Prepararás el pedido PD{INI}, el albarán AP{INI} y la factura FP{INI}, enlazados entre sí, y leerás cómo se numeran.",
+      "concepto": "Cada documento de venta tiene un tipo: la tipología. Es como un molde: todos los pedidos, albaranes o facturas que hagas con él salen con la misma forma y el mismo comportamiento. Si la tipología está mal, los documentos salen sin número, sin líneas o sin asiento, y la venta no cuadra con la contabilidad.\n\nLa tipología dice cuatro cosas: con qué serie se numera el documento, de qué documento copia las líneas, a qué documento da paso y si genera asiento al contabilizarlo.\n\nLa serie es el contador que numera, como el dispensador de turnos de una tienda. El numerador es la pantalla donde se define ese contador: una máscara que arma el número con la empresa, la serie y un contador de 6 cifras. Tú no lo escribes: lo pone el ERP al guardar.\n\nEl documento origen es aquel del que nace otro, y el documento destino, aquel al que da paso. En tu circuito, el pedido da paso al albarán y el albarán, a la factura. «Copiar líneas» decide si el documento nuevo trae las líneas del origen: «Sí» las copia solo. «Actualizar origen» «Sumando» anota en el origen lo ya servido o facturado, para no repetirlo.\n\nEjemplo: tu venta de 10 unidades a 20,00 usa tres tipologías. El pedido PD{INI} no tiene origen: sus líneas las tecleas a mano. El albarán AP{INI} copia las líneas del pedido y no genera asiento. La factura FP{INI} copia los albaranes AP{INI} y genera el asiento: 43000 al debe por 242,00, 47000 al haber por 42,00 y 70000 al haber por 200,00.\n\nFíjate: no creas las tipologías desde cero. Con «Nuevo como» copias una que ya existe en la demo (PED, ACL2 y FV) y le cambias el código y la descripción. Las capturas son de las tipologías PDCP, APCP y FPCP de la demo; las tuyas son PD{INI}, AP{INI} y FP{INI}.\n\nOjo: el código de una tipología admite como máximo 4 caracteres. Con iniciales de 3 letras usa solo 2.\n\nDónde: «Gestión › Maestros › Auxiliares › Numerador de documentos» y «Gestión › Ventas › Maestros › Documentos».",
+      "duracionMin": 40,
+      "secciones": [
+        {
+          "id": "ventas-documentos-numerador",
+          "titulo": "Leer la numeración de los documentos",
+          "paraQueSirve": "Sirve para entender de dónde sale el número de cada documento (0PV000006, 0AV000006, 0FV000007…). Tú no lo escribes: lo pone el ERP al guardar, según la serie de la tipología.",
+          "ruta": [
+            "Gestión",
+            "Maestros",
+            "Auxiliares",
+            "Numerador de documentos"
+          ],
+          "explicacion": [
+            "La pantalla se titula «NUMERADORES DE DOCUMENTOS». Cada fila es una serie, es decir, un contador propio: «Tabla origen» (el documento que numera), «Código», «Descripción», «Rotura», «Numerador», «Control cronológico» y «Fecha baja».",
+            "En ventas usas cuatro series: OV (oferta de venta), PV (pedido de venta), AV (albarán de venta) y FV (factura de venta). También hay series de anticipos.",
+            "«Rotura» decide cuándo empieza un contador nuevo. En ventas es #e#s: empresa más serie. Hay un contador para cada empresa y serie, pero no uno por año.",
+            "«Numerador» es la máscara del número: #e#s#6n significa #e = empresa, #s = serie y #6n = un contador de 6 cifras. Ejemplo: empresa 0, serie PV y contador 000006 dan 0PV000006.",
+            "Aquí solo los lees: tus tipologías usan las series que ya existen. No cambies nada.",
+            "Abajo, la caja «Línea (n)» lista los contadores de la serie: «Serie», «Fecha último documento» y «Último número». Ninguno de los de ventas tiene marcado «Control cronológico», que obligaría a que fecha y número vayan en orden."
+          ],
+          "campos": [
+            {
+              "campo": "Tabla origen *",
+              "significado": "Documento que numera esta serie.",
+              "ejemplo": "gvenpedh (pedido de venta)"
+            },
+            {
+              "campo": "Código *",
+              "significado": "Código de la serie. Es lo que eliges en el campo «Serie» de la tipología.",
+              "ejemplo": "PV"
+            },
+            {
+              "campo": "Descripción *",
+              "significado": "Nombre de la serie.",
+              "ejemplo": "PEDIDO DE VENTA"
+            },
+            {
+              "campo": "Rotura *",
+              "significado": "Qué hace que el contador empiece de nuevo desde 1. Aquí: cambiar de empresa o de serie.",
+              "ejemplo": "#e#s"
+            },
+            {
+              "campo": "Numerador *",
+              "significado": "Criterio de numeración: empresa + serie + 6 cifras.",
+              "ejemplo": "#e#s#6n › 0PV000006"
+            },
+            {
+              "campo": "Control cronológico",
+              "significado": "Si obliga a que fecha y número vayan en orden. En ventas está desmarcado.",
+              "ejemplo": "Desmarcado"
+            },
+            {
+              "campo": "Último número",
+              "significado": "Último número que ha dado cada contador de la serie.",
+              "ejemplo": "El que toque en la demo"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Numerador de documentos» y localiza las series OV, PV, AV y FV",
+              "pregunta": "Estás en los numeradores. ¿Dónde localizas la serie del pedido de venta?",
+              "detalle": "Ruta: Gestión › Maestros › Auxiliares › Numerador de documentos. La lista tiene 16 filas; las de ventas son las que tienen «Tabla origen» gvenofeh, gvenpedh, gvenmovh y gvenfach.",
+              "imagen": "ventas-n-14.webp",
+              "hotspot": {
+                "x": 23.8,
+                "y": 47.7,
+                "w": 4.4,
+                "h": 3.2,
+                "etiqueta": "PV"
+              }
+            },
+            {
+              "texto": "Abre la serie PV y lee «Rotura» (#e#s) y «Numerador» (#e#s#6n)",
+              "detalle": "No cambies nada. Abajo, la caja «Línea (4)» muestra los contadores de la serie: 0PV, DISPV… Cada uno lleva su último número.",
+              "imagen": "ventas-n-15.webp",
+              "hotspot": {
+                "x": 55.0,
+                "y": 22.6,
+                "w": 42.0,
+                "h": 4.9,
+                "etiqueta": "Rotura"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Si falta el numerador de un tipo de documento, el ERP no puede numerar ese documento. Por eso las tipologías usan series que ya existen."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Este numerador es el de los documentos de gestión. La numeración fiscal de las facturas, la de los libros de IVA, es otra y está en Finanzas."
+            }
+          ]
+        },
+        {
+          "id": "ventas-documentos-pedido",
+          "titulo": "Crear la tipología de pedido PD{INI}",
+          "paraQueSirve": "Sirve para que tus pedidos salgan con la serie PV y sin documento origen: sus líneas las tecleas a mano. Después, el pedido dará paso al albarán.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Maestros",
+            "Documentos",
+            "Pedidos"
+          ],
+          "explicacion": [
+            "La pantalla se titula «TIPOLOGÍA DE PEDIDOS DE VENTAS». La demo ya trae la tipología PED «Pedido (sin Oferta)»: no tiene «Tabla origen», porque el pedido no nace de una oferta. La copias con «Nuevo como».",
+            "«Nuevo», arriba a la derecha, abre un menú con dos opciones: «Nuevo» (en blanco) y «Nuevo como» (copia el registro que estás viendo en una ventana, con «Guardar» abajo a la derecha). Usa «Nuevo como».",
+            "El pedido admite líneas a mano: en el pedido, la pestaña «Líneas» tiene un botón «Nuevo» para teclear artículo, cantidad y precio. No hace falta oferta.",
+            "La ficha son cajas apiladas: «Identificación», «Documento origen», «Destinos», «Impuestos», «Valoración»… En «Documento origen», «Tabla origen» queda vacía y no hay ninguna casilla de «Copiar línea origen» marcada.",
+            "El campo «Albarán ventas» de la caja «Destinos» dice a qué tipología de albarán da paso el pedido. Lo rellenas al final, cuando exista AP{INI}."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo pedido *",
+              "significado": "Código de la tipología (máximo 4 caracteres).",
+              "ejemplo": "PD{INI}"
+            },
+            {
+              "campo": "Descripción",
+              "significado": "Nombre de la tipología.",
+              "ejemplo": "Pedido venta {INI} sin origen"
+            },
+            {
+              "campo": "Serie *",
+              "significado": "Numerador que da número a los pedidos.",
+              "ejemplo": "PV"
+            },
+            {
+              "campo": "Tipo * / Estado *",
+              "significado": "Clase de pedido y si la tipología está activa.",
+              "ejemplo": "Normal / Activo"
+            },
+            {
+              "campo": "Tabla origen",
+              "significado": "Documento del que copia las líneas. Vacía: no hay origen.",
+              "ejemplo": "(vacía)"
+            },
+            {
+              "campo": "Albarán ventas",
+              "significado": "Tipología de albarán a la que da paso el pedido.",
+              "ejemplo": "AP{INI}"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la tipología PED, despliega «Nuevo» y elige «Nuevo como»",
+              "pregunta": "Tienes abierta la tipología PED. ¿Qué opción del menú «Nuevo» copia esta tipología?",
+              "detalle": "Ruta: Gestión › Ventas › Maestros › Documentos › Pedidos. Si no ves PED, búscala en la lista de tipologías.",
+              "imagen": "ventas-n-16.webp",
+              "hotspot": {
+                "x": 86.4,
+                "y": 11.3,
+                "w": 7.0,
+                "h": 3.6,
+                "etiqueta": "Nuevo como"
+              }
+            },
+            {
+              "texto": "Cambia «Tipo pedido» a PD{INI} y la «Descripción»; deja «Serie» PV y «Tabla origen» vacía; pulsa «Guardar»",
+              "detalle": "La captura es de PDCP «Pedido venta CP sin origen», de la demo. El código admite como máximo 4 caracteres.",
+              "imagen": "ventas-n-17.webp",
+              "hotspot": {
+                "x": 1.8,
+                "y": 16.3,
+                "w": 8.4,
+                "h": 4.9,
+                "etiqueta": "Tipo pedido"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Si tus iniciales tienen 3 letras, usa solo las 2 primeras: PDJA, no PDJAM. Si no, el campo sale en rojo con «Demasiado largo»."
+            }
+          ]
+        },
+        {
+          "id": "ventas-documentos-albaran",
+          "titulo": "Crear la tipología de albarán AP{INI}",
+          "paraQueSirve": "Sirve para que tu albarán nazca del pedido, copie sus líneas y no genere asiento: la venta se contabiliza solo con la factura.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Maestros",
+            "Documentos",
+            "Albaranes"
+          ],
+          "explicacion": [
+            "La pantalla se titula «TIPOLOGÍA DE ALBARANES Y EXPEDICIONES DE VENTAS». Copia la tipología ACL2 «Albaran ventas CL desde pedido» con «Nuevo como»: ya trae «Pedidos de venta» como «Tabla origen», por eso se copia esta y no otra.",
+            "«Documento origen» es el documento del que nace este. En un albarán desde pedido, es «Pedidos de venta».",
+            "«Copiar líneas» «Sí» inserta automáticamente las líneas del documento origen. «Validar» las inserta desde un selector, y «No» ni las copia ni deja seleccionarlas.",
+            "«Actualizar origen» «Sumando» actualiza la línea del pedido sumando lo servido. Así el pedido sabe qué falta por servir y puede pasar a «Servido o Facturado».",
+            "«Cuenta origen» y «Cuenta destino» (DISP «DISPONIBLE PARA SER UTILIZADO» y NSAL «NO SALDO») son las cuentas logísticas por las que se mueve la mercancía al salir.",
+            "«Asiento expediciones» y «Asiento albaranes» quedan vacíos: el albarán no contabiliza. El asiento lo genera la factura.",
+            "«Tipo factura», en «Documento destino», dice qué tipología de factura se usa al facturar este albarán. Lo rellenas al final, cuando exista FP{INI}."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo movimiento *",
+              "significado": "Código de la tipología (máximo 4 caracteres).",
+              "ejemplo": "AP{INI}"
+            },
+            {
+              "campo": "Descripción *",
+              "significado": "Nombre de la tipología.",
+              "ejemplo": "Albarán venta {INI} desde pedido"
+            },
+            {
+              "campo": "Serie *",
+              "significado": "Numerador de los albaranes.",
+              "ejemplo": "AV"
+            },
+            {
+              "campo": "Expedición albarán *",
+              "significado": "Clase de expedición.",
+              "ejemplo": "Albarán"
+            },
+            {
+              "campo": "Cuenta origen * / Cuenta destino *",
+              "significado": "Cuentas logísticas por las que sale la mercancía.",
+              "ejemplo": "DISP / NSAL"
+            },
+            {
+              "campo": "Tabla origen",
+              "significado": "Documento del que copia las líneas.",
+              "ejemplo": "Pedidos de venta"
+            },
+            {
+              "campo": "Copiar líneas",
+              "significado": "Sí: inserta automáticamente las líneas del documento origen.",
+              "ejemplo": "Sí"
+            },
+            {
+              "campo": "Actualizar origen",
+              "significado": "Sumando: actualiza la línea del documento origen sumando.",
+              "ejemplo": "Sumando"
+            },
+            {
+              "campo": "Tipo factura",
+              "significado": "Tipología de factura al facturar este albarán.",
+              "ejemplo": "FP{INI}"
+            },
+            {
+              "campo": "Valorar *",
+              "significado": "Cómo se valora el precio de las líneas.",
+              "ejemplo": "Tarifa"
+            },
+            {
+              "campo": "Asiento expediciones / Asiento albaranes",
+              "significado": "Plantillas de asiento del albarán. Vacías: no contabiliza.",
+              "ejemplo": "(vacíos)"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la tipología ACL2, despliega «Nuevo» › «Nuevo como» y cambia «Tipo movimiento» a AP{INI} y la «Descripción»",
+              "pregunta": "Estás en el diálogo de «Nuevo como» del albarán. ¿Qué campo cambias para dar tu propio código a la tipología?",
+              "detalle": "La captura es de APCP «Albarán venta CP desde pedido»: serie AV, Expedición albarán «Albarán», Cuenta origen DISP y Cuenta destino NSAL. Deja esos valores como vienen.",
+              "imagen": "ventas-n-18.webp",
+              "hotspot": {
+                "x": 11.0,
+                "y": 16.3,
+                "w": 13.2,
+                "h": 4.9,
+                "etiqueta": "Tipo movimiento"
+              }
+            },
+            {
+              "texto": "En «Documento origen» comprueba «Tabla origen» «Pedidos de venta», «Copiar líneas» «Sí» y «Actualizar origen» «Sumando»",
+              "detalle": "Si «Copiar líneas» no está en «Sí», márcalo. «Sumando» queda resaltado como la opción elegida.",
+              "imagen": "ventas-n-19.webp",
+              "hotspot": {
+                "x": 11.0,
+                "y": 45.2,
+                "w": 39.0,
+                "h": 11.8,
+                "etiqueta": "Copiar líneas"
+              }
+            },
+            {
+              "texto": "En la pestaña «Contabilización» deja vacíos «Asiento expediciones» y «Asiento albaranes» y pulsa «Guardar»",
+              "detalle": "«Datos contables» y «Tesorería» están en «no». Sin plantilla de asiento, el albarán no genera asiento.",
+              "imagen": "ventas-n-20.webp",
+              "hotspot": {
+                "x": 11.0,
+                "y": 16.6,
+                "w": 39.0,
+                "h": 4.9,
+                "etiqueta": "Asiento expediciones"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "En la caja «Indicativos» hay otro campo «Tipo movimiento» con el valor «Salida». Es el tipo de movimiento de stock, no el código de tu tipología."
+            },
+            {
+              "tipo": "nota",
+              "texto": "En este curso el albarán no se contabiliza. En otras empresas sí se puede: se pone una plantilla de asiento (AV) en «Asiento albaranes»."
+            }
+          ]
+        },
+        {
+          "id": "ventas-documentos-factura",
+          "titulo": "Crear la tipología de factura FP{INI}",
+          "paraQueSirve": "Sirve para que tu factura se alimente solo de los albaranes AP{INI} y se contabilice con la plantilla de ventas.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Maestros",
+            "Documentos",
+            "Facturas"
+          ],
+          "explicacion": [
+            "La pantalla se titula «TIPOLOGÍA DE FACTURAS DE VENTAS». Copia la tipología FV «Factura de Ventas» con «Nuevo como».",
+            "Su «Tabla origen» es «Expediciones»: así llama el ERP a los albaranes de venta.",
+            "«Condición selección» filtra qué albaranes puede facturar esta tipología. tipdoc es la columna «tipo de documento» del albarán: guarda el código de su tipología. La condición tipdoc IN ('AP{INI}') significa «solo los albaranes de tipología AP{INI}». Así tu factura no recoge los albaranes de otras tipologías de la demo, que es compartida. Escríbela con apóstrofos rectos ('), no con comillas curvas, y con las mayúsculas y los paréntesis exactos.",
+            "FV trae «Copiar líneas» en «Validar». Cámbialo a «Sí»: la factura copia sola las líneas de los albaranes. «Actualización tabla origen» «Sumando» marca en el albarán lo ya facturado.",
+            "«Tipo asiento» «FACTURA DE VENTAS» (viene de FV) es la plantilla que genera el asiento al contabilizar: cliente al debe, IVA y ventas al haber."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo factura *",
+              "significado": "Código de la tipología (máximo 4 caracteres).",
+              "ejemplo": "FP{INI}"
+            },
+            {
+              "campo": "Descripción *",
+              "significado": "Nombre de la tipología.",
+              "ejemplo": "Factura venta {INI} desde albarán"
+            },
+            {
+              "campo": "Serie *",
+              "significado": "Numerador de las facturas.",
+              "ejemplo": "FV"
+            },
+            {
+              "campo": "Tabla origen",
+              "significado": "Documento del que copia: los albaranes de venta.",
+              "ejemplo": "Expediciones"
+            },
+            {
+              "campo": "Condición selección (text/sql)",
+              "significado": "Filtro de los albaranes que se pueden facturar.",
+              "ejemplo": "tipdoc IN ('AP{INI}')"
+            },
+            {
+              "campo": "Copiar líneas",
+              "significado": "Sí: copia automáticamente las líneas de los albaranes.",
+              "ejemplo": "Sí"
+            },
+            {
+              "campo": "Actualización tabla origen",
+              "significado": "Sumando: marca en el albarán lo facturado.",
+              "ejemplo": "Sumando"
+            },
+            {
+              "campo": "Tipo asiento",
+              "significado": "Plantilla del asiento de la factura.",
+              "ejemplo": "FACTURA DE VENTAS"
+            },
+            {
+              "campo": "Relación cliente * / Clase *",
+              "significado": "Relación contable del cliente y clase de factura.",
+              "ejemplo": "Clientes / Factura completa"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la tipología FV, despliega «Nuevo» › «Nuevo como» y cambia «Tipo factura» a FP{INI} y la «Descripción»",
+              "detalle": "Deja la «Serie» en FV. La captura es de FPCP «Factura venta CP desde albarán»."
+            },
+            {
+              "texto": "En «Documento origen» pon «Tabla origen» «Expediciones», la condición tipdoc IN ('AP{INI}'), «Copiar líneas» «Sí» y «Actualización tabla origen» «Sumando»",
+              "pregunta": "Estás en «Documento origen» de la tipología de factura. ¿Dónde escribes qué albaranes puede facturar?",
+              "detalle": "La captura muestra la condición escrita a la derecha, con «Sí» y «Sumando» marcados.",
+              "imagen": "ventas-n-21.webp",
+              "hotspot": {
+                "x": 49.7,
+                "y": 30.3,
+                "w": 43.1,
+                "h": 4.9,
+                "etiqueta": "Condición selección"
+              }
+            },
+            {
+              "texto": "En la pestaña «Contabilización» comprueba «Tipo asiento» «FACTURA DE VENTAS» y pulsa «Guardar»",
+              "detalle": "«Datos contables» está en «no». El «Tipo asiento» viene de la tipología FV que has copiado.",
+              "imagen": "ventas-n-22.webp",
+              "hotspot": {
+                "x": 6.8,
+                "y": 28.2,
+                "w": 57.5,
+                "h": 4.9,
+                "etiqueta": "Tipo asiento"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "La condición usa el código de tu tipología de albarán (AP{INI}). Si te equivocas de código, la factura no encontrará ningún albarán que conformar."
+            }
+          ]
+        },
+        {
+          "id": "ventas-documentos-enlazar",
+          "titulo": "Enlazar pedido, albarán y factura",
+          "paraQueSirve": "Sirve para cerrar la cadena: el pedido sabe a qué albarán da paso y el albarán, a qué factura. Sin estos dos enlaces, los documentos no se encadenan.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Maestros",
+            "Documentos"
+          ],
+          "explicacion": [
+            "Hasta ahora has creado las tres tipologías por separado. El «Albarán ventas» del pedido y el «Tipo factura» del albarán no se podían rellenar antes, porque AP{INI} y FP{INI} aún no existían.",
+            "El «Documento destino» es el documento al que da paso otro. El pedido da paso al albarán y el albarán, a la factura.",
+            "Los dos se cambian en la ficha ya guardada de cada tipología y se guardan con el icono del disquete de la barra superior. Para abrir una tipología que ya existe: en la lista, pulsa su código en azul; si estás en una ficha, pasa de un registro a otro con las flechas ‹ › de la barra superior."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo factura",
+              "significado": "Caja «Documento destino» de AP{INI}: tipología de factura que se usa al facturar el albarán.",
+              "ejemplo": "FP{INI}"
+            },
+            {
+              "campo": "Albarán ventas",
+              "significado": "Caja «Destinos» de PD{INI}: tipología de albarán a la que da paso el pedido.",
+              "ejemplo": "AP{INI}"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la ficha de AP{INI} y en «Documento destino» elige «Tipo factura» FP{INI}; guarda con el disquete",
+              "pregunta": "Tienes abierta la ficha de AP{INI}. ¿Qué campo apunta ahora a la tipología de factura FP{INI}?",
+              "detalle": "Al copiar de ACL2, «Tipo factura» salía «Factura de Ventas» (FV). Cámbialo por la tuya.",
+              "imagen": "ventas-n-23.webp",
+              "hotspot": {
+                "x": 24.4,
+                "y": 50.2,
+                "w": 30.8,
+                "h": 4.9,
+                "etiqueta": "Tipo factura"
+              }
+            },
+            {
+              "texto": "Abre la ficha de PD{INI} y en la caja «Destinos» elige «Albarán ventas» AP{INI}; guarda con el disquete",
+              "detalle": "En la captura sale «Albarán venta CP desde pedido» (APCP). En «Impuestos», «Relación cliente» es «Clientes» (CLI): déjalo como viene.",
+              "imagen": "ventas-n-24.webp",
+              "hotspot": {
+                "x": 24.4,
+                "y": 21.5,
+                "w": 30.1,
+                "h": 4.9,
+                "etiqueta": "Albarán ventas"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Para ver la cadena entera, abre PD{INI}, AP{INI} y FP{INI} y comprueba: pedido › «Albarán ventas» AP{INI}; albarán › «Tabla origen» «Pedidos de venta» y «Tipo factura» FP{INI}; factura › «Tabla origen» «Expediciones»."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "¿Qué «Tabla origen» tiene la tipología de pedido PD{INI}?",
+          "opciones": [
+            "Oferta de venta",
+            "Ninguna: el pedido no tiene documento origen",
+            "Expediciones",
+            "Pedidos de venta"
+          ],
+          "correcta": 1,
+          "explicacion": "El pedido se teclea a mano, sin oferta, así que su tipología no tiene documento origen."
+        },
+        {
+          "pregunta": "¿Para qué sirve la condición tipdoc IN ('AP{INI}') de la tipología de factura?",
+          "opciones": [
+            "Para numerar las facturas",
+            "Para que la factura solo recoja albaranes de la tipología AP{INI}",
+            "Para elegir el cliente",
+            "Para calcular el IVA"
+          ],
+          "correcta": 1,
+          "explicacion": "«Condición selección» filtra los albaranes que esa tipología puede facturar."
+        },
+        {
+          "pregunta": "Con la máscara #e#s#6n, ¿qué número sale para la empresa 0, la serie AV y el contador 6?",
+          "opciones": [
+            "AV-6",
+            "0AV000006",
+            "AV0000006",
+            "000006"
+          ],
+          "correcta": 1,
+          "explicacion": "Empresa (0) + serie (AV) + contador de 6 cifras (000006)."
+        },
+        {
+          "pregunta": "¿Por qué la tipología AP{INI} deja vacíos «Asiento expediciones» y «Asiento albaranes»?",
+          "opciones": [
+            "Porque es obligatorio dejarlos vacíos",
+            "Porque el albarán no contabiliza: el asiento lo genera la factura",
+            "Porque la serie AV no admite asiento",
+            "Porque el albarán se contabiliza al validar"
+          ],
+          "correcta": 1,
+          "explicacion": "Sin plantilla de asiento, el albarán no genera asiento. La venta se contabiliza solo con la factura."
+        },
+        {
+          "pregunta": "¿Qué hace «Copiar líneas» en «Sí» en la tipología del albarán?",
+          "opciones": [
+            "Imprime el albarán",
+            "Inserta automáticamente las líneas del pedido en el albarán",
+            "Copia el cliente",
+            "Resta stock dos veces"
+          ],
+          "correcta": 1,
+          "explicacion": "«Sí» inserta automáticamente las líneas del documento origen. «Validar» las inserta desde un selector y «No» no las copia."
+        },
+        {
+          "pregunta": "¿Por qué «Albarán ventas» (en el pedido) y «Tipo factura» (en el albarán) se rellenan al final?",
+          "opciones": [
+            "Porque no se pueden editar al crear",
+            "Porque las tipologías de destino aún no existían cuando creaste las anteriores",
+            "Porque los pone el ERP solo",
+            "Porque son opcionales para vender"
+          ],
+          "correcta": 1,
+          "explicacion": "AP{INI} y FP{INI} se crean después. Cuando ya existen, enlazas cada tipología con la siguiente."
+        }
+      ],
+      "checklist": [
+        "Series OV, PV, AV y FV localizadas, con Rotura #e#s y Numerador #e#s#6n (sin cambiar nada).",
+        "Tipología PD{INI} con serie PV, «Tabla origen» vacía y «Albarán ventas» AP{INI}.",
+        "Tipología AP{INI} con serie AV, «Tabla origen» «Pedidos de venta», «Copiar líneas» «Sí», «Sumando», sin asiento y «Tipo factura» FP{INI}.",
+        "Tipología FP{INI} con serie FV, «Tabla origen» «Expediciones», la condición tipdoc IN ('AP{INI}'), «Copiar líneas» «Sí», «Sumando» y «Tipo asiento» «FACTURA DE VENTAS»."
+      ],
+      "problemas": [
+        {
+          "problema": "Al escribir el código de la tipología (PD{INI}, AP{INI}, FP{INI}) sale «Demasiado largo».",
+          "solucion": "El código admite como máximo 4 caracteres. Con iniciales de 3 letras usa solo 2."
+        },
+        {
+          "problema": "FV trae «Copiar líneas» en «Validar» y la factura no copia las líneas sola.",
+          "solucion": "Cámbialo a «Sí» en «Documento origen» de FP{INI}."
+        },
+        {
+          "problema": "En «Albaranes de ventas a conformar» no aparece tu albarán.",
+          "solucion": "Revisa la condición de FP{INI}: debe ser tipdoc IN ('AP{INI}') con tu código exacto. Y comprueba que el albarán está «Validado»."
+        },
+        {
+          "problema": "Al guardar una tipología sale «Hay errores en los datos del formulario».",
+          "solucion": "Falta un campo obligatorio (asterisco rojo). Se marca en rojo con «Este campo es obligatorio»."
+        }
+      ],
+      "aprendido": [
+        "Has leído las series OV, PV, AV y FV del numerador y su máscara #e#s#6n, y sabes cómo sale 0PV000006.",
+        "Has creado la tipología de pedido PD{INI}, sin origen, la de albarán AP{INI} y la de factura FP{INI}, copiándolas con «Nuevo como».",
+        "Las has enlazado: el pedido da paso al albarán AP{INI} y este a la factura FP{INI}, que solo recoge albaranes AP{INI}.",
+        "Sabes qué decide una tipología: serie, documento origen y destino, si copia las líneas, si actualiza el origen y si genera asiento."
+      ]
+    },
+    {
+      "id": "ventas-pedido",
+      "numero": 5,
+      "titulo": "Vender: pedido, albarán y factura",
+      "objetivo": "Harás la venta del caso a tu cliente C{INI}: 10 unidades a 20,00, del pedido a la factura de 242,00, con su asiento y su cobro pendiente.",
+      "concepto": "Vender es entregar la mercancía y cobrarla. En el ERP la venta pasa por tres documentos encadenados: el pedido (lo que el cliente te encarga), el albarán (la mercancía que sale del almacén) y la factura (el documento fiscal con el que cobras, que suma el IVA). Cada uno nace del anterior y copia sus líneas. Así el ERP sabe qué falta por servir y qué falta por facturar. Si no los encadenas bien, puedes entregar sin facturar o facturar dos veces.\n\nOjo: antes de empezar, comprueba que ya tienes lo que aquí se reutiliza y dónde se creó. 1) El tercero C{INI}, creado en «Dar de alta los datos básicos de contabilidad» (módulo Contabilidad), y el cliente C{INI} con su condición de cobro (tipo de efecto R{INI} y plazo P{INI}), creado en «Dar de alta los datos básicos de gestión» (módulo Compras). Los comprobaste en «Preparar el cliente». 2) El artículo 13500620 «6000-2RS ISB» y el agente A01 «Agente 01»: ya existen en la demo, no se crean. 3) Las tipologías PD{INI}, AP{INI} y FP{INI}, creadas en «Configurar los documentos de venta». Si falta algo, vuelve a ese bloque: aquí no lo crees. Para abrir un registro que ya existe, pulsa su número o su código en azul en la lista; «Nuevo» solo para crear uno.\n\nAl contabilizar la factura, el ERP crea el asiento: una anotación con líneas al debe y al haber que suman lo mismo. El debe es la columna izquierda (lo que tienes o te deben) y el haber, la derecha (lo que ingresas o debes). También crea el vencimiento, la fecha en que el cliente debe pagarte. Ese cobro pendiente es un efecto: cada cobro pendiente, con su importe y su fecha. La cartera de cobros (en pantalla, «Cartera de efectos») es la lista de los efectos pendientes de cobrar de la empresa.\n\nEjemplo: vendes 10 unidades del artículo 13500620 a 20,00. La base imponible, el precio sin impuestos, es 200,00. El IVA del 21 % suma 42,00 y la factura es de 242,00. Los vencimientos son los que marque la condición de cobro del cliente: con la de C{INI}, dos de 121,00.\n\nEl asiento tiene tres líneas: la cuenta de cliente 43000 al debe por 242,00 (lo que te debe el cliente); la 47000 (IVA) al haber por 42,00; y la 70000 (ventas) al haber por 200,00. Debe y haber suman 242,00.\n\nCómo se conecta con lo anterior: usas tu cliente C{INI} de «Preparar el cliente» y las tipologías PD{INI}, AP{INI} y FP{INI} de «Configurar los documentos de venta». Docflow, el gráfico que dibuja la cadena pedido › albarán › factura, lo verás al final.\n\nDos pasos van en orden fijo. En el albarán eliges primero el «Origen» (tu pedido) y después el cliente. En la factura no copias nada a mano: «conformas» el albarán, que es decirle a la factura qué albarán factura.\n\nOjo: en la demo, la línea del albarán se copia con el «Importe neto» mal calculado (50,00 en vez de 200,00). Es un fallo de la demo, no un error tuyo: lo corriges en la ficha de la línea. Y la empresa de la demo no tiene domiciliación bancaria; si el tipo de efecto la exige, la prevista del asiento falla y se arregla en la cabecera de la factura.\n\nFíjate: las capturas son de un cliente con un solo plazo (el CCP de la demo), así que muestran un único vencimiento; en tu caso salen dos. Además, son de las tipologías PDCP, APCP y FPCP de la demo, con los documentos 0PV000006, 0AV000006 y 0FV000007. Tus números serán otros: la demo es compartida. La cuenta de cliente de la captura es 43000.00CCP; la tuya es la de C{INI}.\n\nDónde: «Gestión › Ventas › Pedidos › Pedidos», «Gestión › Ventas › Albaranes › Albaranes» y «Gestión › Ventas › Facturas › Facturas».",
+      "duracionMin": 60,
+      "secciones": [
+        {
+          "id": "ventas-pedido-pedido",
+          "titulo": "Crear y validar el pedido",
+          "paraQueSirve": "Sirve para registrar lo que te encarga el cliente: qué artículo, cuántas unidades y a qué precio. Es el primer documento y el origen del albarán.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Pedidos",
+            "Pedidos"
+          ],
+          "explicacion": [
+            "La pantalla se titula «PEDIDOS DE VENTAS». «Nuevo» abre el formulario en una ventana, y «Guardar», abajo a la derecha, lo graba.",
+            "Con la tipología PD{INI} el campo «Origen» queda bloqueado: no hay documento origen. «Empresa» (0, «Deister Software» en la demo), «Delegación» (CENTRAL) y «Departamento» (VENTAS) vienen puestos: no los cambies.",
+            "«Almacén» es desde dónde saldrá la mercancía: «ALMACEN CENTRAL». Su código es 0 y en la lista se muestra el nombre: teclea CENTRAL y elige la fila.",
+            "Elige el «Cliente» y sal del campo con Tab. El ERP rellena la dirección, «Entregar en», el tipo de identificación, el CIF, la divisa, el «Tipo efecto» y la «Forma pago». Estos dos últimos salen de la condición de cobro del cliente.",
+            "«Agente» es quien lleva esta venta. Es obligatorio y no se rellena solo (no es el «Comercial» del cliente): elige A01 «Agente 01», que ya existe en la demo.",
+            "Al guardar, el pedido nace «Provisional» (en borrador, aún se puede cambiar) y con número. En la pestaña «Líneas» añades el artículo. Después «Validar» lo deja «Validado» (comprobado y listo para dar paso al albarán), con importe 200,00."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo documento *",
+              "significado": "Tipología del pedido.",
+              "ejemplo": "PD{INI}"
+            },
+            {
+              "campo": "Almacén *",
+              "significado": "Almacén que servirá el pedido.",
+              "ejemplo": "0 «ALMACEN CENTRAL»"
+            },
+            {
+              "campo": "Cliente *",
+              "significado": "Cliente que hace el pedido. Sal del campo con Tab.",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Agente *",
+              "significado": "Agente comercial. No se rellena solo.",
+              "ejemplo": "A01 «Agente 01»"
+            },
+            {
+              "campo": "Tipo efecto *",
+              "significado": "Cómo se cobra. Lo propone la condición de cobro del cliente.",
+              "ejemplo": "R{INI}"
+            },
+            {
+              "campo": "Forma pago *",
+              "significado": "Plazo de cobro. Lo propone la condición de cobro del tercero.",
+              "ejemplo": "P{INI}"
+            },
+            {
+              "campo": "Artículo *",
+              "significado": "Artículo de la línea (pestaña «Líneas»).",
+              "ejemplo": "13500620 «6000-2RS ISB»"
+            },
+            {
+              "campo": "Cantidad pedida *",
+              "significado": "Unidades pedidas.",
+              "ejemplo": "10"
+            },
+            {
+              "campo": "Precio",
+              "significado": "Precio unitario sin IVA.",
+              "ejemplo": "20,000000"
+            },
+            {
+              "campo": "Importe neto *",
+              "significado": "Importe de la línea. Se calcula al guardar.",
+              "ejemplo": "200,00"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Pedidos» y pulsa «Nuevo»",
+              "detalle": "Ruta: Gestión › Ventas › Pedidos › Pedidos. En el buscador: gvenpedh. Verás la lista «PEDIDOS DE VENTAS».",
+              "imagen": "ventas-n-25.webp",
+              "hotspot": {
+                "x": 89.5,
+                "y": 6.4,
+                "w": 3.8,
+                "h": 2.8,
+                "etiqueta": "Nuevo"
+              }
+            },
+            {
+              "texto": "En «Tipo documento» elige PD{INI}",
+              "pregunta": "Tienes el formulario del pedido en blanco. ¿Dónde eliges la tipología PD{INI}?",
+              "detalle": "Escribe PD y tus iniciales y elige la fila. Empresa, Delegación y Departamento ya vienen puestos. En «Almacén» escribe CENTRAL y elige «ALMACEN CENTRAL».",
+              "imagen": "ventas-n-26.webp",
+              "hotspot": {
+                "x": 1.7,
+                "y": 16.3,
+                "w": 19.6,
+                "h": 4.9,
+                "etiqueta": "Tipo documento"
+              }
+            },
+            {
+              "texto": "Elige el «Cliente» C{INI} y sal del campo con Tab",
+              "detalle": "Tras el Tab se rellenan la dirección, «Entregar en», el CIF, el «Tipo efecto» y la «Forma pago», que salen de la condición de cobro de C{INI} (R{INI} y P{INI}). En la captura sale TF con «30 días», que es la condición del cliente CCP de la demo.",
+              "imagen": "ventas-n-27.webp",
+              "hotspot": {
+                "x": 1.7,
+                "y": 41.6,
+                "w": 8.2,
+                "h": 4.9,
+                "etiqueta": "Cliente"
+              }
+            },
+            {
+              "texto": "Elige el «Agente» A01 «Agente 01» y pulsa «Guardar»",
+              "detalle": "El «Agente» es obligatorio y no viene del cliente: la lista ofrece A01 y A04. Mira la captura anterior: ya sale A01 en «Información general»."
+            },
+            {
+              "texto": "Comprueba que el pedido queda «Provisional», con su número y la situación «Pendiente»",
+              "detalle": "En la captura, el número asignado es 0PV000006. El tuyo será otro: la demo es compartida. Apunta tu número de pedido (0PV…): lo necesitarás para elegir el «Origen» del albarán.",
+              "imagen": "ventas-n-28.webp",
+              "hotspot": {
+                "x": 85.3,
+                "y": 33.6,
+                "w": 9.1,
+                "h": 4.9,
+                "etiqueta": "Estado"
+              }
+            },
+            {
+              "texto": "Abre la pestaña «Líneas» y pulsa «Nuevo»",
+              "pregunta": "Estás en la pestaña «Líneas» del pedido, vacía. ¿Qué botón pulsas para añadir el artículo?",
+              "detalle": "Las pestañas del pedido son «Pedidos ventas», «Líneas», «Impuestos», «Descuentos», «Documentos», «Notas» y «Características».",
+              "imagen": "ventas-n-29.webp",
+              "hotspot": {
+                "x": 88.2,
+                "y": 20.8,
+                "w": 3.8,
+                "h": 2.8,
+                "etiqueta": "Nuevo"
+              }
+            },
+            {
+              "texto": "En el diálogo «LÍNEAS DE PEDIDOS DE VENTAS» elige «Artículo» 13500620, «Cantidad pedida» 10 y «Precio» 20",
+              "detalle": "Tras elegir el artículo y salir con Tab se rellenan solos VL 0 (variante logística: este artículo no tiene variantes), Lote 0 (sin control de lote) y la unidad UNIDAD. La «Cantidad precio» pasa a 10,000: es la cantidad a la que se aplica el precio. El «Importe neto» sigue en 0,00: se calcula al guardar.",
+              "imagen": "ventas-n-30.webp",
+              "hotspot": {
+                "x": 19.1,
+                "y": 49.3,
+                "w": 15.7,
+                "h": 4.9,
+                "etiqueta": "Cantidad pedida"
+              }
+            },
+            {
+              "texto": "Pulsa «Guardar»: la línea sale con importe 200,00",
+              "detalle": "En la rejilla verás 13500620 · 10,000 · UNIDAD · 20,000000 · 200,00.",
+              "imagen": "ventas-n-31.webp",
+              "hotspot": {
+                "x": 55.0,
+                "y": 27.0,
+                "w": 5.9,
+                "h": 3.2,
+                "etiqueta": "Importe neto"
+              }
+            },
+            {
+              "texto": "Pulsa «Validar»: el pedido pasa a «Validado» con importe 200,00",
+              "detalle": "Después aparecen «Pasar a provisional», «Anular» y «Marcar como servido». En «Acciones» no hay «Generar albarán»: el albarán se crea desde su propia pantalla.",
+              "imagen": "ventas-n-32.webp",
+              "hotspot": {
+                "x": 85.3,
+                "y": 33.6,
+                "w": 9.1,
+                "h": 4.9,
+                "etiqueta": "Estado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Los desplegables se llenan al teclear: escribe unas letras del código y elige la fila. Tras elegir el cliente, sal siempre con Tab o no se rellenan las direcciones ni las condiciones."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Para volver a un documento que ya existe (tu pedido, tu albarán, tu factura, una tipología), ábrelo desde su lista: pulsa su número o su código en azul, o el número de fila de su izquierda. «Filtros», arriba junto a «Ordenar», ayuda a encontrarlo. «Nuevo» crea uno nuevo."
+            }
+          ]
+        },
+        {
+          "id": "ventas-pedido-albaran",
+          "titulo": "Crear el albarán desde el pedido",
+          "paraQueSirve": "Sirve para dejar constancia de la mercancía que sale hacia el cliente. Nace del pedido y copia sus líneas.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Albaranes",
+            "Albaranes"
+          ],
+          "explicacion": [
+            "La pantalla se titula «ALBARANES DE VENTAS». El almacén «ALMACEN CENTRAL» viene puesto.",
+            "Hazlo en este orden: primero eliges el «Origen» (tu pedido) y después el «Cliente».",
+            "En «Origen» teclea 0PV: sale una lista con «Pedido», «Empresa» y «Fecha pedido». Como la demo es compartida, salen los pedidos de todos los alumnos: elige el número que apuntaste al crear tu pedido.",
+            "Al guardar, las líneas se copian solas del pedido, porque «Copiar líneas» está en «Sí» en la tipología AP{INI}.",
+            "Fallo de la demo: la línea copiada puede traer el «Importe neto» mal calculado: precio 20,000000 pero neto 50,00, con «Base imponible 1» 50,000000. Con 10 unidades debe ser 200,00. No depende de lo que hayas hecho tú. Para obligar al ERP a recalcular, se cambia un dato de la ficha de la línea y se deshace el cambio (pasos siguientes).",
+            "Al validar, el albarán queda «Validado» pero no genera asiento: lo generará la factura."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo documento *",
+              "significado": "Tipología del albarán.",
+              "ejemplo": "AP{INI}"
+            },
+            {
+              "campo": "Origen",
+              "significado": "Pedido del que nace el albarán. Se elige primero.",
+              "ejemplo": "Tu pedido 0PV…"
+            },
+            {
+              "campo": "Cliente *",
+              "significado": "Cliente del albarán. Sal del campo con Tab.",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Importe dto.",
+              "significado": "Importe de descuento de la línea, en la ficha de la línea.",
+              "ejemplo": "0,00"
+            },
+            {
+              "campo": "Importe neto *",
+              "significado": "Importe de la línea. Debe ser cantidad por precio.",
+              "ejemplo": "200,00"
+            },
+            {
+              "campo": "Estado *",
+              "significado": "Provisional al guardar; Validado al validar.",
+              "ejemplo": "Validado"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Albaranes», pulsa «Nuevo» y en «Tipo documento» elige AP{INI}",
+              "detalle": "Ruta: Gestión › Ventas › Albaranes › Albaranes. En el buscador: gvenalbh. «Almacén» (ALMACEN CENTRAL), «Empresa», «Delegación» y «Departamento» ya vienen puestos."
+            },
+            {
+              "texto": "En «Origen» teclea 0PV y elige tu pedido",
+              "pregunta": "Ya has elegido la tipología AP{INI}. ¿En qué campo tecleas 0PV para enlazar tu pedido?",
+              "detalle": "La lista muestra los pedidos de todos los alumnos con «Pedido», «Empresa» y «Fecha pedido». Elige el tuyo, el que validaste y apuntaste.",
+              "imagen": "ventas-n-33.webp",
+              "hotspot": {
+                "x": 61.8,
+                "y": 29.0,
+                "w": 11.8,
+                "h": 4.9,
+                "etiqueta": "Origen"
+              }
+            },
+            {
+              "texto": "Después elige el «Cliente» C{INI}, sal con Tab y pulsa «Guardar»",
+              "detalle": "Se rellenan las direcciones, el CIF, el «Agente» «Agente 01», el «Tipo Efecto» y la «Forma Pago». «Origen» sigue con tu pedido.",
+              "imagen": "ventas-n-34.webp",
+              "hotspot": {
+                "x": 1.7,
+                "y": 41.6,
+                "w": 8.2,
+                "h": 4.9,
+                "etiqueta": "Cliente"
+              }
+            },
+            {
+              "texto": "Abre la ficha del albarán y la pestaña «Líneas»",
+              "detalle": "El albarán nace «Provisional». Sus pestañas son «Albaranes ventas», «Líneas», «Líneas componentes», «Impuestos», «Descuentos», «Documentos» y «Notas».",
+              "imagen": "ventas-n-35.webp",
+              "hotspot": {
+                "x": 20.3,
+                "y": 11.3,
+                "w": 5.1,
+                "h": 3.4,
+                "etiqueta": "Líneas"
+              }
+            },
+            {
+              "texto": "Comprueba el «Importe neto» de la línea: debe ser 200,00. Si sale 50,00, hay que corregirlo",
+              "detalle": "Es el fallo de la demo: 10 × 20,000000 no puede dar 50,00. En la captura se ve el 50,00. Si en tu albarán ya sale 200,00, pasa al paso de «Validar».",
+              "imagen": "ventas-n-36.webp",
+              "hotspot": {
+                "x": 56.8,
+                "y": 27.0,
+                "w": 4.6,
+                "h": 3.2,
+                "etiqueta": "Importe neto"
+              }
+            },
+            {
+              "texto": "Abre la ficha de la línea: pulsa el número azul de la izquierda de la fila (el «1»), no el código del artículo",
+              "detalle": "En la fila hay dos enlaces azules: el «1» (número de fila) y el código del artículo 13500620. El «1» abre la ficha de la línea, «LÍNEAS DE ALBARANES DE VENTAS».",
+              "imagen": "ventas-n-36.webp",
+              "hotspot": {
+                "x": 15.9,
+                "y": 27.0,
+                "w": 2.4,
+                "h": 3.0,
+                "etiqueta": "Número de fila"
+              }
+            },
+            {
+              "texto": "En la ficha de la línea, pon «Importe dto.» 1 y guarda con el disquete (el icono de guardar, arriba a la derecha)",
+              "detalle": "El «Importe neto» pasa a 199,00. Reescribir el mismo «Precio» no recalcula: el icono de guardar ni se activa si el valor no cambia. La captura es la ficha antes de tocar nada («Importe dto.» 0,00 e «Importe neto» 50,00); no hay captura del 199,00.",
+              "imagen": "ventas-n-37.webp",
+              "hotspot": {
+                "x": 75.6,
+                "y": 60.7,
+                "w": 21.0,
+                "h": 4.0,
+                "etiqueta": "Importe dto."
+              }
+            },
+            {
+              "texto": "Vuelve a poner «Importe dto.» 0 y guarda: el «Importe neto» pasa a 200,00. Vuelve al albarán",
+              "detalle": "La captura muestra el resultado: «Importe dto.» 0,00 e «Importe neto» 200,00. La ficha de la línea se titula «LÍNEAS DE ALBARANES DE VENTAS». Recarga con el icono ⟳ «Recargar» (arriba a la derecha) si hace falta.",
+              "imagen": "ventas-n-38.webp",
+              "hotspot": {
+                "x": 34.4,
+                "y": 56.4,
+                "w": 21.0,
+                "h": 4.9,
+                "etiqueta": "Importe neto"
+              }
+            },
+            {
+              "texto": "Pulsa «Validar»: el albarán pasa a «Validado» con importe 200,00",
+              "detalle": "Quedan los botones «Acciones», «Anular», «Pasar a provisional», «No facturable» y «Nuevo». El menú «Acciones» tiene «Generar factura», «Expedir» y «Copiar». Aquí facturarás conformando el albarán desde la factura.",
+              "imagen": "ventas-n-39.webp",
+              "hotspot": {
+                "x": 85.0,
+                "y": 33.6,
+                "w": 8.8,
+                "h": 4.9,
+                "etiqueta": "Estado"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "En la demo, la línea copiada del pedido sale con «Precio» 20,000000 pero «Importe neto» 50,00. Es un fallo de la demo, no un error tuyo."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "En la ficha de la línea, pon «Importe dto.» 1 y guarda (199,00); luego «Importe dto.» 0 y guarda: 200,00."
+            }
+          ]
+        },
+        {
+          "id": "ventas-pedido-factura",
+          "titulo": "Crear la factura conformando el albarán",
+          "paraQueSirve": "Sirve para emitir el documento fiscal con el que cobras. Conformar el albarán es decirle a la factura qué albarán factura.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Facturas",
+            "Facturas"
+          ],
+          "explicacion": [
+            "La pantalla se titula «FACTURAS DE VENTAS». Creas la factura con la tipología FP{INI} y el cliente, y después le añades el albarán con «Albaranes de ventas a conformar».",
+            "Ese comando está en el desplegable ⌄ junto al título de la ficha. El menú tiene «Docflow», «Registros fiscales», «Albaranes de ventas a conformar» y «Desconformar Albaranes de ventas».",
+            "«Albaranes de ventas a conformar» abre una ventana con los albaranes validados y pendientes de facturar del cliente. Marcas el tuyo y pulsas «Conformar» (o «Conformar todos»).",
+            "Después de conformar, el albarán pasa a «Albaranes conformados» y su estado de documento a «Facturado». Cierra la ventana y pulsa Recargar (icono ⟳).",
+            "La factura queda «Validado» directamente, con «Base imponible» 200,00 e «Importe» 242,00. El importe lleva el IVA del 21 %: 42,00."
+          ],
+          "campos": [
+            {
+              "campo": "Tipo documento *",
+              "significado": "Tipología de la factura.",
+              "ejemplo": "FP{INI}"
+            },
+            {
+              "campo": "Cliente *",
+              "significado": "Cliente al que se factura. Sal del campo con Tab.",
+              "ejemplo": "C{INI}"
+            },
+            {
+              "campo": "Base imponible",
+              "significado": "Importe sin IVA. Sale al conformar el albarán.",
+              "ejemplo": "200,00"
+            },
+            {
+              "campo": "Importe",
+              "significado": "Importe con IVA.",
+              "ejemplo": "242,00"
+            },
+            {
+              "campo": "Estado *",
+              "significado": "Provisional al crear; Validado al conformar.",
+              "ejemplo": "Validado"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre «Facturas», pulsa «Nuevo», elige «Tipo documento» FP{INI} y «Cliente» C{INI} y pulsa «Guardar»",
+              "detalle": "Ruta: Gestión › Ventas › Facturas › Facturas. En el buscador: gvenfach. Sal del cliente con Tab. La factura nace «Provisional», con situación «Entrada» y 0,00. En la captura, 0FV000007.",
+              "imagen": "ventas-n-40.webp",
+              "hotspot": {
+                "x": 1.7,
+                "y": 16.3,
+                "w": 24.3,
+                "h": 4.9,
+                "etiqueta": "Tipo documento"
+              }
+            },
+            {
+              "texto": "Despliega el ⌄ junto al título y elige «Albaranes de ventas a conformar»",
+              "pregunta": "Tienes abierta tu factura FP{INI} vacía. ¿Qué opción del menú ⌄ te deja añadirle el albarán?",
+              "detalle": "El menú también tiene «Docflow», «Registros fiscales» y «Desconformar Albaranes de ventas».",
+              "imagen": "ventas-n-41.webp",
+              "hotspot": {
+                "x": 33.0,
+                "y": 14.0,
+                "w": 15.2,
+                "h": 3.6,
+                "etiqueta": "Albaranes de ventas a conformar"
+              }
+            },
+            {
+              "texto": "En la ventana «ALBARANES DE VENTAS A CONFORMAR» localiza la fila de tu albarán y marca su casilla",
+              "detalle": "La fila muestra la tipología AP{INI}, tu albarán, el cliente, «Validado», «Pendiente» y 200,00. La casilla está a la izquierda de la fila; en la captura, lo resaltado es el número del albarán, para que lo localices.",
+              "imagen": "ventas-n-42.webp",
+              "hotspot": {
+                "x": 29.9,
+                "y": 32.9,
+                "w": 5.4,
+                "h": 3.2,
+                "etiqueta": "Expedición"
+              }
+            },
+            {
+              "texto": "Pulsa «Conformar» y, en la confirmación, pulsa «Aceptar»",
+              "detalle": "La confirmación dice «¿Estás seguro que quieres ejecutar la acción 'Conformar'?».",
+              "imagen": "ventas-n-43.webp",
+              "hotspot": {
+                "x": 58.2,
+                "y": 58.6,
+                "w": 4.3,
+                "h": 2.8,
+                "etiqueta": "Aceptar"
+              }
+            },
+            {
+              "texto": "Comprueba que el albarán sale en «Albaranes conformados» con estado «Facturado». Cierra la ventana y pulsa Recargar",
+              "detalle": "En la captura, el «Origen» del albarán es el pedido 0PV000006.",
+              "imagen": "ventas-n-44.webp",
+              "hotspot": {
+                "x": 5.4,
+                "y": 50.6,
+                "w": 88.0,
+                "h": 4.9,
+                "etiqueta": "Albaranes conformados"
+              }
+            },
+            {
+              "texto": "Mira la factura: «Validado», «Base imponible» 200,00 e «Importe» 242,00",
+              "detalle": "Ahora la factura tiene los botones «Acciones», «Pasar a provisional», «Contabilizar» y «eFactura».",
+              "imagen": "ventas-n-45.webp",
+              "hotspot": {
+                "x": 82.7,
+                "y": 90.0,
+                "w": 14.0,
+                "h": 4.9,
+                "etiqueta": "Importe"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "En el menú «Acciones» del albarán hay también «Generar factura», otra forma de facturar. En este bloque usa siempre «Conformar», el camino que se practica aquí."
+            }
+          ]
+        },
+        {
+          "id": "ventas-pedido-contabilizar",
+          "titulo": "Ver la prevista y contabilizar la factura",
+          "paraQueSirve": "Sirve para ver el asiento antes de grabarlo (la prevista) y después registrar la venta en contabilidad.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Facturas",
+            "Facturas"
+          ],
+          "explicacion": [
+            "«Contabilizar» abre una confirmación con la casilla «Prevista de Asiento Contable». Si la marcas, el ERP te enseña el asiento que generaría, sin grabarlo.",
+            "La prevista es la ventana «Esquema de Asiento Contable - Facturas ventas». Si todo está bien, el «Proceso de Apuntes» tiene tres líneas: la cuenta 43000 del cliente al debe por 242,00; la 47000 al haber por 42,00; y la 70000 al haber por 200,00.",
+            "La 43000 es lo que te debe el cliente. La 47000 recoge el IVA de la venta: el IVA repercutido, que cobras al cliente y debes ingresar a Hacienda. La 70000 «Ventas mercancías» recoge la venta, sin IVA.",
+            "Fíjate: la demo rotula la 47000.00000 «Hacienda Pública, deudora por IVA», pero aquí guarda una deuda con Hacienda. En el plan contable español el IVA repercutido va a la 477; la 4700 es lo que Hacienda te debe a ti. Es configuración de la demo: no la copies.",
+            "Para contabilizar de verdad, pulsa «Contabilizar» con la casilla desmarcada y «Aceptar». Se abre el asiento: diario DV «Ventas» (el «libro» donde se anotan las ventas), justificante AC (el tipo de justificante del asiento), banda FINALIZADO (solo el color con que se muestra un asiento ya contabilizado) y estado «Contabilizado».",
+            "El asiento cuadra: Debe 242,00, Haber 242,00 y Cuadre 0,00.",
+            "La factura queda «Contabilizada», con su «Fecha contabilización», y el botón pasa a ser «Descontabilizar»."
+          ],
+          "campos": [
+            {
+              "campo": "Prevista de Asiento Contable",
+              "significado": "Casilla de la confirmación. Marcada, muestra el asiento sin grabarlo.",
+              "ejemplo": "Marcada"
+            },
+            {
+              "campo": "Tipo efecto *",
+              "significado": "Tipo de efecto de la factura. Si exige domiciliación bancaria que la empresa no tiene, la prevista falla.",
+              "ejemplo": "R{INI} (o EF si lo cambias)"
+            },
+            {
+              "campo": "Cuenta",
+              "significado": "Cuenta de cada apunte de la prevista.",
+              "ejemplo": "43000 / 47000.00000 / 70000.00000"
+            },
+            {
+              "campo": "Debe / Haber",
+              "significado": "Importes del asiento.",
+              "ejemplo": "242,00 / 242,00"
+            },
+            {
+              "campo": "Estado",
+              "significado": "Estado del asiento al contabilizar.",
+              "ejemplo": "Contabilizado"
+            },
+            {
+              "campo": "Cuadre",
+              "significado": "Diferencia entre debe y haber. Debe ser 0.",
+              "ejemplo": "0,00"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Pulsa «Contabilizar», marca la casilla «Prevista de Asiento Contable» y pulsa «Aceptar»",
+              "pregunta": "Vas a contabilizar tu factura. ¿Qué casilla marcas para ver antes el asiento sin grabarlo?",
+              "detalle": "Se abre la ventana «Esquema de Asiento Contable - Facturas ventas». Si todo está bien, verás las tres líneas del asiento.",
+              "imagen": "ventas-n-46.webp",
+              "hotspot": {
+                "x": 37.6,
+                "y": 50.2,
+                "w": 10.3,
+                "h": 4.9,
+                "etiqueta": "Prevista de Asiento Contable"
+              }
+            },
+            {
+              "texto": "Si sale «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.», cierra la ventana: el «Tipo efecto» de la factura exige domiciliación bancaria",
+              "detalle": "La empresa de la demo no tiene domiciliación bancaria (la autorización para cobrar el recibo directamente en la cuenta del cliente), y los tipos de efecto domiciliados, como tu R{INI}, la exigen. Es probable que te salga: si tu prevista sale sin error y con las tres líneas, sáltate este paso y el siguiente. En la captura se ve el error en rojo y, debajo, «Asientos programables» con una fila (gvenfach, FV, ES), sin desplegar. Si la despliegas, las líneas del asiento salen incompletas: 43000 al debe por 242,00 y 47000 al haber por 42,00; falta la de ventas (70000). La captura es de CCP con TF.",
+              "imagen": "ventas-n-47.webp",
+              "hotspot": {
+                "x": 8.7,
+                "y": 27.8,
+                "w": 82.7,
+                "h": 6.4,
+                "etiqueta": "DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA."
+              }
+            },
+            {
+              "texto": "Solución: pulsa «Pasar a provisional», cambia en la cabecera solo «Tipo efecto» a EF, guarda con el disquete, pulsa «Validar» y vuelve a pedir la prevista",
+              "detalle": "El cambio es solo en la factura: no se toca el cliente ni su condición de cobro. No cambies «Forma pago»: con P{INI} siguen saliendo los dos vencimientos de 121,00, ahora con tipo EF. Cambia solo el «Tipo efecto».",
+              "imagen": "ventas-n-48.webp",
+              "hotspot": {
+                "x": 55.5,
+                "y": 64.6,
+                "w": 20.7,
+                "h": 4.9,
+                "etiqueta": "Tipo efecto"
+              }
+            },
+            {
+              "texto": "Comprueba la prevista: 43000 al debe 242,00, 47000 al haber 42,00 y 70000 al haber 200,00",
+              "detalle": "El «Proceso de Apuntes» muestra «FACTURAS DE VENTA», «FACTURAS DE VENTA [Tax]» y «VENTAS» con el nombre del cliente. La cuenta de cliente de la captura es 43000.00CCP; la tuya es la de C{INI}. Con tu condición saldrán igualmente tres apuntes: los dos vencimientos no cambian el asiento.",
+              "imagen": "ventas-n-49.webp",
+              "hotspot": {
+                "x": 22.1,
+                "y": 50.4,
+                "w": 9.3,
+                "h": 15.0,
+                "etiqueta": "Cuenta"
+              }
+            },
+            {
+              "texto": "Cierra la prevista, pulsa «Contabilizar» con la casilla desmarcada y pulsa «Aceptar»: se abre el asiento, en estado «Contabilizado»",
+              "detalle": "La captura es el asiento ya abierto: banda FINALIZADO, asiento 84, diario DV «Ventas», justificante AC, Debe 242,00, Haber 242,00, Cuadre 0,00 y Estado «Contabilizado». A veces hay que pulsar «Contabilizar» dos veces: si la primera vez la ventana solo muestra «Process gconasih_InsertCasientos» y la factura sigue sin contabilizar, recarga con ⟳, comprueba que sigue el botón «Contabilizar» y repítelo; al repetirlo se abre el asiento.",
+              "imagen": "ventas-n-50.webp",
+              "hotspot": {
+                "x": 32.6,
+                "y": 72.2,
+                "w": 6.9,
+                "h": 3.6,
+                "etiqueta": "Estado"
+              }
+            },
+            {
+              "texto": "En «Resumen de apuntes» lee los tres apuntes del asiento",
+              "detalle": "Verás la cuenta de cliente «Cliente captura CP» 242,00 al debe, «Hacienda Pública, deudora por IVA» 42,00 y «Ventas mercancías» 200,00 al haber. Total 242,00 y 242,00. El título dice «Resumen de apuntes (5)»: son las 3 líneas más 2 filas de totales (una de subtotal y otra «Total»).",
+              "imagen": "ventas-n-51.webp",
+              "hotspot": {
+                "x": 37.3,
+                "y": 67.0,
+                "w": 6.9,
+                "h": 8.0,
+                "etiqueta": "Cuenta"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "problema",
+              "texto": "La prevista da «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.» y faltan líneas de asiento."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "El «Tipo efecto» de la factura exige domiciliación bancaria y la empresa de la demo no la tiene. En la cabecera de la factura: «Pasar a provisional», «Tipo efecto» EF (la «Forma pago» no se toca), disquete y «Validar». Vuelve a contabilizar. No se cambia el cliente."
+            },
+            {
+              "tipo": "problema",
+              "texto": "La primera vez que contabilizas, la ventana solo muestra «Process gconasih_InsertCasientos» y la factura sigue sin contabilizar."
+            },
+            {
+              "tipo": "solucion",
+              "texto": "Recarga con ⟳, comprueba que sigue el botón «Contabilizar» y la fecha de contabilización vacía, y repite «Contabilizar» › «Aceptar». A veces hay que pulsar Contabilizar dos veces: a la segunda se abre el asiento."
+            }
+          ]
+        },
+        {
+          "id": "ventas-pedido-cobro",
+          "titulo": "Ver el vencimiento y el Docflow",
+          "paraQueSirve": "Sirve para comprobar el resultado de la venta: el cobro pendiente que ha creado la factura y el recorrido pedido › albarán › factura.",
+          "ruta": [
+            "Gestión",
+            "Ventas",
+            "Facturas",
+            "Facturas"
+          ],
+          "explicacion": [
+            "Una factura contabilizada tiene situación «Contabilizada» y un botón «Descontabilizar». Su pestaña «Vencimientos» lista los cobros pendientes: «Fecha vencimiento», «Tipo Efecto», importes, «Naturaleza»…",
+            "Los vencimientos son los que marca la condición de cobro de la factura. Con la condición de C{INI} (R{INI} y P{INI}) salen dos, de 121,00 cada uno (30 y 60 días). Si cambiaste el «Tipo efecto» de la factura a EF, siguen siendo dos de 121,00, con tipo EF. La captura es de un cliente con un solo plazo: un vencimiento de 242,00, con 42,00 de IVA y «Naturaleza» «Ordinario». Allí la factura es del 25-11-2026 y vence el 28-12-2026: la fecha la calcula el ERP desde la fecha valor y puede no coincidir con tu cuenta exacta de días.",
+            "Cada vencimiento vive en la «Cartera de efectos» como un efecto: Clase «Cobrar», Estado «PE» «Pendiente» y su tipo de efecto. Lo cobrarás en el módulo de Carteras.",
+            "El Docflow dibuja el recorrido de la venta: «Pedidos ventas» › «Expediciones» › «Facturas ventas». Muestra el estado de cada documento: el pedido, «Servido o Facturado»; el albarán, «Facturado»; y la factura, «Validado».",
+            "Aunque la factura esté contabilizada, el Docflow la sigue mostrando como «Validado»."
+          ],
+          "campos": [
+            {
+              "campo": "Fecha vencimiento",
+              "significado": "Fecha en que vence el cobro.",
+              "ejemplo": "28-12-2026"
+            },
+            {
+              "campo": "Tipo Efecto",
+              "significado": "Tipo de efecto del vencimiento.",
+              "ejemplo": "R{INI} (EF si lo cambiaste; EF en la captura)"
+            },
+            {
+              "campo": "Importe local",
+              "significado": "Importe a cobrar, con IVA.",
+              "ejemplo": "121,00 + 121,00 (242,00 en la captura)"
+            },
+            {
+              "campo": "Clase *",
+              "significado": "En la cartera: si el efecto se cobra o se paga.",
+              "ejemplo": "Cobrar"
+            },
+            {
+              "campo": "Tipo de efecto *",
+              "significado": "En la cartera: tipo del efecto.",
+              "ejemplo": "El de la condición, p. ej. EF «Al contado» en la captura"
+            },
+            {
+              "campo": "Estado *",
+              "significado": "En la cartera: PE es «Pendiente», aún no cobrado.",
+              "ejemplo": "PE «Pendiente»"
+            }
+          ],
+          "pasos": [
+            {
+              "texto": "Abre la pestaña «Vencimientos» de la factura contabilizada",
+              "pregunta": "Tu factura está «Contabilizada». ¿Qué pestaña abres para ver cuándo y cuánto te deben?",
+              "detalle": "La factura sale «Contabilizada». La pestaña está arriba, junto a «Líneas».",
+              "imagen": "ventas-n-52.webp",
+              "hotspot": {
+                "x": 24.1,
+                "y": 11.3,
+                "w": 7.8,
+                "h": 3.4,
+                "etiqueta": "Vencimientos"
+              }
+            },
+            {
+              "texto": "Lee los vencimientos: fecha, tipo de efecto e importe",
+              "detalle": "En tu factura habrá dos filas de 121,00; la captura muestra un cliente con un solo plazo y una fila de 242,00. Las columnas son «Fecha vencimiento», «Tipo Efecto», «Importe local», «Importe divisa», «Importe IVA», «Importe retención», «Naturaleza», «IVA no validado», «Perceptor» y «Domiciliación».",
+              "imagen": "ventas-n-53.webp",
+              "hotspot": {
+                "x": 17.6,
+                "y": 27.0,
+                "w": 11.2,
+                "h": 3.2,
+                "etiqueta": "Fecha vencimiento"
+              }
+            },
+            {
+              "texto": "Despliega el ⌄ junto al título y elige «Cartera de efectos»",
+              "detalle": "Con la factura contabilizada, el menú tiene «Docflow», «Albaranes ventas», «Expediciones», «Asientos contables», «Cartera de efectos», «Registros fiscales» y «Albaranes de ventas a conformar».",
+              "imagen": "ventas-n-54.webp",
+              "hotspot": {
+                "x": 33.0,
+                "y": 19.5,
+                "w": 14.4,
+                "h": 3.6,
+                "etiqueta": "Cartera de efectos"
+              }
+            },
+            {
+              "texto": "Comprueba el efecto: tipo de efecto y «Estado» PE «Pendiente»",
+              "detalle": "La ventana se titula «CARTERA DE EFECTOS» con tu factura. En la captura: Clase «Cobrar», la cuenta 43000 del cliente, importe 242,00, impuestos 42,00 y tipo EF «Al contado». En esa captura el tipo es EF porque en esa factura se cambió el «Tipo efecto» para resolver el error de domiciliación (pasos de la prevista); antes era TF. Tu efecto tendrá el tipo R{INI}, o EF si también lo cambiaste, y será uno de los dos efectos de 121,00. «Evolucionar estado» pasa el efecto al siguiente paso de su ciclo (de pendiente a cobrado…) y «Retroceder» lo deshace: se practican en Carteras, aquí no los pulses.",
+              "imagen": "ventas-n-55.webp",
+              "hotspot": {
+                "x": 6.2,
+                "y": 67.2,
+                "w": 27.8,
+                "h": 4.9,
+                "etiqueta": "Tipo de efecto y Estado"
+              }
+            },
+            {
+              "texto": "Cierra la ventana, abre otra vez el ⌄ y elige «Docflow»",
+              "detalle": "Verás tres tarjetas, con un círculo con un «1»: es el número de documentos de ese tipo en la cadena. Son tu pedido «Servido o Facturado», tu albarán «Facturado» y tu factura «Validado», con el nombre de cada tipología.",
+              "imagen": "ventas-n-56.webp",
+              "hotspot": {
+                "x": 19.6,
+                "y": 38.3,
+                "w": 11.5,
+                "h": 3.8,
+                "etiqueta": "Pedidos ventas"
+              }
+            }
+          ],
+          "avisos": [
+            {
+              "tipo": "nota",
+              "texto": "Docflow y «Cartera de efectos» se abren en ventanas aparte. Ciérralas con la X antes de seguir."
+            }
+          ]
+        }
+      ],
+      "test": [
+        {
+          "pregunta": "Al crear el albarán desde el pedido, ¿qué eliges primero?",
+          "opciones": [
+            "El cliente",
+            "El «Origen» (tu pedido)",
+            "El agente",
+            "El almacén"
+          ],
+          "correcta": 1,
+          "explicacion": "Primero el «Origen» y después el «Cliente»."
+        },
+        {
+          "pregunta": "¿Qué hace «Conformar» en la factura de venta?",
+          "opciones": [
+            "Contabiliza la factura",
+            "Le añade el albarán que va a facturar",
+            "Anula el pedido",
+            "Envía la factura al cliente"
+          ],
+          "correcta": 1,
+          "explicacion": "«Conformar» une el albarán a la factura: el albarán pasa a «Facturado» y la factura se llena con sus líneas."
+        },
+        {
+          "pregunta": "Facturas 10 unidades a 20,00 con IVA del 21 %. ¿Cuál es el asiento?",
+          "opciones": [
+            "43000 Debe 200,00 / 70000 Haber 200,00",
+            "43000 Debe 242,00 / 47000 Haber 42,00 / 70000 Haber 200,00",
+            "70000 Debe 242,00 / 43000 Haber 242,00",
+            "43000 Debe 242,00 / 70000 Haber 242,00"
+          ],
+          "correcta": 1,
+          "explicacion": "El cliente te debe 242,00. De ellos, 42,00 son IVA (47000) y 200,00 son venta (70000)."
+        },
+        {
+          "pregunta": "En la demo, la línea del albarán copiada del pedido sale con Importe neto 50,00 en lugar de 200,00. ¿Cómo lo corriges?",
+          "opciones": [
+            "Borras el albarán",
+            "Abres la línea, pones «Importe dto.» 1, guardas, lo vuelves a 0 y guardas",
+            "Cambias el cliente",
+            "Reescribes el mismo precio"
+          ],
+          "correcta": 1,
+          "explicacion": "Es un fallo de la demo. Reescribir el mismo precio no recalcula; al cambiar «Importe dto.» y volver a 0, el neto se recalcula en 200,00."
+        },
+        {
+          "pregunta": "¿Para qué marcas «Prevista de Asiento Contable» al contabilizar?",
+          "opciones": [
+            "Para imprimir la factura",
+            "Para ver el asiento que se generaría sin grabarlo",
+            "Para anular la factura",
+            "Para cambiar el IVA"
+          ],
+          "correcta": 1,
+          "explicacion": "La prevista enseña el asiento antes de grabarlo. Te deja detectar errores como el de la domiciliación."
+        },
+        {
+          "pregunta": "Después de facturar, ¿qué estado muestra el Docflow para el pedido?",
+          "opciones": [
+            "Provisional",
+            "Pendiente",
+            "Servido o Facturado",
+            "Anulado"
+          ],
+          "correcta": 2,
+          "explicacion": "El pedido pasa a «Servido o Facturado». El albarán queda «Facturado» y la factura, «Validado»."
+        },
+        {
+          "pregunta": "Validas el albarán AP{INI}. ¿Se genera asiento contable?",
+          "opciones": [
+            "Sí, 43000 contra 70000",
+            "No: su tipología no tiene plantilla de asiento y el asiento lo genera la factura",
+            "Sí, solo el IVA",
+            "Depende del cliente"
+          ],
+          "correcta": 1,
+          "explicacion": "«Asiento expediciones» y «Asiento albaranes» están vacíos en AP{INI}. La venta se contabiliza solo con la factura."
+        }
+      ],
+      "checklist": [
+        "Pedido con tipología PD{INI}, cliente C{INI}, agente A01 y una línea de 13500620: 10 × 20,00 = 200,00, «Validado».",
+        "Albarán con tipología AP{INI}, «Origen» tu pedido y cliente C{INI}, con «Importe neto» 200,00 corregido y «Validado».",
+        "Factura con tipología FP{INI} y tu albarán conformado: «Base imponible» 200,00 e «Importe» 242,00.",
+        "Prevista y asiento: 43000 Debe 242,00, 47000 Haber 42,00 y 70000 Haber 200,00, con Cuadre 0,00 y estado «Contabilizado».",
+        "Vencimientos según la condición de C{INI}: dos de 121,00 (con tipo EF si cambiaste el «Tipo efecto» de la factura) y, en la «Cartera de efectos», estado PE «Pendiente».",
+        "Docflow con pedido «Servido o Facturado», albarán «Facturado» y factura."
+      ],
+      "problemas": [
+        {
+          "problema": "En el albarán, la línea copiada sale con «Importe neto» 50,00 aunque el precio es 20,000000 (fallo de la demo).",
+          "solucion": "Abre la ficha de la línea (el número azul de la fila), pon «Importe dto.» 1 y guarda con el disquete (199,00); luego pon 0 y guarda (200,00). Reescribir el mismo «Precio» no recalcula."
+        },
+        {
+          "problema": "Al contabilizar (o en la prevista) sale «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.» y faltan líneas.",
+          "solucion": "El tipo de efecto exige domiciliación bancaria y la empresa de la demo no la tiene. En la cabecera de la factura: «Pasar a provisional», «Tipo efecto» EF (la «Forma pago» P{INI} no se toca), disquete, «Validar» y vuelve a contabilizar. No se cambia el cliente."
+        },
+        {
+          "problema": "Al contabilizar, la ventana solo muestra «Process gconasih_InsertCasientos» y la factura sigue sin contabilizar.",
+          "solucion": "Recarga con ⟳, comprueba que sigue el botón «Contabilizar» y repítelo con «Aceptar». A veces hay que pulsarlo dos veces; a la segunda se abre el asiento."
+        },
+        {
+          "problema": "Elegiste el cliente y no se rellenaron las direcciones ni el «Tipo efecto».",
+          "solucion": "Sal del campo «Cliente» con Tab. Hasta entonces el ERP no propone esos datos."
+        },
+        {
+          "problema": "No puedes guardar el pedido porque falta el «Agente».",
+          "solucion": "El «Agente» es obligatorio y no se rellena solo: elige A01 «Agente 01»."
+        },
+        {
+          "problema": "Tras tocar la condición de cobro, el tercero C{INI} vuelve a «Provisional».",
+          "solucion": "Valídalo otra vez en «Registro terceros» (parte «Comprobar la condición de cobro y validar el tercero» del bloque «Preparar el cliente»)."
+        }
+      ],
+      "aprendido": [
+        "Has creado y validado el pedido PD{INI} a C{INI}: 10 unidades de 13500620 a 20,00, 200,00.",
+        "Has creado el albarán AP{INI} desde el pedido (primero el «Origen», después el cliente) y has corregido el «Importe neto» de la línea.",
+        "Has facturado conformando el albarán: «Base imponible» 200,00 e «Importe» 242,00 con IVA.",
+        "Has visto la prevista y has contabilizado: 43000 Debe 242,00, 47000 Haber 42,00 y 70000 Haber 200,00.",
+        "Has comprobado los vencimientos de la factura en la cartera (los que marca la condición del cliente) y el recorrido pedido › albarán › factura en el Docflow."
+      ]
+    },
+    {
       "id": "ventas-1",
       "numero": 1,
       "titulo": "Vender del albarán a la factura",
       "objetivo": "Registrarás la venta de 10 unidades: su albarán, su factura de 242,00 y el cobro pendiente en la cartera.",
-      "concepto": "Vender es entregar la mercancía y cobrarla. Es como una tienda: das un papel de entrega, el albarán, y después mandas la factura, el documento fiscal con el que cobras al cliente y que lleva IVA. Si no registras bien los dos, el almacén no sabe qué ha salido, no cobras lo que te deben y el IVA que entregas a Hacienda sale mal.\n\nEn Axional cada documento se comporta según su tipología, es decir, su tipo: dice cómo se numera, de dónde viene y cómo se contabiliza. La numeración la da la serie, un contador como el dispensador de turnos de una tienda. La plantilla contable es la regla que dice qué cuentas lleva el asiento de cada documento.\n\nContabilizar es pasar el documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. Genera un asiento: una anotación con líneas al debe y al haber que suman lo mismo. El albarán apunta la venta como pendiente de facturar (cuenta 43090). La factura genera el asiento definitivo con el cliente, el IVA y las ventas.\n\nLa factura también crea el vencimiento, que es la fecha en que el cliente debe pagarte. Ese cobro pendiente se llama efecto y se guarda en la cartera, la lista de todos los cobros y pagos pendientes de la empresa. El IVA es un impuesto que paga el consumidor final: tú lo cobras al vender y lo entregas a Hacienda.\n\nEjemplo: en tu caso, vendes las 10 unidades que compraste a 12,50. La base imponible, el precio sin impuestos, es 10 × 20,00 = 200,00. El IVA del 21 % suma 42,00 y la factura es de 242,00. Tu margen es 200,00 − 125,00 = 75,00.\n\nEjemplo: vendes a tu cliente C{INI}, el que diste de alta en «Dar de alta los datos básicos de gestión». Las capturas son de otro cliente de la demo: cambia solo el código. Los importes son los de tu caso y el mecanismo es el mismo.\n\nOjo: en este bloque la venta queda contada dos veces a propósito. El albarán usa AV (43090 contra 70000) y la factura usa FV (43000 contra 70000): la 70000 suma 400,00 y la 43090 deja 200,00 colgados. Lo correcto, con una plantilla que salde la 43090 (FVOA), sería 43000.00000 242,00 al debe, y 47000.00000 42,00 y 43090 200,00 al haber. En tu caso la venta cuenta una sola vez: 200,00.\n\nFíjate: Tus operaciones del caso se graban en la empresa 0 «Deister Software» de la demo, porque es la que tiene tipologías y plantillas configuradas. Tu empresa S{INI} solo sirve para practicar su alta, sus saldos iniciales y su cierre. Los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.\n\nDónde: «Gestión › Ventas › Albaranes › Albaranes» y «Gestión › Ventas › Facturas › Facturas».",
+      "concepto": "Vender es entregar la mercancía y cobrarla. Es como una tienda: das un papel de entrega, el albarán, y después mandas la factura, el documento fiscal con el que cobras al cliente y que lleva IVA. Si no registras bien los dos, el almacén no sabe qué ha salido, no cobras lo que te deben y el IVA que entregas a Hacienda sale mal.\n\nEn Axional cada documento se comporta según su tipología, es decir, su tipo: dice cómo se numera, de dónde viene y cómo se contabiliza. La numeración la da la serie, un contador como el dispensador de turnos de una tienda. La plantilla contable es la regla que dice qué cuentas lleva el asiento de cada documento.\n\nContabilizar es pasar el documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. Genera un asiento: una anotación con líneas al debe y al haber que suman lo mismo. El albarán apunta la venta como pendiente de facturar (cuenta 43090). La factura genera el asiento definitivo con el cliente, el IVA y las ventas.\n\nLa factura también crea el vencimiento, que es la fecha en que el cliente debe pagarte. Ese cobro pendiente se llama efecto y se guarda en la cartera, la lista de todos los cobros y pagos pendientes de la empresa. El IVA es un impuesto que paga el consumidor final: tú lo cobras al vender y lo entregas a Hacienda.\n\nEjemplo: practicas con una venta como la de tu caso, las 10 unidades que compraste a 12,50. La venta real de tu caso ya la hiciste en «Vender: pedido, albarán y factura»; aquí recorres otro circuito, sin pedido, y no la sumes. La base imponible, el precio sin impuestos, es 10 × 20,00 = 200,00. El IVA del 21 % suma 42,00 y la factura es de 242,00. Tu margen es 200,00 − 125,00 = 75,00.\n\nEjemplo: vendes a tu cliente C{INI}, el que diste de alta en «Dar de alta los datos básicos de gestión». Las capturas son de otro cliente de la demo: cambia solo el código. Los importes son los de tu caso y el mecanismo es el mismo.\n\nOjo: en este bloque la venta queda contada dos veces a propósito. El albarán usa AV (43090 contra 70000) y la factura usa FV (43000 contra 70000): la 70000 suma 400,00 y la 43090 deja 200,00 colgados. Lo correcto, con una plantilla que salde la 43090 (FVOA), sería 43000.00000 242,00 al debe, y 47000.00000 42,00 y 43090 200,00 al haber. En tu caso la venta cuenta una sola vez: 200,00.\n\nFíjate: Tus operaciones del caso se graban en la empresa 0 «Deister Software» de la demo, porque es la que tiene tipologías y plantillas configuradas. Tu empresa S{INI} solo sirve para practicar su alta, sus saldos iniciales y su cierre. Los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.\n\nDónde: «Gestión › Ventas › Albaranes › Albaranes» y «Gestión › Ventas › Facturas › Facturas».",
       "duracionMin": 60,
       "secciones": [
         {
@@ -435,7 +2349,7 @@
             {
               "campo": "Cliente *",
               "significado": "Tercero que das de alta como cliente. Debe existir ya en Terceros.",
-              "ejemplo": "C{INI} Tercero {INI}"
+              "ejemplo": "C{INI} «Cliente Maestros {INI}»"
             },
             {
               "campo": "Fecha alta *",
@@ -1109,6 +3023,10 @@
         {
           "problema": "Al contabilizar el albarán sale «gconasih_ApplyParams: EXPRESION:[cabecera.impant] NO CONTEMPLADA PARA EVALUAR IMPORTE».",
           "solucion": "En la tipología A{INI}, pestaña Contabilización, pon la plantilla AV en «Asiento expediciones» y «Asiento albaranes». Guarda."
+        },
+        {
+          "problema": "Al contabilizar la factura sale «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.»",
+          "solucion": "El tipo de efecto de la factura (R{INI}, un recibo domiciliado) exige una domiciliación bancaria de la empresa, es decir, la autorización para cobrar el recibo en la cuenta del cliente, y la empresa de la demo no la tiene. Cambia solo el «Tipo efecto» de la factura a EF: si la factura está Validada, pulsa «Pasar a provisional», cambia «Tipo efecto» a EF, guarda con el disquete y pulsa «Validar»; después vuelve a contabilizar. No toques el cliente ni la «Forma pago»."
         }
       ],
       "aprendido": [
@@ -1125,7 +3043,7 @@
       "numero": 2,
       "titulo": "Vender de la oferta a la factura",
       "objetivo": "Harás una venta completa, de la oferta a la factura de 133,10, y comprobarás que solo la factura se contabiliza.",
-      "concepto": "Una venta completa es como encargar un mueble. Te dan un presupuesto (la oferta), lo aceptas con un encargo (el pedido), te lo entregan con un albarán y al final llega la factura. Si el ERP no encadena bien los documentos, no sabes qué falta por entregar ni qué falta por cobrar, y puedes facturar dos veces o no facturar nada.\n\nEn Axional cada documento nace del anterior copiando sus líneas. Por eso cada tipología, es decir, cada tipo de documento, tiene como origen la anterior. La tipología dice cómo se numera el documento, de dónde viene y cómo se contabiliza. Así el ERP sabe en todo momento qué falta por servir y qué falta por facturar.\n\nAquí no se contabilizan ni la oferta, ni el pedido, ni el albarán. Contabilizar es pasar el documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. La factura genera el asiento, una anotación con líneas al debe y al haber que suman lo mismo, con cliente, IVA y ventas. También crea el vencimiento de cobro: la fecha en que el cliente debe pagarte.\n\nEjemplo: ofertas 5 unidades a 22,00. La base imponible, el precio sin impuestos, es 110,00 y el IVA del 21 % suma 23,10. La factura total es de 133,10, que el cliente te debe.\n\nEjemplo: en tu caso, la venta a tu cliente es de 10 × 20,00 = 200,00 más 42,00 de IVA, 242,00 en total, y ya la hiciste en «Vender del albarán a la factura». Aquí practicas con otra venta, de 5 × 22,00 = 110,00 más 23,10 de IVA, 133,10 en total, para recorrer el circuito largo con oferta y pedido. No la sumes a tu caso. Como en el bloque anterior, vendes a C{INI}; las capturas son de otro cliente.\n\nFíjate: los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos. La demo es compartida y el ERP te dará otros. Usa siempre los tuyos.\n\nDónde: «Gestión › Ventas › Ofertas › Ofertas», y después Pedidos, Albaranes y Facturas, todos bajo «Gestión › Ventas».",
+      "concepto": "Una venta completa es como encargar un mueble. Te dan un presupuesto (la oferta), lo aceptas con un encargo (el pedido), te lo entregan con un albarán y al final llega la factura. Si el ERP no encadena bien los documentos, no sabes qué falta por entregar ni qué falta por cobrar, y puedes facturar dos veces o no facturar nada.\n\nEn Axional cada documento nace del anterior copiando sus líneas. Por eso cada tipología, es decir, cada tipo de documento, tiene como origen la anterior. La tipología dice cómo se numera el documento, de dónde viene y cómo se contabiliza. Así el ERP sabe en todo momento qué falta por servir y qué falta por facturar.\n\nAquí no se contabilizan ni la oferta, ni el pedido, ni el albarán. Contabilizar es pasar el documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. La factura genera el asiento, una anotación con líneas al debe y al haber que suman lo mismo, con cliente, IVA y ventas. También crea el vencimiento de cobro: la fecha en que el cliente debe pagarte.\n\nEjemplo: ofertas 5 unidades a 22,00. La base imponible, el precio sin impuestos, es 110,00 y el IVA del 21 % suma 23,10. La factura total es de 133,10, que el cliente te debe.\n\nEjemplo: en tu caso, la venta a tu cliente es de 10 × 20,00 = 200,00 más 42,00 de IVA, 242,00 en total, y ya la hiciste en «Vender: pedido, albarán y factura». Aquí practicas con otra venta, de 5 × 22,00 = 110,00 más 23,10 de IVA, 133,10 en total, para recorrer el circuito largo con oferta y pedido. No la sumes a tu caso. Como en el bloque anterior, vendes a C{INI}; las capturas son de otro cliente.\n\nFíjate: los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos. La demo es compartida y el ERP te dará otros. Usa siempre los tuyos.\n\nDónde: «Gestión › Ventas › Ofertas › Ofertas», y después Pedidos, Albaranes y Facturas, todos bajo «Gestión › Ventas».",
       "duracionMin": 75,
       "secciones": [
         {
