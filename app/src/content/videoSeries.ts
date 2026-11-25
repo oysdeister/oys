@@ -13,6 +13,7 @@ import {
 } from './videoMapa';
 import { SERIES_FIN, MOMENTOS_SECCION_FIN, MOMENTOS_EJERCICIO_FIN } from './video-finanzas';
 import { SERIES_TUT_FIN, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_EJERCICIO_TUT_FIN } from './video-tutoriales-fin';
+import { SERIES_WORKFLOW, MOMENTOS_SECCION_WORKFLOW, MOMENTOS_EJERCICIO_WORKFLOW } from './video-workflow';
 import { SERIES_TABLAS_FIN, MOMENTOS_SECCION_TABLAS_FIN } from './video-tablas-fin';
 import { SERIES_TESORERIA, MOMENTOS_SECCION_TESORERIA, MOMENTOS_EJERCICIO_TESORERIA } from './video-tesoreria';
 
@@ -37,6 +38,7 @@ export const SERIES: Record<string, SerieVideo> = {
   compras: { id: 'compras', titulo: 'Vídeo de compras', corto: 'Compras', pagina: '/video', capitulos: CAPITULOS },
   ...Object.fromEntries(SERIES_TABLAS_FIN.map((s) => [s.id, s])),
   ...Object.fromEntries(SERIES_TUT_FIN.map((s) => [s.id, s])),
+  ...Object.fromEntries(SERIES_WORKFLOW.map((s) => [s.id, s])),
   ...Object.fromEntries(SERIES_TESORERIA.map((s) => [s.id, s])),
   ...Object.fromEntries(SERIES_FIN.map((s) => [s.id, s])),
 };
@@ -95,7 +97,7 @@ const CONTABILIZAR_COMPRAS: MomentoVideo = { capitulo: 8, t: 4076, tCap: 275, fi
 const ANADIR_SECCION: Record<string, MomentoVideo[]> = {};
 
 // El vídeo de la tabla va primero: es la tarjeta «Mira primero el vídeo» de la sección que explica esa tabla
-const SECCION_BRUTA = juntar(MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, ANADIR_SECCION, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
+const SECCION_BRUTA = juntar(MOMENTOS_SECCION_TABLAS_FIN, MOM_SEC_COMPRAS, ANADIR_SECCION, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_SECCION_WORKFLOW, MOMENTOS_SECCION_TESORERIA, MOMENTOS_SECCION_FIN);
 
 const claveTramo = (m: MomentoVideo) => `${m.serie ?? 'compras'}|${m.capitulo}|${m.t}`;
 
@@ -119,7 +121,7 @@ function ordenar(id: string, lista: MomentoVideo[]): MomentoVideo[] {
 }
 
 const SECCION: Record<string, MomentoVideo[]> = Object.fromEntries(Object.entries(SECCION_BRUTA).map(([id, l]) => [id, ordenar(id, l)]));
-const EJERCICIO = juntar(MOM_EJ_COMPRAS, MOMENTOS_EJERCICIO_TUT_FIN, MOMENTOS_EJERCICIO_TESORERIA, MOMENTOS_EJERCICIO_FIN);
+const EJERCICIO = juntar(MOM_EJ_COMPRAS, MOMENTOS_EJERCICIO_TUT_FIN, MOMENTOS_EJERCICIO_WORKFLOW, MOMENTOS_EJERCICIO_TESORERIA, MOMENTOS_EJERCICIO_FIN);
 // H32: en el bloque, el tramo de «Contabilizar la factura» de otra base pasa a ser el del capítulo 8 de Compras
 EJERCICIO['icon-contabilidad-v-1'] = [
   ...(EJERCICIO['icon-contabilidad-v-1'] ?? []).filter((m) => claveTramo(m) !== 'fin-icon1|1|44'),
@@ -142,5 +144,5 @@ export function momentosDeModulo(id: string): MomentoVideo[] {
 /** Series que pertenecen a un módulo (para mostrar sus capítulos en la página del módulo) */
 export function seriesDeModulo(modulo: string): SerieVideo[] {
   if (modulo === 'compras') return [SERIES.compras];
-  return [...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
+  return [...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_WORKFLOW, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
 }
