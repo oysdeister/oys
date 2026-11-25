@@ -1,6 +1,5 @@
 /**
- * Vídeo tutorial «Ventas en Deister Axional VNext» (capítulos 1-3: bienvenida, cliente y documentos de venta;
- * el resto se añade cuando estén renderizados). Release «video-ventas-v1».
+ * Vídeo tutorial «Ventas en Deister Axional VNext» (6 capítulos). Release «video-ventas-v1».
  * Se registra en videoSeries.ts. Los tiempos de «escenas» y de los momentos son segundos dentro del clip.
  */
 import type { MomentoVideo } from './videoMapa';
@@ -14,7 +13,7 @@ export const SERIES_VENTAS: SerieTutorialFin[] = [
     id: 'tut-ventas',
     titulo: 'Ventas en Deister Axional VNext',
     corto: 'Vídeo de ventas',
-    intro: 'Qué es el módulo de ventas, cómo se da de alta un cliente y cómo se numeran y se crean los tipos de los documentos de venta.',
+    intro: 'Qué es el módulo de ventas, cómo se da de alta un cliente y cómo se numeran y se crean los tipos de los documentos de venta, y el circuito completo: pedido, albarán, factura, contabilización y vencimiento.',
     modulos: ['ventas'],
     capitulos: [
       {
@@ -73,6 +72,75 @@ export const SERIES_VENTAS: SerieTutorialFin[] = [
           { t: 372, titulo: 'Qué has hecho' },
         ],
       },
+      {
+        n: 4,
+        titulo: 'El pedido de venta',
+        inicio: 1076,
+        duracion: 437,
+        url: clip('cap04'),
+        poster: 'img/ventas-video/cap04.jpg',
+        escenas: [
+          { t: 6, titulo: 'Qué es un pedido de venta' },
+          { t: 40, titulo: 'Qué datos lleva un pedido' },
+          { t: 76, titulo: 'La lista de pedidos de venta' },
+          { t: 114, titulo: 'Crea el pedido: tipo y almacén' },
+          { t: 152, titulo: 'El cliente y sus condiciones' },
+          { t: 185, titulo: 'El agente comercial' },
+          { t: 212, titulo: 'Guarda el pedido' },
+          { t: 225, titulo: 'Abre el pedido' },
+          { t: 255, titulo: 'Añade la línea del pedido' },
+          { t: 295, titulo: 'Guarda la línea y comprueba el importe' },
+          { t: 325, titulo: 'Las cifras del pedido' },
+          { t: 361, titulo: 'Valida el pedido' },
+          { t: 388, titulo: 'El importe del pedido' },
+          { t: 401, titulo: 'Qué has hecho' },
+        ],
+      },
+      {
+        n: 5,
+        titulo: 'Del albarán a la factura',
+        inicio: 1513,
+        duracion: 678,
+        url: clip('cap05'),
+        poster: 'img/ventas-video/cap05.jpg',
+        escenas: [
+          { t: 6, titulo: 'Qué es un albarán' },
+          { t: 34, titulo: 'Crea el albarán' },
+          { t: 65, titulo: 'Origen: el pedido de partida' },
+          { t: 103, titulo: 'Guarda el albarán' },
+          { t: 127, titulo: 'Abre el albarán' },
+          { t: 145, titulo: 'Revisa la línea del albarán' },
+          { t: 172, titulo: 'Corrige el importe de la línea' },
+          { t: 221, titulo: 'Valida el albarán' },
+          { t: 239, titulo: 'El albarán validado' },
+          { t: 259, titulo: 'Crea la factura' },
+          { t: 306, titulo: 'Guarda la factura vacía' },
+          { t: 326, titulo: 'Abre la factura' },
+          { t: 337, titulo: 'Abre la ventana de conformar' },
+          { t: 368, titulo: 'Conforma el albarán' },
+          { t: 397, titulo: 'Base, IVA y total' },
+          { t: 413, titulo: 'El asiento de esta factura' },
+          { t: 474, titulo: 'Contabiliza la factura' },
+          { t: 506, titulo: 'Lee el asiento' },
+          { t: 553, titulo: 'El vencimiento' },
+          { t: 594, titulo: 'Docflow: el rastro completo' },
+          { t: 641, titulo: 'Qué has hecho' },
+        ],
+      },
+      {
+        n: 6,
+        titulo: 'Resumen y ejercicios',
+        inicio: 2191,
+        duracion: 167,
+        url: clip('cap06'),
+        poster: 'img/ventas-video/cap06.jpg',
+        escenas: [
+          { t: 7, titulo: 'El circuito completo de ventas' },
+          { t: 45, titulo: 'Qué has aprendido' },
+          { t: 73, titulo: 'Tres ejercicios para practicar' },
+          { t: 127, titulo: 'Si te atascas' },
+        ],
+      },
     ],
   },
 ];
@@ -87,7 +155,7 @@ export const MOMENTOS_EJERCICIO_VENTAS: Record<string, MomentoVideo[]> = {};
 
 /** Cada tramo en una sola sección (el capítulo 1 se reparte entre las dos entradas de navegación) */
 export const MOMENTOS_SECCION_VENTAS: Record<string, MomentoVideo[]> = {
-  'ventas-nav-circuito': [m(1, 28, 136, 'Vídeo: bienvenida y el circuito de ventas')],
+  'ventas-nav-circuito': [m(1, 28, 136, 'Vídeo: bienvenida y el circuito de ventas'), m(6, 7, 167, 'Vídeo: resumen del circuito y ejercicios para practicar')],
   'ventas-nav-moverse': [m(1, 136, 265, 'Vídeo: el menú lateral y el recorrido por Ventas')],
   'ventas-cliente-tercero': [m(2, 9, 204, 'Vídeo: el tercero y su relación contable')],
   'ventas-cliente-cobro': [m(2, 204, 273, 'Vídeo: condición de cobro y validar el tercero')],
@@ -96,4 +164,9 @@ export const MOMENTOS_SECCION_VENTAS: Record<string, MomentoVideo[]> = {
   'ventas-documentos-factura': [m(3, 165, 259, 'Vídeo: el tipo de factura FPVD')],
   'ventas-documentos-albaran': [m(3, 259, 323, 'Vídeo: el tipo de albarán APVD')],
   'ventas-documentos-pedido': [m(3, 323, 372, 'Vídeo: el tipo de pedido PDVD')],
+  'ventas-pedido-pedido': [m(4, 6, 401, 'Vídeo: crear y validar el pedido de venta')],
+  'ventas-pedido-albaran': [m(5, 6, 259, 'Vídeo: crear y validar el albarán')],
+  'ventas-pedido-factura': [m(5, 259, 413, 'Vídeo: crear la factura conformando el albarán')],
+  'ventas-pedido-contabilizar': [m(5, 413, 553, 'Vídeo: el asiento y contabilizar la factura')],
+  'ventas-pedido-cobro': [m(5, 553, 641, 'Vídeo: el vencimiento y el Docflow')],
 };
