@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { anotarCambioIniciales, iniciales2 } from './iniciales';
 import { avisarCambio } from './sync';
 
 export interface EstadoEjercicio {
@@ -73,8 +74,16 @@ function leer(): Progreso {
     if (!raw) return vacio();
     const p = JSON.parse(raw) as Progreso;
     const ejercicios = migrarEjercicios(p.ejercicios ?? {});
-    const leido = { ...vacio(), ...p, ejercicios, alumno: { ...vacio().alumno, ...p.alumno } };
-    if (ejercicios !== p.ejercicios) {
+    const alumno = { ...vacio().alumno, ...p.alumno };
+    // Iniciales guardadas con 3+ letras (versiones anteriores): pasan a 2 una sola vez y se avisa al alumno
+    const ini2 = iniciales2(alumno.ini, alumno.nombre);
+    const iniMigrada = ini2 !== alumno.ini;
+    if (iniMigrada) {
+      anotarCambioIniciales(alumno.ini, ini2);
+      alumno.ini = ini2;
+    }
+    const leido = { ...vacio(), ...p, ejercicios, alumno };
+    if (ejercicios !== p.ejercicios || iniMigrada) {
       // Se deja ya migrado en el navegador, para que la sincronización con la cuenta no suba el reparto viejo
       try {
         localStorage.setItem(CLAVE, JSON.stringify(leido));
@@ -149,7 +158,7 @@ export function limpiaUsuario(s: string) {
 
 export const acciones = {
   setAlumno(nombre: string, ini: string, usuario: string) {
-    const limpio = ini.trim().toUpperCase().replace(/[^A-ZÑ0-9]/g, '').slice(0, 4);
+    const limpio = iniciales2(ini, nombre);
     const id = `${limpio}-${nombre.trim().toLowerCase().replace(/\s+/g, '-')}`;
     guardar({ ...estado, alumno: { id, nombre: nombre.trim(), ini: limpio, usuario: limpiaUsuario(usuario) } });
   },

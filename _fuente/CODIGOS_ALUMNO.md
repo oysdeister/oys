@@ -2,20 +2,38 @@
 
 Regla: **un código, una cosa**. Si dos bloques necesitan lo mismo, el segundo lo **reutiliza** y lo dice («Usa el tercero T{INI} que creaste en …; no crees otro»). Si son cosas distintas, llevan códigos distintos aunque vivan en tablas distintas.
 
-`{INI}` = iniciales del alumno (2 letras, p. ej. JP). Longitudes máximas comprobadas en el diccionario Axional (campo `codigo` de cada tabla):
+## Iniciales del alumno: siempre 2 letras
+
+`{INI}` = iniciales del alumno. Son **siempre 2 letras**, nunca 3.
+
+- Cómo se calculan: primera letra del nombre + primera letra del primer apellido. «Laura Martín Ruiz» → **LM**.
+- Sin tildes y en mayúsculas: «Óscar Núñez» → ON.
+- Si el nombre tiene una sola palabra, se usan sus 2 primeras letras: «Laura» → LA.
+- Alumnos que tenían 3 letras guardadas (p. ej. PDJ): la app las pasa a 2 sola, con el nombre si lo conoce (si no, las 2 primeras). Les sale un aviso **una sola vez** con las iniciales de antes y las de ahora. Lo que ya crearon en la demo no cambia; los códigos nuevos llevan las 2 letras.
+- Variantes en el ERP de práctica: `{T}` = T + iniciales (TLM) y `{ART}` = ROD + iniciales (RODLM).
+
+Por qué 2: varios campos de código son muy cortos. Con 3 letras, el ERP da «Demasiado largo».
+
+Longitudes máximas comprobadas en el diccionario Axional (campo `codigo` de cada tabla):
 
 | Tabla (pantalla) | Máx. | Nota |
 |---|---|---|
-| ctipopag (Plazos de pago) | 3 | `P{INI}` cabe con 2 iniciales |
-| ctipoefe (Tipos de efectos) | 3 | `R{INI}` cabe con 2 iniciales |
-| galmctas (Cuentas logísticas) | 4 | `RS{INI}` |
-| gcommovd / gcomfacd (tipologías de albarán / factura de compra) | 4 | `AC{INI}`, `AO{INI}`, `FC{INI}` |
-| gvenofed / gvenpedd / gvenmovd / gvenfacd (tipologías de venta) | 4 | `O{INI}`, `PD{INI}`, `PV{INI}`, `AP{INI}`, `A{INI}`, `FP{INI}` |
+| ctipopag (Plazos de pago) | 3 | `P{INI}`, `V{INI}`: justo (3 de 3) |
+| ctipoefe (Tipos de efectos) | 3 | `R{INI}`, `E{INI}`: justo (3 de 3) |
+| galmctas (Cuentas logísticas) | 4 | `RS{INI}`: justo (4 de 4) |
+| gcompedd / gcommovd / gcomfacd y oferta (tipologías de compra) | 4 | `OC{INI}`, `PC{INI}`, `PW{INI}`, `AC{INI}`, `AO{INI}`, `FC{INI}`: justo (4 de 4) |
+| gvenofed / gvenpedd / gvenmovd / gvenfacd (tipologías de venta) | 4 | `PD{INI}`, `PV{INI}`, `AP{INI}`, `FP{INI}`: justo (4 de 4). `O{INI}`, `A{INI}`: 3 |
+| cdiarios (Diarios) | 2 | `{INI}`: justo (2 de 2) |
+| Empresa (código de la sociedad) | 4 | `S{INI}`: 3 |
+| Flujo financiero / grupo auxiliar | 6 | `{INI}COM`, `{INI}EMP`: 5 |
+| Cuenta financiera (bancos y cajas) | 10 | `BBVA_{INI}`, `CAJA_{INI}`, `CAIXA{INI}`: 7; `{INI}CAJA`: 6 |
 | gven_pricelist / gven_pricegroup (lista y grupo de precios de venta) | 12 | `LV{INI}`, `GV{INI}` (comprobado en el diálogo: contador «/ 12») |
 | ctercero, galmacen, tagrupac | 12 | |
 | garticul, carticul (artículos) | 16 | |
 
-Con iniciales de 3 letras, en los códigos de 3 o 4 caracteres se usan solo las 2 primeras (el campo `codigo` no admite más: si no, sale «Demasiado largo»).
+Con 2 iniciales **todos los códigos caben**. Muchos quedan justos: plazos y tipos de efecto (3), tipologías de compra y de venta (4), cuenta logística `RS{INI}` (4), diario `{INI}` (2) y la descripción del rol «APROBADOR PEDIDOS {INI}» (20). Por eso no se admiten 3 letras.
+
+Otros textos con límite: la descripción del rol de workflow admite 20 caracteres («APROBADOR PEDIDOS » ocupa 18 + 2 iniciales = 20). El código postal de prueba `08{INI}1` tiene 5 caracteres, como un CP real.
 
 Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos códigos. En la plataforma, el artículo que se compra es siempre el 13500620 (también en el ERP simulado: prácticas «Pedido › albarán › factura» y «Entregas parciales»).
 
@@ -49,7 +67,7 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `0PC{INI}01` | Número del pedido (a mano, formulario genérico) | compras-3 | compras-3 |
 | `AO{INI}` | Tipología de albarán de compra con origen pedido | compras-tipos | compras-2 |
 | `GW{INI}` | Grupo de validaciones «WORKFLOW PEDIDOS {INI}» sobre «Pedidos de compras», con la validación 36 | compras-workflow-config «Crear el grupo de validaciones y su línea» | compras-workflow-config (tipología PW{INI}) |
-| `RW{INI}` | Rol de workflow «APROBADOR PEDIDOS {INI}» (descripción de 20 caracteres como máximo: con 2 iniciales; asignado al usuario `public`) | compras-workflow-config «Crear el rol que autoriza» | compras-workflow-config (etapa «Usuario» del circuito WF{INI}) |
+| `RW{INI}` | Rol de workflow «APROBADOR PEDIDOS {INI}» (descripción de 20 caracteres como máximo: 18 + 2 iniciales = 20, justo; asignado al usuario `public`) | compras-workflow-config «Crear el rol que autoriza» | compras-workflow-config (etapa «Usuario» del circuito WF{INI}) |
 | `WF{INI}` | Circuito de workflow «APROBACION PEDIDOS {INI}» (Inicio, Usuario con el rol RW{INI}, Fin) | compras-workflow-config «Crear el circuito» | compras-workflow-config (línea del grupo GW{INI}) |
 | `PW{INI}` | Tipología de pedido de compra con workflow (serie PC, «Grupo validación» GW{INI}). No sustituye a PC{INI} | compras-workflow-config «Enlazar el grupo a la tipología de pedido» | compras-workflow (pedido de prueba) |
 | `0PW{INI}0001` | Número del pedido de prueba con PW{INI} (a mano, formulario genérico); su Identificador pedido lo asigna el ERP y va en el CSV de líneas | compras-workflow «Probar» | compras-workflow (revalidación y autorización) |
@@ -82,7 +100,7 @@ Longitudes comprobadas en el diccionario (wic_table_object): `tlinefin.linfin` 1
 |---|---|---|---|
 | `C{INI}` | **El cliente de Ventas**: el tercero cliente de Maestros. Ventas no crea otro: en `ventas-cliente` lo **comprueba y completa** (relación CLI, datos del Maestro de clientes, condición de cobro R{INI} + P{INI} de Maestros sin cambiarla, validación). El proveedor T{INI} de Compras ya no se usa como cliente | Maestros › maestros-1 «Terceros» y maestros-2 «El tercero en Gestión: cliente y condiciones de cobro» | ventas-cliente, ventas-pedido, ventas-1, ventas-2 |
 | `PD{INI}` | Tipología de pedido de venta sin origen (copia de PED, serie PV, destino albarán AP{INI}) | ventas-documentos | ventas-pedido |
-| `PV{INI}` | Tipología de pedido de venta **desde oferta** (copia de POF, serie PV, origen «Oferta», Sumando, destino albarán AP{INI}) (antes `P{INI}`, chocaba con el plazo de Maestros). Con 3 iniciales, solo 2 (máx. 4) | ventas-documentos «Crear la tipología de pedido PV{INI}, desde la oferta» | ventas-2 (solo comprueba), examen práctico (lib/examen.ts) |
+| `PV{INI}` | Tipología de pedido de venta **desde oferta** (copia de POF, serie PV, origen «Oferta», Sumando, destino albarán AP{INI}) (antes `P{INI}`, chocaba con el plazo de Maestros). Máx. 4: justo con 2 iniciales | ventas-documentos «Crear la tipología de pedido PV{INI}, desde la oferta» | ventas-2 (solo comprueba), examen práctico (lib/examen.ts) |
 | `O{INI}` | Tipología de oferta de venta (copia de OV, serie OV, sin origen) | ventas-documentos «Crear la tipología de oferta O{INI}» | ventas-2 (solo comprueba), examen práctico |
 | `AP{INI}` | Tipología de albarán de venta desde pedido (copia de ACL2, serie AV, origen «Pedidos de venta», «Copiar líneas» Sí, Sumando, sin asiento, Tipo factura FP{INI}) | ventas-documentos | ventas-pedido, ventas-2 (sustituye a la antigua `A{INI}2`), examen práctico |
 | `A{INI}` | Tipología de albarán de venta **sin origen que contabiliza** (Nuevo › Nuevo en blanco, serie AV, Salida, plantilla AV en los dos asientos, Tipo factura FP{INI}) | ventas-documentos «Crear la tipología de albarán A{INI}, que contabiliza» | ventas-1 (solo comprueba) |
@@ -90,7 +108,7 @@ Longitudes comprobadas en el diccionario (wic_table_object): `tlinefin.linfin` 1
 | `LV{INI}` | Lista de precios de venta «Tarifa venta {INI}» (13500620 a 20,00; código máx. 12) | ventas-precios «Crear la lista de precios de venta LV{INI}» | ventas-precios (grupo GV{INI}) |
 | `GV{INI}` | Grupo de precios de venta «Grupo venta {INI}» (lista LV{INI} en orden 1; código máx. 12) | ventas-precios «Crear el grupo de precios GV{INI}» | ventas-precios (Grupo precio de C{INI}), ventas-pedido (precio propuesto) |
 
-Ventas usa un **único juego** de seis tipologías, todas creadas en Configurar (`ventas-documentos`): O{INI}, PD{INI}, PV{INI}, AP{INI}, A{INI} y FP{INI}. Los bloques de Operar (ventas-pedido, ventas-1, ventas-2) las reutilizan y lo dicen. `A{INI}2` y `F{INI}` ya no existen (la condición `tipdoc` de FP{INI} cubre AP{INI} y A{INI}). Longitud máxima de los códigos de tipología de venta: 4 (con 3 iniciales, solo 2).
+Ventas usa un **único juego** de seis tipologías, todas creadas en Configurar (`ventas-documentos`): O{INI}, PD{INI}, PV{INI}, AP{INI}, A{INI} y FP{INI}. Los bloques de Operar (ventas-pedido, ventas-1, ventas-2) las reutilizan y lo dicen. `A{INI}2` y `F{INI}` ya no existen (la condición `tipdoc` de FP{INI} cubre AP{INI} y A{INI}). Longitud máxima de los códigos de tipología de venta: 4 (con 2 iniciales, PD/PV/AP/FP quedan justos).
 
 ### Tesorería (tesoreria.json)
 

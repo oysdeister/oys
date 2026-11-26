@@ -25,6 +25,7 @@ import Examinador from './pages/Examinador';
 import Video from './pages/Video';
 import ErpPractica from './pages/ErpPractica';
 import Glosario from './pages/Glosario';
+import { avisoIniciales, cerrarAvisoIniciales } from './lib/iniciales';
 import Errores from './pages/Errores';
 
 function useTema() {
@@ -59,6 +60,33 @@ function usePlegada() {
 }
 
 /** Avisa con una medalla cuando se gana una insignia nueva */
+/** Aviso de una vez: las iniciales guardadas con 3 letras pasan a 2 (los códigos de la demo cambian). */
+function AvisoIniciales() {
+  const p = useProgreso();
+  const [cerrado, setCerrado] = useState(false);
+  // Se lee al pintar: la migración puede ocurrir al fusionar con la cuenta, y entonces cambian las iniciales y se repinta
+  const aviso = cerrado ? null : avisoIniciales();
+  if (!aviso || !p.alumno.ini) return null;
+  const xx = p.alumno.ini;
+  return (
+    <div className="toast toast-ini" role="status">
+      <span>
+        Tus iniciales ahora son <b>{xx}</b> (antes {aviso.antes}): en la demo usa códigos como <code>T{xx}</code> o <code>PROV-{xx}-001</code>. Con 3 letras algunos códigos no caben.
+      </span>
+      <button
+        type="button"
+        className="btn sm"
+        onClick={() => {
+          cerrarAvisoIniciales();
+          setCerrado(true);
+        }}
+      >
+        Entendido
+      </button>
+    </div>
+  );
+}
+
 function AvisoInsignias() {
   const p = useProgreso();
   const ganadas = insigniasGanadas(p);
@@ -175,6 +203,7 @@ function Marco() {
       </div>
       <BottomNav />
       <AvisoInsignias />
+      <AvisoIniciales />
       <AnimatePresence>{(!p.alumno.ini || !p.alumno.usuario) && <Onboarding key="onb" />}</AnimatePresence>
       <Bienvenida />
     </div>

@@ -2,17 +2,10 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { acciones, getProgreso, limpiaUsuario } from '../lib/progress';
 import { olvidaBienvenida } from '../lib/saludo';
+import { iniciales2, inicialesDe } from '../lib/iniciales';
 import { Espacio } from './shell/Espacio';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
-
-/** Iniciales a partir del nombre («Laura Martín» → «LM»); si solo hay una palabra, sus dos primeras letras. */
-function inicialesDe(nombre: string) {
-  const limpio = (w: string) => w.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-ZÑ0-9]/g, '');
-  const palabras = nombre.trim().split(/\s+/).map(limpio).filter(Boolean);
-  const ini = palabras.slice(0, 3).map((w) => w[0]).join('');
-  return (ini.length >= 2 ? ini : (palabras[0] ?? '').slice(0, 2)).slice(0, 4);
-}
 
 /** Usuario a partir del nombre («Laura Martín» → «lmartin»). */
 function usuarioDe(nombre: string, ini: string) {
@@ -29,7 +22,7 @@ export function Onboarding() {
   const reduce = useReducedMotion();
   const previo = getProgreso().alumno;
   const [nombre, setNombre] = useState(previo.nombre);
-  const ok = nombre.trim().length > 1 && inicialesDe(nombre).length >= 2;
+  const ok = nombre.trim().length > 1 && inicialesDe(nombre).length === 2;
   const base = import.meta.env.BASE_URL;
   const d = (t: number) => (reduce ? { duration: 0 } : { delay: t, duration: 0.7, ease: EASE });
 
@@ -47,7 +40,7 @@ export function Onboarding() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!ok) return;
-              const ini = previo.ini || inicialesDe(nombre);
+              const ini = previo.ini ? iniciales2(previo.ini, nombre) : inicialesDe(nombre);
               olvidaBienvenida(); // que la bienvenida salga justo después
               acciones.setAlumno(nombre, ini, usuarioDe(nombre, ini));
             }}

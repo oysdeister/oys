@@ -282,7 +282,7 @@ export function generarCaso(codigo: string): Caso {
       ],
     },
     {
-      titulo: 'Factura de venta (F' + ini + ', plantilla FV)',
+      titulo: 'Factura de venta (FP' + ini + ', plantilla FV)',
       lineas: [
         { cuenta: '43000', nombre: 'Clientes', debe: venta.total, haber: 0 },
         { cuenta: '47000', nombre: 'IVA repercutido 21 %', debe: 0, haber: iv },
