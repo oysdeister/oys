@@ -261,7 +261,7 @@
             },
             {
               "campo": "Grupo precio",
-              "significado": "Grupo de precios (pestaña «Tarifas»). Vacío, el precio se teclea en el pedido.",
+              "significado": "Grupo de precios (pestaña «Tarifas»). Vacío, el precio se teclea en el pedido. Lo rellenas con GV{INI} en «Preparar los precios de venta».",
               "ejemplo": "(vacío)"
             }
           ],
@@ -335,7 +335,7 @@
             },
             {
               "tipo": "nota",
-              "texto": "Si «Grupo precio» está vacío, el precio no viene de ninguna tarifa: lo tecleas en la línea del pedido, como harás en este caso."
+              "texto": "Si «Grupo precio» está vacío, el precio no viene de ninguna tarifa: lo tecleas en la línea del pedido. En «Preparar los precios de venta» le pondrás tu grupo GV{INI} y el precio de 20,00 saldrá solo."
             }
           ]
         },
@@ -971,8 +971,8 @@
           ],
           "pasos": [
             {
-              "texto": "Abre «Grupos de precios», pulsa «Nuevo» y crea Grupo GV{INI} con Nombre «Grupo venta {INI}»",
-              "detalle": "Ruta: Gestión › Ventas › Maestros › Tarifas › Precios › Grupos de precios. Se abre en modo lista. La captura es el grupo 00002 de la demo con sus tres filas.",
+              "texto": "Abre «Grupos de precios», pulsa «Nuevo» (arriba a la derecha) y crea el grupo: Grupo GV{INI} y Nombre «Grupo venta {INI}»; pulsa «Guardar»",
+              "detalle": "Ruta: Gestión › Ventas › Maestros › Tarifas › Precios › Grupos de precios. Se abre en modo lista. Al guardar, la ficha de tu grupo queda abierta con la caja «Listas de grupo de precios» vacía, que rellenas en el paso siguiente. La captura es el grupo 00002 de la demo, ya con sus tres filas.",
               "imagen": "ventas-n-77.webp",
               "hotspot": {
                 "x": 12.8,
@@ -1316,7 +1316,7 @@
             "La plantilla de asiento (en el ERP, asiento programable) es la regla que construye el asiento. Está en «CABECERAS ASIENTOS PROGRAMABLES» (gconasih). Cada plantilla tiene «Líneas de asiento» y, abajo, «Documentos del tipo de asiento»: las tipologías que la usan.",
             "AV «ALBARAN DE VENTA» tiene tres líneas: la 43090 al debe por el total del albarán («VENTAS PENDIENTE DE FACTURA»), la cuenta de ventas del artículo al haber («VENTAS A») y la 70600 de pronto pago. La 43090 se rotula «Clientes, facturas pendientes de formalizar»: es la venta entregada y aún sin factura.",
             "FV «FACTURA DE VENTAS» lleva el cliente al debe por el total de la factura, la cuenta de ventas del artículo al haber por la base, la 70600 de pronto pago y la 43800 de anticipos. El IVA lo añade el ERP: en la prevista sale como «FACTURAS DE VENTA [Tax]».",
-            "FVOA «FACTURA VENTA ORIGEN ALBARAN CONT. TOTAL» es la pareja de AV. Además de las líneas de FV, salda la 43090 al haber y devuelve la venta del albarán (línea «RETROCESO ALBARAN»). Así, albarán con AV más factura con FVOA cuentan la venta una sola vez. En la demo ninguna tipología la usa, su diario es DC «Compras» y, al probarla, la prevista da error (lo verás en «Vender del albarán a la factura»).",
+            "FVOA «FACTURA VENTA ORIGEN ALBARAN CONT. TOTAL» es la pareja de AV. Además de las líneas de FV, salda la 43090 al haber (línea «ALBARAN») y, con la línea «RETROCESO ALBARAN», pone la cuenta de ventas al debe por la base: anula la venta que la factura volvería a apuntar, porque ya la apuntó el albarán. Así, albarán con AV más factura con FVOA cuentan la venta una sola vez. En la demo ninguna tipología la usa, su diario es DC «Compras» y, al probarla, la prevista da error (lo verás en «Vender del albarán a la factura»).",
             "La cuenta de ventas no está escrita en la plantilla: la línea dice «Relación artículos» M. El ERP la busca en el tipo contable del artículo. El 13500620 tiene tipo contable PRODUCTO, y en «TIPOS DE CONTABILIZACIÓN» PRODUCTO lleva la 70000.00000 en «ALBARAN DE VENTA», «FACTURA DE VENTAS» y «FACTURA VENTA ORIGEN ALBARAN CONT. TOTAL» (y la 60000.00000 en las de compra)."
           ],
           "campos": [
@@ -1440,7 +1440,7 @@
             "Ninguna"
           ],
           "correcta": 1,
-          "explicacion": "FVOA salda la 43090 y devuelve la venta del albarán. Con FV, la venta del albarán y la de la factura se suman."
+          "explicacion": "FVOA salda la 43090 y anula la venta repetida en la 70000. Con FV, la venta del albarán y la de la factura se suman: 400,00 por una venta de 200,00."
         }
       ],
       "checklist": [
@@ -1470,7 +1470,7 @@
       "numero": 4,
       "titulo": "Configurar los documentos de venta",
       "objetivo": "Crearás las seis tipologías de venta del curso, enlazadas entre sí: PD{INI}, AP{INI} y FP{INI} para tu venta, y O{INI}, PV{INI} y A{INI} para los otros dos circuitos. Y leerás cómo se numeran.",
-      "concepto": "Cada documento de venta tiene un tipo: la tipología. Es como un molde: todos los pedidos, albaranes o facturas que hagas con él salen con la misma forma y el mismo comportamiento. Si la tipología está mal, los documentos salen sin número, sin líneas o sin asiento, y la venta no cuadra con la contabilidad.\n\nLa tipología dice cuatro cosas: con qué serie se numera el documento, de qué documento copia las líneas, a qué documento da paso y si genera asiento al contabilizarlo. El mapa de todas las tipologías y de sus enlaces está en «Conocer las tipologías de venta».\n\nLa serie es el contador que numera, como el dispensador de turnos de una tienda. El numerador es la pantalla donde se define ese contador: una máscara que arma el número con la empresa, la serie y un contador de 6 cifras. Tú no lo escribes: lo pone el ERP al guardar.\n\nEl documento origen es aquel del que nace otro, y el documento destino, aquel al que da paso. «Copiar líneas» decide si el documento nuevo trae las líneas del origen: «Sí» las copia solo. «Actualizar origen» «Sumando» anota en el origen lo ya servido o facturado, para no repetirlo.\n\nEn este bloque creas un único juego de seis tipologías, el que usan todos los bloques de Operar. Para tu venta del caso: el pedido PD{INI} (sin origen), el albarán AP{INI} (desde el pedido, sin asiento) y la factura FP{INI} (desde los albaranes, con asiento). Para «Vender de la oferta a la factura»: la oferta O{INI} y el pedido PV{INI}, que copia de la oferta; el albarán y la factura son AP{INI} y FP{INI}. Para «Vender del albarán a la factura»: el albarán A{INI}, sin origen y con asiento; la factura es FP{INI}.\n\nEjemplo: tu venta de 10 unidades a 20,00 recorre PD{INI} › AP{INI} › FP{INI}. Solo la factura genera asiento: 43000 al debe por 242,00, 47000 al haber por 42,00 y 70000 al haber por 200,00. Ojo: la demo lleva el IVA repercutido a la 47000.00000; en el plan contable español va a la 477. No lo copies.\n\nNorma para crear una tipología: si en la demo hay una con el mismo origen que la tuya, cópiala con «Nuevo › Nuevo como» y cambia solo lo que se dice. Si la tuya no tiene origen y la de la demo sí, créala con «Nuevo › Nuevo» (en blanco): al vaciar la «Tabla origen» de una copia, el ERP no deja guardar. Las capturas son de las tipologías PDCP, APCP y FPCP de la demo; las tuyas son PD{INI}, AP{INI} y FP{INI}.\n\nOjo: el código de una tipología admite como máximo 4 caracteres. Con iniciales de 3 letras usa solo 2.\n\nDónde: «Gestión › Maestros › Auxiliares › Numerador de documentos» y «Gestión › Ventas › Maestros › Documentos».",
+      "concepto": "Cada documento de venta tiene un tipo: la tipología. Es como un molde: todos los pedidos, albaranes o facturas que hagas con él salen con la misma forma y el mismo comportamiento. Si la tipología está mal, los documentos salen sin número, sin líneas o sin asiento, y la venta no cuadra con la contabilidad.\n\nLa tipología dice cuatro cosas: con qué serie se numera el documento, de qué documento copia las líneas, a qué documento da paso y si genera asiento al contabilizarlo. El mapa de todas las tipologías y de sus enlaces está en «Conocer las tipologías de venta».\n\nLa serie es el contador que numera, como el dispensador de turnos de una tienda. El numerador es la pantalla donde se define ese contador: una máscara que arma el número con la empresa, la serie y un contador de 6 cifras. Tú no lo escribes: lo pone el ERP al guardar.\n\nEl documento origen es aquel del que nace otro, y el documento destino, aquel al que da paso. «Copiar líneas» decide si el documento nuevo trae las líneas del origen: «Sí» las copia solo. «Actualizar origen» «Sumando» anota en el origen lo ya servido o facturado, para no repetirlo.\n\nEn este bloque creas un único juego de seis tipologías, el que usan todos los bloques de Operar. Para tu venta del caso: el pedido PD{INI} (sin origen), el albarán AP{INI} (desde el pedido, sin asiento) y la factura FP{INI} (desde los albaranes, con asiento). Para «Vender de la oferta a la factura»: la oferta O{INI} y el pedido PV{INI}, que copia de la oferta; el albarán y la factura son AP{INI} y FP{INI}. Para «Vender del albarán a la factura»: el albarán A{INI}, sin origen y con asiento; la factura es FP{INI}.\n\nEjemplo: tu venta de 10 unidades a 20,00 recorre PD{INI} › AP{INI} › FP{INI}. Solo la factura genera asiento: 43000 al debe por 242,00, 47000 al haber por 42,00 y 70000 al haber por 200,00. Ojo: la demo lleva el IVA repercutido a la 47000.00000; en el plan contable español va a la 477. No lo copies.\n\nNorma para crear una tipología: si en la demo hay una con el mismo origen que la tuya, cópiala con «Nuevo › Nuevo como» y cambia solo lo que se dice. Si las dos tienen origen pero distinto, cópiala y cambia la «Tabla origen» en la misma ventana (así haces AP{INI} desde AV). Si la tuya no tiene origen y la de la demo sí, créala con «Nuevo › Nuevo» (en blanco): al vaciar la «Tabla origen» de una copia, el ERP no deja guardar. Las capturas son de las tipologías PDCP, APCP y FPCP de la demo; las tuyas son PD{INI}, AP{INI} y FP{INI}.\n\nOjo: el código de una tipología admite como máximo 4 caracteres. Con iniciales de 3 letras usa solo 2.\n\nDónde: «Gestión › Maestros › Auxiliares › Numerador de documentos» y «Gestión › Ventas › Maestros › Documentos».",
       "duracionMin": 70,
       "secciones": [
         {
@@ -1684,7 +1684,7 @@
             "Albaranes"
           ],
           "explicacion": [
-            "La pantalla se titula «TIPOLOGÍA DE ALBARANES Y EXPEDICIONES DE VENTAS». Copia la tipología ACL2 «Albaran ventas CL desde pedido» con «Nuevo como»: ya trae «Pedidos de venta» como «Tabla origen», como tu AP{INI}. No copies AV «Albarán de Ventas (Picking)»: su origen es «Propuesta de movimiento», el picking del almacén.",
+            "La pantalla se titula «TIPOLOGÍA DE ALBARANES Y EXPEDICIONES DE VENTAS». Copia la tipología estándar de la demo, AV «Albarán de Ventas (Picking)», con «Nuevo como» y, en la misma ventana, cambia su «Tabla origen» de «Propuesta de movimiento» (el picking del almacén) a «Pedidos de venta». Lo demás ya viene como lo necesitas: serie AV, DISP › NSAL, asientos vacíos, «Copiar líneas» «Sí» y «Actualizar origen» «Sumando». Comprobado en la demo. No copies las filas con CL, CP o VD: son de otros alumnos.",
             "«Documento origen» es el documento del que nace este. En un albarán desde pedido, es «Pedidos de venta».",
             "«Copiar líneas» «Sí» inserta automáticamente las líneas del documento origen. «Validar» las inserta desde un selector, y «No» ni las copia ni deja seleccionarlas.",
             "«Actualizar origen» «Sumando» actualiza la línea del pedido sumando lo servido. Así el pedido sabe qué falta por servir y puede pasar a «Servido o Facturado».",
@@ -1692,7 +1692,7 @@
             "«Cuenta origen» y «Cuenta destino» son las cuentas logísticas, los cajones del stock por los que se mueve la mercancía. DISP «DISPONIBLE PARA SER UTILIZADO» es el stock que puedes vender. NSAL «NO SALDO» es «fuera del inventario». Al validar el albarán, la mercancía pasa de DISP a NSAL: sale del stock disponible.",
             "«Asiento expediciones» y «Asiento albaranes» quedan vacíos: el albarán no contabiliza. El asiento lo genera la factura.",
             "«Tipo factura», en «Documento destino», dice qué tipología de factura se usa al facturar este albarán. Lo rellenas al final, cuando exista FP{INI}.",
-            "«Valorar» dice de dónde sale el precio de las líneas. Opciones, con su ayuda: «Tarifa» «Se aplican tarifas y descuentos según cliente o delegación»; «Última venta» (el del último albarán del artículo y cliente); «Precio medio» (precio de coste); y «No» «No se solicita precio por línea ni se asigna valor económico al albarán». ACL2 trae «Tarifa»: déjalo.",
+            "«Valorar» dice de dónde sale el precio de las líneas. Opciones, con su ayuda: «Tarifa» «Se aplican tarifas y descuentos según cliente o delegación»; «Última venta» (el del último albarán del artículo y cliente); «Precio medio» (precio de coste); y «No» «No se solicita precio por línea ni se asigna valor económico al albarán». AV trae «Tarifa»: déjalo.",
             "«Actualizar origen» también tiene «Restando», que descuenta del documento origen (para devoluciones), y «No». Aquí, «Sumando». La casilla «Abono» queda desmarcada: este albarán no es una devolución."
           ],
           "campos": [
@@ -1769,7 +1769,7 @@
           ],
           "pasos": [
             {
-              "texto": "Abre la tipología ACL2, despliega «Nuevo» › «Nuevo como» y cambia «Tipo movimiento» a AP{INI} y la «Descripción»",
+              "texto": "Abre la tipología AV, despliega «Nuevo» › «Nuevo como» y cambia «Tipo movimiento» a AP{INI} y la «Descripción»",
               "pregunta": "Estás en el diálogo de «Nuevo como» del albarán. ¿Qué campo cambias para dar tu propio código a la tipología?",
               "detalle": "La captura es de APCP «Albarán venta CP desde pedido»: serie AV, Expedición albarán «Albarán», Cuenta origen DISP y Cuenta destino NSAL. Deja esos valores como vienen.",
               "imagen": "ventas-n-18.webp",
@@ -1782,8 +1782,8 @@
               }
             },
             {
-              "texto": "En «Documento origen» comprueba «Tabla origen» «Pedidos de venta», «Copiar líneas» «Sí» y «Actualizar origen» «Sumando»",
-              "detalle": "Si «Copiar líneas» no está en «Sí», márcalo. «Sumando» queda resaltado como la opción elegida.",
+              "texto": "En «Documento origen» cambia «Tabla origen» a «Pedidos de venta» (viene «Propuesta de movimiento») y comprueba «Copiar líneas» «Sí» y «Actualizar origen» «Sumando»",
+              "detalle": "El cambio se hace en la misma ventana de «Nuevo como». «Copiar líneas» y «Sumando» ya vienen puestos desde AV; si «Copiar líneas» no está en «Sí», márcalo. La captura es de APCP, ya con «Pedidos de venta».",
               "imagen": "ventas-n-19.webp",
               "hotspot": {
                 "x": 11.0,
@@ -1981,7 +1981,7 @@
             {
               "texto": "Abre la ficha de AP{INI} y en «Documento destino» elige «Tipo factura» FP{INI}; guarda con el disquete",
               "pregunta": "Tienes abierta la ficha de AP{INI}. ¿Qué campo apunta ahora a la tipología de factura FP{INI}?",
-              "detalle": "Al copiar de ACL2, «Tipo factura» salía «Factura de Ventas» (FV). Cámbialo por la tuya.",
+              "detalle": "Al copiar de AV, «Tipo factura» salía «Factura de Ventas» (FV). Cámbialo por la tuya.",
               "imagen": "ventas-n-23.webp",
               "hotspot": {
                 "x": 24.4,
@@ -2479,7 +2479,7 @@
       "aprendido": [
         "Has leído las series OV, PV, AV y FV del numerador y su máscara #e#s#6n, y sabes cómo sale 0PV000006.",
         "Has creado las seis tipologías del curso: PD{INI}, AP{INI} y FP{INI} para tu venta, y O{INI}, PV{INI} y A{INI} para los otros circuitos, con «Nuevo como» o en blanco según su origen.",
-        "Las has enlazado: el pedido da paso al albarán AP{INI} y este a la factura FP{INI}, que solo recoge albaranes AP{INI}.",
+        "Las has enlazado: el pedido da paso al albarán AP{INI} y este a la factura FP{INI}, que solo recoge albaranes AP{INI} y A{INI}.",
         "Sabes qué decide una tipología: serie, documento origen y destino, si copia las líneas, si actualiza el origen y si genera asiento.",
         "Sabes que la factura lleva una clase fiscal y una numeración fiscal correlativa, aparte del número de gestión."
       ]
@@ -2533,12 +2533,12 @@
             },
             {
               "campo": "Tipo efecto *",
-              "significado": "Cómo se cobra. Lo propone la condición de cobro del cliente.",
+              "significado": "Cómo se cobra. Lo propone la condición de cobro del tercero C{INI}.",
               "ejemplo": "R{INI}"
             },
             {
               "campo": "Forma pago *",
-              "significado": "Plazo de cobro. Lo propone la condición de cobro del tercero.",
+              "significado": "Plazo de cobro. Lo propone la condición de cobro del tercero C{INI}.",
               "ejemplo": "P{INI}"
             },
             {
@@ -2602,7 +2602,7 @@
             },
             {
               "texto": "Elige el «Agente» A01 «Agente 01» y pulsa «Guardar»",
-              "detalle": "El «Agente» es obligatorio y no viene del cliente: la lista ofrece A01 y A04. Mira la captura anterior: ya sale A01 en «Información general»."
+              "detalle": "El «Agente» está en la cabecera del pedido, en la caja «Información general»: en la captura del paso anterior ya sale A01. Es obligatorio y no viene del cliente: la lista ofrece A01 y A04."
             },
             {
               "texto": "Comprueba que el pedido queda «Provisional», con su número y la situación «Pendiente»",
@@ -2838,6 +2838,10 @@
             {
               "tipo": "solucion",
               "texto": "En la ficha de la línea, pon «Importe dto.» 1 y guarda (199,00); luego «Importe dto.» 0 y guarda: 200,00."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Stock: en Compras metiste 10 unidades del 13500620 en ALMACEN CENTRAL y este albarán las saca. En «Vender del albarán a la factura» vendes otras 10 y en «Vender de la oferta a la factura», 5: esas 15 salen del stock que la demo ya tiene en ALMACEN CENTRAL (83 unidades disponibles el 26-11-2026, compartidas por todos). Si al validar un albarán el ERP avisa de falta de stock, avisa al formador."
             }
           ]
         },
@@ -3358,7 +3362,7 @@
       "numero": 1,
       "titulo": "Vender del albarán a la factura",
       "objetivo": "Registrarás la venta de 10 unidades: su albarán, su factura de 242,00 y el cobro pendiente en la cartera.",
-      "concepto": "Vender es entregar la mercancía y cobrarla. Es como una tienda: das un papel de entrega, el albarán, y después mandas la factura, el documento fiscal con el que cobras al cliente y que lleva IVA. Si no registras bien los dos, el almacén no sabe qué ha salido, no cobras lo que te deben y el IVA que entregas a Hacienda sale mal.\n\nAquí no creas tipologías: reutilizas las que creaste en «Configurar los documentos de venta». El albarán es A{INI}: sin pedido y con asiento. La factura es FP{INI}, la misma de tu venta del caso. Al principio solo compruebas que están bien.\n\nContabilizar es pasar el documento a la contabilidad. Genera un asiento: una anotación con líneas al debe y al haber que suman lo mismo. Con A{INI}, el albarán apunta la venta como pendiente de facturar: la 43090 «Clientes, facturas pendientes de formalizar» al debe contra la 70000 al haber. La factura genera el asiento con el cliente, el IVA y las ventas, y crea el vencimiento: la fecha en que el cliente debe pagarte.\n\nOjo, esto es lo importante del bloque. Si el albarán contabiliza, la factura tiene que saldar la 43090 y no volver a apuntar la venta. Eso lo hace la plantilla FVOA «FACTURA VENTA ORIGEN ALBARAN CONT. TOTAL»: lleva la 43090 al haber y devuelve la venta del albarán. Pero en la demo FVOA da error al contabilizar, y FP{INI} usa FV, que apunta otra vez 200,00 en la 70000. Si contabilizas el albarán y la factura tal cual, las ventas suman 400,00 por una venta de 200,00 y la 43090 se queda con 200,00 para siempre. Para evitarlo, en este bloque ves el asiento del albarán y lo descontabilizas antes de facturar. «Descontabilizar» deshace el asiento del albarán; el albarán sigue Validado y se puede facturar. Se comprobó en la demo.\n\nEjemplo: practicas con una venta como la de tu caso, las 10 unidades que compraste a 12,50. La venta real de tu caso ya la hiciste en «Vender: pedido, albarán y factura»; aquí recorres otro circuito, sin pedido, y no la sumes. La base imponible es 10 × 20,00 = 200,00, el IVA del 21 % suma 42,00 y la factura es de 242,00. Tu margen es 200,00 − 125,00 = 75,00.\n\nEjemplo: vendes a tu cliente C{INI}. Su cuenta es su subcuenta propia, la 43000.00901 que creaste en Maestros (o la que te dio el ERP). Las capturas son de otro cliente de la demo: cambia solo el código.\n\nFíjate: tus operaciones se graban en la empresa 0 «Deister Software» de la demo. Los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros.\n\nDónde: «Gestión › Ventas › Albaranes › Albaranes» y «Gestión › Ventas › Facturas › Facturas».",
+      "concepto": "Vender es entregar la mercancía y cobrarla. Es como una tienda: das un papel de entrega, el albarán, y después mandas la factura, el documento fiscal con el que cobras al cliente y que lleva IVA. Si no registras bien los dos, el almacén no sabe qué ha salido, no cobras lo que te deben y el IVA que entregas a Hacienda sale mal.\n\nAquí no creas tipologías: reutilizas las que creaste en «Configurar los documentos de venta». El albarán es A{INI}: sin pedido y con asiento. La factura es FP{INI}, la misma de tu venta del caso. Al principio solo compruebas que están bien.\n\nContabilizar es pasar el documento a la contabilidad. Genera un asiento: una anotación con líneas al debe y al haber que suman lo mismo. Con A{INI}, el albarán apunta la venta como pendiente de facturar: la 43090 «Clientes, facturas pendientes de formalizar» al debe contra la 70000 al haber. La factura genera el asiento con el cliente, el IVA y las ventas, y crea el vencimiento: la fecha en que el cliente debe pagarte.\n\nOjo, esto es lo importante del bloque. Si el albarán contabiliza, la factura tiene que saldar la 43090 y no volver a apuntar la venta. Eso lo hace la plantilla FVOA «FACTURA VENTA ORIGEN ALBARAN CONT. TOTAL»: lleva la 43090 al haber y anula la venta repetida en la 70000. Su asiento neto queda así: 43000 al debe por 242,00, 43090 al haber por 200,00 y 47000 al haber por 42,00. Pero en la demo FVOA da error al contabilizar, y FP{INI} usa FV, que apunta otra vez 200,00 en la 70000. Si contabilizas el albarán y la factura tal cual, las ventas suman 400,00 por una venta de 200,00 y la 43090 se queda con 200,00 para siempre. Para evitarlo, en este bloque ves el asiento del albarán y lo descontabilizas antes de facturar. «Descontabilizar» deshace el asiento del albarán; el albarán sigue Validado y se puede facturar. Se comprobó en la demo.\n\nEjemplo: practicas con una venta igual a la de tu caso, 10 unidades a 20,00. Esas unidades no son las que compraste en Compras (ya las vendiste en el pedido): salen del stock de ALMACEN CENTRAL, que la demo comparte. La venta real de tu caso ya la hiciste en «Vender: pedido, albarán y factura»; aquí recorres otro circuito, sin pedido, y no la sumes. La base imponible es 10 × 20,00 = 200,00, el IVA del 21 % suma 42,00 y la factura es de 242,00. Si las hubieras comprado a 12,50 como en Compras, el margen sería 200,00 − 125,00 = 75,00.\n\nEjemplo: vendes a tu cliente C{INI}. Su cuenta es su subcuenta propia, la 43000.00901 que creaste en Maestros (o la que te dio el ERP). Las capturas son de otro cliente de la demo: cambia solo el código.\n\nFíjate: tus operaciones se graban en la empresa 0 «Deister Software» de la demo. Los números de documento de los ejemplos (0AV000001, 0FV000001…) son orientativos: la demo es compartida y el ERP te dará otros.\n\nDónde: «Gestión › Ventas › Albaranes › Albaranes» y «Gestión › Ventas › Facturas › Facturas».",
       "duracionMin": 60,
       "secciones": [
         {
@@ -3658,8 +3662,8 @@
             },
             {
               "campo": "Estado *",
-              "significado": "Provisional hasta que se valida el cliente.",
-              "ejemplo": "Provisional"
+              "significado": "Provisional en el alta; al guardar queda «Activo».",
+              "ejemplo": "Activo"
             },
             {
               "campo": "Comercial *",
@@ -3704,7 +3708,7 @@
             },
             {
               "texto": "Comprueba Cliente C{INI}, Comercial C{INI} y Agrupación empresas ALL",
-              "pregunta": "Vas a dar de alta el tercero como cliente. ¿Dónde eliges el cliente C{INI}?",
+              "pregunta": "Tienes abierta la ficha de C{INI} en el Maestro de clientes. ¿En qué campo compruebas que el cliente es C{INI}?",
               "detalle": "La captura es del alta de otro tercero de la demo; tú solo miras tu ficha.",
               "imagen": "ventas-d-155.webp",
               "hotspot": {
@@ -4057,7 +4061,7 @@
           ],
           "explicacion": [
             "En la factura no tecleas líneas. Conformas los albaranes pendientes y sus líneas se copian; el albarán pasa a Facturado.",
-            "Antes de facturar, descontabiliza el albarán (botón «Descontabilizar» de su ficha). FP{INI} usa la plantilla FV: apunta la venta en la 70000 y no salda la 43090. Con el albarán contabilizado, la venta contaría dos veces (400,00) y la 43090 quedaría con 200,00. En una empresa real, la pareja correcta es albarán con AV y factura con FVOA, que salda la 43090; en la demo FVOA da error.",
+            "Antes de facturar, descontabiliza el albarán (botón «Descontabilizar» de su ficha). FP{INI} usa la plantilla FV: apunta la venta en la 70000 y no salda la 43090. Con el albarán contabilizado, la venta contaría dos veces (400,00) y la 43090 quedaría con 200,00. En una empresa real que contabiliza los albaranes, la pareja correcta es albarán con AV y factura con FVOA, que salda la 43090; en la demo FVOA da error.",
             "Fíjate: la opción de conformar no es un botón ni una pestaña. Está en el desplegable junto al título de la factura, al lado de «Desconformar Albaranes de ventas».",
             "Ejemplo: la línea de 200,00 lleva un IVA del 21 %, que son 42,00. La factura suma 242,00. El asiento pone la 43000.00901 de C{INI} al Debe por 242,00, la 47000.00000 al Haber por 42,00 y la 70000.00000 al Haber por 200,00."
           ],
@@ -4225,11 +4229,11 @@
           "avisos": [
             {
               "tipo": "problema",
-              "texto": "Al contabilizar sale un error de domiciliación bancaria («DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.» con TF)."
+              "texto": "Al contabilizar (o en la prevista) sale un error de domiciliación bancaria y faltan líneas. Con TF el mensaje es «DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.»; tu R{INI} pide el IBAN de C{INI}, que no lo tiene."
             },
             {
               "tipo": "solucion",
-              "texto": "El tipo de efecto pide una cuenta bancaria que la demo no tiene. Atajo de la demo: «Pasar a provisional», «Tipo efecto» EF, disquete y «Validar». Se explica en «Vender: pedido, albarán y factura»."
+              "texto": "El tipo de efecto pide una cuenta bancaria que la demo no tiene (la de la empresa con TF; la del cliente con R{INI}). Atajo de la demo: en la cabecera de la factura, «Pasar a provisional», «Tipo efecto» EF (la «Forma pago» P{INI} no se toca), disquete, «Validar» y vuelve a contabilizar. Se explica en «Vender: pedido, albarán y factura»."
             },
             {
               "tipo": "nota",
@@ -4307,7 +4311,7 @@
         "La factura FP{INI} tiene la línea conformada de tu albarán.",
         "La prevista muestra la subcuenta de C{INI} Debe 242,00, 47000.00000 Haber 42,00 y 70000.00000 Haber 200,00.",
         "La factura aparece con Situación Contabilizada.",
-        "La pestaña Vencimientos de la factura muestra los cobros de 242,00.",
+        "La pestaña Vencimientos de la factura muestra dos cobros de 121,00 (242,00 en total).",
         "En la lista de albaranes, tu albarán pasa a Situación Facturado.",
         "Has descontabilizado el albarán antes de facturar: su «Fecha contabilización» está vacía.",
         "Sabes por qué el par correcto es albarán con AV y factura con FVOA, y por qué aquí no se usa FVOA.",
@@ -4983,9 +4987,9 @@
               "imagen": "ventas-d-184.webp"
             },
             {
-              "texto": "Abre la línea con un clic en el número de fila: se abre un panel lateral. Vuelve a escribir el Precio 22 y el Importe dto. 0, y guarda con el disquete del panel.",
+              "texto": "Abre la línea con un clic en el número de fila: se abre un panel lateral. Escribe el Precio 22 y guarda con el disquete del panel; si el disquete no se activa, pon «Importe dto.» 1, guarda, vuelve a 0 y guarda.",
               "pregunta": "Has abierto la línea del albarán en el panel lateral. ¿Dónde vuelves a escribir el precio de 22?",
-              "detalle": "El importe neto se recalcula a 110,00. El disquete es el primer icono gris de la barra superior del panel, a la izquierda de la papelera.",
+              "detalle": "El importe neto se recalcula a 110,00. Si no cambias ningún valor, el ERP no recalcula: por eso se cambia «Importe dto.» a 1 y se vuelve a 0, como en «Vender: pedido, albarán y factura». El disquete es el primer icono gris de la barra superior del panel, a la izquierda de la papelera.",
               "imagen": "ventas-d-185.webp",
               "hotspot": {
                 "x": 40.6,
@@ -5008,7 +5012,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "Abre la línea con un clic en el número de fila (se abre un panel lateral). Vuelve a escribir el Precio 22 y el Importe dto. 0 y guarda con el disquete del panel. El importe neto se recalcula a 110,00."
+              "texto": "Abre la línea con un clic en el número de fila (se abre un panel lateral). Fuerza el recálculo: pon «Importe dto.» 1 y guarda con el disquete del panel; después vuelve a 0 y guarda. El importe neto pasa a 110,00. Reescribir el mismo Precio no recalcula."
             }
           ]
         },
@@ -5101,7 +5105,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "Si sale «fechas fuera de rango de vigencia en empresa», revisa la fecha de inicio de la empresa (Maestro de empresas). Después crea el ejercicio del año (Ejercicios contables)."
+              "texto": "Si al contabilizar sale un error de domiciliación bancaria, haz el mismo atajo que en «Vender: pedido, albarán y factura»: «Pasar a provisional», «Tipo efecto» EF, disquete, «Validar» y vuelve a contabilizar. Si sale «fechas fuera de rango de vigencia en empresa», la fecha de la factura cae fuera de los ejercicios de la empresa 0: no lo cambies tú, avisa al formador (es configuración de la empresa, compartida por todos)."
             },
             {
               "tipo": "nota",
@@ -5148,12 +5152,12 @@
           "pregunta": "El albarán copiado del pedido muestra un importe neto de 2,50. ¿Qué haces?",
           "opciones": [
             "Lo validas igualmente",
-            "Reescribes el Precio 22 y el Importe dto. 0 en la línea y guardas para recalcular a 110,00",
+            "Abres la línea, pones «Importe dto.» 1, guardas, lo vuelves a 0 y guardas: se recalcula a 110,00",
             "Borras el albarán",
             "Cambias la cantidad"
           ],
           "correcta": 1,
-          "explicacion": "Revisa siempre los importes de las líneas copiadas antes de validar."
+          "explicacion": "Es el mismo fallo de la demo que en «Vender: pedido, albarán y factura». Si no cambias ningún valor, el ERP no recalcula; al cambiar «Importe dto.» y volver a 0, recalcula 5 × 22,00 = 110,00. Revisa siempre los importes copiados antes de validar."
         },
         {
           "pregunta": "En este circuito, ¿qué documentos se contabilizan?",
@@ -5169,7 +5173,7 @@
       ],
       "checklist": [
         "La tipología O{INI} está guardada con serie OV, Tabla origen vacía y Copiar línea origen sin marcar.",
-        "La tipología PV{INI} tiene Tabla origen Oferta, Copiar línea origen «Sí», Actualización «Sumando», destino Albarán AV y Relación cliente CLI.",
+        "La tipología PV{INI} tiene Tabla origen Oferta, Copiar línea origen «Sí», Actualización «Sumando», destino «Albarán ventas» AP{INI} y Relación cliente CLI.",
         "La tipología AP{INI} tiene Tabla origen «Pedidos de venta», Copiar líneas «Sí», Actualizar origen «Sumando» y los dos asientos vacíos.",
         "La tipología FP{INI} incluye AP{INI} en su Condición selección.",
         "Tu oferta tiene vigencia hasta el 31-12-2026 y el Agente A01.",
@@ -5197,11 +5201,15 @@
         },
         {
           "problema": "La línea copiada en el albarán trae precio 22,00 pero un importe neto de 2,50 en lugar de 110,00.",
-          "solucion": "Abre la línea, vuelve a escribir el Precio 22 y el Importe dto. 0 y guarda con el disquete del panel. El importe neto se recalcula a 110,00."
+          "solucion": "Abre la línea, pon «Importe dto.» 1 y guarda con el disquete del panel; después vuelve a 0 y guarda. El importe neto pasa a 110,00. Reescribir el mismo Precio no recalcula."
         },
         {
           "problema": "Al contabilizar la factura sale «fechas fuera de rango de vigencia en empresa».",
-          "solucion": "Revisa la fecha de inicio de la empresa (Maestro de empresas). Después crea el ejercicio del año (Ejercicios contables)."
+          "solucion": "La fecha de la factura cae fuera de los ejercicios contables de la empresa 0. No toques el Maestro de empresas ni los ejercicios: es configuración compartida. Avisa al formador."
+        },
+        {
+          "problema": "Al contabilizar la factura sale un error de domiciliación bancaria («DOMICILIACION BANCARIA DE LA EMPRESA NO ENCONTRADA.» con TF) y faltan líneas.",
+          "solucion": "El tipo de efecto pide una cuenta bancaria que falta (de la empresa con TF; el IBAN del cliente con R{INI}). Atajo de la demo: en la cabecera de la factura, «Pasar a provisional», «Tipo efecto» EF (la «Forma pago» no se toca), disquete, «Validar» y vuelve a contabilizar."
         }
       ],
       "aprendido": [
@@ -5269,7 +5277,7 @@
         "tipologia": "A{INI}",
         "fecha": "12-11-2026",
         "importe": 200.0,
-        "estado": "Facturado (Validado y contabilizado con AV, cuenta 43090)",
+        "estado": "Facturado (Validado; contabilizado con AV en la 43090 y descontabilizado antes de facturar)",
         "origen": null
       },
       {
@@ -5278,7 +5286,7 @@
         "tipologia": "FP{INI}",
         "fecha": "12-11-2026",
         "importe": 242.0,
-        "estado": "Contabilizada (vencimiento EF 14-12-2026 de 242,00)",
+        "estado": "Contabilizada (dos vencimientos de 121,00, a 30 y 60 días)",
         "origen": "0AV000001"
       },
       {
