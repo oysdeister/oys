@@ -546,7 +546,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Los asientos de esta práctica son de tu empresa S{INI}. El 5.000,00 € de saldos iniciales de «Registrar los saldos iniciales de una empresa» es lo que se cierra y se abre."
+              "texto": "Los asientos de esta práctica son de tu empresa S{INI}. El 5.000,00 € de saldos iniciales de «Registrar los saldos iniciales de una empresa» es lo que se cierra y se abre. Ese bloque está en «Para saber más» de Contabilidad básica: si no lo hiciste, hazlo antes, porque sin saldos no hay nada que regularizar."
             }
           ]
         },
@@ -1449,11 +1449,11 @@
           "ruta": [
             "Gestión",
             "Ventas",
-            "Albaranes",
-            "Albaranes"
+            "Pedidos",
+            "Pedidos"
           ],
           "explicacion": [
-            "Vendes a tu cliente C{INI}. En el bloque «Vender del albarán a la factura» das de alta como cliente a T{INI} solo para practicar; en tu caso el cliente es C{INI}.",
+            "Vendes a tu cliente C{INI}, el que comprobaste en «Preparar el cliente».",
             "Un efecto es cada cobro pendiente que deja una factura, con su importe y su vencimiento. La venta se cobra en dos efectos porque el plazo P{INI} es 50 % a 30 días y 50 % a 60 días."
           ],
           "campos": [
@@ -1480,8 +1480,8 @@
           ],
           "pasos": [
             {
-              "texto": "Operación 5 · 15-10 · Venta a C{INI}. Abre «Gestión › Ventas › Albaranes › Albaranes», crea el albarán de 10 unidades a 20,00 y valídalo. Después abre «Gestión › Ventas › Facturas › Facturas» y factura el albarán.",
-              "detalle": "El stock baja a 0 y la factura suma 200,00 + 42,00 = 242,00. El asiento lleva 43000.00901 Cliente C{INI} 242,00 al debe y 47000.00000 42,00 más 43090 (o 70000.00000) 200,00 al haber. Esa 47000.00000 es el IVA repercutido en la demo, que su plan rotula «Hacienda Pública, deudora por IVA». En el PGC el IVA repercutido va a la 477. Es configuración de la demo: no la copies. Ojo: en «Vender del albarán a la factura» la factura usa la plantilla FV y la venta queda dos veces (70000 con 400,00 y 43090 con 200,00 al debe). En tu caso cuenta la venta una sola vez: 200,00. Con una plantilla que salde la 43090 (FVOA), el asiento sería 43000.00901 242,00 al debe, y 47000.00000 42,00 y 43090 200,00 al haber. Lo aprendiste en «Vender del albarán a la factura»."
+              "texto": "Operación 5 · 15-10 · Venta a C{INI}. Abre «Gestión › Ventas › Pedidos › Pedidos», crea el pedido PD{INI} de 10 unidades del 13500620 a 20,00, sírvelo con el albarán AP{INI} y factúralo con FP{INI}.",
+              "detalle": "El stock baja a 0 y la factura suma 200,00 + 42,00 = 242,00. El albarán AP{INI} no lleva plantilla de asiento, así que la venta se contabiliza una sola vez, con la factura: 43000.00901 Cliente C{INI} 242,00 al debe y, al haber, 47000.00000 42,00 y 70000.00000 200,00. Esa 47000.00000 es el IVA repercutido en la demo, que su plan rotula «Hacienda Pública, deudora por IVA». En el PGC el IVA repercutido va a la 477. Es configuración de la demo: no la copies. Lo aprendiste en «Vender: pedido, albarán y factura»."
             },
             {
               "texto": "Operación 6 · 15-10 · Mira los efectos de la factura de venta. Abre «Finanzas › Cobros y Pagos › Movimientos» y busca tus efectos.",
@@ -1529,7 +1529,7 @@
           "pasos": [
             {
               "texto": "Operación 7 · 06-11 · Pago a T{INI} por remesa. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas», crea una remesa de pago por transferencia con el efecto de T{INI} y ciérrala.",
-              "detalle": "El efecto de 151,25 pasa a pagado y el banco cobra 3,50 de comisión. En el ERP lo ves en dos momentos. Al ordenar la remesa: 40000.T{INI} 151,25 al debe contra la cuenta puente de la acción. Al conciliar el cargo del banco: la cuenta puente al debe y 57200.00000 al haber, más la comisión (626 Servicios bancarios (en la demo, la cuenta de tu flujo {INI}COM, por ejemplo la 62999.00000 que creaste en «Dar de alta una cuenta contable») 3,50 al debe y 57200.00000 al haber). Neto: 400 151,25 y 626 3,50 al debe, 572 154,75 al haber. Lo aprendiste en «Crear una remesa de pago» y en «Preparar el banco propio»."
+              "detalle": "El efecto de 151,25 pasa a pagado y el banco cobra 3,50 de comisión. En el ERP lo ves en dos momentos. Al ordenar la remesa: 40000.T{INI} 151,25 al debe contra la cuenta puente de la acción. Al conciliar el cargo del banco: la cuenta puente al debe y 57200.00000 al haber, más la comisión (3,50 al debe en la cuenta de tu flujo {INI}COM, que se traduce a una 626 «Servicios bancarios y similares», y 57200.00000 al haber). Neto: 400 151,25 y 626 3,50 al debe, 572 154,75 al haber. Lo aprendiste en «Crear una remesa de pago» y en «Preparar el banco propio»."
             },
             {
               "texto": "Operación 8 · 12-11 · Comisión de mantenimiento. Abre «Finanzas › Tesorería › Ops. corto plazo» y registra un movimiento manual con el flujo {INI}COM de 10,00.",
@@ -1540,7 +1540,7 @@
               "detalle": "El efecto pasa de PE a CO (cobrado). El asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. Lo aprendiste en «Cobrar efectos sueltos y en remesa»."
             },
             {
-              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» y crea la remesa LRC{INI} con el efecto de 121,00. El banco la cobra el 14-12.",
+              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» y crea una remesa de cobro SEPA por la línea financiera LRC{INI} con el efecto de 121,00. El banco la cobra el 14-12.",
               "detalle": "Cuando el banco cobra, el efecto pasa a CO y el asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. Lo aprendiste en «Domiciliar un cliente: mandato SEPA y remesa de cobro»."
             }
           ],

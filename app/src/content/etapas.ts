@@ -34,7 +34,7 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     {
       fase: 'configurar',
       titulo: 'La empresa',
-      que: 'Lees la ficha de una empresa y creas la tuya, con su ejercicio y su banco: lo mínimo para facturar, cobrar y pagar.',
+      que: 'Lees la ficha de una empresa y creas la tuya, con su ejercicio y su banco: la base de una empresa.',
       bloques: ['maestros-v-3', 'maestros-v-4'],
     },
   ],

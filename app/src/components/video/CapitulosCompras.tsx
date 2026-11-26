@@ -23,7 +23,7 @@ export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titul
         <h2 id={hid}>{titulo ?? `${sv.titulo}, por capítulos`}</h2>
         {intro && <p className="vc-intro">{intro}</p>}
         <p className="muted small">
-          {total} minutos en {CAPITULOS.length} capítulos. Toca uno para verlo aquí mismo.{' '}
+          {total} {total === 1 ? 'minuto' : 'minutos'} en {CAPITULOS.length} {CAPITULOS.length === 1 ? 'capítulo' : 'capítulos'}. Toca {CAPITULOS.length === 1 ? 'el capítulo' : 'uno'} para verlo aquí mismo.{' '}
           {sv.pagina && <Link to={sv.pagina}>Ver la página del vídeo</Link>}
         </p>
       </div>

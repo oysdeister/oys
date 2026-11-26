@@ -457,7 +457,7 @@ export default function Video() {
             return (
               <section key={m.id} className="vd-index vd-otras" aria-labelledby={`vd-mod-${m.id}`}>
                 <h2 id={`vd-mod-${m.id}`} className="vd-h2">
-                  {i + 1}. {META[m.id]?.corto ?? m.titulo}
+                  {i}. {META[m.id]?.corto ?? m.titulo}
                 </h2>
                 {m.id === 'compras' && (
                   <>
