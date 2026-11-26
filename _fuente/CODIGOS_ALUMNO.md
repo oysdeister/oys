@@ -10,6 +10,8 @@ Regla: **un código, una cosa**. Si dos bloques necesitan lo mismo, el segundo l
 | ctipoefe (Tipos de efectos) | 3 | `R{INI}` cabe con 2 iniciales |
 | galmctas (Cuentas logísticas) | 4 | `RS{INI}` |
 | gcommovd / gcomfacd (tipologías de albarán / factura de compra) | 4 | `AC{INI}`, `AO{INI}`, `FC{INI}` |
+| gvenofed / gvenpedd / gvenmovd / gvenfacd (tipologías de venta) | 4 | `O{INI}`, `PD{INI}`, `PV{INI}`, `AP{INI}`, `A{INI}`, `FP{INI}` |
+| gven_pricelist / gven_pricegroup (lista y grupo de precios de venta) | 12 | `LV{INI}`, `GV{INI}` (comprobado en el diálogo: contador «/ 12») |
 | ctercero, galmacen, tagrupac | 12 | |
 | garticul, carticul (artículos) | 16 | |
 
@@ -46,10 +48,10 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `PC{INI}` | Tipología de pedido de compra | compras-tipos | compras-3, compras-2 |
 | `0PC{INI}01` | Número del pedido (a mano, formulario genérico) | compras-3 | compras-3 |
 | `AO{INI}` | Tipología de albarán de compra con origen pedido | compras-tipos | compras-2 |
-| `GW{INI}` | Grupo de validaciones «WORKFLOW PEDIDOS {INI}» sobre «Pedidos de compras», con la validación 36 | compras-workflow «Crear el grupo de validaciones y su línea» | compras-workflow (tipología PW{INI}) |
-| `RW{INI}` | Rol de workflow «APROBADOR PEDIDOS {INI}» (descripción de 20 caracteres como máximo: con 2 iniciales; asignado al usuario `public`) | compras-workflow «Crear el rol que autoriza» | compras-workflow (etapa «Usuario» del circuito WF{INI}) |
-| `WF{INI}` | Circuito de workflow «APROBACION PEDIDOS {INI}» (Inicio, Usuario con el rol RW{INI}, Fin) | compras-workflow «Crear el circuito» | compras-workflow (línea del grupo GW{INI}) |
-| `PW{INI}` | Tipología de pedido de compra con workflow (serie PC, «Grupo validación» GW{INI}). No sustituye a PC{INI} | compras-workflow «Enlazar el grupo a la tipología de pedido» | compras-workflow (pedido de prueba) |
+| `GW{INI}` | Grupo de validaciones «WORKFLOW PEDIDOS {INI}» sobre «Pedidos de compras», con la validación 36 | compras-workflow-config «Crear el grupo de validaciones y su línea» | compras-workflow-config (tipología PW{INI}) |
+| `RW{INI}` | Rol de workflow «APROBADOR PEDIDOS {INI}» (descripción de 20 caracteres como máximo: con 2 iniciales; asignado al usuario `public`) | compras-workflow-config «Crear el rol que autoriza» | compras-workflow-config (etapa «Usuario» del circuito WF{INI}) |
+| `WF{INI}` | Circuito de workflow «APROBACION PEDIDOS {INI}» (Inicio, Usuario con el rol RW{INI}, Fin) | compras-workflow-config «Crear el circuito» | compras-workflow-config (línea del grupo GW{INI}) |
+| `PW{INI}` | Tipología de pedido de compra con workflow (serie PC, «Grupo validación» GW{INI}). No sustituye a PC{INI} | compras-workflow-config «Enlazar el grupo a la tipología de pedido» | compras-workflow (pedido de prueba) |
 | `0PW{INI}0001` | Número del pedido de prueba con PW{INI} (a mano, formulario genérico); su Identificador pedido lo asigna el ERP y va en el CSV de líneas | compras-workflow «Probar» | compras-workflow (revalidación y autorización) |
 | `PROV-{INI}-001` / `-002` | Número de factura del proveedor | compras-2 / compras-3 | Cartera (pago de la factura) |
 
@@ -80,12 +82,15 @@ Longitudes comprobadas en el diccionario (wic_table_object): `tlinefin.linfin` 1
 |---|---|---|---|
 | `C{INI}` | **El cliente de Ventas**: el tercero cliente de Maestros. Ventas no crea otro: en `ventas-cliente` lo **comprueba y completa** (relación CLI, datos del Maestro de clientes, condición de cobro R{INI} + P{INI} de Maestros sin cambiarla, validación). El proveedor T{INI} de Compras ya no se usa como cliente | Maestros › maestros-1 «Terceros» y maestros-2 «El tercero en Gestión: cliente y condiciones de cobro» | ventas-cliente, ventas-pedido, ventas-1, ventas-2 |
 | `PD{INI}` | Tipología de pedido de venta sin origen (copia de PED, serie PV, destino albarán AP{INI}) | ventas-documentos | ventas-pedido |
-| `AP{INI}` | Tipología de albarán de venta desde pedido (copia de ACL2, serie AV, origen «Pedidos de venta», «Copiar líneas» Sí, Sumando, sin asiento, Tipo factura FP{INI}) | ventas-documentos | ventas-pedido, condición `tipdoc IN ('AP{INI}')` de FP{INI} |
-| `FP{INI}` | Tipología de factura de venta desde albaranes (copia de FV, serie FV, origen Expediciones con condición `tipdoc IN ('AP{INI}')`, «Copiar líneas» Sí, asiento FACTURA DE VENTAS) | ventas-documentos | ventas-pedido |
-| `A{INI}` / `A{INI}2` | Tipologías de albarán de venta de práctica (sin origen / desde pedido) | ventas-1 / ventas-2 | F{INI}, examen práctico |
-| `F{INI}` | Tipología de factura de venta de práctica | ventas-1 | ventas-2, examen práctico |
-| `O{INI}` | Tipología de oferta de venta | ventas-2 | examen práctico |
-| `PV{INI}` | Tipología de pedido de venta (antes `P{INI}`, chocaba con el plazo de Maestros) | ventas-2 | examen práctico (lib/examen.ts) |
+| `PV{INI}` | Tipología de pedido de venta **desde oferta** (copia de POF, serie PV, origen «Oferta», Sumando, destino albarán AP{INI}) (antes `P{INI}`, chocaba con el plazo de Maestros). Con 3 iniciales, solo 2 (máx. 4) | ventas-documentos «Crear la tipología de pedido PV{INI}, desde la oferta» | ventas-2 (solo comprueba), examen práctico (lib/examen.ts) |
+| `O{INI}` | Tipología de oferta de venta (copia de OV, serie OV, sin origen) | ventas-documentos «Crear la tipología de oferta O{INI}» | ventas-2 (solo comprueba), examen práctico |
+| `AP{INI}` | Tipología de albarán de venta desde pedido (copia de ACL2, serie AV, origen «Pedidos de venta», «Copiar líneas» Sí, Sumando, sin asiento, Tipo factura FP{INI}) | ventas-documentos | ventas-pedido, ventas-2 (sustituye a la antigua `A{INI}2`), examen práctico |
+| `A{INI}` | Tipología de albarán de venta **sin origen que contabiliza** (Nuevo › Nuevo en blanco, serie AV, Salida, plantilla AV en los dos asientos, Tipo factura FP{INI}) | ventas-documentos «Crear la tipología de albarán A{INI}, que contabiliza» | ventas-1 (solo comprueba) |
+| `FP{INI}` | **Única** tipología de factura de venta (copia de FV, serie FV, origen Expediciones con condición `tipdoc IN ('AP{INI}','A{INI}')`, «Copiar líneas» Sí, Sumando, asiento FACTURA DE VENTAS) | ventas-documentos | ventas-pedido, ventas-1, ventas-2 (sustituye a la antigua `F{INI}`), examen práctico |
+| `LV{INI}` | Lista de precios de venta «Tarifa venta {INI}» (13500620 a 20,00; código máx. 12) | ventas-precios «Crear la lista de precios de venta LV{INI}» | ventas-precios (grupo GV{INI}) |
+| `GV{INI}` | Grupo de precios de venta «Grupo venta {INI}» (lista LV{INI} en orden 1; código máx. 12) | ventas-precios «Crear el grupo de precios GV{INI}» | ventas-precios (Grupo precio de C{INI}), ventas-pedido (precio propuesto) |
+
+Ventas usa un **único juego** de seis tipologías, todas creadas en Configurar (`ventas-documentos`): O{INI}, PD{INI}, PV{INI}, AP{INI}, A{INI} y FP{INI}. Los bloques de Operar (ventas-pedido, ventas-1, ventas-2) las reutilizan y lo dicen. `A{INI}2` y `F{INI}` ya no existen (la condición `tipdoc` de FP{INI} cubre AP{INI} y A{INI}). Longitud máxima de los códigos de tipología de venta: 4 (con 3 iniciales, solo 2).
 
 ### Tesorería (tesoreria.json)
 
@@ -113,7 +118,7 @@ Sin códigos propios del alumno (solo `{INI}` en notas de factura de Impuestos).
 
 | Código | Módulo | Qué es |
 |---|---|---|
-| `PD{INI}`, `AP{INI}`, `FP{INI}`, `A{INI}`, `A{INI}2`, `F{INI}`, `PV{INI}`, `O{INI}` | Ventas | Tipologías de venta (ver tabla de Ventas) |
+| `O{INI}`, `PD{INI}`, `PV{INI}`, `AP{INI}`, `A{INI}`, `FP{INI}`, `LV{INI}`, `GV{INI}` | Ventas | Tipologías y precios de venta (ver tabla de Ventas) |
 | `DIV{INI}` | Contabilidad (icon-contabilidad) | Proyecto «División 1 {INI}» |
 | `{INI}EMP`, `{INI}0001` | Contabilidad | Grupo auxiliar y código auxiliar «José Gómez» (por eso el artículo de Maestros pasa a ROD{INI}) |
 | `{INI}ADM` | Contabilidad | Sección |

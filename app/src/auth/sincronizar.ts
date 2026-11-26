@@ -12,7 +12,7 @@ import { EVENTO_CAMBIO, sinAvisos } from '../lib/sync';
 import { acciones, getProgreso, limpiaUsuario, recargarProgreso } from '../lib/progress';
 import { recargarExamen } from '../lib/examen';
 import { recargarNotas } from '../erp/practicas';
-import { CLAVES_PROGRESO, ajustar, bytes, escribirLocal, esProgresoC, fusionar, igualSinFecha, leerLocal, type ProgresoC } from './compacto';
+import { CLAVES_PROGRESO, ajustar, bytes, escribirLocal, esProgresoC, fusionar, igualSinFecha, leerLocal, migrarC, type ProgresoC } from './compacto';
 
 const CLAVE_DUENO = 'oys-sync-usuario';
 const CLAVE_PENDIENTE = 'oys-sync-pendiente';
@@ -73,7 +73,7 @@ function datosDeCuenta(user: Usuario) {
 /** Progreso guardado en la cuenta (o null si no hay o no es válido). */
 function remotoDe(user: Usuario): ProgresoC | null {
   const v = user.unsafeMetadata?.oys;
-  return esProgresoC(v) ? { ...v, x: v.x ?? null, xa: v.xa ?? null, xf: v.xf ?? null, pf: v.pf ?? {} } : null;
+  return esProgresoC(v) ? migrarC({ ...v, x: v.x ?? null, xa: v.xa ?? null, xf: v.xf ?? null, pf: v.pf ?? {} }) : null;
 }
 
 async function subir(user: Usuario, pc: ProgresoC) {

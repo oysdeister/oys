@@ -2351,12 +2351,12 @@
    ]
   },
   {
-   "id": "compras-workflow",
+   "id": "compras-workflow-config",
    "numero": 5,
-   "titulo": "Aprobar pedidos con un workflow",
-   "objetivo": "Montarás el circuito completo de aprobación de pedidos: validación, grupo, rol, circuito y tipología. Después comprobarás que un pedido sin referencia de proveedor se bloquea y lo autorizarás.",
-   "concepto": "Una empresa no quiere que cualquiera compre cualquier cosa. Por eso un pedido puede quedar bloqueado hasta que alguien con permiso lo autorice. Ese circuito de aprobación se llama workflow. Piensa en el jefe de una oficina que firma las compras de más de cierto importe: sin su firma, el pedido no sale.\n\nLas piezas son cinco. Una validación es una comprobación ya programada: «este pedido no tiene referencia del proveedor, ¿lo bloqueo?». Un grupo de validaciones reúne varias comprobaciones y se aplica a un tipo de documento. Un rol es la lista de personas que pueden firmar. Un circuito es el dibujo del recorrido: empieza, espera la firma de un rol y termina. Y la tipología del pedido, que ya conoces, enlaza todo con el campo «Grupo validación».\n\nEl flujo es este. Cuando el pedido se valida, el ERP ejecuta las comprobaciones del grupo. Si una salta, el pedido queda Bloqueado y se crea una tarea pendiente para el rol. Quien tiene el rol la autoriza en «Gestionar», el circuito llega a «Fin» y el pedido pasa a Validado.\n\nEste bloque va al final del módulo a propósito: primero sabes comprar, y solo entonces montas la aprobación.\n\nEjemplo: tu pedido de prueba, de 10 unidades a 4,00 = 40,00, no lleva referencia del proveedor. La validación 36 lo bloquea, tú lo autorizas como aprobador y queda Validado.\n\nFíjate: «Revalidación» es lo que lanza el workflow en la demo. En ventas «validas» con un botón, pero la ficha de pedidos de compra de la demo es genérica y no tiene botón «Validar» (es un fallo de la demo). Guardar la ficha del pedido tampoco lanza el workflow.\n\nFíjate: un pedido pasa por tres estados. «Provisional» es un borrador que aún se puede cambiar; «Validado» está comprobado y listo para usarse; «Bloqueado» significa que una validación ha saltado y falta una autorización.\n\nFíjate: las capturas son de los códigos de prueba de la demo: grupo GCP, rol RCP, circuito WFCP, tipología PWCP y pedido 0PWCP0001. Los tuyos serán GW{INI}, RW{INI}, WF{INI}, PW{INI} y 0PW{INI}0001; en cada paso se avisa de cuál es cuál.\n\nDónde: la configuración, en «Finanzas › Maestros» (Validaciones y Acciones y workflow); el trabajo diario, en «Gestión › Compras › Pedidos › Work Flow».",
-   "duracionMin": 60,
+   "titulo": "Montar la aprobación de pedidos",
+   "objetivo": "Dejarás montada la aprobación de pedidos de compra: el rol que autoriza, el circuito, la validación, el grupo de validaciones y la tipología PW{INI} que lo enlaza todo.",
+   "concepto": "Una empresa no quiere que cualquiera compre cualquier cosa. Por eso un pedido puede quedar bloqueado hasta que alguien con permiso lo autorice. Ese circuito de aprobación se llama workflow.\n\nEjemplo: el jefe de compras no quiere que salga ningún pedido sin la referencia del proveedor (el campo «Referencia» del pedido). Montas una aprobación que bloquea el pedido que la lleva vacía y espera su firma. Es justo lo que comprueba la validación 36 que vas a usar. Para bloquear por importe haría falta otra validación que mire el importe; en este bloque no se usa.\n\nLas piezas son cinco, y las montas en este orden. El rol es la lista de personas que pueden firmar. El circuito es el dibujo del recorrido: empieza, espera la firma de un rol y termina. La validación es una comprobación ya programada: «este pedido no tiene referencia del proveedor, ¿lo bloqueo?». El grupo de validaciones reúne las comprobaciones de un tipo de documento y dice qué circuito las autoriza. Y la tipología del pedido, que ya conoces, enlaza todo con el campo «Grupo validación».\n\nAsí queda la cadena: tipología PW{INI} › grupo GW{INI} › validación 36 y circuito WF{INI} › rol RW{INI}.\n\nEn este bloque solo configuras: no creas ningún pedido. La prueba la haces en el bloque «Probar y autorizar un pedido con workflow», en Operar, cuando ya sepas comprar.\n\nFíjate: las capturas son de los códigos de prueba de la demo: rol RCP, circuito WFCP, grupo GCP y tipología PWCP. Los tuyos serán RW{INI}, WF{INI}, GW{INI} y PW{INI}; en cada paso se avisa de cuál es cuál.\n\nDónde: el rol, el circuito, la validación y el grupo, en «Finanzas › Maestros» (Validaciones y Acciones y workflow); la tipología, en «Gestión › Compras › Maestros › Documentos › Pedidos».",
+   "duracionMin": 35,
    "secciones": [
     {
      "id": "compras-workflow-menu",
@@ -2368,13 +2368,13 @@
       "Validaciones"
      ],
      "explicacion": [
-      "Una aprobación se monta con cinco piezas, de la más pequeña a la más grande: validación, grupo de validaciones, rol, circuito y tipología del pedido.",
-      "La validación es una comprobación ya programada. Dice «sí, bloquea este documento» o «no». Está en «Maestro de validaciones».",
-      "El grupo de validaciones agrupa las comprobaciones que se aplican a una tabla, por ejemplo a los pedidos de compras. Está en «Grupo de validaciones».",
+      "Una aprobación se monta con cinco piezas: rol, circuito, validación, grupo de validaciones y tipología del pedido. En este bloque las creas en ese orden.",
       "El rol es la lista de personas que pueden autorizar. Está en «Acciones y workflow › Definiciones › Roles de workflow».",
       "El circuito es el dibujo del recorrido: Inicio, una tarea para un rol y Fin. Está en «Acciones y workflow › Definiciones › Circuitos de workflow».",
+      "La validación es una comprobación ya programada. Dice «sí, bloquea este documento» o «no». Está en «Maestro de validaciones».",
+      "El grupo de validaciones agrupa las comprobaciones que se aplican a una tabla, por ejemplo a los pedidos de compras, y dice qué circuito las autoriza. Está en «Grupo de validaciones».",
       "La tipología del pedido es la que enlaza todo: en el campo «Grupo validación» le dices qué grupo se aplica. Está en «Gestión › Compras › Maestros › Documentos › Pedidos».",
-      "Las pantallas para trabajar con los pedidos bloqueados están en «Gestión › Compras › Pedidos › Work Flow». Allí autorizas.",
+      "Las pantallas para trabajar con los pedidos bloqueados están en «Gestión › Compras › Pedidos › Work Flow». Allí autorizas, en el bloque «Probar y autorizar un pedido con workflow».",
       "Fíjate: la configuración está en Finanzas y el trabajo diario con los pedidos en Gestión. Son dos menús distintos."
      ],
      "campos": [],
@@ -2398,7 +2398,7 @@
       },
       {
        "texto": "Abre Gestión › Compras › Pedidos › Work Flow.",
-       "detalle": "Verás Gestionar, Autorizar, Retroceder y dos listas de pendientes. Las usarás al final del bloque."
+       "detalle": "Verás Gestionar, Autorizar, Retroceder y dos listas de pendientes. Las usarás en el bloque «Probar y autorizar un pedido con workflow», en Operar."
       }
      ],
      "avisos": [
@@ -2409,194 +2409,6 @@
       {
        "tipo": "nota",
        "texto": "Hay el mismo bloque «Work Flow» en Ofertas, Solicitudes, Acuerdos, Albaranes y Facturas de compras. Aquí solo usas el de Pedidos."
-      }
-     ]
-    },
-    {
-     "id": "compras-workflow-validacion",
-     "titulo": "Elegir la validación",
-     "paraQueSirve": "Sirve para escoger la comprobación que va a bloquear el pedido. No se crea nada: se elige una que ya existe.",
-     "ruta": [
-      "Finanzas",
-      "Maestros",
-      "Validaciones",
-      "Maestro de validaciones"
-     ],
-     "explicacion": [
-      "El «Maestro de validaciones» es un catálogo de comprobaciones ya programadas. En la demo hay unas 50.",
-      "Cada fila tiene un número, una descripción y un «Modo validación». La 36 es de modo «Documento»: comprueba el documento entero.",
-      "Usarás la 36, «REFERENCIA DE TERCERO NO INFORMADA»: bloquea cualquier pedido que no tenga la referencia del proveedor. Es fácil de provocar: basta con dejar ese campo vacío.",
-      "No existe una validación de «autorizar siempre». Para eso habría que programar una nueva en este maestro, y aquí no se hace."
-     ],
-     "campos": [
-      {
-       "campo": "Número validación",
-       "significado": "Número de la comprobación. Es lo que eliges después en el grupo.",
-       "ejemplo": "36"
-      },
-      {
-       "campo": "Desc. validación",
-       "significado": "Qué comprueba.",
-       "ejemplo": "REFERENCIA DE TERCERO NO INFORMADA"
-      },
-      {
-       "campo": "Modo validación",
-       "significado": "Qué comprueba la validación. La 36 es «Documento»: el documento entero.",
-       "ejemplo": "Documento"
-      },
-      {
-       "campo": "Tabla validación",
-       "significado": "Documentos a los que se puede aplicar.",
-       "ejemplo": "gcomofeh gcomacuh gcompedh… (entre ellos, pedidos)"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre «Maestro de validaciones» y localiza la fila 36.",
-       "pregunta": "¿Qué validación vamos a usar para bloquear el pedido?",
-       "detalle": "Desplázate por la lista hasta ver «REFERENCIA DE TERCERO NO INFORMADA». No cambies nada.",
-       "imagen": "cob-workflow-4.webp",
-       "hotspot": {
-        "x": 12.4,
-        "y": 51.2,
-        "w": 87.6,
-        "h": 3.4,
-        "etiqueta": "Fila 36 · REFERENCIA DE TERCERO NO INFORMADA"
-       }
-      },
-      {
-       "texto": "Fíjate en su Modo validación y en las tablas a las que se aplica.",
-       "detalle": "Es «Documento» y la lista de tablas incluye gcompedh, la de los pedidos de compras."
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "Este maestro es de consulta: solo eliges una validación, no creas ninguna."
-      }
-     ]
-    },
-    {
-     "id": "compras-workflow-grupo",
-     "titulo": "Crear el grupo de validaciones y su línea",
-     "paraQueSirve": "Sirve para empaquetar la validación 36 en un grupo que luego se enlaza a la tipología del pedido.",
-     "ruta": [
-      "Finanzas",
-      "Maestros",
-      "Validaciones",
-      "Grupo de validaciones"
-     ],
-     "explicacion": [
-      "Primero creas el grupo (la cabecera) y después le añades su línea (la validación 36).",
-      "El grupo se aplica a una tabla: en «Nombre tabla» eliges «Pedidos de compras».",
-      "En la línea, «Bloqueo» dice qué se bloquea si el documento no pasa la comprobación: Validación, Contabilización o Impresión. Eliges «Validación».",
-      "La casilla «Manual» sale marcada: déjala como viene.",
-      "«Código workflow» de la línea se deja vacío ahora. Lo rellenarás cuando tengas el circuito."
-     ],
-     "campos": [
-      {
-       "campo": "Código validación *",
-       "significado": "Código del grupo. Es lo que escribirás en la tipología.",
-       "ejemplo": "GW{INI}"
-      },
-      {
-       "campo": "Descripción validación *",
-       "significado": "Nombre del grupo.",
-       "ejemplo": "WORKFLOW PEDIDOS {INI}"
-      },
-      {
-       "campo": "Nombre tabla",
-       "significado": "Documento al que se aplica el grupo.",
-       "ejemplo": "Pedidos de compras"
-      },
-      {
-       "campo": "Definición fase *",
-       "significado": "Orden de la línea dentro del grupo.",
-       "ejemplo": "1"
-      },
-      {
-       "campo": "Validación *",
-       "significado": "Número de la comprobación del maestro.",
-       "ejemplo": "36"
-      },
-      {
-       "campo": "Bloqueo",
-       "significado": "Qué se bloquea si no pasa: Validación, Contabilización o Impresión.",
-       "ejemplo": "Validación"
-      },
-      {
-       "campo": "Código workflow",
-       "significado": "Circuito que decide quién autoriza. Se rellena después.",
-       "ejemplo": "Vacío por ahora"
-      }
-     ],
-     "pasos": [
-      {
-       "texto": "Abre «Grupo de validaciones» y pulsa «Añadir grupo».",
-       "pregunta": "Tienes la lista de grupos vacía («Sin datos»). ¿Qué botón pulsas para crear el grupo?",
-       "detalle": "El botón está arriba a la derecha. Se abre el diálogo «MAESTRO DE GRUPOS DE VALIDACIONES», que es el que ves ya abierto en la captura.",
-       "imagen": "cob-workflow-5.webp",
-       "hotspot": {
-        "x": 87.7,
-        "y": 6.5,
-        "w": 5.5,
-        "h": 2.8,
-        "etiqueta": "Añadir grupo"
-       }
-      },
-      {
-       "texto": "Rellena Código validación GW{INI}, Descripción validación WORKFLOW PEDIDOS {INI} y Nombre tabla «Pedidos de compras». Pulsa «Guardar».",
-       "detalle": "Sale el mensaje «Éxito». En la captura el código es GCP y la descripción «WORKFLOW PEDIDOS COMPRA CP (prueba)»: son los de la demo; tú pones GW{INI}. «Información adicional» es una nota libre y no es obligatoria: la captura la trae rellena, tú puedes dejarla vacía.",
-       "imagen": "cob-workflow-5.webp",
-       "hotspot": {
-        "x": 33.8,
-        "y": 36.9,
-        "w": 11.2,
-        "h": 5.1,
-        "etiqueta": "Código validación"
-       }
-      },
-      {
-       "texto": "Abre tu grupo. En «Validaciones por grupo» pulsa «Añadir detalle».",
-       "detalle": "Se abre «DETALLE DE VALIDACIONES POR GRUPO DE VALIDACIONES».",
-       "imagen": "cob-workflow-6.webp",
-       "hotspot": {
-        "x": 34.5,
-        "y": 40.9,
-        "w": 10.7,
-        "h": 5.1,
-        "etiqueta": "Validación"
-       }
-      },
-      {
-       "texto": "Pon Definición fase 1, Validación 36 y Bloqueo «Validación». Deja Código workflow vacío y pulsa «Guardar».",
-       "detalle": "«Modo validación» lo rellena el sistema: sale «Documento».",
-       "imagen": "cob-workflow-6.webp",
-       "hotspot": {
-        "x": 24.4,
-        "y": 47.0,
-        "w": 20.8,
-        "h": 5.1,
-        "etiqueta": "Bloqueo"
-       }
-      },
-      {
-       "texto": "Comprueba que el grupo tiene su línea 1 con la validación 36.",
-       "detalle": "Si no hay línea, el pedido no se bloqueará nunca. En la captura el grupo es GCP; el tuyo, GW{INI}.",
-       "imagen": "cob-workflow-7.webp",
-       "hotspot": {
-        "x": 12.8,
-        "y": 47.4,
-        "w": 84.9,
-        "h": 3.4,
-        "etiqueta": "Línea 1 · validación 36"
-       }
-      }
-     ],
-     "avisos": [
-      {
-       "tipo": "nota",
-       "texto": "En «Información adicional» puedes poner una nota libre. No es obligatoria."
       }
      ]
     },
@@ -2614,7 +2426,7 @@
      "explicacion": [
       "Un rol es un grupo de personas con el mismo permiso, como «los que aprueban pedidos». El circuito se lo asigna a una tarea y solo ellos pueden resolverla.",
       "Primero creas el rol con «Añadir rol». Después, dentro del rol, asignas los usuarios en «Roles de usuario».",
-      "Un rol es en realidad una lista de usuarios. En una empresa real aquí pondrías a las personas concretas que aprueban pedidos; en la demo usarás «public» (el «Usuario público»).",
+      "Un rol es en realidad una lista de usuarios. En una empresa real aquí pondrías a las personas concretas que aprueban pedidos; en la demo usarás «public» (el «Usuario público») solo porque el desplegable no trae más usuarios.",
       "La descripción del rol admite 20 caracteres como máximo.",
       "«Usuarios por roles» es solo una lista: no tiene botón «Nuevo». Los usuarios se asignan siempre desde el rol."
      ],
@@ -2663,7 +2475,7 @@
       },
       {
        "texto": "Dentro del rol, en «Roles de usuario», pulsa «Nuevo» y elige el Código usuario «public». Guarda.",
-       "detalle": "«public» es el «Usuario público». En la demo es suficiente: con él asignado, el usuario con el que trabajas puede autorizar. La captura muestra el diálogo «USUARIOS ASIGNADOS A ROLES DE WORKFLOW» del rol RCP de la demo; el tuyo será RW{INI}. «Información» es una nota libre.",
+       "detalle": "«public» es el «Usuario público». Solo en la demo: con él asignado, el usuario con el que trabajas puede autorizar. En un cliente real no se usa (mira el aviso). La captura muestra el diálogo «USUARIOS ASIGNADOS A ROLES DE WORKFLOW» del rol RCP de la demo; el tuyo será RW{INI}. «Información» es una nota libre.",
        "imagen": "cob-workflow-9.webp",
        "hotspot": {
         "x": 33.8,
@@ -2682,6 +2494,10 @@
       {
        "tipo": "solucion",
        "texto": "Elige «public». En la demo, con él puede autorizar el usuario con el que trabajas."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Solo en la demo asignas «public» al rol. En un cliente real asignas un rol concreto a usuarios concretos: las personas que deben aprobar, con su nombre. Si cualquiera puede autorizar, se pierde la segregación de funciones (quien pide no es quien aprueba), que es justo lo que busca el workflow."
       }
      ]
     },
@@ -2702,7 +2518,7 @@
       "Al llegar a «Fin», la validación queda autorizada y el pedido puede validarse.",
       "Los conectores unen las etapas: Inicio con la tarea, y la tarea con Fin. La «Condición» se deja vacía.",
       "Cuando termines, puedes ver el diagrama dibujado en «Acciones y workflow › Diseño de workflow».",
-      "Al final enlazas el circuito a la línea del grupo de validaciones."
+      "Después, al crear el grupo de validaciones, pondrás este circuito en su línea."
      ],
      "campos": [
       {
@@ -2797,10 +2613,194 @@
         "h": 51.9,
         "etiqueta": "Diagrama del circuito"
        }
+      }
+     ],
+     "avisos": []
+    },
+    {
+     "id": "compras-workflow-validacion",
+     "titulo": "Elegir la validación",
+     "paraQueSirve": "Sirve para escoger la comprobación que va a bloquear el pedido. No se crea nada: se elige una que ya existe.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Validaciones",
+      "Maestro de validaciones"
+     ],
+     "explicacion": [
+      "El «Maestro de validaciones» es un catálogo de comprobaciones ya programadas. En la demo hay unas 50.",
+      "Cada fila tiene un número, una descripción y un «Modo validación». La 36 es de modo «Documento»: comprueba el documento entero.",
+      "Usarás la 36, «REFERENCIA DE TERCERO NO INFORMADA»: bloquea cualquier pedido que no tenga la referencia del proveedor. Es fácil de provocar: basta con dejar ese campo vacío.",
+      "No existe una validación de «autorizar siempre». Para eso habría que programar una nueva en este maestro, y aquí no se hace.",
+      "Después la pondrás en la línea del grupo de validaciones, junto con tu circuito."
+     ],
+     "campos": [
+      {
+       "campo": "Número validación",
+       "significado": "Número de la comprobación. Es lo que eliges después en el grupo.",
+       "ejemplo": "36"
       },
       {
-       "texto": "Vuelve a «Grupo de validaciones», abre la línea del grupo y rellena «Código workflow» con tu circuito. Guarda.",
-       "detalle": "En la captura sale APROBACION PEDIDOS COMPRA CP, el circuito de la demo; tú eliges el tuyo, WF{INI}.",
+       "campo": "Desc. validación",
+       "significado": "Qué comprueba.",
+       "ejemplo": "REFERENCIA DE TERCERO NO INFORMADA"
+      },
+      {
+       "campo": "Modo validación",
+       "significado": "Qué comprueba la validación. La 36 es «Documento»: el documento entero.",
+       "ejemplo": "Documento"
+      },
+      {
+       "campo": "Tabla validación",
+       "significado": "Documentos a los que se puede aplicar.",
+       "ejemplo": "gcomofeh gcomacuh gcompedh… (entre ellos, pedidos)"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Maestro de validaciones» y localiza la fila 36.",
+       "pregunta": "¿Qué validación vamos a usar para bloquear el pedido?",
+       "detalle": "Desplázate por la lista hasta ver «REFERENCIA DE TERCERO NO INFORMADA». No cambies nada.",
+       "imagen": "cob-workflow-4.webp",
+       "hotspot": {
+        "x": 12.4,
+        "y": 51.2,
+        "w": 87.6,
+        "h": 3.4,
+        "etiqueta": "Fila 36 · REFERENCIA DE TERCERO NO INFORMADA"
+       }
+      },
+      {
+       "texto": "Fíjate en su Modo validación y en las tablas a las que se aplica.",
+       "detalle": "Es «Documento» y la lista de tablas incluye gcompedh, la de los pedidos de compras."
+      }
+     ],
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "Este maestro es de consulta: solo eliges una validación, no creas ninguna."
+      }
+     ]
+    },
+    {
+     "id": "compras-workflow-grupo",
+     "titulo": "Crear el grupo de validaciones y su línea",
+     "paraQueSirve": "Sirve para empaquetar la validación 36 en un grupo que luego se enlaza a la tipología del pedido.",
+     "ruta": [
+      "Finanzas",
+      "Maestros",
+      "Validaciones",
+      "Grupo de validaciones"
+     ],
+     "explicacion": [
+      "Primero creas el grupo (la cabecera) y después le añades su línea (la validación 36).",
+      "El grupo se aplica a una tabla: en «Nombre tabla» eliges «Pedidos de compras».",
+      "En la línea, «Bloqueo» dice qué se bloquea si el documento no pasa la comprobación: Validación, Contabilización o Impresión. Eliges «Validación».",
+      "La casilla «Manual» sale marcada: déjala como viene. No se ha comprobado qué cambia si la quitas.",
+      "En «Código workflow» de la línea pones tu circuito WF{INI}: es el que decide quién autoriza. Sin él, el pedido se bloquea, pero nadie puede autorizarlo."
+     ],
+     "campos": [
+      {
+       "campo": "Código validación *",
+       "significado": "Código del grupo. Es lo que escribirás en la tipología.",
+       "ejemplo": "GW{INI}"
+      },
+      {
+       "campo": "Descripción validación *",
+       "significado": "Nombre del grupo.",
+       "ejemplo": "WORKFLOW PEDIDOS {INI}"
+      },
+      {
+       "campo": "Nombre tabla",
+       "significado": "Documento al que se aplica el grupo.",
+       "ejemplo": "Pedidos de compras"
+      },
+      {
+       "campo": "Definición fase *",
+       "significado": "Orden de la línea dentro del grupo.",
+       "ejemplo": "1"
+      },
+      {
+       "campo": "Validación *",
+       "significado": "Número de la comprobación del maestro.",
+       "ejemplo": "36"
+      },
+      {
+       "campo": "Bloqueo",
+       "significado": "Qué se bloquea si no pasa: Validación, Contabilización o Impresión.",
+       "ejemplo": "Validación"
+      },
+      {
+       "campo": "Código workflow",
+       "significado": "Circuito que decide quién autoriza.",
+       "ejemplo": "WF{INI}"
+      }
+     ],
+     "pasos": [
+      {
+       "texto": "Abre «Grupo de validaciones» y pulsa «Añadir grupo».",
+       "pregunta": "Tienes la lista de grupos vacía («Sin datos»). ¿Qué botón pulsas para crear el grupo?",
+       "detalle": "El botón está arriba a la derecha. Se abre el diálogo «MAESTRO DE GRUPOS DE VALIDACIONES», que es el que ves ya abierto en la captura.",
+       "imagen": "cob-workflow-5.webp",
+       "hotspot": {
+        "x": 87.7,
+        "y": 6.5,
+        "w": 5.5,
+        "h": 2.8,
+        "etiqueta": "Añadir grupo"
+       }
+      },
+      {
+       "texto": "Rellena Código validación GW{INI}, Descripción validación WORKFLOW PEDIDOS {INI} y Nombre tabla «Pedidos de compras». Pulsa «Guardar».",
+       "detalle": "Sale el mensaje «Éxito». En la captura el código es GCP y la descripción «WORKFLOW PEDIDOS COMPRA CP (prueba)»: son los de la demo; tú pones GW{INI}. «Información adicional» es una nota libre y no es obligatoria: la captura la trae rellena, tú puedes dejarla vacía.",
+       "imagen": "cob-workflow-5.webp",
+       "hotspot": {
+        "x": 33.8,
+        "y": 36.9,
+        "w": 11.2,
+        "h": 5.1,
+        "etiqueta": "Código validación"
+       }
+      },
+      {
+       "texto": "Abre tu grupo. En «Validaciones por grupo» pulsa «Añadir detalle».",
+       "detalle": "Se abre «DETALLE DE VALIDACIONES POR GRUPO DE VALIDACIONES».",
+       "imagen": "cob-workflow-6.webp",
+       "hotspot": {
+        "x": 34.5,
+        "y": 40.9,
+        "w": 10.7,
+        "h": 5.1,
+        "etiqueta": "Validación"
+       }
+      },
+      {
+       "texto": "Pon Definición fase 1, Validación 36, Bloqueo «Validación» y, en «Código workflow», tu circuito WF{INI}. Pulsa «Guardar».",
+       "detalle": "«Modo validación» lo rellena el sistema: sale «Documento». En la captura «Código workflow» sale vacío porque en la demo se puso más tarde; tú ya tienes el circuito y lo pones ahora.",
+       "imagen": "cob-workflow-6.webp",
+       "hotspot": {
+        "x": 24.4,
+        "y": 47.0,
+        "w": 20.8,
+        "h": 5.1,
+        "etiqueta": "Bloqueo"
+       }
+      },
+      {
+       "texto": "Comprueba que el grupo tiene su línea 1 con la validación 36.",
+       "detalle": "Si no hay línea, el pedido no se bloqueará nunca. En la captura el grupo es GCP; el tuyo, GW{INI}.",
+       "imagen": "cob-workflow-7.webp",
+       "hotspot": {
+        "x": 12.8,
+        "y": 47.4,
+        "w": 84.9,
+        "h": 3.4,
+        "etiqueta": "Línea 1 · validación 36"
+       }
+      },
+      {
+       "texto": "Abre la línea del grupo y comprueba que «Código workflow» muestra tu circuito.",
+       "detalle": "En la captura sale APROBACION PEDIDOS COMPRA CP, el circuito de la demo; tú verás el tuyo, APROBACION PEDIDOS {INI}. Si está vacío, elígelo y guarda.",
        "imagen": "cob-workflow-15.webp",
        "hotspot": {
         "x": 46.4,
@@ -2813,16 +2813,20 @@
      ],
      "avisos": [
       {
+       "tipo": "nota",
+       "texto": "En «Información adicional» puedes poner una nota libre. No es obligatoria."
+      },
+      {
        "tipo": "problema",
        "texto": "Si la línea del grupo no lleva circuito, el pedido se bloquea, pero no hay ningún botón para autorizarlo."
       },
       {
        "tipo": "solucion",
-       "texto": "Rellena «Código workflow» en la línea del grupo con tu circuito, como en el último paso."
+       "texto": "Rellena «Código workflow» en la línea del grupo con tu circuito, como en el paso 4."
       },
       {
        "tipo": "nota",
-       "texto": "Punto de control: antes de seguir, comprueba que la línea 1 del grupo ya muestra tu WF{INI} en «Código workflow». Sin él, el pedido se bloquea pero no hay ningún botón para autorizarlo."
+       "texto": "Punto de control: antes de pasar a la tipología, comprueba que la línea 1 del grupo muestra tu WF{INI} en «Código workflow». Sin él, el pedido se bloquea pero no hay ningún botón para autorizarlo."
       }
      ]
     },
@@ -2841,7 +2845,7 @@
       "Ya tienes el grupo, el rol y el circuito. Falta decirle a un tipo de pedido que los use.",
       "Para no tocar la tipología PC{INI} de otros bloques, creas una tipología nueva: PW{INI}. Su código admite 4 caracteres: con dos iniciales cabe.",
       "El enlace está en el campo «Grupo validación», en la sección «Datos generales».",
-      "En la demo, la tipología de pedidos de compra no tiene «Nuevo como», así que se crea desde cero con los campos obligatorios. Si a ti te aparece al desplegar «Nuevo» (en las tipologías de ventas sí sale), puedes copiar PC{INI} y cambiar el código."
+      "En la demo, la tipología de pedidos de compra no tiene «Nuevo como», así que se crea desde cero con los campos obligatorios. Si a ti te aparece al desplegar «Nuevo», puedes copiar PC{INI} y cambiar el código."
      ],
      "campos": [
       {
@@ -2913,7 +2917,106 @@
        "texto": "En la captura el tipo es PWCP y el grupo GCP: son los de la demo. Tú usas PW{INI} y GW{INI}."
       }
      ]
+    }
+   ],
+   "test": [
+    {
+     "pregunta": "¿Qué es un grupo de validaciones?",
+     "opciones": [
+      "Un conjunto de usuarios que autorizan",
+      "Un paquete de comprobaciones que se aplica a una tabla, como los pedidos de compras",
+      "El dibujo del recorrido de la aprobación",
+      "Un tipo de factura"
+     ],
+     "correcta": 1,
+     "explicacion": "El grupo reúne las validaciones y se enlaza a la tipología del pedido."
     },
+    {
+     "pregunta": "¿Qué campo de la tipología de pedido enlaza con el grupo de validaciones?",
+     "opciones": [
+      "Serie",
+      "Circuito",
+      "Grupo validación",
+      "Tabla origen"
+     ],
+     "correcta": 2,
+     "explicacion": "«Grupo validación», en «Datos generales» de la tipología, dice qué grupo se aplica."
+    },
+    {
+     "pregunta": "¿Qué pasa si la línea del grupo de validaciones no tiene «Código workflow»?",
+     "opciones": [
+      "El pedido no se bloquea",
+      "El pedido se bloquea, pero no hay botón para autorizarlo",
+      "El pedido se autoriza solo",
+      "Da error al guardar el grupo"
+     ],
+     "correcta": 1,
+     "explicacion": "Sin circuito no se crea la tarea pendiente, y por tanto no hay nada que autorizar."
+    },
+    {
+     "pregunta": "¿Qué papel tiene la etapa «Usuario» del circuito?",
+     "opciones": [
+      "Empezar el circuito",
+      "Quedarse pendiente hasta que alguien con el rol la autorice",
+      "Contabilizar el pedido",
+      "Terminar el circuito"
+     ],
+     "correcta": 1,
+     "explicacion": "La etapa «Usuario» lleva un rol y espera su autorización antes de llegar a «Fin»."
+    },
+    {
+     "pregunta": "En la demo asignas el usuario «public» al rol que autoriza. ¿Qué haces en un cliente real?",
+     "opciones": [
+      "Asignas también «public», que vale para todos",
+      "Asignas al rol los usuarios concretos que deben aprobar",
+      "Dejas el rol sin usuarios",
+      "Asignas al usuario que crea los pedidos"
+     ],
+     "correcta": 1,
+     "explicacion": "«public» solo se usa porque el desplegable de la demo no trae tu usuario. En un cliente se ponen personas concretas: si cualquiera puede aprobar, el workflow no controla nada."
+    }
+   ],
+   "checklist": [
+    "Crea el rol RW{INI} y asígnale un usuario.",
+    "Crea el circuito WF{INI} con tres etapas y dos conectores, y comprueba su diagrama.",
+    "Localiza la validación 36 en «Maestro de validaciones».",
+    "Crea el grupo GW{INI} sobre «Pedidos de compras» y su línea con la validación 36 y tu circuito WF{INI}.",
+    "Comprueba que la línea del grupo muestra tu circuito en «Código workflow».",
+    "Crea la tipología PW{INI} con «Grupo validación» = GW{INI}."
+   ],
+   "problemas": [
+    {
+     "problema": "No encuentro mi usuario en el desplegable «Código usuario» del rol.",
+     "solucion": "En la demo, el desplegable solo ofrece unos pocos usuarios (oys.jc, oys.mm y public). Asigna «public» al rol. Es solo para la demo: en un cliente real se asignan usuarios concretos."
+    },
+    {
+     "problema": "La «Descripción de rol» APROBADOR PEDIDOS {INI} no cabe.",
+     "solucion": "Admite 20 caracteres como máximo y «APROBADOR PEDIDOS » ya ocupa 18. Usa solo tus 2 primeras iniciales."
+    },
+    {
+     "problema": "Voy a crear el grupo y no sé qué poner en «Código workflow» de la línea.",
+     "solucion": "Tu circuito WF{INI}. Por eso el circuito se crea antes que el grupo. Sin él, el pedido se bloquea, pero no hay ningún botón para autorizarlo."
+    },
+    {
+     "problema": "Quiero copiar una tipología de pedido con «Nuevo como» y no existe.",
+     "solucion": "En la tipología de pedidos de compra de la demo, esa opción no está disponible. Crea la tipología con «Nuevo» y rellena los campos obligatorios."
+    }
+   ],
+   "aprendido": [
+    "Sabes qué cinco piezas forman una aprobación y en qué menú está cada una.",
+    "Has creado el rol RW{INI} y el circuito WF{INI}, con su etapa «Usuario» para ese rol.",
+    "Has elegido la validación 36 y la has puesto, con tu circuito, en la línea del grupo GW{INI}.",
+    "Has enlazado el grupo a la tipología PW{INI} con el campo «Grupo validación»."
+   ]
+  },
+  {
+   "id": "compras-workflow",
+   "numero": 6,
+   "titulo": "Probar y autorizar un pedido con workflow",
+   "objetivo": "Comprobarás que un pedido PW{INI} sin referencia del proveedor se bloquea y lo autorizarás como aprobador hasta dejarlo Validado.",
+   "concepto": "Antes de este bloque haz «Montar la aprobación de pedidos», en Configurar. Aquí usas lo que montaste allí: el rol RW{INI}, el circuito WF{INI}, el grupo GW{INI} y la tipología PW{INI}.\n\nAhora lo pruebas. Te pones en el lugar del jefe de compras que no deja salir ningún pedido sin la referencia del proveedor: creas uno sin ella, ves que se bloquea y lo autorizas.\n\nEl flujo es este. Lanzas «Revalidación» sobre el pedido: en la demo es lo único que ejecuta las comprobaciones del grupo (guardar la ficha no lo hace). Si una salta, el pedido queda Bloqueado y se crea una tarea pendiente para el rol. Quien tiene el rol la autoriza en «Gestionar», el circuito llega a «Fin» y el pedido pasa a Validado.\n\nEste bloque va al final del módulo a propósito: primero sabes comprar, y solo entonces pruebas la aprobación.\n\nEjemplo: tu pedido de prueba, de 10 unidades a 4,00 = 40,00, no lleva referencia del proveedor. La validación 36 lo bloquea, tú lo autorizas como aprobador y queda Validado.\n\nFíjate: un pedido pasa por tres estados. «Provisional» es un borrador que aún se puede cambiar; «Validado» está comprobado y listo para usarse; «Bloqueado» significa que una validación ha saltado y falta una autorización.\n\nFíjate: la ficha de pedidos de compra de esta demo está incompleta (es un fallo de la demo): no tiene botón «Validar» ni pestaña de líneas, y no numera sola. Por eso, solo en esta práctica, tecleas el número, importas la línea con un fichero CSV y, si hace falta, cambias el «Estado» a mano. En un cliente real el pedido se crea desde su pantalla y nada de eso se hace.\n\nFíjate: las capturas son de los códigos de prueba de la demo: tipología PWCP, pedido 0PWCP0001, rol RCP y circuito WFCP. Los tuyos serán PW{INI}, 0PW{INI}0001, RW{INI} y WF{INI}.\n\nDónde: el pedido y su aprobación, en «Gestión › Compras › Pedidos» (Procesos › Revalidación y Work Flow); la traza y la evaluación, en «Finanzas › Maestros».",
+   "duracionMin": 30,
+   "secciones": [
     {
      "id": "compras-workflow-prueba",
      "titulo": "Probar: el pedido se bloquea",
@@ -2927,12 +3030,13 @@
      ],
      "explicacion": [
       "Creas un pedido con tu tipología PW{INI} y lo dejas sin «Referencia». Esa es la condición que bloquea la validación 36.",
-      "En esta demo el número del pedido no lo pone el ERP, como en ventas: la ficha de pedidos de compra es genérica y no aplica el numerador, así que lo tecleas tú (0PW{INI}0001). Es un fallo de la demo y solo vale para esta práctica.",
+      "Usas el proveedor 00010 y el artículo 13500620 a 4,00: son los datos con los que se comprobó el workflow en la demo. No es tu T{INI} a 12,50 de «Preparar los precios de compra». Aquí el proveedor y el precio dan igual: la validación 36 solo mira si la «Referencia» está vacía.",
+      "En esta demo el número del pedido no lo pone el ERP: la ficha de pedidos de compra es genérica y no aplica el numerador, así que lo tecleas tú (0PW{INI}0001). Por eso no sigue la numeración de la serie PC que viste en «Preparar la numeración y los tipos de documento». Es un fallo de la demo y solo vale para esta práctica: en un cliente real el pedido se crea desde su pantalla y lo numera el ERP.",
       "Guardar la ficha no lanza el workflow. Lo lanza el proceso «Revalidación», que vuelve a comprobar los pedidos con las reglas de autorización.",
       "La revalidación actúa sobre pedidos en Provisional y también sobre pedidos ya Bloqueados (así arranca el circuito si lo enlazaste tarde). Con el pedido ya Validado, no devuelve nada.",
       "El resultado es el estado Bloqueado: en la ficha aparecen Bloqueos «V» y Validaciones 1.",
-      "La traza de validaciones guarda la comprobación pendiente: validación 36 en estado «Pendiente».",
-      "Las líneas del pedido se cargan con un fichero CSV porque la ficha genérica no tiene pestaña de líneas (otro fallo de la demo). Un CSV es un archivo de texto con los datos separados por «;».",
+      "La traza de validaciones es el registro de las comprobaciones que han saltado en cada documento y de su estado. La de tu pedido guarda la validación 36 en estado «Pendiente».",
+      "Las líneas del pedido se cargan con un fichero CSV porque la ficha genérica no tiene pestaña de líneas (otro fallo de la demo). Es solo un apaño para esta demo: en un cliente real las líneas se añaden desde la ficha del pedido, nunca importándolas a la tabla. Un CSV es un archivo de texto con los datos separados por «;».",
       "Columnas del CSV: cabid = Identificador del pedido; linrel = número de línea (1); orden (1); codart = artículo; varlog = VL (0); numlot = lote (0); canped = cantidad pedida; udmcom = unidad (UNI); canpre = cantidad precio; udmpre = unidad del precio (UNI); precio; impnet = importe neto (10 × 4 = 40); canser = cantidad servida (0); dtoimp = importe de descuento (0: con otro valor sale el error 26865 y la línea no entra)."
      ],
      "campos": [
@@ -2953,7 +3057,7 @@
       },
       {
        "campo": "Proveedor *",
-       "significado": "Proveedor del pedido.",
+       "significado": "Proveedor del pedido. Es el de la demo con el que se comprobó el workflow, no tu T{INI}.",
        "ejemplo": "00010"
       },
       {
@@ -3015,7 +3119,7 @@
       },
       {
        "texto": "Comprueba que «Estado» es «Provisional» y deja «Bloqueos» vacío",
-       "detalle": "La captura muestra Estado «Validado» y Bloqueos «V»: no los copies, no son el estado de partida. Con el pedido Validado, Revalidación no devuelve nada. Si tu pedido sale «Validado», cambia el campo «Estado» a «Provisional» a mano y guarda (en la demo el Estado se puede cambiar a mano). Si no te deja, crea otro pedido con otro número (0PW{INI}0002) y déjalo en Provisional desde el principio.",
+       "detalle": "La captura muestra Estado «Validado» y Bloqueos «V»: no los copies, no son el estado de partida. Con el pedido Validado, Revalidación no devuelve nada. Si tu pedido sale «Validado», cambia el campo «Estado» a «Provisional» a mano y guarda. Ojo: esto se hace solo porque la demo no trae el formulario completo; en un cliente real el pedido se crea desde su pantalla y el Estado nunca se cambia a mano. Si no te deja, crea otro pedido con otro número (0PW{INI}0002) y déjalo en Provisional desde el principio.",
        "imagen": "cob-workflow-17.webp",
        "hotspot": {
         "x": 32.0,
@@ -3039,11 +3143,11 @@
       },
       {
        "texto": "Crea el fichero de líneas: un archivo de texto con dos filas, separadas por «;», y guárdalo con extensión .csv",
-       "detalle": "Abre un editor de texto sin formato (Bloc de notas en Windows; TextEdit en Mac, en modo «Texto sin formato»). Escribe estas dos líneas, cambiando el primer número de la segunda por tu Identificador pedido (aquí, 18): cabid;linrel;orden;codart;varlog;numlot;canped;udmcom;canpre;udmpre;precio;impnet;canser;dtoimp — 18;1;1;13500620;0;0;10;UNI;10;UNI;4;40;0;0. La primera fila son los nombres de las columnas; la segunda, tu línea: 10 unidades del artículo 13500620 a 4,00, es decir, 40,00. Guárdalo como lineas-pedido.csv. Sin espacios, sin comillas y con «;» entre campos."
+       "detalle": "Solo porque la demo no trae el formulario completo; en un cliente real las líneas se añaden en la pantalla del pedido. Abre un editor de texto sin formato (Bloc de notas en Windows; TextEdit en Mac, en modo «Texto sin formato»). Escribe estas dos líneas, cambiando el primer número de la segunda por tu Identificador pedido (aquí, 18): cabid;linrel;orden;codart;varlog;numlot;canped;udmcom;canpre;udmpre;precio;impnet;canser;dtoimp — 18;1;1;13500620;0;0;10;UNI;10;UNI;4;40;0;0. La primera fila son los nombres de las columnas; la segunda, tu línea: 10 unidades del artículo 13500620 a 4,00, es decir, 40,00. Guárdalo como lineas-pedido.csv. Sin espacios, sin comillas y con «;» entre campos."
       },
       {
        "texto": "Importa la línea: en Gestión › Compras › Pedidos › «Líneas de pedidos» pulsa ⋮ (arriba a la derecha) › Importar y sigue el asistente",
-       "detalle": "El asistente tiene cuatro pasos: «Selecciona fichero» (tu lineas-pedido.csv, con «;» como delimitador), «Selecciona datos», «Mapeado de columnas» y «Opciones importación». Debe acabar con «1 row(s) inserted». La captura es ese final, sobre la lista de líneas de todos los pedidos (con el menú lateral replegado). En ventas añadías la línea con «Líneas › Nuevo»; aquí no, porque la ficha del pedido de compra no tiene líneas.",
+       "detalle": "Solo porque la demo no trae el formulario completo; en un cliente real las líneas se añaden en la pantalla del pedido. El asistente tiene cuatro pasos. 1) «Selecciona fichero»: eliges tu lineas-pedido.csv, con «;» como delimitador. 2) «Selecciona datos». 3) «Mapeado de columnas»: las columnas del fichero se llaman igual que los campos de la tabla (cabid, linrel…); comprueba que cada una va a su campo del mismo nombre. 4) «Opciones importación». Debe acabar con «1 row(s) inserted». La captura es ese final, sobre la lista de líneas de todos los pedidos (con el menú lateral replegado).",
        "imagen": "cob-workflow-18.webp",
        "hotspot": {
         "x": 32.3,
@@ -3116,6 +3220,10 @@
      "avisos": [
       {
        "tipo": "problema",
+       "texto": "Solo en esta demo tecleas el número del pedido, importas las líneas con un CSV y, si hace falta, cambias el «Estado» a mano. Se hace solo porque la demo no trae el formulario completo. En un cliente real el pedido se crea desde su pantalla: el ERP lo numera, las líneas se añaden en la ficha y el estado solo cambia con los procesos del ERP. Nunca cambies el Estado a mano ni importes líneas directamente a la tabla."
+      },
+      {
+       "tipo": "problema",
        "texto": "Guardar el pedido o importar la línea no lanza el workflow. Hay que ejecutar «Revalidación»."
       },
       {
@@ -3128,7 +3236,7 @@
       },
       {
        "tipo": "nota",
-       "texto": "Si el pedido está Validado, Revalidación no devuelve nada. Déjalo en Provisional (campo «Estado») antes de revalidar."
+       "texto": "Si el pedido está Validado, Revalidación no devuelve nada. Debe estar en Provisional antes de revalidar (en esta demo, si sale Validado, cambias el «Estado» a mano: mira el primer aviso)."
       }
      ]
     },
@@ -3145,8 +3253,9 @@
      ],
      "explicacion": [
       "«Gestionar» es la pantalla de trabajo del que autoriza. Arriba salen los pedidos con autorizaciones pendientes; debajo, las tareas «Pendientes».",
-      "Al revalidar con el circuito ya puesto en el grupo, el sistema crea una evaluación del circuito y un token: la tarea APROBAR PEDIDO pendiente para tu rol.",
+      "Al revalidar con el circuito ya puesto en el grupo, el sistema crea una evaluación y un token. La evaluación es el recorrido del circuito para tu pedido. El token marca en qué etapa está ese recorrido: aquí, la tarea APROBAR PEDIDO pendiente para tu rol.",
       "Entras en la tarea por el enlace «1» del número de fila. Se abre «ACCIONES PENDIENTES», con los botones Denegar, Autorizar, Retornar y Designar.",
+      "En «ACCIONES PENDIENTES» fíjate en el campo is_authorizable: vale 1 cuando tu usuario puede autorizar esa tarea, porque tiene el rol de la etapa.",
       "Al pulsar «Autorizar» te pide una «Respuesta usuario»: el motivo de la aprobación.",
       "Al aceptar, la tarea pasa a Ejecutada, el circuito llega a «Fin» y el pedido queda Validado. No hace falta revalidar de nuevo.",
       "Este bloque solo practica «Autorizar». Denegar, Retornar y Designar quedan fuera: no los pulses."
@@ -3398,28 +3507,6 @@
    ],
    "test": [
     {
-     "pregunta": "¿Qué es un grupo de validaciones?",
-     "opciones": [
-      "Un conjunto de usuarios que autorizan",
-      "Un paquete de comprobaciones que se aplica a una tabla, como los pedidos de compras",
-      "El dibujo del recorrido de la aprobación",
-      "Un tipo de factura"
-     ],
-     "correcta": 1,
-     "explicacion": "El grupo reúne las validaciones y se enlaza a la tipología del pedido."
-    },
-    {
-     "pregunta": "¿Qué campo de la tipología de pedido enlaza con el grupo de validaciones?",
-     "opciones": [
-      "Serie",
-      "Circuito",
-      "Grupo validación",
-      "Tabla origen"
-     ],
-     "correcta": 2,
-     "explicacion": "«Grupo validación», en «Datos generales» de la tipología, dice qué grupo se aplica."
-    },
-    {
      "pregunta": "Has guardado un pedido sin referencia del proveedor y no se ha bloqueado. ¿Qué haces?",
      "opciones": [
       "Lo guardas otra vez",
@@ -3429,6 +3516,17 @@
      ],
      "correcta": 1,
      "explicacion": "Guardar no lanza el workflow: lo lanza el proceso «Revalidación»."
+    },
+    {
+     "pregunta": "Revalidas tu pedido sin referencia del proveedor y el workflow funciona. ¿En qué estado queda?",
+     "opciones": [
+      "Provisional",
+      "Validado",
+      "Bloqueado",
+      "Anulado"
+     ],
+     "correcta": 2,
+     "explicacion": "La validación 36 salta: el pedido queda Bloqueado, con Bloqueos «V» y Validaciones 1, hasta que alguien con el rol lo autorice."
     },
     {
      "pregunta": "¿Dónde pulsas el botón que autoriza el pedido bloqueado?",
@@ -3442,37 +3540,34 @@
      "explicacion": "Las consultas Autorizar y Retroceder solo listan; el botón «Autorizar» está en «Acciones pendientes»."
     },
     {
-     "pregunta": "¿Qué pasa si la línea del grupo de validaciones no tiene «Código workflow»?",
+     "pregunta": "Has pulsado «Autorizar» y «Aceptar», y la pantalla no dice nada. ¿Cómo compruebas que ha funcionado?",
      "opciones": [
-      "El pedido no se bloquea",
-      "El pedido se bloquea, pero no hay botón para autorizarlo",
-      "El pedido se autoriza solo",
-      "Da error al guardar el grupo"
+      "Abres el pedido: debe estar Validado, sin bloqueos",
+      "Vuelves a pulsar «Autorizar»",
+      "Ejecutas «Retroceder» para deshacerlo",
+      "No se puede comprobar"
      ],
-     "correcta": 1,
-     "explicacion": "Sin circuito no se crea la tarea pendiente, y por tanto no hay nada que autorizar."
+     "correcta": 0,
+     "explicacion": "La pantalla no muestra confirmación. El pedido debe estar Validado, con Bloqueos vacío y Validaciones 0; la traza dice «Autorizado»."
     },
     {
-     "pregunta": "¿Qué papel tiene la etapa «Usuario» del circuito?",
+     "pregunta": "En esta práctica tecleas el número del pedido, importas la línea con un CSV y quizá cambias el «Estado» a mano. ¿Por qué?",
      "opciones": [
-      "Empezar el circuito",
-      "Quedarse pendiente hasta que alguien con el rol la autorice",
-      "Contabilizar el pedido",
-      "Terminar el circuito"
+      "Es como se hace siempre en el ERP",
+      "Porque la demo no trae el formulario completo del pedido; en un cliente real se crea desde su pantalla",
+      "Para saltarte el workflow",
+      "Porque el CSV es más rápido"
      ],
      "correcta": 1,
-     "explicacion": "La etapa «Usuario» lleva un rol y espera su autorización antes de llegar a «Fin»."
+     "explicacion": "Es un apaño de esta demo. En un cliente real el ERP numera el pedido, las líneas se añaden en la ficha y el Estado nunca se cambia a mano."
     }
    ],
    "checklist": [
-    "Localiza la validación 36 en «Maestro de validaciones».",
-    "Crea el grupo GW{INI} sobre «Pedidos de compras» y su línea con la validación 36.",
-    "Crea el rol RW{INI} y asígnale un usuario.",
-    "Crea el circuito WF{INI} con tres etapas y dos conectores, y comprueba su diagrama.",
-    "Pon el circuito en la línea del grupo.",
-    "Crea la tipología PW{INI} con «Grupo validación» = GW{INI}.",
     "Crea un pedido PW{INI} sin referencia y ejecútale «Revalidación»: queda Bloqueado.",
+    "Abre el pedido: Bloqueos «V» y Validaciones 1.",
+    "En «Traza de validaciones», la validación 36 de tu pedido sale «Pendiente».",
     "Autoriza la tarea en Gestionar › Acciones pendientes: el pedido queda Validado.",
+    "En la traza, la validación 36 pasa a «Autorizado», y en «Evaluación de WKF» tu evaluación sale «Finalizado».",
     "Ejecuta Autorizar y Retroceder y anota que solo listan."
    ],
    "problemas": [
@@ -3482,39 +3577,32 @@
     },
     {
      "problema": "El pedido está Bloqueado, pero en Gestionar no sale ninguna tarea que autorizar.",
-     "solucion": "A la línea del grupo le falta el «Código workflow». Ponlo y revalida: se crea la tarea pendiente para tu rol."
-    },
-    {
-     "problema": "No encuentro mi usuario en el desplegable «Código usuario» del rol.",
-     "solucion": "En la demo, el desplegable solo ofrece unos pocos usuarios (oys.jc, oys.mm y public). Asigna «public» al rol."
-    },
-    {
-     "problema": "En Retroceder el pedido sale en la lista, pero no hay botón para deshacer la autorización.",
-     "solucion": "Es una consulta sin acción en la demo. No se puede deshacer la autorización desde ahí."
-    },
-    {
-     "problema": "Quiero copiar una tipología de pedido con «Nuevo como» y no existe.",
-     "solucion": "En la tipología de pedidos de compra de la demo, esa opción no está disponible. Crea la tipología con «Nuevo» y rellena los campos obligatorios."
+     "solucion": "A la línea del grupo le falta el «Código workflow» (bloque «Montar la aprobación de pedidos»). Ponlo y revalida: se crea la tarea pendiente para tu rol."
     },
     {
      "problema": "Al crear el pedido, la captura enseña Estado «Validado» y la revalidación no devuelve nada.",
-     "solucion": "Con el pedido Validado, Revalidación no actúa. Cambia el «Estado» a «Provisional» y guarda, o crea otro pedido (0PW{INI}0002) en Provisional."
+     "solucion": "Con el pedido Validado, Revalidación no actúa. Solo en esta demo: cambia el «Estado» a «Provisional» y guarda, o crea otro pedido (0PW{INI}0002) en Provisional. En un cliente real el Estado nunca se cambia a mano."
     },
     {
      "problema": "No sé qué número poner como primer valor del fichero CSV de líneas.",
      "solucion": "Es el «Identificador pedido» de tu pedido: el número de la primera columna de la lista Gestión › Compras › Pedidos › Pedidos, en la fila de tu pedido."
+    },
+    {
+     "problema": "En Retroceder el pedido sale en la lista, pero no hay botón para deshacer la autorización.",
+     "solucion": "Es una consulta sin acción en la demo. No se puede deshacer la autorización desde ahí."
     }
    ],
    "aprendido": [
-    "Has montado las piezas de un workflow: grupo de validaciones, rol, circuito y tipología.",
     "Has visto que «Revalidación» bloquea el pedido que incumple la validación 36.",
     "Has autorizado el pedido desde Gestionar › Acciones pendientes y ha quedado Validado.",
-    "Sabes que Autorizar y Retroceder solo listan en la demo."
+    "Sabes leer la traza, la evaluación y el token de una aprobación.",
+    "Sabes que Autorizar y Retroceder solo listan en la demo.",
+    "Sabes que teclear el número, importar líneas y cambiar el Estado a mano es solo un apaño de esta demo."
    ]
   },
   {
    "id": "compras-3",
-   "numero": 6,
+   "numero": 7,
    "titulo": "Pedir: de la oferta al pedido",
    "objetivo": "Registrarás la oferta de tu proveedor y la convertirás en pedido, el primer paso del ciclo de compra.",
    "concepto": "El ciclo de compra empieza antes de que llegue nada: pides precio al proveedor (la oferta) y, si te convence, le haces el pedido. Es como pedir presupuesto al fontanero y después encargarle el trabajo. Si saltas este paso, no hay un pedido que respalde la compra y no queda escrito qué pactaste con el proveedor.\n\nLa oferta recoge cantidades, precio y vigencia, es decir, hasta cuándo vale. Al validarla, su línea queda Adjudicada: aceptada. El pedido es el compromiso de compra. En una base bien configurada, copia las líneas de la oferta.\n\nEl camino estándar para que el pedido nazca de la oferta es: Oferta › Generar acuerdo › Generación de pedidos desde acuerdos. Usas las tipologías OC{INI} y PC{INI} del bloque anterior, tu proveedor T{INI} y el artículo 13500620.\n\nOjo: en la base TUTORIAL el pedido no tiene formulario propio ni numerador de acuerdos. Lo que funciona es crear el pedido a mano, con tu oferta como origen. El camino estándar lo ves al final, solo para ver que falla.\n\nEjemplo: la oferta es de 10 unidades a 12,50, el precio de tu tarifa. La línea suma 10 × 12,50 = 125,00 sin IVA. Cada unidad con IVA cuesta 12,50 + 21 % = 15,125.\n\nFíjate: los números de documento de los ejemplos (0OC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Ofertas › Ofertas» y «Gestión › Compras › Pedidos › Pedidos».",
@@ -3817,7 +3905,7 @@
   },
   {
    "id": "compras-2",
-   "numero": 7,
+   "numero": 8,
    "titulo": "Recibir la mercancía con el albarán",
    "objetivo": "Registrarás la llegada de la mercancía con un albarán y comprobarás que el stock sube.",
    "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán: el papel que viene con la caja y dice qué te han traído. Al validarlo, el stock (las existencias del almacén) sube y la compra queda pendiente de facturar. Si no lo registras, el almacén no sabe que tiene la mercancía y no puedes comprobar la factura del proveedor.\n\nEn una base bien configurada, el albarán nace del pedido. Lo generas con el proceso «Generación de albaranes desde pedidos». Más adelante, en la Práctica del bloque «Registrar y contabilizar la factura», lo harás con el botón «Generar albaranes». También puedes elegir el pedido en el campo «Origen».\n\nEl albarán copia las líneas del pedido y le descuenta lo recibido. «Sumando» es el modo de «Actualizar origen» que marca en el pedido lo que ya ha llegado. Con eso sabes qué falta por llegar.\n\nOjo: en la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío. Creas el albarán a mano con tu tipología AO{INI} y escribes la línea, como en un albarán sin origen.\n\nEjemplo: escribes 10 unidades a 12,50, como en la oferta. El albarán vale 125,00 sin IVA. Al validarlo, el stock del artículo 13500620 sube 10 unidades.\n\nEsas unidades pasan de NSAL a DISP (disponible: stock que se puede usar). NSAL (no saldo) es el «fuera del inventario»: lo que no cuenta como existencias.\n\nCon tu tipología AO{INI} este albarán no hace asiento: lo hará la factura. En el bloque siguiente ves el asiento de un albarán cuya tipología sí contabiliza.\n\nFíjate: los números de documento de los ejemplos (0AC000002…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes».",
@@ -4078,7 +4166,7 @@
   },
   {
    "id": "compras-albaran-contabilizar",
-   "numero": 8,
+   "numero": 9,
    "titulo": "Contabilizar el albarán de compra",
    "objetivo": "Contabilizarás el albarán de T{INI} y leerás el asiento que anota la mercancía recibida, aunque todavía falte la factura.",
    "concepto": "Contabilizar es pasar un documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. Cuando la mercancía llega todavía no tienes la factura, pero la compra ya existe: debes dinero y aún no tienes el papel que lo justifica. Si no contabilizas el albarán, el gasto no cuenta en su mes y la contabilidad enseña menos deuda de la real.\n\nPor eso un albarán se puede contabilizar, si su tipología lo permite («Asiento albaranes» informado). Tu AO{INI} no lo tiene: aquí practicas con un albarán de la demo cuya tipología sí. Genera un asiento: una anotación cuyas líneas suman lo mismo en el debe, el lado izquierdo de una cuenta, que en el haber, el lado derecho. Cada línea es un apunte. El ERP anota el gasto en 60000 al debe. En contrapartida anota al haber la 40090, «facturas pendientes de recibir».\n\nLa 40090 es una cuenta puente: guarda la compra mientras falta la factura y vuelve a cero cuando llega. Es una deuda provisional con el proveedor. Así el gasto queda en su mes aunque la factura llegue tarde.\n\nEjemplo: un albarán de 10 × 12,50 = 125,00 deja 125,00 en 60000 al debe y 125,00 en 40090 al haber. Las capturas son del albarán de la demo, de 4 uds.: 4 × 12,50 = 50,00. El mecanismo es el mismo.\n\nLos números de documento de los ejemplos (0AC000017, asiento 78…) son orientativos. La demo es compartida: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes».",
@@ -4318,7 +4406,7 @@
   },
   {
    "id": "compras-factura",
-   "numero": 9,
+   "numero": 10,
    "titulo": "Registrar y contabilizar la factura",
    "objetivo": "Registrarás la factura del proveedor, la cruzarás con el albarán y generarás el asiento: así cierras el ciclo de compra.",
    "concepto": "Después de la mercancía llega la factura: el documento con el que el proveedor te cobra lo que te ha servido. Antes de aceptarla, compruebas que coincide con lo que recibiste, como cuando repasas el tique del súper con la compra. Si pagas sin comprobar, puedes pagar mercancía que no ha llegado.\n\nEn Axional la registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nContabilizar es pasar la factura a la contabilidad. El ERP genera el asiento de compras. Un asiento es la anotación contable de una operación: cada importe va al debe o al haber, y las dos columnas suman lo mismo. Con tu AO{INI}, que no contabilizó el albarán, el asiento es: gasto 60000 e IVA 47200 al debe, y proveedor 40000 al haber. También crea los vencimientos de pago.\n\nEjemplo: tu albarán es de 10 × 12,50 = 125,00 de base. El IVA del 21 % son 26,25, y la factura suma 151,25. En el asiento, 125,00 + 26,25 van al debe y 151,25 al haber del proveedor.\n\nFíjate: si falta un dato maestro del proveedor o del artículo, salen errores que aprenderás a leer. Si lo montaste todo en «Dar de alta el proveedor y el artículo», la factura contabiliza a la primera.\n\nOjo: hay dos caminos a la factura y los dos dejan lo mismo; los comparas en la primera parte. Tu caso sigue el camino A.\n\nLos números de documento de los ejemplos (0FC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Facturas › Facturas».",
@@ -4770,7 +4858,7 @@
   },
   {
    "id": "compras-generar-factura",
-   "numero": 10,
+   "numero": 11,
    "titulo": "Generar la factura desde el albarán",
    "objetivo": "Generarás la factura de T{INI} desde su albarán, la contabilizarás y comprobarás que se salda la cuenta de facturas pendientes de recibir.",
    "concepto": "La factura del proveedor es el documento fiscal con el que te cobra, y lleva IVA. Cuando llega no hace falta teclearla entera: se genera desde el albarán, como un impreso que ya trae tus datos. Si no la registras y contabilizas, no sabes cuánto debes de verdad, no puedes restar el IVA a Hacienda y el proveedor te reclama un pago que no tienes anotado.\n\nLas líneas pasan solas y tú solo indicas el número de la factura del proveedor y su importe. Ese importe es el que pone el papel. El ERP lo compara con el que calcula él: base más IVA. Si coinciden, la factura sale validada.\n\nEs el camino B del bloque «Registrar y contabilizar la factura»: allí tecleas y conformas (A, el de tu caso); aquí generas desde un albarán ya contabilizado. Para cada albarán usa uno solo. Si ya facturaste ese albarán, usa otro.\n\nAl contabilizar la factura, el asiento salda la 40090 del albarán y anota la deuda real con el proveedor en su cuenta 40000. El IVA soportado, el que pagas en tus compras y puedes restar, va a la 47200.\n\nEjemplo: en tu caso, la factura de T{INI} es de 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25 en total. La captura es de un albarán de 4 uds.: 50,00 más 10,50 de IVA, 60,50. Con tu albarán de 10 unidades escribes 151,25 en «Importe factura». El mecanismo es el mismo.\n\nEjemplo comprobado en la demo: la factura trae 60,00 y el ERP calcula 60,50. Sale validada y contabiliza por 60,50. No sabemos si hay tolerancia o si no hay control de importe: la demo lo acepta; en una empresa real revisa la diferencia.\n\nLos números de documento de los ejemplos (0FC000021, asiento 79…) son orientativos. Usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes» y «Gestión › Compras › Facturas › Facturas».",
@@ -5142,7 +5230,7 @@
   },
   {
    "id": "compras-abono-devolucion",
-   "numero": 11,
+   "numero": 12,
    "titulo": "Devolución de mercancía y abono del proveedor",
    "objetivo": "Sabrás corregir una compra ya facturada con una factura rectificativa (abono) y crearás la cabecera de la rectificativa de T{INI}.",
    "concepto": "A veces devuelves mercancía o el proveedor se equivoca de precio. La factura ya está contabilizada y no se toca: se corrige con otra factura de signo contrario, que se llama abono o factura rectificativa. Es como una tachadura con firma en un libro de cuentas. Si no corriges así, pagas de más al proveedor y el IVA que restas a Hacienda sale mal.\n\nEn Axional el abono es una factura de la tipología RECT «FACTURA RECTIFICATIVA». Su serie es RECT y su tabla origen son las facturas, restando.\n\nEl abono copia las líneas de la factura que corrige con «Copiar líneas de factura». Después se valida y se contabiliza como cualquier factura.\n\nEjemplo: en tu caso, devuelves 1 unidad de las 10 que compraste. El abono es de −12,50 de base y −2,63 de IVA: −12,50 − 2,63 = −15,13. En la demo practicas con la factura de 4 unidades (60,50) de «Generar la factura desde el albarán» y solo llegas a crear la cabecera. El mecanismo es el mismo.\n\nAtención: la base tutorial tiene límites. No hay tipología de albarán de devolución a proveedor y no pudimos completar el abono. Lo que sigue es lo que sí funciona hasta ahora.\n\nDónde: «Gestión › Compras › Facturas › Facturas».",
@@ -5435,7 +5523,7 @@
   },
   {
    "id": "maestros-3",
-   "numero": 12,
+   "numero": 13,
    "titulo": "Registrar y consultar el stock",
    "objetivo": "Registrarás una entrada inicial de stock y comprobarás cuánto hay y de dónde viene.",
    "concepto": "El stock son las existencias: lo que tienes en el almacén. No aparece solo al crear el artículo; entra y sale con movimientos. Es como una hucha: solo sabes cuánto hay si apuntas cada moneda que metes y que sacas. Si no registras los movimientos, el ERP no sabe qué tienes y pedidos y albaranes trabajan con cifras falsas.\n\nAquí registras una entrada inicial con un movimiento interno. Es un movimiento de stock que no viene de una compra ni de una venta. Después lo compruebas con dos consultas.\n\nLa primera es el Stock global: responde a «¿cuánto tengo y dónde?». La segunda es el kardex: el historial de movimientos de un artículo, como el extracto de una cuenta del banco.\n\nEjemplo: metes 10 unidades de ROD{INI} en el almacén ALM{INI}. El Stock global debe mostrar 10 disponibles. El kardex debe mostrar una entrada de 10 y un saldo de 10.\n\nEjemplo: en tu caso, el stock del 13500620 sube 10 con la compra y baja 10 con la venta, y acaba en 0. Aquí practicas con otro artículo, ROD{INI}, y una entrada de 10 unidades con un movimiento interno, porque es un artículo de aprendizaje. El mecanismo es el mismo.\n\nSi las dos consultas coinciden en las 10 unidades, el artículo, el almacén y las cuentas logísticas están bien configurados.\n\nDónde: «Gestión › Logística › Movimientos internos › Movimientos».",

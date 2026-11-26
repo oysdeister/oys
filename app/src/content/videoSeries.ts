@@ -145,6 +145,6 @@ export function momentosDeModulo(id: string): MomentoVideo[] {
 
 /** Series que pertenecen a un módulo (para mostrar sus capítulos en la página del módulo) */
 export function seriesDeModulo(modulo: string): SerieVideo[] {
-  if (modulo === 'compras') return [SERIES.compras];
+  if (modulo === 'compras') return [SERIES.compras, ...SERIES_WORKFLOW.filter((s) => s.modulos.includes('compras'))];
   return [...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_WORKFLOW, ...SERIES_VENTAS, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
 }

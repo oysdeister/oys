@@ -7,7 +7,7 @@
  *
  * Fusión: siempre gana el mayor avance (unión de pasos y checklist, mejor nota, OR de superados).
  */
-import { CLAVE_PROGRESO, type Progreso, type EstadoEjercicio } from '../lib/progress';
+import { CLAVE_PROGRESO, migrarEjercicios, type Progreso, type EstadoEjercicio } from '../lib/progress';
 import { CLAVE_DESCARTE, CLAVE_EXAMEN, corregir, generarTeoria, type EstadoExamen } from '../lib/examen';
 
 type EstadoExamenLike = EstadoExamen;
@@ -297,6 +297,17 @@ function mejorExamen(a: ExamenC | null, b: ExamenC | null): ExamenC | null {
   if (!!a.val !== !!b.val) return a.val ? a : b;
   if (a.g[2] !== b.g[2]) return a.g[2] > b.g[2] ? a : b;
   return (a.f ?? '') >= (b.f ?? '') ? a : b;
+}
+
+/** Aplica al progreso de la cuenta la misma migración de bloques partidos que al local (lib/progress.ts). */
+export function migrarC(pc: ProgresoC): ProgresoC {
+  const ej: Record<string, EstadoEjercicio> = {};
+  for (const [id, [pa, g, t, d]] of Object.entries(pc.e)) ej[id] = { pasos: deMascara(pa), guiado: !!g, test: t < 0 ? null : t / 100, demo: deMascara(d) };
+  const migrado = migrarEjercicios(ej);
+  if (migrado === ej) return pc;
+  const e: Record<string, EjC> = {};
+  for (const [id, x] of Object.entries(migrado)) e[id] = [aMascara(x.pasos), x.guiado ? 1 : 0, x.test == null ? -1 : Math.round(x.test * 100), aMascara(x.demo)];
+  return { ...pc, e };
 }
 
 /** Fusiona dos progresos quedándose siempre con el mayor avance. */

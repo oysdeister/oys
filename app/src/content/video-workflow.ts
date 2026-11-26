@@ -86,7 +86,10 @@ function m(capitulo: number, tCap: number, fin: number, titulo: string): Momento
 
 export const MOMENTOS_EJERCICIO_WORKFLOW: Record<string, MomentoVideo[]> = {};
 
-/** Cada tramo en una sola sección del bloque «compras-workflow» */
+/**
+ * Cada tramo en una sola sección. Van por id de sección: caps. 1 y 2 en el bloque «compras-workflow-config»
+ * (menu, rol, circuito, validacion, grupo, tipologia) y cap. 3 en «compras-workflow» (prueba, autorizar, consulta).
+ */
 export const MOMENTOS_SECCION_WORKFLOW: Record<string, MomentoVideo[]> = {
   'compras-workflow-menu': [m(1, 24, 169, 'Vídeo: qué es un workflow y dónde están las piezas')],
   'compras-workflow-validacion': [m(2, 247, 290, 'Vídeo: la validación del grupo')],

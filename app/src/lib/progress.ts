@@ -30,12 +30,59 @@ function vacio(): Progreso {
   return { version: 1, alumno: { id: '', nombre: '', ini: '', usuario: '' }, ejercicios: {}, sims: {}, creado: ahora, actualizado: ahora };
 }
 
+/*
+ * Migración (11-2026): «compras-workflow» se partió en dos bloques sin cambiar ids de sección.
+ * Sus 6 primeras partes (22 pasos) pasaron a «compras-workflow-config» y cambiaron de orden
+ * (menu, rol, circuito, validacion, grupo, tipologia; el último paso de «circuito» pasó a «grupo»).
+ * Las 3 últimas (23 pasos) se quedan en «compras-workflow», desde el índice 0.
+ * Idempotente: solo actúa si existe el bloque viejo y aún no existe el nuevo (que se crea siempre, aunque quede vacío).
+ */
+const WF = 'compras-workflow';
+const WF_CONFIG = 'compras-workflow-config';
+/** Paso viejo (índice global en compras-workflow) → [bloque, paso nuevo] */
+const PASOS_WF: [string, number][] = [
+  ...[0, 1, 2, 11, 12, 13, 14, 15, 16, 17, 3, 4, 5, 6, 7, 8, 9, 10, 18, 19, 20, 21].map((n): [string, number] => [WF_CONFIG, n]),
+  ...Array.from({ length: 23 }, (_, i): [string, number] => [WF, i]),
+];
+/** Punto viejo de la checklist → [bloque, punto nuevo] */
+const DEMO_WF: [string, number][] = [[WF_CONFIG, 2], [WF_CONFIG, 3], [WF_CONFIG, 0], [WF_CONFIG, 1], [WF_CONFIG, 4], [WF_CONFIG, 5], [WF, 0], [WF, 3], [WF, 5]];
+
+/** Reparte el progreso viejo de un bloque partido. Devuelve el mismo objeto si no hay nada que migrar. */
+export function migrarEjercicios(ej: Record<string, EstadoEjercicio>): Record<string, EstadoEjercicio> {
+  const viejo = ej[WF];
+  if (!viejo || ej[WF_CONFIG]) return ej;
+  // El test viejo cubría sobre todo la configuración: la nota vale para los dos bloques
+  const nuevo: Record<string, EstadoEjercicio> = {
+    [WF_CONFIG]: { pasos: [], guiado: viejo.guiado, test: viejo.test, demo: [] },
+    [WF]: { pasos: [], guiado: viejo.guiado, test: viejo.test, demo: [] },
+  };
+  for (const i of viejo.pasos ?? []) {
+    const d = PASOS_WF[i];
+    if (d && !nuevo[d[0]].pasos.includes(d[1])) nuevo[d[0]].pasos.push(d[1]);
+  }
+  for (const i of viejo.demo ?? []) {
+    const d = DEMO_WF[i];
+    if (d && !nuevo[d[0]].demo.includes(d[1])) nuevo[d[0]].demo.push(d[1]);
+  }
+  return { ...ej, ...nuevo };
+}
+
 function leer(): Progreso {
   try {
     const raw = localStorage.getItem(CLAVE);
     if (!raw) return vacio();
     const p = JSON.parse(raw) as Progreso;
-    return { ...vacio(), ...p, alumno: { ...vacio().alumno, ...p.alumno } };
+    const ejercicios = migrarEjercicios(p.ejercicios ?? {});
+    const leido = { ...vacio(), ...p, ejercicios, alumno: { ...vacio().alumno, ...p.alumno } };
+    if (ejercicios !== p.ejercicios) {
+      // Se deja ya migrado en el navegador, para que la sincronización con la cuenta no suba el reparto viejo
+      try {
+        localStorage.setItem(CLAVE, JSON.stringify(leido));
+      } catch {
+        /* almacenamiento bloqueado */
+      }
+    }
+    return leido;
   } catch {
     return vacio();
   }
@@ -83,7 +130,10 @@ export function ejercicioVacio(): EstadoEjercicio {
 
 function conEjercicio(id: string, cambio: (e: EstadoEjercicio) => EstadoEjercicio) {
   const actual = estado.ejercicios[id] ?? ejercicioVacio();
-  guardar({ ...estado, ejercicios: { ...estado.ejercicios, [id]: cambio(actual) } });
+  // Si alguien empieza «compras-workflow» (formato nuevo) sin tener aún «compras-workflow-config»,
+  // se crea este vacío: si no, la próxima lectura tomaría su progreso por el formato viejo y lo migraría mal.
+  const marca: Record<string, EstadoEjercicio> = id === WF && !estado.ejercicios[WF_CONFIG] ? { [WF_CONFIG]: ejercicioVacio() } : {};
+  guardar({ ...estado, ejercicios: { ...estado.ejercicios, ...marca, [id]: cambio(actual) } });
 }
 
 /** Nombre de usuario: minúsculas sin acentos, letras, cifras, punto y guion. */
@@ -135,7 +185,7 @@ export const acciones = {
     try {
       const p = JSON.parse(texto) as Progreso;
       if (p.version !== 1 || typeof p.ejercicios !== 'object') return false;
-      guardar(p);
+      guardar({ ...p, ejercicios: migrarEjercicios(p.ejercicios) });
       return true;
     } catch {
       return false;

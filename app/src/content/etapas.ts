@@ -50,16 +50,18 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
   compras: [
     { fase: 'configurar', titulo: 'Maestros de compra', que: 'Gestión: cliente, artículo, proveedor y almacén; después tu proveedor y su precio de compra.', bloques: ['maestros-2', 'compras-1', 'compras-precios'] },
     { fase: 'configurar', titulo: 'Documentos', que: 'Cómo se numera y cómo se comporta cada documento del ciclo.', bloques: ['compras-tipos'] },
+    { fase: 'configurar', titulo: 'Aprobación de pedidos', que: 'Montas la aprobación de pedidos de compra: rol, circuito, validación, grupo de validaciones y tipología. La pruebas al final de Operar.', bloques: ['compras-workflow-config'] },
     { fase: 'operar', titulo: 'Comprar', que: 'Llevas una compra de principio a fin: pides, recibes la mercancía, contabilizas el albarán y registras o generas la factura.', bloques: ['compras-3', 'compras-2', 'compras-albaran-contabilizar', 'compras-factura', 'compras-generar-factura'] },
     { fase: 'operar', titulo: 'Facturas que generan asientos', que: 'Contabilizas facturas, haces facturas directas y corriges errores.', bloques: ['icon-contabilidad-v-1', 'icon-contabilidad-v-2', 'icon-contabilidad-v-3', 'icon-contabilidad-v-4'] },
     { fase: 'operar', titulo: 'Devolver y controlar el stock', que: 'Corriges una compra ya facturada con un abono y registras y consultas el stock: cuánto hay y de dónde viene.', bloques: ['compras-abono-devolucion', 'maestros-3'] },
-    { fase: 'operar', titulo: 'Aprobar pedidos: workflow', que: 'Cuando ya sabes comprar, montas un circuito de aprobación: el pedido queda bloqueado hasta que alguien con permiso lo autoriza.', bloques: ['compras-workflow'] },
+    { fase: 'operar', titulo: 'Aprobar pedidos: workflow', que: 'Con la aprobación ya montada, pruebas que un pedido sin referencia se bloquea y lo autorizas.', bloques: ['compras-workflow'] },
   ],
   ventas: [
-    { fase: 'configurar', titulo: 'El cliente', que: 'Compruebas tu cliente y lo completas con lo que le falte para venderle: datos comerciales, condición de cobro y cuenta contable.', bloques: ['ventas-cliente'] },
-    { fase: 'configurar', titulo: 'Los documentos de venta', que: 'Cómo se numeran y cómo se comportan el pedido, el albarán y la factura de venta, enlazados entre sí.', bloques: ['ventas-documentos'] },
+    { fase: 'configurar', titulo: 'El cliente', que: 'Compruebas tu cliente y lo completas con lo que le falte para venderle: datos comerciales, impuestos, banco, condición de cobro y cuenta contable.', bloques: ['ventas-cliente'] },
+    { fase: 'configurar', titulo: 'Los precios de venta', que: 'Creas tu lista y tu grupo de precios y se los asignas al cliente, para que el pedido proponga el precio.', bloques: ['ventas-precios'] },
+    { fase: 'configurar', titulo: 'Los documentos de venta', que: 'Ves el mapa de tipologías y creas tu juego único de seis tipologías, enlazadas de la oferta a la factura.', bloques: ['ventas-tipologias-mapa', 'ventas-documentos'] },
     { fase: 'operar', titulo: 'Vender', que: 'Llevas una venta hasta el asiento y el cobro pendiente: pedido, albarán, factura, contabilizar, vencimiento y Docflow.', bloques: ['ventas-pedido'] },
-    { fase: 'operar', titulo: 'Practicar otros circuitos', que: 'Practicas dos circuitos más: del albarán a la factura y de la oferta a la factura.', bloques: ['ventas-1', 'ventas-2'] },
+    { fase: 'operar', titulo: 'Practicar otros circuitos', que: 'Con las tipologías que ya creaste: del albarán a la factura y de la oferta a la factura.', bloques: ['ventas-1', 'ventas-2'] },
   ],
   carteras: [
     { fase: 'configurar', titulo: 'Preparar', que: 'Plazos, tipos de efecto y bancos propios.', bloques: ['carteras-1', 'carteras-3'] },
