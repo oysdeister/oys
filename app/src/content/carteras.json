@@ -2461,12 +2461,12 @@
       {
        "campo": "Remesas por cuenta › Remesa *",
        "significado": "Tipo de remesa que admite la cuenta.",
-       "ejemplo": "CSCTS (y CSDDS)"
+       "ejemplo": "CSCTS, CSDDS y PSCTT"
       },
       {
        "campo": "Remesas por cuenta › Línea financiera / Límite",
        "significado": "Línea financiera asociada y límite de importe.",
-       "ejemplo": "LRC{INI} / 100.000"
+       "ejemplo": "LRC{INI} en CSDDS / 100.000"
       }
      ],
      "pasos": [
@@ -2501,9 +2501,9 @@
        "detalle": "Referencia financiera CONTRATO-{INI}-001. Fechas 01-11-2026 y 31-12-2027. Cargo «Gestión cobros». Límite concedido y operativo: 100.000."
       },
       {
-       "texto": "En «Remesas por cuenta» pulsa «Nuevo», elige la remesa CSCTS (Cobro transferencias, sin Tesorería) y guarda",
+       "texto": "En «Remesas por cuenta» pulsa «Nuevo», elige la remesa CSCTS (Cobro transferencias, sin Tesorería) y guarda. Repite con CSDDS y con PSCTT",
        "pregunta": "Has guardado la línea financiera del banco. ¿Dónde accedes para añadir la remesa por cuenta CSCTS?",
-       "detalle": "Si quieres probar los recibos domiciliados, repite con CSDDS (necesitas antes el IBAN del cliente: lo tienes en «Domiciliar un cliente: mandato SEPA y remesa de cobro»). En la captura salen las dos filas, CSCTS y CSDDS; esta última con la línea financiera CA1. Deja la línea financiera y el límite de la fila como salen.",
+       "detalle": "CSCTS es la que usas en este bloque. CSDDS (cobro de recibos domiciliados SEPA) la necesitas para la remesa de cobro de C{INI} en «Domiciliar un cliente: mandato SEPA y remesa de cobro»: en su fila elige la línea financiera LRC{INI}. PSCTT (pago por transferencia con tesorería) la necesitas para pagar a T{INI} en «Crear una remesa de pago». Deja el límite como sale. En la captura salen CSCTS y CSDDS, esta con la línea financiera CA1 de otro banco.",
        "imagen": "carteras-d-280.webp",
        "hotspot": {
         "x": 34.8,
@@ -2614,12 +2614,12 @@
       },
       {
        "texto": "En «Detalle» añade la línea ASE{INI} (cuenta 70500.00000, centro de coste 0 y cuenta de explotación 0). Guarda, pulsa «Validar» y después «Contabilizar»",
-       "detalle": "La factura toma el número FVN026-000002 y queda contabilizada. Sus efectos los ves en el paso siguiente."
+       "detalle": "La factura toma un número de la serie FVN (en la captura, FVN026-000002; el tuyo será otro) y queda contabilizada. Sus efectos los ves en el paso siguiente."
       },
       {
        "texto": "Mira la pestaña «Vencimientos»: dos efectos de 121,00",
        "pregunta": "Has guardado la factura con el nuevo plazo T2D. ¿Dónde compruebas los dos efectos RC PE de 121,00?",
-       "detalle": "FVN026-000002 suma 242,00 (200,00 + 42,00 de IVA). Cada efecto lleva la mitad: 121,00 (100,00 + 21,00 de IVA). En la captura la factura ya está contabilizada.",
+       "detalle": "Tu segunda factura suma 242,00 (200,00 + 42,00 de IVA). Cada efecto lleva la mitad: 121,00 (100,00 + 21,00 de IVA). En la captura la factura ya está contabilizada.",
        "imagen": "carteras-d-283.webp",
        "hotspot": {
         "x": 0.5,
@@ -2643,9 +2643,9 @@
        }
       },
       {
-       "texto": "Abre la remesa y, en la pestaña «Selección de efectos», marca los dos efectos de FVN026-000002. Pulsa «Agregar efectos»",
+       "texto": "Abre la remesa y, en la pestaña «Selección de efectos», marca los dos efectos de tu segunda factura. Pulsa «Agregar efectos»",
        "pregunta": "Has marcado los dos efectos de FVN026-000002. ¿Qué botón pulsas para agregarlos a la remesa?",
-       "detalle": "Pasan a PR y el total es 242,00. La captura es de una remesa de prueba (RM026-000004, cliente TCAPK, factura FVN026-000004). Tú marca los dos efectos de tu FVN026-000002 y no los de otros terceros.",
+       "detalle": "Pasan a PR y el total es 242,00. La captura es de una remesa de prueba del cliente TCAPK. Tu remesa tendrá otro número: marca solo los dos efectos de tu factura a CAR{INI}, no los de otros terceros.",
        "imagen": "carteras-d-285.webp",
        "hotspot": {
         "x": 88.4,
@@ -2710,7 +2710,7 @@
       {
        "texto": "Mira la pestaña «Apuntes» de la remesa, con el asiento del cobro",
        "pregunta": "Has cobrado la remesa y quieres ver el asiento. ¿Qué pestaña abres para consultar los apuntes?",
-       "detalle": "Son tres apuntes que cuadran. Al debe, 57200.00000 Bancos por 242,00: entra el dinero. Al haber, una línea 23000.00000 por cada efecto de FVN026-000002 (121,00 + 121,00). La 23000 es la anomalía de la demo: lee el cuadro de arriba.",
+       "detalle": "Son tres apuntes que cuadran. Al debe, 57200.00000 Bancos por 242,00: entra el dinero. Al haber, una línea 23000.00000 por cada efecto de tu factura (121,00 + 121,00). La 23000 es la anomalía de la demo: lee el cuadro de arriba.",
        "imagen": "carteras-d-290.webp",
        "hotspot": {
         "x": 13.1,
@@ -2750,7 +2750,7 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "Con el tipo CSDDS (Cobro débitos directos - domiciliaciones) los efectos se agregan. Pero al ordenar sale «cefectos_upd: [FVN026-000002] Requiere la domiciliación bancaria del tercero!»."
+       "texto": "Con el tipo CSDDS (Cobro débitos directos - domiciliaciones) los efectos se agregan. Pero al ordenar sale «cefectos_upd: [número de tu factura] Requiere la domiciliación bancaria del tercero!»."
       },
       {
        "tipo": "solucion",
@@ -2762,7 +2762,7 @@
       },
       {
        "tipo": "solucion",
-       "texto": "Crea una remesa nueva con el tipo correcto. La RM026-000001 se queda vacía."
+       "texto": "Crea una remesa nueva con el tipo correcto. La equivocada se queda vacía, con su número (el tuyo será otro que el de las capturas)."
       }
      ]
     }
@@ -3983,8 +3983,8 @@
    "id": "icon-cartera-v-4",
    "numero": 9,
    "titulo": "Comprobar los tipos de remesa de una cuenta",
-   "objetivo": "Sabrás qué tipos de remesa admite una cuenta del banco antes de crear una remesa con ella.",
-   "concepto": "Una remesa es un paquete de efectos que se manda junto al banco para que los cobre o los pague. Un efecto es cada cobro o pago pendiente de una factura. Es como llevar al banco un sobre con varias órdenes a la vez, en lugar de ir una por una. Si el banco no admite ese tipo de remesa, no podrás crear el paquete.\n\nCada banco propio, es decir, cada cuenta bancaria de la empresa, solo acepta ciertos tipos de remesa. Esos tipos se guardan en su pestaña «Remesas por cuenta». Ya lo hiciste en el bloque «Cobrar efectos sueltos y en remesa», con BBVA_{INI} y CSCTS.\n\nOjo: si la pestaña está vacía, al crear una remesa el campo del tipo no ofrece ningún valor.\n\nEjemplo: en tu caso, el banco es BBVA_{INI} y lo usarás para pagar a T{INI}. En la demo revisas otro banco, el de la base del vídeo: la cuenta financiera PRVCC0 de la empresa 0 Deister Software. Tiene tres tipos. CCHET es cobro de cheques, CSCTT cobro por transferencia y PSCTT pago por transferencia con tesorería. PSCTT es el que usarás para pagar. El mecanismo es el mismo con BBVA_{INI}.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas» o «Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios».",
+   "objetivo": "Comprobarás que tu banco BBVA_{INI} admite los tipos de remesa que vas a usar (PSCTT para pagar a T{INI} y CSDDS para cobrar a C{INI}) y añadirás los que falten.",
+   "concepto": "Una remesa es un paquete de efectos que se manda junto al banco para que los cobre o los pague. Un efecto es cada cobro o pago pendiente de una factura. Es como llevar al banco un sobre con varias órdenes a la vez, en lugar de ir una por una. Si el banco no admite ese tipo de remesa, no podrás crear el paquete.\n\nCada banco propio, es decir, cada cuenta bancaria de la empresa, solo acepta ciertos tipos de remesa. Esos tipos se guardan en su pestaña «Remesas por cuenta». En «Cobrar efectos sueltos y en remesa» añadiste a BBVA_{INI} CSCTS y, si seguiste el paso, CSDDS y PSCTT.\n\nOjo: si la pestaña está vacía, al crear una remesa el campo del tipo no ofrece ningún valor.\n\nEn tu caso necesitas dos tipos en BBVA_{INI}: PSCTT, pago por transferencia con tesorería, para pagar el efecto de 151,25 de T{INI}; y CSDDS, cobro de recibos domiciliados SEPA, para cobrar el efecto 2 de 121,00 de C{INI}.\n\nLas capturas son de la base del vídeo: la cuenta PRVCC0 de la empresa 0 tiene CCHET (cobro de cheques), CSCTT (cobro por transferencia) y PSCTT. Con tus datos verás BBVA_{INI} y sus tipos.\n\nDónde: «Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios».",
    "duracionMin": 15,
    "secciones": [
     {
@@ -3998,8 +3998,7 @@
       "Empresas"
      ],
      "explicacion": [
-      "Puedes abrir los bancos propios desde el maestro de empresas, en la pestaña Bancos propios.",
-      "También desde Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios, como en el bloque «Dar de alta bancos propios y cajas». Es la misma ficha.",
+      "Abre los bancos propios desde Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios, como en el bloque «Dar de alta bancos propios y cajas». También llegas desde el maestro de empresas, pestaña Bancos propios: es la misma ficha.",
       "Dentro del banco, la pestaña «Remesas por cuenta» lista los tipos de remesa que admite."
      ],
      "campos": [
@@ -4011,22 +4010,22 @@
       {
        "campo": "Bancos propios",
        "significado": "Pestaña con las cuentas bancarias propias de la empresa (cuentas financieras).",
-       "ejemplo": "PRVCC0 Previsiones, c/c Emp 0"
+       "ejemplo": "BBVA_{INI} (PRVCC0 en el vídeo)"
       },
       {
        "campo": "Remesas por cuenta",
        "significado": "Pestaña de la cuenta financiera con los tipos de remesa que admite.",
-       "ejemplo": "CCHET, CSCTT, PSCTT"
+       "ejemplo": "CSCTS, CSDDS y PSCTT en BBVA_{INI} (CCHET, CSCTT y PSCTT en el vídeo)"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre el maestro de empresas y selecciona la empresa 0 Deister Software.",
-       "detalle": "Verás la ficha de la empresa 0, con sus pestañas. La empresa 0 es donde la demo graba los documentos."
+       "texto": "Abre «Bancos propios» y filtra la empresa 0 Deister Software.",
+       "detalle": "La empresa 0 es donde la demo graba los documentos del caso y donde está tu BBVA_{INI}."
       },
       {
-       "texto": "Ve a la pestaña «Bancos propios» y abre la cuenta financiera PRVCC0.",
-       "detalle": "Es la cuenta de Previsiones, c/c Emp 0, una cuenta bancaria de la empresa. Se abre su ficha."
+       "texto": "Abre tu cuenta financiera BBVA_{INI}.",
+       "detalle": "Se abre su ficha, con sus pestañas. En el vídeo se abre PRVCC0, «Previsiones, c/c Emp 0»."
       },
       {
        "texto": "Pulsa la pestaña «Remesas por cuenta».",
@@ -4039,7 +4038,7 @@
         "h": 2.9,
         "etiqueta": "Remesas por cuenta"
        },
-       "detalle": "Verás una fila por cada tipo de remesa que admite la cuenta: CCHET, CSCTT y PSCTT."
+       "detalle": "Verás una fila por cada tipo de remesa que admite la cuenta. En la captura del vídeo, las de PRVCC0: CCHET, CSCTT y PSCTT. En la tuya, CSCTS y los que añadiste."
       }
      ],
      "avisos": [
@@ -4061,8 +4060,9 @@
       "Bancos propios"
      ],
      "explicacion": [
-      "Los tipos que admite PRVCC0 son CCHET, CSCTT y PSCTT.",
-      "Una factura de compra es dinero que debes a un proveedor, así que la pagas. Para ella se usa la clase Pagar y el tipo PSCTT."
+      "Para pagar una factura de compra (dinero que debes a un proveedor) se usa la clase Pagar y el tipo PSCTT.",
+      "Para cobrar un recibo domiciliado de un cliente se usa la clase Cobrar y el tipo CSDDS.",
+      "En el vídeo, PRVCC0 admite CCHET, CSCTT y PSCTT."
      ],
      "campos": [
       {
@@ -4083,16 +4083,16 @@
      ],
      "pasos": [
       {
-       "texto": "Comprueba que en la pestaña aparecen CCHET, CSCTT y PSCTT.",
-       "detalle": "Verás tres filas, una por cada tipo. Cada una dice si es de cobro o de pago."
+       "texto": "Comprueba si BBVA_{INI} tiene PSCTT. Si no, pulsa «Nuevo», elige PSCTT y guarda.",
+       "detalle": "En la lista sale como «Pago transferencias (con Tesorería)». Deja el límite como sale."
       },
       {
        "texto": "Comprueba que su estado es Abierto.",
-       "detalle": "Si no estuvieran abiertos, la remesa podría no ofrecerlos."
+       "detalle": "Si no estuviera abierto, la remesa no lo ofrecería."
       },
       {
-       "texto": "Anota el tipo PSCTT: lo usarás en el bloque «Crear una remesa de pago» para pagar el efecto de 1.815,00.",
-       "detalle": "Es el tipo que usarás en el bloque siguiente. En tu caso sería para pagar los 151,25 a T{INI}; en el vídeo, para el efecto de 1.815,00."
+       "texto": "Comprueba también CSDDS con la línea financiera LRC{INI}. Si falta, añádelo igual.",
+       "detalle": "PSCTT lo usas en «Crear una remesa de pago» para pagar los 151,25 de T{INI}. CSDDS, en «Domiciliar un cliente: mandato SEPA y remesa de cobro» para cobrar los 121,00 del efecto 2 de C{INI}."
       }
      ],
      "avisos": [
@@ -4154,18 +4154,16 @@
     }
    ],
    "checklist": [
-    "Abres el maestro de empresas.",
-    "Seleccionas la empresa 0 Deister Software.",
-    "Vas a la pestaña Bancos propios.",
-    "Abres la cuenta financiera PRVCC0.",
+    "Abres Bancos propios y la ficha de BBVA_{INI} de la empresa 0.",
     "Pulsas la pestaña Remesas por cuenta.",
-    "Compruebas que CCHET, CSCTT y PSCTT están en estado Abierto.",
-    "Sabes que PSCTT es el tipo para pagar facturas de compra."
+    "BBVA_{INI} tiene PSCTT en estado Abierto (si no, lo has añadido).",
+    "BBVA_{INI} tiene CSDDS con la línea LRC{INI} (si no, lo has añadido).",
+    "Sabes que PSCTT es el tipo para pagar facturas de compra y CSDDS para cobrar recibos domiciliados."
    ],
    "problemas": [
     {
      "problema": "Al crear una remesa, el desplegable del tipo aparece vacío.",
-     "solucion": "Ve a Maestro de empresas › Bancos propios › PRVCC0 › Remesas por cuenta. Comprueba que hay tipos de remesa en estado abierto."
+     "solucion": "Abre Bancos propios › BBVA_{INI} › Remesas por cuenta. Comprueba que hay tipos de remesa en estado Abierto y añade el que falte."
     },
     {
      "problema": "No encuentras la pestaña «Remesas por cuenta».",
@@ -4173,9 +4171,9 @@
     }
    ],
    "aprendido": [
-    "Has abierto la cuenta financiera PRVCC0 desde el maestro de empresas.",
+    "Has abierto tu cuenta financiera BBVA_{INI}.",
     "Has visto que la pestaña «Remesas por cuenta» decide qué tipos de remesa ofrece esa cuenta.",
-    "Has comprobado que CCHET, CSCTT y PSCTT están en estado Abierto.",
+    "Has dejado en BBVA_{INI} los tipos PSCTT y CSDDS en estado Abierto.",
     "Sabes que para pagar una factura de compra se usa la clase Pagar y el tipo PSCTT."
    ]
   },
@@ -4183,8 +4181,8 @@
    "id": "icon-cartera-v-5",
    "numero": 10,
    "titulo": "Crear una remesa de pago",
-   "objetivo": "Crearás una remesa de pago y le añadirás un efecto pendiente, para ordenar varios pagos al banco de una vez.",
-   "concepto": "Una remesa es un paquete de efectos que mandas junto al banco. Un efecto es cada cobro o pago pendiente que deja una factura. En lugar de hacer diez transferencias a mano, mandas al banco una remesa con los diez pagos. Si no la usas, cada pago es un trámite suelto y es fácil que alguno se pierda o se pague dos veces.\n\nEn el bloque «Cobrar efectos sueltos y en remesa» la usaste para cobrar. También sirve para pagar. Usa la clase Pagar si los efectos vienen de facturas de compra, y Cobrar si vienen de ventas.\n\nPrimero, el banco propio debe tener el tipo de remesa en «Remesas por cuenta». Lo viste en el bloque «Comprobar los tipos de remesa de una cuenta». Después, en Finanzas › Cobros y Pagos › Remesas, creas la remesa. Su tipo debe encajar con el tipo de efecto de la factura. Luego abres «Selección de efectos», filtras por tercero y pulsas «Agregar efectos».\n\nEjemplo: en tu caso, el 06-11 pagas a T{INI} los 151,25 de su factura con una remesa de pago por transferencia, desde tu banco BBVA_{INI}. En la demo practicas con otros datos, porque son los de la base del vídeo: empresa 0 Deister Software, banco PRVCC0 y tercero 00087 LABORATORIOS UNION. Su efecto es de 1.815,00. Al entrar en la remesa, pasa de PE (pendiente) a PR (propuesto). El mecanismo es el mismo.\n\nDónde: «Finanzas › Cobros y Pagos › Remesas › Registro de remesas».",
+   "objetivo": "Crearás la remesa de pago de tu caso con el efecto de 151,25 de T{INI} desde BBVA_{INI}.",
+   "concepto": "Una remesa es un paquete de efectos que mandas junto al banco. Un efecto es cada cobro o pago pendiente que deja una factura. En lugar de hacer diez transferencias a mano, mandas al banco una remesa con los diez pagos. Si no la usas, cada pago es un trámite suelto y es fácil que alguno se pierda o se pague dos veces.\n\nEn el bloque «Cobrar efectos sueltos y en remesa» la usaste para cobrar. También sirve para pagar. Usa la clase Pagar si los efectos vienen de facturas de compra, y Cobrar si vienen de ventas.\n\nAntes, tres cosas. 1) El banco BBVA_{INI} debe tener el tipo PSCTT en «Remesas por cuenta» (bloque «Comprobar los tipos de remesa de una cuenta»). 2) El efecto tiene que ser de un tipo que encaje: el de T{INI} es TF, transferencia, como pusiste en sus condiciones de pago en Compras. 3) El proveedor necesita IBAN para recibir la transferencia: T{INI} ya lo tiene, el ES9121000418450200051332 de prueba que le diste en Compras.\n\nEste es el pago de tu caso (operación 7): el 06-11-2026 pagas a T{INI} los 151,25 de su factura PROV-{INI}-001 con una remesa PSCTT desde BBVA_{INI}. Al entrar en la remesa, el efecto pasa de PE (pendiente) a PR (propuesto). La comisión de 3,50 la cobra el banco aparte y la ves en Tesorería.\n\nLas capturas son del vídeo: banco PRVCC0, tercero 00087 LABORATORIOS UNION y efecto de 1.815,00. Con tus datos verás BBVA_{INI}, T{INI} y 151,25.\n\nDónde: «Finanzas › Cobros y Pagos › Remesas › Registro de remesas».",
    "duracionMin": 25,
    "secciones": [
     {
@@ -4197,28 +4195,28 @@
       "Maestros",
       "Auxiliares",
       "Bancos propios",
-      "PRVCC0",
+      "BBVA_{INI}",
       "Remesas por cuenta"
      ],
      "explicacion": [
       "Es lo que comprobaste en el bloque «Comprobar los tipos de remesa de una cuenta». Si el tipo no está en «Remesas por cuenta», la remesa no lo ofrece.",
-      "En el vídeo se añaden al banco dos tipos. CSCTT es el cobro por transferencia con tesorería y PSCTT el pago por transferencia con tesorería."
+      "PSCTT es el pago por transferencia con tesorería. En el vídeo se añaden CSCTT y PSCTT a otro banco."
      ],
      "campos": [
       {
        "campo": "Banco propio",
        "significado": "Cuenta bancaria de la empresa en la que añades los tipos.",
-       "ejemplo": "PRVCC0"
+       "ejemplo": "BBVA_{INI} (PRVCC0 y CAIXA13 en el vídeo)"
       },
       {
        "campo": "Remesa",
        "significado": "Tipo de remesa que admite la cuenta.",
-       "ejemplo": "CSCTT y PSCTT"
+       "ejemplo": "PSCTT (y CSDDS)"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre el banco PRVCC0 y su pestaña «Remesas por cuenta»",
+       "texto": "Abre BBVA_{INI} y su pestaña «Remesas por cuenta»",
        "pregunta": "Has abierto el banco PRVCC0. ¿Qué pestaña consultas para ver sus tipos de remesa?",
        "imagen": "v-icon11-006.jpg",
        "hotspot": {
@@ -4228,12 +4226,12 @@
         "h": 2.9,
         "etiqueta": "Remesas por cuenta"
        },
-       "detalle": "Comprueba si ya están PSCTT (y CSCTT). En la base del vídeo, PRVCC0 ya los tiene, como viste en el bloque «Comprobar los tipos de remesa de una cuenta»."
+       "detalle": "Comprueba que está PSCTT. En la captura del vídeo, PRVCC0 ya lo tiene."
       },
       {
        "texto": "Si falta, pulsa «Nuevo» en la pestaña, escribe el tipo en «Remesa» y elígelo en la lista",
        "pregunta": "En la pestaña «Remesas por cuenta», ¿dónde escribes el tipo de remesa que falta?",
-       "detalle": "Cada fila lleva la cuenta financiera, el tipo de remesa y el límite de importe. En la captura del vídeo se hace en otro banco, CAIXA13 de la empresa SOR. Al escribir SC, la lista ofrece los tipos (CCHES, CCHET…).",
+       "detalle": "Cada fila lleva la cuenta financiera, el tipo de remesa y el límite de importe. En la captura del vídeo se hace en otro banco, CAIXA13 de la empresa SOR. Al escribir SC, la lista ofrece los tipos (CCHES, CCHET…). Tú añade PSCTT a BBVA_{INI}.",
        "imagen": "v-icon1-018.jpg",
        "hotspot": {
         "x": 53.8,
@@ -4246,7 +4244,7 @@
       {
        "texto": "Guarda y comprueba que la pestaña muestra las filas nuevas en estado Abierto",
        "pregunta": "Has guardado los tipos de remesa nuevos. ¿Dónde compruebas que aparecen en estado Abierto?",
-       "detalle": "Verás las filas nuevas con el estado Abierto. En la captura, CAIXA13 queda con CSCTT y PSCTT.",
+       "detalle": "Verás las filas con el estado Abierto. En la captura, CAIXA13 queda con CSCTT y PSCTT; en la tuya, BBVA_{INI} con PSCTT.",
        "imagen": "v-icon1-019.jpg",
        "hotspot": {
         "x": 61,
@@ -4282,12 +4280,12 @@
       {
        "campo": "Cuenta financiera",
        "significado": "Banco propio del que sale o al que entra el dinero.",
-       "ejemplo": "PRVCC0"
+       "ejemplo": "BBVA_{INI} (PRVCC0 en el vídeo)"
       },
       {
        "campo": "Fecha de remesa",
        "significado": "Fecha del envío al banco. Puedes cambiarla.",
-       "ejemplo": ""
+       "ejemplo": "06-11-2026"
       },
       {
        "campo": "Clase",
@@ -4306,11 +4304,11 @@
        "detalle": "Se abre la lista de remesas. Desde ahí creas una nueva."
       },
       {
-       "texto": "Pulsa «Nuevo» y rellena la empresa, la cuenta financiera PRVCC0 y la fecha",
-       "detalle": "Rellena también Fecha remesa y Fecha valor (en el vídeo, 23-06-2026). La moneda (EUR) y el cambio se rellenan solos."
+       "texto": "Pulsa «Nuevo» y rellena la empresa 0, la cuenta financiera BBVA_{INI} y las fechas",
+       "detalle": "Fecha remesa y Fecha valor: 06-11-2026, el día del pago de tu caso (en el vídeo, 23-06-2026). La moneda (EUR) y el cambio se rellenan solos."
       },
       {
-       "texto": "Elige la clase Pagar para facturas de compra o Cobrar para ventas.",
+       "texto": "Elige la clase Pagar.",
        "pregunta": "Para facturas de compra, ¿qué opción de clase eliges al crear la remesa?",
        "imagen": "v-icon1-020.jpg",
        "hotspot": {
@@ -4320,10 +4318,10 @@
         "h": 4.5,
         "etiqueta": "Clase Pagar"
        },
-       "detalle": "Si los efectos vienen de facturas de compra, la clase es Pagar. Si vienen de ventas, Cobrar. Aquí, Pagar."
+       "detalle": "Los efectos vienen de una factura de compra, la de T{INI}: la clase es Pagar."
       },
       {
-       "texto": "Elige el tipo de remesa que encaje con el efecto de la factura.",
+       "texto": "Elige el tipo de remesa PSCTT.",
        "pregunta": "El efecto de la factura es una transferencia con tesorería. ¿Qué tipo de remesa eliges?",
        "imagen": "v-icon1-023.jpg",
        "hotspot": {
@@ -4333,7 +4331,7 @@
         "h": 4,
         "etiqueta": "PSCTT"
        },
-       "detalle": "La lista solo ofrece los tipos que tiene el banco en «Remesas por cuenta». Aquí, PSCTT."
+       "detalle": "La lista solo ofrece los tipos que tiene BBVA_{INI} en «Remesas por cuenta». Si sale «Datos no disponibles», vuelve al bloque «Comprobar los tipos de remesa de una cuenta»."
       },
       {
        "texto": "Comprueba que el tipo queda como PSCTT «Pago transferencias (con Tesorería)» y que la acción se rellena sola (RPSCTP).",
@@ -4350,7 +4348,7 @@
       },
       {
        "texto": "Pulsa «Guardar»",
-       "detalle": "La remesa recibe su número (justificante RM…). Lo usarás en el bloque «Evolucionar una remesa»."
+       "detalle": "La remesa recibe su número (justificante RM…). Tu remesa tendrá otro número que el de las capturas: anótalo, lo usarás en «Evolucionar una remesa»."
       }
      ],
      "avisos": [
@@ -4373,24 +4371,23 @@
      "explicacion": [
       "En la pestaña «Selección de efectos» de la remesa filtras por tercero, vencimiento u otros campos.",
       "A la remesa viaja el importe pendiente del efecto, es decir, lo que queda por pagar.",
-      "El tipo de efecto tiene que encajar con el tipo de remesa. En el vídeo, una primera factura tenía tipo de efecto cheque y la remesa era de transferencias. Por eso no aparecía ningún efecto.",
-      "Con la factura en transferencia (TF), el efecto sí aparece."
+      "El tipo de efecto tiene que encajar con el tipo de remesa. El de T{INI} es TF (transferencia) y encaja con PSCTT. En el vídeo, una primera factura tenía tipo cheque y la remesa era de transferencias: no aparecía ningún efecto."
      ],
      "campos": [
       {
        "campo": "Tercero",
        "significado": "Filtro por el proveedor o cliente de la factura.",
-       "ejemplo": "00087"
+       "ejemplo": "T{INI} (00087 en el vídeo)"
       },
       {
        "campo": "Tipo de efecto",
        "significado": "Medio de pago del efecto. Tiene que encajar con el tipo de remesa.",
-       "ejemplo": "TF (no CH) para PSCTT"
+       "ejemplo": "TF para PSCTT (no CH)"
       },
       {
        "campo": "Importe",
        "significado": "Importe pendiente que viaja a la remesa.",
-       "ejemplo": "1.815,00"
+       "ejemplo": "151,25 (1.815,00 en el vídeo)"
       }
      ],
      "pasos": [
@@ -4399,9 +4396,9 @@
        "detalle": "Verás los filtros arriba y, debajo, la rejilla de efectos pendientes. Aún está vacía hasta que filtres."
       },
       {
-       "texto": "Filtra por el tercero de la factura (en el vídeo, 00087)",
+       "texto": "Filtra por el tercero T{INI}",
        "pregunta": "En la selección de efectos de la remesa, ¿dónde filtras por el tercero de la factura?",
-       "detalle": "Escribe el código en el filtro «Tercero» de la pestaña y elígelo en la lista. La captura es de la primera remesa del vídeo (RM026-000012): al escribir 0008 se despliega la lista de terceros y la rejilla aún dice «No data».",
+       "detalle": "Escribe T{INI} en el filtro «Tercero» de la pestaña y elígelo en la lista. La captura es de una remesa del vídeo: al escribir 0008 se despliega la lista de terceros y la rejilla aún dice «No data».",
        "imagen": "v-icon1-022.jpg",
        "hotspot": {
         "x": 21,
@@ -4412,12 +4409,12 @@
        }
       },
       {
-       "texto": "Comprueba que carga el efecto pendiente de la factura.",
-       "detalle": "Debe salir una fila con el efecto pendiente de la factura. En el vídeo es el id 90, de 1.815,00; lo ves en la captura del paso «Agregar efectos»."
+       "texto": "Comprueba que carga el efecto de 151,25 de la factura PROV-{INI}-001.",
+       "detalle": "Debe salir una fila: clase Pagar, tipo TF, estado PE, 151,25. En el vídeo es el efecto 90, de 1.815,00."
       },
       {
        "texto": "Si no aparece, revisa que el tipo de efecto de la factura encaje con el tipo de remesa y con las remesas por cuenta",
-       "detalle": "Si el tipo de efecto no encaja con el de la remesa, no sale nada. Corrige la factura o crea otra remesa del tipo correcto."
+       "detalle": "Si no sale nada: la factura de T{INI} no está contabilizada, su tipo de efecto no es TF, o el efecto ya se pagó. Corrige la causa o crea otra remesa del tipo correcto."
       }
      ],
      "avisos": [
@@ -4450,12 +4447,12 @@
       {
        "campo": "Tercero",
        "significado": "Proveedor por el que filtras.",
-       "ejemplo": "00087 LABORATORIOS UNION"
+       "ejemplo": "T{INI} (00087 LABORATORIOS UNION en el vídeo)"
       },
       {
        "campo": "Efecto",
        "significado": "Número que identifica el efecto en la cartera.",
-       "ejemplo": "90"
+       "ejemplo": "El de tu factura (90 en el vídeo)"
       },
       {
        "campo": "Clase",
@@ -4475,7 +4472,7 @@
       {
        "campo": "Importe",
        "significado": "Importe que queda por pagar del efecto.",
-       "ejemplo": "1.815,00"
+       "ejemplo": "151,25 (1.815,00 en el vídeo)"
       }
      ],
      "pasos": [
@@ -4484,8 +4481,8 @@
        "detalle": "Verás los filtros y la rejilla de efectos pendientes de esa remesa."
       },
       {
-       "texto": "Filtra por Tercero 00087.",
-       "detalle": "Aparecerá el efecto id 90, clase Pagar, tipo TF, estado PE e importe 1.815,00."
+       "texto": "Filtra por Tercero T{INI}.",
+       "detalle": "Aparecerá su efecto: clase Pagar, tipo TF, estado PE e importe 151,25."
       },
       {
        "texto": "Pulsa «Agregar efectos».",
@@ -4501,7 +4498,7 @@
        "detalle": "Sale el aviso verde «Éxito» y el efecto pasa a la lista de efectos de la remesa."
       },
       {
-       "texto": "Comprueba que el efecto pasa a «Relación de efectos remesados» y que el total de la remesa es 1.815,00.",
+       "texto": "Comprueba que el efecto pasa a «Relación de efectos remesados» y que el total de la remesa es 151,25.",
        "pregunta": "Tras agregar el efecto, ¿dónde ves el efecto en la relación con estado PR y el total de 1.815,00?",
        "imagen": "v-icon11-008.jpg",
        "hotspot": {
@@ -4511,7 +4508,7 @@
         "h": 4.6,
         "etiqueta": "Efecto en la relación, estado PR"
        },
-       "detalle": "Arriba sale el aviso verde «Éxito». El efecto aparece con estado PR (Propuesto) y «Total remesa» marca 1.815,00."
+       "detalle": "Arriba sale el aviso verde «Éxito». El efecto aparece con estado PR (Propuesto) y «Total remesa» marca 151,25. En la captura del vídeo, 1.815,00."
       }
      ],
      "avisos": [
@@ -4595,12 +4592,12 @@
     }
    ],
    "checklist": [
-    "El banco PRVCC0 (o tu banco) tiene el tipo PSCTT en «Remesas por cuenta».",
-    "Has creado en Registro de remesas una remesa con empresa, cuenta financiera, fecha y clase Pagar.",
-    "El tipo de remesa es PSCTT «Pago transferencias (con Tesorería)» y la acción se ha rellenado sola.",
-    "Has guardado la remesa y anotado su número.",
-    "Has filtrado «Selección de efectos» por el tercero y agregado el efecto.",
-    "El efecto está en «Relación de efectos remesados» y el total coincide con su importe."
+    "BBVA_{INI} tiene el tipo PSCTT en «Remesas por cuenta».",
+    "Has creado una remesa con empresa 0, cuenta BBVA_{INI}, fecha 06-11-2026 y clase Pagar.",
+    "El tipo de remesa es PSCTT «Pago transferencias (con Tesorería)» y la acción RPSCTP se ha rellenado sola.",
+    "Has guardado la remesa y anotado su número (será otro que el de las capturas).",
+    "Has filtrado «Selección de efectos» por T{INI} y agregado su efecto de 151,25.",
+    "El efecto está en «Relación de efectos remesados» en PR y el total es 151,25."
    ],
    "problemas": [
     {
@@ -4617,11 +4614,11 @@
     }
    ],
    "aprendido": [
-    "Has comprobado que el banco PRVCC0 tiene el tipo PSCTT en «Remesas por cuenta».",
+    "Has comprobado que BBVA_{INI} tiene el tipo PSCTT en «Remesas por cuenta».",
     "Has creado una remesa de clase Pagar y tipo PSCTT, y la acción RPSCTP se ha rellenado sola.",
-    "Has filtrado por el tercero 00087 y has agregado su efecto de 1.815,00 a la remesa. En tu caso, agregarías el efecto de 151,25 de T{INI}.",
+    "Has agregado a la remesa el efecto de 151,25 de T{INI}.",
     "Has visto que el efecto pasa de PE Pendiente a PR Propuesto al entrar en la remesa.",
-    "Sabes que un efecto solo aparece si su tipo encaja con el tipo de remesa."
+    "Sabes que un efecto solo aparece si su tipo encaja con el tipo de remesa (TF con PSCTT)."
    ]
   },
   {
@@ -4629,7 +4626,7 @@
    "numero": 11,
    "titulo": "Resolver un efecto que no se remesa",
    "objetivo": "Sabrás por qué un efecto no entra en una remesa y qué corregir antes de enviarla al banco.",
-   "concepto": "A veces un efecto no se deja remesar, es decir, no entra en el paquete de cobros o pagos que mandas al banco. Es como un sobre que Correos no acepta porque le falta la dirección. Si no lo arreglas, ese cobro o pago se queda fuera y hay que tramitarlo aparte. Casi siempre falta algo en la configuración previa.\n\nHay dos casos típicos. El primero es la domiciliación bancaria: la cuenta bancaria (IBAN) del tercero guardada en su ficha. El banco la necesita para cargarle un recibo o enviarle una transferencia. Un tercero es cualquier persona o empresa con la que trabajas.\n\nOjo: si el tipo de efecto exige domiciliación y el tercero no la tiene, sale «DOMICILIACIÓN BANCARIA NO INFORMADA». En el vídeo se evitó con la forma de pago cheque, que no la necesita.\n\nEl segundo caso es que el tipo de efecto no encaje con el tipo de remesa. Cada tipo de remesa solo ofrece en «Selección de efectos» los tipos de efecto que admite.\n\nEjemplo: un efecto cheque no aparece en una remesa de transferencias. En tu caso, el efecto de 151,25 a T{INI} es una transferencia (TF), y por eso entra en una remesa de pago por transferencia. Agrupa en cada remesa efectos de un tipo que encaje con ella.\n\nDónde: «Finanzas › Maestros › Terceros › Registro terceros» para los datos bancarios y «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» para la selección.",
+   "concepto": "A veces un efecto no se deja remesar, es decir, no entra en el paquete de cobros o pagos que mandas al banco. Es como un sobre que Correos no acepta porque le falta la dirección. Si no lo arreglas, ese cobro o pago se queda fuera y hay que tramitarlo aparte. Casi siempre falta algo en la configuración previa.\n\nHay dos casos típicos. El primero es la domiciliación bancaria: la cuenta bancaria (IBAN) del tercero guardada en su ficha. El banco la necesita para cargarle un recibo o enviarle una transferencia. Un tercero es cualquier persona o empresa con la que trabajas.\n\nOjo: si el tipo de efecto exige domiciliación y el tercero no la tiene, sale «DOMICILIACIÓN BANCARIA NO INFORMADA». En el vídeo se evitó con la forma de pago cheque, que no la necesita.\n\nEl segundo caso es que el tipo de efecto no encaje con el tipo de remesa. Cada tipo de remesa solo ofrece en «Selección de efectos» los tipos de efecto que admite.\n\nEjemplo: un efecto cheque no aparece en una remesa de transferencias. En tu caso, el efecto de 151,25 a T{INI} es una transferencia (TF) y T{INI} tiene IBAN (se lo diste en Compras): por eso entra en la remesa PSCTT. El efecto 2 de C{INI} es un recibo domiciliado R{INI}: pide el IBAN del cliente, y C{INI} no lo tiene hasta que se lo das en «Domiciliar un cliente: mandato SEPA y remesa de cobro». Agrupa en cada remesa efectos de un tipo que encaje con ella.\n\nDónde: «Finanzas › Maestros › Terceros › Registro terceros» para los datos bancarios y «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» para la selección.",
    "duracionMin": 30,
    "secciones": [
     {
@@ -4655,7 +4652,7 @@
       {
        "campo": "Forma de pago",
        "significado": "Medio de pago elegido. Con cheque no hace falta domiciliación.",
-       "ejemplo": "Cheque"
+       "ejemplo": "Cheque en el vídeo; en tu caso, mejor informar el IBAN"
       }
      ],
      "pasos": [
@@ -4665,8 +4662,8 @@
        "detalle": "Verás los datos bancarios de su ficha. Si está vacío el campo de la cuenta (IBAN), esa es la causa del error."
       },
       {
-       "texto": "Si no puedes informar la cuenta bancaria del tercero, usa un tipo de efecto que no la exija (en la demo, cheque)",
-       "detalle": "Con un efecto de tipo cheque el error desaparece, porque no exige cuenta bancaria. En el vídeo se resolvió así."
+       "texto": "Informa la cuenta bancaria del tercero; si no puedes, usa un tipo de efecto que no la exija (en el vídeo, cheque)",
+       "detalle": "La solución buena es dar el IBAN al tercero en «Datos bancarios» (en tu caso, el IBAN de prueba ES9121000418450200051332 a C{INI}). Con un efecto de tipo cheque el error desaparece porque no exige cuenta bancaria: así se resolvió en el vídeo."
       }
      ],
      "avisos": [
@@ -4797,8 +4794,8 @@
    "id": "icon-cartera-v-6",
    "numero": 12,
    "titulo": "Evolucionar una remesa",
-   "objetivo": "Llevarás una remesa de pago hasta Contabilizado y revisarás el asiento y el movimiento de tesorería que genera.",
-   "concepto": "Evolucionar una remesa es dar la orden al banco: «paga estos efectos». Es como pasar del carrito a «confirmar pedido». Hasta ese momento la remesa era solo un borrador de pagos. Si no la evolucionas, el banco no recibe la orden y el proveedor no cobra.\n\nAl evolucionar la remesa del bloque «Crear una remesa de pago» (en el vídeo, RM026-000018), el ERP hace tres cosas. Genera el asiento contable, que es la anotación del pago en la contabilidad. Crea el movimiento de tesorería, que registra la salida de dinero del banco. Y cambia el estado de cada efecto.\n\nEl efecto estaba en PR Propuesto desde que lo agregaste. Ahora pasa a OP Ordenado con la acción RPSCTO, «Remesa pago transferencias, ordenar (c/Tes)».\n\nEl asiento tiene dos lados. El debe es el lado izquierdo de una cuenta y el haber, el derecho. Los dos suman lo mismo.\n\nEjemplo: en tu caso, al ordenar el pago a T{INI} el asiento llevaría al debe 40000.T{INI} por 151,25: la deuda con tu proveedor se cancela. La salida de 151,25 aparecería en tesorería. En la demo practicas con el vídeo: proveedor 00087 LABORATORIOS UNION y 1.815,00. Allí el asiento lleva al debe la cuenta del proveedor 40000.00087 por 1.815,00 y al haber la 10000.00087 por 1.815,00.\n\nOjo con esa cuenta del haber. En el plan contable español, la 100 es Capital: el dinero que han puesto los socios. En la base de formación del vídeo, la cuenta 100… hace de cuenta puente de pagos ordenados (lo que en el PGC sería la 401), no de capital ni de banco. El banco baja después, al conciliar. Es una configuración propia de esa base, y no la debes copiar. La decide el enlace contable de la acción de ordenar, que viste en «Conocer los estados y tipos de efecto».\n\nEn una empresa real, el haber de este asiento suele ser la 401, proveedores, efectos a pagar. El banco (572) lo apunta después el movimiento de tesorería al contabilizarlo. Si estuviera en los dos sitios, se contaría dos veces.\n\nEl movimiento de tesorería sale con posición Salida e importe -1.815,00, porque es un pago. La salida real del dinero se confirma después, cuando llega el extracto del banco y se cruza con él.\n\nPracticarás ese cruce en tres bloques de Tesorería y bancos: «Conocer el circuito de extracto y conciliación», «Crear el extracto de una remesa» y «Conciliar y contabilizar una remesa». Allí usarás otra remesa de pago ya ordenada, de 1.524,60.\n\nDónde: «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» y, para la tesorería, «Finanzas › Tesorería › Ops. corto plazo».",
+   "objetivo": "Ordenarás tu remesa de pago a T{INI} y revisarás el asiento y el movimiento de tesorería de -151,25 que genera.",
+   "concepto": "Evolucionar una remesa es dar la orden al banco: «paga estos efectos». Es como pasar del carrito a «confirmar pedido». Hasta ese momento la remesa era solo un borrador de pagos. Si no la evolucionas, el banco no recibe la orden y el proveedor no cobra.\n\nAl evolucionar tu remesa del bloque «Crear una remesa de pago», el ERP hace tres cosas. Genera el asiento contable, que es la anotación del pago en la contabilidad. Crea el movimiento de tesorería, que registra la salida de dinero del banco. Y cambia el estado de cada efecto.\n\nEl efecto estaba en PR Propuesto desde que lo agregaste. Ahora pasa a OP Ordenado con la acción RPSCTO, «Remesa pago transferencias, ordenar (c/Tes)».\n\nEl asiento tiene dos lados. El debe es el lado izquierdo de una cuenta y el haber, el derecho. Los dos suman lo mismo.\n\nEn tu caso, el asiento lleva al debe 40000.T{INI} por 151,25: la deuda con tu proveedor se cancela. Al haber va la cuenta puente de pagos ordenados que marca el enlace contable de la acción. En el vídeo (proveedor 00087, 1.815,00) esa cuenta es la 10000.00087.\n\nOjo con esa cuenta del haber. En el plan contable español, la 100 es Capital: el dinero que han puesto los socios. En esta demo, la cuenta 100… hace de cuenta puente de pagos ordenados (lo que en el PGC sería la 401), no de capital ni de banco. Es una configuración propia de la demo, y no la debes copiar. La decide el enlace contable de la acción de ordenar, que viste en «Conocer los estados y tipos de efecto».\n\nEn una empresa real, el haber de este asiento suele ser la 401, proveedores, efectos a pagar. El banco (572) lo apunta después el movimiento de tesorería al contabilizarlo. Si estuviera en los dos sitios, se contaría dos veces.\n\nEl movimiento de tesorería sale en BBVA_{INI} con la operación PMICDT, posición Salida e importe -151,25, porque es un pago. La salida real del dinero se confirma después, cuando llega el extracto del banco y se cruza con él. Lo haces en Tesorería y bancos: «Crear el extracto de una remesa» y «Conciliar y contabilizar una remesa».\n\nDónde: «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» y, para la tesorería, «Finanzas › Tesorería › Ops. corto plazo».",
    "duracionMin": 35,
    "secciones": [
     {
@@ -4814,7 +4811,7 @@
      "explicacion": [
       "La evolución se hace desde la remesa, con los efectos ya agregados.",
       "La remesa pasa a Cerrado/CONTABILIZADO y muestra una banda morada.",
-      "Practicas con la remesa RM026-000018 del vídeo. En la tuya, el número será otro."
+      "Las capturas son de la remesa RM026-000018 del vídeo. Tu remesa tendrá otro número: usa la tuya."
      ],
      "campos": [
       {
@@ -4835,7 +4832,7 @@
      ],
      "pasos": [
       {
-       "texto": "En la remesa RM026-000018, con el efecto en Relación de efectos remesados, pulsa «Evolucionar estado».",
+       "texto": "En tu remesa de pago a T{INI}, con el efecto en «Relación de efectos remesados», pulsa «Evolucionar estado».",
        "pregunta": "En la remesa con el efecto ya agregado, ¿qué botón pulsas para avanzar su estado?",
        "imagen": "v-icon11-008.jpg",
        "hotspot": {
@@ -4845,7 +4842,7 @@
         "h": 2.7,
         "etiqueta": "Evolucionar estado"
        },
-       "detalle": "Sale la ventana de confirmación y, al aceptarla, la remesa cambia de estado."
+       "detalle": "Sale la ventana de confirmación y, al aceptarla, la remesa cambia de estado. Si te pide fechas, deja 06-11-2026. La captura es la RM026-000018 del vídeo."
       },
       {
        "texto": "Fíjate en que el estado cambia a CONTABILIZADO.",
@@ -4885,22 +4882,22 @@
       {
        "campo": "Cuenta Debe",
        "significado": "Cuenta cargada en el asiento (columna Debe). Aquí, la deuda con el proveedor que se cancela.",
-       "ejemplo": "40000.00087 LABORATORIOS UNION"
+       "ejemplo": "40000.T{INI} (40000.00087 en el vídeo)"
       },
       {
        "campo": "Cuenta Haber",
        "significado": "Cuenta abonada en el asiento (columna Haber). La decide el enlace contable de la acción. En esa base, la 100… hace de cuenta puente de pagos ordenados (lo que en el PGC sería la 401), no de capital ni de banco. El banco baja después, al conciliar.",
-       "ejemplo": "10000.00087 (en esa base, puente de pagos ordenados; no es capital ni banco)"
+       "ejemplo": "Cuenta puente de pagos ordenados del enlace contable (10000.00087 en el vídeo; no es capital ni banco)"
       },
       {
        "campo": "Descripción",
        "significado": "Texto que explica la línea del asiento.",
-       "ejemplo": "Efecto ordenado de LABORATORIOS UNION"
+       "ejemplo": "Efecto ordenado de Tercero {INI}"
       },
       {
        "campo": "Importe asiento",
        "significado": "Importe contable de cada línea. Debe y haber suman lo mismo.",
-       "ejemplo": "1.815,00"
+       "ejemplo": "151,25 (1.815,00 en el vídeo)"
       },
       {
        "campo": "Tesorería",
@@ -4915,12 +4912,12 @@
       {
        "campo": "Importe tesorería",
        "significado": "Importe del movimiento. Es negativo si es un pago.",
-       "ejemplo": "-1.815,00"
+       "ejemplo": "-151,25 (-1.815,00 en el vídeo)"
       },
       {
        "campo": "Fecha operación",
        "significado": "Fecha financiera del movimiento de tesorería.",
-       "ejemplo": "25-07-2026"
+       "ejemplo": "06-11-2026 (25-07-2026 en el vídeo)"
       }
      ],
      "pasos": [
@@ -4938,17 +4935,17 @@
        }
       },
       {
-       "texto": "Comprueba las dos líneas: 40000.00087 al Debe por 1.815,00 y 10000.00087 al Haber por 1.815,00.",
-       "detalle": "La descripción es «Efecto ordenado de LABORATORIOS UNION». Cuidado con la segunda cuenta: en esa base la 10000.00087 es la cuenta puente de pagos ordenados, no capital ni banco. El banco baja después, al conciliar. Debe y haber suman 1.815,00."
+       "texto": "Comprueba las dos líneas: 40000.T{INI} al Debe por 151,25 y la cuenta puente al Haber por 151,25.",
+       "detalle": "En el vídeo: 40000.00087 al Debe y 10000.00087 al Haber por 1.815,00. Cuidado con la segunda cuenta: es la cuenta puente de pagos ordenados, no capital ni banco. El banco baja después, al conciliar. Debe y haber suman lo mismo."
       },
       {
        "texto": "Abre la tesorería desde Finanzas › Tesorería › Ops. corto plazo.",
-       "detalle": "Se abre la lista de movimientos de tesorería. Busca el movimiento PMICDT. También lo tienes en la sección «Tesorería», al final de la remesa."
+       "detalle": "Se abre la lista de movimientos de tesorería. Filtra por BBVA_{INI} y busca el movimiento PMICDT. También lo tienes en la sección «Tesorería», al final de la remesa."
       },
       {
        "texto": "Revisa el movimiento de tesorería.",
        "pregunta": "En el movimiento de tesorería de la remesa, ¿dónde compruebas la posición Salida y el importe -1.815,00?",
-       "detalle": "Verás la cuenta financiera PRVCC0, posición Salida, importe -1.815,00, fecha operación 25-07-2026 y operación PMICDT.",
+       "detalle": "Verás la cuenta financiera BBVA_{INI}, posición Salida, importe -151,25, fecha 06-11-2026 y operación PMICDT. En la captura del vídeo: PRVCC0, -1.815,00 y 25-07-2026.",
        "imagen": "v-icon11-010.jpg",
        "hotspot": {
         "x": 47.6,
@@ -4982,8 +4979,8 @@
      "campos": [],
      "pasos": [
       {
-       "texto": "Anota el importe y la fecha del movimiento de tesorería (-1.815,00, PMICDT)",
-       "detalle": "Es lo que tendría que aparecer en el extracto del banco, la lista de movimientos que te manda el banco. En tu caso, serían -151,25 del pago a T{INI}. En los bloques de Tesorería y bancos practicas el cruce con otra remesa ya ordenada, de 1.524,60."
+       "texto": "Anota el importe y la fecha del movimiento de tesorería (-151,25, PMICDT, 06-11-2026)",
+       "detalle": "Es lo que aparecerá en el extracto del banco, como cargo de 151,25. Lo cruzas en Tesorería y bancos, en «Conciliar y contabilizar una remesa». La comisión de 3,50 del banco aún no está: sale cuando configuras la comisión en «Preparar el banco propio»."
       }
      ],
      "avisos": []
@@ -5024,15 +5021,15 @@
      "explicacion": "Al debe va la deuda con el proveedor que se cancela. La cuenta del haber la decide el enlace contable: en la base del vídeo es la 10000.00087, una cuenta puente de pagos ordenados. En el PGC sería la 401 si pagas con efectos (pagarés). Con transferencia, el banco (572) se apunta al conciliar."
     },
     {
-     "pregunta": "¿Qué importe muestra la tesorería del pago?",
+     "pregunta": "¿Qué importe muestra la tesorería de tu pago a T{INI}?",
      "opciones": [
-      "1.815,00",
-      "-1.815,00",
+      "151,25",
+      "-151,25",
       "0,00",
-      "25.000,00"
+      "-154,75"
      ],
      "correcta": 1,
-     "explicacion": "Es una salida de dinero, por eso el importe es negativo: -1.815,00."
+     "explicacion": "Es una salida de dinero, por eso el importe es negativo: -151,25. La comisión de 3,50 va en otro movimiento."
     },
     {
      "pregunta": "¿Qué se hace después con la tesorería?",
@@ -5047,13 +5044,13 @@
     }
    ],
    "checklist": [
-    "Pulsas «Evolucionar estado» en la remesa.",
+    "Pulsas «Evolucionar estado» en tu remesa de pago a T{INI}.",
     "Ves la banda morada CONTABILIZADO.",
     "Localizas el asiento AC contabilizado.",
-    "Compruebas 40000.00087 al Debe por 1.815,00.",
-    "Compruebas la cuenta del haber: 10000.00087 en el vídeo. En esa base es la cuenta puente de pagos ordenados (la 401 del PGC), no capital ni banco. El banco baja al conciliar.",
-    "Abres el movimiento de tesorería PMICDT.",
-    "Compruebas el importe -1.815,00 y la posición Salida.",
+    "Compruebas 40000.T{INI} al Debe por 151,25.",
+    "Compruebas la cuenta del haber: la cuenta puente de pagos ordenados del enlace contable (10000.00087 en el vídeo), no capital ni banco. El banco baja al conciliar.",
+    "Abres el movimiento de tesorería PMICDT de BBVA_{INI}.",
+    "Compruebas el importe -151,25, la posición Salida y la fecha 06-11-2026.",
     "Has anotado el movimiento de tesorería que tendrás que conciliar con el extracto."
    ],
    "problemas": [
@@ -5071,10 +5068,10 @@
     }
    ],
    "aprendido": [
-    "Has evolucionado la remesa RM026-000018 con «Evolucionar estado» y ha pasado a Cerrado/CONTABILIZADO.",
+    "Has evolucionado tu remesa de pago con «Evolucionar estado» y ha pasado a Cerrado/CONTABILIZADO.",
     "Has visto que el efecto pasa de PR Propuesto a OP Ordenado con la acción RPSCTO.",
-    "Has revisado el asiento AC: 40000.00087 al debe y 10000.00087 al haber, por 1.815,00 cada una. En esa base la 10000 es la cuenta puente de pagos ordenados, no es capital ni banco.",
-    "Has comprobado el movimiento de tesorería PMICDT con posición Salida e importe -1.815,00.",
+    "Has revisado el asiento AC: 40000.T{INI} al debe y la cuenta puente al haber, por 151,25 cada una.",
+    "Has comprobado el movimiento de tesorería PMICDT con posición Salida e importe -151,25.",
     "Sabes que la salida real del dinero se confirma después, al conciliar con el extracto del banco."
    ]
   },
@@ -5083,7 +5080,7 @@
    "numero": 13,
    "titulo": "Entender cómo pasan los efectos a tesorería",
    "objetivo": "Sabrás cómo un efecto o una remesa con tesorería generan el movimiento de dinero en el banco, para controlar la liquidez.",
-   "concepto": "Un efecto es una promesa de pago: dice cuánto y cuándo. Un movimiento de tesorería es la anotación de una entrada o salida real de dinero en un banco propio. Es como pasar de la lista de facturas por pagar al cargo que verás en el banco. Si el pago no llega a tesorería, la empresa no sabe cuánto dinero tiene realmente.\n\nLa tesorería es el control del dinero real que entra y sale del banco y la caja. El movimiento se compara más tarde con lo que dice el banco. A ese cruce se le llama conciliación. Así controlas la liquidez, es decir, el dinero disponible.\n\nUn efecto de pago pendiente se convierte en movimiento de tesorería de dos maneras. Lo evolucionas con la acción PTES «Pago a tesorería», o lo metes en una remesa «con tesorería» (c/Tes) y la ordenas.\n\nAl aceptar, el efecto pasa a Ordenado y se generan una gestión y un movimiento de tesorería. El movimiento lleva la cuenta financiera, el importe del efecto y la operación financiera que indique la acción.\n\nEjemplo: en tu caso, el pago de 151,25 a T{INI} deja un movimiento de salida de -151,25 en BBVA_{INI}. En la demo ves la misma mecánica con otros datos: la operación PMICDT «Pagos emitidos transferencias de crédito» y una remesa de 8.080,15 con proveedor 00003, de las capturas de la base de formación.\n\nFíjate: las remesas «sin tesorería» (s/Tes), como la del bloque «Cobrar efectos sueltos y en remesa», no crean movimiento. Confirman el cobro o el pago directamente con el asiento del banco.\n\nEste ejercicio usa capturas de la base de formación de Deister. Ahí los códigos de banco y de tercero no son los tuyos.\n\nQué es el movimiento y cómo se concilia lo ves en dos bloques de Tesorería y bancos: «Registrar un movimiento manual» y «Conciliar el banco».\n\nDónde: «Finanzas › Cobros y Pagos › Cobros y Pagos» y «Finanzas › Cobros y Pagos › Remesas › Registro de remesas».",
+   "concepto": "Un efecto es una promesa de pago: dice cuánto y cuándo. Un movimiento de tesorería es la anotación de una entrada o salida real de dinero en un banco propio. Es como pasar de la lista de facturas por pagar al cargo que verás en el banco. Si el pago no llega a tesorería, la empresa no sabe cuánto dinero tiene realmente.\n\nLa tesorería es el control del dinero real que entra y sale del banco y la caja. El movimiento se compara más tarde con lo que dice el banco. A ese cruce se le llama conciliación. Así controlas la liquidez, es decir, el dinero disponible.\n\nUn efecto de pago pendiente se convierte en movimiento de tesorería de dos maneras. Lo evolucionas con la acción PTES «Pago a tesorería», o lo metes en una remesa «con tesorería» (c/Tes) y la ordenas.\n\nAl aceptar, el efecto pasa a Ordenado y se generan una gestión y un movimiento de tesorería. El movimiento lleva la cuenta financiera, el importe del efecto y la operación financiera que indique la acción.\n\nEjemplo: en tu caso, la remesa PSCTT de «Evolucionar una remesa» deja un movimiento de -151,25 en BBVA_{INI} con la operación PMICDT «Pagos emitidos transferencias de crédito». Las capturas son de otra base de formación, con una remesa de 8.080,15 al proveedor 00003: el mecanismo es el mismo.\n\nFíjate: las remesas «sin tesorería» (s/Tes), como la del bloque «Cobrar efectos sueltos y en remesa», no crean movimiento. Confirman el cobro o el pago directamente con el asiento del banco.\n\nEste ejercicio usa capturas de la base de formación de Deister. Ahí los códigos de banco y de tercero no son los tuyos.\n\nQué es el movimiento y cómo se concilia lo ves en dos bloques de Tesorería y bancos: «Registrar un movimiento manual» y «Conciliar el banco».\n\nDónde: «Finanzas › Cobros y Pagos › Cobros y Pagos» y «Finanzas › Cobros y Pagos › Remesas › Registro de remesas».",
    "duracionMin": 30,
    "secciones": [
     {
@@ -5181,10 +5178,10 @@
       "Registro de remesas"
      ],
      "explicacion": [
-      "Una remesa de tipo PSCTT «Pago transferencias (con Tesorería)» solo admite efectos de terceros con IBAN informado. El banco necesita saber a qué cuenta transferir.",
+      "Una remesa de tipo PSCTT «Pago transferencias (con Tesorería)» solo admite efectos de terceros con IBAN informado. El banco necesita saber a qué cuenta transferir. T{INI} lo tiene desde Compras (ES9121000418450200051332, de prueba).",
       "Al evolucionarla, la remesa se ordena, se contabiliza y genera el movimiento de tesorería del total.",
       "El movimiento lleva la operación PMICDT y el flujo «Transferencia por operaciones mercantiles».",
-      "También lleva la cuenta de proveedores por efectos a pagar (40100.00003 en la base de formación, de su proveedor 00003) y el efecto relacionado. En tu caso sería 40000.T{INI}.",
+      "También lleva la cuenta del proveedor y el efecto relacionado: 40100.00003 en la base de formación, de su proveedor 00003; en tu caso, 40000.T{INI}.",
       "Desde el desplegable del título de la remesa o del efecto llegas a su Tesorería."
      ],
      "campos": [
@@ -5206,7 +5203,7 @@
       {
        "campo": "Total remesa",
        "significado": "Suma de los efectos de la remesa.",
-       "ejemplo": "8.080,15 en la base de formación (en tu caso, 151,25)"
+       "ejemplo": "151,25 en tu remesa a T{INI} (8.080,15 en la base de formación)"
       }
      ],
      "pasos": [
@@ -5265,7 +5262,7 @@
       {
        "texto": "Abre la pestaña «Tesorería» de la remesa (o el desplegable ⌄ del título), entra en su movimiento de tesorería y mira la pestaña «Flujos»",
        "pregunta": "En el movimiento de tesorería de la remesa, abres la pestaña Flujos. ¿Dónde ves el flujo con el efecto relacionado?",
-       "detalle": "Un flujo es cada línea del movimiento. Verás la operación PMICDT, el flujo «Transferencia por operaciones mercantiles», la cuenta 40100.00003 (proveedores, efectos a pagar), el importe 8.080,15 y el efecto relacionado. En tu caso, el importe sería 151,25.",
+       "detalle": "Un flujo es cada línea del movimiento. Verás la operación PMICDT, el flujo «Transferencia por operaciones mercantiles», la cuenta del proveedor, el importe y el efecto relacionado. En la captura: 40100.00003 y 8.080,15. En tu remesa: 40000.T{INI} y 151,25.",
        "imagen": "carteras-n-09.webp",
        "hotspot": {
         "x": 0.5,
@@ -5283,7 +5280,7 @@
       },
       {
        "tipo": "solucion",
-       "texto": "La remesa solo acepta deudas con IBAN definido. Completa la cuenta bancaria del tercero."
+       "texto": "La remesa solo acepta deudas con IBAN definido. Completa la cuenta bancaria del tercero en «Datos bancarios» (T{INI} ya la tiene desde Compras)."
       },
       {
        "tipo": "nota",
@@ -6131,8 +6128,8 @@
    "id": "cartera-mandato-sepa",
    "numero": 15,
    "titulo": "Domiciliar un cliente: mandato SEPA y remesa de cobro",
-   "objetivo": "Prepararás el IBAN y el mandato SEPA de CAR{INI}, cobrarás un recibo domiciliado con una remesa CSDDS y sabrás dónde se genera el fichero SEPA.",
-   "concepto": "Imagina que te apuntas al gimnasio y firmas que te cobren el recibo cada mes de tu cuenta. Esa firma es el mandato SEPA: el permiso del cliente para que el banco le cargue el recibo. Sin ese permiso y sin el IBAN (el número de cuenta), el banco puede rechazar el cargo y la empresa no cobra.\n\nEl mandato lleva una referencia única, el tipo de orden (Core, la normal; B2B solo entre empresas), el tipo de operación (pago único o recurrente) y la fecha de firma. Se guarda en la ficha del tercero, pestaña «Mandato».\n\nLa remesa agrupa los recibos que van juntos al banco. Con el tipo CSDDS pasa por tres estados: propuesta, ordenada y cobrada. Al cerrarla se puede generar el fichero SEPA (XML) que se envía al banco.\n\nOjo: En la demo hay tres cosas que no salen como en una empresa real. 1) El mandato no se llega a guardar: sale el error ID 15486 («El código comercial del acreedor [0] debe tener exactamente 3 caracteres»). Es un dato de la empresa, no tuyo: avisa a quien administre la base. 2) El asiento del cobro lleva la cuenta 23000 (inmovilizado) en vez de la del cliente: es una anomalía de la plantilla de la demo. 3) El fichero SEPA no se genera: solo se mira la pantalla. En una empresa real, el mandato se guarda, el cobro carga la 572 «Bancos» al debe y abona al haber la 430 (o la 431 si el recibo iba como efecto en gestión de cobro), y el fichero lo genera tesorería. Nada de esto es fallo tuyo.\n\nEjemplo: en tu caso, el efecto 2 de 121,00 de C{INI} se cobra el 14-12 con una remesa SEPA (LRC{INI}); el efecto 1 lo cobras suelto. Aquí practicas con CAR{INI} y un efecto propio, porque el IBAN y el mandato son datos de prueba. El mecanismo es el mismo.\n\nDónde: «Finanzas › Maestros › Terceros › Registro terceros» para el IBAN y el mandato, y «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» para la remesa.",
+   "objetivo": "Darás a C{INI} un IBAN de prueba y su mandato SEPA, domiciliarás su efecto 2 de 121,00 y lo cobrarás con una remesa CSDDS por la línea LRC{INI}. Sabrás dónde se genera el fichero SEPA.",
+   "concepto": "Imagina que te apuntas al gimnasio y firmas que te cobren el recibo cada mes de tu cuenta. Esa firma es el mandato SEPA: el permiso del cliente para que el banco le cargue el recibo. Sin ese permiso y sin el IBAN (el número de cuenta), el banco puede rechazar el cargo y la empresa no cobra.\n\nEl mandato lleva una referencia única, el tipo de orden (Core, la normal; B2B solo entre empresas), el tipo de operación (pago único o recurrente) y la fecha de firma. Se guarda en la ficha del tercero, pestaña «Mandato».\n\nLa remesa agrupa los recibos que van juntos al banco. Con el tipo CSDDS pasa por tres estados: propuesta, ordenada y cobrada. Al cerrarla se puede generar el fichero SEPA (XML) que se envía al banco.\n\nEste es el cobro de tu caso (operación 10). Tu cliente C{INI} paga con R{INI} «Recibo domiciliado {INI}», que pide el IBAN del cliente. Tu factura FP{INI} de 242,00 dejó dos efectos de 121,00 (14-11 y 14-12). Aquí cobras el efecto 2: el 01-12-2026 lo remesas con CSDDS por la línea financiera LRC{INI} y el banco lo cobra el 14-12-2026. El efecto 1 lo cobras suelto, con una gestión COBD, en el caso final.\n\nAntes necesitas: CSDDS en «Remesas por cuenta» de BBVA_{INI} (bloque «Comprobar los tipos de remesa de una cuenta»), el IBAN de C{INI} y la domiciliación en su efecto 2. La factura se hizo en Ventas cuando C{INI} aún no tenía IBAN, así que el efecto nace sin domiciliación: la pones en la tercera parte.\n\nOjo: En la demo hay tres cosas que no salen como en una empresa real. 1) El mandato no se llega a guardar: sale el error ID 15486 («El código comercial del acreedor [0] debe tener exactamente 3 caracteres»). Es un dato de la empresa, no tuyo. 2) El asiento del cobro lleva la cuenta 23000 (inmovilizado) en vez de la del cliente: es una anomalía de la plantilla de la demo. Por eso la 43000.00901 de C{INI} no queda a cero. 3) El fichero SEPA no se genera: solo se mira la pantalla. En una empresa real, el mandato se guarda, el cobro carga la 572 «Bancos» al debe y abona al haber la 430 (o la 431 si el recibo iba como efecto en gestión de cobro), y el fichero lo genera tesorería. Nada de esto es fallo tuyo.\n\nLas capturas son de la base de demo: cliente «Cliente captura CAPK» (TCAPK) y banco BBVA_CA. Con tus datos verás C{INI}, BBVA_{INI} y 121,00.\n\nDónde: «Finanzas › Maestros › Terceros › Registro terceros» para el IBAN y el mandato, y «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» para la remesa.",
    "duracionMin": 35,
    "secciones": [
     {
@@ -6146,16 +6143,16 @@
       "Registro terceros"
      ],
      "explicacion": [
-      "Abre la ficha de CAR{INI} y entra en la pestaña «Datos bancarios».",
+      "Abre la ficha de C{INI} y entra en la pestaña «Datos bancarios». Es tu cliente de Maestros y Ventas: no crees otro.",
       "Pulsa «Añadir banco». El IBAN y el banco van juntos: si rellenas uno, tienes que rellenar el otro.",
       "Al guardar, el tercero vuelve a estado Provisional. Pulsa «Validar» para dejarlo Validado.",
-      "Las capturas son de la base de demo: allí el cliente es «Cliente captura CAPK» (TCAPK) y el banco BBVA_CA. Tú usas CAR{INI} y BBVA_{INI}."
+      "Las capturas son de la base de demo: allí el cliente es «Cliente captura CAPK» (TCAPK) y el banco BBVA_CA. Tú usas C{INI} y BBVA_{INI}."
      ],
      "campos": [
       {
        "campo": "Domiciliación",
        "significado": "Número de la cuenta dentro del tercero. Es obligatorio.",
-       "ejemplo": "1"
+       "ejemplo": "0 (la primera cuenta del tercero)"
       },
       {
        "campo": "Banco",
@@ -6175,16 +6172,16 @@
      ],
      "pasos": [
       {
-       "texto": "Abre la ficha de CAR{INI} y pulsa la pestaña «Datos bancarios»",
-       "detalle": "Verás la lista de cuentas bancarias del tercero. Estará vacía si no has dado ninguna."
+       "texto": "Abre la ficha de C{INI} y pulsa la pestaña «Datos bancarios»",
+       "detalle": "Verás la lista de cuentas bancarias del tercero. Estará vacía: en Ventas solo la miraste."
       },
       {
        "texto": "Pulsa «Añadir banco»",
        "detalle": "Se abre una fila nueva para escribir el IBAN y el banco."
       },
       {
-       "texto": "Rellena «Domiciliación» con 1 y «IBAN o Cuenta bancaria» con el IBAN de prueba",
-       "detalle": "Escribe el IBAN completo y sal con Tab."
+       "texto": "Rellena «Domiciliación» con 0 y «IBAN o Cuenta bancaria» con el IBAN de prueba ES9121000418450200051332",
+       "detalle": "Escribe el IBAN completo y sal con Tab. Es el mismo IBAN de prueba que diste a T{INI} en Compras: no uses nunca uno real."
       },
       {
        "texto": "Pulsa en «Banco», escribe ES21 y elige ES2100 CAIXABANK, S.A",
@@ -6226,7 +6223,7 @@
      ],
      "explicacion": [
       "Ojo: En la demo, el último paso («Guardar») no se puede completar: sale el error ID 15486 y el mandato no se guarda. Haz los pasos hasta ahí y mira el error: está previsto. Solución: avisa a quien administre la base (su código comercial de acreedor debe tener 3 caracteres). No lo cambies tú.",
-      "En la ficha de CAR{INI}, pestaña «Mandato», pulsa «Nuevo».",
+      "En la ficha de C{INI}, pestaña «Mandato», pulsa «Nuevo».",
       "El formulario se llama «Órdenes SEPA de domiciliación de débito directo (Mandate)». El titular y la domiciliación se rellenan con el IBAN que acabas de dar de alta.",
       "El estado «Solicitado» pasa a «Activo» cuando el mandato está firmado. Los estados son Solicitado, Activo y Cancelado.",
       "Fíjate: el campo «Identificador del acreedor» no se escribe. Lo calcula el botón «Calcular ID del acreedor» a partir de la empresa."
@@ -6250,7 +6247,7 @@
       {
        "campo": "Fecha firma",
        "significado": "Día en que el cliente firmó.",
-       "ejemplo": "24-11-2026"
+       "ejemplo": "01-12-2026"
       },
       {
        "campo": "Tipo de orden",
@@ -6270,7 +6267,7 @@
       {
        "campo": "Titular y Domiciliación",
        "significado": "Quién paga y con qué IBAN.",
-       "ejemplo": "CAR{INI} / ES9121000418450200051332"
+       "ejemplo": "C{INI} / ES9121000418450200051332"
       }
      ],
      "pasos": [
@@ -6291,8 +6288,8 @@
        "detalle": "La referencia es única. Con MAN{INI}001 no chocas con la de otros alumnos."
       },
       {
-       "texto": "Elige el «Titular» CAR{INI}. En «Domiciliación» escribe 1 y elige la fila con el IBAN",
-       "detalle": "Con titular y domiciliación puestos, el formulario queda así.",
+       "texto": "Elige el «Titular» C{INI}. En «Domiciliación» escribe 0 y elige la fila con el IBAN",
+       "detalle": "Con titular y domiciliación puestos, el formulario queda como en la captura (de TCAPK).",
        "imagen": "cob-mandato-form.webp"
       },
       {
@@ -6310,59 +6307,58 @@
     },
     {
      "id": "cartera-mandato-sepa-factura",
-     "titulo": "Facturar con recibo domiciliado",
-     "paraQueSirve": "Sirve para tener un efecto de cobro que lleve la domiciliación. La factura la copia del tercero.",
+     "titulo": "Domiciliar el efecto 2 de C{INI}",
+     "paraQueSirve": "Sirve para que el efecto que vas a remesar lleve la cuenta del cliente: sin ella, la remesa CSDDS no se puede ordenar.",
      "ruta": [
       "Finanzas",
-      "Facturación",
-      "Ventas",
-      "Factura de venta"
+      "Cobros y Pagos",
+      "Cobros y Pagos"
      ],
      "explicacion": [
-      "Crea una factura de venta a CAR{INI} como en «Cobrar efectos sueltos y en remesa». Usa el tipo de efecto RC y el plazo 30 días.",
-      "Al elegir el cliente, el campo «Domiciliación» se rellena solo con el IBAN del tercero.",
-      "Valida y contabiliza. El efecto RC queda en estado PE."
+      "Tu factura FP{INI} de 242,00 se hizo en Ventas. Dejó dos efectos de 121,00 de tipo R{INI}: uno vence el 14-11-2026 y otro el 14-12-2026.",
+      "Una factura nueva toma la domiciliación del tercero al crearse. La tuya se hizo cuando C{INI} no tenía IBAN, así que su efecto puede estar sin domiciliación.",
+      "No hagas otra factura: completa el efecto 2 en la cartera de efectos."
      ],
      "campos": [
       {
        "campo": "Tipo efecto",
-       "significado": "Medio de pago. Para el recibo, RC.",
-       "ejemplo": "RC"
+       "significado": "Medio de cobro del efecto.",
+       "ejemplo": "R{INI} «Recibo domiciliado {INI}»"
       },
       {
-       "campo": "Plazo pago",
-       "significado": "Días hasta el vencimiento.",
-       "ejemplo": "30 días"
+       "campo": "Vencimiento",
+       "significado": "Fecha en que vence el efecto.",
+       "ejemplo": "14-12-2026 (efecto 2)"
       },
       {
        "campo": "Domiciliación",
-       "significado": "Se rellena sola con el IBAN del tercero.",
-       "ejemplo": "ES9121000418450200051332"
+       "significado": "Cuenta del tercero con la que se carga el recibo.",
+       "ejemplo": "0 · ES9121000418450200051332"
       },
       {
        "campo": "Cuenta",
-       "significado": "Cuenta del cliente.",
-       "ejemplo": "43000.TCAPK en la demo"
+       "significado": "Cuenta del cliente en la factura.",
+       "ejemplo": "43000.00901 (C{INI})"
       }
      ],
      "pasos": [
       {
-       "texto": "Abre Facturación › Ventas › Factura de venta y pulsa «Nuevo documento»",
-       "detalle": "Se abre una factura vacía."
+       "texto": "Abre la cartera de efectos y filtra por el tercero C{INI}",
+       "detalle": "Ruta: Finanzas › Cobros y Pagos › Cobros y Pagos («Cartera de efectos»). Verás los dos efectos de 121,00 de tu factura FP{INI}, tipo R{INI}, en estado PE."
       },
       {
-       "texto": "Elige FV, empresa 0, proyecto 0, sección 0 y cliente CAR{INI}. Sal con Tab",
-       "detalle": "Comprueba que «Domiciliación» lleva el IBAN. Si sale vacío, vuelve al paso del IBAN."
+       "texto": "Abre el efecto 2 (vence el 14-12-2026) y mira «Domiciliación»",
+       "detalle": "Si ya trae la 0 con el IBAN, no toques nada. Si está vacía, elige la 0 (el IBAN que acabas de dar) y guarda."
       },
       {
-       "texto": "Guarda, añade la línea con el artículo ASE{INI} y valida y contabiliza",
-       "detalle": "La factura queda contabilizada y su efecto RC sale en estado PE. Los pasos de la línea son los de «Cobrar efectos sueltos y en remesa»."
+       "texto": "Si el efecto no te deja informar la domiciliación, cóbralo sin remesa",
+       "detalle": "Alternativa: cobra el efecto 2 el 14-12-2026 con una gestión COBD, como el efecto 1 en «Cobrar efectos sueltos y en remesa». El banco sube igual 121,00 y el saldo del caso sigue en 3.077,25. Salta entonces la parte de la remesa."
       }
      ],
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "No repitas el artículo ni el cliente: usa los que ya creaste en Cartera."
+       "texto": "No hagas otra factura a C{INI} ni uses la de CAR{INI}: el efecto 2 de tu FP{INI} es el que cobra el caso."
       }
      ]
     },
@@ -6378,7 +6374,7 @@
      ],
      "explicacion": [
       "Ojo: En la demo, el asiento del cobro (último paso) lleva la 23000, no la cuenta del cliente: es una anomalía de su plantilla. En una empresa real iría 572 al debe y 430/431 al haber. No te preocupes: no lo has hecho mal, y no lo copies.",
-      "Crea una remesa de clase Cobrar, tipo CSDDS (Cobro débitos directos - domiciliaciones, sin Tesorería) y cuenta BBVA_{INI}. La «Línea financiera» no es obligatoria.",
+      "Crea una remesa de clase Cobrar, tipo CSDDS (Cobro débitos directos - domiciliaciones, sin Tesorería), cuenta BBVA_{INI} y línea financiera LRC{INI}, con fecha 01-12-2026.",
       "Agrega el efecto desde la pestaña «Selección de efectos». Solo salen los efectos que llevan domiciliación.",
       "«Evolucionar estado» la ordena: acción «Remesa cobro débito directo, ordenar (s/Tes)». La remesa pasa a Cerrado y el efecto a OC.",
       "Una segunda vez, «Remesa, confirmar pago por bancos (s/Tes)» la cobra y genera el asiento."
@@ -6402,7 +6398,7 @@
       {
        "campo": "Importe banco",
        "significado": "Importe que va al banco.",
-       "ejemplo": "142,00 en la captura"
+       "ejemplo": "121,00 (142,00 en la captura)"
       }
      ],
      "pasos": [
@@ -6411,12 +6407,12 @@
        "detalle": "Se abre una remesa vacía."
       },
       {
-       "texto": "Rellena empresa 0, clase Cobrar, cuenta BBVA_{INI} y tipo CSDDS. Guarda",
-       "detalle": "Sale «Éxito». La remesa queda Abierta, con el tipo CSDDS y la acción inicial RCSDDP."
+       "texto": "Rellena empresa 0, clase Cobrar, cuenta BBVA_{INI}, tipo CSDDS, línea financiera LRC{INI} y fecha 01-12-2026. Guarda",
+       "detalle": "Sale «Éxito». La remesa queda Abierta, con el tipo CSDDS y la acción inicial RCSDDP. Tu remesa tendrá su propio número (RM…), distinto del de las capturas. Si el tipo CSDDS no sale, añádelo a BBVA_{INI} en «Comprobar los tipos de remesa de una cuenta»."
       },
       {
-       "texto": "Abre la remesa. En «Selección de efectos» marca el efecto y pulsa «Agregar efectos»",
-       "detalle": "Solo salen efectos que llevan domiciliación. El efecto pasa a PR Propuesto y el total de la remesa es su importe."
+       "texto": "Abre la remesa. En «Selección de efectos» filtra C{INI}, marca el efecto de 121,00 que vence el 14-12-2026 y pulsa «Agregar efectos»",
+       "detalle": "Solo salen los efectos que llevan domiciliación. El efecto pasa a PR Propuesto y el total de la remesa es 121,00. Si no sale, revisa la tercera parte."
       },
       {
        "texto": "Pulsa «Evolucionar estado» y acepta «Remesa cobro débito directo, ordenar (s/Tes)»",
@@ -6425,12 +6421,12 @@
       },
       {
        "texto": "Pulsa de nuevo «Evolucionar estado» y acepta «Remesa, confirmar pago por bancos (s/Tes)»",
-       "detalle": "Deja la fecha de contabilización y los importes de intereses y comisiones a 0,00.",
+       "detalle": "Es el cobro del banco: pon 14-12-2026 en la fecha de contabilización. Deja intereses y comisiones a 0,00. El efecto pasa a CO.",
        "imagen": "cob-sdd-confirmar.webp"
       },
       {
-       "texto": "Mira la pestaña «Apuntes»: 57200.00000 al debe. La contrapartida habitual es la cuenta del cliente (430/431) al haber",
-       "detalle": "En la demo (asiento 83, solo como ejemplo) sale 142,00 a 57200.00000 (debe) y 142,00 a 23000.TCAPK (haber). Esa contrapartida es la anomalía del cuadro de arriba: no la tomes como correcta.",
+       "texto": "Mira la pestaña «Apuntes»: 57200.00000 121,00 al debe. La contrapartida habitual es la cuenta del cliente (430/431) al haber",
+       "detalle": "En la demo verás al haber una 23000, no la 43000.00901 de C{INI}: es la anomalía del cuadro de arriba. En la captura (asiento 83, de TCAPK) sale 142,00 a 57200.00000 y a 23000.TCAPK. No la tomes como correcta.",
        "imagen": "cob-sdd-apuntes.webp"
       }
      ],
@@ -6471,7 +6467,7 @@
       {
        "campo": "Remesa",
        "significado": "Número de la remesa cerrada.",
-       "ejemplo": "RM026-000008 en la captura"
+       "ejemplo": "La tuya, cerrada (RM026-000008 en la captura; tu número será otro)"
       },
       {
        "campo": "Adeudos directos",
@@ -6564,14 +6560,14 @@
     }
    ],
    "checklist": [
-    "Has dado de alta el IBAN de CAR{INI} en «Datos bancarios» y has validado el tercero.",
-    "Has abierto la pestaña «Mandato» y has visto el formulario completo.",
-    "Sabes que el estado del mandato pasa de Solicitado a Activo.",
+    "BBVA_{INI} tiene CSDDS en «Remesas por cuenta».",
+    "Has dado de alta el IBAN de prueba de C{INI} en «Datos bancarios» y has validado el tercero.",
+    "Has abierto la pestaña «Mandato» de C{INI} y has visto el formulario completo.",
     "Has visto el error del código comercial del acreedor y no has tocado la empresa.",
-    "Has facturado a CAR{INI} con tipo de efecto RC y has visto la domiciliación rellena.",
-    "Has creado una remesa CSDDS con la cuenta BBVA_{INI}.",
-    "Has agregado el efecto y has ordenado la remesa: queda Cerrada.",
-    "Has confirmado el cobro y has leído el asiento: 57200.00000 al debe. Sabes que la 23000 de la demo no es la contrapartida habitual (430/431).",
+    "El efecto 2 de 121,00 de C{INI} (14-12-2026) lleva la domiciliación 0.",
+    "Has creado una remesa CSDDS con BBVA_{INI}, la línea LRC{INI} y fecha 01-12-2026.",
+    "Has agregado el efecto 2 y has ordenado la remesa: queda Cerrada.",
+    "Has confirmado el cobro con fecha 14-12-2026 y has leído el asiento: 57200.00000 121,00 al debe. Sabes que la 23000 de la demo no es la contrapartida habitual (430/431).",
     "Has abierto la pantalla de adeudos directos SEPA y conoces sus dos variables.",
     "Sabes dónde está «Verificar Mandates»."
    ],
@@ -6586,7 +6582,7 @@
     },
     {
      "problema": "«Requiere la domiciliación bancaria del tercero!» al ordenar la remesa.",
-     "solucion": "Falta el IBAN en el tercero o la domiciliación en la factura."
+     "solucion": "Falta el IBAN en C{INI} o la domiciliación en el efecto 2. Complétalos (primera y tercera parte) y vuelve a ordenar."
     },
     {
      "problema": "Al cambiar la empresa en el mandato se borra el titular.",
@@ -6598,8 +6594,9 @@
     }
    ],
    "aprendido": [
-    "Has dado de alta un IBAN y has visto el formulario del mandato SEPA.",
-    "Has cobrado un recibo domiciliado con una remesa CSDDS: propuesta, ordenada y cobrada.",
+    "Has dado de alta el IBAN de C{INI} y has visto el formulario del mandato SEPA.",
+    "Has domiciliado el efecto 2 de tu factura FP{INI}.",
+    "Has cobrado ese recibo de 121,00 con una remesa CSDDS por la línea LRC{INI}: propuesta, ordenada y cobrada.",
     "Has leído el asiento del cobro: 57200.00000 al debe y, lo habitual, la cuenta del cliente (430/431) al haber. La 23000 de la demo es una anomalía de su plantilla.",
     "Sabes dónde se genera el fichero SEPA y qué comprueba «Verificar Mandates»."
    ]

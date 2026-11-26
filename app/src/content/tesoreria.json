@@ -25,7 +25,7 @@
     "Cada movimiento lleva una operación financiera, que dice qué haces con el banco: pagar, cobrar, transferir. También lleva uno o más flujos financieros, que dicen qué es el dinero: nómina, comisión, cobro de factura.",
     "El banco, por su lado, envía el «extracto»: la lista de movimientos que él ha visto en tu cuenta. Suele llegar en un fichero de norma 43 (N43), el formato estándar de la banca española.",
     "«Conciliar» es casar cada movimiento del extracto con su movimiento de tesorería. Así compruebas que el banco y el ERP dicen lo mismo.",
-    "Ejemplo: pagas una remesa de 8.080,15 €. En tesorería hay una salida de 8.080,15 y en el extracto del banco, un cargo de 8.080,15. Al conciliarlos, los dos quedan marcados como casados.",
+    "Ejemplo: en tu caso pagas a T{INI} 151,25 con una remesa. En tesorería hay una salida de -151,25 y en el extracto del banco, un cargo de 151,25. Al conciliarlos, los dos quedan marcados como casados.",
     "En el esquema, a la izquierda está el ERP: factura, cartera y movimientos de tesorería con sus flujos. A la derecha, el banco: el fichero N43 se guarda en el «Almacén ficheros» y de él salen los movimientos del extracto.",
     "En medio está la conciliación. Se apoya en las operaciones y flujos (lado ERP) y en los conceptos común y propio (lado banco).",
     "Ojo: un movimiento de tesorería necesita banco propio, operación financiera y flujo, y el flujo debe tener cuenta contable. Sin eso no podrás contabilizar ni conciliar."
@@ -133,6 +133,10 @@
         "h": 5.1,
         "etiqueta": "Cuenta"
        }
+      },
+      {
+       "texto": "Para recibir el fichero del banco, informa en BBVA_{INI} el banco y un IBAN de prueba, y guarda",
+       "detalle": "En el bloque «Datos cuenta bancaria»: «Banco» ES0182 (BBVA; escribe 0182 y elige la fila) e «IBAN» ES8101820001310200000001. Es un IBAN de prueba con los dígitos de control correctos: entidad 0182, oficina 0001, DC 31 y cuenta 0200000001. No uses nunca uno real. Informa los dos a la vez: si solo pones uno, sale «Entidad y cuenta bancaria, ambos nulos o no nulos». Es lo que tiene la cuenta de prácticas CAPT_BCO de la captura (banco ES0019 e IBAN), que sí ha cargado un fichero N43 en la demo. El fichero del caso del bloque «Dar de alta el extracto bancario» lleva esta misma cuenta."
       }
      ],
      "avisos": []
@@ -248,22 +252,22 @@
       {
        "campo": "Posición",
        "significado": "Lado contable de la comisión: Haber o Debe. Debe y haber son los dos lados de cada cuenta: el debe a la izquierda, el haber a la derecha.",
-       "ejemplo": "Haber"
+       "ejemplo": "Haber (también para tu comisión sobre PMICDT)"
       },
       {
        "campo": "Operación financiera",
        "significado": "Operación sobre la que se calcula la comisión.",
-       "ejemplo": "PNOMIN (código de la demo)"
+       "ejemplo": "PMICDT para tu caso (PNOMIN en la captura)"
       },
       {
        "campo": "Comisión",
-       "significado": "Código de la comisión bancaria.",
-       "ejemplo": "ADOP (código de la demo)"
+       "significado": "Código de la comisión bancaria. Solo la identifica: el importe lo pones tú más abajo.",
+       "ejemplo": "{INI}TRF «Comisión transferencias {INI}» (ADOP en la captura)"
       },
       {
        "campo": "Operación comisión",
-       "significado": "Si lo rellenas, la comisión crea un registro aparte en tesorería.",
-       "ejemplo": ""
+       "significado": "Si lo rellenas, la comisión crea un registro aparte en tesorería. En tu caso, {INI}COM: lo rellenas al final del bloque siguiente, cuando ya exista.",
+       "ejemplo": "{INI}COM (al final de «Configurar flujos, operaciones y parámetros»)"
       },
       {
        "campo": "Com. beneficiario",
@@ -278,7 +282,7 @@
       {
        "campo": "Fecha inicio",
        "significado": "Fecha desde la que se aplica la comisión.",
-       "ejemplo": "01-01-2000"
+       "ejemplo": "01-10-2026 (01-01-2000 en la captura)"
       },
       {
        "campo": "Tipo",
@@ -311,9 +315,9 @@
        }
       },
       {
-       "texto": "Elige la Posición y la Operación financiera",
+       "texto": "Elige la Posición «Haber» y la Operación financiera PMICDT",
        "pregunta": "La comisión se calcula sobre una operación. ¿Dónde eliges la operación financiera de la comisión?",
-       "detalle": "La captura muestra Haber y PNOMIN (pago de nóminas). Para tu comisión por transferencia elige PMICDT, «Pagos emitidos transferencias de crédito».",
+       "detalle": "La captura muestra Haber y PNOMIN (pago de nóminas). Para tu comisión por transferencia elige Haber y PMICDT, «Pagos emitidos transferencias de crédito»: es la operación con la que nace el pago de 151,25 a T{INI} al ordenar la remesa.",
        "imagen": "tesoreria-005.jpg",
        "hotspot": {
         "x": 25,
@@ -324,9 +328,9 @@
        }
       },
       {
-       "texto": "Elige la Comisión y decide si va en un movimiento aparte",
+       "texto": "En «Comisión» escribe {INI}TRF y deja «Operación comisión» vacía por ahora",
        "pregunta": "Has elegido la comisión. ¿Dónde indicas si va en un movimiento aparte?",
-       "detalle": "Si rellenas «Operación comisión», la comisión crea un registro aparte en tesorería: tendrás dos movimientos. Si la dejas vacía, la comisión va como un flujo más del mismo movimiento.",
+       "detalle": "{INI}TRF es el código de tu comisión, «Comisión transferencias {INI}». Si la lista no lo encuentra, créalo con el «+» del campo (código {INI}TRF, descripción «Comisión transferencias {INI}»). La captura usa ADOP, un código de la formación de Deister. «Operación comisión» decide si la comisión va en un movimiento aparte. Tú quieres que vaya aparte, con la operación {INI}COM, pero esa operación la creas en el bloque siguiente: allí vuelves a esta comisión y la rellenas.",
        "imagen": "tesoreria-005.jpg",
        "hotspot": {
         "x": 25,
@@ -337,9 +341,9 @@
        }
       },
       {
-       "texto": "Marca, si toca, Com. beneficiario o Com. efecto",
+       "texto": "Deja sin marcar Com. beneficiario y Com. efecto",
        "pregunta": "La comisión puede ser por perceptor o por deuda pagada. ¿Dónde marcas cuál aplicas?",
-       "detalle": "Beneficiario: una comisión por cada perceptor. Efecto: una por cada deuda pagada.",
+       "detalle": "Beneficiario: una comisión por cada perceptor. Efecto: una por cada deuda pagada. Tu banco cobra 3,50 fijos por transferencia: no marques ninguna.",
        "imagen": "tesoreria-005.jpg",
        "hotspot": {
         "x": 1,
@@ -350,9 +354,9 @@
        }
       },
       {
-       "texto": "Rellena Fecha inicio, Tipo «Fijo» e Importe, y guarda",
+       "texto": "Pon Fecha inicio 01-10-2026, Tipo «Fijo» e Importe 3,5000, y guarda",
        "pregunta": "Ya has puesto la fecha de inicio. ¿Dónde defines cuánto cobra el banco por esta comisión?",
-       "detalle": "Para tu caso, escribe 3,5000 con Tipo «Fijo». Al guardar, verás la comisión en la rejilla de «Comisiones». Con tipo Variable, el importe es un porcentaje y puedes fijar mínimo, máximo y exento.",
+       "detalle": "01-10-2026 es el primer día del caso. Al guardar, verás la comisión en la rejilla de «Comisiones». Con tipo Variable, el importe es un porcentaje y puedes fijar mínimo, máximo y exento.",
        "imagen": "tesoreria-005.jpg",
        "hotspot": {
         "x": 51,
@@ -366,7 +370,11 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Para separar la comisión en otro movimiento, rellena «Operación comisión». Si la dejas vacía, va como un flujo más del mismo movimiento."
+       "texto": "Para separar la comisión en otro movimiento, rellena «Operación comisión». Si la dejas vacía, va como un flujo más del mismo movimiento (un solo cargo de 154,75). Tu caso quiere dos líneas, 151,25 y 3,50: por eso usarás {INI}COM."
+      },
+      {
+       "tipo": "nota",
+       "texto": "La regla vale para los pagos que hagas a partir de ahora. El pago de 151,25 a T{INI} ya lo ordenaste en Cartera, antes de crearla: su comisión de 3,50 la recalculas al final del bloque siguiente."
       }
      ]
     }
@@ -430,11 +438,12 @@
    ],
    "checklist": [
     "Abre tu banco BBVA_{INI} en Bancos propios y comprueba que la Cuenta contable es 57200.00000.",
-    "En el bloque Control extracto bancario, elige el Formato extracto de norma 43 (por ejemplo, BBVA AEB43).",
+    "En el bloque Control extracto bancario, deja el Formato extracto «España AEB43» que sale propuesto.",
     "Revisa la Fecha extracto y el Saldo extracto: vacíos si nunca has cargado un extracto de esa cuenta, o con los datos del último cargado.",
     "Repasa las pestañas de arriba de la ficha: numeradores, remesas por cuenta, operaciones por cuenta y comisiones.",
-    "En la pestaña Comisiones de BBVA_{INI}, crea una comisión de Tipo «Fijo» (por ejemplo, 3,50) con su Fecha inicio. Ponla sobre la operación de pagos por transferencia PMICDT u otra de pago de la lista.",
-    "Decide si la comisión va en un movimiento aparte (rellena «Operación comisión») y guarda."
+    "En la pestaña Comisiones de BBVA_{INI}, crea la comisión {INI}TRF: Posición Haber, operación PMICDT, Tipo «Fijo», importe 3,5000 y Fecha inicio 01-10-2026.",
+    "Deja «Operación comisión» vacía: la rellenas con {INI}COM al final del bloque siguiente.",
+    "Informa en BBVA_{INI} el banco ES0182 y el IBAN de prueba ES8101820001310200000001."
    ],
    "problemas": [
     {
@@ -513,7 +522,7 @@
       {
        "campo": "Posición",
        "significado": "Debe, Haber o Ambos, según el signo del dinero que admite.",
-       "ejemplo": ""
+       "ejemplo": "Ambos"
       },
       {
        "campo": "Tipo flujo",
@@ -523,12 +532,12 @@
       {
        "campo": "Cuenta contable",
        "significado": "Cuenta mnemotécnica del flujo. Decide dónde va el importe al contabilizar.",
-       "ejemplo": "ALMY"
+       "ejemplo": "{INI}626 (ALMY en la captura)"
       },
       {
        "campo": "Detalle cuentas mnemotécnicas",
        "significado": "Traduce la cuenta mnemotécnica a la cuenta real del plan contable.",
-       "ejemplo": "PGE 2008 → 64420.00000"
+       "ejemplo": "PGE 2008 → 62600.00000 para {INI}626 (64420.00000 para ALMY en la captura)"
       },
       {
        "campo": "Proyecto/Sección",
@@ -551,7 +560,7 @@
        }
       },
       {
-       "texto": "Marca Tipo flujo «Comisión» y deja Posición «Ambos» o «Haber»",
+       "texto": "Marca Tipo flujo «Comisión» y deja Posición «Ambos»",
        "pregunta": "El flujo está creado con su código y descripción. ¿Dónde marcas el tipo de flujo «Comisión»?",
        "imagen": "tesoreria-004.jpg",
        "hotspot": {
@@ -561,12 +570,12 @@
         "h": 6.5,
         "etiqueta": "Tipo flujo"
        },
-       "detalle": "Tipo flujo son dos casillas, «Comisión» e «Interés»: marca solo «Comisión». Posición «Ambos» vale para entradas y salidas de dinero."
+       "detalle": "Tipo flujo son dos casillas, «Comisión» e «Interés»: marca solo «Comisión». Posición «Ambos» vale para entradas y salidas de dinero. Deja el Estado «Abierto»: si no, no podrás usar el flujo en el bloque siguiente."
       },
       {
-       "texto": "Elige la Cuenta contable del flujo",
+       "texto": "En la Cuenta contable del flujo elige tu mnemotécnico {INI}626",
        "pregunta": "Has marcado el tipo de flujo «Comisión». ¿Dónde eliges la cuenta contable del flujo?",
-       "detalle": "El plan contable es la lista ordenada de todas las cuentas. Elige el mnemotécnico de gastos bancarios. En el plan PGE 2008, el plan contable de la demo, se traduce a una 626, «Servicios bancarios y similares». El código del flujo (ALMY en la captura) se traduce a la cuenta real de cada plan.",
+       "detalle": "{INI}626 «Servicios bancarios {INI}» apunta a la 62600.00000 «Servicios bancarios y similares» del plan PGE 2008, el plan de la empresa 0. Lo creas al final de «Dar de alta un mnemotécnico propio» (Contabilidad básica). Si no lo hiciste, créalo ahora igual que allí: código {INI}626, descripción «Servicios bancarios {INI}» y una línea de detalle con el plan ES y la cuenta 62600.00000. No uses tu {INI}001: apunta a la 62999.00000, que es para practicar gastos varios, no comisiones. En la captura, el flujo ALMY usa el mnemotécnico ALMY.",
        "imagen": "tesoreria-004.jpg",
        "hotspot": {
         "x": 51.5,
@@ -579,7 +588,7 @@
       {
        "texto": "Comprueba en «Detalle cuentas mnemotécnicas» la cuenta real de tu plan contable",
        "pregunta": "Tras elegir la cuenta contable, ¿dónde compruebas el plan contable y la cuenta real?",
-       "detalle": "En la captura, el flujo ALMY se traduce a la 64420.00000. Para tus comisiones elige un mnemotécnico que se traduzca a una 626 «Servicios bancarios y similares».",
+       "detalle": "En la captura, el flujo ALMY se traduce a la 64420.00000. El tuyo, {INI}626, debe mostrar PGE 2008 → 62600.00000. Si sale otra cuenta o ninguna, revisa el detalle del mnemotécnico.",
        "imagen": "tesoreria-004.jpg",
        "hotspot": {
         "x": 0.5,
@@ -590,7 +599,12 @@
        }
       }
      ],
-     "avisos": []
+     "avisos": [
+      {
+       "tipo": "nota",
+       "texto": "La 62600.00000 existe en el plan PGE 2008 de la demo con la descripción «Servicios bancarios y similares», tipo Costes y sin grupo auxiliar. No hace falta crearla."
+      }
+     ]
     },
     {
      "id": "tesoreria-2-operacion",
@@ -720,6 +734,14 @@
         "etiqueta": "Flujos financieros"
        },
        "detalle": "Verás la operación guardada y, en la rejilla «Flujos financieros», el flujo {INI}COM como flujo por defecto."
+      },
+      {
+       "texto": "Vuelve a la comisión de BBVA_{INI} y en «Operación comisión» elige {INI}COM",
+       "detalle": "Ruta: Finanzas › Cobros y Pagos › Maestros › Auxiliares › Bancos propios › BBVA_{INI} › pestaña «Comisiones». Abre tu comisión {INI}TRF, elige {INI}COM en «Operación comisión» y guarda. Desde ahora, cada pago PMICDT de BBVA_{INI} dejará dos movimientos: el pago y otro de -3,50 con {INI}COM."
+      },
+      {
+       "texto": "Recalcula la comisión de tu pago de 151,25 a T{INI}",
+       "detalle": "Abre «Finanzas › Tesorería › Ops. corto plazo» y entra en el movimiento de -151,25 (operación PMICDT) que nació al ordenar tu remesa en «Evolucionar una remesa». Pulsa «Recalcular comisión». Debe nacer un movimiento de -3,50 con la operación {INI}COM, fecha 06-11-2026. Si no nace (por ejemplo, porque la remesa se ordenó antes de existir la regla), no lo crees a mano: lo generarás desde el extracto con «Generar tesorería» en «Conciliar el banco»."
       }
      ],
      "avisos": []
@@ -1013,13 +1035,14 @@
     }
    ],
    "checklist": [
-    "Crea el flujo {INI}COM con Tipo flujo «Comisión» y una cuenta contable mnemotécnica.",
-    "Comprueba en «Detalle cuentas mnemotécnicas» que existe la cuenta real de tu plan contable.",
+    "Crea el flujo {INI}COM con Tipo flujo «Comisión», Posición «Ambos» y la cuenta mnemotécnica {INI}626.",
+    "Comprueba en «Detalle cuentas mnemotécnicas» que {INI}626 se traduce a la 62600.00000 del plan PGE 2008.",
     "Crea la operación financiera {INI}COM con Posición «Salida» e Interface «Sin cartera de efectos» (NOCAR).",
     "En Información complementaria, asocia a la operación el flujo {INI}COM.",
     "Revisa la rejilla «Flujos financieros» de la operación.",
     "En Parámetros conciliación, elige la Referencia «No considerar» (por importe) y escribe 1 en los dos floats.",
-    "Abre los parámetros de tesorería y localiza «Aplicar fecha contable operación», «Búsqueda flujos» y las tolerancias."
+    "Abre los parámetros de tesorería y localiza «Aplicar fecha contable operación», «Búsqueda flujos» y las tolerancias.",
+    "Rellena «Operación comisión» = {INI}COM en la comisión {INI}TRF de BBVA_{INI} y recalcula la comisión del pago de 151,25."
    ],
    "problemas": [
     {
@@ -1078,7 +1101,7 @@
       {
        "campo": "Empresa",
        "significado": "Empresa a la que pertenece el movimiento.",
-       "ejemplo": "La tuya (captura: 0, Deister Software)"
+       "ejemplo": "0 Deister Software (la del caso)"
       },
       {
        "campo": "Cta. financiera",
@@ -1088,12 +1111,12 @@
       {
        "campo": "Fecha operación",
        "significado": "Día en que haces la operación.",
-       "ejemplo": ""
+       "ejemplo": "12-11-2026"
       },
       {
        "campo": "Fecha valor",
        "significado": "Día en que el banco mueve el dinero. Es obligatoria.",
-       "ejemplo": ""
+       "ejemplo": "12-11-2026"
       },
       {
        "campo": "Posición",
@@ -1103,7 +1126,7 @@
       {
        "campo": "Importe",
        "significado": "Cantidad de dinero del movimiento.",
-       "ejemplo": "El que decidas, por ejemplo 10,00"
+       "ejemplo": "10,00 (se guarda -10,00)"
       },
       {
        "campo": "Operación financiera",
@@ -1133,14 +1156,14 @@
       {
        "campo": "Flujos",
        "significado": "Rejilla con los flujos del movimiento y sus cuentas contables.",
-       "ejemplo": "{INI}COM y su cuenta"
+       "ejemplo": "{INI}COM, cuenta {INI}626 → 62600.00000"
       }
      ],
      "pasos": [
       {
-       "texto": "Pulsa «Nuevo» y elige la empresa y la cuenta financiera BBVA_{INI}",
+       "texto": "Pulsa «Nuevo» y elige la empresa 0 y la cuenta financiera BBVA_{INI}",
        "pregunta": "Has pulsado «Nuevo» para crear un movimiento. ¿Dónde eliges la cuenta financiera BBVA_{INI}?",
-       "detalle": "En la captura sale la cuenta de prácticas CAPT_BCO; tú eliges BBVA_{INI}. Empresa, Proyecto y Sección ya salen propuestos.",
+       "detalle": "Empresa 0 «Deister Software»: es donde está BBVA_{INI} y donde se graba todo el caso, no tu S{INI}. En la captura sale la cuenta de prácticas CAPT_BCO; tú eliges BBVA_{INI}. Proyecto y Sección ya salen propuestos.",
        "imagen": "tesoreria-n-14.webp",
        "hotspot": {
         "x": 49.2,
@@ -1151,9 +1174,9 @@
        }
       },
       {
-       "texto": "Rellena la Fecha operación y la Fecha valor",
+       "texto": "Pon 12-11-2026 en Fecha operación y en Fecha valor",
        "pregunta": "Ya has elegido la cuenta financiera. ¿Dónde indicas las fechas del movimiento?",
-       "detalle": "La fecha valor es obligatoria: sin ella, el movimiento no se graba.",
+       "detalle": "Es el día en que el banco te cobra la comisión de mantenimiento. La fecha valor es obligatoria: sin ella, el movimiento no se graba.",
        "imagen": "tesoreria-n-14.webp",
        "hotspot": {
         "x": 0.8,
@@ -1164,7 +1187,7 @@
        }
       },
       {
-       "texto": "Elige Posición «Salida», el Importe y la Operación financiera {INI}COM",
+       "texto": "Elige Posición «Salida», Importe 10,00 y la Operación financiera {INI}COM",
        "pregunta": "Ya has puesto las fechas. ¿Dónde defines la salida de dinero con la operación {INI}COM?",
        "imagen": "tesoreria-n-14.webp",
        "hotspot": {
@@ -1174,12 +1197,12 @@
         "h": 12.3,
         "etiqueta": "Posición, importe y operación"
        },
-       "detalle": "Escribe el importe de tu movimiento, por ejemplo 10,00. En tesorería las salidas se ven en negativo. La captura muestra una salida de -480,00 con la operación PMICDT «Pagos emitidos transferencias de crédito»."
+       "detalle": "Escribe 10,00. En tesorería las salidas se guardan en negativo: verás -10,00. La captura muestra una salida de -480,00 con la operación PMICDT «Pagos emitidos transferencias de crédito»."
       },
       {
        "texto": "Guarda y revisa los Flujos (abajo, o en la pestaña «Flujos de tesorería»)",
        "pregunta": "Has guardado el movimiento. ¿Dónde revisas los flujos del movimiento?",
-       "detalle": "Cada flujo lleva su cuenta contable: el tuyo será {INI}COM con la suya. ¿La rejilla sale vacía con el aviso «Importes diferentes»? Significa que la suma de los flujos no coincide con el importe. Pulsa «Nuevo» en Flujos, elige {INI}COM y pon el mismo importe.",
+       "detalle": "Cada flujo lleva su cuenta contable: el tuyo será {INI}COM, con la cuenta {INI}626 (62600.00000). ¿La rejilla sale vacía con el aviso «Importes diferentes»? La suma de los flujos no coincide con el importe. Pulsa «Nuevo» en Flujos, elige {INI}COM y pon 10,00. No hace falta marcar Validación ni Auditado.",
        "imagen": "tesoreria-n-14.webp",
        "hotspot": {
         "x": 0.2,
@@ -1314,8 +1337,8 @@
    "id": "tesoreria-4",
    "numero": 4,
    "titulo": "Dar de alta el extracto bancario",
-   "objetivo": "Sabrás leer un extracto N43 ya cargado y darás de alta a mano el extracto de tu movimiento de 10,00.",
-   "concepto": "El banco te manda sus movimientos. Tú los comparas con los tuyos. Esa lista es el extracto bancario, como el resumen mensual de tu banco. La empresa lo necesita para comprobar que su registro y el del banco dicen lo mismo. Si no coinciden, hay un error, un olvido o algo que solo sabe el banco.\n\nEn tu caso, el extracto de BBVA_{INI} tiene seis líneas: la aportación de 3.000,00, el pago de 151,25 a T{INI}, su comisión de 3,50, la comisión de 10,00 y dos cobros de 121,00. Termina con un saldo de 3.077,25. En este bloque das de alta a mano la línea de 10,00.\n\nOjo: En la demo, las capturas de las partes de «cargar» y «revisar» son de otra cuenta de prácticas (CAPT_BCO, con 480,00 y 12,50) y la demo TRI. No verás tu fila ahí: sigue con tu BBVA_{INI} y tu 10,00. Tu banco no recibe ficheros del banco, así que esas partes solo se miran. En una empresa real, el banco te envía el fichero y lo cargas.\n\nPara tu 10,00 hay cuatro cifras que parecen opuestas y no lo son. Las tienes en una tabla de 4 filas en «Dar de alta a mano el extracto de tu movimiento»: importe, extracto del banco, tu cuenta 572 y tesorería. Idea corta: en el extracto, el banco ve un cargo (Debe); en tu 572 es al revés (Haber).\n\nDespués, para saber más: el banco envía el extracto en un fichero N43, el formato de fichero de la banca española, con una cabecera, una línea por movimiento y un cierre. Cada línea lleva un concepto común (código estándar de la banca) y un concepto propio (código de cada banco). Esto lo configura el responsable de tesorería; tú solo mira que existe.\n\nDónde: «Finanzas › Tesorería › Extractos bancarios › Movimientos».",
+   "objetivo": "Tendrás en BBVA_{INI} las seis líneas del extracto de tu caso, cargadas desde un fichero N43 o dadas de alta a mano, y sabrás leer sus conceptos y su signo.",
+   "concepto": "El banco te manda sus movimientos. Tú los comparas con los tuyos. Esa lista es el extracto bancario, como el resumen mensual de tu banco. La empresa lo necesita para comprobar que su registro y el del banco dicen lo mismo. Si no coinciden, hay un error, un olvido o algo que solo sabe el banco.\n\nEl banco lo envía en un fichero N43, el formato de la banca española: una cabecera, una línea por movimiento y un cierre. Cada línea lleva un concepto común (código estándar de la banca: 02 ingresos, 04 transferencias, 06 remesas, 17 comisiones) y un concepto propio (código de cada banco).\n\nEn tu caso, el extracto de BBVA_{INI} del 01-10-2026 al 31-12-2026 tiene seis líneas y termina en 3.077,25:\n1) 01-10 · 02/002 · aportación de los socios · abono 3.000,00 → en el ERP, -3.000,00.\n2) 06-11 · 04/004 · pago a T{INI} · cargo 151,25 → 151,25.\n3) 06-11 · 17/017 · comisión de la transferencia · cargo 3,50 → 3,50.\n4) 12-11 · 17/017 · comisión de mantenimiento · cargo 10,00 → 10,00.\n5) 14-11 · 04/004 · cobro del efecto 1 de C{INI} · abono 121,00 → -121,00.\n6) 14-12 · 06/006 · cobro de la remesa del efecto 2 · abono 121,00 → -121,00.\nSaldo: 3.000,00 − 151,25 − 3,50 − 10,00 + 121,00 + 121,00 = 3.077,25 a tu favor. El ERP lo guarda como -3.077,25.\n\nFíjate en el signo. El ERP guarda el extracto como lo ve el banco: un cargo (sale dinero de tu cuenta) en positivo y un abono (entra dinero) en negativo. Está comprobado en la demo: la cuenta de prácticas CAPT_BCO cargó un N43 con dos cargos y se guardaron 480,00 y 12,50 en positivo; su saldo a favor de 4.507,50 se guardó como -4.507,50. En tesorería es al revés: una salida es negativa. Por eso el extracto +10,00 casa con la tesorería -10,00.\n\nTienes dos caminos. A) Cargar el fichero del caso en el «Almacén ficheros», como en una empresa real. B) Dar de alta las seis líneas a mano en «Extractos bancarios › Movimientos». Elige uno: si haces los dos, tendrás cada línea dos veces.\n\nOjo: las capturas de cargar y revisar son de CAPT_BCO (480,00 y 12,50). Con tus datos verás BBVA_{INI} y las seis líneas de arriba.\n\nDónde: «Finanzas › Tesorería › Extractos bancarios › Almacén ficheros» (fichero) o «… › Movimientos» (a mano).",
    "duracionMin": 40,
    "secciones": [
     {
@@ -1324,31 +1347,44 @@
      "paraQueSirve": "Sirve para entender cómo es el fichero N43 y saber qué comprobará la carga.",
      "ruta": null,
      "explicacion": [
-      "Un fichero N43 tiene tres partes: cabecera con la cuenta y el saldo inicial, una línea por movimiento con sus conceptos común y propio, y cierre con la cuenta y el saldo final.",
+      "Un fichero N43 es texto plano con líneas de 80 caracteres. Tiene tres partes: la cabecera (registro 11) con la cuenta y el saldo inicial, una línea por movimiento (registro 22) con sus conceptos común y propio, y el cierre (registro 33) con los totales y el saldo final. El registro 88 cierra el fichero.",
+      "El importe va sin signo. Lo decide la clave: 1 = cargo (Debe del banco), 2 = abono (Haber del banco).",
       "El cargador comprueba la continuidad: si un extracto acaba con 50.000, el siguiente debe empezar con 50.000.",
-      "Ojo: si falta un fichero o está repetido, la carga da error."
+      "Ojo: si falta un fichero, está repetido o un concepto propio no existe para el banco, la carga da error."
      ],
      "campos": [
       {
        "campo": "Cabecera (cuenta y saldo inicial)",
        "significado": "Dice de qué cuenta es el fichero y con qué saldo empieza.",
-       "ejemplo": ""
+       "ejemplo": "Registro 11: entidad 0182, oficina 0001, cuenta 0200000001, del 01-10-2026 al 31-12-2026, saldo inicial 0,00"
       },
       {
        "campo": "Movimientos",
        "significado": "Una línea por movimiento: fechas, importe, concepto común, concepto propio y referencias.",
-       "ejemplo": "Concepto común 04, concepto propio 322, importe -42,35"
+       "ejemplo": "Registro 22: 06-11-2026, común 04, propio 004, clave 1 (cargo), 151,25, referencia «PAGO PROV-ZZ-001»"
       },
       {
        "campo": "Final (saldo final)",
        "significado": "Saldo con el que acaba el extracto.",
-       "ejemplo": ""
+       "ejemplo": "Registro 33: 3 cargos (164,75), 3 abonos (3.242,00), saldo final 3.077,25 a tu favor. Después, el registro 88 de fin de fichero"
       }
      ],
      "pasos": [
       {
        "texto": "Repasa las tres partes del fichero: cabecera, movimientos y cierre",
        "detalle": "El cargador comprueba que el saldo inicial coincide con el saldo final del extracto anterior."
+      },
+      {
+       "texto": "Descarga el fichero del caso y ábrelo con un editor de texto",
+       "detalle": "Es /n43/caso_BBVA_ZZ.n43 de esta plataforma (añádelo a la dirección de la web, por ejemplo …/oys/n43/caso_BBVA_ZZ.n43). Está hecho para un alumno de prueba con iniciales ZZ. Ábrelo con un editor de texto plano (Bloc de notas, TextEdit en modo texto, VS Code), no con Word."
+      },
+      {
+       "texto": "Cambia ZZ por tus iniciales en las referencias y en el nombre, sin mover nada más",
+       "detalle": "Cambia «PRACTICAS BBVA_ZZ», «TZZ», «PROV-ZZ-001», «CZZ» y «LRCZZ». Tus iniciales tienen 2 letras, como ZZ: así cada línea sigue midiendo 80 caracteres. No toques las cifras: la cuenta 0182 0001 0200000001 es la del IBAN de prueba que pusiste en BBVA_{INI} en «Preparar el banco propio». Guarda con otro nombre, por ejemplo caso_BBVA_{INI}.n43."
+      },
+      {
+       "texto": "Comprueba que existen los conceptos propios 002, 004, 006 y 017 del banco ES0182",
+       "detalle": "Abre «Finanzas › Tesorería › Maestros › Conceptos › Conceptos propios» y filtra por el banco ES0182. Son compartidos por banco: si otro alumno ya los creó, úsalos y no los cambies. Si falta alguno, créalo con «Nuevo»: banco ES0182, el código, su descripción (002 «Ingresos», 004 «Transferencias», 006 «Remesas de efectos», 017 «Comisiones») y Tipo conciliación «Individual». Deja vacía la integración. Sin ellos, la carga da error. La parte «Configurar los conceptos propios y sus operaciones a conciliar» te explica cada campo."
       }
      ],
      "avisos": []
@@ -1364,16 +1400,17 @@
       "Almacén ficheros"
      ],
      "explicacion": [
-      "Ojo: Esta parte solo se mira: tu banco BBVA_{INI} no recibe ficheros N43, así que no cargas ninguno. Mira la captura (cuenta CAPT_BCO) para saber cómo es.",
       "El almacén de ficheros es la pantalla donde subes el fichero N43. Adjuntas el archivo y eliges el formato de norma 43, la empresa y la cuenta financiera.",
       "El Nombre se rellena solo con el del fichero. El Estado nace en «Pendiente procesar».",
-      "Después pulsas «Cargar extracto bancario». El sistema descomprime el fichero y genera los movimientos del extracto bancario."
+      "Después pulsas «Cargar extracto bancario». El sistema lee el fichero y genera los movimientos del extracto bancario.",
+      "Comprobado en la demo: la cuenta de prácticas CAPT_BCO tiene cargado el fichero CAP_N43_tesoreria.n43 (formato España AEB43, 5 registros) con dos movimientos. Las capturas son de esa carga. Tú subes tu caso_BBVA_{INI}.n43 en BBVA_{INI}.",
+      "Si prefieres no usar el fichero, salta esta parte y la siguiente y da de alta las seis líneas a mano en la última parte del bloque."
      ],
      "campos": [
       {
        "campo": "Fichero",
        "significado": "Archivo N43 que adjuntas.",
-       "ejemplo": "CAP_N43_tesoreria.n43"
+       "ejemplo": "caso_BBVA_{INI}.n43 (CAP_N43_tesoreria.n43 en la captura)"
       },
       {
        "campo": "Formato",
@@ -1383,7 +1420,7 @@
       {
        "campo": "Nombre",
        "significado": "Se rellena solo con el nombre del fichero.",
-       "ejemplo": "CAP_N43_tesoreria.n43"
+       "ejemplo": "caso_BBVA_{INI}.n43"
       },
       {
        "campo": "Estado",
@@ -1393,22 +1430,22 @@
       {
        "campo": "Empresa",
        "significado": "Empresa a la que pertenece el extracto.",
-       "ejemplo": "0"
+       "ejemplo": "0 Deister Software"
       },
       {
        "campo": "Cuenta financiera",
        "significado": "Cuenta bancaria del extracto.",
-       "ejemplo": "CAPT_BCO"
+       "ejemplo": "BBVA_{INI} (CAPT_BCO en la captura)"
       },
       {
        "campo": "Registros",
-       "significado": "Número de líneas que trae el fichero.",
-       "ejemplo": "5"
+       "significado": "Número de registros del fichero: cabecera, movimientos, cierre y fin.",
+       "ejemplo": "9 en tu fichero (1 + 6 + 1 + 1); 5 en la captura (1 + 2 + 1 + 1)"
       }
      ],
      "pasos": [
       {
-       "texto": "Pulsa «Nuevo» (y otra vez «Nuevo» en el menú que se despliega) y adjunta el fichero",
+       "texto": "Pulsa «Nuevo» (y otra vez «Nuevo» en el menú que se despliega) y adjunta tu fichero caso_BBVA_{INI}.n43",
        "pregunta": "Has pulsado «Nuevo» para cargar un extracto bancario. ¿Dónde adjuntas el fichero N43?",
        "imagen": "tesoreria-n-03.webp",
        "hotspot": {
@@ -1418,7 +1455,7 @@
         "h": 5.1,
         "etiqueta": "Fichero"
        },
-       "detalle": "Se abre la ventana «Almacén de ficheros de extractos bancarios». Pulsa en Fichero y elige el archivo N43 de tu ordenador."
+       "detalle": "Se abre la ventana «Almacén de ficheros de extractos bancarios». Pulsa en Fichero y elige el archivo que preparaste en la primera parte."
       },
       {
        "texto": "Comprueba el Formato de norma 43",
@@ -1434,7 +1471,7 @@
        }
       },
       {
-       "texto": "Elige la Empresa y la Cuenta financiera, y pulsa «Guardar»",
+       "texto": "Elige la Empresa 0 y la Cuenta financiera BBVA_{INI}, y pulsa «Guardar»",
        "pregunta": "Has comprobado el formato de norma 43. ¿Dónde indicas a qué cuenta financiera pertenece el extracto?",
        "imagen": "tesoreria-n-03.webp",
        "hotspot": {
@@ -1444,12 +1481,12 @@
         "h": 5.1,
         "etiqueta": "Empresa y cuenta"
        },
-       "detalle": "«Guardar» está abajo a la derecha."
+       "detalle": "«Guardar» está abajo a la derecha. En la captura, la cuenta es CAPT_BCO."
       },
       {
        "texto": "Pulsa «Cargar extracto bancario» y confirma",
        "pregunta": "Has guardado la empresa y la cuenta financiera. ¿Qué botón pulsas para cargar el extracto bancario?",
-       "detalle": "El botón sale en los ficheros en «Pendiente procesar». La captura es de la demo TRI, con formato BBVA AEB43. Descomprime el fichero, carga el extracto y sale «Success».",
+       "detalle": "El botón sale en los ficheros en «Pendiente procesar». La captura es de la demo TRI, con formato BBVA AEB43. Lee el fichero, carga el extracto y sale «Success». Si sale un error de concepto propio, vuelve al último paso de la primera parte.",
        "imagen": "tesoreria-n-18.webp",
        "hotspot": {
         "x": 38.0,
@@ -1462,7 +1499,7 @@
       {
        "texto": "Comprueba el resultado: Estado «Procesado» y, abajo, los extractos bancarios cargados",
        "pregunta": "Has cargado el extracto bancario. ¿Dónde ves los extractos cargados y el estado «Procesado»?",
-       "detalle": "En la captura, el fichero CAP_N43_tesoreria.n43 de la cuenta CAPT_BCO cargó 2 extractos: 480,00 (pago a proveedor) y 12,50 (comisión). Arriba tienes el botón «Retroceder carga», que deshace la carga.",
+       "detalle": "En la captura, CAP_N43_tesoreria.n43 de CAPT_BCO cargó 2 extractos: 480,00 (pago a proveedor) y 12,50 (comisión). Con tu fichero verás 6 extractos de BBVA_{INI}: -3.000,00, 151,25, 3,50, 10,00, -121,00 y -121,00. En la ficha de BBVA_{INI}, «Saldo extracto» pasa a -3.077,25 y «Fecha extracto» al 31-12-2026. Arriba tienes «Retroceder carga», que deshace la carga si te equivocas.",
        "imagen": "tesoreria-n-04.webp",
        "hotspot": {
         "x": 0.2,
@@ -1476,11 +1513,11 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "La carga da error si un concepto propio del fichero no existe en Conceptos propios."
+       "texto": "La carga da error si un concepto propio del fichero no existe en Conceptos propios para el banco ES0182, o si BBVA_{INI} no tiene el banco y la cuenta del fichero."
       },
       {
        "tipo": "solucion",
-       "texto": "Da de alta el concepto propio (banco, concepto, descripción y tipo de conciliación) y vuelve a cargar."
+       "texto": "Crea los conceptos 002, 004, 006 y 017 del banco ES0182 y revisa el banco y el IBAN de BBVA_{INI} («Preparar el banco propio»). Después pulsa «Retroceder carga» si hace falta y vuelve a cargar."
       }
      ]
     },
@@ -1495,11 +1532,10 @@
       "Movimientos"
      ],
      "explicacion": [
-      "Ojo: Esta parte solo se mira. Las capturas son de CAPT_BCO (480,00 y 12,50), no de tu banco: no verás tu fila de 10,00 hasta la última parte.",
       "Cada registro del extracto muestra el orden, si está conciliado, la cuenta financiera, las fechas, los conceptos común y propio, las referencias y el importe.",
-      "En la base de prácticas, la cuenta CAPT_BCO tiene 2 extractos. El primero: 480,00, concepto común 04, propio 901 y referencia «CAP PAGO PROVEED».",
-      "El segundo: 12,50, conceptos 17 y 902, y referencia «CAP COMISION MAN».",
-      "Fíjate: los dos son cargos y en esta base se escriben en positivo."
+      "Las capturas son de CAPT_BCO: 480,00 (común 04, propio 901, «CAP PAGO PROVEED») y 12,50 (común 17, propio 902, «CAP COMISION MAN»). Los dos son cargos y se guardan en positivo.",
+      "En BBVA_{INI} verás tus seis líneas: tres cargos en positivo (151,25, 3,50 y 10,00) y tres abonos en negativo (-3.000,00, -121,00 y -121,00).",
+      "Regla única del signo en el extracto: cargo del banco (sale dinero) = positivo; abono (entra dinero) = negativo. En tesorería es al revés."
      ],
      "campos": [
       {
@@ -1515,12 +1551,12 @@
       {
        "campo": "Cuenta financiera",
        "significado": "Cuenta bancaria del extracto.",
-       "ejemplo": "CAPT_BCO"
+       "ejemplo": "BBVA_{INI} (CAPT_BCO en la captura)"
       },
       {
        "campo": "Fecha operación / valor",
        "significado": "Fechas del movimiento en el banco.",
-       "ejemplo": "17-11-2026"
+       "ejemplo": "06-11-2026 en tu pago a T{INI} (17-11-2026 en la captura)"
       },
       {
        "campo": "Concepto común",
@@ -1530,24 +1566,24 @@
       {
        "campo": "Concepto propio",
        "significado": "Código particular del banco.",
-       "ejemplo": "901"
+       "ejemplo": "004 en tu pago (901 en la captura)"
       },
       {
        "campo": "Documento / Referencia 1 / Referencia 2",
        "significado": "Datos que usa la conciliación por documento o por referencia.",
-       "ejemplo": "0000000001 / CAPTES001 / CAP PAGO PROVEED"
+       "ejemplo": "0000000002 / T{INI} / PAGO PROV-{INI}-001 (0000000001 / CAPTES001 / CAP PAGO PROVEED en la captura)"
       },
       {
        "campo": "Importe extracto",
        "significado": "Importe del apunte en el banco.",
-       "ejemplo": "480,00 / 12,50"
+       "ejemplo": "151,25 (cargo) y -121,00 (abono) en tu extracto; 480,00 / 12,50 en la captura"
       }
      ],
      "pasos": [
       {
        "texto": "Abre la lista y localiza los movimientos de tu cuenta",
-       "pregunta": "Has abierto la lista de extractos bancarios. ¿Dónde localizas el movimiento de 480,00 de tu cuenta?",
-       "detalle": "En la captura, los 2 extractos de la cuenta CAPT_BCO. La columna Conciliado ya trae su número (1 y 2) porque están conciliados.",
+       "pregunta": "Has abierto la lista de extractos bancarios. ¿Dónde localizas el movimiento de 480,00 de la captura?",
+       "detalle": "En la captura, los 2 extractos de CAPT_BCO; la columna Conciliado ya trae su número (1 y 2). Filtra por BBVA_{INI}: verás tus seis líneas, con Conciliado vacío.",
        "imagen": "tesoreria-n-05.webp",
        "hotspot": {
         "x": 12.4,
@@ -1568,7 +1604,7 @@
         "h": 11.2,
         "etiqueta": "Concepto común y propio"
        },
-       "detalle": "En la captura, concepto común 04 y concepto propio 901."
+       "detalle": "En la captura, concepto común 04 y concepto propio 901. En tu pago a T{INI}, 04 y 004."
       },
       {
        "texto": "Fíjate en las Referencias y en el campo Conciliado",
@@ -1678,12 +1714,12 @@
       {
        "campo": "Banco",
        "significado": "Déjalo como viene. Banco al que pertenece el concepto.",
-       "ejemplo": "ES0019 (DEUTSCHE BANK) en la base de prácticas"
+       "ejemplo": "ES0182 (BBVA) para tu banco; ES0019 (DEUTSCHE BANK) en la captura"
       },
       {
        "campo": "Concepto propio",
        "significado": "Código particular del banco.",
-       "ejemplo": "002"
+       "ejemplo": "002, 004, 006 y 017 en tu caso; 002 en la captura"
       },
       {
        "campo": "Descripción concepto",
@@ -1712,14 +1748,14 @@
       },
       {
        "campo": "Operaciones a conciliar",
-       "significado": "Déjalo como viene. Rejilla con Posición, Orden, Operación financiera, Texto en registro, Porcentaje e Importe a conciliar. La usa la conciliación masiva.",
-       "ejemplo": ""
+       "significado": "Rejilla con Posición, Orden, Operación financiera, Texto en registro, Porcentaje e Importe a conciliar. La usa la conciliación automática. En tus conceptos la dejas vacía: concilias a mano.",
+       "ejemplo": "Vacía en 002, 004, 006 y 017"
       }
      ],
      "pasos": [
       {
        "texto": "Abre la lista y filtra por tu banco",
-       "detalle": "Cada banco tiene sus códigos (000, 001, 002…). En la base de prácticas salen los del banco ES0019: 000 ANTICIPO, 001 I.V.A., 002 I.R.P.F.… Usa «Filtros» para ver solo los de tu banco.",
+       "detalle": "Cada banco tiene sus códigos. En la captura salen los del banco ES0019: 000 ANTICIPO, 001 I.V.A., 002 I.R.P.F.… Usa «Filtros» con el banco ES0182 para ver los de tu banco: 002, 004, 006 y 017.",
        "imagen": "tesoreria-n-07.webp"
       },
       {
@@ -1775,7 +1811,7 @@
        }
       },
       {
-       "texto": "En «Operaciones a conciliar», pulsa «Nuevo» y añade posición, orden y operación financiera",
+       "texto": "Mira la rejilla «Operaciones a conciliar» (en tus conceptos, déjala vacía)",
        "pregunta": "Ya tienes el filtro ajustado. ¿Dónde añades la posición, el orden y la operación financiera que se van a conciliar?",
        "imagen": "tesoreria-n-08.webp",
        "hotspot": {
@@ -1785,7 +1821,7 @@
         "h": 11.4,
         "etiqueta": "Operaciones a conciliar"
        },
-       "detalle": "La rejilla tiene Posición, Orden, Operación financiera, Texto en registro, Porcentaje a conciliar e Importe a conciliar. Por ejemplo, Orden 1 y la operación {INI}COM."
+       "detalle": "La rejilla tiene Posición, Orden, Operación financiera, Texto en registro, Porcentaje a conciliar e Importe a conciliar. Se rellena para la conciliación automática, por ejemplo Orden 1 y una operación de comisión. Tú concilias a mano en «Conciliar el banco»: no la toques."
       }
      ],
      "avisos": [
@@ -1802,7 +1838,7 @@
     {
      "id": "tesoreria-4-manual",
      "titulo": "Dar de alta a mano el extracto de tu movimiento",
-     "paraQueSirve": "Sirve para tener en BBVA_{INI} un extracto que casar con tu movimiento del bloque «Registrar un movimiento manual». Tu banco de prácticas no recibe ficheros N43.",
+     "paraQueSirve": "Sirve para tener en BBVA_{INI} el extracto del caso si no cargaste el fichero N43: las seis líneas, con su fecha, sus conceptos y su signo.",
      "ruta": [
       "Finanzas",
       "Tesorería",
@@ -1810,9 +1846,9 @@
       "Movimientos"
      ],
      "explicacion": [
-      "Un extracto también se puede dar de alta a mano. Aquí lo haces para simular lo que diría el banco de tu movimiento de 10,00 del bloque «Registrar un movimiento manual».",
-      "Usa la misma fecha y el mismo importe que tu movimiento. Elige un concepto común y uno propio que ya existan para tu banco.",
-      "Fíjate en el signo con que vienen los demás extractos de la cuenta."
+      "Haz esta parte solo si no cargaste el fichero: si ya lo cargaste, las seis líneas ya existen y no las repitas.",
+      "Un extracto también se puede dar de alta a mano. Empiezas por la línea de 10,00, la de tu movimiento del bloque «Registrar un movimiento manual», y sigues con las otras cinco de la tabla.",
+      "El signo sigue el criterio del banco: cargo en positivo, abono en negativo. Mira la tabla de abajo."
      ],
      "campos": [
       {
@@ -1823,16 +1859,16 @@
       {
        "campo": "Fecha operación / valor",
        "significado": "Las mismas que tu movimiento de tesorería.",
-       "ejemplo": ""
+       "ejemplo": "12-11-2026 en la línea de 10,00"
       },
       {
        "campo": "Concepto común / propio",
-       "significado": "Códigos del banco. Elige uno que ya exista.",
-       "ejemplo": "04 / uno de la lista"
+       "significado": "Códigos del banco ES0182 que comprobaste o creaste en la primera parte.",
+       "ejemplo": "17 / 017 en la línea de 10,00"
       },
       {
        "campo": "Importe extracto",
-       "significado": "El de tu movimiento, con el signo que usen los demás extractos de la cuenta. En la base de prácticas, los cargos van en positivo (tabla de abajo).",
+       "significado": "Cargos en positivo y abonos en negativo (criterio del banco, comprobado con la carga N43 de CAPT_BCO).",
        "ejemplo": "10,00"
       },
       {
@@ -1854,6 +1890,41 @@
        "campo": "Tu 10,00 · Tesorería",
        "significado": "Es una salida de dinero: el importe sale en negativo.",
        "ejemplo": "-10,00"
+      },
+      {
+       "campo": "Línea 1 · 01-10-2026",
+       "significado": "Aportación de los socios. Abono: entra dinero. Común 02, propio 002.",
+       "ejemplo": "-3.000,00"
+      },
+      {
+       "campo": "Línea 2 · 06-11-2026",
+       "significado": "Pago a T{INI} por la remesa. Cargo. Común 04, propio 004. Referencia 1 T{INI}.",
+       "ejemplo": "151,25"
+      },
+      {
+       "campo": "Línea 3 · 06-11-2026",
+       "significado": "Comisión de la transferencia. Cargo. Común 17, propio 017.",
+       "ejemplo": "3,50"
+      },
+      {
+       "campo": "Línea 4 · 12-11-2026",
+       "significado": "Comisión de mantenimiento. Cargo. Común 17, propio 017.",
+       "ejemplo": "10,00"
+      },
+      {
+       "campo": "Línea 5 · 14-11-2026",
+       "significado": "Cobro del efecto 1 de C{INI}. Abono. Común 04, propio 004. Referencia 1 C{INI}.",
+       "ejemplo": "-121,00"
+      },
+      {
+       "campo": "Línea 6 · 14-12-2026",
+       "significado": "Cobro de la remesa del efecto 2. Abono. Común 06, propio 006. Referencia 1 LRC{INI}.",
+       "ejemplo": "-121,00"
+      },
+      {
+       "campo": "Saldo final",
+       "significado": "Suma con signo del banco: 151,25 + 3,50 + 10,00 − 3.000,00 − 121,00 − 121,00. Negativo = a tu favor.",
+       "ejemplo": "-3.077,25 (3.077,25 a tu favor)"
       }
      ],
      "pasos": [
@@ -1863,9 +1934,9 @@
        "imagen": "tesoreria-n-10.webp"
       },
       {
-       "texto": "Elige la empresa y la cuenta BBVA_{INI}, y pon las fechas de tu movimiento del bloque «Registrar un movimiento manual»",
+       "texto": "Elige la empresa 0 y la cuenta BBVA_{INI}, y pon 12-11-2026 en las dos fechas",
        "pregunta": "Ya has elegido la empresa. ¿Dónde eliges ahora la cuenta BBVA_{INI}?",
-       "detalle": "Al elegir la Cuenta financiera BBVA_{INI}, el Banco y los datos de la cuenta bancaria (CCC1, CCC2, cuenta) salen de tu banco propio. En Fecha operación y Fecha valor pon las de tu movimiento.",
+       "detalle": "Al elegir la Cuenta financiera BBVA_{INI}, el Banco y los datos de la cuenta bancaria (CCC1 = entidad y oficina, CCC2 = dígito de control y número de cuenta; CCC es el código cuenta cliente) salen de tu banco propio. Si BBVA_{INI} no tiene banco, esos campos quedan vacíos.",
        "imagen": "tesoreria-n-10.webp",
        "hotspot": {
         "x": 65.7,
@@ -1876,9 +1947,9 @@
        }
       },
       {
-       "texto": "Elige el concepto común 04 y un concepto propio de la lista",
-       "pregunta": "La cuenta y las fechas de tu movimiento ya están puestas. ¿Dónde eliges el concepto común 04?",
-       "detalle": "En Concepto propio, elige uno que exista para tu banco en Conceptos propios.",
+       "texto": "Elige el concepto común 17 y el concepto propio 017",
+       "pregunta": "La cuenta y las fechas de tu movimiento ya están puestas. ¿Dónde eliges el concepto común 17?",
+       "detalle": "17 es «Intereses, comisiones, custodia, gastos e impuestos». El propio 017 es el de comisiones del banco ES0182 que comprobaste en la primera parte. Si la lista no lo ofrece, créalo allí antes.",
        "imagen": "tesoreria-n-10.webp",
        "hotspot": {
         "x": 34.0,
@@ -1889,9 +1960,9 @@
        }
       },
       {
-       "texto": "Escribe el importe de tu movimiento y guarda",
+       "texto": "Escribe 10,00 en positivo y guarda",
        "pregunta": "Los conceptos ya están elegidos. ¿Dónde escribes el importe de tu movimiento?",
-       "detalle": "Mismo importe que tu movimiento y Divisa EUR. En la base de prácticas los cargos se escriben en positivo en el extracto, y en tesorería salen en negativo. Para tu salida de 10,00, escribe 10,00 y pulsa «Guardar» (mira la tabla de arriba). Conciliarás este extracto en el bloque «Conciliar el banco».",
+       "detalle": "Es un cargo del banco: va en positivo. En tesorería el mismo movimiento es -10,00; casarán en «Conciliar el banco». Divisa EUR. Pulsa «Guardar».",
        "imagen": "tesoreria-n-10.webp",
        "hotspot": {
         "x": 66.4,
@@ -1900,12 +1971,24 @@
         "h": 5.1,
         "etiqueta": "Importe extracto"
        }
+      },
+      {
+       "texto": "Repite con las otras cinco líneas de la tabla, con su fecha, sus conceptos y su signo",
+       "detalle": "Cargos en positivo: 151,25 (06-11-2026, 04/004) y 3,50 (06-11-2026, 17/017). Abonos en negativo: -3.000,00 (01-10-2026, 02/002), -121,00 (14-11-2026, 04/004) y -121,00 (14-12-2026, 06/006). Al acabar, la suma de las seis es -3.077,25: tu saldo de 3.077,25 visto por el banco."
       }
      ],
      "avisos": [
       {
        "tipo": "nota",
        "texto": "En una empresa real, los extractos llegan en el fichero N43. El alta manual sirve para practicar o para corregir."
+      },
+      {
+       "tipo": "problema",
+       "texto": "Ves cada línea dos veces en la lista de movimientos."
+      },
+      {
+       "tipo": "solucion",
+       "texto": "Has cargado el fichero y además las has dado de alta a mano. Borra solo las líneas manuales que acabas de crear (las del fichero tienen número de fichero)."
       }
      ]
     }
@@ -1968,15 +2051,15 @@
     }
    ],
    "checklist": [
-    "Abre Finanzas › Tesorería › Extractos bancarios › Almacén ficheros. Localiza un fichero ya procesado y mira su formato, su estado y su número de registros.",
-    "Abre ese fichero y mira su empresa, su cuenta financiera y la vista de abajo «Extractos bancarios».",
-    "Localiza el botón «Cargar extracto bancario», que sale en los ficheros «Pendiente procesar». No lo pulses: tu banco de prácticas no tiene fichero N43.",
-    "Entra en Extractos bancarios › Movimientos y filtra los registros de una cuenta financiera.",
-    "Abre un movimiento y anota su concepto común, su concepto propio y sus referencias.",
+    "Informa el banco ES0182 y el IBAN de prueba en BBVA_{INI} («Preparar el banco propio»).",
+    "Descarga /n43/caso_BBVA_ZZ.n43, cambia ZZ por tus iniciales y guárdalo como caso_BBVA_{INI}.n43.",
+    "Comprueba (o crea) los conceptos propios 002, 004, 006 y 017 del banco ES0182.",
+    "En Almacén ficheros, sube tu fichero con la empresa 0 y la cuenta BBVA_{INI} y pulsa «Cargar extracto bancario».",
+    "Comprueba que el fichero queda «Procesado» con 9 registros y 6 extractos.",
+    "En Extractos bancarios › Movimientos, filtra BBVA_{INI}: tres cargos en positivo y tres abonos en negativo.",
     "Revisa el concepto común 02 en Conceptos comunes.",
-    "En Conceptos propios, filtra por tu banco y comprueba que existen los conceptos propios del fichero.",
-    "En un concepto propio, revisa la integración y la rejilla «Operaciones a conciliar».",
-    "Da de alta a mano en BBVA_{INI} el extracto de tu movimiento del bloque «Registrar un movimiento manual»."
+    "Si no cargaste el fichero, da de alta a mano las seis líneas de la tabla.",
+    "Comprueba que la suma de tus seis líneas es -3.077,25."
    ],
    "problemas": [
     {
@@ -1997,23 +2080,23 @@
     },
     {
      "problema": "No te deja guardar el extracto que das de alta a mano.",
-     "solucion": "Falta algún campo con asterisco rojo: empresa, cuenta financiera, fechas, conceptos o importe. Rellénalo y vuelve a guardar."
+     "solucion": "Falta algún campo con asterisco rojo: empresa, cuenta financiera, fechas, conceptos o importe. Si el concepto propio no aparece, créalo para el banco ES0182. Rellénalo y vuelve a guardar."
     }
    ],
    "aprendido": [
-    "Has visto las tres partes de un fichero N43 y por qué el saldo de un extracto debe enlazar con el siguiente.",
-    "Has visto cómo se carga un fichero en el almacén y los extractos que genera (solo mirado: tu banco no recibe ficheros).",
+    "Has visto las partes de un fichero N43 (registros 11, 22, 33 y 88) y por qué el saldo de un extracto debe enlazar con el siguiente.",
+    "Has cargado el extracto de tu caso en el almacén, o lo has dado de alta a mano.",
     "Has distinguido el concepto común, estándar de la banca, del concepto propio de cada banco.",
-    "Has revisado la integración y las operaciones a conciliar de un concepto propio.",
-    "Has dado de alta a mano en BBVA_{INI} el extracto de tu movimiento de 10,00."
+    "Sabes la regla del signo: en el extracto, cargo en positivo y abono en negativo; en tesorería, al revés.",
+    "Tienes en BBVA_{INI} las seis líneas del caso, que suman -3.077,25 (3.077,25 a tu favor)."
    ]
   },
   {
    "id": "tesoreria-5",
    "numero": 5,
    "titulo": "Conciliar el banco",
-   "objetivo": "Conciliarás a mano tu extracto de 10,00 con su movimiento de tesorería y sabrás cuándo usar la conciliación automática.",
-   "concepto": "Conciliar es casar cada línea del extracto del banco con su movimiento de tesorería en el ERP. Es como repasar el resumen de tu tarjeta tachando cada cargo que reconoces. Lo que queda sin tachar es un error, un olvido o algo que solo sabe el banco, y hasta que lo aclaras no sabes cuánto dinero tienes de verdad.\n\nEn tu caso, al conciliar BBVA_{INI} las seis líneas del extracto casan con sus movimientos y el saldo del banco queda en 3.077,25. En este bloque practicas con una línea: la comisión de 10,00.\n\nLa conciliación bancaria individual está en «Tesorería › Conciliación bancaria». A la izquierda ves el extracto y a la derecha la tesorería. Marcas un movimiento de cada lado con el mismo importe y pulsas «Conciliar banco». Los dos pasan a conciliados y cada uno guarda la huella del otro.\n\nPara lo que no casa hay más botones. En la primera parte tienes una tabla «si ves X, pulsa Y» con los cinco. Para tu 10,00 solo usas «Conciliar banco».\n\nLa conciliación automática está en «Tesorería › Procesos › Conciliación automática». Casa en bloque por empresa, cuenta y rango de fechas. Usa los conceptos propios (operaciones a conciliar e integración) y los parámetros de conciliación de las operaciones financieras.\n\nFíjate: si los importes no coinciden del todo, puedes definir tolerancias en los parámetros de tesorería.\n\nOjo: En la demo, las capturas son de otra cuenta (CAPT_BCO y la remesa de 8.080,15 de la demo TRI) y no verás tu fila de 10,00. En una empresa real verías la tuya. Tú sigue los pasos con BBVA_{INI} y marca tu fila.\n\nEjemplo: en tu caso, el pago de 151,25 a T{INI} está en tesorería como salida y en el extracto como cargo del mismo importe. Al conciliarlos, quedan casados con el mismo número. La captura usa otra cifra, la de una remesa de 8.080,15 de la demo TRI; el mecanismo es el mismo.\n\nDónde: «Finanzas › Tesorería › Conciliación bancaria».",
+   "objetivo": "Conciliarás tu extracto de BBVA_{INI} con tus movimientos de tesorería: la comisión de 10,00, el pago de 151,25 y su comisión de 3,50. Sabrás qué hacer con las líneas que no tienen movimiento.",
+   "concepto": "Conciliar es casar cada línea del extracto del banco con su movimiento de tesorería en el ERP. Es como repasar el resumen de tu tarjeta tachando cada cargo que reconoces. Lo que queda sin tachar es un error, un olvido o algo que solo sabe el banco, y hasta que lo aclaras no sabes cuánto dinero tienes de verdad.\n\nLa conciliación bancaria individual está en «Tesorería › Conciliación bancaria». A la izquierda ves el extracto y a la derecha la tesorería. Marcas un movimiento de cada lado con el mismo importe y signo contrario y pulsas «Conciliar banco». El extracto +10,00 (cargo) casa con la tesorería -10,00 (salida). Los dos pasan a conciliados y cada uno guarda el número del otro.\n\nEn tu caso, de las seis líneas del extracto de BBVA_{INI}:\n- Casan con un movimiento de tesorería: 10,00 (tu movimiento manual, -10,00), 151,25 (el pago PMICDT de la remesa, -151,25) y 3,50 (la comisión {INI}COM, -3,50).\n- No tienen movimiento de tesorería: -3.000,00 (la aportación, un asiento manual), y los dos -121,00 (el cobro con la gestión COBD y la remesa de cobro s/Tes). Su asiento ya lleva la 57200 directamente. Se quedan en «Extracto pendiente» y las justificas con su asiento: no uses «Generar tesorería» con ellas, porque al contabilizar el movimiento generado el banco subiría dos veces.\nEl saldo del banco queda en 3.077,25 igualmente: lo comprueba la 57200.\n\nSi la comisión de 3,50 no tiene movimiento (no lo creó «Recalcular comisión»), márcala y pulsa «Generar tesorería» con la operación {INI}COM. Esa sí la contabilizas: la comisión aún no tiene asiento.\n\nLa conciliación automática está en «Tesorería › Procesos › Conciliación automática». Casa en bloque por empresa, cuenta y fechas, con los conceptos propios y los parámetros de conciliación de las operaciones. Si los importes no coinciden del todo, puedes definir tolerancias en los parámetros de tesorería.\n\nOjo: las capturas son de otras cuentas (CAPT_BCO y una remesa de 8.080,15 de la demo TRI). Tú sigue los pasos con BBVA_{INI} y tus filas.\n\nDónde: «Finanzas › Tesorería › Conciliación bancaria».",
    "duracionMin": 45,
    "secciones": [
     {
@@ -2035,17 +2118,17 @@
       {
        "campo": "Fecha inicio / fin",
        "significado": "Fechas entre las que buscas movimientos.",
-       "ejemplo": ""
+       "ejemplo": "01-10-2026 / 31-12-2026"
       },
       {
        "campo": "Empresa",
        "significado": "Empresa que concilias.",
-       "ejemplo": "0 (base de prácticas)"
+       "ejemplo": "0 Deister Software"
       },
       {
        "campo": "Cuenta financiera",
        "significado": "Cuenta bancaria que concilias.",
-       "ejemplo": "CAPT_BCO"
+       "ejemplo": "BBVA_{INI} (CAPT_BCO en la captura)"
       },
       {
        "campo": "Concepto común / propio",
@@ -2059,7 +2142,7 @@
       },
       {
        "campo": "Si ves: el mismo importe en el extracto y en tesorería",
-       "significado": "Marca las dos filas y pulsa «Conciliar banco». Es el que usas con tu 10,00.",
+       "significado": "Marca las dos filas y pulsa «Conciliar banco». El extracto lleva el signo del banco y la tesorería el contrario: +10,00 con -10,00. Es lo que usas con 10,00, 151,25 y 3,50.",
        "ejemplo": "Conciliar banco"
       },
       {
@@ -2069,7 +2152,7 @@
       },
       {
        "campo": "Si ves: una comisión o un impuesto que solo está en el extracto",
-       "significado": "Márcalo y pulsa «Generar tesorería»: crea su movimiento de tesorería.",
+       "significado": "Márcalo y pulsa «Generar tesorería»: crea su movimiento de tesorería. En tu caso, solo para la comisión de 3,50 si no nació al recalcular.",
        "ejemplo": "Generar tesorería"
       },
       {
@@ -2095,7 +2178,7 @@
         "h": 6.0,
         "etiqueta": "Fechas"
        },
-       "detalle": "Salen propuestas del 1 de enero a hoy. Ajústalas a la fecha de tu movimiento."
+       "detalle": "Salen propuestas del 1 de enero a hoy. Pon 01-10-2026 y 31-12-2026: es el periodo de tu extracto."
       },
       {
        "texto": "Elige la Empresa y la Cuenta financiera, y pulsa «Ejecutar consulta»",
@@ -2149,7 +2232,7 @@
       "Conciliación bancaria"
      ],
      "explicacion": [
-      "Marca un movimiento del extracto y su movimiento de tesorería, con el mismo importe, y pulsa «Conciliar banco». Los dos salen de pendientes y pasan a conciliados.",
+      "Marca un movimiento del extracto y su movimiento de tesorería, con el mismo importe y signo contrario (extracto +10,00, tesorería -10,00), y pulsa «Conciliar banco». Los dos salen de pendientes y pasan a conciliados.",
       "El movimiento de tesorería recibe en Conciliado un número correlativo y un enlace al extracto. El extracto queda marcado como conciliado y enlazado al movimiento.",
       "Tu movimiento del bloque «Registrar un movimiento manual» ya está contabilizado (banco contra el flujo). Aquí solo lo concilias.",
       "Fíjate: cuando el movimiento nace de una remesa con tesorería, el asiento del banco se genera al contabilizar después de conciliar. Lo verás más adelante en este módulo, en los bloques «Conocer el circuito de extracto y conciliación», «Crear el extracto de una remesa» y «Conciliar y contabilizar una remesa»."
@@ -2158,12 +2241,12 @@
       {
        "campo": "Importe extracto",
        "significado": "Importe del apunte en el banco.",
-       "ejemplo": "-8.080,15"
+       "ejemplo": "10,00 en tu cargo (-8.080,15 en la captura de la demo TRI)"
       },
       {
        "campo": "Importe tesorería",
        "significado": "Importe del movimiento en el ERP.",
-       "ejemplo": "-8.080,15"
+       "ejemplo": "-10,00 en tu salida (-8.080,15 en la captura)"
       },
       {
        "campo": "Conciliado",
@@ -2174,7 +2257,7 @@
      "pasos": [
       {
        "texto": "Marca el movimiento del extracto",
-       "pregunta": "Vas a conciliar a mano el cargo de una remesa. ¿Dónde marcas el movimiento del extracto de -8.080,15?",
+       "pregunta": "Vas a conciliar a mano un cargo del banco. ¿Dónde marcas el movimiento del extracto? (En la captura, -8.080,15.)",
        "imagen": "tesoreria-n-17.webp",
        "hotspot": {
         "x": 0,
@@ -2183,11 +2266,11 @@
         "h": 8.6,
         "etiqueta": "Extracto -8.080,15"
        },
-       "detalle": "Captura de la demo TRI (otra cuenta): el cargo de 8.080,15 del pago de una remesa. En tu pantalla, marca tu fila de 10,00."
+       "detalle": "Captura de la demo TRI (otra cuenta): el cargo de 8.080,15 del pago de una remesa, que allí se dio de alta con signo menos. En tu pantalla, marca tu fila de 10,00 del 12-11-2026."
       },
       {
-       "texto": "Marca su movimiento de tesorería, del mismo importe",
-       "pregunta": "Ya has marcado el extracto de -8.080,15. ¿Dónde marcas su movimiento de tesorería del mismo importe?",
+       "texto": "Marca su movimiento de tesorería, del mismo importe y signo contrario",
+       "pregunta": "Ya has marcado el extracto. ¿Dónde marcas su movimiento de tesorería?",
        "imagen": "tesoreria-n-17.webp",
        "hotspot": {
         "x": 58.5,
@@ -2196,7 +2279,7 @@
         "h": 8.8,
         "etiqueta": "Tesorería -8.080,15"
        },
-       "detalle": "Verás marcadas las dos filas, la del extracto y la de tesorería, con el mismo importe. En la captura son las de 8.080,15; en la tuya, las de 10,00."
+       "detalle": "En la captura son las dos filas de 8.080,15. En la tuya, el extracto 10,00 y la tesorería -10,00 (operación {INI}COM)."
       },
       {
        "texto": "Pulsa «Conciliar banco»",
@@ -2236,6 +2319,14 @@
         "h": 5.1,
         "etiqueta": "Conciliado"
        }
+      },
+      {
+       "texto": "Concilia igual el pago de 151,25 y su comisión de 3,50",
+       "detalle": "Extracto 151,25 con la tesorería -151,25 (PMICDT, la de tu remesa a T{INI}). Extracto 3,50 con la tesorería -3,50 ({INI}COM). Si no hay movimiento de -3,50, marca el extracto de 3,50, pulsa «Generar tesorería» y elige la operación {INI}COM: se crea y queda conciliado. Después, contabiliza los movimientos de 151,25 y de 3,50 como en «Conciliar y contabilizar una remesa»."
+      },
+      {
+       "texto": "Deja en «Extracto pendiente» la aportación y los dos cobros",
+       "detalle": "Las líneas -3.000,00, -121,00 (14-11) y -121,00 (14-12) no tienen movimiento de tesorería: la aportación es un asiento manual, el cobro COBD y la remesa de cobro s/Tes apuntan el banco directamente. Compruébalas con su asiento en el Mayor de la 57200 y déjalas pendientes. En una empresa real, los cobros entrarían por una gestión o una remesa con tesorería y casarían aquí."
       }
      ],
      "avisos": []
@@ -2398,7 +2489,7 @@
         "h": 24.5,
         "etiqueta": "Empresa y cuenta"
        },
-       "detalle": "Verás los filtros Empresa y Cuenta financiera. Para tu práctica, usa tu empresa y BBVA_{INI}."
+       "detalle": "Verás los filtros Empresa y Cuenta financiera. Para tu práctica, usa la empresa 0 y BBVA_{INI}."
       },
       {
        "texto": "Acota las fechas y, si quieres, un concepto propio",
@@ -2424,7 +2515,7 @@
         "h": 4.8,
         "etiqueta": "Ejecutar consulta"
        },
-       "detalle": "Concilia lo que puede y te muestra los movimientos que quedan pendientes y los conciliados. Lo dice el aviso de arriba de la pantalla. Para tu práctica: tu empresa, BBVA_{INI} y la fecha de tu extracto."
+       "detalle": "Concilia lo que puede y te muestra los movimientos que quedan pendientes y los conciliados. Lo dice el aviso de arriba de la pantalla. En tu caso no casará nada nuevo: ya conciliaste a mano y tus conceptos propios no tienen «Operaciones a conciliar». Lánzala solo para ver el resultado."
       }
      ],
      "avisos": []
@@ -2488,14 +2579,14 @@
     }
    ],
    "checklist": [
-    "Ejecuta la consulta de conciliación de BBVA_{INI} con el rango de fechas de tu movimiento.",
-    "Marca tu extracto del bloque «Dar de alta el extracto bancario» y tu movimiento del bloque «Registrar un movimiento manual», y pulsa Conciliar.",
+    "Ejecuta la consulta de conciliación de la empresa 0 y BBVA_{INI} del 01-10-2026 al 31-12-2026.",
+    "Concilia el extracto 10,00 con tu movimiento -10,00 ({INI}COM).",
+    "Concilia el extracto 151,25 con el movimiento -151,25 (PMICDT) de tu remesa.",
+    "Concilia el extracto 3,50 con el movimiento -3,50 ({INI}COM); si no existe, créalo con «Generar tesorería».",
+    "Deja pendientes -3.000,00 y los dos -121,00 y compruébalos con su asiento en la 57200.",
     "Comprueba las huellas de conciliación en el movimiento y en el extracto.",
     "Localiza los botones «Cancelar extractos», «Generar tesorería», «Conciliar cartera» y «Conciliar banco». Di en qué caso usarías cada uno.",
-    "Si en tu extracto hay un extorno (mismo importe con signo contrario), concílialo con «Cancelar extractos».",
-    "Abre la pestaña Selección de efectos y localiza un efecto pendiente de tu empresa.",
-    "Abre un extracto conciliado y localiza el botón Desconciliar. Úsalo solo con tus propias conciliaciones.",
-    "Lanza la conciliación automática filtrando empresa, cuenta y concepto propio."
+    "Abre un extracto conciliado y localiza el botón Desconciliar. Úsalo solo con tus propias conciliaciones."
    ],
    "problemas": [
     {
@@ -3932,7 +4023,7 @@
    "numero": 14,
    "titulo": "Conocer el circuito de extracto y conciliación",
    "objetivo": "Sabrás qué emite el banco y qué hace la empresa, y ordenarás remesa, extracto, conciliación y contabilización.",
-   "concepto": "El extracto bancario es la lista de movimientos que el banco dice que ha habido en tu cuenta. La conciliación bancaria es la comprobación que hace la empresa: casa cada línea del extracto con su movimiento de tesorería en el ERP.\n\nEs como repasar el tique del súper contra lo que llevas en la bolsa: si algo no cuadra, lo ves enseguida. Sin conciliar, no sabes si el banco y tu ERP cuentan lo mismo.\n\nNormalmente el extracto llega en un fichero de norma 43 (N43). En la base de formación no llega ningún fichero real del banco. Por eso darás de alta el extracto a mano.\n\nEl circuito es: remesa ordenada → extracto bancario → conciliación → contabilización. Una remesa es un paquete de pagos que mandas junto al banco. «Ordenada» significa que ya está enviada, con su tesorería. Ya viste el extracto y la conciliación en los bloques «Dar de alta el extracto bancario» y «Conciliar el banco».\n\nEn tu caso, la remesa es el pago de 151,25 a T{INI}, con su comisión de 3,50. El vídeo usa otra remesa, de 1.524,60, del banco PRVCC0 de su base. El mecanismo es el mismo.\n\nFíjate: hay dos asientos distintos. Un asiento es cada anotación en la contabilidad. Al ordenar la remesa, el ERP saca la deuda del proveedor (400) a la cuenta que diga la acción. En ese momento todavía no toca el banco.\n\nCuando el extracto confirma el cargo y lo concilias, «Contabilizar» genera el asiento del banco. Hasta entonces, el banco contable no baja.\n\nEjemplo: con el PGC español, el plan contable de España, si al ordenar la deuda pasó a la 401, el asiento del banco es 401 al debe y 572 Bancos al haber. En la base del vídeo sale la 57900.00000 «Fondos en movimiento», que esa base usa como cuenta del banco. Lo ves en el bloque «Conciliar y contabilizar una remesa».\n\nDónde: «Finanzas › Tesorería › Conciliación bancaria».",
+   "concepto": "El extracto bancario es la lista de movimientos que el banco dice que ha habido en tu cuenta. La conciliación bancaria es la comprobación que hace la empresa: casa cada línea del extracto con su movimiento de tesorería en el ERP.\n\nEs como repasar el tique del súper contra lo que llevas en la bolsa: si algo no cuadra, lo ves enseguida. Sin conciliar, no sabes si el banco y tu ERP cuentan lo mismo.\n\nNormalmente el extracto llega en un fichero de norma 43 (N43). Ningún banco real te lo envía en la demo: lo cargas tú con el fichero del caso o lo das de alta a mano (bloque «Dar de alta el extracto bancario»).\n\nEl circuito es: remesa ordenada → extracto bancario → conciliación → contabilización. Una remesa es un paquete de pagos que mandas junto al banco. «Ordenada» significa que ya está enviada, con su tesorería. Ya viste el extracto y la conciliación en los bloques «Dar de alta el extracto bancario» y «Conciliar el banco».\n\nEn tu caso, la remesa es el pago de 151,25 a T{INI} del 06-11-2026, con su comisión de 3,50. Las capturas del vídeo usan otra remesa, de 1.524,60, del banco PRVCC0. El mecanismo es el mismo.\n\nFíjate: hay dos asientos distintos. Un asiento es cada anotación en la contabilidad. Al ordenar la remesa, el ERP saca la deuda del proveedor (400) a la cuenta que diga la acción. En ese momento todavía no toca el banco.\n\nCuando el extracto confirma el cargo y lo concilias, «Contabilizar» genera el asiento del banco. Hasta entonces, el banco contable no baja.\n\nEjemplo: con el PGC español, el plan contable de España, si al ordenar la deuda pasó a la 401, el asiento del banco es 401 al debe y 572 Bancos al haber. En la base del vídeo sale la 57900.00000 «Fondos en movimiento», que esa base usa como cuenta del banco. Lo ves en el bloque «Conciliar y contabilizar una remesa».\n\nDónde: «Finanzas › Tesorería › Conciliación bancaria».",
    "duracionMin": 20,
    "secciones": [
     {
@@ -3981,13 +4072,13 @@
       "El circuito es: remesa → extracto bancario → conciliación bancaria → contabilización.",
       "Solo puedes conciliar cuando hay extracto y tesorería pendientes.",
       "Contabilizar es siempre el último paso.",
-      "En los bloques «Crear el extracto de una remesa» y «Conciliar y contabilizar una remesa» partes de una remesa de pago ya ordenada. Es la de la base del vídeo, de 1.524,60. La de tu caso es de 151,25. Allí te centras en el extracto y la conciliación."
+      "En los bloques «Crear el extracto de una remesa» y «Conciliar y contabilizar una remesa» partes de tu remesa de pago a T{INI} ya ordenada (151,25, «Evolucionar una remesa»). Las capturas son de la remesa del vídeo, de 1.524,60."
      ],
      "campos": [],
      "pasos": [
       {
-       "texto": "Localiza la remesa de partida en «Registro de remesas».",
-       "detalle": "Verás una remesa de pago ya ordenada. La captura es de la base del vídeo; en tu caso, sería el pago de 151,25 a T{INI}.",
+       "texto": "Localiza tu remesa de pago a T{INI} en «Registro de remesas».",
+       "detalle": "Verás tu remesa ya ordenada (Cerrado/CONTABILIZADO), con su número. La captura es de la base del vídeo.",
        "imagen": "v-icon2-001.jpg"
       },
       {
@@ -4091,8 +4182,8 @@
    "id": "icon-cartera-v-9",
    "numero": 15,
    "titulo": "Crear el extracto de una remesa",
-   "objetivo": "Darás de alta el extracto bancario de una remesa de pago, tal como lo registra el banco.",
-   "concepto": "El extracto es la versión del banco de lo que ha pasado en tu cuenta. Sin él no puedes comprobar que el pago de la remesa salió de verdad. Es como el recibo que te da el cajero: la prueba de que la operación se hizo.\n\nEl extracto se da de alta en «Finanzas» › «Tesorería» › «Extractos bancarios» › «Movimientos». Eliges la empresa y la cuenta financiera, es decir, tu banco propio, se rellena sola.\n\nCada movimiento lleva dos códigos. El concepto común es el código estándar de la banca española para el tipo de movimiento (04 = giros, transferencias, traspasos y cheques). El concepto propio es el código particular de cada banco (13 = transferencia en la base del vídeo). La conciliación los usa para saber con qué operaciones casar.\n\nFíjate en el signo. El extracto sigue el criterio del banco: para el banco, tu cuenta es dinero que te debe. Cuando pagas, te lo carga, es decir, lo anota en su debe.\n\nPor eso, al revés que en tesorería, en esta base los pagos (cargos) van en positivo. Los cobros (abonos) van en negativo.\n\nEjemplo: en tu caso, el extracto trae el pago de 151,25 a T{INI} y otra línea de 3,50 por su comisión. El vídeo practica con una remesa de 1.524,60 del banco PRVCC0. Su extracto es 1.524,60 y su movimiento de tesorería, -1.524,60 (Salida). El mecanismo es el mismo.\n\nOjo: es el criterio de esta base de formación. En la demo TRI el pago de la remesa sale en el extracto en negativo (ya lo viste en el bloque «Dar de alta el extracto bancario»). En el fichero N43 el importe va sin signo, con una clave de debe o haber. Antes de escribir un extracto a mano, mira cómo vienen los demás extractos de esa cuenta.\n\nDónde: «Finanzas › Tesorería › Extractos bancarios › Movimientos».",
+   "objetivo": "Darás de alta, o comprobarás, las dos líneas del extracto de tu pago a T{INI}: el cargo de 151,25 y el de su comisión de 3,50.",
+   "concepto": "El extracto es la versión del banco de lo que ha pasado en tu cuenta. Sin él no puedes comprobar que el pago de la remesa salió de verdad. Es como el recibo que te da el cajero: la prueba de que la operación se hizo.\n\nEl extracto se da de alta en «Finanzas» › «Tesorería» › «Extractos bancarios» › «Movimientos». Eliges la empresa y la cuenta financiera, es decir, tu banco propio.\n\nCada movimiento lleva dos códigos. El concepto común es el código estándar de la banca española (04 = giros, transferencias, traspasos y cheques; 17 = comisiones). El concepto propio es el código particular de cada banco (en tu banco ES0182, 004 y 017). La conciliación los usa para saber con qué operaciones casar.\n\nFíjate en el signo. El extracto sigue el criterio del banco: cuando pagas, te lo carga, y el cargo se guarda en positivo. Los cobros (abonos) se guardan en negativo. Está comprobado en la demo con el fichero N43 de la cuenta CAPT_BCO: sus dos cargos (480,00 y 12,50) se guardaron en positivo. En el fichero el importe va sin signo, con la clave 1 (cargo) o 2 (abono).\n\nEn tu caso, el 06-11-2026 el banco carga 151,25 (pago a T{INI}) y 3,50 (comisión). Si cargaste el fichero del caso en «Dar de alta el extracto bancario», ya las tienes: solo compruébalas. Si no, dalas de alta aquí.\n\nLas capturas son del vídeo: una remesa de 1.524,60 del banco PRVCC0, concepto propio 13. Con tus datos verás BBVA_{INI}, 151,25 y 004.\n\nDónde: «Finanzas › Tesorería › Extractos bancarios › Movimientos».",
    "duracionMin": 30,
    "secciones": [
     {
@@ -4106,9 +4197,9 @@
       "Movimientos"
      ],
      "explicacion": [
-      "Entra en la ventana de extractos bancarios y movimientos.",
-      "Elige la empresa 0 Deister Software. La cuenta financiera (PRVCC0) se carga sola.",
-      "Escribe el importe del pago, 1.524,60, en positivo. Es un cargo del banco en tu cuenta."
+      "Entra en la ventana de extractos bancarios y movimientos. Antes, filtra por BBVA_{INI}: si ya ves 151,25 y 3,50 del 06-11-2026 (porque cargaste el fichero), no los repitas.",
+      "Elige la empresa 0 Deister Software y la cuenta financiera BBVA_{INI}.",
+      "Escribe el importe del pago, 151,25, en positivo. Es un cargo del banco en tu cuenta."
      ],
      "campos": [
       {
@@ -4119,12 +4210,12 @@
       {
        "campo": "Cuenta financiera",
        "significado": "Cuenta de tesorería de la empresa. Dice en qué cuenta del banco ha pasado el movimiento.",
-       "ejemplo": "PRVCC0 (se carga sola)"
+       "ejemplo": "BBVA_{INI} (PRVCC0 en el vídeo)"
       },
       {
        "campo": "Fecha de operación",
        "significado": "Día en que se hizo la operación.",
-       "ejemplo": "24-06-2026"
+       "ejemplo": "06-11-2026 (24-06-2026 en el vídeo)"
       },
       {
        "campo": "Concepto común",
@@ -4134,28 +4225,28 @@
       {
        "campo": "Concepto propio",
        "significado": "Código particular del banco para esta operación.",
-       "ejemplo": "13 Transferencia"
+       "ejemplo": "004 Transferencias de tu banco ES0182 (13 Transferencia en el vídeo)"
       },
       {
        "campo": "Importe",
        "significado": "Importe del movimiento. Un pago (cargo del banco) va en positivo.",
-       "ejemplo": "1.524,60"
+       "ejemplo": "151,25 (1.524,60 en el vídeo)"
       }
      ],
      "pasos": [
       {
        "texto": "Entra en «Finanzas» › «Tesorería» › «Extractos bancarios» › «Movimientos».",
-       "detalle": "Ves la lista de movimientos del banco ya registrados.",
+       "detalle": "Ves la lista de movimientos del banco ya registrados. Filtra por BBVA_{INI}: si las líneas de 151,25 y 3,50 ya están, salta al último paso.",
        "imagen": "v-icon2-002.jpg"
       },
       {
-       "texto": "Pulsa «Nuevo». En «Empresa» elige 0 Deister Software.",
-       "detalle": "La cuenta financiera se carga sola.",
+       "texto": "Pulsa «Nuevo». En «Empresa» elige 0 Deister Software y en «Cuenta financiera», BBVA_{INI}.",
+       "detalle": "En el vídeo la cuenta (PRVCC0) se carga sola porque es la única de la empresa del ejemplo. Tú elige BBVA_{INI}.",
        "imagen": "v-icon2-003.jpg"
       },
       {
-       "texto": "En la fecha de operación y la fecha valor escribe 24-06-2026.",
-       "detalle": "La fecha valor es el día en que el dinero cuenta para el banco. Aquí coincide con la de operación."
+       "texto": "En la fecha de operación y la fecha valor escribe 06-11-2026.",
+       "detalle": "Es el día del pago a T{INI}. La fecha valor es el día en que el dinero cuenta para el banco; aquí coincide con la de operación. En el vídeo, 24-06-2026."
       },
       {
        "texto": "En «Concepto común» escribe 04.",
@@ -4171,14 +4262,14 @@
        }
       },
       {
-       "texto": "En «Concepto propio» escribe 13.",
-       "detalle": "La lista te ofrece «13 TRANSFERENCIA». Elígelo y la descripción se rellena sola."
+       "texto": "En «Concepto propio» escribe 004.",
+       "detalle": "Es el concepto de transferencias de tu banco ES0182 (lo comprobaste o creaste en «Dar de alta el extracto bancario»). En el vídeo, la lista ofrece «13 TRANSFERENCIA» de otro banco."
       },
       {
-       "texto": "En «Importe extracto» escribe 1.524,60, en positivo.",
+       "texto": "En «Importe extracto» escribe 151,25, en positivo.",
        "pregunta": "Ya tienes el concepto común. ¿Dónde escribes el importe de 1.524,60 en positivo?",
        "imagen": "v-icon2-005.jpg",
-       "detalle": "Es el campo «Importe extracto» del bloque «Importes». La divisa EUR se rellena sola.",
+       "detalle": "Es el campo «Importe extracto» del bloque «Importes». La divisa EUR se rellena sola. En el vídeo, 1.524,60.",
        "hotspot": {
         "x": 33.0,
         "y": 70.2,
@@ -4188,8 +4279,8 @@
        }
       },
       {
-       "texto": "Pulsa «Guardar».",
-       "detalle": "El extracto queda guardado con su número de orden (7 en la captura) e importe 1.524,60.",
+       "texto": "Pulsa «Guardar» y repite con la comisión: 06-11-2026, común 17, propio 017, 3,50 en positivo.",
+       "detalle": "Cada extracto queda con su número de orden (7 en la captura del vídeo). Tendrás dos líneas: 151,25 y 3,50.",
        "imagen": "v-icon2-006.jpg"
       },
       {
@@ -4200,11 +4291,11 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "El concepto común 04 es el de giros, transferencias, traspasos y cheques."
+       "texto": "El concepto común 04 es el de giros, transferencias, traspasos y cheques; el 17, el de intereses, comisiones y gastos."
       },
       {
        "tipo": "nota",
-       "texto": "El pago va en positivo porque el extracto sigue el criterio del banco: un pago es un cargo en tu cuenta. En tesorería, el mismo pago es -1.524,60 (Salida)."
+       "texto": "El pago va en positivo porque el extracto sigue el criterio del banco: un pago es un cargo en tu cuenta. En tesorería, el mismo pago es -151,25 (Salida)."
       }
      ]
     }
@@ -4241,10 +4332,10 @@
       "No importa el signo"
      ],
      "correcta": 1,
-     "explicacion": "En esta base, el extracto guarda los cargos (pagos) en positivo y los abonos (cobros) en negativo. Es al revés que en tesorería. En otras bases puede variar."
+     "explicacion": "El extracto guarda los cargos (pagos) en positivo y los abonos (cobros) en negativo, como lo ve el banco. Lo confirma la carga N43 de la cuenta CAPT_BCO. Es al revés que en tesorería."
     },
     {
-     "pregunta": "¿Qué concepto propio se usa en el ejemplo de pagar?",
+     "pregunta": "En el vídeo, ¿qué concepto propio lleva el extracto del pago?",
      "opciones": [
       "03",
       "04",
@@ -4252,7 +4343,7 @@
       "Ninguno"
      ],
      "correcta": 2,
-     "explicacion": "En el ejemplo de pagar, el concepto propio es 13 (transferencia)."
+     "explicacion": "En el vídeo es el 13 (transferencia) de su banco. En tu banco ES0182 usas el 004."
     },
     {
      "pregunta": "¿Qué haces después de rellenar los campos del extracto?",
@@ -4267,10 +4358,11 @@
     }
    ],
    "checklist": [
-    "Has entrado en «Finanzas» › «Tesorería» › «Extractos bancarios» › «Movimientos».",
-    "Has elegido la empresa y la cuenta financiera se ha rellenado sola.",
-    "El extracto tiene fecha 24-06-2026, concepto común 04 y concepto propio 13.",
-    "El importe es 1.524,60 en positivo y el extracto está guardado."
+    "Has filtrado los movimientos del extracto por BBVA_{INI}.",
+    "Tienes la línea de 151,25 del 06-11-2026 con conceptos 04 y 004, en positivo.",
+    "Tienes la línea de 3,50 del 06-11-2026 con conceptos 17 y 017, en positivo.",
+    "No has duplicado líneas que ya venían del fichero N43.",
+    "No has pulsado «Conciliar automático»."
    ],
    "problemas": [
     {
@@ -4279,13 +4371,13 @@
     },
     {
      "problema": "No se carga la cuenta financiera.",
-     "solucion": "Comprueba que has elegido bien la empresa. Su cuenta financiera se carga sola."
+     "solucion": "Elige primero la empresa 0 y después la cuenta BBVA_{INI} en la lista."
     }
    ],
    "aprendido": [
-    "Has dado de alta a mano el extracto del pago de una remesa.",
-    "Has usado el concepto común 04 y el concepto propio 13 para clasificar el movimiento.",
-    "Has escrito el pago de 1.524,60 en positivo, siguiendo el criterio del banco en esta base.",
+    "Tienes en BBVA_{INI} el extracto de tu pago: 151,25 y 3,50 del 06-11-2026.",
+    "Has usado el concepto común 04 (y 17 para la comisión) y los propios 004 y 017 de tu banco.",
+    "Has escrito los cargos en positivo, siguiendo el criterio del banco.",
     "Has dejado el extracto guardado y sin conciliar, listo para el siguiente bloque."
    ]
   },
@@ -4293,8 +4385,8 @@
    "id": "icon-cartera-v-10",
    "numero": 16,
    "titulo": "Conciliar y contabilizar una remesa",
-   "objetivo": "Casarás el extracto con su movimiento de tesorería y contabilizarás la conciliación para confirmar el cargo en el banco.",
-   "concepto": "Conciliar es confirmar que el banco y el ERP cuentan lo mismo: casar cada línea del extracto con su movimiento de tesorería. Es como emparejar calcetines: cada movimiento del banco busca su pareja. Si no concilias, no sabes si el dinero de la remesa ha salido de verdad.\n\nLa conciliación está en «Finanzas › Tesorería › Conciliación bancaria». Filtras empresa, cuenta y fechas y pulsas «Ejecutar». A la izquierda sale el extracto pendiente y a la derecha, la tesorería pendiente.\n\nMarcas el extracto y su movimiento de tesorería y pulsas «Conciliar tesorería». Tienen el mismo importe y signo contrario, como viste en el bloque «Crear el extracto de una remesa».\n\nEjemplo: en tu caso, el pago de 151,25 a T{INI} y su comisión de 3,50 quedan casados con sus movimientos de tesorería. En el vídeo, la remesa es de 1.524,60: el extracto es 1.524,60 y su movimiento de tesorería, -1.524,60. El mecanismo es el mismo.\n\nAl contabilizar, el asiento lleva dos apuntes de 1.524,60. Un asiento es la anotación en la contabilidad y un apunte, cada línea suya. Uno va al debe y otro al haber.\n\nOjo: la tarea no termina al conciliar. Después entras en el importe conciliado y pulsas «Contabilizar». Solo así se genera el asiento.\n\nDónde: «Finanzas › Tesorería › Conciliación bancaria».",
+   "objetivo": "Casarás el extracto de 151,25 con el movimiento -151,25 de tu remesa a T{INI} y lo contabilizarás para que el banco baje en la contabilidad.",
+   "concepto": "Conciliar es confirmar que el banco y el ERP cuentan lo mismo: casar cada línea del extracto con su movimiento de tesorería. Es como emparejar calcetines: cada movimiento del banco busca su pareja. Si no concilias, no sabes si el dinero de la remesa ha salido de verdad.\n\nLa conciliación está en «Finanzas › Tesorería › Conciliación bancaria». Filtras empresa, cuenta y fechas y pulsas «Ejecutar». A la izquierda sale el extracto pendiente y a la derecha, la tesorería pendiente.\n\nMarcas el extracto y su movimiento de tesorería y pulsas «Conciliar banco». Tienen el mismo importe y signo contrario: extracto 151,25, tesorería -151,25.\n\nAl contabilizar el movimiento conciliado, el asiento lleva dos apuntes de 151,25. Un asiento es la anotación en la contabilidad y un apunte, cada línea suya. Al debe, la cuenta puente que usó la acción de ordenar la remesa (la viste en «Evolucionar una remesa»). Al haber, la 57200.00000 de BBVA_{INI}: ahora sí baja el banco. La comisión de 3,50 se concilia igual con su movimiento {INI}COM y su asiento lleva 62600.00000 al debe y 57200.00000 al haber.\n\nLas capturas son del vídeo: remesa de 1.524,60, extracto 1.524,60 y tesorería -1.524,60. El mecanismo es el mismo.\n\nOjo: la tarea no termina al conciliar. Después entras en el importe conciliado y pulsas «Contabilizar». Solo así se genera el asiento.\n\nDónde: «Finanzas › Tesorería › Conciliación bancaria».",
    "duracionMin": 35,
    "secciones": [
     {
@@ -4320,27 +4412,27 @@
       {
        "campo": "Cuenta",
        "significado": "Cuenta financiera que revisas. Con un asterisco ves todas.",
-       "ejemplo": "*"
+       "ejemplo": "BBVA_{INI} (* en el vídeo)"
       },
       {
        "campo": "Fecha inicio",
        "significado": "Primer día del periodo. Las partidas anteriores no salen.",
-       "ejemplo": "01-01-2026"
+       "ejemplo": "01-11-2026"
       },
       {
        "campo": "Fecha fin",
        "significado": "Último día del periodo. Las partidas posteriores no salen.",
-       "ejemplo": "30-06-2026 o hoy"
+       "ejemplo": "30-11-2026"
       },
       {
        "campo": "Extracto pendiente",
        "significado": "Columna con los importes del banco que aún no tienen pareja.",
-       "ejemplo": "1.524,60"
+       "ejemplo": "151,25 y 3,50 (1.524,60 en el vídeo)"
       },
       {
        "campo": "Tesorería pendiente",
        "significado": "Columna con los importes de tesorería que aún no tienen pareja.",
-       "ejemplo": "-1.524,60"
+       "ejemplo": "-151,25 y -3,50 (-1.524,60 en el vídeo)"
       }
      ],
      "pasos": [
@@ -4351,15 +4443,15 @@
       },
       {
        "texto": "En «Empresa» elige 0 Deister Software.",
-       "detalle": "Verás «0 Deister Software» elegido. En la demo trabajas dentro de la empresa 0; en tu caso, es donde se graban tus documentos."
+       "detalle": "Verás «0 Deister Software» elegido. Es donde se graban tus documentos del caso."
       },
       {
-       "texto": "En «Cuenta» escribe un asterisco para ver todas las cuentas.",
-       "detalle": "Si solo hay una cuenta, aparecerá la de la empresa."
+       "texto": "En «Cuenta» elige BBVA_{INI}.",
+       "detalle": "Así solo ves tus movimientos. En el vídeo se escribe un asterisco (todas las cuentas) porque la empresa del ejemplo tiene una sola."
       },
       {
-       "texto": "En «Fecha inicio» escribe 01-01-2026 y en «Fecha fin», 30-06-2026 (o la de hoy).",
-       "detalle": "Verás las dos fechas escritas. Si tu extracto es de otra fecha, ajústalas."
+       "texto": "En «Fecha inicio» escribe 01-11-2026 y en «Fecha fin», 30-11-2026.",
+       "detalle": "El pago y su comisión son del 06-11-2026."
       },
       {
        "texto": "Pulsa «Ejecutar».",
@@ -4375,10 +4467,10 @@
        "detalle": "Se abre una ventana con dos columnas: «Extracto pendiente» a la izquierda y «Tesorería pendiente» a la derecha."
       },
       {
-       "texto": "Localiza el extracto 1.524,60 a la izquierda y la tesorería -1.524,60 a la derecha.",
+       "texto": "Localiza el extracto 151,25 a la izquierda y la tesorería -151,25 a la derecha.",
        "pregunta": "La consulta ya se ha ejecutado. ¿Dónde está el extracto de 1.524,60 pendiente de conciliar?",
        "imagen": "v-icon2-008.jpg",
-       "detalle": "A la izquierda está «Extracto pendiente»; a la derecha, «Tesorería pendiente». Esta muestra la posición (Salida o Entrada) y la operación financiera (PMICDT).",
+       "detalle": "A la izquierda está «Extracto pendiente»; a la derecha, «Tesorería pendiente», con la posición (Salida) y la operación financiera (PMICDT). En la captura del vídeo, 1.524,60 y -1.524,60.",
        "hotspot": {
         "x": 14.0,
         "y": 57.8,
@@ -4391,7 +4483,7 @@
      "avisos": [
       {
        "tipo": "nota",
-       "texto": "Con el asterisco en «Cuenta» no necesitas saber el código de la cuenta."
+       "texto": "Si eliges BBVA_{INI} en «Cuenta», no ves movimientos de otros alumnos."
       }
      ]
     },
@@ -4405,25 +4497,25 @@
       "Conciliación bancaria"
      ],
      "explicacion": [
-      "Marca el extracto y su movimiento de tesorería. Después pulsa «Conciliar tesorería».",
+      "Marca el extracto y su movimiento de tesorería. Después pulsa «Conciliar banco».",
       "Una vez conciliados, salen en las pestañas «Extracto conciliado» y «Tesorería conciliada».",
       "Por último, entra en el importe conciliado y pulsa «Contabilizar». Así se genera el asiento."
      ],
      "campos": [
       {
-       "campo": "Conciliar tesorería",
+       "campo": "Conciliar banco",
        "significado": "Botón que casa el extracto pendiente con la tesorería pendiente.",
        "ejemplo": "Operación con éxito"
       },
       {
        "campo": "Extracto conciliado",
        "significado": "Pestaña con el extracto ya casado.",
-       "ejemplo": "1.524,60"
+       "ejemplo": "151,25 (1.524,60 en el vídeo)"
       },
       {
        "campo": "Tesorería conciliada",
        "significado": "Pestaña con la tesorería ya casada.",
-       "ejemplo": "-1.524,60"
+       "ejemplo": "-151,25 (-1.524,60 en el vídeo)"
       },
       {
        "campo": "Contabilizar",
@@ -4433,9 +4525,9 @@
      ],
      "pasos": [
       {
-       "texto": "Marca el extracto y el movimiento de tesorería. Pulsa «Conciliar tesorería».",
+       "texto": "Marca el extracto 151,25 y el movimiento -151,25. Pulsa «Conciliar banco».",
        "pregunta": "Ya has marcado el extracto y su movimiento de tesorería. ¿Qué botón pulsas para conciliarlos?",
-       "detalle": "Marca la casilla de cada fila. El botón «Conciliar tesorería» está arriba a la derecha. Debe salir el aviso verde «Éxito».",
+       "detalle": "Marca la casilla de cada fila. El botón está arriba a la derecha (en la versión del vídeo se llamaba «Conciliar tesorería»). Debe salir el aviso verde «Éxito».",
        "imagen": "v-icon2-009.jpg",
        "hotspot": {
         "x": 69.4,
@@ -4446,7 +4538,7 @@
        }
       },
       {
-       "texto": "Abre la pestaña «Extracto conciliado» y comprueba que está el 1.524,60.",
+       "texto": "Abre la pestaña «Extracto conciliado» y comprueba que está el 151,25.",
        "pregunta": "La conciliación ha salido con éxito. ¿Dónde compruebas el extracto conciliado de 1.524,60?",
        "imagen": "v-icon2-010.jpg",
        "hotspot": {
@@ -4456,14 +4548,14 @@
         "h": 3.6,
         "etiqueta": "Extracto conciliado 1.524,60"
        },
-       "detalle": "Verás la línea de 1.524,60 en esta pestaña. Ya no sale en «Extracto pendiente»."
+       "detalle": "Ya no sale en «Extracto pendiente». En la captura del vídeo, 1.524,60."
       },
       {
-       "texto": "Abre la pestaña «Tesorería conciliada» y comprueba que está el -1.524,60.",
-       "detalle": "Verás la línea de -1.524,60 en esta pestaña. Ya no sale en «Tesorería pendiente»."
+       "texto": "Abre la pestaña «Tesorería conciliada» y comprueba que está el -151,25.",
+       "detalle": "Ya no sale en «Tesorería pendiente». En la captura del vídeo, -1.524,60."
       },
       {
-       "texto": "En la pestaña «Tesorería conciliada», pulsa el importe subrayado -1.524,60.",
+       "texto": "En la pestaña «Tesorería conciliada», pulsa el importe subrayado -151,25.",
        "detalle": "Se abre una ventana con el movimiento de tesorería (PMICDT) y su extracto. Abajo está el resumen de apuntes."
       },
       {
@@ -4483,7 +4575,7 @@
        "texto": "Revisa el asiento generado: el debe y el haber cuadran.",
        "pregunta": "La conciliación ya está contabilizada. ¿Dónde revisas el asiento generado, con el debe y el haber?",
        "imagen": "v-icon2-011.jpg",
-       "detalle": "Está en «Resumen de apuntes»: dos líneas de 1.524,60. Al debe, la 10000.00027, la cuenta que abonó la orden de la remesa. Al haber, la 57900.00000 «Fondos en movimiento», la cuenta del banco en esa base. En el PGC español serían la 401 y la 572.",
+       "detalle": "Está en «Resumen de apuntes»: dos líneas de 151,25. Al debe, la cuenta puente de la acción de ordenar (la del haber del asiento de «Evolucionar una remesa»). Al haber, 57200.00000, la cuenta de BBVA_{INI}. En la captura del vídeo: 10000.00027 y 57900.00000 «Fondos en movimiento», la cuenta del banco PRVCC0. En el PGC español serían la 401 y la 572.",
        "hotspot": {
         "x": 15.0,
         "y": 77.8,
@@ -4491,6 +4583,10 @@
         "h": 6.6,
         "etiqueta": "Asiento de la conciliación"
        }
+      },
+      {
+       "texto": "Haz lo mismo con la comisión: extracto 3,50 con tesorería -3,50 ({INI}COM), concilia y contabiliza",
+       "detalle": "El asiento lleva 62600.00000 (tu flujo {INI}COM, mnemotécnico {INI}626) 3,50 al debe y 57200.00000 3,50 al haber. Si no tienes el movimiento de -3,50, créalo desde el extracto con «Generar tesorería» y la operación {INI}COM («Conciliar el banco»)."
       }
      ],
      "avisos": [
@@ -4526,7 +4622,7 @@
       "El código de empresa"
      ],
      "correcta": 2,
-     "explicacion": "Con un asterisco ves todas las cuentas disponibles."
+     "explicacion": "Con un asterisco ves todas las cuentas disponibles. Para ver solo las tuyas, elige BBVA_{INI}."
     },
     {
      "pregunta": "¿Qué columnas comparas al ejecutar?",
@@ -4564,12 +4660,12 @@
    ],
    "checklist": [
     "Has abierto «Finanzas» › «Tesorería» › «Conciliación bancaria».",
-    "Has filtrado empresa, cuenta (o asterisco) y fechas, y has pulsado «Ejecutar».",
-    "Ves pendientes el extracto 1.524,60 y la tesorería -1.524,60.",
-    "Has pulsado «Conciliar tesorería» y sale «Operación con éxito».",
+    "Has filtrado la empresa 0, la cuenta BBVA_{INI} y las fechas 01-11-2026 a 30-11-2026, y has pulsado «Ejecutar».",
+    "Ves pendientes el extracto 151,25 y la tesorería -151,25 (y 3,50 / -3,50).",
+    "Has pulsado «Conciliar banco» y sale «Éxito».",
     "El importe está en «Extracto conciliado» y en «Tesorería conciliada».",
     "Has entrado en el importe conciliado y has pulsado «Contabilizar».",
-    "El asiento de la conciliación aparece y cuadra."
+    "El asiento cuadra: cuenta puente 151,25 al debe y 57200.00000 al haber; comisión 62600.00000 3,50 al debe y 57200.00000 al haber."
    ],
    "problemas": [
     {
@@ -4587,17 +4683,17 @@
    ],
    "aprendido": [
     "Has filtrado la conciliación por empresa, cuenta y fechas y la has ejecutado.",
-    "Has casado el extracto de 1.524,60 con su tesorería de -1.524,60 con «Conciliar tesorería».",
+    "Has casado el extracto de 151,25 con su tesorería de -151,25, y el de 3,50 con -3,50.",
     "Has comprobado el resultado en «Extracto conciliado» y «Tesorería conciliada».",
-    "Has pulsado «Contabilizar» y has revisado que el asiento cuadra."
+    "Has pulsado «Contabilizar» y el banco ha bajado en la contabilidad: 57200.00000 al haber."
    ]
   },
   {
    "id": "icon-cartera-v-11",
    "numero": 17,
    "titulo": "Conciliar un cobro y un anticipo",
-   "objetivo": "Darás de alta el extracto de un cobro y sabrás qué efectos genera un anticipo.",
-   "concepto": "Un cobro es dinero que entra en tu cuenta, y el banco lo anota en su extracto, la lista de movimientos de tu cuenta. Es como mirar la app del banco cuando un amigo te dice que ya te ha hecho el Bizum. Si no lo compruebas, no sabes si el cliente ha pagado de verdad.\n\nEl banco ve tu cuenta al revés que tú. Para él, un cobro tuyo es un abono, y en el extracto de esta base los abonos van en negativo. En tesorería, el mismo cobro es una Entrada en positivo.\n\nEjemplo: en tu caso, cobras 121,00 de C{INI}: uno el 14-11 con un efecto suelto y otro el 14-12 con una remesa de cobro. El vídeo usa una remesa de cobro de 5.082,00, con concepto común 04 y concepto propio 13. El mecanismo es el mismo.\n\nDespués se concilia y contabiliza igual que el pago (bloque «Conciliar y contabilizar una remesa»).\n\nUn anticipo es dinero que el cliente paga antes de que exista la factura, por ejemplo una señal de 500 €. En finanzas no genera factura. Genera dos efectos, es decir, dos cobros o pagos pendientes en la cartera, la lista de todos los efectos.\n\nUno es de +500 y se cobra ya, con su remesa y su extracto. El otro es de -500 y queda pendiente. Se compensa con el efecto de la factura cuando llegue.\n\nFíjate: ese -500 no mueve dinero, así que no tiene extracto propio. El proceso de anticipos lo ves por dentro en el bloque «Conocer los procesos avanzados de cartera» (Cartera, cobros y pagos). Tu caso no tiene anticipos: no lo sumes.\n\nDónde: «Finanzas › Tesorería › Extractos bancarios › Movimientos».",
+   "objetivo": "Darás de alta, o comprobarás, las líneas del extracto de tus dos cobros de 121,00, sabrás por qué van en negativo y qué efectos genera un anticipo.",
+   "concepto": "Un cobro es dinero que entra en tu cuenta, y el banco lo anota en su extracto, la lista de movimientos de tu cuenta. Es como mirar la app del banco cuando un amigo te dice que ya te ha hecho el Bizum. Si no lo compruebas, no sabes si el cliente ha pagado de verdad.\n\nEl banco ve tu cuenta al revés que tú. Para él, un cobro tuyo es un abono, y en el extracto los abonos se guardan en negativo (comprobado con la carga N43 de la cuenta CAPT_BCO: su saldo a favor de 4.507,50 quedó como -4.507,50). En tesorería, el mismo cobro sería una Entrada en positivo.\n\nEn tu caso cobras dos veces 121,00 de C{INI}: el 14-11-2026 el efecto 1 con la gestión COBD (común 04, propio 004) y el 14-12-2026 el efecto 2 con la remesa de cobro por la línea LRC{INI} (común 06, propio 006). En el extracto son dos líneas de -121,00. Si cargaste el fichero del caso, ya las tienes.\n\nFíjate: estos dos cobros no tienen movimiento de tesorería. La gestión COBD y la remesa s/Tes apuntan la 57200 directamente con su asiento. Por eso, al conciliar se quedan en «Extracto pendiente» y las justificas con el asiento (lo explica «Conciliar el banco»). No los contabilices otra vez.\n\nLas capturas son del vídeo: una remesa de cobro de 5.082,00, con concepto común 04 y concepto propio 13 de otro banco.\n\nUn anticipo es dinero que el cliente paga antes de que exista la factura, por ejemplo una señal de 500 €. En finanzas no genera factura. Genera dos efectos, es decir, dos cobros o pagos pendientes en la cartera, la lista de todos los efectos.\n\nUno es de +500 y se cobra ya, con su remesa y su extracto. El otro es de -500 y queda pendiente. Se compensa con el efecto de la factura cuando llegue.\n\nFíjate: ese -500 no mueve dinero, así que no tiene extracto propio. El proceso de anticipos lo ves por dentro en el bloque «Conocer los procesos avanzados de cartera» (Cartera, cobros y pagos). Tu caso no tiene anticipos: no lo sumes.\n\nDónde: «Finanzas › Tesorería › Extractos bancarios › Movimientos».",
    "duracionMin": 40,
    "secciones": [
     {
@@ -4611,9 +4707,9 @@
       "Movimientos"
      ],
      "explicacion": [
-      "La remesa de cobro se refleja en un extracto de 5.082,00 en negativo.",
+      "Cada cobro de 121,00 se refleja en el extracto como -121,00. En el vídeo, la remesa de cobro es un extracto de -5.082,00.",
       "El signo negativo no es un error. Para el banco es un abono en tu cuenta, y los abonos van en negativo.",
-      "Después de guardar, concilia y contabiliza como en el bloque «Conciliar y contabilizar una remesa»."
+      "Tus dos cobros no tienen movimiento de tesorería: al conciliar se quedan pendientes y los compruebas con su asiento."
      ],
      "campos": [
       {
@@ -4624,32 +4720,32 @@
       {
        "campo": "Cuenta financiera",
        "significado": "Cuenta de tesorería de la empresa donde entra el cobro.",
-       "ejemplo": "Se carga automáticamente"
+       "ejemplo": "BBVA_{INI}"
       },
       {
        "campo": "Concepto común",
        "significado": "Código estándar del tipo de movimiento. Ayuda a casarlo en la conciliación.",
-       "ejemplo": "04"
+       "ejemplo": "04 (14-11) y 06 (14-12); 04 en el vídeo"
       },
       {
        "campo": "Concepto propio",
        "significado": "Código particular del banco para este cobro.",
-       "ejemplo": "13"
+       "ejemplo": "004 y 006 de tu banco ES0182; 13 en el vídeo"
       },
       {
        "campo": "Importe",
        "significado": "Importe del movimiento. Un cobro (abono del banco) va en negativo.",
-       "ejemplo": "-5.082,00"
+       "ejemplo": "-121,00 (-5.082,00 en el vídeo)"
       }
      ],
      "pasos": [
       {
        "texto": "Entra en «Finanzas» › «Tesorería» › «Extractos bancarios» › «Movimientos».",
-       "detalle": "Es la misma pantalla que usaste para el extracto del pago."
+       "detalle": "Es la misma pantalla que usaste para el extracto del pago. Filtra por BBVA_{INI}: si las dos líneas de -121,00 ya están (fichero del caso), salta al último paso."
       },
       {
-       "texto": "Pulsa «Nuevo». En «Empresa» elige 0 Deister Software.",
-       "detalle": "La cuenta financiera se carga sola.",
+       "texto": "Pulsa «Nuevo». Elige la empresa 0 Deister Software, la cuenta BBVA_{INI} y las fechas 14-11-2026.",
+       "detalle": "Fecha de operación y fecha valor: 14-11-2026, el día que C{INI} paga el efecto 1.",
        "imagen": "v-icon2-013.jpg"
       },
       {
@@ -4657,12 +4753,12 @@
        "detalle": "Verás el código 04 y, debajo, su descripción."
       },
       {
-       "texto": "En «Concepto propio» escribe 13.",
+       "texto": "En «Concepto propio» escribe 004.",
        "imagen": "v-icon2-014.jpg",
-       "detalle": "Verás «13 TRANSFERENCIA» en la lista. Elígelo y la descripción se rellena sola."
+       "detalle": "Es el de transferencias de tu banco ES0182. En el vídeo, «13 TRANSFERENCIA» de otro banco."
       },
       {
-       "texto": "En «Importe extracto» escribe 5.082,00 en negativo (-5.082,00).",
+       "texto": "En «Importe extracto» escribe 121,00 en negativo (-121,00).",
        "pregunta": "Este extracto es de un cobro. ¿Dónde escribes el importe de -5.082,00 en negativo?",
        "imagen": "v-icon2-015.jpg",
        "hotspot": {
@@ -4672,21 +4768,25 @@
         "h": 4.6,
         "etiqueta": "Importe extracto -5082"
        },
-       "detalle": "Verás -5.082,00 en el campo, con el signo menos delante. Es el criterio del banco: el cobro es un abono."
+       "detalle": "Verás -121,00 con el signo menos delante. Es el criterio del banco: el cobro es un abono. En el vídeo, -5.082,00."
       },
       {
-       "texto": "Pulsa «Guardar».",
-       "detalle": "Verás el extracto guardado con su número de orden. La divisa EUR se rellena sola."
+       "texto": "Pulsa «Guardar» y repite con el efecto 2: 14-12-2026, común 06, propio 006, -121,00.",
+       "detalle": "06 es «Remesas de efectos»: el banco te abona la remesa de cobro. La divisa EUR se rellena sola."
       },
       {
-       "texto": "Comprueba que el extracto queda guardado con -5.082,00.",
-       "detalle": "Si sale en positivo, no casará con su tesorería al conciliar."
+       "texto": "Comprueba que tienes dos líneas de -121,00 en BBVA_{INI}.",
+       "detalle": "Si salen en positivo, cámbialas: un abono en positivo descuadra el saldo del extracto (−3.077,25)."
       }
      ],
      "avisos": [
       {
        "tipo": "nota",
        "texto": "No lo cambies a positivo. En el extracto, el cobro es un abono del banco y va en negativo."
+      },
+      {
+       "tipo": "nota",
+       "texto": "Tus cobros no se contabilizan desde la conciliación: su asiento ya lo hicieron la gestión COBD y la remesa."
       }
      ]
     },
@@ -4745,7 +4845,7 @@
       "Cero"
      ],
      "correcta": 1,
-     "explicacion": "En esta base, el extracto guarda los abonos (cobros) en negativo y los cargos (pagos) en positivo. En otras bases puede variar."
+     "explicacion": "El extracto guarda los abonos (cobros) en negativo y los cargos (pagos) en positivo, como lo ve el banco. Lo confirma la carga N43 de la cuenta CAPT_BCO."
     },
     {
      "pregunta": "¿Qué concepto propio se usa en el ejemplo de cobrar?",
@@ -4793,8 +4893,10 @@
     }
    ],
    "checklist": [
-    "Has creado el extracto con empresa, concepto común 04 y concepto propio 13.",
-    "El importe es -5.082,00 y el extracto está guardado.",
+    "Has filtrado los movimientos del extracto por BBVA_{INI}.",
+    "Tienes la línea de -121,00 del 14-11-2026 (común 04, propio 004).",
+    "Tienes la línea de -121,00 del 14-12-2026 (común 06, propio 006).",
+    "Sabes que esos cobros no tienen movimiento de tesorería y que al conciliar se quedan pendientes.",
     "Has abierto la pantalla «Anticipos» y has visto que no pide factura.",
     "Sabes que un anticipo genera dos efectos: el positivo se cobra y el negativo se compensa con la factura."
    ],
@@ -4813,12 +4915,12 @@
     },
     {
      "problema": "El extracto no casa con su tesorería al conciliar.",
-     "solucion": "Mira el signo del importe. Si lo escribiste en positivo, ábrelo y cámbialo a negativo (-5.082,00)."
+     "solucion": "Mira el signo: el cobro va en negativo en el extracto y en positivo en tesorería. Recuerda que tus cobros de 121,00 no tienen movimiento de tesorería: no casan con nada y se justifican con su asiento."
     }
    ],
    "aprendido": [
-    "Has dado de alta el extracto de un cobro de -5.082,00, en negativo porque es un abono del banco.",
-    "Has usado el concepto común 04 y el concepto propio 13 también para el cobro.",
+    "Has dado de alta el extracto de un cobro de -121,00, en negativo porque es un abono del banco.",
+    "Has usado los conceptos comunes 04 y 06 y los propios 004 y 006 de tu banco para los cobros.",
     "Has visto que la pantalla «Anticipos» no pide ninguna factura.",
     "Has entendido que un anticipo genera dos efectos: el positivo se cobra y el negativo se compensa con la factura."
    ]

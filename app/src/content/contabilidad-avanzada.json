@@ -1420,7 +1420,7 @@
           "pasos": [
             {
               "texto": "Operación 1 · 01-10 · Aportación de los socios. Abre «Finanzas › Contabilidad General › Diario contable › Asientos › Asientos» y crea un asiento con el banco 57200.00000 al debe por 3.000,00 y el capital (cuenta 100 del plan) al haber por 3.000,00.",
-              "detalle": "El asiento cuadra: 3.000,00 − 3.000,00 = 0,00. Lo aprendiste en «Crear un asiento manual». Grábalo en la empresa 0, como todo el caso; no en S{INI}. La aportación es un asiento manual y no crea movimiento de tesorería. Para conciliar la línea de +3.000,00 del extracto, genera su tesorería con «Generar tesorería» al conciliar (bloque «Conciliar el banco»)."
+              "detalle": "El asiento cuadra: 3.000,00 − 3.000,00 = 0,00. Lo aprendiste en «Crear un asiento manual». Grábalo en la empresa 0, como todo el caso; no en S{INI}. La aportación es un asiento manual y no crea movimiento de tesorería. En el extracto del banco será la línea de 3.000,00 (abono; el ERP la guarda como -3.000,00): al conciliar se queda pendiente y la justificas con este asiento. No uses «Generar tesorería» con ella: al contabilizar ese movimiento, el banco subiría dos veces."
             },
             {
               "texto": "Operación 2 · 05-10 · Oferta y pedido a T{INI}. Abre «Gestión › Compras › Ofertas › Ofertas» y luego «Gestión › Compras › Pedidos › Pedidos». Pide 10 unidades del artículo 13500620 a 12,50 y deja el pedido 0PC{INI}01.",
@@ -1508,7 +1508,7 @@
             {
               "campo": "Pago a T{INI}",
               "significado": "Sale del banco.",
-              "ejemplo": "151,25 + 3,50 = 154,75"
+              "ejemplo": "151,25 + 3,50 = 154,75 (dos cargos en el extracto)"
             },
             {
               "campo": "Comisión manual",
@@ -1528,26 +1528,30 @@
           ],
           "pasos": [
             {
-              "texto": "Operación 7 · 06-11 · Pago a T{INI} por remesa. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas», crea una remesa de pago por transferencia con el efecto de T{INI} y ciérrala.",
-              "detalle": "El efecto de 151,25 pasa a pagado y el banco cobra 3,50 de comisión. En el ERP lo ves en dos momentos. Al ordenar la remesa: 40000.T{INI} 151,25 al debe contra la cuenta puente de la acción. Al conciliar el cargo del banco: la cuenta puente al debe y 57200.00000 al haber, más la comisión (3,50 al debe en la cuenta de tu flujo {INI}COM, que se traduce a una 626 «Servicios bancarios y similares», y 57200.00000 al haber). Neto: 400 151,25 y 626 3,50 al debe, 572 154,75 al haber. Lo aprendiste en «Crear una remesa de pago» y en «Preparar el banco propio»."
+              "texto": "Operación 7 · 06-11 · Pago a T{INI} por remesa. En «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» crea una remesa de clase Pagar, tipo PSCTT, cuenta BBVA_{INI} y fecha 06-11-2026, agrega el efecto de 151,25 de T{INI} y ordénala con «Evolucionar estado». Si ya la hiciste en «Crear una remesa de pago» y «Evolucionar una remesa», no la repitas: comprueba que el efecto está en OP.",
+              "detalle": "Antes, BBVA_{INI} necesita PSCTT en «Remesas por cuenta»; T{INI} ya tiene IBAN y tipo de efecto TF desde Compras. Al ordenar: 40000.T{INI} 151,25 al debe contra la cuenta puente de la acción, y un movimiento de tesorería PMICDT de -151,25. La comisión de 3,50 es la regla {INI}TRF de la pestaña «Comisiones» de BBVA_{INI} (fija 3,50 sobre PMICDT, «Operación comisión» {INI}COM): nace como movimiento de -3,50 con «Recalcular comisión» o, si no, con «Generar tesorería» al conciliar. Al conciliar y contabilizar: la cuenta puente 151,25 al debe y 57200.00000 al haber; y 62600.00000 (cuenta de tu flujo {INI}COM, mnemotécnico {INI}626) 3,50 al debe y 57200.00000 al haber. Neto: 400 151,25 y 626 3,50 al debe, 572 154,75 al haber. Lo aprendiste en «Crear una remesa de pago», «Evolucionar una remesa», «Preparar el banco propio» y «Configurar flujos, operaciones y parámetros»."
             },
             {
-              "texto": "Operación 8 · 12-11 · Comisión de mantenimiento. Abre «Finanzas › Tesorería › Ops. corto plazo» y registra un movimiento manual con el flujo {INI}COM de 10,00.",
-              "detalle": "El movimiento sale en negativo: −10,00. El asiento lleva la 626 Servicios bancarios al debe (en la demo, la cuenta de tu flujo {INI}COM) y 57200.00000 al haber, por 10,00. Lo aprendiste en «Registrar un movimiento manual»."
+              "texto": "Operación 8 · 12-11 · Comisión de mantenimiento. Abre «Finanzas › Tesorería › Ops. corto plazo» y registra un movimiento manual de BBVA_{INI} con fecha 12-11-2026, Salida 10,00 y la operación {INI}COM. Si ya lo hiciste en «Registrar un movimiento manual», no lo repitas.",
+              "detalle": "El movimiento sale en negativo: −10,00. El asiento lleva 62600.00000 Servicios bancarios y similares (la cuenta de tu flujo {INI}COM, mnemotécnico {INI}626) al debe y 57200.00000 al haber, por 10,00. Lo aprendiste en «Registrar un movimiento manual»."
             },
             {
-              "texto": "Operación 9 · 14-11 · Cobro del efecto 1. Abre «Finanzas › Cobros y Pagos › Gestiones › Gestiones sobre efectos», crea una gestión COBD con el efecto de 121,00 y ciérrala.",
-              "detalle": "El efecto pasa de PE a CO (cobrado). El asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. Lo aprendiste en «Cobrar efectos sueltos y en remesa»."
+              "texto": "Operación 9 · 14-11 · Cobro del efecto 1. Abre «Finanzas › Cobros y Pagos › Gestiones › Gestiones sobre efectos», crea una gestión COBD con fecha 14-11-2026 y el efecto de 121,00 de C{INI} que vence ese día, y ciérrala.",
+              "detalle": "El efecto pasa de PE a CO (cobrado). El asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. No crea movimiento de tesorería: en la conciliación su línea del extracto (-121,00) se queda pendiente y la justificas con este asiento. Lo aprendiste en «Cobrar efectos sueltos y en remesa»."
             },
             {
-              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. Abre «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» y crea una remesa de cobro SEPA por la línea financiera LRC{INI} con el efecto de 121,00. El banco la cobra el 14-12.",
-              "detalle": "Cuando el banco cobra, el efecto pasa a CO y el asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. Lo aprendiste en «Domiciliar un cliente: mandato SEPA y remesa de cobro»."
+              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. En «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» crea una remesa de clase Cobrar, tipo CSDDS, cuenta BBVA_{INI}, línea financiera LRC{INI} y fecha 01-12-2026, con el efecto de 121,00 que vence el 14-12. Ordénala y confirma el cobro con fecha 14-12-2026. Si ya la hiciste en «Domiciliar un cliente: mandato SEPA y remesa de cobro», no la repitas.",
+              "detalle": "Antes: CSDDS en «Remesas por cuenta» de BBVA_{INI}, el IBAN de prueba en C{INI} y la domiciliación 0 en el efecto 2 (lo hiciste en ese bloque). Tu remesa tendrá su propio número. Al confirmar, el efecto pasa a CO y el asiento lleva 57200.00000 121,00 al debe y, lo habitual, 43000.00901 121,00 al haber. Si el efecto no admite la domiciliación, cóbralo el 14-12-2026 con una gestión COBD como el 1: el banco queda igual."
             }
           ],
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Con el efecto 2 cobrado, la cuenta de tu cliente queda a cero: 242,00 − 121,00 − 121,00 = 0,00."
+              "texto": "Con el efecto 2 cobrado, la deuda de tu cliente queda a cero: 242,00 − 121,00 − 121,00 = 0,00."
+            },
+            {
+              "tipo": "nota",
+              "texto": "Anomalía de la demo: el asiento de la remesa de cobro lleva al haber una 23000 en lugar de la 43000.00901. Si cobras el efecto 2 por remesa, la 43000.00901 de C{INI} se queda con 121,00 en el Mayor aunque el efecto esté CO. No es un error tuyo; el banco 57200 sube igual 121,00."
             }
           ]
         },
@@ -1567,7 +1571,7 @@
           "campos": [
             {
               "campo": "Saldo del banco",
-              "significado": "Debe coincidir con el extracto.",
+              "significado": "Debe coincidir con el extracto (el ERP guarda el saldo a tu favor en negativo: -3.077,25).",
               "ejemplo": "3.077,25"
             },
             {
@@ -1588,8 +1592,8 @@
           ],
           "pasos": [
             {
-              "texto": "Operación 11 · 31-12 · Concilia el extracto de BBVA_{INI}. Da de alta el extracto en «Finanzas › Tesorería › Extractos bancarios › Almacén ficheros» y concílialo en «Finanzas › Tesorería › Conciliación bancaria».",
-              "detalle": "El extracto tiene seis líneas y termina en 3.077,25: 3.000,00 − 151,25 − 3,50 − 10,00 + 121,00 + 121,00. Todas quedan conciliadas. Lo aprendiste en «Dar de alta el extracto bancario» y en «Conciliar el banco»."
+              "texto": "Operación 11 · 31-12 · Concilia el extracto de BBVA_{INI}. Carga el fichero N43 del caso en «Finanzas › Tesorería › Extractos bancarios › Almacén ficheros» (o da de alta las seis líneas a mano en «… › Movimientos») y concílialo en «Finanzas › Tesorería › Conciliación bancaria».",
+              "detalle": "El extracto tiene seis líneas y termina en 3.077,25 a tu favor: 3.000,00 − 151,25 − 3,50 − 10,00 + 121,00 + 121,00. En el ERP se guardan con el signo del banco: cargos en positivo (151,25, 3,50, 10,00) y abonos en negativo (-3.000,00, -121,00, -121,00). Concilias con «Conciliar banco» las tres que tienen movimiento de tesorería: 151,25 con -151,25 (PMICDT), 3,50 con -3,50 y 10,00 con -10,00 ({INI}COM). Las otras tres (aportación, cobro COBD y remesa s/Tes) no tienen movimiento: se quedan en «Extracto pendiente» y las justificas con su asiento en la 57200. Lo aprendiste en «Dar de alta el extracto bancario» y en «Conciliar el banco»."
             },
             {
               "texto": "Operación 12 · 31-12 · Liquida el IVA del 4T. Abre «Finanzas › Impuestos › IVA › Borrador autoliquidación IVA (Modelo 303)» (o escribe 303 en el buscador) y prepara el modelo del cuarto trimestre.",
@@ -1685,7 +1689,7 @@
             {
               "campo": "Cliente C{INI} y proveedor T{INI}",
               "significado": "242,00 − 121,00 − 121,00 y 151,25 − 151,25.",
-              "ejemplo": "0,00 y 0,00"
+              "ejemplo": "0,00 y 0,00 (con la remesa de cobro, la 43000.00901 muestra 121,00 por la anomalía de la 23000)"
             },
             {
               "campo": "Stock del artículo 13500620",
@@ -1798,7 +1802,7 @@
       "problemas": [
         {
           "problema": "El banco no termina en 3.077,25.",
-          "solucion": "Repasa las operaciones 1, 7, 8, 9 y 10 en «Finanzas › Contabilidad General › Extractos › Mayor de cuentas», con la cuenta 57200.00000 filtrada por tus documentos y tu diario {INI}. Busca el asiento o el movimiento que falta o que está por duplicado."
+          "solucion": "Repasa las operaciones 1, 7, 8, 9 y 10 en «Finanzas › Contabilidad General › Extractos › Mayor de cuentas», con la cuenta 57200.00000 filtrada por tus documentos y tu diario {INI}. Busca el asiento o el movimiento que falta o que está por duplicado. Si usaste «Generar tesorería» con la aportación o con un cobro y lo contabilizaste, ese importe está dos veces: descontabiliza el movimiento generado."
         },
         {
           "problema": "Falta tu cliente C{INI} o tu banco BBVA_{INI}.",

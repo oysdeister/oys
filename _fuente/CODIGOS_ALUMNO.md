@@ -56,7 +56,7 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `TS{INI}` | Tercero **de la empresa** S{INI} «Empresa prácticas {INI}» (NIF de prueba B76543214, sin relaciones contables). No es cliente ni proveedor | maestros-v-4 «Crear el tercero de tu empresa» | maestros-v-4 (identificación social de S{INI}) |
 | `S{INI}` | Empresa «Empresa prácticas {INI}» | maestros-v-4 | — |
 | `CAIXA{INI}` | Banco propio de la empresa S{INI} | maestros-v-4 | — |
-| `T{INI}` | Tercero **proveedor** «Tercero {INI}» (No censado, Id. 0, categoría 002) y su ficha de proveedor | Compras › compras-1 «Tercero» y «Proveedor» | compras-2, compras-3, Ventas **no** (su cliente es C{INI}), Cartera **no** (usa su tercero CAR{INI}), ERP simulado (prácticas de compras y pago) |
+| `T{INI}` | Tercero **proveedor** «Tercero {INI}» (No censado, Id. 0, categoría 002) y su ficha de proveedor | Compras › compras-1 «Tercero» y «Proveedor» | compras-2, compras-3, Ventas **no** (su cliente es C{INI}), Cartera: solo para **pagar su efecto de 151,25** con la remesa PSCTT (icon-cartera-v-5/-v-6, operación 7 del caso), sin tocar sus condiciones ni su IBAN de Compras; el resto de Cartera usa CAR{INI}. ERP simulado (prácticas de compras y pago) |
 | `TF{INI}` | Lista de precios de compra (tarifa) | compras-precios | compras-precios (grupo G{INI}) |
 | `G{INI}` | Grupo de precios de compra | compras-precios | compras-precios (proveedor T{INI}) |
 | `13500620` | Artículo **de la demo** que se compra (6000-2RS ISB, tipo contable PRODUCTO). No se modifica | ya existe | compras-1 (tarifa), compras-2 y compras-3 (oferta, albaranes, factura), Ventas, ERP simulado (pedido › albarán › factura) |
@@ -93,6 +93,10 @@ Longitudes comprobadas en el diccionario (wic_table_object): `tlinefin.linfin` 1
 | `LRC{INI}` | Línea financiera «Remesas de cobro {INI}» de BBVA_{INI} (antes `{INI}1`) | carteras-5 | remesas por cuenta |
 | `REM{INI}` | Tipo de línea financiera «Remesas cobro {INI}» (antes `{INI}`) | carteras-5 | LRC{INI} |
 | `CONTRATO-{INI}-001` | Referencia de la línea financiera | carteras-5 | — |
+| `MAN{INI}001` | Referencia del mandato SEPA de **C{INI}** (en la demo no se llega a guardar: error 15486) | cartera-mandato-sepa | — |
+| IBAN de prueba `ES9121000418450200051332` | Datos bancarios (domiciliación 0) de T{INI} (Compras) y de **C{INI}** (cartera-mandato-sepa). No es un código, es un dato de prueba | compras-1 / cartera-mandato-sepa | remesa PSCTT de T{INI}, remesa CSDDS del efecto 2 de C{INI} |
+
+Remesas de Cartera: la de **pago** (icon-cartera-v-4 a v-7, carteras-7) es la del caso, con el efecto de 151,25 de **T{INI}** (tipo TF, ya tiene IBAN), PSCTT y BBVA_{INI}, fecha 06-11-2026. La de **cobro** SEPA (cartera-mandato-sepa) es la del caso, con el efecto 2 de 121,00 de **C{INI}** (FP{INI}, tipo R{INI}), CSDDS, línea LRC{INI}, 01-12-2026 y cobro el 14-12-2026. BBVA_{INI} lleva en «Remesas por cuenta» CSCTS, CSDDS (con LRC{INI}) y PSCTT (carteras-5-remesa-banco). carteras-5 sigue con CAR{INI}. El número de remesa (RM…) lo pone el ERP: los de las capturas no son del alumno.
 
 ### Ventas (ventas.json)
 
@@ -115,13 +119,19 @@ Ventas usa un **único juego** de seis tipologías, todas creadas en Configurar 
 | Código | Qué es | Dónde se crea | Dónde se reutiliza |
 |---|---|---|---|
 | `BBVA_{INI}`, `CAJA_{INI}` | Los de Cartera (no se crean otros) | carteras-3 | tesoreria-1 a 6 |
-| `{INI}COM` | Flujo financiero «Comisión» y su operación financiera de salida (mismo código a propósito: la operación usa ese flujo) | tesoreria-2 | tesoreria-3, 4 |
+| `{INI}COM` | Flujo financiero «Comisión» y su operación financiera de salida (mismo código a propósito: la operación usa ese flujo). Cuenta del flujo: mnemotécnico `{INI}626` | tesoreria-2 | tesoreria-3, 4, 5; «Operación comisión» de `{INI}TRF` |
+| `{INI}TRF` | Código de la comisión bancaria «Comisión transferencias {INI}» de BBVA_{INI} (Haber, PMICDT, fija 3,50, desde 01-10-2026, «Operación comisión» {INI}COM). 5 caracteres; **longitud y maestro no comprobados en la demo** (la captura de Deister usaba ADOP) | tesoreria-1-comisiones (se completa al final de tesoreria-2-operacion) | asientos-14, caso final op. 7 |
+| IBAN de prueba `ES8101820001310200000001` | Banco ES0182 (BBVA) y cuenta 0182 0001 31 0200000001 de **BBVA_{INI}**, para recibir el N43. Dato de prueba (dígitos de control calculados), igual para todos los alumnos | tesoreria-1-banco (último paso) | fichero `app/public/n43/caso_BBVA_ZZ.n43` |
+| Conceptos propios `002`, `004`, `006`, `017` del banco ES0182 | **No son del alumno**: son compartidos por banco (3 caracteres, sin sitio para iniciales). El primero que los necesita los crea; los demás los reutilizan sin cambiarlos | tesoreria-4-n43 (último paso) | tesoreria-4, icon-cartera-v-9/-v-11 |
+| `caso_BBVA_{INI}.n43` | Fichero N43 del caso (6 líneas, saldo final 3.077,25), copia de `/n43/caso_BBVA_ZZ.n43` con ZZ cambiado por las iniciales | tesoreria-4-n43 | tesoreria-4-carga |
 
 ### Contabilidad general (icon-contabilidad.json)
 
 | Código | Qué es | Dónde se crea | Dónde se reutiliza |
 |---|---|---|---|
 | `62999.00000` | Cuenta «Gastos varios {INI}» | parametrizacion-1 | parametrizacion-2, 4 |
+| `{INI}001` | Mnemotécnico «Gastos de prueba {INI}» → 62999.00000 (5 caracteres) | contab-mnemotecnicos-alta | — (no se usa para comisiones) |
+| `{INI}626` | Mnemotécnico «Servicios bancarios {INI}» → **62600.00000** «Servicios bancarios y similares» del plan ES (PGE 2008; existe en TUTORIAL, tipo Costes, sin grupo auxiliar). 5 caracteres, como `{INI}001` | contab-mnemotecnicos-alta (2 pasos al final de «Enlazarlo a una cuenta de un plan»); si no se hizo, tesoreria-2-flujo lo explica | flujo {INI}COM (tesoreria-2), asientos-14, caso final op. 7, 8 y 13 |
 | `{INI}EMP` / `{INI}0001` | Grupo auxiliar «Empleados {INI}» / código auxiliar «José Gómez» | parametrizacion-3 | parametrizacion-4 |
 | `DIV{INI}` | Proyecto «División 1 {INI}» (antes `{INI}1`) | parametrizacion-5 | parametrizacion-6, asientos |
 | `{INI}ADM` | Sección «Administración {INI}» | parametrizacion-6 | proyecto DIV{INI} |
@@ -130,7 +140,14 @@ Ventas usa un **único juego** de seis tipologías, todas creadas en Configurar 
 
 ### Impuestos y Activos
 
-Sin códigos propios del alumno (solo `{INI}` en notas de factura de Impuestos).
+Impuestos no crea códigos: el alumno solo lee datos de la demo (empresa 0 en ESCO, proveedor de prueba TCAPC, artículo 13500620 con clave BOG, factura de prueba 0FC000012, reglas 73 y 153) y no cambia ningún tercero. Activos crea el ordenador del alumno, comprobado en la demo con las iniciales de prueba ZZ (bien ZZORD, elemento AF, componente 000003, cuadro 2026-2029 de 300,00).
+
+| Código | Qué es | Dónde se crea | Dónde se reutiliza |
+|---|---|---|---|
+| `{INI}ORD` | Bien «Ordenador {INI}» (empresa 0, grupo inmovilizado y contable CAP1, grupo fiscal ES7, código fiscal ES72, serie AF). Longitud: 5 caracteres | icon-activos-1 «Crear tu propio ordenador» | icon-activos-2 (valores y cuadro), icon-activos-3 (botones de baja y venta, sin aceptar) |
+| `AF` | Elemento «Ordenador portatil {INI}» del bien {INI}ORD: se deja el código que propone el ERP (la serie del bien). Lleva una línea en «Valores de los elementos» (A, Lineal, 25 %, 4 años) | icon-activos-1 «Crear tu propio ordenador» | componente «Portatil {INI}» |
+| «Portatil {INI}» | Componente del elemento {INI}ORD AF: el número lo pone el ERP (en la prueba ZZ, 000003). Proveedor de prueba TCAPC, valor 1.200,00, alta e inicio 01-01-2026, valores A + L + 25 % + 4 años | icon-activos-1 «Crear tu propio ordenador» | icon-activos-2, icon-activos-3 |
+| `{INI}-ORD-001` | Número de factura del proveedor en la identificación del componente (texto, no crea factura) | icon-activos-1 | — |
 
 ## Otros módulos (solo leídos, no editados)
 

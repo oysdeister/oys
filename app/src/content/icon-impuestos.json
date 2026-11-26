@@ -17,7 +17,7 @@
       "numero": 1,
       "titulo": "Entender el IVA",
       "objetivo": "Calcularás la cuota de IVA de una factura y la liquidación de un trimestre, y sabrás qué datos usa el ERP para elegir el impuesto.",
-      "concepto": "El IVA es un impuesto que paga el consumidor final, pero lo recauda la empresa. Funciona como un buzón de paso: cobras IVA al vender, pagas IVA al comprar y entregas la diferencia a Hacienda. Si lo registras mal, ingresas a Hacienda más o menos de lo que toca.\n\nAntes de tocar pantallas necesitas cuatro ideas. Qué es el IVA, cuándo lo cobras y cuándo lo pagas. Cómo se calcula. Y qué haces con él al final de cada periodo.\n\nEjemplo, tu caso: compras 10 × 12,50 = 125,00 y el IVA soportado es 125,00 × 21 % = 26,25. Vendes 10 × 20,00 = 200,00 y el IVA repercutido es 42,00. La liquidación del 4T es 42,00 − 26,25 = 15,75 a ingresar.\n\nDespués verás la idea central del módulo: en el ERP nadie teclea el IVA en una factura. Lo decide una regla. La regla mira la zona fiscal de la empresa, la zona fiscal del tercero y la clave fiscal del artículo. El tercero es cualquier persona o empresa con la que trabajas, cliente o proveedor. La zona dice dónde tributa; la clave dice cómo tributa el artículo.\n\nPuente: en este módulo consultas facturas de ejemplo de la empresa ALA («Triathlon [ALA] S.L.»), otra empresa de la demo, en Álava, que sale en los vídeos. Sus cifras (800 €, 2.100 €…) son de práctica; el mecanismo es el mismo que el de tu caso.",
+      "concepto": "El IVA es un impuesto que paga el consumidor final, pero lo recauda la empresa. Funciona como un buzón de paso: cobras IVA al vender, pagas IVA al comprar y entregas la diferencia a Hacienda. Si lo registras mal, ingresas a Hacienda más o menos de lo que toca.\n\nAntes de tocar pantallas necesitas cuatro ideas. Qué es el IVA, cuándo lo cobras y cuándo lo pagas. Cómo se calcula. Y qué haces con él al final de cada periodo.\n\nEjemplo, tu caso: compras 10 × 12,50 = 125,00 y el IVA soportado es 125,00 × 21 % = 26,25. Vendes 10 × 20,00 = 200,00 y el IVA repercutido es 42,00. La liquidación del 4T es 42,00 − 26,25 = 15,75 a ingresar.\n\nDespués verás la idea central del módulo: en el ERP nadie teclea el IVA en una factura. Lo decide una regla. La regla mira la zona fiscal de la empresa, la zona fiscal del tercero y la clave fiscal del artículo. El tercero es cualquier persona o empresa con la que trabajas, cliente o proveedor. La zona dice dónde tributa; la clave dice cómo tributa el artículo.\n\nPuente: las capturas de los vídeos son de la empresa ALA («Triathlon [ALA] S.L.»), otra empresa de la demo de los vídeos, en Álava. Sus cifras (800 €, 2.100 €…) son de práctica. En tu demo de prácticas (base TUTORIAL) trabajas con la empresa 0 «Deister Software», que está en la zona ESCO, y con la factura de compra de prueba 0FC000012. El mecanismo es el mismo.",
       "duracionMin": 20,
       "secciones": [
         {
@@ -88,12 +88,12 @@
           "paraQueSirve": "Te da el mapa mental del módulo: qué datos entran, quién decide y qué sale.",
           "ruta": null,
           "explicacion": [
-            "Nadie escribe el porcentaje de IVA en la factura. Al validarla, el ERP lo deduce de tres datos de los maestros: la zona fiscal de la empresa, la del tercero y la clave fiscal del artículo. Si hace falta afinar, mira también la clave del tercero y la del documento.",
+            "Nadie escribe el porcentaje de IVA en la factura. Al validarla, el ERP lo deduce de tres datos de los maestros: la zona fiscal de la empresa, la del tercero y la clave fiscal del artículo. Si hace falta afinar, mira también la clave del tercero y la del documento. Las claves son etiquetas fiscales; las verás en el bloque siguiente.",
             "Primer dato, la zona fiscal: el territorio a efectos de impuestos. Un proveedor de la península está en la zona ESCO, España continental. No tributa igual que uno de Canarias (allí no hay IVA, sino IGIC) o de otro país de la Unión Europea.",
             "Segundo dato, la clave fiscal del artículo: qué compras o vendes a efectos de IVA. Por ejemplo, BOG «Bienes a tipo general».",
             "Con esos datos el ERP busca una regla de asignación. La regla devuelve primero la operación impositiva: qué clase de operación es para Hacienda. Por ejemplo, CLBC «Compra local de bienes corrientes».",
             "Después devuelve el tipo de impuesto. Por ejemplo, ESG «ES, IVA 21 % General».",
-            "Ejemplo: empresa en zona ESCO + proveedor en zona ESCO + artículo con clave BOG. La regla devuelve CLBC y ESG: 21 % sobre la base."
+            "Ejemplo de tu demo: empresa 0 en zona ESCO + proveedor en zona ESCO con clave Régimen general + artículo con clave BOG (como el 13500620). Encaja la regla 73, que devuelve CLBC y ESG: 21 % sobre la base."
           ],
           "campos": [
             {
@@ -124,8 +124,8 @@
           ],
           "pasos": [
             {
-              "texto": "Mira el detalle fiscal de una factura de compra con dos líneas de 100 €.",
-              "detalle": "Cada fila guarda el porcentaje, la operación (CLBC en las dos) y el impuesto (ESG al 21 % y ESR al 10 %). También guarda la regla que lo decidió (73 y 153), la base y el impuesto deducible (21 € y 10 €).",
+              "texto": "Mira en la captura el detalle fiscal de una factura de compra con dos líneas de 100 €.",
+              "detalle": "Cada fila guarda el porcentaje, la operación (CLBC en las dos) y el impuesto (ESG al 21 % y ESR al 10 %). También guarda la regla que lo decidió y la base, y el impuesto deducible (21 € y 10 €). La regla 73 (ESCO + ESCO + BOG) da el 21 % y la 153 (ESCO + ESCO + BOR) da el 10 %; las dos existen en tu demo. Esta pantalla es la pestaña «Impuestos por documento», que abrirás en «Leer la regla de impuestos de una factura».",
               "imagen": "icon-impuestos-009.webp"
             }
           ],
@@ -228,7 +228,7 @@
       "numero": 2,
       "titulo": "Conocer los maestros fiscales",
       "objetivo": "Localizarás las zonas, las clases y los tipos de impuesto, las operaciones y las claves fiscales que el ERP combina para calcular el IVA.",
-      "concepto": "Los maestros fiscales son fichas que se crean una vez y se reutilizan en muchas facturas. Son como las piezas de un mecano: la regla de impuestos solo combina piezas que ya existen. Si una pieza está mal, todas las facturas que la usan calculan mal el IVA y Hacienda recibe una declaración equivocada.\n\nEn este bloque repasas esas piezas en el orden en que se configuran: zonas fiscales, clases y tipos de impuesto, operaciones impositivas y claves fiscales.\n\nNo vas a modificar nada. Abre cada maestro, localiza el registro de ejemplo y comprueba los campos que se indican.\n\nEjemplo: en tu caso, tu compra a T{INI} tributa en la península (zona ESCO) con el tipo ESG, el 21 %. Son 26,25 de IVA soportado sobre 125,00. Los ejemplos de este bloque con ESAR son de ALA, otra empresa de la demo, en Álava, que sale en los vídeos. El mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Maestros › Zonas fiscales».",
+      "concepto": "Los maestros fiscales son fichas que se crean una vez y se reutilizan en muchas facturas. Son como las piezas de un mecano: la regla de impuestos solo combina piezas que ya existen. Si una pieza está mal, todas las facturas que la usan calculan mal el IVA y Hacienda recibe una declaración equivocada.\n\nEn este bloque repasas esas piezas en el orden en que se configuran: zonas fiscales, clases y tipos de impuesto, operaciones impositivas y claves fiscales.\n\nNo vas a modificar nada. Abre cada maestro, localiza el registro de ejemplo y comprueba los campos que se indican.\n\nEjemplo: en tu caso, la empresa 0 está en la zona ESCO (España continental) y tu compra de 125,00 lleva el tipo ESG, el 21 %: 26,25 de IVA soportado. Los ejemplos de este bloque con ESAR son de ALA, otra empresa de la demo de los vídeos, en Álava. El mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Maestros › Zonas fiscales».",
       "duracionMin": 35,
       "secciones": [
         {
@@ -283,11 +283,11 @@
             },
             {
               "texto": "Vuelve a la lista y localiza la zona ESAR.",
-              "detalle": "Es España Araba (Álava) y la usa la empresa ALA de la demo. Volverás a verla en «Comprobar los datos fiscales de empresa, tercero y artículo», «Leer la regla de impuestos de una factura» y «Probar las reglas de impuestos»."
+              "detalle": "Es España Araba (Álava) y la usa la empresa ALA de la demo de los vídeos; tu empresa 0 está en ESCO. Volverás a verla en «Comprobar los datos fiscales de empresa, tercero y artículo», «Leer la regla de impuestos de una factura» y «Probar las reglas de impuestos»."
             },
             {
-              "texto": "Si tu demo tiene una zona de Canarias, Ceuta o Melilla, ábrela y compara su campo TAI con el de ESCO.",
-              "detalle": "Fuera del TAI no se aplica IVA. Se aplica IGIC (Canarias) o IPSI (Ceuta y Melilla)."
+              "texto": "En la lista de zonas, busca una de Canarias, Ceuta o Melilla y compara su campo TAI con el de ESCO.",
+              "detalle": "Fuera del TAI no se aplica IVA: se aplica IGIC (Canarias) o IPSI (Ceuta y Melilla). Si tu lista no tiene ninguna de esas zonas, sáltate el paso."
             }
           ],
           "avisos": [
@@ -526,7 +526,7 @@
             },
             {
               "texto": "Abre Finanzas › Impuestos › Maestros › Clave fiscal por zona y artículo y mira si hay alguna excepción.",
-              "detalle": "Si la hay, comprueba que sus fechas no se solapan con otra del mismo artículo y la misma zona."
+              "detalle": "Si la hay, comprueba que sus fechas no se solapan con otra del mismo artículo y la misma zona. Si la lista sale vacía, es normal: no hay excepciones."
             }
           ],
           "avisos": [
@@ -634,7 +634,7 @@
       "numero": 3,
       "titulo": "Comprobar los datos fiscales de empresa, tercero y artículo",
       "objetivo": "Comprobarás que la empresa, el tercero y el artículo tienen la zona y la clave fiscal que necesita la regla de IVA.",
-      "concepto": "La regla de impuestos es como una receta: sin los ingredientes no sale el plato. Si a la empresa, al tercero o al artículo les falta un dato fiscal, la factura no puede calcular el IVA bien y Hacienda recibiría una cifra equivocada.\n\nLa regla necesita tres datos: la zona fiscal de la empresa, la zona fiscal del tercero y la clave fiscal del artículo. La zona dice dónde tributa la empresa o el tercero. La clave dice cómo tributa el artículo. Un tercero es cualquier persona o empresa con la que trabajas.\n\nALA es otra empresa de la demo, en Álava, que sale en los vídeos; no es la tuya. Aquí compruebas sus datos para ver el mecanismo. El proveedor 00003 también es de esa demo, no tu T{INI}. La empresa Triathlon [ALA] S.L. está en la zona ESAR (España Araba). El proveedor 00003 tiene la clave de tercero RGEN (régimen general). Su zona se asigna en Direcciones y, al empezar, también es ESAR.\n\nEjemplo: el artículo 002 Material deportivo tiene la clave BOG. Una factura de compra de ALA al proveedor 00003 por ese artículo combina ESAR + ESAR + BOG. En el bloque siguiente verás qué regla encaja.\n\nEjemplo: en tu caso, la compra a T{INI} de 125,00 sale al 21 %, con 26,25 de IVA soportado. El mecanismo es el mismo.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas».",
+      "concepto": "La regla de impuestos es como una receta: sin los ingredientes no sale el plato. Si a la empresa, al tercero o al artículo les falta un dato fiscal, la factura no puede calcular el IVA bien y Hacienda recibiría una cifra equivocada.\n\nLa regla necesita tres datos: la zona fiscal de la empresa, la zona fiscal del tercero y la clave fiscal del artículo. La zona dice dónde tributa la empresa o el tercero. La clave dice cómo tributa el artículo. Un tercero es cualquier persona o empresa con la que trabajas.\n\nEn tu demo de prácticas compruebas datos reales de la base TUTORIAL. La empresa 0 «Deister Software» está en la zona ESCO (España continental). El proveedor de prueba TCAPC «Tercero CAP compras» tiene la clave de tercero Régimen general (RGEN) y su dirección está en ESCO. El artículo 13500620, el que compras en el curso, tiene la clave BOG «Bienes a tipo general».\n\nEjemplo: una compra de la empresa 0 a TCAPC de un bien con clave BOG combina ESCO + ESCO + BOG. En el bloque siguiente verás qué regla encaja: la 73.\n\nLas capturas son de la demo de los vídeos: la empresa ALA (Álava, zona ESAR), el proveedor 00003 y el artículo 002 Material deportivo. Allí la combinación es ESAR + ESAR + BOG.\n\nEjemplo: en tu caso, la compra de 125,00 sale al 21 %, con 26,25 de IVA soportado. El mecanismo es el mismo.\n\nDónde: «Finanzas › Maestros › Parametrización › Empresas».",
       "duracionMin": 14,
       "secciones": [
         {
@@ -648,37 +648,38 @@
             "Empresas"
           ],
           "explicacion": [
-            "En la ficha de la empresa, la pestaña Identificación fiscal guarda tres datos. Son el tercero que representa a la propia empresa, su identificador fiscal (NIF) y su zona impositiva.",
-            "En la empresa ALA de la demo la zona impositiva es ESAR, España Araba: la empresa está en Álava.",
+            "En la ficha de la empresa, los datos fiscales son tres: el tercero que representa a la propia empresa, su identificador fiscal (NIF) y su zona impositiva.",
+            "En tu demo, la empresa 0 «Deister Software» tiene el NIF A58738147 y la zona impositiva ESCO, España continental. Los ves en el bloque «Datos fiscales» de la pestaña «Empresa»; en la demo de los vídeos la pestaña se llama «Identificación fiscal».",
+            "En la empresa ALA de la demo de los vídeos la zona impositiva es ESAR, España Araba: la empresa está en Álava.",
             "La regla cruza dos zonas: la de la empresa y la del tercero. Aquí ves la de la empresa."
           ],
           "campos": [
             {
               "campo": "Tercero",
               "significado": "Tercero que representa a la propia empresa.",
-              "ejemplo": "Triathlon [ALA] S.L."
+              "ejemplo": "Triathlon [ALA] S.L. (en la demo de los vídeos)"
             },
             {
               "campo": "Identificador fiscal",
               "significado": "NIF de la sociedad. La identifica ante Hacienda.",
-              "ejemplo": "No se muestra en el curso"
+              "ejemplo": "A58738147 (empresa 0)"
             },
             {
               "campo": "Zona impositiva",
               "significado": "Zona fiscal de la empresa. Es una condición de la regla.",
-              "ejemplo": "ESAR, España Araba"
+              "ejemplo": "ESCO en la empresa 0; ESAR en ALA"
             }
           ],
           "pasos": [
             {
-              "texto": "Abre Finanzas › Maestros › Parametrización › Empresas, entra en la empresa ALA y abre la pestaña Identificación fiscal.",
-              "detalle": "Localiza el identificador fiscal y la zona impositiva: ESAR, España Araba."
+              "texto": "Abre Finanzas › Maestros › Parametrización › Empresas y entra en la empresa 0 «Deister Software».",
+              "detalle": "En el bloque «Datos fiscales» localiza el NIF empresa A58738147 y la zona impositiva ESCO, España continental. Es la misma ficha que viste en Maestros. En ALA, la empresa de los vídeos, la zona es ESAR."
             }
           ],
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Esta pantalla no lleva captura en el curso. Si no encuentras la pestaña, busca el campo Zona impositiva: en el Maestro de empresas también sale como columna de la lista."
+              "texto": "Esta pantalla no lleva captura en el curso. Si no encuentras la ficha, escribe «Empresas» en el buscador del menú. La zona impositiva también sale como columna en la lista de empresas."
             }
           ]
         },
@@ -693,10 +694,11 @@
             "Registro terceros"
           ],
           "explicacion": [
-            "La ficha del tercero 00003 tiene arriba varias pestañas: Formulario principal, Relaciones, Direcciones, Datos bancarios, Condiciones comerciales y otras.",
+            "La ficha de un tercero tiene arriba varias pestañas: Formulario principal, Relaciones, Direcciones, Datos bancarios, Condiciones comerciales y otras.",
             "En el formulario principal ves el tipo de identificación fiscal (NIF-Empresa), el país emisor (España), la identificación fiscal y el estado (Activo).",
             "También ves la clave fiscal de tercero (Régimen general, RGEN) y el tipo (Proveedores).",
-            "La zona impositiva se asigna en cada dirección del tercero (pestaña Direcciones). Así un tercero puede tener direcciones en zonas distintas. Al empezar, la del 00003 es ESAR."
+            "La zona impositiva se asigna en cada dirección del tercero (pestaña Direcciones). Así un tercero puede tener direcciones en zonas distintas. La que cuenta en una factura es la dirección que lleva la factura, normalmente la principal (la 0).",
+            "En tu demo usas el proveedor de prueba TCAPC «Tercero CAP compras» (NIF B12345682), dirección 0 «Calle CAP 1», Barcelona, en zona ESCO. La captura es del proveedor 00003 de la demo de los vídeos, cuya zona al empezar es ESAR."
           ],
           "campos": [
             {
@@ -727,9 +729,9 @@
           ],
           "pasos": [
             {
-              "texto": "Abre Finanzas › Maestros › Terceros › Registro terceros y localiza el tercero 00003.",
-              "pregunta": "Has localizado el tercero 00003. ¿Dónde ves su clave fiscal?",
-              "detalle": "Comprueba Tipo ID fiscal NIF-Empresa, País emisor España y Estado Activo. Mira también Clave fiscal de tercero Régimen general (RGEN) y Tipo Proveedores.",
+              "texto": "Abre Finanzas › Maestros › Terceros › Registro terceros y localiza el tercero TCAPC «Tercero CAP compras».",
+              "pregunta": "Has localizado el tercero (en la captura, 00003). ¿Dónde ves su clave fiscal?",
+              "detalle": "Es un proveedor de prueba de la demo: solo mira, no lo cambies. Comprueba Tipo ID fiscal NIF-Empresa, el NIF B12345682 y la clave fiscal de tercero Régimen general (RGEN). Haz lo mismo con tu T{INI}. La captura es del proveedor 00003 de la demo de los vídeos.",
               "imagen": "v-tax-tablas-007.jpg",
               "hotspot": {
                 "x": 44.5,
@@ -740,8 +742,8 @@
               }
             },
             {
-              "texto": "Abre la pestaña Direcciones y localiza la zona impositiva de la dirección.",
-              "detalle": "Al empezar el ejercicio es ESAR, España Araba."
+              "texto": "Abre la pestaña Direcciones y abre la dirección 0, la principal.",
+              "detalle": "En TCAPC es «Calle CAP 1», Barcelona, y su zona impositiva es ESCO, España continental. Mira también la de tu T{INI}. En el 00003 de los vídeos, al empezar, es ESAR."
             }
           ],
           "avisos": [
@@ -756,15 +758,16 @@
           "titulo": "Artículo: clave fiscal y tipo fiscal",
           "paraQueSirve": "Sirve para comprobar que el artículo lleva la clave fiscal que la regla usa para decidir el impuesto.",
           "ruta": [
-            "Finanzas",
-            "Facturación",
+            "Gestión",
             "Maestros",
-            "Artículos"
+            "Artículos",
+            "Registro"
           ],
           "explicacion": [
-            "El artículo 002 Material deportivo tiene en su ficha el campo Clave fiscal art. con el valor BOG.",
+            "En tu demo, el artículo 13500620 (6000-2RS ISB), el que compras en el curso, tiene en su ficha el campo «Clave fiscal» con el valor BOG «Bienes a tipo general» y la «Naturaleza» Bien.",
+            "BOG es la clave de los bienes al tipo general (21 %). SOG es la de los servicios al tipo general: por eso tu artículo financiero FOR{INI} de Contabilidad llevaba SOG.",
             "El desplegable ofrece variantes de la clave general: BOG «Bienes a tipo general», BOGISP «Bienes a tipo general. Local ISP» y BOGNQ «Bienes a tipo general, sin recargo».",
-            "Tipo fiscal: Bien. Es la naturaleza del artículo, es decir, si es un bien o un servicio."
+            "En la captura, de la demo de los vídeos, el artículo 002 Material deportivo lleva el campo «Clave fiscal art.» con BOG y el «Tipo fiscal» Bien."
           ],
           "campos": [
             {
@@ -780,9 +783,9 @@
           ],
           "pasos": [
             {
-              "texto": "Abre Finanzas › Facturación › Maestros › Artículos y localiza el artículo 002 Material deportivo.",
-              "pregunta": "Has localizado el artículo 002 Material deportivo. ¿Dónde ves su clave fiscal?",
-              "detalle": "Despliega Clave fiscal art.: verás BOG, BOGISP y BOGNQ. El artículo usa BOG. Comprueba también Tipo fiscal Bien.",
+              "texto": "Abre Gestión › Maestros › Artículos › Registro y localiza el artículo 13500620.",
+              "pregunta": "Has localizado el artículo (en la captura, 002 Material deportivo). ¿Dónde ves su clave fiscal?",
+              "detalle": "En el bloque «Contabilidad» comprueba la «Clave fiscal» BOG «Bienes a tipo general» y la «Naturaleza» Bien. Despliega la clave para ver BOG, BOGISP y BOGNQ y sal con Esc sin cambiar nada. La captura es del artículo 002 Material deportivo de la demo de los vídeos.",
               "imagen": "v-tax-tablas-008.jpg",
               "hotspot": {
                 "x": 17,
@@ -806,12 +809,12 @@
           "pregunta": "¿Dónde se guarda la zona impositiva de la empresa?",
           "opciones": [
             "En el maestro de artículos",
-            "En la pestaña Identificación fiscal de la empresa",
+            "En los datos fiscales de la ficha de la empresa",
             "En la lista de asientos",
             "En la pestaña de impuestos de cada factura"
           ],
           "correcta": 1,
-          "explicacion": "La empresa lleva su zona en Identificación fiscal. En ALA es ESAR."
+          "explicacion": "La empresa lleva su zona en sus datos fiscales. En la empresa 0 es ESCO; en ALA, la de los vídeos, ESAR."
         },
         {
           "pregunta": "¿Dónde se asigna la zona impositiva de un tercero?",
@@ -825,7 +828,7 @@
           "explicacion": "Cada dirección tiene su zona. Por eso no aparece en el formulario principal."
         },
         {
-          "pregunta": "¿Qué clave fiscal de tercero tiene el proveedor 00003?",
+          "pregunta": "¿Qué clave fiscal de tercero tiene el proveedor de prueba TCAPC?",
           "opciones": [
             "BOG",
             "RGEN, Régimen general",
@@ -833,10 +836,10 @@
             "RREQ, Recargo de equivalencia"
           ],
           "correcta": 1,
-          "explicacion": "Es un proveedor en régimen general: RGEN."
+          "explicacion": "Es un proveedor en régimen general: RGEN. El 00003 de los vídeos también."
         },
         {
-          "pregunta": "¿Qué clave fiscal tiene el artículo 002 Material deportivo?",
+          "pregunta": "¿Qué clave fiscal tiene el artículo 13500620 que compras en el curso?",
           "opciones": [
             "BOGISP",
             "RGEN",
@@ -859,11 +862,11 @@
         }
       ],
       "checklist": [
-        "Abres Empresas, entras en ALA y localizas la zona impositiva ESAR en Identificación fiscal.",
-        "Abres el tercero 00003 y compruebas NIF-Empresa, España y Activo.",
-        "Compruebas que el tercero 00003 tiene clave fiscal RGEN y tipo Proveedores.",
-        "En Direcciones del tercero 00003 localizas la zona impositiva ESAR.",
-        "Abres el artículo 002 Material deportivo y compruebas la clave BOG y el tipo fiscal Bien."
+        "Abres Empresas, entras en la empresa 0 y localizas la zona impositiva ESCO.",
+        "Abres el tercero TCAPC y compruebas NIF-Empresa, NIF B12345682 y clave fiscal Régimen general.",
+        "En Direcciones de TCAPC localizas la zona impositiva ESCO de la dirección 0.",
+        "Miras también la zona y la clave de tu T{INI}.",
+        "Abres el artículo 13500620 y compruebas la clave BOG y la naturaleza Bien."
       ],
       "problemas": [
         {
@@ -872,7 +875,7 @@
         },
         {
           "problema": "No sabes qué clave fiscal de artículo mirar.",
-          "solucion": "El campo es Clave fiscal art., en la ficha del artículo. Material deportivo usa BOG."
+          "solucion": "El campo es «Clave fiscal», en el bloque «Contabilidad» de la ficha del artículo. El 13500620 usa BOG."
         },
         {
           "problema": "La combinación no encaja con la regla que esperabas.",
@@ -884,11 +887,11 @@
         }
       ],
       "aprendido": [
-        "Has localizado la zona impositiva de la empresa ALA (ESAR) en Identificación fiscal.",
-        "Has comprobado que el proveedor 00003 tiene la clave de tercero RGEN.",
+        "Has localizado la zona impositiva de la empresa 0 (ESCO); en ALA, la de los vídeos, es ESAR.",
+        "Has comprobado que el proveedor TCAPC tiene la clave de tercero Régimen general (RGEN).",
         "Has visto que la zona del tercero se asigna en cada dirección, no en la cabecera.",
-        "Has comprobado que el artículo 002 Material deportivo lleva la clave BOG.",
-        "Sabes que la regla combinará ESAR + ESAR + BOG para esa factura de compra. En tu caso, la compra a T{INI} sale al 21 %: 26,25 sobre 125,00."
+        "Has comprobado que el artículo 13500620 lleva la clave BOG.",
+        "Sabes que la regla combinará ESCO + ESCO + BOG para una compra de la empresa 0. En tu caso, la compra sale al 21 %: 26,25 sobre 125,00."
       ]
     },
     {
@@ -896,7 +899,7 @@
       "numero": 4,
       "titulo": "Leer la regla de impuestos de una factura",
       "objetivo": "Leerás el detalle de impuestos de una factura y seguirás el rastro hasta la regla que eligió el IVA.",
-      "concepto": "Cada factura validada guarda el «por qué» de su IVA, como un ticket que dice qué oferta te aplicaron. Saber leerlo te permite explicar a Hacienda, o a tu jefe, de dónde sale cada euro de impuesto. Si no lo sabes leer, no puedes defender una factura con el IVA mal.\n\nLa factura de compra FCALA23-000015 es de la empresa Triathlon [ALA] S.L. al proveedor 00003, por el artículo Material deportivo. ALA es otra empresa de la demo, en Álava, que sale en los vídeos; no es una factura tuya. Al validarla, es decir, al darla por buena, el ERP calculó sus impuestos.\n\nLa pestaña Impuestos por documento muestra la operación Compra local de bienes corrientes y el impuesto ES, IVA 21 % General. También muestra la regla aplicada: 2586.\n\nLa regla 2586 exige zona de empresa ESAR, zona de tercero ESAR y clave de artículo BOG. Son justo los tres datos que comprobaste en el bloque anterior.\n\nEjemplo: base 800,00 × 21 % = cuota deducible 168,00. Total de la factura: 968,00.\n\nEjemplo: en tu caso, la factura PROV-{INI}-001 de T{INI} se lee igual: base 125,00 × 21 % = cuota 26,25 y total 151,25. El mecanismo es el mismo.\n\nDónde: «Finanzas › Facturación › Compras › Registro».",
+      "concepto": "Cada factura validada guarda el «por qué» de su IVA, como un ticket que dice qué oferta te aplicaron. Saber leerlo te permite explicar a Hacienda, o a tu jefe, de dónde sale cada euro de impuesto. Si no lo sabes leer, no puedes defender una factura con el IVA mal.\n\nEn tu demo lees la factura de compra de prueba 0FC000012: empresa 0, proveedor TCAPC, tipología CAPA «Factura activos CAP», base 10.000,00. Es una factura de prueba de la demo, no tuya: solo la miras. Al validarla, es decir, al darla por buena, el ERP calculó sus impuestos.\n\nLa pestaña «Impuestos por documento» muestra el tipo ESG, la operación CLBC (Compra local de bienes corrientes) y la regla aplicada: la 73.\n\nLa regla 73 exige zona de empresa ESCO, zona de tercero ESCO, clave de tercero Régimen general y clave de artículo BOG. Son justo los datos que comprobaste en el bloque anterior.\n\nEjemplo: base 10.000,00 × 21 % = cuota deducible 2.100,00. Total de la factura: 12.100,00.\n\nLas capturas son de la demo de los vídeos: la factura FCALA23-000015 de ALA, con base 800,00, cuota 168,00, total 968,00 y la regla 2586 (ESAR + ESAR + BOG).\n\nEjemplo: en tu caso, la factura PROV-{INI}-001 se lee igual: base 125,00 × 21 % = cuota 26,25 y total 151,25. El mecanismo es el mismo.\n\nDónde: «Gestión › Compras › Facturas › Facturas».",
       "duracionMin": 25,
       "secciones": [
         {
@@ -904,17 +907,17 @@
           "titulo": "Factura de compra y pestaña Impuestos por documento",
           "paraQueSirve": "Sirve para localizar la factura y leer el resultado fiscal que calculó el ERP.",
           "ruta": [
-            "Finanzas",
-            "Facturación",
+            "Gestión",
             "Compras",
-            "Registro"
+            "Facturas",
+            "Facturas"
           ],
           "explicacion": [
-            "La factura FCALA23-000015 es de tipo FC (Fact. de compras), de la empresa Triathlon [ALA] S.L. y del proveedor 00003. Tiene fecha contable 30-04-2023 e importe neto de 800 €.",
-            "En la parte inferior están las pestañas Detalle, Referencia catastral, Impuestos por documento, Archivo documental y Vencimientos.",
+            "En tu demo, la factura 0FC000012 es de tipo documento CAPA «Factura activos CAP», empresa 0, proveedor TCAPC «Tercero CAP compras», factura del proveedor FRA-ACT-001, base imponible 10.000,00 e importe total 12.100,00. Está validada y contabilizada.",
+            "Arriba tiene las pestañas Facturas compras, Líneas, Impuestos por documento, Vencimientos, Expedientes, Documentos y Notas.",
             "Impuestos por documento muestra una fila por cada combinación de operación e impuesto.",
-            "Cada fila lleva operación, impuesto, base, porcentaje, porcentaje deducible y prorrata.",
-            "También lleva cuota deducible y no deducible, total, regla y envío telemático."
+            "Cada fila lleva tipo, operación, base imponible, porcentaje, porcentaje deducible, cuota deducible, base no imponible, regla, grupo fiscal y total.",
+            "En la captura, de la demo de los vídeos, la factura FCALA23-000015 de ALA está en Finanzas › Facturación › Compras › Registro y lleva además prorrata, cuota no deducible y envío telemático."
           ],
           "campos": [
             {
@@ -965,14 +968,14 @@
           ],
           "pasos": [
             {
-              "texto": "Abre Finanzas › Facturación › Compras › Registro y localiza la factura FCALA23-000015.",
-              "detalle": "Comprueba el tipo FC, la empresa Triathlon [ALA] S.L., el proveedor 00003 y el importe neto de 800,00.",
+              "texto": "Abre Gestión › Compras › Facturas › Facturas y localiza la factura 0FC000012 del proveedor TCAPC.",
+              "detalle": "Comprueba el tipo documento CAPA «Factura activos CAP», la empresa 0, el proveedor TCAPC, la base imponible 10.000,00 y el importe total 12.100,00. Solo mira: no pulses «Descontabilizar» ni «Anular». La captura es de la FCALA23-000015 de ALA (800,00 de importe neto).",
               "imagen": "v-tax-tablas-009.jpg"
             },
             {
               "texto": "Abre la pestaña Impuestos por documento.",
               "pregunta": "Has abierto la pestaña «Impuestos por documento». ¿Dónde ves la regla de impuestos?",
-              "detalle": "Comprueba la operación Compra local de bienes corrientes, ES, IVA 21 % General, base 800,00 y 21,00 %. Mira también la cuota deducible 168,00, el total 968,00 €, la regla 2586 y el envío SII Facturas.",
+              "detalle": "Comprueba el tipo ESG, la operación CLBC, la base imponible 10.000,00, el porcentaje 21,00 y el porcentaje deducible 100,00. Mira también la cuota deducible 2.100,00, la base no imponible 0,00, la regla 73 y el total 12.100,00. En la captura (ALA): base 800,00, cuota 168,00, total 968,00 y regla 2586.",
               "imagen": "v-tax-tablas-010.jpg",
               "hotspot": {
                 "x": 88,
@@ -986,11 +989,11 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Los impuestos de esta pestaña los calcula el ERP al validar; no se teclean. La casilla Modificado manualmente indica si alguien los cambió a mano después."
+              "texto": "Los impuestos de esta pestaña los calcula el ERP al validar; no se teclean."
             },
             {
               "tipo": "nota",
-              "texto": "La regla aparece como enlace. Púlsala y abrirás directamente la regla 2586."
+              "texto": "La regla aparece como enlace. Púlsala y abrirás directamente la regla 73 (en la captura, la 2586)."
             }
           ]
         },
@@ -1005,11 +1008,11 @@
             "Reglas de asignación"
           ],
           "explicacion": [
-            "La regla 2586 es de la clase Impuesto sobre el valor añadido. Tiene fecha de inicio 01-01-2017, prioridad 1 y estado Abierto.",
-            "Condiciones de aplicación: zona empresa España Araba (ESAR), zona tercero España Araba (ESAR) y clave artículo Bienes a tipo general (BOG).",
-            "Fíjate: Clave tercero y Clave documento están vacías. Eso significa que la regla vale para cualquier valor de esos campos.",
-            "Impuesto de compras: operación Compra local de bienes corrientes (CLBC) y tipo ES, IVA 21 % General (ESG), con un 100 % deducible.",
-            "Impuesto de ventas: operación Venta local de bienes corrientes (VLBC) y el mismo tipo ESG. Una sola regla sirve para comprar y para vender."
+            "La regla 73 de tu demo es de la clase Impuesto sobre el valor añadido. Tiene fecha de inicio 01-01-2017, prioridad 101 y estado Abierto.",
+            "Condiciones de aplicación: zona empresa ESCO, zona tercero ESCO, clave tercero Régimen general y clave artículo BOG.",
+            "Impuesto de compras: operación CLBC y tipo ESG, con un 100 % deducible. Impuesto de ventas: operación VLBC y el mismo tipo ESG. Una sola regla sirve para comprar y para vender.",
+            "Su hermana es la regla 153: mismas zonas y misma clave de tercero, pero clave de artículo BOR (bienes a tipo reducido). Devuelve CLBC y ESR, el 10 %.",
+            "La captura es de la regla 2586 de la demo de los vídeos: ESAR + ESAR + BOG, prioridad 1, con Clave tercero y Clave documento vacías. Un campo vacío significa que la regla vale para cualquier valor de ese campo."
           ],
           "campos": [
             {
@@ -1055,8 +1058,8 @@
           ],
           "pasos": [
             {
-              "texto": "Abre la regla 2586 desde el enlace de la factura o desde Finanzas › Impuestos › Maestros › Reglas de asignación.",
-              "detalle": "La ventana se titula «Reglas de aplicación de impuestos». Comprueba las condiciones ESAR + ESAR + BOG. Comprueba también las salidas: CLBC + ESG en compras y VLBC + ESG en ventas.",
+              "texto": "Abre la regla 73 desde el enlace de la factura, o en Finanzas › Impuestos › Maestros › Reglas de asignación escribe 73 en «Id. regla» y pulsa «Ejecutar consulta».",
+              "detalle": "La ventana se titula «Reglas de aplicación de impuestos». Comprueba las condiciones ESCO + ESCO + Régimen general + BOG y las salidas: CLBC + ESG en compras y VLBC + ESG en ventas. La captura es de la regla 2586 (ESAR + ESAR + BOG).",
               "imagen": "v-tax-tablas-011.jpg"
             }
           ],
@@ -1118,8 +1121,8 @@
           ],
           "pasos": [
             {
-              "texto": "Desde la regla 2586, pulsa el tipo ESG para abrirlo.",
-              "pregunta": "Has abierto el tipo ESG desde la regla 2586. ¿Dónde ves la base de cálculo?",
+              "texto": "Desde la regla 73, pulsa el tipo ESG para abrirlo.",
+              "pregunta": "Has abierto el tipo ESG desde la regla. ¿Dónde ves la base de cálculo?",
               "detalle": "Comprueba la base de cálculo Importe neto y el 21,000. El resto del tipo ya lo viste en «Conocer los maestros fiscales». En esta demo los mnemotécnicos son ESG-IVA-SV y ESG-IVA-RV.",
               "imagen": "v-tax-tablas-012.jpg",
               "hotspot": {
@@ -1132,7 +1135,7 @@
             },
             {
               "texto": "Abre la pestaña inferior Reglas en adquisiciones.",
-              "detalle": "Comprueba que la regla 2586 aparece en la lista. Es la prueba de que esta regla devuelve ESG en compras."
+              "detalle": "Comprueba que la regla 73 aparece en la lista (en la captura, la 2586). Es la prueba de que esta regla devuelve ESG en compras."
             }
           ],
           "avisos": [
@@ -1205,17 +1208,17 @@
           ],
           "pasos": [
             {
-              "texto": "En Reglas de asignación, filtra por Zona empresa ESAR y mira cuántas reglas hay.",
-              "detalle": "Verás una regla por cada combinación de zona del tercero y clave de artículo que la demo necesita."
+              "texto": "En Reglas de asignación, escribe ESCO en «Zona empresa» y pulsa «Ejecutar consulta».",
+              "detalle": "Verás las reglas que pueden aplicarse a la empresa 0: una por cada combinación de zona del tercero, clave de tercero y clave de artículo. Entre ellas, la 73 y la 153."
             },
             {
-              "texto": "Abre la ficha de un tercero con la pestaña Impuestos (en la captura, OUTDOOR SPORTS SA, código 00232) y revisa una sustitución.",
-              "detalle": "En la captura, OUTDOOR SPORTS SA sustituye ES, IVA 21 % General por ES, IVA 0 % Exento entre el 01-01-2021 y el 31-12-2021.",
+              "texto": "Mira en la captura la ficha de un tercero con la pestaña Impuestos: OUTDOOR SPORTS SA, código 00232, de la demo de los vídeos.",
+              "detalle": "En la captura, OUTDOOR SPORTS SA sustituye ES, IVA 21 % General por ES, IVA 0 % Exento entre el 01-01-2021 y el 31-12-2021. En tu demo esta sustitución se configura en Finanzas › Impuestos › Maestros › Impuestos por tercero.",
               "imagen": "icon-impuestos-006.webp"
             },
             {
-              "texto": "Abre Finanzas › Impuestos › Maestros › Grupos fiscales y revisa uno (en la captura, el grupo IVA).",
-              "detalle": "Comprueba el emisor (90002), el receptor (90003, distinto del emisor) y el porcentaje de base fiscal (40,000).",
+              "texto": "Mira en la captura un grupo fiscal (el grupo IVA).",
+              "detalle": "Un grupo fiscal reúne empresas que liquidan el IVA juntas. En la captura, el emisor es 90002, el receptor 90003 (distinto del emisor) y el porcentaje de base fiscal 40,000. Son códigos de la captura. En tu demo lo encuentras en Finanzas › Impuestos › Maestros › Grupos fiscales.",
               "imagen": "icon-impuestos-007.webp"
             },
             {
@@ -1289,12 +1292,12 @@
         }
       ],
       "checklist": [
-        "Abres la factura FCALA23-000015 y compruebas FC, ALA, proveedor 00003 y 800,00 €.",
-        "En Impuestos por documento compruebas base 800,00, cuota 168,00, total 968,00 y regla 2586.",
-        "Abres la regla 2586 y compruebas ESAR + ESAR + BOG y CLBC + ESG en compras.",
-        "Desde el tipo ESG, en Reglas en adquisiciones, localizas la regla 2586.",
+        "Abres la factura 0FC000012 y compruebas CAPA, empresa 0, proveedor TCAPC y base 10.000,00.",
+        "En Impuestos por documento compruebas base 10.000,00, cuota 2.100,00, total 12.100,00 y regla 73.",
+        "Abres la regla 73 y compruebas ESCO + ESCO + Régimen general + BOG y CLBC + ESG en compras.",
+        "Desde el tipo ESG, en Reglas en adquisiciones, localizas la regla 73.",
         "Explicas qué pasa si encajan dos reglas (prioridad) y si no encaja ninguna (no se puede validar).",
-        "Revisas un ejemplo de Impuestos por tercero y uno de Grupos fiscales."
+        "Revisas en las capturas un ejemplo de Impuestos por tercero y uno de Grupos fiscales."
       ],
       "problemas": [
         {
@@ -1326,8 +1329,8 @@
       "id": "icon-impuestos-v-3",
       "numero": 5,
       "titulo": "Probar las reglas de impuestos",
-      "objetivo": "Comprobarás en una factura de prueba que, al cambiar la zona del tercero o la clave del artículo, cambia la regla aplicada.",
-      "concepto": "La mejor forma de entender una regla es cambiar un dato y ver qué pasa, como mover una pieza de dominó. Así sabrás diagnosticar por qué una factura lleva un IVA distinto del que esperabas. Si no lo sabes, declaras un IVA que no es el que toca.\n\nEn el vídeo, el formador cambia la zona impositiva de la dirección del proveedor 00003 de ESAR (España Araba) a ESCO (España continental). Ese proveedor y la empresa ALA son de la demo de los vídeos, no son tuyos. Luego crea una factura de compra nueva de ALA a ese proveedor con Material deportivo por 1.200 €. Al validarla, es decir, al darla por buena, el ERP calcula el impuesto.\n\nAl validar, la regla aplicada ya no es la 2586, sino la 1477 (ESAR + ESCO + BOG). El IVA sigue siendo del 21 %.\n\nDespués añade una línea de servicios: artículo 008, Trabajos realizados por otras empresas, 800 €. Esa línea usa la regla 1479 (ESAR + ESCO + SOR), con operación CLSC y tipo ESR al 10 %.\n\nEjemplo: línea 1: base 1.200 × 21 % = cuota 252, total 1.452. Línea 2: 800 × 10 % = 80, total 880. Factura: 1.452 + 880 = 2.332 €, con una fila de impuestos por combinación.\n\nEjemplo: en tu caso, la compra a T{INI} tiene una sola línea de 125,00 y sale al 21 %: 26,25 de IVA y total 151,25. Aquí practicas con 1.200 y 800 porque son las cifras del vídeo. El mecanismo es el mismo.\n\nAviso: la zona del proveedor 00003 es un dato compartido de la demo. Al terminar, devuélvela a ESAR.\n\nDónde: «Finanzas › Facturación › Compras › Registro».",
+      "objetivo": "Verás en las capturas cómo cambia la regla al cambiar la zona del tercero o la clave del artículo, y lo comprobarás leyendo las reglas 73 y 153 de tu demo.",
+      "concepto": "La mejor forma de entender una regla es cambiar un dato y ver qué pasa, como mover una pieza de dominó. Así sabrás diagnosticar por qué una factura lleva un IVA distinto del que esperabas. Si no lo sabes, declaras un IVA que no es el que toca.\n\nEn el vídeo, el formador cambia la zona impositiva de la dirección del proveedor 00003 de ESAR (España Araba) a ESCO (España continental). Ese proveedor y la empresa ALA son de la demo de los vídeos, no son tuyos. Luego crea una factura de compra de ALA a ese proveedor con Material deportivo por 1.200 €. Al validarla, es decir, al darla por buena, el ERP calcula el impuesto.\n\nAl validar, la regla aplicada ya no es la 2586, sino la 1477 (ESAR + ESCO + BOG). El IVA sigue siendo del 21 %.\n\nDespués añade una línea de servicios: artículo 008, Trabajos realizados por otras empresas, 800 €. Esa línea usa la regla 1479 (ESAR + ESCO + SOR), con operación CLSC y tipo ESR al 10 %.\n\nEjemplo: línea 1: base 1.200 × 21 % = cuota 252, total 1.452. Línea 2: 800 × 10 % = 80, total 880. Factura: 1.452 + 880 = 2.332 €, con una fila de impuestos por combinación.\n\nLimitación de la demo: el proveedor 00003, la empresa ALA y sus facturas son datos de la demo de los vídeos. Cambiar la zona de un tercero cambia el IVA de las facturas de todos los alumnos. Por eso el cambio de zona y la factura nueva de este bloque solo los miras en las capturas. En tu demo compruebas el mismo mecanismo leyendo dos reglas: la 73 (BOG, 21 %) y la 153 (BOR, 10 %). Solo cambia la clave del artículo, y cambian la regla y el porcentaje.\n\nEjemplo: en tu caso, la compra a T{INI} tiene una sola línea de 125,00 y sale al 21 %: 26,25 de IVA y total 151,25. Las cifras de 1.200 y 800 son las del vídeo. El mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Maestros › Reglas de asignación».",
       "duracionMin": 20,
       "secciones": [
         {
@@ -1341,11 +1344,11 @@
             "Registro"
           ],
           "explicacion": [
-            "Primero cambias la zona impositiva de la dirección del proveedor 00003 a España continental (ESCO) y guardas.",
-            "Fíjate: para crear una factura tienes que estar en modo lista. El botón de nuevo registro solo se habilita ahí.",
-            "La factura de prueba es de tipo Fact. de compras (FC), empresa Triathlon [ALA] S.L., fecha contable 30-04-2023 y proveedor 00003.",
-            "En el vídeo recibe el número FCALA23-000016. La tuya tendrá el siguiente número libre.",
-            "Añades una línea con el artículo Material deportivo, cantidad 1 y precio 1.200."
+            "En el vídeo, el formador cambia la zona impositiva de la dirección principal del proveedor 00003 a España continental (ESCO) y guarda.",
+            "Fíjate: para crear una factura hay que estar en modo lista. El botón de nuevo registro solo se habilita ahí.",
+            "La factura de prueba del vídeo es de tipo Fact. de compras (FC), empresa Triathlon [ALA] S.L., fecha contable 30-04-2023 y proveedor 00003. Recibe el número FCALA23-000016.",
+            "Lleva una línea con el artículo Material deportivo, cantidad 1 y precio 1.200.",
+            "Limitación de la demo: estos pasos solo se miran en la captura. El 00003 y ALA son datos compartidos de la demo de los vídeos; cambiar su zona cambiaría el IVA de las facturas de todos."
           ],
           "campos": [
             {
@@ -1376,16 +1379,16 @@
           ],
           "pasos": [
             {
-              "texto": "Abre el tercero 00003, entra en Direcciones y cambia la zona impositiva a España continental (ESCO). Guarda.",
-              "detalle": "Anota que la zona original era ESAR. Al terminar la dejarás como estaba."
+              "texto": "Mira en el vídeo cómo se cambia la zona impositiva de la dirección principal del tercero 00003 a España continental (ESCO).",
+              "detalle": "Solo mira: no cambies ningún tercero de la demo. La zona se cambia en la pestaña Direcciones, en la dirección principal. En tu demo, la zona de la empresa 0 y la de TCAPC ya son ESCO."
             },
             {
-              "texto": "Entra en Finanzas › Facturación › Compras › Registro, pasa a modo lista y pulsa el botón de nuevo registro.",
-              "detalle": "Rellena tipo FC, empresa ALA, fecha contable y proveedor 00003. Escribe {INI} en las notas para reconocer tu factura. El botón Validar del pie lo usarás después de añadir la línea.",
+              "texto": "Mira en la captura la cabecera de la factura de prueba del vídeo.",
+              "detalle": "Tipo FC, empresa ALA, fecha contable 30-04-2023 y proveedor 00003. El botón «Validar» del pie calcula los impuestos y deja la factura validada; no genera asiento. El asiento lo genera después «Contabilizar».",
               "imagen": "v-tax-tablas-013.jpg"
             },
             {
-              "texto": "Añade la línea del artículo Material deportivo con cantidad 1 y precio 1.200.",
+              "texto": "Mira en la captura la línea del artículo Material deportivo, cantidad 1 y precio 1.200.",
               "detalle": "La línea queda con un importe de 1.200,00.",
               "imagen": "v-tax-tablas-014.jpg"
             }
@@ -1401,7 +1404,7 @@
             },
             {
               "tipo": "nota",
-              "texto": "La demo es compartida: cambiar la zona de un tercero afecta a las facturas de tus compañeros. Haz la prueba, anota los resultados y devuelve la zona a ESAR al acabar."
+              "texto": "Limitación de la demo: no cambies la zona de ningún tercero que no sea tuyo. Afectaría a las facturas de tus compañeros."
             }
           ]
         },
@@ -1456,9 +1459,9 @@
           ],
           "pasos": [
             {
-              "texto": "Pulsa «Validar» y abre la pestaña Impuestos por documento.",
+              "texto": "Mira en la captura la pestaña Impuestos por documento de la factura validada.",
               "pregunta": "Has validado y abierto «Impuestos por documento». ¿Dónde ves la regla?",
-              "detalle": "Comprueba Compra local de bienes corrientes, ES, IVA 21 % General y base 1.200,00. Mira también la cuota 252,00, el total 1.452,00 € y la regla 1477.",
+              "detalle": "Compra local de bienes corrientes, ES, IVA 21 % General y base 1.200,00. Cuota 252,00, total 1.452,00 € y regla 1477 (ESAR + ESCO + BOG). En tu demo, la regla equivalente para la empresa 0 y un proveedor en ESCO es la 73.",
               "imagen": "v-tax-tablas-015.jpg",
               "hotspot": {
                 "x": 88,
@@ -1476,7 +1479,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "Anota la combinación del mensaje (zonas y clave). Pide a tu formador que cree la regla en Reglas de asignación; en un proyecto real la crearía el consultor."
+              "texto": "Anota la combinación del mensaje (zonas y claves). En un proyecto real, el consultor crea la regla que falta en Reglas de asignación."
             },
             {
               "tipo": "nota",
@@ -1495,11 +1498,12 @@
             "Registro"
           ],
           "explicacion": [
-            "Añades una segunda línea (orden 4) con el artículo 008 «Trabajos realizados por otras empresas», cantidad 1 y precio 800. Es un servicio, así que lleva otra clave fiscal.",
+            "En el vídeo se añade una segunda línea con el artículo 008 «Trabajos realizados por otras empresas», cantidad 1 y precio 800. Sale con orden 4: el orden es solo la posición de la línea y no influye en el impuesto. Es un servicio, así que lleva otra clave fiscal.",
             "La regla 1479 combina zona empresa España Araba (ESAR), zona tercero España continental (ESCO) y clave artículo Servicios a tipo reducido (SOR).",
             "Ejemplo: en compras devuelve la operación Compra local de servicios corrientes (CLSC) y el tipo ES, IVA 10 % reducido (ESR). 800 × 10 % = 80 €.",
             "Cada línea guarda su cálculo en Datos contables › Impuestos: operación, tipo y regla.",
-            "Las líneas con la misma combinación se suman en una sola fila de Impuestos por documento."
+            "Las líneas con la misma combinación se suman en una sola fila de Impuestos por documento.",
+            "En tu demo, el mismo efecto lo ves con las reglas 73 y 153: misma empresa, mismo proveedor, distinta clave de artículo (BOG o BOR) y distinto porcentaje (21 % o 10 %)."
           ],
           "campos": [
             {
@@ -1530,22 +1534,22 @@
           ],
           "pasos": [
             {
-              "texto": "Abre la regla 1479 en Reglas de asignación y comprueba sus condiciones.",
-              "detalle": "Condiciones: ESAR + ESCO + SOR. En compras devuelve CLSC y ESR; en ventas, VLSC y ESR.",
+              "texto": "En tu demo, abre en Reglas de asignación la regla 153 y compárala con la 73.",
+              "detalle": "Las dos tienen zona empresa ESCO, zona tercero ESCO y clave tercero Régimen general. Cambia la clave de artículo: BOG en la 73 y BOR en la 153. En compras, la 73 devuelve CLBC + ESG (21 %) y la 153, CLBC + ESR (10 %). La captura es de la regla 1479 del vídeo (ESAR + ESCO + SOR, que devuelve CLSC y ESR).",
               "imagen": "v-tax-tablas-016.jpg"
             },
             {
-              "texto": "En tu factura, añade la línea del artículo 008 «Trabajos realizados por otras empresas», cantidad 1 y precio 800. Vuelve a validar; si la factura validada no deja añadir líneas, devuélvela antes a provisional.",
-              "detalle": "Abre Datos contables › Impuestos de esa línea: verás Compra local de servicios corrientes, ES, IVA 10 % reducido y regla 1479. Fíjate también en el campo Clave fiscal art. de la línea.",
+              "texto": "Mira en la captura la segunda línea de la factura del vídeo: artículo 008 «Trabajos realizados por otras empresas», cantidad 1 y precio 800.",
+              "detalle": "En Datos contables › Impuestos de esa línea salen Compra local de servicios corrientes, ES, IVA 10 % reducido y regla 1479. Fíjate en el campo Clave fiscal art. de la línea: en la captura sale SOE, pero la regla 1479 pide SOR. Es una diferencia de la captura del vídeo; en una factura real, la clave de la línea tiene que coincidir con la de la regla.",
               "imagen": "v-tax-tablas-017.jpg"
             },
             {
-              "texto": "Abre Impuestos por documento.",
-              "detalle": "Deben salir dos filas: 1.200 al 21 % (regla 1477) y 800 al 10 % (regla 1479). Total de la factura: 1.452 + 880 = 2.332 €."
+              "texto": "Calcula las dos filas que tendría Impuestos por documento en la factura del vídeo.",
+              "detalle": "Dos filas: 1.200 al 21 % (regla 1477) = 252 y 800 al 10 % (regla 1479) = 80. Total de la factura: 1.452 + 880 = 2.332 €."
             },
             {
-              "texto": "Al terminar, devuelve la zona impositiva de la dirección del tercero 00003 a ESAR.",
-              "detalle": "La zona vuelve a ser ESAR. Tus compañeros ven otra vez la regla 2586 en sus facturas."
+              "texto": "Explica qué haría falta para repetir la prueba sin tocar datos de otros.",
+              "detalle": "Un tercero propio en otra zona, con su ficha de proveedor, y una factura propia. En el curso no lo creas: con las reglas 73 y 153 ya has visto que, al cambiar un dato de entrada, cambian la regla y el impuesto."
             }
           ],
           "avisos": [
@@ -1555,7 +1559,7 @@
             },
             {
               "tipo": "nota",
-              "texto": "En la captura del vídeo, la clave de la línea sale como SOE, pero la regla 1479 pide SOR. En tu prueba, comprueba que la clave de la línea coincide con la de la regla. Si no coincide, avisa a tu formador."
+              "texto": "En la captura del vídeo, la clave de la línea sale como SOE, pero la regla 1479 pide SOR. Tómalo como un error de la captura: la regla solo se aplica si la clave de la línea coincide con la de la regla."
             }
           ]
         }
@@ -1618,13 +1622,11 @@
         }
       ],
       "checklist": [
-        "Cambias la zona de la dirección del tercero 00003 a ESCO y guardas.",
-        "En modo lista creas una factura FC de ALA al proveedor 00003 con {INI} en las notas.",
-        "Añades Material deportivo, cantidad 1, precio 1.200, y validas.",
-        "Compruebas regla 1477, base 1.200, cuota 252 y total 1.452.",
-        "Añades el artículo 008 por 800 y compruebas la regla 1479 con ESR al 10 %.",
-        "Compruebas dos filas en Impuestos por documento y un total de 2.332 €.",
-        "Devuelves la zona del tercero 00003 a ESAR."
+        "Explicas, con las capturas, qué cambia el formador en el tercero 00003 y por qué no lo repites en la demo compartida.",
+        "Lees en la captura la regla 1477, base 1.200, cuota 252 y total 1.452.",
+        "Abres en tu demo las reglas 73 y 153 y localizas la única condición que cambia: la clave de artículo (BOG o BOR).",
+        "Explicas por qué la 73 devuelve ESG (21 %) y la 153, ESR (10 %).",
+        "Calculas las dos filas de la factura del vídeo y su total de 2.332 €."
       ],
       "problemas": [
         {
@@ -1657,7 +1659,7 @@
       "numero": 6,
       "titulo": "Revisar el registro fiscal",
       "objetivo": "Sabrás leer un registro fiscal, repartir el IVA entre deducible y no deducible y reconocer la inversión del sujeto pasivo.",
-      "concepto": "El registro fiscal es la ficha que Hacienda vería de cada factura, como la etiqueta de un archivador. De estas fichas salen los libros registro, las declaraciones y los envíos al SII (el sistema que comunica las facturas a Hacienda). Si un registro está mal, la declaración sale mal.\n\nCada factura con impuestos deja su registro fiscal. Tiene una cabecera (empresa, tercero, fechas, zonas, naturaleza compra o venta, libro) y una o más líneas (operación, tipo, base y cuotas).\n\nEn este bloque consultas esos registros. Terminas con un caso especial: la inversión del sujeto pasivo, en la que el IVA lo declara quien compra.\n\nEjemplo: compra con base 1.000 € al 21 % → cuota 210 €. Si solo deduces el 80 %, 168 € son deducibles y 42 € pasan a gasto.\n\nEjemplo: en tu caso, la factura PROV-{INI}-001 deja un registro con base 125,00, cuota 26,25 y total 151,25. Tu venta deja otro con base 200,00 y cuota 42,00. Los ejemplos de abajo (1.000 €, 210 €) son de práctica; el mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Registros fiscales».",
+      "concepto": "El registro fiscal es la ficha que Hacienda vería de cada factura, como la etiqueta de un archivador. De estas fichas salen los libros registro, las declaraciones y los envíos al SII (el sistema que comunica las facturas a Hacienda). Si un registro está mal, la declaración sale mal.\n\nCada factura con impuestos deja su registro fiscal. Tiene una cabecera (empresa, tercero, fechas, zonas, naturaleza compra o venta, libro) y una o más líneas (operación, tipo, base y cuotas).\n\nEn este bloque consultas esos registros. Terminas con un caso especial: la inversión del sujeto pasivo, en la que el IVA lo declara quien compra.\n\nEjemplo: compra con base 1.000 € al 21 % → cuota 210 €. Si solo deduces el 80 %, 168 € son deducibles y 42 € pasan a gasto.\n\nEjemplo: en tu caso, la factura PROV-{INI}-001 deja un registro con base 125,00, cuota 26,25 y total 151,25. En tu demo también puedes leer el de la factura de prueba 0FC000012: base 10.000,00 y cuota 2.100,00. Tu venta deja otro con base 200,00 y cuota 42,00. Los ejemplos de abajo (1.000 €, 210 €) son de práctica; el mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Registros fiscales».",
       "duracionMin": 30,
       "secciones": [
         {
@@ -1671,7 +1673,7 @@
           ],
           "explicacion": [
             "Cabecera: empresa, fechas (contable, de documento y de operación), ejercicio y periodo fiscal, tercero y su NIF.",
-            "También en la cabecera: zonas impositivas de empresa y tercero, naturaleza (Compras o Ventas), libro registro (por ejemplo, L.R. de Facturas Recibidas), tipo de documento (Factura completa) y clave de e-reporting (el canal de envío de la factura a Hacienda).",
+            "También en la cabecera: zonas impositivas de empresa y tercero, naturaleza (Compras o Ventas), libro registro (por ejemplo, L.R. de Facturas Recibidas), tipo de documento (Factura completa) y clave de e-reporting (el canal de envío de la factura a Hacienda, por ejemplo el SII: el sistema por el que muchas empresas comunican cada factura a Hacienda en cuatro días hábiles).",
             "Líneas: una por cada combinación de operación e impuesto, con la base y las cuotas. Son las mismas filas que viste en Impuestos por documento.",
             "La pestaña Rectifica enlaza una factura rectificativa con el registro de la original. Indica si corrige por diferencias (solo el importe que cambia) o por sustitución (anula y sustituye la factura entera).",
             "La parte inferior muestra el Listado SII Facturas con el estado del envío a Hacienda. El botón Traspasar a SII-Facturas lo prepara."
@@ -1680,7 +1682,7 @@
             {
               "campo": "Empresa",
               "significado": "Empresa a la que pertenece el registro.",
-              "ejemplo": "TRI"
+              "ejemplo": "TRI en la captura (otra empresa de la demo de los vídeos); 0 en tu demo"
             },
             {
               "campo": "Fecha contable / Fecha documento",
@@ -1730,8 +1732,8 @@
               "imagen": "icon-impuestos-008.webp"
             },
             {
-              "texto": "Busca el registro de la factura FCALA23-000015 que leíste en el bloque «Leer la regla de impuestos de una factura».",
-              "detalle": "Su línea debe tener operación CLBC, tipo ESG, base 800 y cuota 168. Es una factura de ALA, otra empresa de la demo, no tuya."
+              "texto": "Busca el registro de la factura 0FC000012 de TCAPC que leíste en «Leer la regla de impuestos de una factura».",
+              "detalle": "Filtra por empresa 0 y tercero TCAPC. Su línea debe tener operación CLBC, tipo ESG, base 10.000,00 y cuota 2.100,00. Busca también el de tu PROV-{INI}-001 (tercero T{INI}): base 125,00 y cuota 26,25. En la captura, la factura es de otra empresa de la demo de los vídeos."
             },
             {
               "texto": "Si encuentras un registro con la pestaña Rectifica informada, mira a qué registro original apunta.",
@@ -1794,13 +1796,13 @@
           ],
           "pasos": [
             {
-              "texto": "Abre Finanzas › Impuestos › Comprobación del registro y filtra por ejercicio fiscal.",
-              "detalle": "Localiza el bloque de la empresa ALA y su total.",
+              "texto": "Abre Finanzas › Impuestos › Comprobación del registro y filtra por ejercicio fiscal 2026.",
+              "detalle": "Localiza el bloque de la empresa 0 y su total. Verás también las líneas de tus compañeros: filtra por tercero (tu T{INI} o TCAPC) para ver las tuyas. En la captura, de la demo de los vídeos, sale el bloque de ALA.",
               "imagen": "icon-impuestos-010.webp"
             },
             {
               "texto": "Busca una línea con zona de tercero distinta de ESCO, por ejemplo INT o EUR.",
-              "detalle": "Fíjate en que su operación ya no es local."
+              "detalle": "Fíjate en que su operación ya no es local. Si no hay ninguna, sáltate el paso."
             }
           ],
           "avisos": [
@@ -1824,7 +1826,7 @@
             "La cuota deducible es el IVA soportado que restarás en la liquidación.",
             "La cuota no deducible es la parte que no puedes restar. Acaba siendo un gasto más de la compra.",
             "Ejemplo: compra con base 1.000 € al 21 % → cuota 210 €. Si solo deduces el 80 % de esa cuota, por ejemplo porque la empresa aplica una prorrata anual del 80 % al tener también operaciones exentas: deducible 168 €, no deducible 42 €, total 1.210 €. En tu caso, sin prorrata, los 26,25 son todos deducibles.",
-            "En una compra normal el 100 % es deducible. La cuota no deducible es 0,00, como en la factura FCALA23-000015."
+            "En una compra normal el 100 % es deducible. La cuota no deducible es 0,00, como en la factura 0FC000012 de tu demo."
           ],
           "campos": [
             {
@@ -1912,11 +1914,11 @@
           "pasos": [
             {
               "texto": "Abre Finanzas › Impuestos › Maestros › Operaciones impositivas y abre la operación CCMESC.",
-              "detalle": "Comprueba la marca ISP y sus operaciones AXRSC (recibida) y AXESC (emitida)."
+              "detalle": "Comprueba la marca ISP y sus operaciones AXRSC (recibida) y AXESC (emitida). CCMESC es de IPSI (Ceuta y Melilla): aquí solo sirve como ejemplo de dónde se marca la ISP."
             },
             {
               "texto": "En Comprobación del registro, filtra las líneas con la columna ISP marcada.",
-              "detalle": "Abre una y busca en su registro las líneas derivadas de la autofactura."
+              "detalle": "Abre una y busca en su registro las líneas derivadas de la autofactura. Si no hay ninguna línea con ISP, sáltate el paso."
             },
             {
               "texto": "Calcula el ejemplo: servicio de 2.000 € sin IVA con ISP al 21 %.",
@@ -1990,8 +1992,8 @@
       ],
       "checklist": [
         "Abres un registro fiscal de compras y localizas naturaleza, libro y zonas.",
-        "Localizas el registro de la factura FCALA23-000015 y su línea CLBC + ESG.",
-        "Abres Comprobación del registro y localizas el bloque de la empresa ALA.",
+        "Localizas el registro de la factura 0FC000012 y su línea CLBC + ESG, y el de tu PROV-{INI}-001.",
+        "Abres Comprobación del registro y localizas el bloque de la empresa 0.",
         "Calculas a mano el reparto deducible / no deducible con un 80 %.",
         "Explicas con tus palabras qué es la inversión del sujeto pasivo.",
         "Abres la operación CCMESC y compruebas ISP con AXRSC y AXESC."
@@ -2043,8 +2045,8 @@
           "explicacion": [
             "El modelo 303 es la declaración del IVA de cada trimestre. Se presenta ante la AEAT, la Agencia Estatal de Administración Tributaria, que es la Hacienda del Estado.",
             "Tu 303 del 4T 2026 lleva tres cifras. IVA repercutido: 42,00, el de tu venta de 200,00. IVA soportado: 26,25, el de tu compra de 125,00. Resultado: 42,00 − 26,25 = 15,75 a ingresar. El plazo del 4.º trimestre acaba el 30 de enero; si ese día es sábado o festivo, pasa al siguiente día hábil. El 30-01-2027 es sábado, así que tienes hasta el lunes 1-02-2027.",
-            "El asiento de liquidación salda las dos cuentas de IVA y deja lo que debes en una tercera. Al debe: 477 IVA repercutido, 42,00. Al haber: 472 IVA soportado, 26,25, y 4750 Hacienda Pública, acreedora por IVA, 15,75. El debe (42,00) iguala al haber (26,25 + 15,75).",
-            "Fíjate: la demo lleva el IVA repercutido a la 47000.00000 por configuración. En el PGC, el plan contable español, es la 477. Al leer el asiento en el ERP, la 47000.00000 hace de 477."
+            "El asiento de liquidación salda las dos cuentas de IVA y deja lo que debes en una tercera. En el plan PGE 2008 de tu demo: al debe, 47000.00000 (IVA repercutido en la demo), 42,00. Al haber, 47200.00000 (IVA soportado), 26,25, y 47500.00000 «Hacienda Pública, acreedora por IVA», 15,75. El debe (42,00) iguala al haber (26,25 + 15,75).",
+            "Fíjate en los nombres. La demo rotula la 47000.00000 «Hacienda Pública, deudora por IVA», pero la usa para el IVA repercutido: en el PGC, el plan contable español, el repercutido es la 477. «Deudora» quiere decir que Hacienda te debe a ti; «acreedora», que tú le debes a Hacienda. Por eso los 15,75 a ingresar van a la 47500.00000."
           ],
           "campos": [
             {
@@ -2066,21 +2068,21 @@
           "pasos": [
             {
               "texto": "Abre «Finanzas › Impuestos › IVA › Borrador autoliquidación IVA (Modelo 303)» (o escribe 303 en el buscador).",
-              "detalle": "Mira el periodo y las casillas de repercutido y soportado. En la demo compartida solo mira: no presentes nada."
+              "detalle": "Mira el periodo y las casillas de IVA repercutido, IVA soportado y resultado. Limitación de la demo: la empresa 0 la compartes con todos los alumnos, así que el borrador suma también sus facturas y no saldrán tus 42,00 y 26,25 solos. Tus tres cifras las calculas a mano en el paso siguiente. Solo mira: no presentes nada."
             },
             {
               "texto": "Calcula las tres cifras de tu 303.",
               "detalle": "Repercutido 42,00, soportado 26,25 y resultado 42,00 − 26,25 = 15,75 a ingresar."
             },
             {
-              "texto": "Escribe el asiento de liquidación.",
-              "detalle": "477 al debe 42,00. 472 al haber 26,25. 4750 al haber 15,75."
+              "texto": "Escribe el asiento de liquidación con las cuentas de la demo.",
+              "detalle": "Al debe: 47000.00000, 42,00. Al haber: 47200.00000, 26,25, y 47500.00000, 15,75. En el PGC son la 477, la 472 y la 4750."
             }
           ],
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "Este es el asiento que anota la liquidación. No está comprobado que el borrador del 303 lo contabilice: en el caso, lo anotas tú."
+              "texto": "Este asiento lo escribes tú, en papel. En la demo compartida no presentes el 303 ni grabes el asiento. En una empresa real se grabaría como asiento manual, como los que hiciste en «Contabilidad general» con tu diario {INI}."
             }
           ]
         },
@@ -2096,7 +2098,7 @@
           "explicacion": [
             "Modelo 303: autoliquidación del IVA, mensual o trimestral. Es el de tu caso.",
             "Modelo 390: resumen anual del IVA. Repite lo declarado en los 303 del año.",
-            "Modelo 349: declaración informativa de compras y ventas con empresas de otros países de la UE, mensual o trimestral.",
+            "Modelo 349: declaración informativa de compras y ventas con empresas de otros países de la UE, mensual o trimestral. Del 390 y del 349 solo tienes que saber qué son y cada cuánto se presentan.",
             "El ERP calcula cada casilla sumando las líneas de los registros fiscales del periodo, según su operación impositiva y su tipo. Si la regla eligió mal la operación, el importe acaba en la casilla equivocada."
           ],
           "campos": [
@@ -2195,7 +2197,7 @@
           "pasos": [
             {
               "texto": "Abre Finanzas › Impuestos › Maestros › Claves de operaciones y ordena por Modelo.",
-              "detalle": "La ventana se titula «Claves tributarias para declaraciones fiscales». Pulsa Ordenar en la barra superior y elige Modelo. Localiza las claves del ES190: una misma clave G se desglosa en subclaves 01, 02, 03…",
+              "detalle": "La ventana se titula «Claves tributarias para declaraciones fiscales». Pulsa Ordenar en la barra superior y elige Modelo; si no ves Ordenar, haz clic en la cabecera de la columna Modelo. Localiza las claves del ES190: una misma clave G se desglosa en subclaves 01, 02, 03…",
               "imagen": "icon-impuestos-011.webp"
             },
             {
@@ -2225,7 +2227,7 @@
             "Si una empresa tiene actividades exentas y no exentas, solo deduce una parte de su IVA soportado. Esa parte es la prorrata.",
             "Prorrata general: ventas con derecho a deducción entre el total de ventas, redondeado al entero superior. Por ejemplo, 800.000 € con derecho y 200.000 € exentas dan un 80 %.",
             "Durante el año se aplica un porcentaje provisional, que es el definitivo del año anterior. En la última declaración del año se calcula el definitivo y se regulariza la diferencia.",
-            "Ejemplo: en la captura, la empresa FPE (otra empresa de la demo) tiene en 2018 un 5 % provisional y un 6 % definitivo. Si soportó 10.000 € de IVA, dedujo 500 € (5 %). Con el 6 % le tocan 600 €: regulariza 100 € a su favor. En tu caso no hay prorrata: deduces los 26,25 enteros. Con una prorrata del 80 % serían 26,25 × 80 % = 21,00.",
+            "Ejemplo: en la captura, la empresa FPE (otra empresa de la demo de los vídeos, como ALA, TRI y CAN; la tuya es la 0) tiene en 2018 un 5 % provisional y un 6 % definitivo. Si soportó 10.000 € de IVA, dedujo 500 € (5 %). Con el 6 % le tocan 600 €: regulariza 100 € a su favor. En tu caso no hay prorrata: deduces los 26,25 enteros. Con una prorrata del 80 % serían 26,25 × 80 % = 21,00.",
             "El maestro guarda, por empresa y por fechas, el porcentaje provisional, el definitivo y la cuenta de prorrata. Puede afinar por proyecto, sección o actividad CNAE, el código oficial de la actividad económica.",
             "Ojo: si informas el CNAE, informa también el proyecto o la sección."
           ],
@@ -2264,7 +2266,7 @@
           "pasos": [
             {
               "texto": "Abre Finanzas › Impuestos › Maestros › Prorrata por empresa y actividad.",
-              "detalle": "Localiza las filas de la empresa FPE. Compara el porcentaje provisional con el definitivo de cada año.",
+              "detalle": "Mira qué filas hay. La captura es de la empresa FPE, de la demo de los vídeos: compara su porcentaje provisional con el definitivo de cada año. Tu empresa 0 no aplica prorrata: en su ficha, el campo «Prorrata» vale No.",
               "imagen": "icon-impuestos-012.webp"
             },
             {
@@ -2329,7 +2331,7 @@
           "pasos": [
             {
               "texto": "Abre la carpeta Finanzas › Impuestos › Procesos y localiza sus cinco procesos.",
-              "detalle": "Son Autofacturas e ISP, Retroceder autofacturas e ISP, Validación de impuestos, Retroceder validación de impuestos y Carga de impuestos desde plantilla Excel. Casi todos piden un rango de fechas."
+              "detalle": "Son Autofacturas e ISP, Retroceder autofacturas e ISP, Validación de impuestos, Retroceder validación de impuestos y Carga de impuestos desde plantilla Excel. Casi todos piden un rango de fechas. En la demo compartida solo los localizas: no los ejecutes."
             },
             {
               "texto": "Abre un registro fiscal y mira su Listado SII Facturas.",
@@ -2410,11 +2412,11 @@
         }
       ],
       "checklist": [
-        "Escribes las tres cifras de tu 303 (42,00, 26,25 y 15,75) y su asiento de liquidación.",
+        "Escribes las tres cifras de tu 303 (42,00, 26,25 y 15,75) y su asiento con las cuentas 47000.00000, 47200.00000 y 47500.00000.",
         "Localizas el «Borrador autoliquidación IVA (Modelo 303)» en Finanzas › Impuestos › IVA o con el buscador.",
         "Relacionas 303, 390 y 349 con su contenido y su periodicidad.",
         "En Claves de operaciones localizas claves del ES190 con subclave.",
-        "En Prorrata por empresa y actividad comparas el porcentaje provisional y el definitivo de FPE.",
+        "En Prorrata por empresa y actividad comparas, con la captura de FPE, el porcentaje provisional y el definitivo, y compruebas que la empresa 0 no aplica prorrata.",
         "Calculas una regularización de prorrata.",
         "En Procesos localizas los procesos de autofacturas, validación, sus retrocesos y la carga Excel; el SII, en el botón Traspasar a SII-Facturas del registro fiscal.",
         "Explicas la diferencia entre SII, VERIFACTU y TicketBAI."
@@ -2450,7 +2452,7 @@
       "numero": 8,
       "titulo": "Controlar los impuestos antes de declarar",
       "objetivo": "Lanzarás los controles de integridad, sabrás qué incidencias devuelven y cómo resolverlas antes de declarar.",
-      "concepto": "Antes de presentar una declaración, conviene comprobar que los registros fiscales cuadran con la contabilidad (el registro en euros de todo lo que entra y sale de la empresa, ordenado por cuentas) y entre sí. Es como repasar el carro antes de pagar: mejor descubrir el error ahora que en una inspección.\n\nLos controles de la carpeta Finanzas › Impuestos › Integridad hacen esa revisión. No corrigen nada: solo señalan diferencias para que las analices.\n\nEn la demo hay siete controles. Dos son de justificación: comparan lo fiscal con los asientos contables. Uno revisa los NIF (Incidencias en CIF'S).\n\nDos revisan importes (Incidencias en importes cabecera y líneas, y Descuadres en impuestos). Uno mira la coherencia (Inconsistencias de impuestos) y otro los duplicados (Documentos duplicados).\n\nTodos se usan igual: rellenas los filtros y pulsas Ejecutar consulta.\n\nEjemplo: la cabecera de un registro dice 1.210 € y sus líneas suman 1.200 €. El control de importes devuelve «ERROR EN MONEDA LOCAL» por los 10 € de diferencia.\n\nEjemplo: en tu caso, el control de justificación compara el registro de la compra (cuota 26,25) con el asiento de la factura, que lleva 47200 IVA soportado por 26,25. Si coinciden, no sale ninguna incidencia. Las cifras de abajo son de práctica; el mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Integridad».",
+      "concepto": "Antes de presentar una declaración, conviene comprobar que los registros fiscales cuadran con la contabilidad (el registro en euros de todo lo que entra y sale de la empresa, ordenado por cuentas) y entre sí. Es como repasar el carro antes de pagar: mejor descubrir el error ahora que en una inspección.\n\nLos controles de la carpeta Finanzas › Impuestos › Integridad hacen esa revisión. No corrigen nada: solo señalan diferencias para que las analices.\n\nEn la demo hay siete controles. Dos son de justificación: comparan lo fiscal con los asientos contables. Uno revisa los NIF (Incidencias en CIF'S).\n\nDos revisan importes (Incidencias en importes cabecera y líneas, y Descuadres en impuestos). Uno mira la coherencia (Inconsistencias de impuestos) y otro los duplicados (Documentos duplicados).\n\nTodos se usan igual: rellenas los filtros y pulsas Ejecutar consulta.\n\nEjemplo: la cabecera de un registro dice 1.210 € y sus líneas suman 1.200 €. El control de importes devuelve «ERROR EN MONEDA LOCAL» por los 10 € de diferencia.\n\nEjemplo: en tu caso, el control de justificación compara el registro de la compra (cuota 26,25) con el asiento de la factura de compra, que lleva 26,25 al debe de la 47200.00000, la cuenta de IVA soportado de la demo. Si coinciden, no sale ninguna incidencia. Las cifras de abajo son de práctica; el mecanismo es el mismo.\n\nDónde: «Finanzas › Impuestos › Integridad».",
       "duracionMin": 20,
       "secciones": [
         {
@@ -2465,7 +2467,7 @@
           "explicacion": [
             "Un asiento es el registro contable de una operación. Cada línea del asiento es un apunte, con un importe en el debe o en el haber.",
             "Una factura con IVA deja a la vez un asiento y un registro fiscal. Los dos deben contar lo mismo.",
-            "Justificación impuestos vía enlaces y vía asientos: comparan los registros fiscales con los apuntes contables. Cada registro debe estar enlazado con su asiento y su cuota debe coincidir con la contabilizada en las cuentas de IVA.",
+            "Justificación impuestos vía enlaces y vía asientos: comparan los registros fiscales con los apuntes contables. Un enlace es el vínculo entre el registro fiscal y el apunte de su asiento. Cada registro debe estar enlazado con su asiento y su cuota debe coincidir con la contabilizada en las cuentas de IVA.",
             "Incidencias en CIF'S: revisa los NIF de los terceros. CIF es el nombre antiguo del NIF de las empresas; el ERP usa los dos.",
             "Incidencias en importes cabecera y líneas: compara el total de la cabecera del registro fiscal con la suma de sus líneas, en euros y en divisa.",
             "Descuadres en impuestos (ventana «Comprobación de impuestos, cabecera y detalle»): busca también descuadres entre cabecera y detalle.",
@@ -2576,7 +2578,7 @@
             {
               "texto": "Lee el resultado: una fila por cada cuenta de compras o ventas de los asientos que llevan IVA.",
               "pregunta": "En el resultado de la justificación, ¿dónde ves las columnas de base y cuota?",
-              "detalle": "Columnas: imppor (porcentaje de IVA), Cuenta y Descripción cuenta, basimp (base) y totimp (cuota). En la demo, al 21 %: 60000 Compras de mercancias, base 300,00 y cuota 63,00; 70000 Ventas mercancías, −310,00 y −65,10; 70500 Prestaciones de servicios, −800,00 y −168,00. Las ventas salen en negativo porque se calcula debe menos haber y las ventas van al haber. Comprueba que cada cuota es la base × 21 % (300 × 21 % = 63) y compárala con los registros fiscales. Si no sale ninguna línea, no hay nada que justificar en ese periodo. Son cifras de la demo: en tu caso saldría la cuenta 60000 con base 125,00 y cuota 26,25.",
+              "detalle": "Columnas: imppor (porcentaje de IVA), Cuenta y Descripción cuenta, basimp (base) y totimp (cuota). En la captura, al 21 %: 60000 Compras de mercancias, base 300,00 y cuota 63,00; 70000 Ventas mercancías, −310,00 y −65,10; 70500 Prestaciones de servicios, −800,00 y −168,00. Las ventas salen en negativo porque se calcula debe menos haber y las ventas van al haber. Comprueba que cada cuota es la base × 21 % (300 × 21 % = 63). Si no sale ninguna línea, no hay nada que justificar en ese periodo. La empresa 0 es compartida: verás también las compras y ventas de tus compañeros. Tu compra de 125,00 suma 26,25 de cuota en la cuenta de gasto de tu factura.",
               "imagen": "icon-impuestos-n-03.webp",
               "hotspot": {
                 "x": 68.2,
@@ -2602,7 +2604,7 @@
             },
             {
               "tipo": "solucion",
-              "texto": "Revisa el NIF en la ficha del tercero. Si está mal, corrígelo en el maestro y regenera los registros afectados."
+              "texto": "Revisa el NIF en la ficha del tercero. Si está mal, corrígelo en el maestro y vuelve a lanzar el proceso «Validación de impuestos» (Finanzas › Impuestos › Procesos) para las fechas afectadas."
             },
             {
               "tipo": "problema",
@@ -2660,12 +2662,12 @@
             },
             {
               "texto": "Abre Documentos duplicados, rellena Fecha contable y pulsa Ejecutar consulta.",
-              "detalle": "Fecha contable es obligatoria. Para revisar todas las fechas escribe >01-01-2000 (el signo > significa «posteriores a»). El resultado muestra Empresa, ejercicio, Naturaleza, Documento y NIF tercero. Si sale una fila, decide si es la misma factura registrada dos veces o dos facturas distintas con el mismo número. En la demo sale vacía."
+              "detalle": "Fecha contable es obligatoria. Para revisar todas las fechas escribe >01-01-2000: el signo > significa «posteriores a» (y < «anteriores a»). El resultado muestra Empresa, ejercicio, Naturaleza, Documento y NIF tercero. Si sale una fila, decide si es la misma factura registrada dos veces o dos facturas distintas con el mismo número. En la demo sale vacía."
             },
             {
               "texto": "Abre Inconsistencias de impuestos y pulsa Ejecutar consulta sin rellenar filtros.",
               "pregunta": "Has ejecutado la consulta de inconsistencias de impuestos. ¿Dónde ves el total de inconsistencias?",
-              "detalle": "Sale una fila por comprobación, de la 06 a la 17, con su Total de inconsistencias y el Detalle de la inconsistencia. En la demo todas valen 0. Si una no vale 0, anota su número, lee su detalle y revisa los registros fiscales de ese tipo.",
+              "detalle": "Sale una fila por comprobación, de la 06 a la 17, con su Total de inconsistencias y el Detalle de la inconsistencia. Si una no vale 0, anota su número, lee su detalle y revisa los registros fiscales de ese tipo. La demo es compartida: un contador distinto de 0 puede venir de las pruebas de otro alumno.",
               "imagen": "icon-impuestos-n-02.webp",
               "hotspot": {
                 "x": 0.3,
@@ -2756,7 +2758,7 @@
         "Lanzas Incidencias en CIF'S y revisas la columna Causa.",
         "Lanzas Incidencias en importes cabecera y líneas y buscas ERROR EN MONEDA LOCAL o ERROR EN DIVISA.",
         "Lanzas Documentos duplicados con una Fecha contable y analizas el resultado.",
-        "Lanzas Inconsistencias de impuestos y compruebas que los contadores valen 0."
+        "Lanzas Inconsistencias de impuestos y anotas los contadores que no valen 0."
       ],
       "problemas": [
         {
