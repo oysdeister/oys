@@ -1,38 +1,46 @@
 ---
 name: video-tutorial-erp
-description: Orquesta de principio a fin un vídeo tutorial de documentación de un ERP (Deister u otro) a partir de grabaciones Loom o de capturas del ERP, para cualquier módulo (compras, ventas, almacén…). Úsala cuando pidan «hacer un vídeo tutorial», «documentar en vídeo el módulo X», «convertir estos Loom en un tutorial» o rehacer un vídeo de formación del ERP. Para la plantilla y el render, video-motor-remotion; para el contenido funcional, las skills erp-*.
+description: "Orquesta de principio a fin un vídeo tutorial nuevo de un ERP (Deister Axional VNext u otro) para cualquier módulo - desde grabaciones Loom o grabando en vivo la demo - pensado para principiantes. Úsala siempre que pidan «hacer un vídeo tutorial», «documentar en vídeo el módulo X», «convertir estos Loom en un tutorial», «grabar el vídeo de ventas/workflow» o rehacer un vídeo de formación, y también si hay que coordinar dos sesiones en paralelo. Plantilla y render: video-motor-remotion; trocear, subir y enlazar en la plataforma: videos; contenido funcional: skills erp-*."
 ---
 
 # Vídeo tutorial de un ERP (orquestador)
 
-Opus decide, reparte y revisa; los agentes baratos (Sonnet) hacen el volumen. El usuario quiere **solo el resultado**: trabaja sin preguntas intermedias y avisa al final con el vídeo.
+Opus decide, reparte y revisa; los agentes baratos (Sonnet o DeepSeek) hacen el volumen. El usuario quiere **solo el resultado**: trabaja sin preguntas intermedias y avisa al final con el vídeo.
 
-## Requisitos fijos del usuario
-- Diseño espectacular en 3D (paneles flotantes, cámara con dolly, tarjetas que se voltean).
-- Pantallas reales paso a paso con **callouts numerados** por cada clic.
-- Cobertura completa por **capítulos**, 20-35 min en total, sin prisas; un `resumen` al final de cada capítulo.
-- Logo O&S como copyright (`config.marca`), voz **es-ES-XimenaNeural** (edge-tts).
-- Castellano de España, tuteo, números en cifras en la narración.
+## Dos rutas según la fuente
+- **Grabaciones existentes (Loom, Meet)** → ruta A (v1, 3D con capturas y clips recortados).
+- **Demo viva del ERP nuevo (nextdemo.geasa.eu, base tutorial)** → ruta B (v2, recomendada): navegación grabada en vivo con puppeteer (`rec.mjs`), voz sincronizada con los clics. Es la que se usó para compras, ventas y workflow.
 
-## Flujo
-1. **Obtener vídeos**: `yt-dlp <url Loom>` a `media/src/<id>.mp4`. No uses el transcript de Loom del MCP Atlassian: es malo.
-2. **Transcribir y extraer fotogramas**: `scripts/procesa.sh <id> <alias>` (whisper-cpp `large-v3-turbo`, `-l es`, con prompt de vocabulario; un fotograma cada 10 s, `f_N = (N-1)*10 s`). `scripts/compacta.py transcript.json salida.txt` compacta y parte en tramos.
-3. **Análisis en tramos de ~20 min**: un agente Sonnet por tramo, cada uno con sus frames y su transcripción → `kb/vX_tramoN.md` (pantallas, rutas, campos, datos, tiempos, tramos sucios). Plantilla del encargo en `references/encargos.md`.
-4. **Guionista Opus**: fusiona los tramos en `kb/guion_fusionado.md` + `video/src/data/guion.json`, reordena por capítulos y **verifica cada dato y recorte contra el fotograma** (sección «Verificación»). Generador de ejemplo: `scripts/guion/` (gen.py valida tramos, recortes, tramos sucios y velocidades; md.py escribe el guion legible). Ejecútalos con `PROYECTO=<carpeta base>`.
-5. **Revisión Opus**: comprueba en los frames lo dudoso y las cifras clave. Las decisiones y las cifras las fijas tú.
-6. **Locución, clips, velocidades y render por capítulos**: skill `video-motor-remotion`.
-7. Revisa 3-4 fotogramas del render final y entrega el capítulo 1 y el completo.
+Antes de empezar lee `references/requisitos_principiantes.md` (público, contenido por módulo, datos de la demo) y pasa `references/criterios_v2.md` como lista de comprobación.
 
-Si no hay grabación (ERP nuevo), se graba con capturas 4K: ver `erp-nuevo-compras` («Capturas»).
+## Ruta A: desde grabaciones
+1. `yt-dlp <url Loom>` a `media/src/<id>.mp4`. No uses el transcript de Loom del MCP Atlassian: es malo.
+2. `scripts/procesa.sh <id> <alias>` (whisper-cpp `large-v3-turbo`, `-l es`, un fotograma cada 10 s, `f_N = (N-1)*10 s`) y `scripts/compacta.py` para partir en tramos.
+3. Un agente por tramo de ~20 min → `kb/vX_tramoN.md` (plantilla en `references/encargos.md`).
+4. Guionista Opus: fusiona en `kb/guion_fusionado.md` + `video/src/data/guion.json` y verifica cada dato y recorte contra el fotograma (`scripts/guion/`: gen.py, md.py, grid.py; ejecútalos con `PROYECTO=<base>`).
+5. Revisión Opus de lo dudoso y de las cifras; las decisiones y cifras las fijas tú.
+
+## Ruta B: grabación en vivo
+1. **Criterios y datos**: `criterios.md` del vídeo y `datos.md` (qué registros existen ya en la demo, códigos propios del vídeo, últimos números de documento). Mira antes de grabar para no duplicar.
+2. **Guion por capítulo** (`capNN.json` + `.md`): escenas `pantalla` con `acciones` declarativas; brief de especialista en `references/brief_especialistas_v2.md`, un especialista Sonnet por capítulo, con su revisor.
+3. **Grabación EN SERIE** (un solo Chrome): `video-motor-remotion/scripts/v2/rec.mjs`, en un Chrome headless propio (puerto 9334) para no robar el foco; el usuario inicia la sesión del ERP. Reglas y trampas de la grabación (tema oscuro, esperas de red, tecleo, listas, iframes) en `references/lecciones.md`.
+4. **Limpieza** con `recorta.py` (esperas muertas) y `tapas.json` (errores visibles), sin regrabar.
+5. **Voz → clips → render por capítulos**: skill `video-motor-remotion`.
+6. **Verificador Opus** por bloques de capítulos: comprueba cifras en fotogramas y corrige el texto; cada capítulo acaba con «Qué has aprendido». Entrega `out/INDICE.md` (minutos) y `out/PENDIENTE.md` (lo que no se pudo hacer).
+7. Pasa a `videos` para trocear a `web/capNN.mp4`, subir la release y enlazar.
 
 ## Privacidad y limpieza (obligatorio)
-Ningún clip puede mostrar: rejillas de usuarios (nombres, e-mails), Gmail, Google Calendar, pantallas de login, errores de conexión o de informe, widget del grabador, pantallas en blanco, ventanas de correo. Recorta las barras del navegador y de Windows. Anota los tramos sucios en el guion para que `gen.py` los rechace.
+Ningún clip muestra: rejillas de usuarios (nombres, e-mails), Gmail, Calendar, login, errores de conexión o de informe, widget del grabador, pantallas en blanco ni ventanas de correo. Recorta barras del navegador y de Windows; anota los tramos sucios para que `gen.py` los rechace. Los datos de la demo son falsos: no se difuminan campos, cuentas ni importes. Solo en recortes de grabaciones de reuniones (Meet) se ocultan caras, webcams, nombres de participantes, IBAN y datos de clientes reales; recorta a la zona del ERP y revisa una hoja de fotogramas cada ~10 s antes de dar el clip por bueno.
 
 ## Errores típicos
-- **Whisper inventa texto en los silencios**: corrige siempre con la pantalla; los rótulos literales mandan.
-- Cifras de la voz que no cuadran con la pantalla (p. ej. dice 10.990 y se ve 10.890): manda la pantalla.
-- Pasos que se nombran pero no se ven: márcalos «SIN PANTALLA», no los inventes.
-- Recortes estimados por los agentes: ajústalos sobre el fotograma.
+- Whisper inventa texto en los silencios: manda la pantalla y los rótulos literales.
+- Cifras dichas que no cuadran con lo visto: manda la pantalla. Pasos nombrados pero no vistos: «SIN PANTALLA», no los inventes.
+- Tras **Guardar** un documento de ventas el ERP vuelve a la lista: añade una escena que abra la ficha.
+- Escenas que crean datos no se regraban desde cero; guarda copia del webm antes de regrabar.
+- Sesión del ERP caducada (todo redirige a login o el primer `prep` da `NO ENCONTRADO`): para, avisa y sigue con lo que no necesita demo; el usuario inicia la sesión, tú nunca tecleas la contraseña.
+- La demo es compartida: los números de documento no coinciden entre alumnos; en los guiones habla de «el siguiente número» y crea solo registros con código propio del vídeo.
+- Un solo grabador y un solo render a la vez (compiten por el Chrome y la GPU); renderiza por capítulos en cola.
+- No des el vídeo por publicado sin comprobarlo en pantalla (serie visible en su módulo).
 
-## Coste
-Delega lectura y análisis en modelos baratos (Sonnet o DeepSeek con el orquestador); Opus solo para guion, verificación y decisiones. Más detalle y lecciones: `references/lecciones.md`.
+## Coordinación y coste
+Dos versiones o fuentes a la vez: `references/dos_sesiones.md` (ESTADO.md para retomar). Delega lectura y análisis en modelos baratos; Opus solo para guion, verificación y decisiones. Más lecciones: `references/lecciones.md`.

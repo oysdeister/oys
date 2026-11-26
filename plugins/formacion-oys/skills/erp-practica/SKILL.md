@@ -1,6 +1,6 @@
 ---
 name: erp-practica
-description: Mantenimiento del ERP de práctica de la plataforma O&S: añadir pantallas, comportamientos, refrescar catálogo desde la demo y crear prácticas con comprobaciones. Úsala cuando pidan tocar `app/src/erp/`, `app/public/erp-cat/` o `app/scripts/erp-catalogo/`: «añade una pantalla al ERP», «haz que la factura valide como la demo», «actualiza el catálogo», «crea una práctica nueva».
+description: "Mantenimiento del ERP de práctica de la plataforma O&S: añadir pantallas, comportamientos, refrescar catálogo desde la demo y crear prácticas con comprobaciones. Úsala cuando pidan tocar `app/src/erp/`, `app/public/erp-cat/` o `app/scripts/erp-catalogo/`: «añade una pantalla al ERP», «haz que la factura valide como la demo», «actualiza el catálogo», «crea una práctica nueva»."
 ---
 # Mantenimiento del ERP de práctica
 

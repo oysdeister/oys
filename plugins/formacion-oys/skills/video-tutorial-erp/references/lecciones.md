@@ -8,7 +8,7 @@
 - Escenas de 10-40 s; parte las ideas largas antes que acelerar la voz.
 - Escenas más cortas que su clip: acelera el clip (regla de velocidad en video-motor-remotion) o recorta el tramo.
 - Render completo de 34 min ≈ 75 min por capítulos con GPU angle; renderiza por capítulos y concatena.
-- Ejemplo de ESTADO.md para retomar tras una compactación: `../video-dos-sesiones/references/`.
+- Ejemplo de ESTADO.md para retomar tras una compactación: `dos_sesiones.md` y `ejemplos_dos_sesiones/`.
 
 ## Lecciones de la v2 (VNext para principiantes, 16-11-2026)
 - **Lo que pidió el usuario tras la v1**: público principiante absoluto; nada de «antes/ahora» ni versiones; overview del módulo y del menú; todo término técnico explicado en llano; mucho más lento; navegación en vivo (no capturas fijas); pantalla grande y plana; columna lateral pequeña. Lista de comprobación: `criterios_v2.md`.
@@ -21,3 +21,16 @@
 - **Sesión del ERP**: caduca a las pocas horas; el login aparece con usuario/contraseña autocompletados y solo el usuario pulsa Entrar. Comprueba la sesión antes de cada grabación (si no, `NO ENCONTRADO` en el primer prep).
 - **Estado compartido entre pestañas**: el menú lateral abierto/cerrado se comparte entre todas las pestañas del Chrome; cada escena fija el suyo (`asegura_menu`). `erp2.mjs` se cuelga en `browser.pages()` con pestañas chrome://: usar `erp2_ov.mjs` o targets de tipo página con timeout.
 - **Coste y tiempos**: ~10 capítulos, 62 pantallas, ≈ 80 min de voz. Render ≈ 2,5 min por minuto de vídeo (clips 2560×1440); cola de render por capítulos en segundo plano mientras se verifica el resto.
+
+## Grabación (25-11-2026, vídeos de ventas y workflow)
+- **No robar el foco**: grabar en un Chrome headless propio (`--headless=new --remote-debugging-port=9334 --user-data-dir=<carpeta propia> --window-size=1600,900`) con `CDP=http://127.0.0.1:9334`; rec.mjs y erp2_ov.mjs no hacen `bringToFront` fuera del 9333. Con el Chrome visible del usuario, lo que él teclea en otra ventana puede acabar en el vídeo. La sesión del headless la inicia el usuario (copiar cookies entre navegadores lo bloquea el control de permisos).
+- La demo sondea la red: `waitForNetworkIdle` nunca llega y cada clic esperaba 8-9 s. Tope `SETTLE_MAX` (3 s) en `settle`; para grabaciones viejas, `tools/recorta.py <id>` quita las esperas muertas (guarda `.orig`).
+- `Meta+A` por CDP no selecciona el texto de un input en macOS: el tecleo se añadía al valor copiado («FVFPVD»). `type` usa ahora `el.select()` y solo recurre a Meta+A para editores (Monaco).
+- Desplegables de tabla: un segundo clic puede cerrar la lista. Acción `abre_lista {campo, fila}`: clic y otro solo si la fila no aparece.
+- Un tooltip activo («Recargar») es `.menuable__content__active` y tapaba la búsqueda de filas: `fila` busca primero en menús abiertos que contengan la fila y si no en el diálogo/documento.
+- Usa `TMO` alto (la guarda global de 15 min de rec.mjs mató una escena a medias sin escribir el log).
+- **Tema oscuro**: el ERP sigue `prefers-color-scheme`; si macOS pasa a oscuro (al anochecer) la grabación sale con cabecera roja y paneles negros a medias. rec.mjs fuerza `emulateMediaFeatures` claro; tras cada sesión el tema vuelve al del sistema, así que una escena que empieza sin `goto` puede quedar mezclada: empieza cada tanda con un `goto`/recarga.
+- Tras **Guardar** un pedido, albarán o factura de ventas, el ERP vuelve a la **lista** (no abre la ficha): añade una escena que abra la fila (`td.ax-grid-extra-cell-index a`).
+- Las líneas del albarán se abren en un **panel lateral (iframe)**: `frame:true` también para `campo` (etiquetas) y hay que bajar con `scroll` dentro del panel.
+- Un clic que se repite (reintento de foco) duplica la `clave` en el log: quita la del clic fallido.
+- Grabar en un Chrome propio (9334) con la ventana detrás funciona: cursor, diálogos y desplegables se pintan.

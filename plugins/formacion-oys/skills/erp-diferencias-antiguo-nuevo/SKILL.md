@@ -19,4 +19,4 @@ description: Diferencias entre la versión antigua del ERP Deister (2015) y la n
 - CRC y Conformar desaparecen; control por importe declarado/calculado y tolerancias. Docflow nuevo.
 - Contabilización equivalente (4009/6000 → 40090/60000).
 
-Tabla completa, pendientes y referencias de capturas: `references/diferencias.md`. Fuentes: skills `erp-antiguo-compras` y `erp-nuevo-compras`.
+Tabla completa, pendientes y referencias de capturas: `references/diferencias.md`. Fuentes: skills `erp-antiguo-compras` y `erp-next-compras`.

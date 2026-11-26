@@ -69,7 +69,7 @@ const CURSOR_JS = `(() => {
   mk();
 })();`;
 
-const browser = await puppeteer.connect({ browserURL: 'http://127.0.0.1:9333', defaultViewport: null });
+const browser = await puppeteer.connect({ browserURL: process.env.CDP || 'http://127.0.0.1:9333', defaultViewport: null });
 let ajenas = [];
 try { ajenas = Object.values(JSON.parse(fs.readFileSync(path.join(HERE, '..', '..', 'tools', '.tabs.json'), 'utf8'))); } catch {}
 const tg = browser.targets().filter((t) => t.type() === 'page' && t.url().includes('nextdemo.geasa.eu') && !t.url().includes('dbstudio') && !ajenas.includes(t._targetId));
@@ -77,7 +77,7 @@ let page = null;
 for (const t of tg.reverse()) { try { page = await Promise.race([t.page(), new Promise((_, r) => setTimeout(() => r(0), 8000))]); if (page) break; } catch {} }
 if (!page) throw new Error('sin pestaña principal');
 try { const cs = await page.target().createCDPSession(); await cs.send('Emulation.setFocusEmulationEnabled', { enabled: true }); } catch {}
-await page.bringToFront();
+if (!process.env.CDP || process.env.CDP.includes('9333')) await page.bringToFront(); // en headless (9334) no hace falta y no roba el foco
 await page.setViewport({ width: VW, height: VH, deviceScaleFactor: 2 });
 await page.evaluateOnNewDocument(CURSOR_JS);
 await page.evaluate(CURSOR_JS);
@@ -90,7 +90,7 @@ const ev = (tipo, extra = {}) => { if (recorder || DRY) log.push({ t: +now().toF
 
 const settle = async (ms = 900) => {
   await sleep(ms);
-  try { await page.waitForNetworkIdle({ idleTime: 400, timeout: 8000 }); } catch {}
+  try { await page.waitForNetworkIdle({ idleTime: 400, timeout: Number(process.env.SETTLE_MAX || 3000) }); } catch {} // la demo sondea la red: con 8000 cada clic esperaba ~9 s
   try { await page.evaluate(CURSOR_JS); } catch {}
 };
 
@@ -121,8 +121,9 @@ async function locate(t) {
       if (el && el.getBoundingClientRect().width < 5) el = vi.querySelector('.v-input__slot') || el; // selects con input de ancho 0
       if (el) el.scrollIntoView({ block: 'nearest' });
     } else if (q.row) {
-      const m = [...document.querySelectorAll('.menuable__content__active')].filter(vis).pop() || dlg || document;
-      const cells = [...m.querySelectorAll('td, .v-list-item__title, .v-list-item')].filter(vis).filter((c) => norm(c.innerText).includes(q.row));
+      const roots = [...[...document.querySelectorAll('.menuable__content__active')].filter(vis).reverse(), dlg, document].filter(Boolean);
+      let cells = [];
+      for (const m of roots) { cells = [...m.querySelectorAll('td, .v-list-item__title, .v-list-item')].filter(vis).filter((c) => norm(c.innerText).includes(q.row)); if (cells.length) break; } // un tooltip activo («Recargar») no debe tapar la rejilla
       el = cells[q.n || 0];
     } else if (q.text) {
       const root = FR ? D : (q.global ? document : (dlg || document));
@@ -272,7 +273,14 @@ const R = {
   },
   async shot(name) {
     fs.mkdirSync(path.join(REC, 'shots'), { recursive: true });
-    await page.screenshot({ path: path.join(REC, 'shots', name + '.png') });
+    const out = path.join(REC, 'shots', name + '.png');
+    try { await Promise.race([page.screenshot({ path: out }), new Promise((_, r) => setTimeout(() => r(new Error('shot timeout')), 12000))]); }
+    catch (e) { // pestaña oculta: último fotograma del webm
+      const w = path.join(REC, name.replace(/_fin$/, '') + '.webm');
+      if (!fs.existsSync(w)) throw e;
+      const { execFileSync } = await import('node:child_process');
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-sseof', '-0.5', '-i', w, '-frames:v', '1', '-vf', 'scale=1600:-1', out]);
+    }
   },
   log: (...a) => console.log(...a),
 };
@@ -293,11 +301,20 @@ async function accion(a) {
     case 'move': case 'hover': await R.move(tgt(a)); break;
     case 'type':
       if (a.campo || a.sel) await R.click(tgt(a), { espera: 400 });
-      if (a.limpiar !== false && (a.campo || a.sel)) { await R.page.keyboard.down('Meta'); await R.page.keyboard.press('KeyA'); await R.page.keyboard.up('Meta'); }
+      if (a.limpiar !== false && (a.campo || a.sel)) { const sel = await R.page.evaluate(() => { const e = document.activeElement; if (e && typeof e.select === 'function' && e.value !== undefined) { e.select(); return true; } return false; }); if (!sel) { await R.page.keyboard.down('Meta'); await R.page.keyboard.press('KeyA'); await R.page.keyboard.up('Meta'); } } // Meta+A por CDP no selecciona en inputs (macOS)
       await R.type(a.texto, { delay: a.delay });
       if (a.enter) await R.key('Enter');
       break;
     case 'pick': await R.pick(a.texto, { espera: a.espera }); break;
+    case 'abre_lista': {
+      // clic en el campo y, si la lista no muestra a.fila tras ~3 s, otro clic (hasta 3 intentos)
+      for (let i = 0; i < 3; i++) {
+        await R.click(tgt(a), { espera: 500 });
+        let ok = false;
+        for (let k = 0; k < 8 && !ok; k++) { await sleep(400); try { await locate({ row: a.fila }); ok = true; } catch {} }
+        if (ok) break;
+      }
+      break; }
     case 'key': for (let i = 0; i < (a.veces || 1); i++) await R.key(a.tecla); break;
     case 'scroll': await R.scroll(a.sel || a.texto ? tgt(a) : null, a.dy || 300); break;
     case 'resalta': { const r = await R.move(tgt(a)); ev('resalta', { rect: r, ms: a.ms || 2500, texto: a.etiqueta }); await R.pause(a.ms || 2500); break; }

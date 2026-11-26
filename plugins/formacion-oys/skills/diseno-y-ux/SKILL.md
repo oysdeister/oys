@@ -1,6 +1,6 @@
 ---
 name: diseno-y-ux
-description: Mantiene el sistema de diseño v4 y la guía de usabilidad UX v5 de la plataforma. Úsala cuando toques CSS, componentes de interfaz o valides la UX con agentes-junior: «arregla el CSS», «lanza los juniors», «revisa la UX», «prueba de humo».
+description: "Mantiene el sistema de diseño v4 y la guía de usabilidad UX v5 de la plataforma. Úsala cuando toques CSS, componentes de interfaz o valides la UX con agentes-junior: «arregla el CSS», «lanza los juniors», «revisa la UX», «prueba de humo»."
 ---
 
 # Diseño y UX

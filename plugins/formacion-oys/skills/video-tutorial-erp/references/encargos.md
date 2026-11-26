@@ -7,4 +7,4 @@
 > Fusiona `kb/*.md` en un guion por capítulos (20-35 min, resumen al final de cada uno) con el formato de `video/GUION_FORMATO.md`. Cada escena `pantalla` lleva tramo, recorte, zooms y callouts numerados por clic. Verifica cada dato, tramo y recorte contra el fotograma y documenta la sección «Verificación» (datos comprobados, correcciones, exclusiones de privacidad, SIN PANTALLA, dudoso). Salidas: `kb/guion_fusionado.md` y `video/src/data/guion.json`.
 
 ## Ejemplo real
-Guion y verificación del vídeo de compras antiguo: `../erp-antiguo-compras/references/guion_fusionado.md` y `verificacion.md`.
+Guion y verificación del vídeo de compras antiguo: `../../erp-antiguo-compras/references/guion_fusionado.md` y `verificacion.md`.

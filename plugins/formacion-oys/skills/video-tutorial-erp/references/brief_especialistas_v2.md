@@ -21,7 +21,7 @@ Rehacer el vídeo de compras para **usuarios finales principiantes** (no saben d
 
 ## Documentación existente (léela antes de ir al ERP)
 - `mapa_erp_nuevo.md` (rutas de menú y objetos), `notas_tarifas.md`, `notas_tipos_documento.md`, `notas_circuito.md`, `circuito_creado.md` (qué se creó en v1, errores encontrados y por qué), `hd/INDICE.md` (capturas 4K con rects).
-- Skill `oys:erp-nuevo-compras` (conocimiento funcional del ERP nuevo y de las capturas con puppeteer).
+- Skill `formacion-oys:erp-next-compras` (conocimiento funcional del ERP nuevo y de las capturas con puppeteer).
 - Guion v1 como referencia de contenido (NO de enfoque): `video/scripts/gen_guion.py`. Formato de escenas: `video/GUION_FORMATO.md`.
 
 ## Hechos clave ya conocidos

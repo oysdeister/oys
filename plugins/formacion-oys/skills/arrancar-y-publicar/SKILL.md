@@ -19,7 +19,7 @@ description: Cubre arrancar el entorno local, compilar, probar y desplegar la pl
 - `.github/workflows/pages.yml` — workflow que compila y publica en GitHub Pages.
 - `.claude/launch.json` — perfiles de arranque: «taller» (puerto 5179) y «ux» (puerto 5191).
 - `app/package.json` — scripts `dev`, `build`, `lint`, `preview`.
-- `app/src/lib/config.ts` — usa `VITE_VIDEO_URL` para enlazar el vídeo de compras.
+- `app/src/lib/config.ts` — define `VITE_VIDEO_URL`, pero hoy no se usa: las URL de los vídeos de compras van fijas en `app/src/content/videoMapa.ts` (release `video-v1`).
 - `.gitignore` — excluye `video/` anclado a `/video/`, `media/`, `nueva/` y otros.
 - `CLERK.md` — explica el acceso con Clerk y las variables `VITE_*` de dominio y correos.
 
@@ -50,7 +50,7 @@ Queda en `http://localhost:5179`. Si necesitas otro perfil, usa «ux» (puerto 5
 Variables de entorno para desarrollo (en `app/.env.local` o exportadas antes de lanzar):
 
 - `VITE_CLERK_PUBLISHABLE_KEY` — si no está definida, la app funciona sin login y guarda el progreso solo en el navegador (CLERK.md).
-- `VITE_VIDEO_URL` — enlace al vídeo tutorial de compras para incrustarlo (config.ts).
+- `VITE_VIDEO_URL` — definida en config.ts para el vídeo de compras, sin uso actual.
 - `VITE_DOMINIO_PERMITIDO` — dominio de correo con acceso; por defecto `oysconsultores.com` (vacío = cualquiera).
 - `VITE_CORREOS_EXTRA` — correos extra permitidos, separados por comas.
 
