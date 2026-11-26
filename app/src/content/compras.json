@@ -2355,7 +2355,7 @@
    "numero": 5,
    "titulo": "Montar la aprobación de pedidos",
    "objetivo": "Dejarás montada la aprobación de pedidos de compra: el rol que autoriza, el circuito, la validación, el grupo de validaciones y la tipología PW{INI} que lo enlaza todo.",
-   "concepto": "Una empresa no quiere que cualquiera compre cualquier cosa. Por eso un pedido puede quedar bloqueado hasta que alguien con permiso lo autorice. Ese circuito de aprobación se llama workflow.\n\nEjemplo: el jefe de compras no quiere que salga ningún pedido sin la referencia del proveedor (el campo «Referencia» del pedido). Montas una aprobación que bloquea el pedido que la lleva vacía y espera su firma. Es justo lo que comprueba la validación 36 que vas a usar. Para bloquear por importe haría falta otra validación que mire el importe; en este bloque no se usa.\n\nLas piezas son cinco, y las montas en este orden. El rol es la lista de personas que pueden firmar. El circuito es el dibujo del recorrido: empieza, espera la firma de un rol y termina. La validación es una comprobación ya programada: «este pedido no tiene referencia del proveedor, ¿lo bloqueo?». El grupo de validaciones reúne las comprobaciones de un tipo de documento y dice qué circuito las autoriza. Y la tipología del pedido, que ya conoces, enlaza todo con el campo «Grupo validación».\n\nAsí queda la cadena: tipología PW{INI} › grupo GW{INI} › validación 36 y circuito WF{INI} › rol RW{INI}.\n\nEn este bloque solo configuras: no creas ningún pedido. La prueba la haces en el bloque «Probar y autorizar un pedido con workflow», en Operar, cuando ya sepas comprar.\n\nFíjate: las capturas son de los códigos de prueba de la demo: rol RCP, circuito WFCP, grupo GCP y tipología PWCP. Los tuyos serán RW{INI}, WF{INI}, GW{INI} y PW{INI}; en cada paso se avisa de cuál es cuál.\n\nDónde: el rol, el circuito, la validación y el grupo, en «Finanzas › Maestros» (Validaciones y Acciones y workflow); la tipología, en «Gestión › Compras › Maestros › Documentos › Pedidos».",
+   "concepto": "Una empresa no quiere que cualquiera compre cualquier cosa. Por eso un pedido puede quedar bloqueado hasta que alguien con permiso lo autorice. Ese circuito de aprobación se llama workflow.\n\nEjemplo: el jefe de compras no quiere que salga ningún pedido sin la referencia del proveedor (el campo «Referencia» del pedido). Montas una aprobación que bloquea el pedido que la lleva vacía y espera su firma. Es justo lo que comprueba la validación 36 que vas a usar. Para bloquear por importe haría falta otra validación que mire el importe; en este bloque no se usa.\n\nLas piezas son cinco, y las montas en este orden. El rol es la lista de personas que pueden firmar. El circuito es el dibujo del recorrido: empieza, espera la firma de un rol y termina. La validación es una comprobación ya programada: «este pedido no tiene referencia del proveedor, ¿lo bloqueo?». El grupo de validaciones reúne las comprobaciones de un tipo de documento y dice qué circuito las autoriza. Y la tipología del pedido, que ya conoces, enlaza todo con el campo «Grupo validación».\n\nAsí queda la cadena: la tipología PW{INI} usa el grupo GW{INI}; el grupo lleva la validación 36 y el circuito WF{INI}; y el circuito espera la firma del rol RW{INI}.\n\nEn este bloque solo configuras: no creas ningún pedido. La prueba la haces en el bloque «Probar y autorizar un pedido con workflow», en Operar, cuando ya sepas comprar.\n\nFíjate: las capturas son de los códigos de prueba de la demo: rol RCP, circuito WFCP, grupo GCP y tipología PWCP. Los tuyos serán RW{INI}, WF{INI}, GW{INI} y PW{INI}; en cada paso se avisa de cuál es cuál.\n\nDónde: el rol, el circuito, la validación y el grupo, en «Finanzas › Maestros» (Validaciones y Acciones y workflow); la tipología, en «Gestión › Compras › Maestros › Documentos › Pedidos».",
    "duracionMin": 35,
    "secciones": [
     {
@@ -2543,7 +2543,7 @@
       },
       {
        "campo": "Perfil o roles asignados",
-       "significado": "Rol que resuelve la etapa Usuario. Escribe el código del rol, no su descripción.",
+       "significado": "Rol que resuelve la etapa Usuario. Se elige en un desplegable, que lo muestra con su descripción; la rejilla de etapas muestra su código.",
        "ejemplo": "RW{INI}"
       },
       {
@@ -2579,8 +2579,8 @@
        }
       },
       {
-       "texto": "En la etapa «Usuario», rellena «Perfil o roles asignados» con el código de tu rol: RW{INI}, no su descripción",
-       "detalle": "Tipo actividad «Usuario», Descripción actividad «APROBAR PEDIDO». La rejilla de etapas muestra el código del rol (RCP en la captura).",
+       "texto": "En la etapa «Usuario», elige tu rol RW{INI} en el desplegable «Perfil o roles asignados»",
+       "detalle": "Tipo actividad «Usuario», Descripción actividad «APROBAR PEDIDO». El desplegable no se teclea: eliges el rol y queda como una etiqueta con su descripción (en la captura, «APROBADOR PEDIDOS CP»). Al guardar, la rejilla de etapas muestra su código (RCP en la captura; el tuyo, RW{INI}).",
        "imagen": "cob-workflow-12.webp",
        "hotspot": {
         "x": 25.6,
@@ -2658,9 +2658,9 @@
      ],
      "pasos": [
       {
-       "texto": "Abre «Maestro de validaciones» y localiza la fila 36.",
+       "texto": "Abre «Maestro de validaciones» y localiza la validación 36 en la columna «Número validación».",
        "pregunta": "¿Qué validación vamos a usar para bloquear el pedido?",
-       "detalle": "Desplázate por la lista hasta ver «REFERENCIA DE TERCERO NO INFORMADA». No cambies nada.",
+       "detalle": "Desplázate por la lista hasta ver «REFERENCIA DE TERCERO NO INFORMADA». La columna gris de la izquierda es solo el número de fila (junto a la 36 pone 34): no la mires. No pulses «Añadir código» ni cambies nada.",
        "imagen": "cob-workflow-4.webp",
        "hotspot": {
         "x": 12.4,
@@ -2702,7 +2702,7 @@
      "campos": [
       {
        "campo": "Código validación *",
-       "significado": "Código del grupo. Es lo que escribirás en la tipología.",
+       "significado": "Código del grupo. Es lo que elegirás en la tipología.",
        "ejemplo": "GW{INI}"
       },
       {
@@ -2895,12 +2895,13 @@
        "detalle": "No hay «Nuevo como»: ni en ⋮, ni en el menú de la fila, ni en la ficha."
       },
       {
-       "texto": "Rellena Tipo pedido PW{INI}, Descripción, Serie PC, Tipo Normal, Estado Activo, Relación proveedor Proveedores y Stock planificado No."
+       "texto": "Rellena Tipo pedido PW{INI}, Descripción, Serie PC, Tipo Normal, Estado Activo, Relación proveedor Proveedores y Stock planificado No.",
+       "detalle": "Relación proveedor: aquí eliges «Proveedores» (PRO), no ACR como en los otros tipos de pedido del módulo. Es la que se usó al comprobar el workflow en la demo, con el proveedor 00010. Como en todas las tipologías, vale cualquier relación que tenga el proveedor del pedido: tu T{INI} tiene ACR y PRO, y el 00010 tiene PRO."
       },
       {
        "texto": "En «Datos generales» elige en «Grupo validación» tu grupo GW{INI}. Pulsa «Guardar».",
        "pregunta": "¿Qué campo de la tipología enlaza con el grupo de validaciones?",
-       "detalle": "En la ficha salen también las secciones «Validaciones workflow» y «Circuito worflow» (así, con la errata). En pedidos de compras salen vacías.",
+       "detalle": "En la ficha salen también las secciones «Validaciones workflow» y «Circuito worflow» (así, con la errata). En pedidos de compras salen vacías. Deja vacío también el campo «Circuito» de «Datos generales»: en la demo se dejó así y el pedido se bloqueó y se autorizó, porque el circuito que decide quién autoriza es el de la línea del grupo (WF{INI}).",
        "imagen": "cob-workflow-16.webp",
        "hotspot": {
         "x": 1.7,
@@ -3143,7 +3144,7 @@
       },
       {
        "texto": "Crea el fichero de líneas: un archivo de texto con dos filas, separadas por «;», y guárdalo con extensión .csv",
-       "detalle": "Solo porque la demo no trae el formulario completo; en un cliente real las líneas se añaden en la pantalla del pedido. Abre un editor de texto sin formato (Bloc de notas en Windows; TextEdit en Mac, en modo «Texto sin formato»). Escribe estas dos líneas, cambiando el primer número de la segunda por tu Identificador pedido (aquí, 18): cabid;linrel;orden;codart;varlog;numlot;canped;udmcom;canpre;udmpre;precio;impnet;canser;dtoimp — 18;1;1;13500620;0;0;10;UNI;10;UNI;4;40;0;0. La primera fila son los nombres de las columnas; la segunda, tu línea: 10 unidades del artículo 13500620 a 4,00, es decir, 40,00. Guárdalo como lineas-pedido.csv. Sin espacios, sin comillas y con «;» entre campos."
+       "detalle": "Solo porque la demo no trae el formulario completo; en un cliente real las líneas se añaden en la pantalla del pedido. Abre un editor de texto sin formato (Bloc de notas en Windows; TextEdit en Mac, en modo «Texto sin formato»). Escribe estas dos líneas, cambiando el primer número de la segunda por tu Identificador pedido (aquí, 18): cabid;linrel;orden;codart;varlog;numlot;canped;udmcom;canpre;udmpre;precio;impnet;canser;dtoimp — 18;1;1;13500620;0;0;10;UNI;10;UNI;4;40;0;0. La primera fila son los nombres de las columnas; la segunda, tu línea: 10 unidades del artículo 13500620 a 4,00, es decir, 40,00. Guárdalo como lineas-pedido.csv. Sin espacios, sin comillas y con «;» entre campos. Si el Mac lo guarda como lineas-pedido.csv.txt, quita el «.txt» del nombre."
       },
       {
        "texto": "Importa la línea: en Gestión › Compras › Pedidos › «Líneas de pedidos» pulsa ⋮ (arriba a la derecha) › Importar y sigue el asistente",
@@ -3181,8 +3182,8 @@
        }
       },
       {
-       "texto": "Lee el resultado: «Pedido validado», con Estado Bloqueado.",
-       "detalle": "El importe neto es 40,00.",
+       "texto": "Lee el resultado: la columna Estado dice «Bloqueado».",
+       "detalle": "El importe neto es 40,00. «Pedido validado» es el texto que pone el proceso al terminar, aunque el pedido quede bloqueado: lo que cuenta es la columna Estado.",
        "imagen": "cob-workflow-21.webp",
        "hotspot": {
         "x": 12.5,
@@ -3255,7 +3256,7 @@
       "«Gestionar» es la pantalla de trabajo del que autoriza. Arriba salen los pedidos con autorizaciones pendientes; debajo, las tareas «Pendientes».",
       "Al revalidar con el circuito ya puesto en el grupo, el sistema crea una evaluación y un token. La evaluación es el recorrido del circuito para tu pedido. El token marca en qué etapa está ese recorrido: aquí, la tarea APROBAR PEDIDO pendiente para tu rol.",
       "Entras en la tarea por el enlace «1» del número de fila. Se abre «ACCIONES PENDIENTES», con los botones Denegar, Autorizar, Retornar y Designar.",
-      "En «ACCIONES PENDIENTES» fíjate en el campo is_authorizable: vale 1 cuando tu usuario puede autorizar esa tarea, porque tiene el rol de la etapa.",
+      "En «ACCIONES PENDIENTES» fíjate en el campo is_authorizable: vale 1 cuando tu usuario puede autorizar esa tarea, porque tiene el rol de la etapa. Si vale 0, revisa en «Montar la aprobación de pedidos» que la etapa «Usuario» del circuito lleva tu rol RW{INI} y que ese rol tiene asignado el usuario «public».",
       "Al pulsar «Autorizar» te pide una «Respuesta usuario»: el motivo de la aprobación.",
       "Al aceptar, la tarea pasa a Ejecutada, el circuito llega a «Fin» y el pedido queda Validado. No hace falta revalidar de nuevo.",
       "Este bloque solo practica «Autorizar». Denegar, Retornar y Designar quedan fuera: no los pulses."
@@ -3426,7 +3427,7 @@
       {
        "campo": "Fecha pedido *",
        "significado": "Fecha del pedido. Es el único filtro obligatorio.",
-       "ejemplo": "25-11-2026"
+       "ejemplo": "La de tu pedido (en la captura, 25-11-2026)"
       },
       {
        "campo": "Pedido",

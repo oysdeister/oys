@@ -88,14 +88,15 @@ export const MOMENTOS_EJERCICIO_WORKFLOW: Record<string, MomentoVideo[]> = {};
 
 /**
  * Cada tramo en una sola sección. Van por id de sección: caps. 1 y 2 en el bloque «compras-workflow-config»
- * (menu, rol, circuito, validacion, grupo, tipologia) y cap. 3 en «compras-workflow» (prueba, autorizar, consulta).
+ * (menu, rol, circuito, grupo, tipologia; validacion sin tramo) y cap. 3 en «compras-workflow» (prueba, autorizar, consulta).
  */
 export const MOMENTOS_SECCION_WORKFLOW: Record<string, MomentoVideo[]> = {
   'compras-workflow-menu': [m(1, 24, 169, 'Vídeo: qué es un workflow y dónde están las piezas')],
-  'compras-workflow-validacion': [m(2, 247, 290, 'Vídeo: la validación del grupo')],
-  'compras-workflow-grupo': [m(2, 215, 247, 'Vídeo: el grupo de validaciones')],
   'compras-workflow-rol': [m(2, 9, 57, 'Vídeo: el rol y su usuario')],
   'compras-workflow-circuito': [m(2, 57, 215, 'Vídeo: el circuito, sus etapas y conectores')],
+  // «compras-workflow-validacion» no lleva tramo propio: el vídeo no abre el «Maestro de validaciones»;
+  // la 36 se elige dentro de la línea del grupo (cap. 2, 247-290 s), que va con «compras-workflow-grupo».
+  'compras-workflow-grupo': [m(2, 215, 290, 'Vídeo: el grupo de validaciones y su línea con la validación 36')],
   'compras-workflow-tipologia': [m(2, 290, 348, 'Vídeo: enlazar el grupo a la tipología')],
   'compras-workflow-prueba': [m(3, 7, 184, 'Vídeo: probar, el pedido se bloquea')],
   'compras-workflow-autorizar': [m(3, 184, 280, 'Vídeo: autorizar desde Gestionar')],
