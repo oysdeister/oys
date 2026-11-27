@@ -1,0 +1,108 @@
+{
+ "c": "cvenfacd",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nomdoc": {
+   "req": 1
+  },
+  "clasfac": {
+   "req": 1,
+   "def": "F1",
+   "mayus": 1
+  },
+  "autnum": {
+   "req": 1,
+   "def": 1,
+   "mayus": 1
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['A','C'].includes(estado))))",
+     "msg": "El estado debe ser Abierto [A] o Cerrado [C].",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "serdoc": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdocnumh",
+    "clave": "mask_code"
+   }
+  },
+  "diario": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tiprel": {
+   "mayus": 1,
+   "lov": {
+    "obj": "crelcter",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dockey": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_dockey",
+    "clave": "dock_code"
+   }
+  },
+  "ivainc": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "codpla": {
+   "lov": {
+    "obj": "ccon_template_xls",
+    "clave": "codigo"
+   }
+  },
+  "tipwkf": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cworkflow_val",
+    "clave": "val_code"
+   }
+  },
+  "titdoc": {
+   "req": 1,
+   "def": "Factura de venta"
+  },
+  "codrec": {
+   "lov": {
+    "obj": "cvenfacd",
+    "clave": "codigo"
+   }
+  }
+ },
+ "notas": [
+  "Estados de estado: A=Abierto, C=Cerrado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

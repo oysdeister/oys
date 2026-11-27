@@ -5,7 +5,7 @@
 - Hecho en código: MomentoVideo.serie; content/videoSeries.ts (SERIES, momentosDe*, seriesDeModulo); content/video-icon.ts (SERIES_ICON vacío, a rellenar); ReproductorModal/BotonMomento con serie; CapitulosSerie (CapitulosCompras alias); ModulePage usa seriesDeModulo; Guiado/Concepto/ExercisePage importan de videoSeries. tsc limpio.
 - Nota compartida: side-session-notes/local_3a429acd…/videos-series-propuesta.md. Mensajes enviados a videos-tesoreria e icon-docs (pregunté ids de módulos).
 - Pipeline: DeepSeek (prompt_analisis.md) sobre cada SRT → analisis/<id>.md ; luego agente Claude por vídeo revisa fotogramas y escribe JSON del módulo.
-- Release de clips: video-icon-v1 (repo sergibauli/oys) — pedir OK antes de subir (publicar).
+- Release de clips: video-icon-v1 (repo oysdeister/oys) — pedir OK antes de subir (publicar).
 - 13:25 Transcripciones completas. Lanzados 8 agentes Sonnet (BRIEF_video.md) → analisis/<id>.{capitulos,ejercicios,momentos}.json + capturas en public/img/<modulo>/.
 - Módulos: finanzas-icon (icon1, icon11, icon2), maestros-contables (maestros), impuestos (tax-intro, tax-tablas), cobros-pagos (cobros), asientos-gestion (asientos).
 - Iconos añadidos en Icon.tsx: impuesto, finanzas, cobro. Falta: modulos.json (cabeceras), ensamblar.py --clips, index.ts ORDEN/META, examen.ts META_CORTO/ORDEN_MOD, revisión líder, build, commit, nota.

@@ -1,48 +1,107 @@
-import { useMemo, useState } from 'react';
-import { Glosa } from '../Glosario';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import confetti from 'canvas-confetti';
+import { Glosa } from '../Glosario';
+import { Icon } from '../Icon';
 import type { Ejercicio } from '../../types';
 import { APROBADO, acciones, useProgreso } from '../../lib/progress';
 import { conIni } from '../../lib/texto';
-import { NucleoOrbita } from '../shell/NucleoOrbita';
-import { COLORES_MARCA, barajar } from './util';
+import { barajar } from './util';
 
 const LETRAS = 'ABCDEFGH';
+const EASE = [0.2, 0.7, 0.2, 1] as const;
 
-export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (tab: string) => void }) {
-  const reducir = useReducedMotion();
+/** Anillo con el porcentaje del resultado. */
+function AnilloNota({ n, ok, reduce }: { n: number; ok: boolean; reduce: boolean | null }) {
+  const R = 54;
+  const C = 2 * Math.PI * R;
+  return (
+    <div className={`qz-anillo${ok ? ' ok' : ' ko'}`} aria-hidden="true">
+      <svg viewBox="0 0 128 128" width="128" height="128">
+        <circle cx="64" cy="64" r={R} className="qz-anillo-fondo" />
+        <motion.circle
+          cx="64"
+          cy="64"
+          r={R}
+          className="qz-anillo-valor"
+          strokeDasharray={C}
+          initial={{ strokeDashoffset: reduce ? C * (1 - n) : C }}
+          animate={{ strokeDashoffset: C * (1 - n) }}
+          transition={{ duration: reduce ? 0 : 1.2, ease: EASE, delay: 0.2 }}
+        />
+      </svg>
+      <span className="qz-anillo-txt">
+        {Math.round(n * 100)}
+        <small>%</small>
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Paso «Test»: una pregunta cada vez, tarjetas de respuesta grandes y respuesta inmediata.
+ * Solo cuenta como hecho al aprobar; hasta entonces la página no muestra su «Siguiente».
+ */
+export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string; onListo: (listo: boolean) => void; onIr: (tab: string) => void }) {
   const p = useProgreso();
+  const reduce = useReducedMotion();
   const mejor = p.ejercicios[ej.id]?.test ?? null;
+  const yaAprobado = mejor !== null && mejor >= APROBADO;
   const [intento, setIntento] = useState(0);
   const [i, setI] = useState(0);
   const [elegida, setElegida] = useState<number | null>(null);
   const [aciertos, setAciertos] = useState(0);
-  const [fin, setFin] = useState(false);
+  // Acierto o fallo de cada pregunta ya contestada (pinta la barra por tramos)
+  const [res, setRes] = useState<boolean[]>([]);
+  // Aprobado otro día: empieza en el resultado (puede repetirlo)
+  const [fin, setFin] = useState(yaAprobado);
+  const [nota, setNota] = useState<number | null>(null);
   const t = (x: string) => conIni(x, ini);
 
   // Opciones barajadas por pregunta, nuevas en cada intento
   const ordenes = useMemo(() => ej.test.map((q) => barajar(q.opciones.map((_, k) => k))), [ej, intento]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!ej.test.length) return <p className="muted">Este ejercicio no tiene test.</p>;
+  const aprobado = fin && (nota !== null ? nota >= APROBADO : yaAprobado);
+  useEffect(() => { onListo(aprobado || !ej.test.length); }, [aprobado, ej.test.length, onListo]);
 
-  const q = ej.test[i];
   const total = ej.test.length;
+  const q = ej.test[i];
 
   const elegir = (k: number) => {
-    if (elegida !== null) return;
+    if (elegida !== null || fin) return;
     setElegida(k);
-    if (k === q.correcta) setAciertos((a) => a + 1);
+    const bien = k === q.correcta;
+    if (bien) setAciertos((a) => a + 1);
+    setRes((r) => [...r, bien]);
   };
+
+  // Teclado: A-H (o 1-8) eligen opción
+  useEffect(() => {
+    if (fin || !total) return;
+    const tecla = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = e.target as HTMLElement | null;
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+      // Solo si el foco está en el test o en ninguna parte (no al navegar por la barra lateral)
+      if (el && el !== document.body && !el.closest('.qz')) return;
+      const k = e.key.toUpperCase();
+      const n = LETRAS.indexOf(k) >= 0 ? LETRAS.indexOf(k) : /^[1-8]$/.test(k) ? Number(k) - 1 : -1;
+      if (n >= 0 && n < ordenes[i].length && elegida === null) {
+        e.preventDefault();
+        elegir(ordenes[i][n]);
+      }
+    };
+    window.addEventListener('keydown', tecla);
+    return () => window.removeEventListener('keydown', tecla);
+  });
+
+  if (!total) return <p className="muted">Este bloque no tiene test.</p>;
 
   const siguiente = () => {
     if (i >= total - 1) {
-      const nota = aciertos / total;
-      acciones.notaTest(ej.id, nota);
+      const n = aciertos / total;
+      acciones.notaTest(ej.id, n);
+      setNota(n);
       setFin(true);
-      if (nota >= APROBADO && !reducir) {
-        void confetti({ particleCount: 150, spread: 90, origin: { y: 0.55 }, colors: COLORES_MARCA, disableForReducedMotion: true });
-      }
       return;
     }
     setI(i + 1);
@@ -54,38 +113,66 @@ export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (t
     setI(0);
     setElegida(null);
     setAciertos(0);
+    setRes([]);
+    setNota(null);
     setFin(false);
   };
 
   if (fin) {
-    const nota = aciertos / total;
-    const ok = nota >= APROBADO;
+    const n = nota ?? mejor ?? 0;
+    const ok = n >= APROBADO;
     return (
-      <motion.div className={`sheet pad test-fin ${ok ? 'flash-ok' : 'flash-ko'}`} initial={{ opacity: 0, rotateX: -12, y: 20 }} animate={{ opacity: 1, rotateX: 0, y: 0 }} transition={{ type: 'spring', stiffness: 110, damping: 16 }} style={{ transformPerspective: 1000 }}>
-        <div className={`test-nucleo${ok ? ' ok' : ' ko'}`}>
-          <NucleoOrbita valor={nota} size={210} etiqueta={`${aciertos} de ${total} aciertos`} />
+      <motion.div className={`qz qz-fin${ok ? ' ok' : ' ko'}`} initial={{ opacity: 0, y: reduce ? 0 : 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
+        <div className="qz-fin-medalla">
+          <AnilloNota n={n} ok={ok} reduce={reduce} />
+          <motion.span
+            className="qz-fin-sello"
+            aria-hidden="true"
+            initial={{ scale: reduce ? 1 : 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 14, delay: reduce ? 0 : 1.1 }}
+          >
+            <Icon name={ok ? 'logros' : 'repetir'} size={20} stroke={2.2} />
+          </motion.span>
         </div>
-        <div>
-          <h2>{ok ? 'Aprobado' : 'Casi'}</h2>
-          <p className="muted">
-            {ok
-              ? 'Tienes claros los conceptos. Ahora pásalo a la demo real.'
-              : `Necesitas un ${Math.round(APROBADO * 100)} % para aprobar. Repasa el concepto y vuelve a intentarlo: las opciones cambian de orden.`}
+        <div className="qz-fin-txt">
+          <p className="qz-fin-titulo">{ok ? (nota === null ? 'Test aprobado' : 'Aprobado') : 'Todavía no'}</p>
+          <p className="pl-res">
+            {nota !== null ? `${aciertos} de ${total} respuestas correctas (${Math.round(n * 100)} %).` : `Ya has aprobado este test con un ${Math.round(n * 100)} %.`}{' '}
+            {nota === null ? '' : ok ? '' : `Para aprobar necesitas un ${Math.round(APROBADO * 100)} % (${Math.ceil(APROBADO * total)} de ${total}).`}
           </p>
-          {mejor !== null && <p className="small muted">Tu mejor nota: {Math.round(Math.max(mejor, nota) * 100)} %</p>}
-          <div className="row-btns">
+          {nota !== null && res.length === total && (
+            <ol className="qz-resumen" aria-label="Resultado por pregunta">
+              {res.map((b, k) => (
+                <li key={k} className={b ? 'bien' : 'mal'} title={`Pregunta ${k + 1}: ${b ? 'correcta' : 'incorrecta'}`}>
+                  <Icon name={b ? 'check' : 'cerrar'} size={14} stroke={3} />
+                  <span className="sr-only">
+                    Pregunta {k + 1}: {b ? 'correcta' : 'incorrecta'}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          )}
+          {!ok && (
+            <p className="muted">
+              Repasa el{' '}
+              <button type="button" className="pl-link en-linea" onClick={() => onIr('concepto')}>
+                Concepto
+              </button>{' '}
+              y vuelve a intentarlo: las opciones cambian de orden.
+            </p>
+          )}
+          {ok && nota !== null && mejor !== null && mejor > n && <p className="muted">Tu mejor nota: {Math.round(mejor * 100)} %.</p>}
+          <div className="pl-btns">
             {ok ? (
-              <button className="btn arc" onClick={() => onIr('demo')}>
-                Ir a la demo real
+              <button type="button" className="btn ghost qz-btn" onClick={reintentar}>
+                <Icon name="repetir" size={18} /> Repetir el test
               </button>
             ) : (
-              <button className="btn arc" onClick={() => onIr('concepto')}>
-                Repasar el concepto
+              <button type="button" className="btn arc qz-btn" onClick={reintentar}>
+                <Icon name="repetir" size={18} /> Volver a intentarlo
               </button>
             )}
-            <button className="btn ghost" onClick={reintentar}>
-              Reintentar
-            </button>
           </div>
         </div>
       </motion.div>
@@ -95,63 +182,97 @@ export function TestEj({ ej, ini, onIr }: { ej: Ejercicio; ini: string; onIr: (t
   const acerto = elegida !== null && elegida === q.correcta;
 
   return (
-    <div className="test glass">
-      <div className="test-top">
-        <span className="small muted">
-          Pregunta {i + 1} de {total}
+    <div className="qz">
+      <div className="qz-cab">
+        <p className="qz-cont" aria-live="polite">
+          <b>
+            Pregunta {i + 1} de {total}
+          </b>
+        </p>
+        <span className="qz-marcador" aria-label={`${aciertos} aciertos`}>
+          <Icon name="check" size={15} stroke={3} /> {aciertos}
         </span>
-        {mejor !== null && <span className={`chip${mejor >= APROBADO ? ' ok' : ''}`}>Mejor nota {Math.round(mejor * 100)} %</span>}
       </div>
-      <div className="meter" aria-hidden="true">
-        <motion.i initial={false} animate={{ width: `${((i + (elegida !== null ? 1 : 0)) / total) * 100}%` }} />
-      </div>
-      <AnimatePresence mode="wait">
+      <ol className="qz-tramos" aria-hidden="true">
+        {ej.test.map((_, k) => (
+          <li key={k} className={k < res.length ? (res[k] ? 'bien' : 'mal') : k === i ? 'actual' : ''}>
+            <span />
+          </li>
+        ))}
+      </ol>
+
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={`${intento}-${i}`}
-          className="test-q"
-          initial={reducir ? { opacity: 0 } : { opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={reducir ? { opacity: 0 } : { opacity: 0, x: -30 }}
-          transition={{ duration: 0.25 }}
+          className="qz-pregunta"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reduce ? 0.12 : 0.35, ease: EASE }}
         >
-          <h3 className="test-preg"><Glosa>{t(q.pregunta)}</Glosa></h3>
-          <div role="radiogroup" aria-label="Opciones">
+          <p className="pl-instr qz-instr">
+            <Glosa>{t(q.pregunta)}</Glosa>
+          </p>
+          <div className="qz-opcs" role="group" aria-label="Respuestas">
             {ordenes[i].map((k, n) => {
-              const clase = elegida === null ? '' : k === q.correcta ? ' right' : k === elegida ? ' wrong' : ' dim';
+              const estado = elegida === null ? '' : k === q.correcta ? ' bien' : k === elegida ? ' mal' : ' apagada';
               return (
                 <motion.button
                   key={k}
-                  role="radio"
-                  aria-checked={elegida === k}
-                  className={`quiz-opt${clase}`}
+                  type="button"
+                  aria-pressed={elegida === k}
+                  className={`qz-opc${estado}`}
                   onClick={() => elegir(k)}
-                  disabled={elegida !== null && k !== elegida && k !== q.correcta}
-                  animate={elegida === k && k !== q.correcta && !reducir ? { x: [0, -8, 8, -5, 5, 0] } : elegida !== null && k === q.correcta && !reducir ? { scale: [1, 1.02, 1] } : {}}
-                  transition={{ duration: 0.4 }}
+                  disabled={elegida !== null}
+                  initial={reduce ? false : { opacity: 0, y: 4 }}
+                  animate={estado === ' apagada' ? { opacity: 0.55, y: 0 } : { opacity: 1, y: 0 }}
+                  transition={estado ? { duration: 0.45, ease: 'easeOut' } : { duration: 0.3, ease: EASE, delay: 0.05 + n * 0.05 }}
                 >
-                  <span className="letter">{LETRAS[n]}</span>
-                  <span>{t(q.opciones[k])}</span>
+                  <span className="qz-letra" aria-hidden="true">
+                    {estado === ' bien' ? <Icon name="check" size={18} stroke={3} /> : estado === ' mal' ? <Icon name="cerrar" size={18} stroke={3} /> : LETRAS[n]}
+                  </span>
+                  <span className="qz-opc-txt">{t(q.opciones[k])}</span>
+                  <span className="sr-only">{estado === ' bien' ? ' (respuesta correcta)' : estado === ' mal' ? ' (tu respuesta, incorrecta)' : ''}</span>
                 </motion.button>
               );
             })}
           </div>
+
           <AnimatePresence>
             {elegida !== null && (
-              <motion.div className={`callout ${acerto ? 'solucion' : 'problema'}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} aria-live="polite">
-                <b>{acerto ? 'Correcto' : 'No es esa'}</b>
-                <Glosa>{t(q.explicacion)}</Glosa>
+              <motion.div
+                className={`qz-feedback ${acerto ? 'bien' : 'mal'}`}
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: EASE }}
+              >
+                <motion.span
+                  className="qz-feedback-icono"
+                  aria-hidden="true"
+                  initial={false}
+                >
+                  <Icon name={acerto ? 'check' : 'aviso'} size={22} stroke={2.6} />
+                </motion.span>
+                <div className="qz-feedback-txt">
+                  <p className="pl-expl" aria-live="polite">
+                    <b>{acerto ? 'Correcto.' : 'No es correcta.'}</b> <Glosa>{t(q.explicacion)}</Glosa>
+                  </p>
+                  <div className="pl-btns">
+                    <button type="button" className="btn arc qz-btn" onClick={siguiente} autoFocus>
+                      {i >= total - 1 ? 'Ver el resultado' : 'Siguiente pregunta'}
+                    </button>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-          {elegida !== null && (
-            <div className="row-btns" style={{ marginTop: 16 }}>
-              <button className="btn arc" onClick={siguiente} autoFocus>
-                {i >= total - 1 ? 'Ver mi nota' : 'Siguiente pregunta'}
-              </button>
-            </div>
-          )}
         </motion.div>
       </AnimatePresence>
+      {elegida === null && (
+        <p className="qz-pista">
+          Pulsa una respuesta o usa las teclas <kbd>A</kbd>–<kbd>{LETRAS[ordenes[i].length - 1]}</kbd>.
+        </p>
+      )}
     </div>
   );
 }

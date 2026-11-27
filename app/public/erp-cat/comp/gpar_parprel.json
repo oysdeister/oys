@@ -1,0 +1,114 @@
+{
+ "c": "gpar_parprel",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "nompar": {
+   "req": 1
+  },
+  "nivel": {
+   "reqSi": "!(1==1)",
+   "ro": "1==1"
+  },
+  "tippar": {
+   "req": 1,
+   "ro": "(\r\n ingpre != 0    || \r\n ingcom != 0  || \r\n gaspre != 0   || \r\n gascom != 0 || \r\n imppro != 0   || \r\n ingcer != 0    || \r\n ingapl != 0    || \r\n gascer != 0   || \r\n gasapl != 0   || \r\n impcos != 0\r\n)",
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_partidad",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codexp": {
+   "req": 1,
+   "ro": "document_parent.show_exp == 0",
+   "oculto": "document_parent.show_exp == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parexpe",
+    "clave": "codexp",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecinip": {
+   "req": 1
+  },
+  "fecfinp": {
+   "req": 1
+  },
+  "indpre": {
+   "req": 1,
+   "def": 1
+  },
+  "indimp": {
+   "req": 1,
+   "def": 1
+  },
+  "ingprec": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "ingprep": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "ingpre": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "gasprec": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "gasprep": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "gaspre": {
+   "req": 1,
+   "ro": "1 == 1",
+   "def": 0
+  },
+  "paract": {
+   "ro": "virtual_gpar_parprel.item_activity != 0",
+   "oculto": "document_parent.indcon == 0",
+   "calc": "tippar == tippar && virtual_gpar_parprel.item_activity != 0 ? \"\": paract",
+   "lov": {
+    "obj": "gpar_parprel",
+    "clave": "codpar",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "botones": {
+  "BUT_ADD_DESCOMPOUND": {
+   "l": "Añadir Descompuestos",
+   "nota": "Activo si virtual_gpar_parprel.indpre == 2 && virtualerp.is_closed == 0"
+  },
+  "BUT_ELIMINAR_PARTIDAS": {
+   "l": "Eliminar partidas",
+   "nota": "Activo si virtualerp.is_closed == 0; condición de servidor; pide confirmación; abre diálogo con campos"
+  },
+  "BUT_INSERT_BUDGET": {
+   "l": "Insertar presupuesto",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; abre diálogo con campos"
+  },
+  "BUT_INSERT_BUDGET__BUT_INSERT_BUDGET": {
+   "l": "Insertar presupuesto",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; abre diálogo con campos; OJO: la demo tiene otro botón con el mismo código de etiqueta (BUT_INSERT_BUDGET), aquí con la clave BUT_INSERT_BUDGET__BUT_INSERT_BUDGET"
+  },
+  "BUT_EVOL_STATE": {
+   "l": "Cambiar estado",
+   "nota": "Siempre activo; abre diálogo con campos"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

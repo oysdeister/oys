@@ -1,0 +1,122 @@
+{
+ "c": "ctipoefe",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "clase": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    }
+   ],
+   "def": "C"
+  },
+  "codigo": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(codigo)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1
+  },
+  "nomefe": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(nomefe)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "nomefe",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "estefe": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cefecest",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomest",
+     "caduca"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomest",
+    "filtro": "l.clase == clase"
+   }
+  },
+  "rieven": {
+   "req": 1,
+   "def": 0
+  },
+  "rieint": {
+   "req": 1,
+   "def": 0
+  },
+  "riecom": {
+   "req": 1,
+   "def": 0
+  },
+  "riefac": {
+   "req": 1,
+   "def": 0
+  },
+  "diaope": {
+   "req": 1,
+   "def": 0
+  },
+  "riesgo": {
+   "req": 1,
+   "def": "S"
+  },
+  "domban": {
+   "req": 1,
+   "def": "N"
+  },
+  "fecope": {
+   "req": 1,
+   "def": "E"
+  },
+  "clasif": {
+   "req": 1,
+   "def": 1
+  },
+  "efactu": {
+   "def": "01"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(codigo) || vacio(nomefe) || vacio(clase)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && cuenta('ctipoefe','codigo',codigo) > 0 && busca('ctipoefe','codigo',codigo,'clase') == clase",
+   "msg": "Unique constraint (informix.p_ctipoefe) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Nuevo = botón «Añadir tipo efecto» (abre diálogo inferior «TIPOS DE EFECTOS»); al guardar con éxito sale el aviso «Éxito» con enlace «Ver registro».",
+  "Al guardar sin obligatorios: cada campo muestra «Este campo es obligatorio.» y aparece el aviso rojo «Hay errores en los datos del formulario» (no llega al servidor).",
+  "Lupa con código inexistente (Estado inicial = ZZ): el campo muestra «Error en la validación» al salir (POST fk/ctipoefe/estefe/verify/cefecest devuelve 204) y Guardar da «Hay errores en los datos del formulario».",
+  "Duplicado (clase C, código EF): el servidor responde 500 con «Unique constraint (informix.p_ctipoefe) violated.» (aviso rojo). Clave primaria = clase + codigo.",
+  "Insert real: POST table/ctipoefe/list/<b64>/dml/insert (multipart) con defectos riesgo S, domban N, fecope E, diaope 0, clasif 1, efactu 01.",
+  "La lista es de edición por celda (editMode CELL); sin botones ni Acciones propias.",
+  "probado: Nuevo «Añadir tipo efecto» (guardar vacío, alta con éxito), lupa Estado inicial inexistente, duplicado. Sin botones ni Acciones."
+ ]
+}

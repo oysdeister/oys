@@ -1,0 +1,148 @@
+{
+ "c": "gvendtoc",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "desdto": {
+   "req": 1,
+   "mayus": 1
+  },
+  "orden": {
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!(((orden == null) || (orden > 0)))",
+     "msg": "El número de orden de aplicación del descuento debe ser mayor que cero.",
+     "tipo": "error",
+     "campo": "orden",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "escala": {
+   "req": 1,
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((escala == null || ['S','N'].includes(escala))))",
+     "msg": "Los valores posibles del indicativo de tipo de concepto con escalado son: [S] Si, [N] No.",
+     "tipo": "error",
+     "campo": "escala",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "margen": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "tipdto": {
+   "req": 1,
+   "def": "E",
+   "reglas": [
+    {
+     "si": "!(((tipdto == null || ['E','A'].includes(tipdto))))",
+     "msg": "Los valores posibles del indicativo de concepto de descuento son: [E] escalado, [A] acumulativo.",
+     "tipo": "error",
+     "campo": "tipdto",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "formul": {
+   "req": 1,
+   "def": "%",
+   "reglas": [
+    {
+     "si": "!(((formul == null || ['%','I','G','N','I%','%U','RU','RP','RX','RC'].includes(formul))))",
+     "msg": "Los valores válidos del tipo de fórmula son: [%] porcentaje, [I] importe, [I%] escalado de importe, [N] Sin formula, [RU] Escalado por unidades, [RP] regalo por porcentaje, [RX] regalo MXN, [RC] regalo repercute coste al resto de documento.",
+     "tipo": "error",
+     "campo": "formul",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "bascal": {
+   "req": 1,
+   "def": "P",
+   "reglas": [
+    {
+     "si": "!(((bascal == null || ['D','P','B','E','I','C','N','U'].includes(bascal))))",
+     "msg": "Los valores posibles del indicativo de la base de cálculo son: [P] precio base, [B] base IVA, [E] impuesto especial, [I] importe con IVA, [T] total neto, [C] consumo, [N] no aplicar, [U] unidades (facturada más regalo), [D] desglose de precios.",
+     "tipo": "error",
+     "campo": "bascal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "aplfac": {
+   "req": 1,
+   "def": 0
+  },
+  "aplrap": {
+   "req": 1,
+   "def": 0
+  },
+  "aplrea": {
+   "req": 1,
+   "def": 0
+  },
+  "contab": {
+   "req": 1,
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((contab == null || ['S','N'].includes(contab))))",
+     "msg": "Los valores posibles del indicativo de contabilización del descuento son: [S] si, [N] no.",
+     "tipo": "error",
+     "campo": "contab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "signo": {
+   "req": 1,
+   "def": "+",
+   "reglas": [
+    {
+     "si": "!(((signo == null || ['+','-'].includes(signo))))",
+     "msg": "Los valores posibles del signo del concepto de descuento son: [+] cargo, \r\n[-] descuento.",
+     "tipo": "error",
+     "campo": "signo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((contab == 'N') || (((contab == 'S') && (!(formul == null || formul.match(/^R/g) != null))) && (!(formul == null || formul.match(/^C/g) != null)))))",
+   "msg": "La formula de aplicación de descuento [R] unidades de regalo sólo es aplicable en descuentos que no admitan contabilización.",
+   "tipo": "error",
+   "campo": "formul",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((formul == null || ['%','I','G','N'].includes(formul))) && (escala == 'N')) || (((formul == null || ['I%','%U','RU','RX','RC','RP'].includes(formul))) && (escala == 'S'))))",
+   "msg": "Los valores del tipo de fórmula [%] porcentaje, [I] importe y [N] sin fórmula;  no deben de tener escalados. Los valores [I%] escalado importe, [RU] Escalado unidades, [RP] regalo porcentaje, [RX] regalo MXN, [RC] regalo repercute coste si deben tenerlo",
+   "tipo": "error",
+   "campo": "formul",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Estados de estado: P=Provisional, A=Activo, B=Bloqueado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

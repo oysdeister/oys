@@ -4,7 +4,38 @@ import { cargaObjeto, useBuscar, useObjeto } from './datos';
 import { almacen, claveTexto, filaNueva, filasDe, hoyIso, useGen, type Fila } from './almacen';
 import { colEstado, destinoEnlace, dialogoDe, efectoBoton, estadoBoton, type DialogoBoton as TipoDialogoBoton } from './botones';
 import { evalua } from './expresion';
-import { useErp, Lista, Ficha, Seccion, Rejilla, CampoTexto, CampoNum, CampoFecha, CampoSel, CampoCheck, CampoLectura, Pestanas, Dialogo, type Col, type Accion, dec, fechaEs } from '../ui';
+import type { CompBoton, CompLov } from './comportamiento';
+import { alCambiar, cumple, defectosComp, ejecutaBoton, msgGenerico, preBoton, useComp, validaBorrar, validaGuardar, type Mensaje } from './motorComp';
+
+const tipoAviso = (t: Mensaje['tipo']) => (t === 'error' ? 'error' : t === 'ok' ? 'ok' : 'info');
+
+/** Lupa (lista de valores) de un campo, como la de Axional: columnas reales y búsqueda */
+function Lupa({ lov, onElegir, onCerrar }: { lov: CompLov; onElegir: (fila: Fila) => void; onCerrar: () => void }) {
+  const { datos: o } = useObjeto(lov.obj);
+  const [q, setQ] = useState('');
+  const cols = (lov.cols ?? [lov.clave, ...(lov.desc ? [lov.desc] : [])]).map((n) => o?.cols?.find((c) => c.n === n)).filter((c): c is CatCol => !!c);
+  const filas = o ? filasDe(o).filter((x) => (lov.filtro ? cumple(lov.filtro, { fila: x, l: x }) : true)) : [];
+  const vis = filas.filter((x) => !q || cols.some((c) => String(x[c.n] ?? '').toLowerCase().includes(q.toLowerCase()))).slice(0, 200);
+  return (
+    <Dialogo titulo={o?.tit ?? lov.obj} onCerrar={onCerrar} acciones={[]}>
+      <input className="erp-input" placeholder="Buscar" value={q} onChange={(e) => setQ(e.target.value)} autoFocus />
+      <table className="erp-tabla">
+        <thead>
+          <tr>{cols.map((c) => <th key={c.n}>{c.l}</th>)}</tr>
+        </thead>
+        <tbody>
+          {vis.map((x) => (
+            <tr key={x._k} onClick={() => onElegir(x)} style={{ cursor: 'pointer' }}>
+              {cols.map((c) => <td key={c.n}>{textoValor(c, x[c.n])}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!vis.length && <p className="erp-nota">Sin registros</p>}
+    </Dialogo>
+  );
+}
+import { useErp, Lista, Ficha, Seccion, Rejilla, CampoTexto, CampoNum, CampoFecha, CampoSel, CampoCheck, CampoLectura, Pestanas, Dialogo, type Col, type Accion, dec, fechaEs, avisoGuardarAntes } from '../ui';
 
 export function textoValor(col: CatCol, v: CatValor | undefined): string {
   if (v === null || v === undefined || v === '') return '';
@@ -59,7 +90,19 @@ function Valor({ col, v }: { col: CatCol; v: CatValor | undefined }) {
   return <>{String(v)}</>;
 }
 
-function Campo({ col, valor, onChange, soloLectura }: { col: CatCol; valor: CatValor | undefined; onChange: (v: CatValor) => void; soloLectura: boolean }) {
+function Campo(props: { col: CatCol; valor: CatValor | undefined; onChange: (v: CatValor) => void; soloLectura: boolean; onLupa?: () => void }) {
+  if (!props.onLupa) return <CampoBase {...props} />;
+  return (
+    <div className="erp-campo-lupa">
+      <CampoBase {...props} />
+      <button type="button" className="erp-lupa" aria-label={`Buscar ${props.col.l}`} title="Buscar" onClick={props.onLupa}>
+        🔍
+      </button>
+    </div>
+  );
+}
+
+function CampoBase({ col, valor, onChange, soloLectura }: { col: CatCol; valor: CatValor | undefined; onChange: (v: CatValor) => void; soloLectura: boolean }) {
   if (soloLectura) {
     return (
       <CampoLectura
@@ -220,20 +263,22 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
   const { ini, ir, aviso } = useErp();
   const gen = useGen();
   const { datos: buscar } = useBuscar();
+  const comp = useComp(code);
+  const [lupa, setLupa] = useState<{ col: string; lov: CompLov } | null>(null);
   const [f, setF] = useState<Fila>(() => {
-    if (clave === 'nuevo') return filaNueva(obj);
+    if (clave === 'nuevo') return defectosComp(comp, filaNueva(obj));
     return filasDe(obj, gen).find((x) => x._k === clave) ?? filaNueva(obj);
   });
   const insertando = clave === 'nuevo';
   const [original, setOriginal] = useState<Fila>(() => f);
-  const [dialogo, setDialogo] = useState<{ b: CatBoton; d: TipoDialogoBoton } | null>(null);
+  const [dialogo, setDialogo] = useState<{ b: CatBoton; d: TipoDialogoBoton; cb?: CompBoton } | null>(null);
 
   useEffect(() => {
-    const nueva = clave === 'nuevo' ? filaNueva(obj) : (filasDe(obj, gen).find((x) => x._k === clave) ?? filaNueva(obj));
+    const nueva = clave === 'nuevo' ? defectosComp(comp, filaNueva(obj)) : (filasDe(obj, gen).find((x) => x._k === clave) ?? filaNueva(obj));
     setF(nueva);
     setOriginal(nueva);
     setDialogo(null);
-  }, [clave, obj, gen]);
+  }, [clave, obj, gen, comp]);
 
   const sucio = useMemo(() => {
     const keys = new Set([...Object.keys(original), ...Object.keys(f)]);
@@ -262,11 +307,12 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
     const requeridos = (obj.cols ?? []).filter(
       (c) => c.req && !c.ro && c.t !== 'b' && apareceEnPestanaF(c, obj),
     );
-    const faltante = requeridos.find(
-      (c) => f[c.n] === null || f[c.n] === undefined || f[c.n] === '',
-    );
-    if (faltante) {
-      aviso('error', `El campo «${faltante.l}» es obligatorio.`);
+    const errores = validaGuardar(obj, comp, f, insertando, undefined, (n) => requeridos.some((c) => c.n === n));
+    const bloqueo = errores.find((m) => m.tipo === 'error');
+    errores.filter((m) => m.tipo !== 'error').forEach((m) => aviso(tipoAviso(m.tipo), m.texto));
+    if (bloqueo) {
+      // Axional: texto rojo bajo el campo + toast «Hay errores en los datos del formulario» (si el error es de un campo)
+      aviso('error', bloqueo.campo ? `${msgGenerico('errores_formulario', 'Hay errores en los datos del formulario')}: ${obj.cols?.find((c) => c.n === bloqueo.campo)?.l.replace(/\n/g, ' ') ?? bloqueo.campo} · ${bloqueo.texto}` : bloqueo.texto);
       return;
     }
     if (insertando) {
@@ -280,7 +326,12 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
   };
 
   const borrar = () => {
-    if (window.confirm('¿Borrar el registro?')) {
+    const err = validaBorrar(comp, f).find((m) => m.tipo === 'error');
+    if (err) {
+      aviso('error', err.texto);
+      return;
+    }
+    if (window.confirm(`${msgGenerico('borrar_titulo', 'Eliminar registro')}\n\n${msgGenerico('borrar_confirmar', "¿Estás seguro que quieres eliminar el registro '${desc}' ?", { desc: claveTexto(obj, f) })}`)) {
       almacen.borrar(code, f._k, ini);
       aviso('ok', 'Registro borrado.');
       ir(`obj:${code}`, null);
@@ -309,9 +360,33 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
     }
   };
 
+  const ejecutaComp = (cb: CompBoton, entrada: Record<string, CatValor>) => {
+    const r = ejecutaBoton(code, cb, f, entrada, ini);
+    if (Object.keys(r.cambios).length) setF((prev) => ({ ...prev, ...r.cambios }));
+    r.mensajes.forEach((m) => aviso(tipoAviso(m.tipo), m.texto));
+    if (r.ir) ir(`obj:${r.ir.obj}`, r.ir.clave ?? null);
+  };
+
   const pulsar = (b: CatBoton) => {
     if (sucio) {
-      aviso('error', 'Guarde los cambios antes de ejecutar el proceso.');
+      aviso('error', avisoGuardarAntes(b.l));
+      return;
+    }
+    const cb = comp?.botones?.[b.c];
+    if (cb) {
+      const pre = preBoton(cb, f);
+      const err = pre.find((m) => m.tipo === 'error');
+      pre.filter((m) => m.tipo !== 'error').forEach((m) => aviso('info', m.texto));
+      if (err) {
+        aviso('error', err.texto);
+        return;
+      }
+      if (cb.dialogo?.length) {
+        setDialogo({ b, d: { titulo: cb.dialogoTit ?? cb.l, campos: cb.dialogo, aceptar: 'Aceptar' }, cb });
+        return;
+      }
+      if (cb.confirm && !window.confirm(cb.confirm)) return;
+      ejecutaComp(cb, {});
       return;
     }
     const d = dialogoDe(obj, b);
@@ -339,7 +414,7 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
   for (const b of obj.bot ?? []) {
     const st = estadoBoton(b, f, insertando);
     if (!st.visible) continue;
-    acciones.push({ label: b.l, lugar: b.g ? 'acciones' : 'boton', disabled: !st.activo, onClick: () => pulsar(b) });
+    acciones.push({ label: b.l, lugar: b.g ? 'acciones' : 'boton', disabled: !st.activo || sucio, onClick: () => pulsar(b) });
   }
   if (obj.perm?.i) acciones.push({ label: 'Nuevo', lugar: 'boton', onClick: () => ir(`obj:${code}`, 'nuevo') });
 
@@ -351,8 +426,9 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
         <Campo
           col={col}
           valor={valor}
-          onChange={(v) => setF((prev) => ({ ...prev, [col.n]: v }))}
+          onChange={(v) => setF((prev) => alCambiar(comp, { ...prev, [col.n]: v }, col.n, insertando))}
           soloLectura={soloLectura}
+          onLupa={comp?.campos?.[col.n]?.lov && !soloLectura ? () => setLupa({ col: col.n, lov: comp.campos![col.n].lov! }) : undefined}
         />
       </div>
     );
@@ -366,7 +442,10 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
           {(tab.f ?? []).map(([n, span]) => {
             const col = obj.cols?.find((c) => c.n === n);
             if (!col) return null;
-            const soloLectura = !(obj.perm?.u || insertando) || col.ro === 1 || (typeof col.ro === 'string' && evalua(col.ro, f, insertando));
+            const cc = comp?.campos?.[n];
+            if (cc?.oculto && cumple(cc.oculto, { fila: f, ins: insertando })) return null;
+            const soloLectura =
+              !(obj.perm?.u || insertando) || col.ro === 1 || !!cc?.calc || (cc?.ro ? cumple(cc.ro, { fila: f, ins: insertando }) : typeof col.ro === 'string' && evalua(col.ro, f, insertando));
             return renderCampo(col, f[n], soloLectura, span);
           })}
         </Rejilla>
@@ -444,12 +523,25 @@ function VistaFicha({ obj, code, clave }: { obj: CatObjeto; code: string; clave:
       >
         {cuerpo}
       </Ficha>
+      {lupa && (
+        <Lupa
+          lov={lupa.lov}
+          onCerrar={() => setLupa(null)}
+          onElegir={(x) => {
+            setF((prev) => alCambiar(comp, { ...prev, [lupa.col]: x[lupa.lov.clave] ?? null }, lupa.col, insertando));
+            setLupa(null);
+          }}
+        />
+      )}
       {dialogo && (
         <DialogoBoton
           d={dialogo.d}
           onAceptar={(entrada) => {
             setDialogo(null);
-            aplicar(dialogo.b, entrada);
+            if (dialogo.cb) {
+              if (dialogo.cb.confirm && !window.confirm(dialogo.cb.confirm)) return;
+              ejecutaComp(dialogo.cb, entrada);
+            } else aplicar(dialogo.b, entrada);
           }}
           onCerrar={() => setDialogo(null)}
         />

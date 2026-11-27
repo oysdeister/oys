@@ -1,0 +1,326 @@
+{
+ "c": "gcomacuh",
+ "fecha": "2026-11-18",
+ "area": "compras",
+ "campos": {
+  "tipdoc": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "!__ins",
+   "lov": {
+    "obj": "gcomacud",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc"
+   }
+  },
+  "docser": {
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "tercer": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "vacio(tipdoc)",
+   "lov": {
+    "obj": "gproveed",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomcom",
+     "cif",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "ro": "vacio(tercer)",
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "filtro": "l.codigo == tercer"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0"
+  },
+  "delega": {
+   "req": 1,
+   "def": "0"
+  },
+  "depart": {
+   "req": 1,
+   "ro": "vacio(delega)",
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "cols": [
+     "depart",
+     "nomdep"
+    ],
+    "desc": "nomdep",
+    "filtro": "l.delega == delega"
+   }
+  },
+  "fecacu": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "estcab": {
+   "req": 1,
+   "def": "P",
+   "ro": "true"
+  },
+  "estado": {
+   "req": 1,
+   "def": "N",
+   "ro": "true"
+  },
+  "indmod": {
+   "def": "S",
+   "ro": "true"
+  },
+  "divisa": {
+   "req": 1,
+   "ro": "vacio(tercer)"
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "vacio(tercer)"
+  },
+  "codpri": {
+   "req": 1,
+   "def": 0
+  },
+  "impacu": {
+   "def": 0,
+   "ro": "true"
+  },
+  "impant": {
+   "def": 0,
+   "ro": "true"
+  },
+  "acuh_gross": {
+   "def": 0,
+   "ro": "true"
+  },
+  "camope": {
+   "def": 1
+  },
+  "terenv": {
+   "ro": "vacio(tercer)"
+  },
+  "direnv": {
+   "ro": "vacio(terenv)"
+  },
+  "terfac": {
+   "ro": "vacio(tercer)"
+  },
+  "dirfac": {
+   "ro": "vacio(terfac)"
+  },
+  "tipefe": {
+   "ro": "vacio(tercer)"
+  },
+  "frmpag": {
+   "ro": "vacio(tercer)"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(tipdoc) || vacio(depart) || vacio(tercer) || vacio(tipdir) || vacio(divisa) || vacio(cambio)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tipdoc)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tipdoc",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(depart)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "depart",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tercer)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tercer",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tipdir)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tipdir",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(divisa)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "divisa",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(cambio)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "cambio",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins",
+   "msg": "gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'V'"
+     }
+    }
+   ],
+   "nota": "Metadatos: estcab != 'V' y estado N o P."
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'P'"
+     }
+    }
+   ]
+  },
+  "BUT_SERVIR": {
+   "l": "Marcar como servido",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Marcar como servido' ?",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'S'"
+     }
+    }
+   ]
+  },
+  "BUT_ACTIVATE_SERVER": {
+   "l": "Activar servido",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Activar servido' ?",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'N'"
+     }
+    }
+   ]
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Cerrar' ?",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'C'"
+     }
+    }
+   ],
+   "nota": "Solo con tipología que amplía (gcomacud.amplia == 'S')."
+  },
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Abrir' ?",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'N'"
+     }
+    }
+   ]
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Acciones › Copiar (diálogo con campos)."
+  },
+  "BUT_ANTICIPO": {
+   "l": "Anticipo",
+   "nota": "Acciones; solo si gcomacud.indant == 'G' (ninguna tipología de TUTORIAL)."
+  },
+  "BUT_DOC_EXP": {
+   "l": "Generar expediente exportación",
+   "nota": "Acciones; oculto en TUTORIAL (hide_tab_gexpimpo = 1)."
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Requiere virtualerp.bloq_manu == 1."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "N",
+     "P"
+    ],
+    "a": "S",
+    "por": "BUT_SERVIR"
+   },
+   {
+    "de": [
+     "S"
+    ],
+    "a": "N",
+    "por": "BUT_ACTIVATE_SERVER"
+   },
+   {
+    "de": [
+     "N",
+     "P"
+    ],
+    "a": "C",
+    "por": "BUT_CERRAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "N",
+    "por": "BUT_ABRIR"
+   }
+  ]
+ },
+ "notas": [
+  "TUTORIAL no tiene ningún acuerdo y no se puede crear: al Guardar un Nuevo con datos completos (ACC, proveedor CAPNC, ref CAP-ACU-01) la demo responde 500 «Se ha producido un error · ID: n · gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]». Lo mismo al Generar acuerdo desde una oferta. Por eso ficha, botones y líneas del acuerdo salen de metadatos (fuente meta) y no hay confirmaciones ni éxitos literales propios.",
+  "Nuevo (diálogo): obligatorios sin defecto Tipo documento, Departamento (aquí NO viene C por defecto), Proveedor, Dirección, Divisa y Cambio; Empresa 0 y Delegación 0 por defecto.",
+  "Al elegir Proveedor rellena Dirección, Divisa EUR, Cambio 1 y Recepcionar en tercero 0 (DEISTER SOFTWARE, Sant Pere Claver, 15).",
+  "Las confirmaciones usan el patrón genérico de Axional «¿Estás seguro que quieres ejecutar la acción '<botón>' ?» observado en Cerrar de ofertas.",
+  "Menú ⌄: Docflow, Líneas, Selector de artículos por proveedor, Copiar líneas de solicitud (catálogo)."
+ ]
+}

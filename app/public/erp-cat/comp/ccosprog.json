@@ -1,0 +1,170 @@
+{
+ "c": "ccosprog",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "empcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "placon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(placon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(placon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "placon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1
+  },
+  "ctaaux": {
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxl",
+    "clave": "ctaaux"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaaux)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codimp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosimpc",
+    "clave": "codimp",
+    "cols": [
+     "codimp",
+     "nomimp",
+     "estado",
+     "concep"
+    ],
+    "desc": "nomimp"
+   }
+  },
+  "rowid": {
+   "ro": "1==1"
+  },
+  "codaux": {
+   "mayus": 1
+  },
+  "sistem": {
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((!(codaux == null || codaux.length === 0)) && (!(ctaaux == null || ctaaux.length === 0))) || (((codaux == null || codaux.length === 0)) && ((ctaaux == null || ctaaux.length === 0)))))",
+   "msg": "Grupo y auxiliar, ambos nulos o no nulos.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Costes › Maestros › Repartos automáticos › Asignación a empresa y cuenta",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

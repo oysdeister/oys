@@ -1,0 +1,234 @@
+{
+ "id": "compras-albaran-contabilizar",
+ "numero": 7,
+ "titulo": "Contabilizar el albarán de compra",
+ "objetivo": "Contabilizarás el albarán de T{INI} y verás el asiento que anota la mercancía recibida en la cuenta de facturas pendientes de recibir.",
+ "concepto": "Cuando la mercancía llega, todavía no tienes la factura. Pero la compra ya existe: debes mercancía y aún no sabes el papel que la justifica.\n\nPor eso el albarán se puede contabilizar. El ERP anota el gasto en 60000 y, en contrapartida, una cuenta de «facturas pendientes de recibir»: la 40090. Es una deuda provisional con el proveedor.\n\nCuando llega la factura, esa cuenta 40090 se salda y el importe pasa a la cuenta real del proveedor. Así el gasto queda en su mes aunque la factura llegue tarde.\n\nLos números de documento de los ejemplos (0AC000017, asiento 78…) son orientativos. La demo es compartida: usa siempre los tuyos.",
+ "duracionMin": 15,
+ "secciones": [
+  {
+   "id": "compras-albaran-contabilizar-accion",
+   "titulo": "Contabilizar el albarán",
+   "paraQueSirve": "Aquí conviertes el albarán validado en un asiento contable. Sin este paso, la mercancía recibida no aparece en la contabilidad hasta que llegue la factura.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Albaranes",
+    "Albaranes"
+   ],
+   "explicacion": [
+    "Parte del albarán que hiciste en el bloque «Recibir la mercancía con el albarán»: tipología AO{INI}, proveedor T{INI}, artículo 13500620.",
+    "El albarán tiene que estar validado. Entonces la barra superior muestra «Pasar a provisional» y «Contabilizar».",
+    "Ejemplo comprobado: 4 unidades de 13500620 a 12,50 = 50,00 de importe neto."
+   ],
+   "campos": [
+    {
+     "campo": "Fecha contabilización *",
+     "significado": "Día del asiento. El ERP propone la fecha del albarán.",
+     "ejemplo": "La que propone (18-11-2026 en el ejemplo)"
+    },
+    {
+     "campo": "Prevista de Asiento Contable",
+     "significado": "Casilla para generar un asiento previsto, no definitivo. Márcala solo si lo necesitas.",
+     "ejemplo": "Sin marcar"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Abre el albarán de T{INI} desde Gestión › Compras › Albaranes › Albaranes.",
+     "pregunta": "Estás en la lista de albaranes. ¿Cómo abres el de T{INI}?",
+     "detalle": "Entras en la ficha. Mira el Estado: tiene que decir «Validado»."
+    },
+    {
+     "texto": "Fíjate en los botones de la barra superior: «Pasar a provisional», «Contabilizar», «No facturable» y «Anular».",
+     "pregunta": "¿Qué botón de la barra superior pasa el albarán a la contabilidad?",
+     "detalle": "«Contabilizar» solo sale con el albarán validado y sin contabilizar.",
+     "imagen": "cob-albaran-contabilizar-1.webp",
+     "hotspot": {
+      "x": 71.4,
+      "y": 6.0,
+      "w": 6.0,
+      "h": 3.6,
+      "etiqueta": "Contabilizar"
+     }
+    },
+    {
+     "texto": "Pulsa «Contabilizar». Se abre un diálogo con la Fecha contabilización.",
+     "pregunta": "¿Qué casilla del diálogo genera un asiento previsto en lugar del definitivo?",
+     "detalle": "Deja la fecha que propone el ERP y la casilla sin marcar.",
+     "imagen": "cob-albaran-contabilizar-2.webp",
+     "hotspot": {
+      "x": 37.8,
+      "y": 52.2,
+      "w": 10.2,
+      "h": 3.4,
+      "etiqueta": "Prevista de Asiento Contable"
+     }
+    },
+    {
+     "texto": "Pulsa «Aceptar».",
+     "pregunta": "Has dejado la fecha y la casilla como estaban. ¿Qué botón confirma la contabilización?",
+     "detalle": "Se abre la ventana del asiento. En la barra del albarán, «Contabilizar» cambia a «Descontabilizar».",
+     "imagen": "cob-albaran-contabilizar-2.webp",
+     "hotspot": {
+      "x": 58.2,
+      "y": 58.2,
+      "w": 4.4,
+      "h": 3.3,
+      "etiqueta": "Aceptar"
+     }
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "Si ya contabilizaste el albarán y quieres deshacerlo, el botón «Descontabilizar» lo revierte. En la demo no lo hemos pulsado."
+    },
+    {
+     "tipo": "problema",
+     "texto": "Al contabilizar, la ventana del asiento solo carga bien la primera vez. En la siguiente puede mostrar un asiento anterior."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Cierra la ventana y recarga el albarán con el botón de recarga. Comprueba el número de asiento en las líneas."
+    }
+   ]
+  },
+  {
+   "id": "compras-albaran-contabilizar-asiento",
+   "titulo": "El asiento del albarán",
+   "paraQueSirve": "Aquí compruebas qué anotó el ERP. Es la prueba de que la mercancía ya está en la contabilidad.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Albaranes",
+    "Albaranes"
+   ],
+   "explicacion": [
+    "El asiento sale en el diario DC (Compras), con justificante AC y como documento el número del albarán.",
+    "Tiene dos líneas: gasto al debe y facturas pendientes de recibir al haber. Las dos suman lo mismo, 50,00 en el ejemplo (asiento 78).",
+    "Si pulsas el desplegable ⌄ junto a la estrella, la entrada «Asientos contables» vuelve a abrirlo cuando quieras."
+   ],
+   "campos": [
+    {
+     "campo": "60000.00000 · Compras de mercancías",
+     "significado": "Gasto de la compra. Va al debe.",
+     "ejemplo": "Debe 50,00 · COMPRAS A Tercero {INI}"
+    },
+    {
+     "campo": "40090.00000 · Proveedores, facturas pendientes de recibir o de formalizar",
+     "significado": "Deuda provisional con el proveedor. Va al haber.",
+     "ejemplo": "Haber 50,00 · COMPRAS PENDIENTE DE FACTURA"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "En la ventana del asiento, abre la pestaña «Líneas de apuntes».",
+     "pregunta": "El asiento está abierto en la pestaña Asiento. ¿Dónde ves las cuentas y los importes?",
+     "detalle": "Verás las dos líneas del asiento y los totales Debe y Haber.",
+     "imagen": "cob-albaran-contabilizar-4.webp",
+     "hotspot": {
+      "x": 8.5,
+      "y": 22.2,
+      "w": 9.1,
+      "h": 3.6,
+      "etiqueta": "Líneas de apuntes"
+     }
+    },
+    {
+     "texto": "Fíjate en la línea 1: cuenta 60000.00000 «Compras de mercancías», Debe 50,00.",
+     "pregunta": "¿En qué cuenta y en qué columna está el gasto de la compra?",
+     "imagen": "cob-albaran-contabilizar-4.webp"
+    },
+    {
+     "texto": "Fíjate en la línea 2: cuenta 40090.00000 «Proveedores, facturas pendientes de recibir o de formalizar», Haber 50,00.",
+     "pregunta": "¿Qué cuenta guarda la deuda provisional hasta que llegue la factura?",
+     "detalle": "Cuando llegue la factura, esta cuenta se salda.",
+     "imagen": "cob-albaran-contabilizar-4.webp"
+    },
+    {
+     "texto": "Comprueba que Debe y Haber suman lo mismo y que Cuadre es 0,00.",
+     "detalle": "Un asiento descuadrado no se puede guardar."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "Las cuentas son las de la demo. 60000 sale como «Compras de mercancías» y 40090 como «Proveedores, facturas pendientes de recibir o de formalizar»."
+    }
+   ]
+  }
+ ],
+ "test": [
+  {
+   "pregunta": "¿Por qué se contabiliza el albarán antes de tener la factura?",
+   "opciones": [
+    "Porque lo exige Hacienda",
+    "Porque la mercancía ya se ha recibido y la deuda existe aunque falte el papel",
+    "Porque así se paga antes",
+    "Porque el albarán es una factura provisional"
+   ],
+   "correcta": 1,
+   "explicacion": "El gasto pertenece al mes en que llega la mercancía. La factura puede tardar."
+  },
+  {
+   "pregunta": "¿En qué cuenta se anota la deuda provisional del albarán?",
+   "opciones": [
+    "40000",
+    "47200",
+    "40090",
+    "57200"
+   ],
+   "correcta": 2,
+   "explicacion": "La 40090 recoge las facturas pendientes de recibir o de formalizar."
+  },
+  {
+   "pregunta": "En el asiento del albarán, la cuenta 60000 va…",
+   "opciones": [
+    "Al haber",
+    "Al debe",
+    "Fuera del asiento",
+    "Al debe y al haber a la vez"
+   ],
+   "correcta": 1,
+   "explicacion": "El gasto 60000 va al debe y la 40090 al haber."
+  },
+  {
+   "pregunta": "¿Qué botón aparece en el albarán una vez contabilizado?",
+   "opciones": [
+    "Contabilizar",
+    "Anular factura",
+    "Descontabilizar",
+    "Validar"
+   ],
+   "correcta": 2,
+   "explicacion": "Descontabilizar sustituye a Contabilizar y permite deshacer el asiento."
+  }
+ ],
+ "checklist": [
+  "Abre el albarán de T{INI} y comprueba que su Estado es «Validado».",
+  "Localiza «Contabilizar» en la barra superior.",
+  "Pulsa «Contabilizar» y deja la fecha que propone el ERP.",
+  "Acepta y comprueba que el botón pasa a «Descontabilizar».",
+  "Abre la pestaña «Líneas de apuntes» del asiento.",
+  "Comprueba que 60000.00000 va al debe por el importe neto del albarán.",
+  "Comprueba que 40090.00000 va al haber por el mismo importe.",
+  "Anota el número de asiento y el diario (DC)."
+ ],
+ "problemas": [
+  {
+   "problema": "No sale el botón «Contabilizar».",
+   "solucion": "El albarán no está validado o ya está contabilizado. Mira el Estado y, si pone «Contabilizado», verás «Descontabilizar»."
+  },
+  {
+   "problema": "Sale «cuenta no definida» (error 24709) al contabilizar.",
+   "solucion": "El artículo es de un tipo contable sin cuenta. Usa el artículo 13500620, que sí tiene cuentas."
+  }
+ ],
+ "aprendido": [
+  "Has contabilizado el albarán con el botón «Contabilizar».",
+  "Has visto que el gasto va a 60000 al debe y la deuda provisional a 40090 al haber.",
+  "Sabes que el albarán se contabiliza aunque aún no haya llegado la factura.",
+  "Sabes deshacerlo con «Descontabilizar»."
+ ]
+}

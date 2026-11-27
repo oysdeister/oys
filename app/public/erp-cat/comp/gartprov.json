@@ -1,0 +1,114 @@
+{
+ "c": "gartprov",
+ "fecha": "2026-11-18 almacen/captura-garticul",
+ "area": "almacen",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "grpalm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "galmgrph",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpro": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gproveed",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "direcc",
+     "poblac"
+    ],
+    "desc": "direcc",
+    "filtro": "l.codigo == codpro",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "varlog": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "cols": [
+     "varlog"
+    ],
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "udmcom": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni",
+    "filtro": "l.codart == codart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "refpro": {},
+  "assign": {
+   "req": 1
+  },
+  "priori": {
+   "req": 1
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!vacio(fecbaj) && !vacio(fecalt) && fecalt > fecbaj",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((fecbaj == null)) || ((fecalt == null || fecbaj == null) || (fecalt.getTime() <= fecbaj.getTime())))",
+   "tipo": "error",
+   "campo": "fecbaj",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Abierto directamente desde el menú (Artículos por proveedores) es de consulta/modificación: permisos insert=false, update=true, delete=true, sin botón Nuevo útil (metadatos de la lista). El alta se hace desde la ficha del proveedor (gproveed › pestaña Artículos por proveedor › Nuevo) o desde la subrejilla 'Artículos por proveedor' de la ficha del artículo.",
+  "Sin botones. Ficha real: table/gartprov/form/2 (Identificación, Estado, Referencia proveedor, Fechas/Reposición, Información proveedor/Auxiliares, Condiciones de compra/Observaciones, Documentos, Reglas en adquisiciones/entregas, Proveedores prioritarios por almacén, Tarifas (solo con permiso VERPRE), Datos de control).",
+  "Ejemplos en la demo: 00000016/00001 (prioridad 99) y MB0001/00001 (asignado, prioridad 1, ref. REF-MB-6000). Columnas de la dirección del proveedor (cterdire.*) se muestran solo lectura.",
+  "No se grabaron filas CAP en gartprov (el alta corresponde a la ficha del proveedor, área maestros)."
+ ]
+}

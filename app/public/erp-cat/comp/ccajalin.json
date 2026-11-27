@@ -1,0 +1,328 @@
+{
+ "c": "ccajalin",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "estlin": {
+   "req": 1,
+   "mayus": 1,
+   "def": "D"
+  },
+  "tipope": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajaope",
+    "clave": "codigo",
+    "filtro": "(vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "codigo",
+     "nomope",
+     "cuenta"
+    ],
+    "desc": "nomope"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tipope) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(tipope))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tipope",
+     "fuente": "meta"
+    }
+   ],
+   "alCambiar": {
+    "cuenta": "busca('ccajaope','codigo',tipope,'cuenta') + '.00000'",
+    "docser": "padre.jusser",
+    "codcon": "'AP'"
+   }
+  },
+  "docser": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cefectos",
+    "clave": "docser",
+    "cols": [
+     "docser",
+     "fecha",
+     "import",
+     "codper",
+     "numero"
+    ],
+    "desc": "fecha",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "filtro": "(vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "impdiv": {
+   "req": 1
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(moneda))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "apteid": {
+   "ro": "true",
+   "lov": {
+    "obj": "ccajalin",
+    "clave": "apteid",
+    "cols": [
+     "apteid",
+     "prolin",
+     "seclin",
+     "sistem"
+    ],
+    "desc": "prolin",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numero": {
+   "ro": "true",
+   "lov": {
+    "obj": "ccajamov",
+    "clave": "cajaid",
+    "cols": [
+     "cajaid"
+    ],
+    "noExiste": "Error en la validación"
+   },
+   "defExpr": "padre.cajaid"
+  },
+  "prolin": {
+   "req": 1,
+   "ro": "cuserauth_allow.in_prolin == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "filtro": "(vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación"
+   },
+   "defExpr": "padre.proyec"
+  },
+  "seclin": {
+   "req": 1,
+   "ro": "cuserauth_allow.in_seclin == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "noExiste": "Error en la validación"
+   },
+   "defExpr": "padre.seccio"
+  },
+  "sistem": {
+   "req": 1,
+   "def": "A",
+   "ro": "cuserauth_allow.in_sistem == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(sistem))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codcon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "coment"
+    ],
+    "desc": "coment",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codcon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codcon))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "feclin": {
+   "req": 1,
+   "defExpr": "padre.fecmov || hoy()"
+  },
+  "cantid1": {
+   "req": 1,
+   "def": 0
+  },
+  "cantid2": {
+   "req": 1,
+   "def": 0
+  },
+  "codaux": {
+   "mayus": 1
+  },
+  "ctaaux": {
+   "ro": "true",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxl",
+    "clave": "ctaaux",
+    "filtro": "(vacio(codaux) || l.codaux == codaux) && (vacio(numero) || l.numero == numero)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctaaux))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaexp": {
+   "reqSi": "!(ccuentas.tipcta != 'C')",
+   "ro": "ccuentas.tipcta != 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctaexp))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "centro": {
+   "reqSi": "!(ccuentas.tipcta != 'C')",
+   "ro": "ccuentas.tipcta != 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen"
+    ],
+    "desc": "nomcen",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(centro) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(centro))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "centro",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpre": {
+   "ro": "ccajaope.invers != 'S'",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codpre) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codpre))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpar": {
+   "ro": "ccajaope.invers != 'S'",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codpar) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codpar))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpar",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seqno": {
+   "ro": "true",
+   "lov": {
+    "obj": "cefectos",
+    "clave": "numero",
+    "cols": [
+     "numero",
+     "tercer",
+     "cuenta",
+     "clase"
+    ],
+    "desc": "tercer",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'LÍNEAS DE CAJA', editMode ROW, 0 filas en la demo; permisos insert=False update=True delete=True.",
+  "Diálogo «LÍNEAS DE CAJA» (subrejilla de ccajamov): cajas Gastos imputados, Datos contables, Costes, Datos financieros/Auxiliares, Datos de control. Defectos vistos: Estado Definitivo (D), Moneda EUR, Sistema A (General), Proyecto 0, Sección 0, Cantidad 1 y 2 = 0, fecha del movimiento.",
+  "Guardar vacío: «Este campo es obligatorio.» en Tipo operación y Cuenta (demo).",
+  "LOV Tipo operación (demo): Operación, Descripción operación, Cuenta nemotécnica (cuenta corta de ccajaope, p. ej. 57000 → 57000.00000).",
+  "Insertar fuera de la ficha del movimiento: «User oys.jma does not have ROW_INSERT privilege on table ccajalin» (demo).",
+  "probado: alta de línea desde la subrejilla de ccajamov (guardar vacío, línea SI 100), alta fuera de la ficha (sin privilegio). Sin botones."
+ ]
+}

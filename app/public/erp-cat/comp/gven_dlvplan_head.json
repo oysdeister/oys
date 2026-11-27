@@ -1,0 +1,369 @@
+{
+ "c": "gven_dlvplan_head",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "dlvh_docser": {
+   "reqSi": "!(context.isOnInsert())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "dlvh_tercer": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dlvh_tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "gven_dlvplan_type",
+    "clave": "dlvt_code",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dlvh_empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dlvh_delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dlvh_depart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart"
+   }
+  },
+  "dlvh_date": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "dlvh_imptot": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "dlvh_estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "N"
+  },
+  "dlvh_estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvh_estcab == null || ['P','E','V'].includes(dlvh_estcab))))",
+     "msg": "El estado de la cabecera puede modificarse en los estados: [P] Provisional, [V] validado, [E] bloqueado",
+     "tipo": "error",
+     "campo": "dlvh_estcab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvh_tipdir": {
+   "req": 1,
+   "ro": "dlvh_tercer == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "dlvh_divisa": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_cambio": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvh_cambio == null) || (dlvh_cambio != 0)))",
+     "msg": "El cambio debe ser diferente a cero.",
+     "tipo": "error",
+     "campo": "dlvh_cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvh_doclock": {
+   "def": "V"
+  },
+  "dlvh_valpen": {
+   "ro": "1==1"
+  },
+  "dlvh_tipefe": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_frmpag": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_terenv": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_direnv": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "dlvh_terfac": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_dirfac": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "dlvh_agente": {
+   "reqSi": "!(ctercero.infage == 'N')",
+   "mayus": 1,
+   "lov": {
+    "obj": "grep_agente",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_transp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_dirtra": {
+   "ro": "dlvh_transp == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "dlvh_medtra": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gtramedi",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_tiptra": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gtratipo",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_terexp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_direxp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "dlvh_codpos": {
+   "mayus": 1
+  },
+  "dlvh_gross": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "dlvh_codpri": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((dlvh_codpri == null) || (dlvh_codpri >= 0)))",
+     "msg": "La prioridad de adjudicación no puede ser inferior a cero.",
+     "tipo": "error",
+     "campo": "dlvh_codpri",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvh_porgar": {
+   "req": 1
+  },
+  "dlvh_portes": {
+   "def": "D",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvh_portes == null || ['P','D'].includes(dlvh_portes))))",
+     "msg": "Los valores posibles del indicativo de portes son: [P]agados, [D]ebidos.",
+     "tipo": "error",
+     "campo": "dlvh_portes",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvh_codpre": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parpreh",
+    "clave": "codpre"
+   }
+  },
+  "dlvh_codpar": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parprel",
+    "clave": "codpar"
+   }
+  },
+  "dlvh_clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "dlvh_codalm": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dlvh_fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "dlvh_fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "dlvh_indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvh_indmod == null || ['S','N','M','B'].includes(dlvh_indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]odificar, [B]orrar.",
+     "tipo": "error",
+     "campo": "dlvh_indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvh_purge": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((dlvh_fecini == null || dlvh_fecfin == null) || (dlvh_fecini.getTime() <= dlvh_fecfin.getTime())))",
+   "msg": "La fecha inicio de un plan de entrega debe ser anterior a la fecha final del plan de entrega.",
+   "tipo": "error",
+   "campo": "dlvh_fecini",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((dlvh_codpar == null || dlvh_codpar.length === 0)) || ((!(dlvh_codpar == null || dlvh_codpar.length === 0)) && (!(dlvh_codpre == null || dlvh_codpre.length === 0)))))",
+   "msg": "No se puede informar la partida sin indicar antes el presupuesto.",
+   "tipo": "error",
+   "campo": "dlvh_codpre",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si dlvh_estcab != 'V'"
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si dlvh_estcab != 'P' && dlvh_estado != 'S' && dlvh_estado != 'A'"
+  },
+  "BUT_FREEZPER": {
+   "l": "Modificar periodo congelado",
+   "nota": "Siempre activo; condición de servidor; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_MODIFICA_PROGRAMACION": {
+   "l": "Modificar tipo programación",
+   "nota": "Activo si (dlvh_estado != \"S\" || dlvh_estado != \"A\") && dlvh_estcab == 'V'; condición de servidor; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_GEN_DIST": {
+   "l": "Generar repartos",
+   "nota": "Activo si (dlvh_estado != \"S\" || dlvh_estado != \"A\") && dlvh_estcab == 'V'; condición de servidor; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si dlvh_estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos"
+  },
+  "BUT_ANULAR_LINEAS": {
+   "l": "Anular líneas",
+   "nota": "Siempre activo; condición de servidor"
+  },
+  "BUT_ACTIVAR_LINEAS": {
+   "l": "Activar líneas",
+   "nota": "Siempre activo; condición de servidor"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

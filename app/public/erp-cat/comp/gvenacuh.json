@@ -1,0 +1,314 @@
+{
+ "c": "gvenacuh",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(context.isOnInsert())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "tercer": {
+   "req": 1,
+   "ro": "tipdoc == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenacud",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "ro": "delega == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecacu": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "imptot": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "N",
+   "mayus": 1
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estcab == null || ['P','E','V'].includes(estcab))))",
+     "msg": "Los valores posibles del estado de pedidos son: [P] provisional, [E] bloqueada y [V] validada.",
+     "tipo": "error",
+     "campo": "estcab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipdir": {
+   "req": 1,
+   "ro": "tercer == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "divisa": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0 || tercer == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0 || tercer == null",
+   "reglas": [
+    {
+     "si": "!(((cambio == null) || (cambio != 0)))",
+     "msg": "El cambio debe ser diferente a cero.",
+     "tipo": "error",
+     "campo": "cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "terenv": {
+   "ro": "tercer == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "direnv": {
+   "ro": "terenv == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "portes": {
+   "ro": "tercer == null || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((portes == null || ['P','D'].includes(portes))))",
+     "msg": "Los valores posibles del indicativo de  portes son [P] pagados, [D] debidos.",
+     "tipo": "error",
+     "campo": "portes",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]odificar, [B]orrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "movest": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "movhis": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "terfac": {
+   "ro": "tercer == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "dirfac": {
+   "ro": "terfac == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "transp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo"
+   }
+  },
+  "dirtra": {
+   "ro": "transp == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "medtra": {
+   "lov": {
+    "obj": "gtramedi",
+    "clave": "codigo"
+   }
+  },
+  "tiptra": {
+   "lov": {
+    "obj": "gtratipo",
+    "clave": "codigo"
+   }
+  },
+  "porgar": {
+   "ro": "virtual_auth.modpre == 0 || tercer == null"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha inicio de vigencia de un acuerdo debe ser anterior a la fecha final de vigencia.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((impmax == null)) || ((impacu == null || impmax == null) || (impacu <= impmax))))",
+   "msg": "El importe acumulado de acuerdo debe ser menor o igual al importe máximo de un acuerdo, o el importe máximo de acuerdo ha de ser nulo.",
+   "tipo": "error",
+   "campo": "impacu",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((codpar == null || codpar.length === 0)) || ((!(codpar == null || codpar.length === 0)) && (!(codpre == null || codpre.length === 0)))))",
+   "msg": "No es posible informar el lote sin antes dar el presupuesto.",
+   "tipo": "error",
+   "campo": "codpre",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V' && (estado == 'N' || estado == 'P')"
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P'"
+  },
+  "BUT_GEN_INVOICE": {
+   "l": "Generar factura",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; en el menú Acciones"
+  },
+  "BUT_ANTICIPO": {
+   "l": "Anticipo",
+   "nota": "Activo si gvenacud.indant == 'G' && estado == 'N'; condición de servidor; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_DEL_PROVISION": {
+   "l": "Borrar provisión",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; en el menú Acciones"
+  },
+  "BUT_GEN_PROVISION": {
+   "l": "Generar provisión",
+   "nota": "Siempre activo; condición de servidor; pide confirmación; en el menú Acciones"
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si estcab != 'P'; condición de servidor; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos"
+  },
+  "BUT_SERVIR": {
+   "l": "Marcar como servido",
+   "nota": "Activo si estcab == 'V' && (estado == 'N' || estado == 'P') && indmod != 'N'; condición de servidor; pide confirmación"
+  },
+  "BUT_ACTIVATE_SERVER": {
+   "l": "Activar servido",
+   "nota": "Activo si estado == 'S' && indmod != 'N'; condición de servidor; pide confirmación"
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "nota": "Activo si estcab == 'V' && !['S','C'].includes(estado) && gvenacud.amplia == 1 && indmod != 'N'; condición de servidor; pide confirmación"
+  },
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "nota": "Activo si indmod != 'N' && estado == 'C'; condición de servidor; pide confirmación"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

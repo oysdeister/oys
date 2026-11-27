@@ -1,0 +1,187 @@
+{
+ "c": "cfinamor",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "numcuo": {
+   "def": 0,
+   "ro": "true"
+  },
+  "tipcuo": {
+   "def": "C",
+   "ro": "true",
+   "oculto": "true",
+   "mayus": 1
+  },
+  "amor_ori": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "est_cuo": {
+   "def": "P",
+   "ro": "true",
+   "mayus": 1
+  },
+  "plzcuo": {
+   "def": "L",
+   "ro": "true"
+  },
+  "fecha": {
+   "ro": "true"
+  },
+  "feccal": {
+   "ro": "true"
+  },
+  "dias": {
+   "def": 1,
+   "ro": "true"
+  },
+  "cappen": {
+   "def": 0,
+   "ro": "true"
+  },
+  "porint": {
+   "def": 0,
+   "ro": "true"
+  },
+  "impint": {
+   "def": 0,
+   "ro": "true"
+  },
+  "impamo": {
+   "def": 0,
+   "ro": "true"
+  },
+  "salint": {
+   "def": 0,
+   "ro": "true"
+  },
+  "intliq": {
+   "req": 1,
+   "def": 0
+  },
+  "impcuo": {
+   "def": 0,
+   "ro": "true"
+  },
+  "impimp": {
+   "def": 0,
+   "ro": "true"
+  },
+  "impret": {
+   "def": 0,
+   "ro": "true"
+  },
+  "impdiv": {
+   "def": 0,
+   "ro": "true",
+   "oculto": "cfinrevi.divisa == cfinrevi.divemp"
+  },
+  "camcap": {
+   "def": 1,
+   "ro": "true"
+  },
+  "camint": {
+   "def": 1,
+   "ro": "true"
+  },
+  "imploc": {
+   "def": 0,
+   "ro": "true"
+  },
+  "ctafin": {
+   "ro": "true",
+   "oculto": "true",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ctafin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctafin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "facidx": {
+   "ro": "true"
+  },
+  "apteid": {
+   "ro": "true"
+  },
+  "famoid": {
+   "ro": "true",
+   "lov": {
+    "obj": "cfinamor",
+    "clave": "famoid",
+    "cols": [
+     "famoid",
+     "tipcuo",
+     "amor_ori",
+     "est_cuo"
+    ],
+    "desc": "tipcuo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "frevid": {
+   "ro": "true",
+   "lov": {
+    "obj": "cfinrevi",
+    "clave": "frevid",
+    "cols": [
+     "frevid",
+     "estrev",
+     "user_created",
+     "user_updated"
+    ],
+    "desc": "estrev",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "feccon": {
+   "ro": "true"
+  },
+  "famoid_rel": {
+   "ro": "true"
+  }
+ },
+ "botones": {
+  "BUT_CUOTA_LIQUIDABLE": {
+   "l": "Liquidar cuota",
+   "nota": "Liquida el saldo de intereses de la cuota.. Visible/habilitado si: cfinconh.fconid_rel != null && (impcuo + impimp + impret) != 0 && facidx == null && cfinconh.role == 1 && cfinconh.gen_tes == 0. selección múltiple"
+  },
+  "BUT_ELIMINAR_FACTURA": {
+   "l": "Eliminar factura",
+   "nota": "Elimina la factura relacionada.. Visible/habilitado si: facidx != null && ((factab == 'ccomfach' && famoid_rel == null) || factab == 'cvenfach'). selección múltiple"
+  },
+  "BUT_GENERATE_INVOICE": {
+   "l": "Generar factura",
+   "nota": "Genera una factura para el documento.. Visible/habilitado si: /** Cuota pendiente,sin Factura, el role es financiado sin relacionado, y el tipo es Interco o Leasing*/ est_cuo == 'P' && facidx == null && cfinconh.fconid_rel == null && cfinconh.role == 2 && (cfinconh.tipcom != null || cfinconh.tipven !=null ). selección múltiple"
+  },
+  "BUT_GENERAR_FAC_INTER": {
+   "l": "Factura interempresa",
+   "nota": "Genera facturas de ventas interempresas.. Visible/habilitado si: cfinconh.fconid_rel != null && (impcuo + impimp + impret) != 0 && facidx == null && cfinconh.role == 1 && cfinconh.gen_tes == 0. selección múltiple"
+  },
+  "BUT_DELET_TESORERIA": {
+   "l": "Retroceder tesoreria",
+   "nota": "Elimina los movimientos de tesorería.. Visible/habilitado si: apteid != null. selección múltiple"
+  },
+  "BUT_GEN_TAPTCUEN": {
+   "l": "Traspasar a tesorería",
+   "nota": "Traspasa el cuadro de amortizacion a tesoreria.. Visible/habilitado si: apteid == null && (impcuo + impimp + impret) != 0 && cfinconh.gen_tes == 1 && cfinconh.estado== 'A' && est_cuo == 'P'. selección múltiple"
+  },
+  "BUT_MODIFICACION_CAMBIO": {
+   "l": "Modificar cambio",
+   "nota": "Modifica el tipo de cambio de interes y cambio capital.. Visible/habilitado si: est_cuo == 'P'. abre diálogo con campos. selección múltiple"
+  },
+  "BUT_MODIFICACION_CTAFIN": {
+   "l": "Modificar cuenta",
+   "nota": "Modifica la cuenta financiera.. Visible/habilitado si: est_cuo == 'P' && apteid == null. abre diálogo con campos. selección múltiple"
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'CUADRO AMORTIZACIÓN', editMode ROW, 0 filas en la demo; permisos insert=False update=True delete=True.",
+  "no probado: Liquidar cuota, Eliminar factura, Generar factura, Factura interempresa, Retroceder tesoreria, Traspasar a tesorería, Modificar cambio, Modificar cuenta — sin contratos de financiación en TUTORIAL; solo metadatos, diálogos no capturados."
+ ]
+}

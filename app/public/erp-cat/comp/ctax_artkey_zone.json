@@ -1,0 +1,124 @@
+{
+ "c": "ctax_artkey_zone",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "zone_artk_taxzon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(zone_artk_taxzon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_artk_taxzon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_artk_taxzon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "zone_artk_codart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codart",
+     "nomart",
+     "tipdes",
+     "taxkey"
+    ],
+    "desc": "nomart"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(zone_artk_codart) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_artk_codart)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_artk_codart",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(zone_artk_codart) && !existe('garticul','codigo',zone_artk_codart)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_artkey_zone3).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "zone_artk_codart"
+    }
+   ]
+  },
+  "zone_artk_taxkey": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_artkey",
+    "clave": "artk_code",
+    "cols": [
+     "artk_code",
+     "artk_name",
+     "artk_estado",
+     "artk_nature"
+    ],
+    "desc": "artk_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(zone_artk_taxkey) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_artk_taxkey)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_artk_taxkey",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "zone_artk_vigini": {
+   "req": 1
+  },
+  "zone_artk_vigfin": {
+   "req": 1
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && cuenta('ctax_artkey_zone','zone_artk_codart',zone_artk_codart) > 0 && existe('ctax_artkey_zone','zone_artk_taxzon',zone_artk_taxzon)",
+   "msg": "EXISTEN OTRAS EXCEPCIONES DE IMPUESTOS CON FECHAS SOLAPADAS",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "!(((zone_artk_vigfin == null || zone_artk_vigini == null) || (zone_artk_vigfin.getTime() >= zone_artk_vigini.getTime())))",
+   "msg": "Fecha de vigencia final debe ser posterior o igual a la de inicio",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Clave fiscal por zona y artículo",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (zona CAPZR, artículo 13500620, clave BOG; creado y borrado): fechas al revés por servidor «Check constraint (informix.c_ctax_artkey_zone1) failed.» (en la interfaz sale antes la regla de cliente de alGuardar), artículo inexistente «…f_ctax_artkey_zone3…», misma zona y artículo con fechas solapadas «EXISTEN OTRAS EXCEPCIONES DE IMPUESTOS CON FECHAS SOLAPADAS» (trigger; la regla es una aproximación sin comparar fechas).",
+  "Nuevo propone solo usuario y fecha de alta (sin defectos de negocio).",
+  "probado: Nuevo, Guardar, Borrar; sin botones; sin menú ⌄."
+ ]
+}

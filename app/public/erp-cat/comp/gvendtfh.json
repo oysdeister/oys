@@ -1,0 +1,127 @@
+{
+ "c": "gvendtfh",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "clasif": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "moneda": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "codagr": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo"
+   }
+  },
+  "codart": {
+   "mayus": 1
+  },
+  "fabric": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "modelo": {
+   "lov": {
+    "obj": "gartmode",
+    "clave": "modelo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "priori": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((priori == null) || (priori >= 0)))",
+     "msg": "La prioridad de aplicación del descuento no puede ser inferior a 0.",
+     "tipo": "error",
+     "campo": "priori",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "margen": {
+   "req": 1,
+   "def": 0
+  },
+  "findtf": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((findtf == null || [0,1,2,3].includes(findtf))))",
+     "msg": "Se ha de informar o bien la agrupación o bien el artículo.",
+     "tipo": "error",
+     "campo": "findtf",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "E",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['E','A','B'].includes(estado))))",
+     "msg": "Los valores posibles del estado son: [E]ntrado, [A]ctivo y [B] bloqueado.",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha inicio de vigencia no puede ser posterior a la fecha fin.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si 1==1; pide confirmación; abre diálogo con campos"
+  },
+  "BUT_AUTORIZAR": {
+   "l": "Autorizar",
+   "nota": "Activo si 1==1; pide confirmación"
+  }
+ },
+ "notas": [
+  "Estados de estado: E=Entrada, A=Activa, B=Bloqueada",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

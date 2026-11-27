@@ -1,0 +1,84 @@
+{
+ "c": "ganticil",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docant": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ganticih",
+    "clave": "docser",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tabliq": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((tabliq == null || ['gvenacuh','gvenpedh','gvenmovh','gvenfach','gven_vales','gtpv_ticketh'].includes(tabliq))))",
+     "msg": "Las tablas sobre las que se liquida el anticipo son acuerdos, pedidos, albaranes, facturas y tickets de TPV.",
+     "tipo": "error",
+     "campo": "tabliq",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "docliq": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenacuh",
+    "clave": "docser",
+    "filtro": "tabliq == 'gvenacuh'"
+   }
+  },
+  "impant": {
+   "req": 1,
+   "def": 0
+  },
+  "imptra": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "impanu": {
+   "req": 1,
+   "def": 0
+  },
+  "manual": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 1
+  },
+  "transfer": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "contab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((Math.abs(impant) >= Math.abs(imptra)))",
+   "msg": "El importe liquidado de un anticipo por un documento no puede ser inferior al importe liquidado traspasado a documentos destino.",
+   "tipo": "error",
+   "campo": "imptra",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((contab == null) || (contab == 0)) || ((tabliq == 'gvenfach') && ((contab == null || [0,1].includes(contab))))))",
+   "msg": "Las liquidaciones se marcan como contabilizadas si el documento de la liquidación es una factura.",
+   "tipo": "error",
+   "campo": "tabliq",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

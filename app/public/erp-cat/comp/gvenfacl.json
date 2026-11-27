@@ -1,0 +1,224 @@
+{
+ "c": "gvenfacl",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "ro": "(gvenfacd.tabori == 'TV' && document_parent.docori != null) || (linori != null && context.isOnUpdate())",
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul_s",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart"
+   }
+  },
+  "varlog": {
+   "req": 1,
+   "ro": "(gvenfacd.tabori == 'TV' && document_parent.docori != null) || (linori != null && context.isOnUpdate())",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "cols": [
+     "varlog",
+     "nomvar",
+     "reffab"
+    ],
+    "desc": "nomvar",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numlot": {
+   "req": 1,
+   "ro": "garticul.lotes == 'N'",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartlote",
+    "clave": "numlot",
+    "cols": [
+     "numlot",
+     "lot_estado"
+    ],
+    "desc": "lot_estado"
+   }
+  },
+  "canfac": {
+   "req": 1,
+   "ro": "gvenfacd.tabori == 'TV' && document_parent.docori != null",
+   "reglas": [
+    {
+     "si": "!(((canfac == null) || (canfac != 0)))",
+     "msg": "La cantidad de una línea de factura no puede ser 0.",
+     "tipo": "error",
+     "campo": "canfac",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "udmven": {
+   "req": 1,
+   "ro": "(gvenfacd.tabori == 'TV' && document_parent.docori != null) || linori != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "canabo": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "canbon": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "udmpre": {
+   "req": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "precio": {
+   "ro": "virtual_auth.precio_mod == 0  || (gvenfacd.tabori == 'TV' && document_parent.docori != null) || preiva != null"
+  },
+  "preiva": {
+   "ro": "virtual_auth.precio_mod == 0 || (gvenfacd.tabori == 'TV' && document_parent.docori != null)"
+  },
+  "dtoli1": {
+   "ro": "virtual_auth.precio_mod == 0 || (gvenfacd.tabori == 'TV' && document_parent.docori != null) || docfoot != 0"
+  },
+  "dtoli2": {
+   "ro": "virtual_auth.precio_mod == 0 || (gvenfacd.tabori == 'TV' && document_parent.docori != null) || docfoot != 0"
+  },
+  "dtoli3": {
+   "ro": "virtual_auth.precio_mod == 0 || (gvenfacd.tabori == 'TV' && document_parent.docori != null) || docfoot != 0"
+  },
+  "dtoimp": {
+   "ro": "virtual_auth.precio_mod == 0 || (gvenfacd.tabori == 'TV' && document_parent.docori != null) || docfoot != 0"
+  },
+  "impnet": {
+   "req": 1,
+   "ro": "1==1"
+  },
+  "regalo": {
+   "req": 1,
+   "ro": "virtual_auth.precio_mod == 0",
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((regalo == null || ['S','N','G','M'].includes(regalo))))",
+     "msg": "Los valores posibles del indicativo de regalo son: [G] Genera regalo, [S] Regalo, [M] Manual y [N] no.",
+     "tipo": "error",
+     "campo": "regalo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "valqty": {
+   "ro": "1==1"
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]odificar, [B]orrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agente": {
+   "mayus": 1,
+   "lov": {
+    "obj": "grep_agente",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "estado",
+     "nombre"
+    ],
+    "desc": "estado"
+   }
+  },
+  "canpre": {
+   "req": 1
+  },
+  "tax_porded": {
+   "def": 100
+  },
+  "docfoot": {
+   "def": 0
+  },
+  "impdtc": {
+   "def": 0
+  },
+  "impdte": {
+   "def": 0
+  },
+  "impdto": {
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((canabo == null) || (canabo >= 0)) && ((canabo == null) || (canabo <= Math.abs(canfac)))))",
+   "msg": "La cantidad abonada no puede ser inferior a cero, ni superior a la cantidad facturada.",
+   "tipo": "error",
+   "campo": "canfac",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((udmven != udmpre) || ((udmven == udmpre) && ((canfac == null || canpre == null) || (canfac == canpre)))))",
+   "msg": "La cantidad de precios debe coincidir con la cantidad de ventas si la unidad de precios coincide con la de ventas.",
+   "tipo": "error",
+   "campo": "canfac",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_ACT_DESC": {
+   "l": "Activar descripción",
+   "nota": "Activo si garticul.desamp != null && desamp == null; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "txt_data",
+     "l": "Texto",
+     "t": "s",
+     "sz": 2048,
+     "req": 1,
+     "defs": "${virtualerp.txt_data}",
+     "h": "Contenido del texto"
+    }
+   ],
+   "dialogoTit": "Activar descripción"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

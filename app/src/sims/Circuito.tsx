@@ -116,7 +116,7 @@ function construirRondas(): Ronda[] {
     paso('factura', fr, `0F${L}${pad(base + azar(2, 9), 6)}`),
   ];
   return [
-    { titulo: 'Circuito de compras', objetivo: 'Coloca los documentos del ejercicio 3 en la vía, del primero al último.', pasos: compras, distractor: 'Agrega el efecto a una remesa de cobro' },
+    { titulo: 'Circuito de compras', objetivo: 'Coloca los documentos del bloque 3 de Compras en la vía, del primero al último.', pasos: compras, distractor: 'Agrega el efecto a una remesa de cobro' },
     { titulo: 'Circuito de ventas', objetivo: 'Ahora la cadena de ventas, de la oferta al asiento.', pasos: ventas, distractor: 'Mete la mercancía en el almacén' },
     { titulo: 'La vida de un efecto de cobro', objetivo: 'Ordena los estados del efecto, desde que nace hasta que se cobra.', pasos: cartera, distractor: 'Devuelto: el banco no ha podido cobrarlo (DV)' },
     {

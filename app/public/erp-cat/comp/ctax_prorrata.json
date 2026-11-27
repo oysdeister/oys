@@ -1,0 +1,140 @@
+{
+ "c": "ctax_prorrata",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "pror_empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(pror_empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pror_empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pror_empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pror_proyec": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(pror_proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pror_proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pror_proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pror_seccio": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(pror_seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(pror_seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "pror_seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pror_cnae": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoact",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomact"
+    ],
+    "desc": "nomact"
+   }
+  },
+  "pror_fecini": {
+   "req": 1
+  },
+  "pror_fecfin": {
+   "req": 1
+  },
+  "pror_porcen": {
+   "req": 1,
+   "def": 100
+  },
+  "pror_ctagas": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "rowid": {
+   "ro": "1==1"
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((pror_fecfin == null || pror_fecini == null) || (pror_fecfin.getTime() >= pror_fecini.getTime())))",
+   "msg": "Fecha fin prorrata debe ser posterior o igual a fecha de inicio",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((pror_cnae == null || pror_cnae.length === 0)) || ((!(pror_proyec == null || pror_proyec.length === 0)) || (!(pror_seccio == null || pror_seccio.length === 0)))))",
+   "msg": "Si se informa el CNAE,  el proyecto y sección debe ser no nulos.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Prorrata por empresa y actividad",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

@@ -1,0 +1,179 @@
+{
+ "c": "cterdire",
+ "fecha": "2026-11-18 maestros-a",
+ "area": "maestros",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "defExpr": "padre.codigo",
+   "ro": "true"
+  },
+  "tipdir": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipodir",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdir"
+    ],
+    "desc": "nomdir",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "def": "A"
+  },
+  "idioma": {
+   "req": 1,
+   "def": "es",
+   "lov": {
+    "obj": "ctipoidi",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomidi"
+    ],
+    "desc": "nomidi",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codnac": {
+   "req": 1,
+   "def": "ESP",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "direcc": {
+   "req": 1
+  },
+  "codpos": {
+   "mayus": 1,
+   "ro": "vacio(codnac)",
+   "lov": {
+    "obj": "cmunicip",
+    "clave": "codpos",
+    "cols": [
+     "codpos",
+     "codnac",
+     "codprv",
+     "codreg",
+     "coddis",
+     "nommun"
+    ],
+    "desc": "nommun",
+    "filtro": "l.codnac == codnac"
+   },
+   "alCambiar": {
+    "codprv": "busca('cmunicip','codpos',codpos,'codprv')",
+    "poblac": "busca('cmunicip','codpos',codpos,'nommun')",
+    "region": "busca('cmunicip','codpos',codpos,'codreg')",
+    "distri": "busca('cmunicip','codpos',codpos,'coddis')"
+   }
+  },
+  "poblac": {
+   "lov": {
+    "obj": "cmunicip",
+    "clave": "nommun",
+    "cols": [
+     "nommun",
+     "codpos",
+     "codprv",
+     "codnac"
+    ]
+   },
+   "alCambiar": {
+    "codpos": "busca('cmunicip','nommun',poblac,'codpos')",
+    "codprv": "busca('cmunicip','nommun',poblac,'codprv')"
+   }
+  },
+  "codprv": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "codigo",
+    "filtro": "l.codnac == codnac",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "region": {
+   "ro": "vacio(codnac)",
+   "lov": {
+    "obj": "cregion",
+    "clave": "codreg"
+   }
+  },
+  "zonimp": {
+   "req": 1,
+   "def": "ESCO",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codzon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipozon",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "email": {
+   "reglas": [
+    {
+     "si": "!vacio(email) && !/^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9\\-]+\\.)+([a-zA-Z0-9\\-\\.]+)+([,;]([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9\\-]+\\.)+([a-zA-Z0-9\\-\\.]+))*$/.test(email)",
+     "msg": "La definición del correo electrónico no es válida",
+     "tipo": "error",
+     "campo": "email",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "empres": {
+   "mayus": 1
+  },
+  "depart": {
+   "mayus": 1
+  },
+  "zonlog": {
+   "mayus": 1
+  },
+  "punope": {
+   "mayus": 1
+  }
+ },
+ "botones": {
+  "BUT_GET_CARD": {
+   "l": "Obtener tarjeta",
+   "nota": "Obtiene la tarjeta de contacto de la persona (tooltip). No probado: no cambia datos."
+  },
+  "BUT_GEOCODER": {
+   "l": "Geocodificar dirección",
+   "nota": "Obtiene las coordenadas de geolocalización (gps_latitud, gps_longitud). Tiene confirm=true en metadatos; pide confirmación Sí/No, texto no capturado. No probado."
+  }
+ },
+ "notas": [
+  "Diálogo de alta desde la pestaña Direcciones de ctercero («Añadir direccion»). Defectos vistos: Tipo de dirección 0, Idioma es, País ESP, Zona impositiva ESCO, Estado A. Sin Dirección: «Hay errores en los datos del formulario» y «Este campo es obligatorio.» (crudo t29). El resto (país, provincia, población) no es obligatorio.",
+  "Código postal es lupa SOFT sobre cmunicip (codpos_search_mapping): al ELEGIR una fila de la lista rellena Provincia (codprv), Población (nommun), Región (codreg) y Distrito (coddis) (fkSelectionColumnMapping de los metadatos). Escribir el código y salir con Tab no rellena nada: en la demo se grabó 08017 sin provincia ni población (crudo t31).",
+  "TRANSACTION_INSERT_AFTER: UPDATE ctercero SET estado='P' (el tercero vuelve a Provisional) (crudo t31.4).",
+  "Como pantalla de menú (Direcciones) permissions.insert = false: solo modificar y borrar.",
+  "probado: ninguno. no probado: Obtener tarjeta (BUT_GET_CARD) — no cambia datos; Geocodificar dirección (BUT_GEOCODER) — texto de confirmación no capturado."
+ ]
+}

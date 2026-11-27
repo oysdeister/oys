@@ -1,307 +1,32 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef, type CSSProperties, type KeyboardEvent } from 'react';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { META, MODULOS, getModulo } from '../content';
-import { avanceEjercicio, ejercicioCompletado, useProgreso } from '../lib/progress';
-import { avanceModulo } from '../lib/avance';
+import { ejercicioCompletado, useProgreso, APROBADO } from '../lib/progress';
+import { MAX_PREG, notaExamen, preguntasDe } from '../lib/examenModulo';
 import { conIni } from '../lib/texto';
-import { CapitulosSerie } from '../components/video';
-import { seriesDeModulo } from '../content/videoSeries';
+import { momentosDeModulo, seriesDeModulo } from '../content/videoSeries';
+import { VideoPrimero } from '../components/exercise/VideoPrimero';
 import { SIMS } from '../sims/registro';
 import { Icon } from '../components/Icon';
 import { SeccionVista } from '../components/exercise/SeccionVista';
-import { estadoDe, pct, useMedia } from '../components/exercise/util';
+import { useNotas } from '../erp/practicas';
 import { FICHAS, type PiezaCircuito } from './portadaDatos';
-import { useRevela } from '../components/exercise/Revela';
+import { FASE_UI, conSelectorDeFases, esFaseId, faseActiva, fasesDe, guardarFase, type FaseId, modoLibre, bloqueAbierto, bloqueQueToca, bloquesObligatorios, etapasDe, pasoQueToca, pasosDe, pasosHechos, PASOS } from '../lib/ruta';
 import './aprender.css';
-import './portada.css';
-import './pulido.css';
-
-const EASE = [0.2, 0.7, 0.2, 1] as const;
-const RITMO = 2800; // ms que se queda la ficha en cada pieza
-
-function useAutoplay(n: number, reducir: boolean) {
-  const [activo, setActivo] = useState(0);
-  const [play, setPlay] = useState(!reducir);
-  useEffect(() => {
-    if (!play || n < 2) return;
-    const t = setTimeout(() => setActivo((a) => (a + 1) % n), activo === 0 ? RITMO + 900 : RITMO);
-    return () => clearTimeout(t);
-  }, [play, activo, n]);
-  return { activo, setActivo, play, setPlay };
-}
-
-function Doc({ color }: { color: string }) {
-  return (
-    <svg viewBox="0 0 24 30" width="30" height="38" aria-hidden="true">
-      <path d="M3 2h12l6 6v20H3z" fill="var(--sheet)" stroke={color} strokeWidth="2" strokeLinejoin="round" />
-      <path d="M15 2v6h6M7 14h10M7 18h10M7 22h6" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-/** Circuito del módulo en escritorio: piezas en un arco sobre un suelo en perspectiva, y una ficha que viaja de una a otra */
-function CircuitoH({ piezas, color, ini }: { piezas: PiezaCircuito[]; color: string; ini: string }) {
-  const reducir = !!useReducedMotion();
-  const n = piezas.length;
-  const { activo, setActivo, play, setPlay } = useAutoplay(n, reducir);
-  const pos = piezas.map((_, i) => {
-    const f = n === 1 ? 0.5 : i / (n - 1);
-    return { x: 7 + f * 86, y: 72 - Math.sin(f * Math.PI) * 40 };
-  });
-  const W = 1000;
-  const H = 250;
-  const pts = pos.map((p) => ({ x: (p.x / 100) * W, y: (p.y / 100) * H }));
-  let d = `M ${pts[0].x} ${pts[0].y}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] ?? pts[i];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[i + 2] ?? p2;
-    d += ` C ${p1.x + (p2.x - p0.x) / 6} ${p1.y + (p2.y - p0.y) / 6}, ${p2.x - (p3.x - p1.x) / 6} ${p2.y - (p3.y - p1.y) / 6}, ${p2.x} ${p2.y}`;
-  }
-  const pz = piezas[activo];
-  const elegir = (i: number) => {
-    setActivo(i);
-    setPlay(false);
-  };
-
-  return (
-    <div className="pc">
-      <motion.div
-        className="pc-stage"
-        initial={reducir ? false : { rotateX: 38, opacity: 0, y: 30 }}
-        whileInView={{ rotateX: 0, opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 1.1, ease: EASE }}
-      >
-        <div className="pc-floor" aria-hidden="true" />
-        <svg className="pc-svg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-          <path d={d} fill="none" stroke="var(--line)" strokeWidth={14} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-          <motion.path
-            d={d}
-            fill="none"
-            stroke={color}
-            strokeWidth={6}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            initial={{ pathLength: reducir ? 1 : 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: reducir ? 0 : 1.4, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          />
-        </svg>
-        <div role="tablist" aria-label="Piezas del circuito">
-          {piezas.map((p, i) => (
-            <motion.button
-              key={i}
-              type="button"
-              role="tab"
-              aria-selected={i === activo}
-              className={`pc-node${i === activo ? ' here' : ''}${i < activo ? ' seen' : ''}`}
-              style={{ left: `${pos[i].x}%`, top: `${pos[i].y}%`, x: '-50%', y: -27 }}
-              onClick={() => elegir(i)}
-              initial={reducir ? false : { opacity: 0, scale: 0.4 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: reducir ? 0 : 0.35 + (i / Math.max(1, n - 1)) * 1.1, type: 'spring', stiffness: 260, damping: 18 }}
-            >
-              <span className="pc-dot">
-                <span>{i + 1}</span>
-              </span>
-              <span className="pc-label">{p.t}</span>
-            </motion.button>
-          ))}
-        </div>
-        {!reducir && (
-          <motion.div
-            className="pc-token"
-            aria-hidden="true"
-            initial={false}
-            animate={{ left: `${pos[activo].x}%`, top: `${pos[activo].y}%`, rotateY: activo * 360 }}
-            transition={{ duration: 0.9, ease: [0.5, 0, 0.2, 1] }}
-            style={{ x: '-50%', y: -100, transformPerspective: 500 }}
-          >
-            <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>
-              <Doc color={color} />
-            </motion.div>
-          </motion.div>
-        )}
-      </motion.div>
-
-      <div className="pc-panel" aria-live="polite">
-        <span className="pc-panel-n">
-          {activo + 1}
-          <small>/{n}</small>
-        </span>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={activo}
-            initial={reducir ? { opacity: 0 } : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reducir ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
-          >
-            <h3>{pz.t}</h3>
-            <p>{conIni(pz.d, ini)}</p>
-            {pz.ej && (
-              <span className="pc-ej">
-                <b>Ejemplo del manual:</b> {conIni(pz.ej, ini)}
-              </span>
-            )}
-          </motion.div>
-        </AnimatePresence>
-        <div className="pc-ctrl">
-          <button type="button" onClick={() => elegir((activo - 1 + n) % n)} aria-label="Pieza anterior">
-            <Icon name="atras" size={18} />
-          </button>
-          <button type="button" onClick={() => setPlay((v) => !v)} aria-label={play ? 'Pausar el recorrido' : 'Reproducir el recorrido'}>
-            {play ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <rect x="5" y="4" width="5" height="16" rx="1.5" />
-                <rect x="14" y="4" width="5" height="16" rx="1.5" />
-              </svg>
-            ) : (
-              <Icon name="play" size={16} />
-            )}
-          </button>
-          <button type="button" onClick={() => elegir((activo + 1) % n)} aria-label="Pieza siguiente">
-            <Icon name="flecha" size={18} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Circuito en el móvil: una línea vertical con todas las piezas explicadas; el color avanza por ella */
-function CircuitoV({ piezas, ini }: { piezas: PiezaCircuito[]; ini: string }) {
-  const reducir = !!useReducedMotion();
-  const n = piezas.length;
-  const { activo, setActivo, setPlay } = useAutoplay(n, reducir);
-  const refs = useRef<(HTMLLIElement | null)[]>([]);
-  const [alto, setAlto] = useState(0);
-  useLayoutEffect(() => {
-    const li = refs.current[activo];
-    if (li) setAlto(li.offsetTop + 2);
-  }, [activo]);
-  return (
-    <ol className="pcv" aria-label="Piezas del circuito">
-      <motion.span className="pcv-fill" aria-hidden="true" initial={false} animate={{ height: alto }} transition={{ duration: reducir ? 0 : 0.7, ease: EASE }} />
-      {piezas.map((p, i) => (
-        <li key={i} ref={(el) => { refs.current[i] = el; }} className={i === activo ? 'here' : ''}>
-          <button
-            type="button"
-            className={`pcv-btn pc-node-v${i <= activo ? ' seen' : ''}`}
-            aria-current={i === activo ? 'step' : undefined}
-            onClick={() => {
-              setActivo(i);
-              setPlay(false);
-            }}
-          >
-            <span className={`pc-node${i === activo ? ' here' : ''}${i < activo ? ' seen' : ''}`} style={{ position: 'static', transform: 'none', width: 'auto', minWidth: 0 }}>
-              <span className="pc-dot">
-                <span>{i + 1}</span>
-              </span>
-            </span>
-            <span className="pcv-card">
-              <strong>{p.t}</strong>
-              <p>{conIni(p.d, ini)}</p>
-              {p.ej && <span className="pc-ej">{conIni(p.ej, ini)}</span>}
-            </span>
-          </button>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-function Desplegable({ titulo, n, children, abiertoIni = false }: { titulo: string; n: number; children: ReactNode; abiertoIni?: boolean }) {
-  const [abierto, setAbierto] = useState(abiertoIni);
-  const reducir = useReducedMotion();
-  return (
-    <div className={`fold${abierto ? ' open' : ''}`}>
-      <button className="fold-head" aria-expanded={abierto} onClick={() => setAbierto((a) => !a)}>
-        <span className="fold-t">
-          <span className="fold-n" aria-hidden="true">{String(n).padStart(2, '0')}</span>
-          <span>{titulo}</span>
-        </span>
-        <motion.span className="fold-ico" animate={{ rotate: abierto ? 45 : 0 }} aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
-        </motion.span>
-      </button>
-      <AnimatePresence initial={false}>
-        {abierto && (
-          <motion.div
-            className="fold-body"
-            initial={reducir ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            animate={reducir ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
-            exit={reducir ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          >
-            <div className="fold-in">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-/** Cabecera de sección: antetítulo pequeño con acento, titular con volumen y una línea de ayuda */
-function CabSec({ id, n, kicker, titulo, texto }: { id?: string; n: number; kicker: string; titulo: string; texto?: string }) {
-  const r = useRevela();
-  return (
-    <motion.header className="pm-cab" {...r(0, 14)}>
-      <p className="kick">
-        <span className="kick-n">{String(n).padStart(2, '0')}</span> {kicker}
-      </p>
-      <h2 id={id}>
-        <span className="tx-grad">{titulo}</span>
-      </h2>
-      {texto && <p className="pm-cab-txt">{texto}</p>}
-    </motion.header>
-  );
-}
-
-/** Flecha «baja»: lleva con scroll suave a la ruta de ejercicios */
-function Bajar({ destino, texto }: { destino: string; texto: string }) {
-  const reducir = !!useReducedMotion();
-  const ir = () => {
-    const el = document.getElementById(destino);
-    if (!el) return;
-    el.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
-    const foco = el.querySelector<HTMLElement>('h2');
-    if (foco) {
-      foco.setAttribute('tabindex', '-1');
-      foco.focus({ preventScroll: true });
-    }
-  };
-  return (
-    <div className="pm-bajar-wrap">
-      <button type="button" className="pm-bajar" onClick={ir} aria-label={`${texto}: baja hasta los ejercicios del módulo`}>
-        <span>{texto}</span>
-        <motion.span
-          className="pm-bajar-ico"
-          aria-hidden="true"
-          animate={reducir ? undefined : { y: [0, 5, 0] }}
-          transition={reducir ? undefined : { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 5v14M6 13l6 6 6-6" />
-          </svg>
-        </motion.span>
-      </button>
-    </div>
-  );
-}
+import './ruta.css';
 
 export default function ModulePage() {
   const { id = '' } = useParams();
   const p = useProgreso();
-  const reducir = useReducedMotion();
-  const r = useRevela();
-  const movil = useMedia('(max-width: 700px)');
+  const notasErp = useNotas();
   const modulo = getModulo(id);
+  const [sp, setSp] = useSearchParams();
+  const faseUrl = sp.get('fase');
+  const refTabs = useRef<Record<string, HTMLButtonElement | null>>({});
+  // Si la fase viene en la URL (enlace compartido, chip de la portada o menú lateral), se recuerda para este módulo
+  useEffect(() => {
+    if (modulo && esFaseId(faseUrl)) guardarFase(modulo.id, faseUrl);
+  }, [modulo, faseUrl]);
 
   if (!modulo) {
     return (
@@ -315,240 +40,376 @@ export default function ModulePage() {
     );
   }
 
+  // Enlace a un módulo antiguo que se fusionó en otro (p. ej. #/modulo/icon-cartera): al módulo vigente
+  if (modulo.id !== id) return <Navigate to={`/modulo/${modulo.id}`} replace />;
+
   const ini = p.alumno.ini;
+  const t = (x: string) => conIni(x, ini);
   const meta = META[modulo.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: modulo.titulo };
   const ficha = FICHAS[modulo.id];
-  const piezas: PiezaCircuito[] = ficha?.circuito ?? modulo.circuito.map((t) => ({ t, d: '' }));
-  const av = avanceModulo(p, modulo.id);
-  const minutos = modulo.ejercicios.reduce((s, e) => s + e.duracionMin, 0);
-  const hechos = modulo.ejercicios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
-  const pendiente = modulo.ejercicios.find((e) => !ejercicioCompletado(p.ejercicios[e.id]));
-  const siguiente = pendiente ?? modulo.ejercicios[0];
-  const series = seriesDeModulo(modulo.id);
-  const verVideo = series.length > 0;
-  const sims = SIMS.filter((s) => s.modulo === modulo.id);
+  const piezas: PiezaCircuito[] = ficha?.circuito ?? modulo.circuito.map((x) => ({ t: x, d: '' }));
+  const etapas = etapasDe(modulo);
+  const obligatorios = bloquesObligatorios(modulo);
+  const hechos = obligatorios.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
+  const toca = bloqueQueToca(p, modulo);
+  const todoHecho = !toca;
   const idx = MODULOS.findIndex((m) => m.id === modulo.id);
   const sigMod = MODULOS[idx + 1];
-  const sigMeta = sigMod ? META[sigMod.id] : undefined;
+  const series = seriesDeModulo(modulo.id);
+  const sims = SIMS.filter((s) => s.modulo === modulo.id);
+  const nExamen = Math.min(preguntasDe(modulo.id).length, MAX_PREG);
+  const notaEx = notaExamen(p, modulo.id);
+  const todos = etapas.flatMap((e) => e.bloques.map((b) => ({ b, opc: !!e.opcional })));
+  const nOpc = todos.filter((x) => x.opc).length;
+  const numBloque = new Map(etapas.flatMap((e) => e.bloques).map((b, i) => [b.id, i + 1]));
 
-  const ctaTexto = hechos === modulo.ejercicios.length ? 'Repasar el módulo' : av === 0 ? 'Empezar el módulo' : `Continuar con el ejercicio ${siguiente?.numero ?? ''}`;
+  // Fases del módulo: Configurar, Operar y Para saber más (selector solo si hay Configurar y Operar)
+  const grupos = fasesDe(modulo);
+  const conSelector = conSelectorDeFases(grupos);
+  const fase: FaseId = faseActiva(p, modulo, grupos, faseUrl);
+  const grupoActivo = grupos.find((g) => g.id === fase) ?? grupos[0];
+  const sinBloques = modulo.ejercicios.length === 0;
+
+  const irAlPanel = () => {
+    window.setTimeout(() => document.getElementById('bloques-h')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+  };
+  const cambiarFase = (f: FaseId, conScroll: boolean) => {
+    guardarFase(modulo.id, f);
+    setSp({ fase: f }, { replace: true });
+    if (conScroll) irAlPanel();
+  };
+  const alTeclear = (ev: KeyboardEvent, i: number) => {
+    const n = grupos.length;
+    const j = ev.key === 'ArrowRight' || ev.key === 'ArrowDown' ? (i + 1) % n : ev.key === 'ArrowLeft' || ev.key === 'ArrowUp' ? (i + n - 1) % n : ev.key === 'Home' ? 0 : ev.key === 'End' ? n - 1 : -1;
+    if (j < 0) return;
+    ev.preventDefault();
+    cambiarFase(grupos[j].id, false);
+    refTabs.current[grupos[j].id]?.focus();
+  };
+
+  const pasoToca = toca ? pasoQueToca(p, toca, notasErp) : 'concepto';
+  const enlaceToca = toca ? `/ejercicio/${toca.id}${pasoToca === 'concepto' ? '' : `?tab=${pasoToca}`}` : '';
+  const empezado = obligatorios.some((e) => p.ejercicios[e.id]);
+  const ctaTexto = !toca ? '' : !empezado ? `Empezar por el bloque 1` : `Seguir: bloque ${numBloque.get(toca.id)}, ${PASOS.find((x) => x.id === pasoToca)?.label}`;
+
+  // Índice «En esta página» (botones: con HashRouter un #ancla cambiaría de ruta)
+  const hayExtra = series.length > 0 || sims.length > 0;
+  const indice = [
+    { id: 'antes-h', t: 'Para situarte' },
+    { id: 'bloques-h', t: 'Los bloques' },
+    { id: 'cierre-h', t: 'Para cerrar el módulo' },
+    ...(hayExtra ? [{ id: 'extra-h', t: 'Material de consulta' }] : []),
+  ];
+  const irA = (idSec: string) => {
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById(idSec)?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
+  };
+
+  const renderEtapa = (et: (typeof etapas)[number], ei: number) => (
+              <div key={ei} className={`md-etapa${et.opcional ? ' opc' : ''}`}>
+                {(et.fase || et.opcional) && et.titulo && !et.nota && (
+                  <h4 className="md-etapa-t">
+                    {et.titulo}
+                    {et.opcional ? ' (opcional)' : ''}
+                    {et.que && <small>{et.que}</small>}
+                  </h4>
+                )}
+                {et.nota && (
+                  <div className="md-nota-card">
+                    <span className="md-nota-ico" aria-hidden="true">
+                      <Icon name="check" size={22} stroke={3} />
+                    </span>
+                    <div>
+                      <strong>{et.titulo}</strong>
+                      <p>{et.que}</p>
+                      <p>{et.nota}</p>
+                      {et.enlace && META[et.enlace] && (
+                        <Link className="btn" to={`/modulo/${et.enlace}`}>
+                          Ir a {META[et.enlace].corto}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                )}
+        {et.bloques.length > 0 && <ol className="md-bloques">
+              {et.bloques.map((b) => {
+                const opc = !!et.opcional;
+                const hecho = ejercicioCompletado(p.ejercicios[b.id]);
+                const abierto = bloqueAbierto(p, modulo, b.id);
+                const esToca = toca?.id === b.id;
+                const h = pasosHechos(p, b, notasErp);
+                const ps = pasosDe(b);
+                const n = numBloque.get(b.id);
+                const cuerpo = (
+                  <>
+                    <span className="md-b-n" aria-hidden="true">
+                      {hecho ? <Icon name="check" size={18} stroke={3} /> : abierto ? n : <Icon name="candado" size={16} />}
+                    </span>
+                    <span className="md-b-txt">
+                      <strong>
+                        {t(b.titulo)}{opc ? ' (ampliación, opcional)' : ''}
+                      </strong>
+                      <span>{t(b.objetivo)}</span>
+                      <span className="md-b-pasos" aria-label={`${ps.filter((x) => h[x.id]).length} de ${ps.length} pasos hechos`}>
+                        {ps.map((x) => (
+                          <i key={x.id} className={h[x.id] ? 'ok' : ''} title={x.label} />
+                        ))}
+                        <em>{b.duracionMin} min</em>
+                      </span>
+                    </span>
+                    <span className="md-b-estado">{hecho ? 'Hecho' : esToca ? 'Te toca' : abierto ? (p.ejercicios[b.id] ? 'Empezado' : '') : 'Cerrado'}</span>
+                  </>
+                );
+                return (
+                  <li key={b.id} className={`${hecho ? 'hecho' : ''}${esToca ? ' toca' : ''}${abierto ? '' : ' cerrado'}${opc ? ' opc' : ''}`}>
+                    {abierto ? (
+                      <Link to={`/ejercicio/${b.id}`} className="md-b">
+                        {cuerpo}
+                      </Link>
+                    ) : (
+                      <div className="md-b" aria-disabled="true" title="Termina el bloque anterior para abrir este">
+                        {cuerpo}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+        </ol>}
+              </div>
+  );
 
   return (
-    <div className="wrap mod-page pm" style={{ ['--mod' as string]: meta.color } as CSSProperties}>
-      <Link to="/#modulos" className="btn ghost sm pm-volver">
-        <Icon name="atras" size={18} /> Todos los módulos
+    <div className="wrap gm" style={{ ['--mod' as string]: meta.color } as CSSProperties}>
+      <Link to="/" className="md-volver gm-volver">
+        <Icon name="atras" size={16} /> Todos los módulos
       </Link>
 
-      <header className="ax-banner pm-banner">
-        <div className="pm-banner-in">
-          <div className="pm-banner-txt">
-            <p className="ax-kicker">
-              Módulo {idx + 1} de {MODULOS.length}
-              {modulo.sesion ? `, ${modulo.sesion.toLowerCase()}` : ''}
-            </p>
-            <h1 className="pm-h1">{modulo.titulo}</h1>
-            <p className="lead">{ficha ? conIni(ficha.frase, ini) : conIni(modulo.resumen, ini)}</p>
-            <div className="ax-stats pm-stats">
-              <div className="ax-stat">
-                <span className="ax-num">{modulo.ejercicios.length}</span>
-                <span>ejercicios</span>
-              </div>
-              <div className="ax-stat">
-                <span className="ax-num">{minutos}</span>
-                <span>minutos</span>
-              </div>
-              <div className="ax-stat">
-                <span className="ax-num">{hechos}</span>
-                <span>completados</span>
-              </div>
-            </div>
-            <div className="pm-ctas">
-              {siguiente && (
-                <Link className="btn arc lg" to={`/ejercicio/${siguiente.id}`}>
-                  {ctaTexto}
-                </Link>
-              )}
-              {sims[0] && (
-                <Link className="btn ghost lg" to={`/taller/${sims[0].id}`}>
-                  Practicar en el Taller
-                </Link>
-              )}
-            </div>
+      <header className="g-hero gm-hero">
+        <p className="g-kicker">
+          Módulo {idx} · {obligatorios.length} {obligatorios.length === 1 ? 'bloque' : 'bloques'}
+        </p>
+        <h1>{meta.corto}</h1>
+        <p className="gm-frase">{ficha ? t(ficha.frase) : t(modulo.resumen)}</p>
+        <div className="gm-hero-acc">
+        <div className="gm-avance">
+          <div className="gm-barra" role="progressbar" aria-valuemin={0} aria-valuemax={obligatorios.length} aria-valuenow={hechos} aria-label="Bloques terminados">
+            <i style={{ width: `${(hechos / Math.max(1, obligatorios.length)) * 100}%` }} />
           </div>
-          <motion.div
-            className="pm-planeta"
-            initial={reducir ? false : { scale: 0.6, opacity: 0, rotate: -30 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            transition={{ type: 'spring', stiffness: 70, damping: 14 }}
-            role="img"
-            aria-label={`${Math.round(av * 100)} % del módulo hecho`}
-          >
-            <svg className="pm-planeta-orbita" viewBox="0 0 100 100" aria-hidden="true">
-              <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="2" />
-              <motion.circle
-                cx="50"
-                cy="50"
-                r="47"
-                fill="none"
-                stroke="#7ff0d6"
-                strokeWidth="2.6"
-                strokeLinecap="round"
-                transform="rotate(-90 50 50)"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: Math.max(av, 0.002) }}
-                transition={{ duration: reducir ? 0 : 1.2, delay: 0.4 }}
-              />
-            </svg>
-            <span className="pm-esfera">
-              <Icon name={meta.icono} size={44} />
-            </span>
-            <span className="pm-planeta-pct ax-num">
-              {Math.round(av * 100)}
-              <small>%</small>
-            </span>
-          </motion.div>
+          <span>
+            {hechos} de {obligatorios.length} bloques terminados
+            {nOpc > 0 && ` · además, ${nOpc} ${nOpc === 1 ? 'bloque' : 'bloques'} de ampliación (opcional)`}
+          </span>
         </div>
+        {sinBloques ? (
+          <p className="md-hecho md-prox">
+            <Icon name="reloj" size={18} /> Próximamente: los bloques de este módulo se están preparando.
+          </p>
+        ) : toca ? (
+          <Link className="btn arc lg md-cta" to={enlaceToca}>
+            {ctaTexto}
+          </Link>
+        ) : (
+          <p className="md-hecho">
+            <Icon name="check" size={18} stroke={3} /> Has terminado todos los bloques. Te queda el examen del módulo.
+          </p>
+        )}
+        </div>
+      </header>
+
+      <nav className="gm-indice" aria-label="En esta página">
+        <p className="g-kicker">En esta página</p>
+        <ol>
+          {indice.map((x, i) => (
+            <li key={x.id}>
+              <button type="button" onClick={() => irA(x.id)}>
+                <b>{i + 1}</b>
+                {x.t}
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      {/* 1. Antes de empezar: el mapa del módulo y lo básico, una sola vez */}
+      <section className="g-card gm-sec" aria-labelledby="antes-h">
+        <p className="g-kicker">Parte 1</p>
+        <h2 id="antes-h">Para situarte</h2>
+        <VideoPrimero
+          lista={momentosDeModulo(modulo.id)}
+          indice
+          ante="Antes de empezar el módulo"
+          luego="Luego lee el resto de esta parte y empieza por el bloque 1."
+        />
+        
+        {ficha && <h3>Qué aprenderás</h3>}
         {ficha && (
-          <div className="pm-aprendes" aria-labelledby="apr-h">
-            <h2 id="apr-h" className="kick">Al terminar sabrás</h2>
-            <ul>
-              {ficha.aprendes.map((a, i) => (
-                <motion.li key={i} className="pm-apr" {...r(i + 2, 12)}>
-                  <span className="pm-apr-ico" aria-hidden="true">
-                    <Icon name="check" size={16} stroke={3} />
-                  </span>
-                  <span>{conIni(a, ini)}</span>
-                </motion.li>
-              ))}
-            </ul>
+          <ul className="md-aprendes">
+            {ficha.aprendes.map((a, i) => (
+              <li key={i}>
+                <Icon name="check" size={16} stroke={3} /> {t(a)}
+              </li>
+            ))}
+          </ul>
+        )}
+        {piezas.length > 0 && (
+          <p className="md-recorrido">
+            <b>El recorrido:</b> {piezas.map((x) => x.t).join(' → ')}.
+          </p>
+        )}
+        {modulo.navegacion && modulo.navegacion.length > 0 && (
+          <div className="md-basico">
+            <h3>Lo básico del ERP para este módulo</h3>
+            {modulo.navegacion.map((s) => {
+              // Cada tema en un solo sitio: si un módulo anterior ya lo explica, aquí solo se enlaza
+              const dueno = MODULOS.slice(0, idx).find((m) => m.navegacion?.some((x) => x.titulo === s.titulo));
+              if (dueno && /mover/i.test(s.titulo)) {
+                return (
+                  <p key={s.id} className="md-ya">
+                    {t(s.titulo)}: está en Fundamentos › <Link to="/ejercicio/fundamentos-navegar">Moverse por el ERP</Link>.
+                  </p>
+                );
+              }
+              return dueno ? (
+                <p key={s.id} className="md-ya">
+                  {t(s.titulo)}: ya lo viste en <Link to={`/modulo/${dueno.id}`}>{META[dueno.id]?.corto ?? dueno.titulo}</Link>, en «Para situarte».
+                </p>
+              ) : (
+                <div key={s.id} className="md-basico-tema">
+                  <h4>{t(s.titulo)}</h4>
+                  <SeccionVista s={s} ini={ini} conPasos />
+                </div>
+              );
+            })}
           </div>
         )}
-      </header>
-      <Bajar destino="ruta" texto="Ver tu ruta" />
+      </section>
 
-      {piezas.length > 0 && (
-        <section className="mod-sec" aria-labelledby="circ-h">
-          <CabSec
-            id="circ-h"
-            n={1}
-            kicker="Cómo encaja todo"
-            titulo="El circuito"
-            texto={movil ? 'Así viaja la información por este módulo. Toca una pieza para pararte en ella.' : 'Así viaja la información por este módulo. Cada pieza necesita la anterior: toca una para pararte en ella.'}
-          />
-          <div className="glass pm-panel">
-            {movil ? <CircuitoV piezas={piezas} ini={ini} /> : <CircuitoH piezas={piezas} color={meta.color} ini={ini} />}
-          </div>
-        </section>
-      )}
-
-      {verVideo && (
-        <section className="mod-sec pm-video" aria-label="Vídeo del módulo">
-          <div className="ax-banner pm-video-in">
-            {series.map((sv) => (
-              <CapitulosSerie
-                key={sv.id}
-                serie={sv.id}
-                titulo={series.length > 1 ? sv.titulo : `Vídeo del módulo: ${sv.capitulos.length} capítulos`}
-                intro={sv.intro}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {modulo.navegacion && modulo.navegacion.length > 0 && (
-        <section className="mod-sec" aria-labelledby="antes-h">
-          <CabSec id="antes-h" n={piezas.length > 0 ? 2 : 1} kicker="Lo básico" titulo="Antes de empezar" texto="Ábrelo cuando lo necesites: cada bloque se lee en un par de minutos." />
-          <div className="folds">
-            {modulo.navegacion.map((s, i) => (
-              <Desplegable key={s.id} n={i + 1} titulo={conIni(s.titulo, ini)} abiertoIni={i === 0 && av === 0}>
-                <SeccionVista s={s} ini={ini} conPasos />
-              </Desplegable>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className="mod-sec pm-ruta" id="ruta" aria-labelledby="ruta-h">
-        <CabSec
-          id="ruta-h"
-          n={(piezas.length > 0 ? 1 : 0) + (modulo.navegacion && modulo.navegacion.length > 0 ? 1 : 0) + 1}
-          kicker={`${hechos} de ${modulo.ejercicios.length} hechos`}
-          titulo="Tu ruta"
-          texto="Cada ejercicio se completa con el recorrido guiado y el test aprobado. La checklist en la demo suma el resto."
-        />
-        <ol className="route mod-route">
-          {modulo.ejercicios.map((e, i) => {
-            const est = p.ejercicios[e.id];
-            const done = ejercicioCompletado(est);
-            const chip = estadoDe(est, e.checklist.length);
-            const a = avanceEjercicio(est, e.checklist.length);
-            const esSig = pendiente?.id === e.id;
-            return (
-              <motion.li
-                key={e.id}
-                initial={reducir ? false : { opacity: 0, x: -24 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ delay: Math.min(i, 6) * 0.06, duration: 0.4 }}
-              >
-                <Link to={`/ejercicio/${e.id}`} className={`route-item${done ? ' done' : ''}${esSig ? ' next neon-mod' : ''}`}>
-                  <span className="route-num">{done ? <Icon name="check" size={24} stroke={3} /> : e.numero}</span>
-                  <span className="route-body">
-                    <strong>{conIni(e.titulo, ini)}</strong>
-                    <span className="small muted route-obj">{conIni(e.objetivo, ini)}</span>
-                    <span className="ax-bar mod route-meter" aria-hidden="true">
-                      <i style={{ width: `${a * 100}%` }} />
+      {/* 2. Los bloques, por etapas */}
+      <section className="g-card gm-sec" aria-labelledby="bloques-h">
+        <p className="g-kicker">Parte 2</p>
+        <h2 id="bloques-h">Los bloques</h2>
+        {sinBloques ? (
+          <p className="md-sec-txt">Aquí aparecerán los bloques cuando estén listos.</p>
+        ) : (
+          <p className="md-sec-txt">
+            Te recomendamos hacerlos en orden: cada uno usa lo que preparas en el anterior. «Te toca» marca el siguiente que tienes pendiente.
+          </p>
+        )}
+        {conSelector && (
+          <p className="md-aviso-operar">
+            <Icon name="aviso" size={18} />
+            <span>
+              ¿Ya tienes hecha la fase Configurar de este módulo? <Link to={`/modulo/${modulo.id}?fase=operar`} onClick={irAlPanel}>Ve directo a Operar</Link>. Si es tu primera vez, empieza por el bloque 1, en Configurar.
+            </span>
+          </p>
+        )}
+        {conSelector && (
+          <div className="md-fases" role="tablist" aria-label="Fases del módulo">
+            {grupos.map((g, i) => {
+              const ui = FASE_UI[g.id];
+              const hechosF = g.bloques.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
+              const activa = g.id === fase;
+              return (
+                <button
+                  key={g.id}
+                  ref={(el) => { refTabs.current[g.id] = el; }}
+                  type="button"
+                  role="tab"
+                  id={`fase-tab-${g.id}`}
+                  aria-selected={activa}
+                  aria-controls="fase-panel"
+                  tabIndex={activa ? 0 : -1}
+                  className={`md-fase-tab md-ft-${g.id}${activa ? ' on' : ''}`}
+                  onClick={() => cambiarFase(g.id, true)}
+                  onKeyDown={(ev) => alTeclear(ev, i)}
+                >
+                  <span className="md-ft-ico" aria-hidden="true">
+                    <Icon name={ui.icono} size={26} />
+                  </span>
+                  <span className="md-ft-txt">
+                    <strong>{ui.titulo}</strong>
+                    <span>{ui.corto}</span>
+                    <span className="md-ft-prog">
+                      <span className="md-ft-barra" aria-hidden="true">
+                        <i style={{ width: `${(hechosF / Math.max(1, g.bloques.length)) * 100}%` }} />
+                      </span>
+                      <em>
+                        {g.bloques.length === 0 ? 'Sin bloques nuevos' : `${hechosF} de ${g.bloques.length} ${g.bloques.length === 1 ? 'bloque' : 'bloques'}`}
+                      </em>
                     </span>
                   </span>
-                  <span className="route-meta">
-                    {esSig ? <span className="pm-tetoca">Te toca</span> : <span className={chip.clase}>{chip.texto}</span>}
-                    <span className="small muted">
-                      {pct(a)} · {e.duracionMin} min
-                    </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+        {conSelector ? (
+          <div role="tabpanel" id="fase-panel" aria-labelledby={`fase-tab-${fase}`} tabIndex={0} className="md-panel">
+            {grupoActivo.etapas.map(renderEtapa)}
+          </div>
+        ) : (
+          etapas.map(renderEtapa)
+        )}
+      </section>
+
+      {/* 3. Cierre */}
+      <section className="g-card gm-sec" aria-labelledby="cierre-h">
+        <p className="g-kicker">Parte 3</p>
+        <h2 id="cierre-h">Para cerrar el módulo</h2>
+        <ol className="md-cierre">
+          {nExamen > 0 && (
+            <li>
+              <Link to={`/modulo/${modulo.id}/examen`} className={`md-c${todoHecho ? ' toca' : ''}${todoHecho || modoLibre() ? '' : ' cerrado'}`} onClick={(e) => { if (!todoHecho && !modoLibre()) e.preventDefault(); }} aria-disabled={!todoHecho && !modoLibre()}>
+                <Icon name="examen" size={22} />
+                <span>
+                  <strong>Examen del módulo</strong>
+                  <span>
+                    {notaEx === null
+                      ? `${nExamen} preguntas de test. Apruebas con un ${Math.round(APROBADO * 100)} %.${todoHecho ? '' : ' Mejor cuando termines los bloques.'}`
+                      : `Tu mejor nota: ${Math.round(notaEx * 100)} %${notaEx >= APROBADO ? ' (aprobado)' : ''}. Puedes repetirlo.`}
                   </span>
-                </Link>
-              </motion.li>
-            );
-          })}
+                </span>
+              </Link>
+            </li>
+          )}
+          <li>
+            {sigMod ? (
+              <Link to={`/modulo/${sigMod.id}`} className="md-c">
+                <Icon name={META[sigMod.id]?.icono ?? 'flecha'} size={22} />
+                <span>
+                  <strong>Siguiente: módulo {idx + 1}, {META[sigMod.id]?.corto ?? sigMod.titulo}</strong>
+                  <span>{FICHAS[sigMod.id]?.recorrido ?? ''}</span>
+                </span>
+              </Link>
+            ) : (
+              <Link to="/examen" className="md-c">
+                <Icon name="examen" size={22} />
+                <span>
+                  <strong>Examen final del curso</strong>
+                  <span>Teoría y un caso práctico completo en la Demo real.</span>
+                </span>
+              </Link>
+            )}
+          </li>
         </ol>
       </section>
 
-      <nav className="po-puertas pm-sig" aria-label="Qué hacer después">
-        {sigMod ? (
-          <Link to={`/modulo/${sigMod.id}`} className="po-door po-door-examen" style={{ ['--mod' as string]: sigMeta?.color ?? 'var(--arc)' } as CSSProperties}>
-            <span className="po-door-ico pm-sig-ico" aria-hidden="true">
-              <Icon name={sigMeta?.icono ?? 'flecha'} size={26} />
-            </span>
-            <span className="po-door-txt">
-              <span>Siguiente módulo</span>
-              <strong>{sigMod.titulo}</strong>
-              <span>{FICHAS[sigMod.id]?.recorrido ?? ''}</span>
-            </span>
-          </Link>
-        ) : (
-          <Link to="/examen" className="po-door po-door-examen">
-            <span className="po-door-ico" aria-hidden="true">
-              <Icon name="examen" size={26} />
-            </span>
-            <span className="po-door-txt">
-              <span>Has llegado al último módulo</span>
-              <strong>Examen final</strong>
-              <span>Teoría y un caso práctico completo en la demo.</span>
-            </span>
-          </Link>
-        )}
-        <Link to={sims[0] ? `/taller/${sims[0].id}` : '/taller'} className="po-door po-door-taller">
-          <span className="po-door-ico" aria-hidden="true">
-            <Icon name="taller" size={26} />
-          </span>
-          <span className="po-door-txt">
-            <span>Para afianzar</span>
-            <strong>{sims[0] ? sims[0].titulo : 'El Taller'}</strong>
-            <span>{sims[0] ? 'Simulador del Taller' : 'Simuladores para equivocarte sin miedo.'}</span>
-          </span>
-        </Link>
-      </nav>
+      {hayExtra && (
+        <section className="g-card gm-sec gm-extra" aria-labelledby="extra-h">
+          <p className="g-kicker">Parte 4</p>
+          <h2 id="extra-h">Material de consulta</h2>
+          {sims.length > 0 && (
+            <p>
+              <Link to={`/taller/${sims[0].id}`}>Simulador del Taller: {sims[0].titulo}</Link>
+            </p>
+          )}
+          {series.length > 0 && (
+            <p>
+              <Link to="/video">Vídeos completos del módulo ({series.reduce((n, s) => n + s.capitulos.length, 0)} {series.reduce((n, s) => n + s.capitulos.length, 0) === 1 ? 'capítulo' : 'capítulos'})</Link>
+            </p>
+          )}
+        </section>
+      )}
     </div>
   );
 }

@@ -214,8 +214,12 @@ function rutasDeMenu() {
   const vistos = new Set<string>();
   for (const m of MODULOS) {
     // Las rutas de finanzas salen del árbol de la documentación, no de un menú comprobado en la demo
-    if (esFinanzas(m.id)) continue;
+    // (los bloques «maestros-*» que ahora viven en Contabilidad básica o en Compras sí vienen de la demo)
+    const finanzas = esFinanzas(m.id);
     for (const e of m.ejercicios) {
+      if (finanzas && !e.id.startsWith('maestros-')) continue;
+      // Los ejercicios que vienen de finanzas (ids icon-*) conservan esa regla aunque su módulo se haya fusionado
+      if (esFinanzas(e.id)) continue;
       for (const s of e.secciones) {
         const r = s.ruta;
         if (!r || r.length < 4 || r.length > 6) continue;
@@ -278,7 +282,7 @@ export function generarCaso(codigo: string): Caso {
       ],
     },
     {
-      titulo: 'Factura de venta (F' + ini + ', plantilla FV)',
+      titulo: 'Factura de venta (FP' + ini + ', plantilla FV)',
       lineas: [
         { cuenta: '43000', nombre: 'Clientes', debe: venta.total, haber: 0 },
         { cuenta: '47000', nombre: 'IVA repercutido 21 %', debe: 0, haber: iv },
@@ -417,7 +421,7 @@ export function generarCaso(codigo: string): Caso {
         { k: 'Cliente', v: `${cliente} · categoría Clientes · dirección 0` },
         { k: 'Relación contable', v: 'Cliente · CLI · 43000.00000' },
         { k: 'Condición de cobro', v: 'EF · estado PE · plazo 30D' },
-        { k: 'Tipologías', v: `O${ini} › P${ini} › A${ini}2 › F${ini}` },
+        { k: 'Tipologías', v: `O${ini} › PV${ini} › AP${ini} › FP${ini}` },
         { k: 'Cantidad', v: `${qv} unidades` },
         { k: 'Precio', v: `${p2(venta.precio)} €` },
       ],
@@ -457,7 +461,7 @@ export function generarCaso(codigo: string): Caso {
     },
     {
       id: 't8',
-      modulo: 'asientos',
+      modulo: 'icon-contabilidad',
       titulo: 'Asiento manual',
       encargo: `Hemos pagado por banco ${p2(gasto.importe)} € de ${gasto.concepto}. Regístralo a mano en el diario EA de la empresa 0, con la cuenta ${gasto.cuenta}.00000 (${gasto.nombre}) contra el banco 57200.00000, y en Documento pon el código de examen. Deja el asiento contabilizado.`,
       datos: [
@@ -617,7 +621,7 @@ const CIRCUITO_TESORERIA = {
 /* Parejas para relacionar */
 const RELACIONES: { origen: string; pregunta: string; titulos: [string, string]; pares: [string, string][]; explicacion: string }[] = [
   {
-    origen: 'asientos',
+    origen: 'icon-contabilidad',
     pregunta: 'Une cada cuenta con lo que recoge.',
     titulos: ['Cuenta', 'Qué recoge'],
     pares: [
@@ -739,7 +743,7 @@ function generarDatos(r: ReturnType<typeof rng>): { importe: PreguntaDato[]; cue
     { tipo: 'dato', formato: 'cuenta', origen: 'compras', pregunta: 'Contabilizas el albarán de compra. ¿Qué cuenta va al Haber?', esperado: '40090', placeholder: '00000', explicacion: 'El albarán lleva la 60000 al Debe contra la 40090 Compras pendiente de factura.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'ventas', pregunta: 'Contabilizas una factura de venta. ¿En qué cuenta va el IVA repercutido?', esperado: '47000', placeholder: '00000', explicacion: 'La factura de venta lleva 43000 al Debe y 47000 y 70000 al Haber.' },
     { tipo: 'dato', formato: 'cuenta', origen: 'carteras', pregunta: 'Cobras un efecto por banco con COBD. ¿Qué cuenta va al Debe?', esperado: '57200', placeholder: '00000', explicacion: 'El cobro lleva Bancos 57200 al Debe y Clientes 43000 al Haber.' },
-    { tipo: 'dato', formato: 'cuenta', origen: 'parametrizacion', pregunta: 'Registras una factura de compra con IVA. ¿En qué cuenta va el IVA soportado?', esperado: '47200', placeholder: '00000', explicacion: 'El IVA de las compras va al Debe de la 47200.' },
+    { tipo: 'dato', formato: 'cuenta', origen: 'icon-contabilidad', pregunta: 'Registras una factura de compra con IVA. ¿En qué cuenta va el IVA soportado?', esperado: '47200', placeholder: '00000', explicacion: 'El IVA de las compras va al Debe de la 47200.' },
   ];
   cuenta.push({ tipo: 'dato', formato: 'cuenta', origen: 'tesoreria', pregunta: 'El flujo de comisión de un movimiento de tesorería lleva la cuenta de servicios bancarios. ¿Cuál es?', esperado: '62600', placeholder: '00000', explicacion: 'Las comisiones bancarias van a la 62600 Servicios bancarios y similares, al Debe, contra el banco 57200.' });
   return { importe, cuenta };
@@ -792,7 +796,7 @@ export function generarTeoria(codigo: string): PreguntaExamen[] {
   // Ordenar: un circuito del vídeo y otro de un manual
   const cvs = [...CIRCUITOS_VIDEO.map((c) => ({ origen: `vídeo cap. ${c.cap}`, pregunta: c.pregunta, pasos: c.pasos, explicacion: c.explicacion })), CIRCUITO_TESORERIA];
   const cv = r.pick(cvs);
-  const mods = MODULOS.filter((m) => !esFinanzas(m.id) && m.circuito.length >= 4 && m.circuito.length <= 7);
+  const mods = MODULOS.filter((m) => !esFinanzas(m.id) && m.id !== 'fundamentos' && m.ejercicios.length > 0 && m.circuito.length >= 4 && m.circuito.length <= 7);
   const cm = r.pick(mods);
   // En la versión nueva del ERP no hay paso «Conformar»: no se pide ordenarlo.
   const pasosCm = cm.circuito.filter((x) => !/conformar/i.test(x));
@@ -1505,7 +1509,7 @@ export function checklistExaminador(caso: Caso): string[] {
     `Albarán: asiento 60000 Debe / 40090 Haber por ${p2(caso.compra.base)}, con el número declarado.`,
     `Factura de compra con «Factura proveedor» ${caso.codigo}: base ${p2(caso.compra.base)}, IVA ${p2(caso.compra.iva)}, total ${p2(caso.compra.total)}, Contabilizada; asiento de 5 líneas (40000 H, 47200 D, 60000 D, 40090 D, 60000 H).`,
     `Cartera de pagos: un efecto EF de ${caso.proveedor} por ${p2(caso.compra.total)}, en PE, a 30 días de la fecha de factura (sin pagar).`,
-    `Cliente ${caso.cliente}: relación CLI 43000.00000 y condición de cobro EF / PE / 30D; cadena O${ini} › P${ini} › A${ini}2 › F${ini} con los números declarados y el albarán SIN contabilizar.`,
+    `Cliente ${caso.cliente}: relación CLI (su subcuenta 43000) y condición de cobro EF / PE / 30D; cadena O${ini} › PV${ini} › AP${ini} › FP${ini} con los números declarados y el albarán SIN contabilizar.`,
     `Factura de venta: base ${p2(caso.venta.base)}, IVA ${p2(caso.venta.iva)}, total ${p2(caso.venta.total)}, Contabilizada con 43000 D / 47000 H / 70000 H.`,
     `Gestión de cobro COBD con BBVA_${ini}: el efecto de ${caso.cliente} está en CO y su asiento es 57200 D / 43000 H por ${p2(caso.venta.total)}.`,
     `Asientos, diario EA, Documento ${caso.codigo}: ${caso.gasto.cuenta}.00000 Debe ${p2(caso.gasto.importe)} / 57200.00000 Haber, Contabilizado.`,

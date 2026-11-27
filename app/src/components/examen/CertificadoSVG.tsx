@@ -104,7 +104,7 @@ export function CertificadoSVG({ nombre, codigo, fecha, nota, estado, validacion
   const letras = Array.from(nombre);
   const tamNombre = Math.min(60, Math.round(1150 / Math.max(10, letras.length)));
   const pasoLetra = Math.min(0.055, 0.75 / Math.max(1, letras.length));
-  const micro = `O&S CONSULTORES · TALLER AXIONAL · DEISTER AXIONAL · ${codigo} · `;
+  const micro = `O&S CONSULTORES · TALLER AXIONAL · AXIONAL DEISTER VNEXT · ${codigo} · `;
   const microInf = micro.repeat(Math.ceil(1100 / (micro.length * 3.3)));
   const microSup = `DOCUMENTO DE FORMACIÓN · ${codigo} · ${validacion ?? 'SIN VALIDAR'} · `.repeat(10);
   const textoEstado = estado === 'validado' ? `Validado con el código ${validacion ?? ''}` : estado === 'pendiente' ? 'Pendiente de validación por el examinador' : 'Muestra sin valor';
@@ -115,7 +115,7 @@ export function CertificadoSVG({ nombre, codigo, fecha, nota, estado, validacion
       viewBox={`0 0 ${W} ${H}`}
       width="100%"
       role="img"
-      aria-label={`Certificado de ${nombre}. Practicante certificado en Deister Axional por O&S Consultores. Fecha ${fecha}. Nota ${nota}. Código de examen ${codigo}. ${textoEstado}.`}
+      aria-label={`Certificado de ${nombre}. Practicante certificado en Axional Deister VNext por O&S Consultores. Fecha ${fecha}. Nota ${nota}. Código de examen ${codigo}. ${textoEstado}.`}
       style={{ display: 'block', fontFamily: TEXTO }}
     >
       <defs>
@@ -277,7 +277,7 @@ export function CertificadoSVG({ nombre, codigo, fecha, nota, estado, validacion
           ha superado el examen final de Practicando Axional Deister VNext y es
         </text>
         <text x={CX} y={478} textAnchor="middle" fontFamily={DISPLAY} fontWeight={700} fontSize="29" fill={ARC_DEEP}>
-          Practicante certificado en Deister Axional
+          Practicante certificado en Axional Deister VNext
         </text>
         <text x={CX} y={510} textAnchor="middle" fontSize="16" fill={GRIS}>
           compras, ventas, maestros, asientos, parametrización, carteras, tesorería y finanzas

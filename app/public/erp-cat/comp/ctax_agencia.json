@@ -1,0 +1,216 @@
+{
+ "c": "ctax_agencia",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "agen_code": {
+   "req": 1,
+   "lov": {
+    "obj": "ctax_agencia",
+    "clave": "agen_code",
+    "cols": [
+     "agen_code",
+     "agen_name",
+     "agen_codcal",
+     "agen_cifiss"
+    ],
+    "desc": "agen_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(agen_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(agen_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "agen_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agen_codcal": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccalendah",
+    "clave": "codcal",
+    "cols": [
+     "codcal",
+     "nomcal",
+     "fesnac",
+     "fesreg"
+    ],
+    "desc": "nomcal"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(agen_codcal) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(agen_codcal)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "agen_codcal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agen_cifage": {
+   "req": 1,
+   "mayus": 1
+  },
+  "agen_zonimp": {
+   "req": 1,
+   "def": "ESCO",
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   }
+  },
+  "agen_codnac": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(agen_codnac) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(agen_codnac)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "agen_codnac",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agen_ciftyp": {
+   "req": 1,
+   "mayus": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!vacio(agen_ciftyp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(agen_ciftyp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "agen_ciftyp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agen_cifiss": {
+   "req": 1,
+   "mayus": 1,
+   "def": "ES",
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(agen_cifiss) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(agen_cifiss)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "agen_cifiss",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agen_poblac": {
+   "lov": {
+    "obj": "cmunicip",
+    "clave": "nommun",
+    "cols": [
+     "codnac",
+     "codprv",
+     "codreg",
+     "nommun",
+     "codpos"
+    ],
+    "desc": "codnac"
+   }
+  },
+  "agen_idioma": {
+   "req": 1,
+   "def": "es",
+   "lov": {
+    "obj": "ctipoidi",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomidi"
+    ],
+    "desc": "nomidi"
+   }
+  },
+  "agen_codprv": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "codigo"
+   }
+  },
+  "agen_codpos": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cmunicip",
+    "clave": "codpos",
+    "cols": [
+     "codnac",
+     "codprv",
+     "codreg",
+     "nommun",
+     "codpos"
+    ],
+    "desc": "nommun"
+   }
+  },
+  "agen_telef1": {
+   "mayus": 1
+  },
+  "agen_telef2": {
+   "mayus": 1
+  },
+  "agen_fax1": {
+   "mayus": 1
+  },
+  "agen_fax2": {
+   "mayus": 1
+  },
+  "agen_email": {
+   "reglas": [
+    {
+     "si": "!vacio(agen_email) && !/^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9\\-]+\\.)+([a-zA-Z0-9\\-\\.]+)+([,;]([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9\\-]+\\.)+([a-zA-Z0-9\\-\\.]+))*$/.test(agen_email)",
+     "msg": "La definición del correo electrónico no es válida",
+     "tipo": "error",
+     "campo": "agen_email",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "agen_ctafin": {
+   "mayus": 1
+  },
+  "idversionsii": {
+   "req": 1,
+   "def": "1.1"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Agencias tributarias",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Pestañas de la ficha: Formulario principal | Empresa y agencias tributarias | Período agencia"
+ ]
+}

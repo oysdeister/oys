@@ -1,0 +1,370 @@
+{
+ "id": "compras-generar-factura",
+ "numero": 8,
+ "titulo": "Generar la factura desde el albarán",
+ "objetivo": "Generarás la factura de T{INI} desde el albarán contabilizado, la contabilizarás y verás cómo se salda la cuenta de facturas pendientes de recibir.",
+ "concepto": "Cuando llega la factura del proveedor, no hace falta teclearla entera. Se genera desde el albarán: las líneas pasan solas y tú solo indicas el número de la factura del proveedor y su importe.\n\nEse importe es el que pone el papel. El ERP lo compara con el que calcula él: base más IVA. Si coinciden, la factura sale validada.\n\nAl contabilizar la factura, el asiento salda la 40090 del albarán y anota la deuda real con el proveedor en su cuenta 40000.\n\nEjemplo comprobado: la factura trae 60,00 y el ERP calcula 60,50. Aun así sale validada y contabiliza por 60,50, el importe que calcula el ERP.\n\nLos números de documento de los ejemplos (0FC000021, asiento 79…) son orientativos. Usa siempre los tuyos.",
+ "duracionMin": 20,
+ "secciones": [
+  {
+   "id": "compras-generar-factura-generar",
+   "titulo": "Generar la factura",
+   "paraQueSirve": "Aquí creas la factura de compra a partir del albarán. Las líneas y el proveedor se copian del albarán.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Albaranes",
+    "Albaranes"
+   ],
+   "explicacion": [
+    "Parte del albarán contabilizado del bloque anterior, el de T{INI}.",
+    "«Generar factura» está en el desplegable «Acciones» de la barra superior. Es la tipología de factura que tiene asignada el albarán (FCOA en el ejemplo).",
+    "Tras generar, el albarán pasa a «Facturado» y ya no se puede facturar otra vez."
+   ],
+   "campos": [
+    {
+     "campo": "Fecha factura *",
+     "significado": "Día de la factura. El ERP propone hoy.",
+     "ejemplo": "Hoy"
+    },
+    {
+     "campo": "Factura proveedor *",
+     "significado": "Número de la factura en papel del proveedor. Va a los libros de IVA.",
+     "ejemplo": "FRA-{INI}-003"
+    },
+    {
+     "campo": "Importe factura *",
+     "significado": "Total de la factura con IVA, tal como pone el papel. El ERP lo compara con su cálculo.",
+     "ejemplo": "60,50 (50,00 de base más 10,50 de IVA)"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Abre el albarán contabilizado de T{INI} y pulsa «Acciones».",
+     "pregunta": "Estás en el albarán de T{INI}, ya contabilizado. ¿Dónde está «Generar factura»?",
+     "detalle": "El desplegable muestra «Generar factura», «Actualizar datos económicos» y «Copiar».",
+     "imagen": "cob-genfac-0.webp",
+     "hotspot": {
+      "x": 65.1,
+      "y": 6.0,
+      "w": 5.6,
+      "h": 3.6,
+      "etiqueta": "Acciones"
+     }
+    },
+    {
+     "texto": "Elige «Generar factura». En el diálogo escribe la Factura proveedor y el Importe factura.",
+     "pregunta": "Se ha abierto el diálogo «Generar factura». ¿Dónde escribes el número de la factura del proveedor?",
+     "detalle": "Deja la Fecha factura que propone el ERP.",
+     "imagen": "cob-genfac-2.webp",
+     "hotspot": {
+      "x": 37.8,
+      "y": 47.5,
+      "w": 24.4,
+      "h": 4.6,
+      "etiqueta": "Factura proveedor"
+     }
+    },
+    {
+     "texto": "Escribe el importe de la factura con IVA.",
+     "pregunta": "¿Dónde tecleas el total de la factura?",
+     "detalle": "Si no coincide con el que calcula el ERP, la factura se genera igualmente. Ejemplo: 60,00 en el papel y 60,50 calculados.",
+     "imagen": "cob-genfac-2.webp",
+     "hotspot": {
+      "x": 37.8,
+      "y": 52.8,
+      "w": 24.4,
+      "h": 4.6,
+      "etiqueta": "Importe factura"
+     }
+    },
+    {
+     "texto": "Pulsa «Aceptar».",
+     "pregunta": "¿Qué botón del diálogo genera la factura?",
+     "detalle": "El diálogo se cierra sin mensaje.",
+     "imagen": "cob-genfac-2.webp",
+     "hotspot": {
+      "x": 58.2,
+      "y": 61.0,
+      "w": 4.4,
+      "h": 3.3,
+      "etiqueta": "Aceptar"
+     }
+    },
+    {
+     "texto": "Fíjate en el albarán: el Estado documento ha pasado a «Facturado».",
+     "detalle": "Para ver la factura, abre el desplegable ⌄ junto a la estrella y elige «Facturas compras».",
+     "imagen": "cob-genfac-3.webp",
+     "hotspot": {
+      "x": 76.6,
+      "y": 36.0,
+      "w": 8.8,
+      "h": 3.6,
+      "etiqueta": "Facturado"
+     }
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Al generar la factura no sale ningún mensaje de éxito y la lista de facturas no muestra la nueva."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "La lista se queda en caché. Abre la factura desde el desplegable ⌄ del albarán › «Facturas compras». El Docflow del albarán también puede tardar en actualizarse."
+    },
+    {
+     "tipo": "nota",
+     "texto": "El número de factura lo pone el numerador al guardar. En el ejemplo salió 0FC000021."
+    }
+   ]
+  },
+  {
+   "id": "compras-generar-factura-validar",
+   "titulo": "La factura generada y sus importes",
+   "paraQueSirve": "Aquí compruebas que las líneas y los importes de la factura coinciden con el albarán.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Facturas",
+    "Facturas"
+   ],
+   "explicacion": [
+    "La factura sale del albarán con una línea: 13500620, 4 unidades a 12,50 = 50,00.",
+    "Sale en estado Validado, con Validaciones a 0.",
+    "En el ejemplo, Importe factura es 60,00, Base imponible 50,00 e Importe total 60,50: hay 0,50 de diferencia entre lo declarado y lo calculado."
+   ],
+   "campos": [
+    {
+     "campo": "Importe factura",
+     "significado": "Lo que tú declaraste en el diálogo.",
+     "ejemplo": "60,00"
+    },
+    {
+     "campo": "Base imponible",
+     "significado": "Suma de las líneas sin IVA.",
+     "ejemplo": "50,00"
+    },
+    {
+     "campo": "Importe total",
+     "significado": "Lo que calcula el ERP: base más IVA.",
+     "ejemplo": "60,50"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Abre la factura generada y comprueba el Estado: Validado.",
+     "pregunta": "¿Dónde ves si la factura quedó validada?",
+     "imagen": "cob-genfac-4.webp"
+    },
+    {
+     "texto": "Compara Importe factura, Base imponible e Importe total.",
+     "pregunta": "¿Qué tres importes comparas para ver la diferencia con el papel del proveedor?",
+     "detalle": "Si la diferencia es mayor de lo que tolera tu tipología, la factura quedaría bloqueada.",
+     "imagen": "cob-genfac-4.webp",
+     "hotspot": {
+      "x": 74.2,
+      "y": 90.5,
+      "w": 22.0,
+      "h": 5.0,
+      "etiqueta": "Importe factura · Base imponible · Importe total"
+     }
+    },
+    {
+     "texto": "Abre la pestaña «Líneas» y comprueba artículo, cantidad y precio.",
+     "detalle": "Verás 13500620, 4,000 UNIDAD, precio 12,500000 e importe neto 50,00."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "El control entre albarán y factura no es una comparación con bloqueo automático. Lo hacen las validaciones, los datos de control y el informe «Diferencias entre albaranes y facturas» (Gestión › Compras › Facturas › Situación)."
+    },
+    {
+     "tipo": "nota",
+     "texto": "En la demo, con 0,50 de diferencia la factura salió validada. Qué diferencia se tolera depende de la tipología de factura."
+    }
+   ]
+  },
+  {
+   "id": "compras-generar-factura-contabilizar",
+   "titulo": "Contabilizar la factura",
+   "paraQueSirve": "Aquí pasas la factura a la contabilidad. El asiento salda la 40090 del albarán y crea la deuda real con el proveedor.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Facturas",
+    "Facturas"
+   ],
+   "explicacion": [
+    "En la factura validada, pulsa «Contabilizar». El diálogo pide la Fecha registro contable.",
+    "El asiento tiene cinco líneas. Es más largo que el del albarán porque revierte el albarán y registra el IVA.",
+    "Para volver a ver el asiento, usa el desplegable ⌄ › «Asientos contables»."
+   ],
+   "campos": [
+    {
+     "campo": "Fecha registro contable *",
+     "significado": "Día del asiento. El ERP propone hoy.",
+     "ejemplo": "Hoy"
+    },
+    {
+     "campo": "40000.<tercero> · Proveedores",
+     "significado": "Deuda real con el proveedor, con IVA. Va al haber.",
+     "ejemplo": "Haber 60,50"
+    },
+    {
+     "campo": "47200.00000 · HP, IVA exento",
+     "significado": "IVA soportado. Va al debe. El rótulo es el del plan de la demo.",
+     "ejemplo": "Debe 10,50"
+    },
+    {
+     "campo": "60000.00000 y 40090.00000",
+     "significado": "Líneas que saldan el asiento del albarán: 40090 al debe y 60000 al haber.",
+     "ejemplo": "50,00 cada una"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "En la factura validada, pulsa «Contabilizar» y acepta el diálogo.",
+     "pregunta": "La factura está validada. ¿Qué botón de la barra la pasa a la contabilidad?",
+     "detalle": "El botón pasa a «Descontabilizar» y la Situación a «Contabilizada».",
+     "imagen": "cob-factura-contabilizada.webp",
+     "hotspot": {
+      "x": 85.6,
+      "y": 36.4,
+      "w": 5.6,
+      "h": 3.6,
+      "etiqueta": "Contabilizada"
+     }
+    },
+    {
+     "texto": "Abre el desplegable ⌄ junto a la estrella y elige «Asientos contables».",
+     "detalle": "Se abre el asiento de la factura: diario DC, serie 0FC, documento = factura del proveedor."
+    },
+    {
+     "texto": "En «Líneas de apuntes», comprueba las cinco líneas.",
+     "pregunta": "¿Qué cuenta recibe la deuda real con el proveedor y por cuánto?",
+     "detalle": "Debe y Haber suman 110,50.",
+     "imagen": "cob-factura-contab-3.webp"
+    },
+    {
+     "texto": "Comprueba que 40090 va ahora al debe: el asiento salda lo que dejó el albarán.",
+     "detalle": "Sin este saldo, la compra estaría contada dos veces.",
+     "imagen": "cob-factura-contab-3.webp"
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Tras contabilizar, la ventana del asiento puede mostrar el asiento del albarán (el 78 del ejemplo) en lugar del de la factura (el 79)."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Cierra la ventana, recarga la factura y ábrela desde ⌄ › «Asientos contables»."
+    },
+    {
+     "tipo": "nota",
+     "texto": "Asiento del ejemplo: 40000.<tercero> H 60,50 · 47200.00000 D 10,50 · 60000.00000 D 50,00 · 40090.00000 D 50,00 · 60000.00000 H 50,00."
+    },
+    {
+     "tipo": "problema",
+     "texto": "Si el proveedor tiene descuentos o pronto pago vacíos, la factura no contabiliza («Cannot invoke Object.toString() because n is null»)."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Pon a 0 los descuentos 1, 2 y 3 y el pronto pago del proveedor antes de generar la factura."
+    }
+   ]
+  }
+ ],
+ "test": [
+  {
+   "pregunta": "¿Dónde está la acción «Generar factura»?",
+   "opciones": [
+    "En el menú de Impuestos",
+    "En el desplegable «Acciones» del albarán",
+    "En la lista de pedidos",
+    "En el diario contable"
+   ],
+   "correcta": 1,
+   "explicacion": "Se genera desde el albarán, con el desplegable «Acciones»."
+  },
+  {
+   "pregunta": "¿Qué debes escribir en el diálogo «Generar factura»?",
+   "opciones": [
+    "Solo la fecha",
+    "La Factura proveedor y el Importe factura",
+    "Las líneas una a una",
+    "El número de asiento"
+   ],
+   "correcta": 1,
+   "explicacion": "Las líneas llegan del albarán. Tú indicas el número y el importe del papel del proveedor."
+  },
+  {
+   "pregunta": "En el ejemplo, la factura declarada era de 60,00 y el ERP calculó 60,50. ¿Por qué importe se contabilizó?",
+   "opciones": [
+    "60,00",
+    "60,50",
+    "50,00",
+    "0,50"
+   ],
+   "correcta": 1,
+   "explicacion": "El asiento usa el importe calculado: base 50,00 más 10,50 de IVA."
+  },
+  {
+   "pregunta": "¿Qué hace el asiento de la factura con la cuenta 40090?",
+   "opciones": [
+    "La deja igual",
+    "La pasa al debe y salda la del albarán",
+    "La borra",
+    "La pasa al IVA"
+   ],
+   "correcta": 1,
+   "explicacion": "La 40090 va al debe por 50,00 y compensa el haber del albarán."
+  },
+  {
+   "pregunta": "¿Cómo abres la factura generada si la lista no la muestra?",
+   "opciones": [
+    "Creando otra",
+    "Desde ⌄ › «Facturas compras» en el albarán",
+    "Reiniciando el ERP",
+    "No se puede"
+   ],
+   "correcta": 1,
+   "explicacion": "La lista queda en caché. El desplegable del albarán enlaza con su factura."
+  }
+ ],
+ "checklist": [
+  "Abre el albarán contabilizado de T{INI}.",
+  "Despliega «Acciones» y elige «Generar factura».",
+  "Escribe una Factura proveedor propia (FRA-{INI}-003).",
+  "Escribe el importe con IVA.",
+  "Acepta y comprueba que el albarán queda «Facturado».",
+  "Abre la factura desde ⌄ › «Facturas compras».",
+  "Comprueba Importe factura, Base imponible e Importe total.",
+  "Pulsa «Contabilizar» en la factura y acepta.",
+  "Abre «Asientos contables» desde ⌄ y revisa las cinco líneas.",
+  "Comprueba que 40090 va al debe y 40000 al haber.",
+  "Anota el número de factura y el de asiento."
+ ],
+ "problemas": [
+  {
+   "problema": "La factura no aparece en la lista de facturas.",
+   "solucion": "La lista está en caché. Abre la factura desde ⌄ › «Facturas compras» del albarán."
+  },
+  {
+   "problema": "«Cannot invoke Object.toString() because n is null» al contabilizar.",
+   "solucion": "El proveedor tiene los descuentos o el pronto pago vacíos. Ponlos a 0 en la ficha del proveedor y genera otra factura."
+  },
+  {
+   "problema": "No sale «Generar factura» en «Acciones».",
+   "solucion": "El albarán ya está facturado, o su tipología no tiene tipo de factura asignado."
+  }
+ ],
+ "aprendido": [
+  "Has generado la factura desde el albarán con «Acciones» › «Generar factura».",
+  "Has comprobado que las líneas se copian solas y que el importe declarado se compara con el calculado.",
+  "Has contabilizado la factura: 40000 al haber, IVA al debe y 40090 al debe.",
+  "Sabes que el asiento de la factura salda el del albarán."
+ ]
+}

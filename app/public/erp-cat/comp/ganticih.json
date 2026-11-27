@@ -1,0 +1,228 @@
+{
+ "c": "ganticih",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(1==1)",
+   "ro": "context.isOnUpdate()"
+  },
+  "tercer": {
+   "req": 1,
+   "ro": "climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "ganticid",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecant": {
+   "req": 1
+  },
+  "tipdir": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "climos": {
+   "lov": {
+    "obj": "gclimost",
+    "clave": "user_code",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "docori": {
+   "reqSi": "!(tabori == null)",
+   "ro": "context.isOnUpdate() || (tabori == null)",
+   "mayus": 1,
+   "lov": {
+    "obj": "gven_vales",
+    "clave": "docser",
+    "filtro": "tabori == 'gven_vales' && climos != null"
+   }
+  },
+  "moneda": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "impant": {
+   "req": 1,
+   "ro": "ganticid.tipfac != null",
+   "def": 0
+  },
+  "impacu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "impanu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "doclock": {
+   "def": "V"
+  },
+  "basant": {
+   "req": 1,
+   "ro": "ganticid.tipfac == null",
+   "def": 0
+  },
+  "basacu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "reglas": [
+    {
+     "si": "!(((estcab == null || ['P','E','V'].includes(estcab))))",
+     "msg": "Los valores posibles del estado de factura son: [P] provisional, [E] bloqueada y [V] validada.",
+     "tipo": "error",
+     "campo": "estcab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "clasif": {
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]odificar, [B]orrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tax_oper": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tax_code": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((tabori == null || tabori.length === 0)) && ((docori == null || docori.length === 0))) || ((!(tabori == null || tabori.length === 0)) && (!(docori == null || docori.length === 0)))))",
+   "msg": "El documento y tabla origen se han de informar conjuntamente.",
+   "tipo": "error",
+   "campo": "docori",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((date_invoice == null)) || ((date_contab == null))))",
+   "msg": "Un anticipo no puede estar facturado y contabilizado al mismo tiempo.",
+   "tipo": "error",
+   "campo": "date_invoice",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((!(tax_oper == null || tax_oper.length === 0)) && (!(tax_code == null || tax_code.length === 0))) || (((tax_oper == null || tax_oper.length === 0)) && ((tax_code == null || tax_code.length === 0)))))",
+   "msg": "Si el tipo de operación está informado, el tipo de IVA también debe estarlo, y viceversa",
+   "tipo": "error",
+   "campo": "tax_code",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((date_contab == null)) && ((feccon == null))) || ((!(date_contab == null)) && (!(feccon == null)))))",
+   "msg": "La fecha contable (feccon) y la fecha de realización de la contabilización debe estar informadas conjuntamente.",
+   "tipo": "error",
+   "campo": "feccon",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'"
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P' && date_contab == null"
+  },
+  "BUT_DESCONTABILIZAR": {
+   "l": "Descontabilizar",
+   "nota": "Activo si date_contab != null; condición de servidor"
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "nota": "Activo si date_contab  == null  && date_invoice == null && estcab != 'P'; condición de servidor; pide confirmación"
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

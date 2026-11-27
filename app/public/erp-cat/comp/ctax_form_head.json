@@ -1,0 +1,129 @@
+{
+ "c": "ctax_form_head",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "formh_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_form_head",
+    "clave": "formh_code",
+    "cols": [
+     "formh_code",
+     "formh_name"
+    ],
+    "desc": "formh_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(formh_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(formh_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "formh_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "formh_name": {
+   "req": 1
+  },
+  "formh_limit": {
+   "mayus": 1
+  },
+  "formh_class": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_class",
+    "clave": "class_code",
+    "cols": [
+     "class_code",
+     "class_name",
+     "class_type",
+     "class_clase"
+    ],
+    "desc": "class_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(formh_class) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(formh_class)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "formh_class",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "formh_indest": {
+   "req": 1,
+   "def": 0
+  },
+  "formh_numera": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "botones": {
+  "BUT_COPY0": {
+   "l": "Copiar",
+   "nota": "Copia el documento a un nuevo registro. · Se oculta si no está habilitado · Abre un diálogo con campos · Diálogo «Copiar» con el texto «Copia el documento a un nuevo registro.»",
+   "dialogoTit": "Copiar",
+   "dialogo": [
+    {
+     "n": "formh_code",
+     "l": "Código declaración",
+     "t": "s",
+     "h": "Código de declaración"
+    },
+    {
+     "n": "formh_name",
+     "l": "Descripción",
+     "t": "s",
+     "h": "Descripción de declaración"
+    }
+   ],
+   "ok": "Éxito",
+   "pasos": [
+    {
+     "crea": {
+      "obj": "ctax_form_head",
+      "valores": {
+       "formh_code": "ent.formh_code",
+       "formh_name": "ent.formh_name",
+       "formh_class": "formh_class",
+       "formh_limit": "formh_limit",
+       "formh_indest": "formh_indest",
+       "formh_numera": "formh_numera",
+       "formh_info": "formh_info",
+       "formh_linkdoc": "formh_linkdoc"
+      }
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "Copia también capítulos, grupos, líneas, operaciones, preguntas y respuestas del modelo."
+     }
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Declaraciones fiscales › Modelos de declaración",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Pestañas de la ficha: Modelo | Preguntas | Respuestas | Capítulos",
+  "Probado en la demo: Copiar ES111 → CAP111 «Éxito»; la copia lleva 1 capítulo, 5 grupos, 9 líneas, 11 operaciones, 2 preguntas y 4 respuestas, igual que el original.",
+  "Copiar con un código que ya existe: responde sin error y no hace nada. Copiar con código vacío: la demo NO lo valida y crea un modelo con código «null» (lo borramos).",
+  "Borrar un modelo con hijos: «Key value for constraint (informix.p_ctax_form_head) is still being referenced.»; también capítulos («…p_ctax_form_chapter…»), preguntas («…p_ctax_form_question…») y líneas («…p_ctax_form_line…») mientras tengan dependientes. Orden de borrado: respuestas, operaciones, preguntas, líneas, grupos, capítulos, modelo.",
+  "probado: BUT_COPY0 (diálogo, éxito, código existente, código vacío), Borrar con hijos; sin menú ⌄. Crudos: raw/contabilidad/b1/R_copias.json, limp*.json, s/c11.*."
+ ],
+ "alBorrar": [
+  {
+   "si": "cuenta('ctax_form_chapter','formh_code',formh_code) > 0",
+   "msg": "Key value for constraint (informix.p_ctax_form_head) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ]
+}

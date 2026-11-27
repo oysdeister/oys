@@ -3,24 +3,29 @@ import { Glosa } from '../Glosario';
 import { motion } from 'framer-motion';
 import type { Seccion } from '../../types';
 import { conIni } from '../../lib/texto';
-import { Icon } from '../Icon';
 import { CapturaCampos } from './CapturaCampos';
 import { VerMas, partir, useRevela } from './Revela';
+import { Caja } from './Caja';
+import { cajaDe, cajaDeAviso, tramos } from './util';
 
-const TITULO_AVISO = { problema: 'Ojo', solucion: 'Solución', nota: 'Nota' } as const;
 const MAX_IDEAS = 3;
-const MAX_CAMPOS = 6;
-const MAX_PASOS = 5;
 
 /** Ruta de menú del ERP en forma de migas */
 export function RutaMenu({ ruta }: { ruta: string[] | null }) {
   if (!ruta || !ruta.length) return null;
+  return <Migas ruta={ruta} />;
+}
+
+/** Migas de menú: cada nivel en su pastilla, separados por › (decorativos) */
+function Migas({ ruta }: { ruta: string[] }) {
   return (
-    <div className="menu-path" aria-label={`Ruta de menú: ${ruta.join(', ')}`}>
+    <ol className="menu-path migas" aria-label={`Ruta de menú: ${ruta.join(' › ')}`}>
       {ruta.map((r, i) => (
-        <span key={i}>{r}</span>
+        <li key={i} aria-current={i === ruta.length - 1 ? 'location' : undefined}>
+          <span>{r}</span>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
 
@@ -52,93 +57,92 @@ export function Ideas({ parrafos, ini, max = MAX_IDEAS }: { parrafos: string[]; 
   );
 }
 
-/** Contenido de una sección: para qué sirve, ruta, explicación, campos y avisos */
-export function SeccionVista({ s, ini, conPasos = false, modulo }: { s: Seccion; ini: string; conPasos?: boolean; modulo?: string }) {
+/** Contenido de una sección, como lectura: para qué sirve, dónde está, explicación, campos y avisos */
+export function SeccionVista({ s, ini, conPasos = false, modulo, destacar = false }: { s: Seccion; ini: string; conPasos?: boolean; modulo?: string; destacar?: boolean }) {
   const t = (x: string) => conIni(x, ini);
-  const r = useRevela();
-  const [todosCampos, setTodosCampos] = useState(false);
-  const [todosPasos, setTodosPasos] = useState(false);
-  const campos = todosCampos ? s.campos : s.campos.slice(0, MAX_CAMPOS);
-  const pasos = todosPasos ? s.pasos : s.pasos.slice(0, MAX_PASOS);
+  const iDestacado = destacar ? s.avisos.findIndex((a) => a.tipo === 'problema') : -1;
+  const lead = s.paraQueSirve ? cajaDe(s.paraQueSirve) : null;
+  // Tabla de referencia (no de campos): si todos los «ejemplos» son rutas de menú, las cabeceras lo dicen
+  const esMapa = s.campos.length > 1 && s.campos.every((c) => !!c.ejemplo && c.ejemplo.includes('›'));
   return (
-    <div className="sec-body">
-      {s.paraQueSirve && (
-        <motion.div className="callout why sv-why" {...r(0)}>
-          <span className="sv-why-ico" aria-hidden="true">
-            <Icon name="cerebro" size={20} />
-          </span>
-          <span>
-            <b>¿Para qué sirve?</b>
+    <div className="sec-body lect">
+      {s.paraQueSirve &&
+        (lead ? (
+          <Caja tipo={lead.tipo}>
+            <Glosa>{t(lead.texto)}</Glosa>
+          </Caja>
+        ) : (
+          <p className="lect-lead">
             <Glosa>{t(s.paraQueSirve)}</Glosa>
-          </span>
-        </motion.div>
-      )}
+          </p>
+        ))}
       {s.ruta && s.ruta.length > 0 && (
-        <motion.div className="sec-ruta" {...r(1)}>
-          <span className="small muted">Dónde está</span>
-          <RutaMenu ruta={s.ruta.map(t)} />
-        </motion.div>
+        <div className="lect-donde">
+          <span className="lect-donde-k">En el ERP</span>
+          <Migas ruta={s.ruta.map(t)} />
+        </div>
       )}
-      <Ideas parrafos={s.explicacion} ini={ini} />
+      {tramos(s.explicacion).map((tr, k) =>
+        'lista' in tr ? (
+          <ul key={k} className="lect-lista">
+            {tr.lista.map((p, i) => (
+              <li key={i}>
+                <Glosa>{t(p)}</Glosa>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Caja key={k} tipo={tr.caja.tipo}>
+            <Glosa>{t(tr.caja.texto)}</Glosa>
+          </Caja>
+        ),
+      )}
       {modulo ? (
         <CapturaCampos s={s} modulo={modulo} ini={ini} />
       ) : (
         s.campos.length > 0 && (
-          <motion.div className="sec-campos sv-campos" {...r(0)}>
-            <table className="fields">
-              <thead>
-                <tr>
-                  <th scope="col">Campo</th>
-                  <th scope="col">Qué significa</th>
-                  <th scope="col">Ejemplo</th>
+          <table className="fields lect-campos">
+            <thead>
+              <tr>
+                <th scope="col">{esMapa ? 'Código en el buscador' : 'Campo'}</th>
+                <th scope="col">{esMapa ? 'Qué guarda' : 'Qué es'}</th>
+                <th scope="col">{esMapa ? 'Ruta del menú' : 'Ejemplo'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {s.campos.map((c, i) => (
+                <tr key={i}>
+                  <td>{t(c.campo)}</td>
+                  <td>
+                    <Glosa>{t(c.significado)}</Glosa>
+                  </td>
+                  <td>{c.ejemplo ? <code>{t(c.ejemplo)}</code> : null}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {campos.map((c, i) => (
-                  <tr key={i}>
-                    <td>{t(c.campo)}</td>
-                    <td><Glosa>{t(c.significado)}</Glosa></td>
-                    <td>{c.ejemplo ? <code>{t(c.ejemplo)}</code> : null}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {s.campos.length > MAX_CAMPOS && (
-              <VerMas abierto={todosCampos} resto={s.campos.length - MAX_CAMPOS} que="filas más" onClick={() => setTodosCampos((v) => !v)} />
-            )}
-          </motion.div>
+              ))}
+            </tbody>
+          </table>
         )
       )}
       {conPasos && s.pasos.length > 0 && (
-        <div>
-          <ol className="sv-pasos">
-            {pasos.map((p, i) => (
-              <motion.li key={i} {...r(i)}>
-                <span className="sv-paso-n" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <span>
-                  <span><Glosa>{t(p.texto)}</Glosa></span>
-                  {p.detalle && <small className="muted"><Glosa>{t(p.detalle)}</Glosa></small>}
-                </span>
-              </motion.li>
-            ))}
-          </ol>
-          {s.pasos.length > MAX_PASOS && <VerMas abierto={todosPasos} resto={s.pasos.length - MAX_PASOS} que="pasos más" onClick={() => setTodosPasos((v) => !v)} />}
-        </div>
-      )}
-      {s.avisos.length > 0 && (
-        <div className={`sv-avisos${s.avisos.length > 1 ? ' varios' : ''}`}>
-          {s.avisos.map((a, i) => (
-            <motion.div key={i} className={`callout ${a.tipo} sv-aviso`} {...r(i)}>
-              <b>
-                <Icon name={a.tipo === 'problema' ? 'aviso' : a.tipo === 'solucion' ? 'check' : 'cerebro'} size={16} /> {TITULO_AVISO[a.tipo] ?? 'Nota'}
-              </b>
-              <Glosa>{t(a.texto)}</Glosa>
-            </motion.div>
+        <ol className="lect-pasos">
+          {s.pasos.map((p, i) => (
+            <li key={i}>
+              <Glosa>{t(p.texto)}</Glosa>
+              {p.detalle && (
+                <small className="muted">
+                  {' '}
+                  <Glosa>{t(p.detalle)}</Glosa>
+                </small>
+              )}
+            </li>
           ))}
-        </div>
+        </ol>
       )}
+      {s.avisos.map((a, i) => (
+        <Caja key={i} tipo={cajaDeAviso(a.tipo)} destacado={i === iDestacado}>
+          <Glosa>{t(a.texto)}</Glosa>
+        </Caja>
+      ))}
     </div>
   );
 }

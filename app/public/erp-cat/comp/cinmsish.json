@@ -1,0 +1,54 @@
+{
+ "c": "cinmsish",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nombre": {
+   "req": 1
+  },
+  "tipo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((tipo == null || ['L','D','I','N'].includes(tipo))))",
+     "msg": "El tipo debe ser Lineal [L], Decreciente [D], Inventario [I] o Valor neto [N].",
+     "tipo": "error",
+     "campo": "tipo",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('cinmsish','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_cinmsish) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "!['L','D','I','N'].includes(tipo)",
+   "msg": "Check constraint (informix.c_cinmsish1) failed.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Detalle por años en la subrejilla cinmsisl (Orden, % Amortización). En TUTORIAL: D Decreciente y L Lineal.",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.»."
+ ]
+}

@@ -1,0 +1,166 @@
+{
+ "c": "ctax_grpfis",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "grpf_fecini": {
+   "req": 1
+  },
+  "grpf_fecfin": {
+   "req": 1
+  },
+  "grpf_grpemp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "choldinh",
+    "clave": "holcode",
+    "cols": [
+     "holcode",
+     "holname"
+    ],
+    "desc": "holname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(grpf_grpemp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(grpf_grpemp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "grpf_grpemp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "grpf_teremi": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(grpf_teremi) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(grpf_teremi)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "grpf_teremi",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(grpf_teremi) && !existe('ctercero','codigo',grpf_teremi)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_grpfis2).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "grpf_teremi"
+    }
+   ]
+  },
+  "grpf_terrec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(grpf_terrec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(grpf_terrec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "grpf_terrec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "grpf_codart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "carticul",
+    "clave": "codart",
+    "cols": [
+     "codart",
+     "nomart",
+     "tipdes",
+     "taxkey"
+    ],
+    "desc": "nomart"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(grpf_codart) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(grpf_codart)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "grpf_codart",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "grpf_porbas": {
+   "req": 1
+  },
+  "grpf_codope": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(grpf_codope) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(grpf_codope)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "grpf_codope",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((grpf_teremi != grpf_terrec))",
+   "msg": "El Emisor no debe ser igual al Receptor.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Grupos fiscales",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (emisor CAPNC, receptor TCAPV, holding ALL; creado, modificado y borrado): emisor = receptor por servidor «Check constraint (informix.c_ctax_grpfis1) failed.» (la interfaz muestra antes «El Emisor no debe ser igual al Receptor.»), emisor inexistente «Missing key in referenced table for referential constraint (informix.f_ctax_grpfis2).».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones; sin menú ⌄."
+ ]
+}

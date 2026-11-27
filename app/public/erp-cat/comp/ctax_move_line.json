@@ -1,0 +1,274 @@
+{
+ "c": "ctax_move_line",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "taxl_type": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxl_type) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxl_type)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxl_type",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxl_oper": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxl_oper) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxl_oper)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxl_oper",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxl_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxl_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxl_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxl_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxl_nature": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxl_nature) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxl_nature)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxl_nature",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxl_valida": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_porcen": {
+   "req": 1
+  },
+  "taxl_porded": {
+   "req": 1,
+   "def": 100
+  },
+  "taxl_porpro": {
+   "req": 1,
+   "def": 100
+  },
+  "taxl_units": {
+   "mayus": 1,
+   "def": 1
+  },
+  "taxl_basimp": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_basnimp": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_cuoded": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_cuonded": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_basimpdiv": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_basnimpdiv": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_cuodeddiv": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_cuondeddiv": {
+   "req": 1,
+   "def": 0
+  },
+  "taxl_aptdes": {
+   "req": 1,
+   "ro": "1==1"
+  },
+  "taxl_rule": {
+   "ro": "context.isOnUpdate()",
+   "lov": {
+    "obj": "ctax_rule",
+    "clave": "rule_seqno",
+    "cols": [
+     "rule_codnac",
+     "rule_taxclass",
+     "rule_zonemp"
+    ],
+    "desc": "rule_codnac"
+   }
+  },
+  "taxl_seqno": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_move_line",
+    "clave": "taxl_seqno",
+    "cols": [
+     "taxl_type",
+     "taxl_oper",
+     "taxl_code"
+    ]
+   }
+  },
+  "taxh_seqno": {
+   "req": 1,
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_move_head",
+    "clave": "taxh_seqno",
+    "cols": [
+     "taxh_docser"
+    ],
+    "desc": "taxh_docser"
+   }
+  },
+  "taxl_linori": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_move_line",
+    "clave": "taxl_seqno",
+    "cols": [
+     "taxl_type",
+     "taxl_oper",
+     "taxl_code"
+    ]
+   }
+  },
+  "taxl_desgen": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "def": 0
+  },
+  "taxl_key": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operkey",
+    "clave": "opek_code",
+    "cols": [
+     "opek_code",
+     "opek_class",
+     "opek_name"
+    ],
+    "desc": "opek_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxl_key) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxl_key)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxl_key",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxl_telsend": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "def": 0
+  },
+  "taxl_dec_seqno": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_filebook",
+    "clave": "file_seqno",
+    "cols": [
+     "file_form",
+     "file_empcode",
+     "file_period"
+    ],
+    "desc": "file_form"
+   }
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((taxl_valida == null) || (taxl_valida == 1)) && ((taxl_valori == null))) || (((taxl_valida == null) || (taxl_valida != 1)) && ((taxl_valori == null || [1,2,3,4,5,6,7].includes(taxl_valori))))))",
+   "msg": "Si el impuesto no es validado, entonces requiere informar la causa de validación (1 Cashvat,2 Certificación obra privada,3 Certificación obra publica,4 Immuebles,5 Tracto sucesivo,6 Importación no despachada,7 Subproducto)",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((taxl_porpro == null) || (taxl_porpro >= 0)) && ((taxl_porpro == null) || (100 >= taxl_porpro))) && (((taxl_porded == null) || (taxl_porded >= 0)) && ((taxl_porded == null) || (100 >= taxl_porded)))))",
+   "msg": "El % prorrata y el % deductible debe estar entre 0 y 100.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((taxl_nature == 'R') && ((taxl_porcen == null) || (taxl_porcen != 0))) || (taxl_nature != 'R')))",
+   "msg": "Si la naturaleza es Arriendo [R], el % impuesto no debe ser 0, o la naturaleza no debe ser Arriendo [R].",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "taxl_porded > 100 || taxl_porded < 0",
+   "msg": "Check constraint (informix.c_ctax_move_line6) failed.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "taxl_porded"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › (subrejilla)",
+  "Permisos: alta no, modificar sí, borrar sí.",
+  "Probado en la demo sobre la línea del registro CAP 52: % deducible 150 por servidor «Check constraint (informix.c_ctax_move_line6) failed.» (la interfaz da antes el texto de cliente de alGuardar); operación inexistente «Cannot insert a null into column (ctax_move_head.taxh_key).» (lo lanza el trigger que recalcula la cabecera). Sin alta (permiso insert = no), sin botones ni menú ⌄.",
+  "probado: Guardar (modificación con errores), sin botones."
+ ]
+}

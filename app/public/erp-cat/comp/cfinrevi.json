@@ -1,0 +1,92 @@
+{
+ "c": "cfinrevi",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "fecrev": {
+   "req": 1
+  },
+  "porint": {
+   "req": 1
+  },
+  "cuoban": {
+   "req": 1,
+   "def": 0
+  },
+  "cuocal": {
+   "req": 1,
+   "def": 0
+  },
+  "capamo": {
+   "req": 1,
+   "def": 0
+  },
+  "intcap": {
+   "req": 1,
+   "def": 0
+  },
+  "frevid": {
+   "ro": "true",
+   "lov": {
+    "obj": "cfinrevi",
+    "clave": "frevid",
+    "cols": [
+     "frevid",
+     "estrev",
+     "user_created",
+     "user_updated"
+    ],
+    "desc": "estrev",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estrev": {
+   "def": "E",
+   "ro": "true"
+  },
+  "fconid": {
+   "req": 1,
+   "lov": {
+    "obj": "cfinconh",
+    "clave": "fconid",
+    "cols": [
+     "fconid",
+     "codcon",
+     "codfin",
+     "desfin"
+    ],
+    "desc": "codcon",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cambio": {
+   "def": 1,
+   "ro": "true"
+  },
+  "frevid_rel": {
+   "ro": "true"
+  }
+ },
+ "botones": {
+  "BUT_SIMULAR_AMORT_FINAN": {
+   "l": "Simular amortizaciones",
+   "nota": "Simula las amortizaciones del registro actual."
+  },
+  "BUT_CAMBIO_FECHA_LIQUIDA": {
+   "l": "Cambiar fecha liquidación",
+   "nota": "Actualiza las fechas de liquidación y revisión.. Visible/habilitado si: (cfinconh.role == 1 && estrev == 'G' && cfinconh.cadliq != null) || (cfinconh.role == 1 && cfinconh.metamo == 'I') || (cfinconh.role == 2 && cfinconh.metamo != 'A'). abre diálogo con campos"
+  },
+  "BUT_GENERAR_AMORT_FINAN": {
+   "l": "Generar amortizaciones",
+   "nota": "Genera las amortizaciones a partir del registro.. Visible/habilitado si: estrev == 'E'"
+  },
+  "BUT_ELIMINAR_AMORT_FINAN": {
+   "l": "Eliminar amortizaciones",
+   "nota": "Elimina todos los cuadros de amortizaciones generados.. Visible/habilitado si: estrev == 'G' && (cfinconh.role == 1 || (cfinconh.role == 2 && !cfinconh.fconid_rel ))"
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'HISTÓRICO REVISIONES Y AJUSTES', editMode CELL, 0 filas en la demo; permisos insert=False update=True delete=True.",
+  "no probado: Simular amortizaciones, Cambiar fecha liquidación, Generar amortizaciones, Eliminar amortizaciones — sin contratos de financiación en TUTORIAL; solo metadatos."
+ ]
+}

@@ -1,0 +1,277 @@
+{
+ "c": "gven_presupp",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "fecini": {
+   "req": 1
+  },
+  "fecfin": {
+   "req": 1
+  },
+  "codpre": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gven_presupt",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "numrev": {
+   "req": 1,
+   "def": 0
+  },
+  "src_numrev": {
+   "reqSi": "!(modcal != 'V')",
+   "ro": "modcal != 'V'",
+   "calc": "modcal != 'V' ? null : src_numrev"
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode"
+   }
+  },
+  "codalm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo"
+   }
+  },
+  "cuenta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "galmctas",
+    "clave": "codigo"
+   }
+  },
+  "delega": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo"
+   }
+  },
+  "depart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart"
+   }
+  },
+  "tipdoc": {
+   "mayus": 1
+  },
+  "cladoc": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "codnac": {
+   "mayus": 1
+  },
+  "codzon": {
+   "mayus": 1
+  },
+  "codpos": {
+   "mayus": 1
+  },
+  "tercer": {
+   "mayus": 1
+  },
+  "terfac": {
+   "mayus": 1
+  },
+  "tergrp": {
+   "mayus": 1
+  },
+  "terfed": {
+   "mayus": 1
+  },
+  "tercom": {
+   "mayus": 1
+  },
+  "fabric": {
+   "mayus": 1
+  },
+  "terenv": {
+   "mayus": 1
+  },
+  "agente": {
+   "mayus": 1
+  },
+  "seccio": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gseccana",
+    "clave": "codigo"
+   }
+  },
+  "codfam": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo"
+   }
+  },
+  "marca": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartmarc",
+    "clave": "codigo"
+   }
+  },
+  "modelo": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartmode",
+    "clave": "modelo"
+   }
+  },
+  "nivfam": {
+   "ro": "!(modcal != 'L' && modcal != 'D')"
+  },
+  "budget_fam": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_fam_budget",
+    "clave": "fam_code"
+   }
+  },
+  "nivbudg_fam": {
+   "ro": "modcal == 'L' || modcal == 'D'"
+  },
+  "codart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo"
+   }
+  },
+  "varstk": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varid",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "cantid": {
+   "req": 1,
+   "ro": "modcal == 'V'",
+   "def": 0,
+   "calc": "modcal == 'V' ? 0 : cantid"
+  },
+  "import": {
+   "req": 1,
+   "ro": "modcal == 'V'",
+   "def": 0,
+   "calc": "modcal == 'V' ? 0 : import"
+  },
+  "pormar": {
+   "req": 1,
+   "ro": "modcal == 'V'",
+   "def": 0,
+   "calc": "modcal == 'V' ? 0 : pormar"
+  },
+  "impben": {
+   "req": 1,
+   "ro": "modcal == 'V'",
+   "def": 0,
+   "calc": "modcal == 'V' ? 0 : impben"
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores posibles del indicador de modificación son: [S] si, [N] no, [M] modificar y [B] borrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "modcal": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((modcal == null || ['L','E','D','V'].includes(modcal))))",
+     "msg": "Los valores posibles de la modalidad de cálculo son: [L] Lineal, [E] Estacionario, [D] Distribución y [V] Variación.",
+     "tipo": "error",
+     "campo": "modcal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "curv_code": {
+   "reqSi": "!(modcal != 'D')",
+   "ro": "modcal != 'D'",
+   "calc": "modcal != 'D' ? null : curv_code",
+   "lov": {
+    "obj": "gpres_dist_curveh",
+    "clave": "curv_code"
+   }
+  },
+  "proces": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "varcan": {
+   "ro": "modcal != 'V'",
+   "calc": "modcal != 'V' ? null : varcan"
+  },
+  "varimp": {
+   "ro": "modcal != 'V'",
+   "calc": "modcal != 'V' ? null : varimp"
+  },
+  "varben": {
+   "ro": "modcal != 'V'",
+   "calc": "modcal != 'V' ? null : varben"
+  },
+  "varmar": {
+   "ro": "modcal != 'V'",
+   "calc": "modcal != 'V' ? null : varmar"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha de inicio del presupuesto es igual o anterior a la fecha fin.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((modcal == 'V') && (((varcan == null) || (varcan != 0)) || ((varimp == null) || (varimp != 0)))) || ((modcal != 'V') && (((varcan == null) || (varcan == 0)) && ((varimp == null) || (varimp == 0))))))",
+   "msg": "Los valores de variación de cantidad e importes sólo se informan si la modalidad de cálculo es [V] Variación.",
+   "tipo": "error",
+   "campo": "varcan",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_PROCES": {
+   "l": "Procesar",
+   "nota": "Activo si proces == '0'; pide confirmación; abre diálogo con campos"
+  },
+  "BUT_RETROCEDER": {
+   "l": "Retroceder",
+   "nota": "Activo si proces != '0'; pide confirmación"
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

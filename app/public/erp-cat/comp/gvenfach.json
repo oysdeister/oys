@@ -1,0 +1,1000 @@
+{
+ "c": "gvenfach",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(context.isOnInsert())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "tercer": {
+   "req": 1,
+   "ro": "tipdoc == null || climos != null || (docori != null  && (gvenfacd.tabori == 'PV' || gvenfacd.tabori == 'FV' || gvenfacd.tabori == 'gvenpedh' || gvenfacd.tabori == 'gvenfach' )) || virtualerp.einvoice_sent == 1",
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomcom",
+     "cif",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenfacd",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdlg"
+    ],
+    "desc": "nomdlg"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "cols": [
+     "depart",
+     "nomdep"
+    ],
+    "desc": "nomdep",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecha": {
+   "req": 1,
+   "ro": "virtualerp.einvoice_sent == 1",
+   "defExpr": "hoy()"
+  },
+  "imptot": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estcab == null || ['P','E','V'].includes(estcab))))",
+     "msg": "Los posibles valores del estado de cabecera son [P] Provisional, [E] Bloqueado, [V] Validado",
+     "tipo": "error",
+     "campo": "estcab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "docori": {
+   "reqSi": "!(gvenfacd.tabori == null || gvenfacd.tabori != 'FV' || gvenfacd.tabori != 'PV')",
+   "ro": "context.isOnUpdate() || !(gvenfacd.tabori == 'FV' || gvenfacd.tabori == 'PV')",
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenfach",
+    "clave": "docser",
+    "cols": [
+     "docser"
+    ],
+    "filtro": "gvenfacd.tabori == 'FV'"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "ro": "tipdoc == null || climos != null || (docori != null  && (gvenfacd.tabori == 'PV' || gvenfacd.tabori == 'FV' || gvenfacd.tabori == 'gvenpedh' || gvenfacd.tabori == 'gvenfach' ))",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "desc": "nomdir"
+   }
+  },
+  "divisa": {
+   "req": 1,
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0",
+   "mayus": 1
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0",
+   "reglas": [
+    {
+     "si": "!(((cambio == null) || (cambio != 0)))",
+     "msg": "El cambio debe ser diferente a cero.",
+     "tipo": "error",
+     "campo": "cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecope": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "calc": "fecha"
+  },
+  "valor": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "calc": "fecha"
+  },
+  "feccon": {
+   "ro": "1==1"
+  },
+  "tipefe": {
+   "req": 1,
+   "ro": "tercer == null || \r\ngvenfacd.valdoc == 'N' || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomefe"
+    ],
+    "desc": "nomefe"
+   }
+  },
+  "frmpag": {
+   "req": 1,
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompag"
+    ],
+    "desc": "nompag"
+   }
+  },
+  "terfac": {
+   "req": 1,
+   "ro": "tipdoc == null || climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "dirfac": {
+   "req": 1,
+   "ro": "climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "desc": "nomdir",
+    "filtro": "climos == null"
+   }
+  },
+  "codnac": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   }
+  },
+  "codpos": {
+   "mayus": 1
+  },
+  "codprv": {
+   "mayus": 1
+  },
+  "nomprv": {
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "nomprv",
+    "cols": [
+     "codigo",
+     "nomprv"
+    ],
+    "desc": "nomprv"
+   }
+  },
+  "impant": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "impant_ntax": {
+   "ro": "1==1"
+  },
+  "clasif": {
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcla"
+    ],
+    "desc": "nomcla"
+   }
+  },
+  "dtoge1": {
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0 || virtualerp.einvoice_sent == 1"
+  },
+  "dtoge2": {
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0 || virtualerp.einvoice_sent == 1"
+  },
+  "dtoge3": {
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0 || virtualerp.einvoice_sent == 1"
+  },
+  "dtopp": {
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0 || virtualerp.einvoice_sent == 1"
+  },
+  "tercob": {
+   "req": 1,
+   "ro": "climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "dircob": {
+   "req": 1,
+   "ro": "climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "desc": "nomdir"
+   }
+  },
+  "portes": {
+   "req": 1,
+   "ro": "tercer == null || \r\ngvenfacd.valdoc == 'N' || virtual_auth.modpre == 0",
+   "def": "D",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((portes == null || ['P','D'].includes(portes))))",
+     "msg": "Los valores posibles del indicativo de portes son: [P] pagados, [D] debidos.",
+     "tipo": "error",
+     "campo": "portes",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpre": {
+   "ro": "tercer == null || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parpreh",
+    "clave": "codpre",
+    "cols": [
+     "codpre",
+     "nompre"
+    ],
+    "desc": "nompre"
+   }
+  },
+  "codpar": {
+   "ro": "tercer == null || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parprel",
+    "clave": "codpar",
+    "cols": [
+     "codpar",
+     "nompar"
+    ],
+    "desc": "nompar"
+   }
+  },
+  "movedi": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "movest": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "fach_gross": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "doclock": {
+   "def": "V"
+  },
+  "valpen": {
+   "ro": "1==1"
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]odificar, [B]orrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "porgar": {
+   "req": 1,
+   "ro": "tercer == null || gvenfacd.valdoc == 'N' || virtual_auth.modpre == 0",
+   "def": 0
+  },
+  "fecrec": {
+   "oculto": "gvenfacd.tax_clasif != 'R'"
+  },
+  "docrec": {
+   "ro": "gvenfacd.tax_clasif != 'R'",
+   "oculto": "gvenfacd.tax_clasif != 'R'",
+   "lov": {
+    "obj": "gvenfach",
+    "clave": "docser",
+    "cols": [
+     "docser",
+     "fecha"
+    ],
+    "desc": "fecha"
+   }
+  },
+  "camope": {
+   "def": 1
+  },
+  "cuoant": {
+   "def": 0
+  },
+  "canceled": {
+   "def": 0
+  },
+  "grpfis": {
+   "def": 0
+  },
+  "comisi": {
+   "def": 0
+  },
+  "cabid": {
+   "def": 0
+  },
+  "imprie": {
+   "def": 0
+  },
+  "movhis": {
+   "def": 0
+  },
+  "basimp": {
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((codpar == null || codpar.length === 0)) || ((!(codpar == null || codpar.length === 0)) && (!(codpre == null || codpre.length === 0)))))",
+   "msg": "No se puede informar la partida sin indicar antes el presupuesto.",
+   "tipo": "error",
+   "campo": "codpre",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((valor == null || fecha == null) || (valor.getTime() >= fecha.getTime())))",
+   "msg": "La fecha de valor no puede ser anterior a la fecha de factura.",
+   "tipo": "error",
+   "campo": "fecha",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((date_contab == null)) && ((feccon == null))) || ((!(date_contab == null)) && (!(feccon == null)))))",
+   "msg": "La fecha del asiento y la fecha de contabilización se han de informar a la vez.",
+   "tipo": "error",
+   "campo": "feccon",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((impant == null) || (impant >= 0)) && ((cuoant == null) || (cuoant >= 0))))",
+   "msg": "El importe y la cuota anticipada no pueden ser negativos.",
+   "tipo": "error",
+   "campo": "impant",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'. Demo: 0FV000004 sin líneas pasa de P a V sin mensaje (acc_validar4).",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'V'"
+     }
+    }
+   ]
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P' && date_contab == null. Demo acc_provcontab: con la factura contabilizada el servidor responde el error (en la demo el número sale relleno con espacios hasta 20 caracteres: «[0FV000004           ]»). Sin contabilizar: V → P (acc_prov4).",
+   "pre": [
+    {
+     "si": "date_contab != null",
+     "msg": "Factura de venta [${docser}] contabilizada, no puede pasar a Provisional",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'P'"
+     }
+    }
+   ]
+  },
+  "BUT_DOC_EXP": {
+   "l": "Generar expediente exportación",
+   "nota": "Activo si numexp == null && date_contab == null && gvenfacd.hide_tab_gexpimpo == 0; abre diálogo con campos; en el menú Acciones",
+   "dialogo": [
+    {
+     "n": "paranc",
+     "l": "Partida arancelaria",
+     "t": "s",
+     "sz": 20,
+     "nx": "1==1",
+     "h": "Código de partida arancelaria",
+     "fk": "cexpesta"
+    },
+    {
+     "n": "dirpro",
+     "l": "DP",
+     "t": "s",
+     "sz": 6,
+     "nx": "1==1",
+     "h": "Tipo dirección procedencia proveedor",
+     "fk": "ctercero"
+    },
+    {
+     "n": "nattra",
+     "l": "Naturaleza",
+     "t": "s",
+     "sz": 2,
+     "nx": "1==1",
+     "h": "Naturaleza de la transacción",
+     "fk": "cinnatra"
+    },
+    {
+     "n": "desadu",
+     "l": "Despacho",
+     "t": "s",
+     "sz": 1,
+     "nx": "1==1",
+     "h": "Indicativo de realización de despacho de aduanas"
+    },
+    {
+     "n": "codinc",
+     "l": "Incoterm",
+     "t": "s",
+     "sz": 3,
+     "nx": "1==1",
+     "h": "Código de incoterm asociado",
+     "fk": "gincoter"
+    },
+    {
+     "n": "numdoc",
+     "l": "Número documento",
+     "t": "s",
+     "sz": 15,
+     "nx": "1==1",
+     "h": "Número de documento de importación / exportación"
+    },
+    {
+     "n": "pesest",
+     "l": "Peso estadístico",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "nx": "1==1",
+     "h": "Peso estadístico"
+    },
+    {
+     "n": "fecsal",
+     "l": "Fecha salida proveedor",
+     "t": "d",
+     "nx": "1==1",
+     "h": "Fecha de salida del proveedor"
+    },
+    {
+     "n": "codtra",
+     "l": "Transportista",
+     "t": "s",
+     "sz": 12,
+     "nx": "1==1",
+     "h": "Empresa transportista o naviera",
+     "fk": "ctercero"
+    }
+   ],
+   "dialogoTit": "Generar expediente exportación"
+  },
+  "BUT_ANTICIPO": {
+   "l": "Anticipo",
+   "nota": "Activo si gvenfacd.indant == 'G' && estcab != 'P' && virtualerp.einvoice_sent == 0; condición de servidor; abre diálogo con campos; en el menú Acciones",
+   "dialogo": [
+    {
+     "n": "impant",
+     "l": "Importe",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "req": 1,
+     "def": "0",
+     "h": "Importe del anticipo"
+    },
+    {
+     "n": "tipdoc",
+     "l": "Tipo anticipo",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "defs": "${gvenfacd.tipant}",
+     "h": "Código de tipo de anticipo",
+     "fk": "ganticid"
+    },
+    {
+     "n": "fecant",
+     "l": "Fecha",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-17",
+     "defs": "${fecha}",
+     "h": "Fecha del anticipo"
+    }
+   ],
+   "dialogoTit": "Anticipo"
+  },
+  "BUT_FAC_INTEREMPRESA": {
+   "l": "Generar factura interempresa",
+   "nota": "Activo si gvenfacd.empfac != null && indmod == 'S' && estcab == 'V'; condición de servidor; pide confirmación; en el menú Acciones"
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si estcab != 'P'; condición de servidor; abre diálogo con campos; en el menú Acciones",
+   "dialogo": [
+    {
+     "n": "tipdoc",
+     "l": "Tipo documento",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "def": "CAPW",
+     "defs": "${tipdoc}",
+     "h": "Código de tipo de documento",
+     "fk": "gvenfacd"
+    },
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "def": "0",
+     "defs": "${empcode}",
+     "h": "Código de la empresa",
+     "fk": "cempresa"
+    },
+    {
+     "n": "delega",
+     "l": "Delegación",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "def": "0",
+     "defs": "${delega}",
+     "h": "Código de delegación",
+     "fk": "gdelegac"
+    },
+    {
+     "n": "depart",
+     "l": "Departamento",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "def": "V",
+     "defs": "${depart}",
+     "h": "Código de departamento",
+     "fk": "gdeparta"
+    },
+    {
+     "n": "fecha",
+     "l": "Fecha factura",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-18",
+     "defs": "TODAY",
+     "h": "Fecha de la factura"
+    },
+    {
+     "n": "climos",
+     "l": "Mostrador",
+     "t": "s",
+     "sz": 20,
+     "defs": "${climos}",
+     "nx": "1==1",
+     "h": "Código de cliente mostrador",
+     "fk": "gclimost"
+    },
+    {
+     "n": "tercer",
+     "l": "Cliente",
+     "t": "s",
+     "sz": 12,
+     "req": 1,
+     "def": "TCAPV",
+     "defs": "${tercer}",
+     "h": "Código de cliente (\"-\" según código de identificación fiscal).",
+     "fk": "gcliente"
+    },
+    {
+     "n": "tipdir",
+     "l": "Dirección",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "def": "0",
+     "defs": "${tipdir}",
+     "h": "Código de tipo de dirección de factura",
+     "fk": "cterdire"
+    },
+    {
+     "n": "docser",
+     "l": "Factura",
+     "t": "s",
+     "sz": 20,
+     "nx": "1==1",
+     "h": "Documento"
+    },
+    {
+     "n": "docori",
+     "l": "Origen",
+     "t": "s",
+     "sz": 20,
+     "defs": "${docori}",
+     "nx": "1==1",
+     "h": "Documento origen",
+     "fk": "gvenfach"
+    },
+    {
+     "n": "clasif",
+     "l": "Clasificación",
+     "t": "s",
+     "sz": 12,
+     "defs": "${clasif}",
+     "nx": "1==1",
+     "h": "Código de clasificación",
+     "fk": "gclasdoc"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "defs": "${coment}",
+     "nx": "1==1"
+    },
+    {
+     "n": "revalo",
+     "l": "Revalorar",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "N",
+     "o": [
+      {
+       "v": "N",
+       "l": "No"
+      },
+      {
+       "v": "S",
+       "l": "Sí"
+      }
+     ],
+     "h": "Revalorar documento"
+    }
+   ],
+   "dialogoTit": "Copiar"
+  },
+  "BUT_SIF_VERIFACTU_PRN": {
+   "l": "Imprimir FacturaE",
+   "nota": "Activo si docproc != null && docproc.toLowerCase().includes(\"s\") && date_contab != null; pide confirmación; abre diálogo con campos; en el menú VeriFactu",
+   "dialogo": [
+    {
+     "n": "emp_agencia",
+     "l": "Agencia  tributaria",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Agencia tributaria",
+     "fk": "ctax_agencia"
+    }
+   ],
+   "dialogoTit": "Imprimir FacturaE"
+  },
+  "BUT_SIF_VERIFACTU_QR": {
+   "l": "Consultar QR",
+   "nota": "Activo si docproc != null && docproc.toLowerCase().includes(\"s\") && date_contab != null; pide confirmación; abre diálogo con campos; en el menú VeriFactu",
+   "dialogo": [
+    {
+     "n": "emp_agencia",
+     "l": "Agencia  tributaria",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Agencia tributaria",
+     "fk": "ctax_agencia"
+    }
+   ],
+   "dialogoTit": "Consultar QR"
+  },
+  "BUT_SIF_VERIFACTU_CSV": {
+   "l": "Consultar CSV",
+   "nota": "Activo si docproc != null && docproc.toLowerCase().includes(\"s\") && date_contab != null; pide confirmación; abre diálogo con campos; en el menú VeriFactu",
+   "dialogo": [
+    {
+     "n": "emp_agencia",
+     "l": "Agencia  tributaria",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Agencia tributaria",
+     "fk": "ctax_agencia"
+    }
+   ],
+   "dialogoTit": "Consultar CSV"
+  },
+  "BUT_SIF_VERIFACTU_EST": {
+   "l": "Consultar estado",
+   "nota": "Activo si docproc != null && docproc.toLowerCase().includes(\"s\") && date_contab != null; pide confirmación; abre diálogo con campos; en el menú VeriFactu",
+   "dialogo": [
+    {
+     "n": "emp_agencia",
+     "l": "Agencia  tributaria",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Agencia tributaria",
+     "fk": "ctax_agencia"
+    }
+   ],
+   "dialogoTit": "Consultar estado"
+  },
+  "BUT_SIF_VERIFACTU_ENV": {
+   "l": "Enviar FacturaE",
+   "nota": "Activo si docproc != null && docproc.toLowerCase().includes(\"s\") && date_contab != null; pide confirmación; abre diálogo con campos; en el menú VeriFactu",
+   "dialogo": [
+    {
+     "n": "emp_agencia",
+     "l": "Agencia  tributaria",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Agencia tributaria",
+     "fk": "ctax_agencia"
+    }
+   ],
+   "dialogoTit": "Enviar FacturaE"
+  },
+  "BUT_DESCONTABILIZAR": {
+   "l": "Descontabilizar",
+   "nota": "Activo si feccon != null && canceled == 0; pide confirmación. Demo acc_descontab4b: borra date_contab y feccon (y el asiento). Sin asiento, el servidor da el error (acc_descontab4).",
+   "pre": [
+    {
+     "si": "date_contab == null",
+     "msg": "gvenfach_BackAccount1: ASIENTO NO ENCONTRADO EN DOCUMENTO: [${docser}].",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "date_contab": "null",
+      "feccon": "null"
+     }
+    }
+   ]
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "nota": "Activo si estcab != 'P' && date_contab == null; pide confirmación; diálogo «Prevista de Asiento Contable» (N/S). Demo acc_contab4: rellena date_contab (ahora) y feccon (= fecha factura) y abre casientos en ventana modal (OpenUrl). Con prevista S se ve el asiento sin grabar (cap_capventas 170).",
+   "dialogo": [
+    {
+     "n": "preview",
+     "l": "Prevista de Asiento Contable",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "N"
+    }
+   ],
+   "dialogoTit": "Contabilizar",
+   "pasos": [
+    {
+     "set": {
+      "date_contab": "hoy()",
+      "feccon": "fecha"
+     }
+    },
+    {
+     "ir": {
+      "obj": "casientos"
+     }
+    }
+   ]
+  },
+  "BUT_FACTURAE": {
+   "l": "eFactura",
+   "nota": "Activo si estcab == 'V'; condición de servidor"
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "dialogoTit": "Bloqueo manual"
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "nota": "Activo si canceled == 0 &&  date_contab != null && gvenfacd.abono != 'S'; pide confirmación; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "motrec",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 2,
+     "req": 1,
+     "h": "Motivo rectificación",
+     "fk": "cfacrect"
+    },
+    {
+     "n": "notrec",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1,
+     "hx": "1==1",
+     "h": "Notas de la rectificación"
+    },
+    {
+     "n": "gvenfacd_cod",
+     "l": "Tipo documento",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Tipo documento"
+    }
+   ],
+   "dialogoTit": "Anular"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Menú ⌄ del título: Docflow · Líneas · Anticipo origen · Asientos contables · Cartera de efectos · Registros fiscales · Copiar líneas de facturas de ventas · Albaranes de ventas a conformar · Desconformar Albaranes de ventas",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null.",
+  "Al pulsar la papelera: diálogo «Eliminar registro» con el texto «¿Estás seguro que quieres eliminar el registro '${docser} [${tercer}]' ?» y botones Cancelar / Eliminar (demo, a/f5.del.txt).",
+  "Código inexistente en una lupa: el campo queda en rojo con «Error en la validación» debajo (demo gvenfach.tercer = CAPNOEX; verify devuelve 204).",
+  "Los botones que terminan bien no devuelven texto (message null): la interfaz recarga la fila.",
+  "Menú ⌄ «Albaranes de ventas a conformar» abre la vtable gvenfach_vtabsel_gvenalbh (diálogo «ALBARANES DE VENT…» con rejillas Identificación, Líneas, Albaranes conformados, Líneas y botones «Conformar todos» y «Conformar»); filtra por terfac y gvenfacd.consel (demo a/f6.conf.png).",
+  "Generar factura desde un albarán crea la factura validada (ver gvenalbh GEN_INVOICE)."
+ ],
+ "estados": {
+  "col": "estcab",
+  "trans": [
+   {
+    "de": [
+     "P"
+    ],
+    "a": "V",
+    "por": "BUT_VALIDAR"
+   },
+   {
+    "de": [
+     "V"
+    ],
+    "a": "P",
+    "por": "BUT_TO_PROVISIONAL"
+   }
+  ]
+ }
+}

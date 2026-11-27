@@ -1,0 +1,105 @@
+{
+ "c": "gven_promocg",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "grpdel": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelgrph",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tercer": {
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "clacli": {
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "modcash": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((modcash == null || ['T','F','A'].includes(modcash))))",
+     "msg": "La modalidad de venta solo puede ser de tipo [T]icket, [F]actura o [A]mbos",
+     "tipo": "error",
+     "campo": "modcash",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "clafid": {
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "dlgalt": {
+   "req": 1,
+   "def": 0
+  },
+  "fideli": {
+   "req": 1,
+   "def": "T",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((fideli == null || ['S','N','T'].includes(fideli))))",
+     "msg": "Los valores posibles del indicador de fidelización son: [S] sólo fidelizados, [N] no fidelizados y [T] a todos.",
+     "tipo": "error",
+     "campo": "fideli",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "emplea": {
+   "req": 1,
+   "def": 0
+  },
+  "mayor": {
+   "req": 1,
+   "def": 0
+  },
+  "tipcli": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclimost_type",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tiptar": {
+   "mayus": 1
+  },
+  "tj_diaalt": {
+   "def": 0
+  },
+  "indexc": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((tercer == null || tercer.length === 0)) || ((clacli == null || clacli.length === 0))))",
+   "msg": "No se puede informar la clasificación del cliente y el cliente a la vez.",
+   "tipo": "error",
+   "campo": "clacli",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

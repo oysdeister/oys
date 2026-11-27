@@ -1,0 +1,112 @@
+{
+ "c": "textract_file",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "file_seqno": {
+   "ro": "true"
+  },
+  "file_data": {
+   "req": 1
+  },
+  "file_format": {
+   "req": 1,
+   "ro": "true",
+   "def": "AEB43"
+  },
+  "file_name": {
+   "ro": "true"
+  },
+  "file_rows": {
+   "ro": "true"
+  },
+  "file_seqori": {
+   "ro": "true"
+  },
+  "file_estado": {
+   "req": 1,
+   "ro": "true",
+   "def": 0
+  },
+  "file_msgerr": {
+   "ro": "true"
+  },
+  "file_size": {
+   "ro": "true"
+  },
+  "file_dcrc": {
+   "ro": "true"
+  },
+  "file_type": {
+   "ro": "true"
+  },
+  "empcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   }
+  },
+  "ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación",
+    "desc": "nomcta"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(file_data)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "meta",
+   "campo": "file_data"
+  }
+ ],
+ "botones": {
+  "BUT_LOAD_DELETE": {
+   "l": "Retroceder carga",
+   "confirm": "",
+   "nota": "Código real BUT_ELIMINAR, con confirmación. Habilitado en cliente si file_estado != 0 y en servidor solo si ningún extracto del fichero está conciliado: (SELECT COUNT(*) FROM textract WHERE concid IS NOT NULL AND file_seqno = ${file_seqno}) = 0. En el fichero 1 (CAP_N43_tesoreria.n43, extractos 3 y 4 conciliados) sale gris y no hace nada.",
+   "pasos": [
+    {
+     "borra": {
+      "obj": "textract",
+      "donde": [
+       "file_seqno",
+       "file_seqno"
+      ]
+     }
+    },
+    {
+     "set": {
+      "file_estado": "0"
+     }
+    }
+   ]
+  },
+  "BTN_PROCESS_FILE": {
+   "l": "Procesar el fichero",
+   "confirm": "",
+   "nota": "Código real BUT_PROCESS_FILE, con confirmación; se oculta si file_estado == 1 (ya procesado). Carga las líneas N43 en textract con file_seqno y pasa file_estado a 1. No probado (no hay fichero CAP pendiente).",
+   "pasos": [
+    {
+     "set": {
+      "file_estado": "1"
+     }
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ficha: Identificación (Fichero*, Formato* «España AEB43», Estado* «Procesado», Nombre, Empresa, Cuenta financiera), Error (editor), Datos de control (ID archivo, CRC, Tipo, Tamaño, Registros, Creado por, Creado el) y subrejilla Extractos bancarios (textract_rep).",
+  "file_name, file_rows, file_size, file_dcrc y file_type los calcula el servidor del fichero subido (name(), rows(), size(), dcrc-32(), type()).",
+  "Borrar pide escribir el texto de confirmación «delete» (permissions.deleteConfirmationText).",
+  "no probado (ola E): Procesar el fichero y Retroceder carga con un N43 CAP — motivo: sesión de la demo caducada (redirige a /account/login) a mitad de la ola E; no se teclean credenciales."
+ ]
+}

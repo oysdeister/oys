@@ -1,0 +1,188 @@
+{
+ "c": "cvenfacl",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "carticul",
+    "clave": "codart",
+    "cols": [
+     "codart",
+     "nomart",
+     "tipdes",
+     "taxkey"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "desamp": {
+   "ro": "carticul.tipdes == 'F'",
+   "calc": "carticul.tipdes != 'V'  ? '' : desamp"
+  },
+  "cuenta": {
+   "req": 1,
+   "ro": "carticul.inpven_all == 0 && carticul.inpven_acc == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "codigo"
+   }
+  },
+  "cantid": {
+   "req": 1,
+   "def": 1
+  },
+  "precio": {
+   "req": 1,
+   "ro": "carticul.tippre == 'F'"
+  },
+  "dtolin": {
+   "req": 1,
+   "ro": "carticul.tippre == 'F'",
+   "def": 0
+  },
+  "totnet": {
+   "req": 1,
+   "calc": "cantid * precio * (100 - dtolin) / 100"
+  },
+  "prolin": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   }
+  },
+  "seclin": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   }
+  },
+  "ctaaux": {
+   "reqSi": "!(ccuentas.codaux == null)",
+   "ro": "ccuentas.codaux == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxl",
+    "clave": "ctaaux",
+    "cols": [
+     "ctaaux",
+     "desval"
+    ],
+    "desc": "desval"
+   }
+  },
+  "cencos": {
+   "reqSi": "!(ccuentas.tipcta != 'C')",
+   "ro": "(carticul.inpven_all == 0 && carticul.inpven_cost == 0) || ccuentas.tipcta != 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen"
+    ],
+    "desc": "nomcen"
+   }
+  },
+  "ctaexp": {
+   "reqSi": "!(ccuentas.tipcta != 'C')",
+   "ro": "(carticul.inpven_all == 0 && carticul.inpven_cost == 0) || ccuentas.tipcta != 'C'",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp"
+   }
+  },
+  "parest": {
+   "ro": "carticul.codtip != 'B'",
+   "mayus": 1,
+   "lov": {
+    "obj": "cexpesta",
+    "clave": "codest",
+    "cols": [
+     "codest",
+     "coment"
+    ],
+    "desc": "coment"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((ctaexp == null || ctaexp.length === 0)) && ((cencos == null || cencos.length === 0))) || ((!(ctaexp == null || ctaexp.length === 0)) && (!(cencos == null || cencos.length === 0)))))",
+   "msg": "La cuenta explotación y el centro, ambas deben ser nulas o no nulas.",
+   "tipo": "error",
+   "campo": "cencos",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((codpre == null || codpre.length === 0)) && ((codpar == null || codpar.length === 0))) || ((!(codpre == null || codpre.length === 0)) && (!(codpar == null || codpar.length === 0)))))",
+   "msg": "Presupuesto y partida, ambos nulos o no nulos",
+   "tipo": "error",
+   "campo": "codpre",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((((tax_basimp1 == null)) && ((tax_oper1 == null || tax_oper1.length === 0))) && ((tax_code1 == null || tax_code1.length === 0))) || (((!(tax_basimp1 == null)) && (!(tax_oper1 == null || tax_oper1.length === 0))) && (!(tax_code1 == null || tax_code1.length === 0)))))",
+   "msg": "Primer impuesto. Base fiscal, operación e impuesto, o son todos nulos o son todos no nulos",
+   "tipo": "error",
+   "campo": "tax_basimp1",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((((tax_basimp2 == null)) && ((tax_oper2 == null || tax_oper2.length === 0))) && ((tax_code2 == null || tax_code2.length === 0))) || (((!(tax_basimp2 == null)) && (!(tax_oper2 == null || tax_oper2.length === 0))) && (!(tax_code2 == null || tax_code2.length === 0)))))",
+   "msg": "Segundo impuesto. Base fiscal, operación e impuesto, o son todos nulos o son todos no nulos",
+   "tipo": "error",
+   "campo": "tax_basimp2",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((((tax_basimp3 == null)) && ((tax_oper3 == null || tax_oper3.length === 0))) && ((tax_code3 == null || tax_code3.length === 0))) || (((!(tax_basimp3 == null)) && (!(tax_oper3 == null || tax_oper3.length === 0))) && (!(tax_code3 == null || tax_code3.length === 0)))))",
+   "msg": "Tercer impuesto. Base fiscal, operación e impuesto, o son todos nulos o son todos no nulos",
+   "tipo": "error",
+   "campo": "tax_basimp3",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((((tax_basimp4 == null)) && ((tax_oper4 == null || tax_oper4.length === 0))) && ((tax_code4 == null || tax_code4.length === 0))) || (((!(tax_basimp4 == null)) && (!(tax_oper4 == null || tax_oper4.length === 0))) && (!(tax_code4 == null || tax_code4.length === 0)))))",
+   "msg": "Cuarto impuesto. Base fiscal, operación e impuesto, o son todos nulos o son todos no nulos",
+   "tipo": "error",
+   "campo": "tax_code4",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

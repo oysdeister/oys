@@ -1,0 +1,417 @@
+{
+ "c": "gven_promocr",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "accion": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((accion == null || ['D','G','A','N'].includes(accion))))",
+     "msg": "Los valores posibles de acción son: [D]  regalo ya incluido, [G] generar línea, [A] aviso al TPV y [N] nada.",
+     "tipo": "error",
+     "campo": "accion",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipnot": {
+   "ro": "virtual.exists_iret == 1 && accion == 'A'",
+   "mayus": 1
+  },
+  "coddto": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gvendtoc",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "aplmin": {
+   "req": 1,
+   "def": 0
+  },
+  "unimax": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((unimax == null) || (unimax >= 0)))",
+     "msg": "La cantidad máxima de regalo puede tener valores negativos.",
+     "tipo": "error",
+     "campo": "unimax",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "uniacu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "impmax": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((impmax == null) || (impmax >= 0)))",
+     "msg": "El importe máximo de regalo no puede tener valores negativos.",
+     "tipo": "error",
+     "campo": "impmax",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impacu": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "imaxdia": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((imaxdia == null) || (imaxdia >= 0)))",
+     "msg": "El importe máximo de regalo por día no puede tener valores negativos.",
+     "tipo": "error",
+     "campo": "imaxdia",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "iacudia": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "art_fabric": {
+   "mayus": 1,
+   "calc": "(art_cantid == null) ? null : art_fabric",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "art_codfam": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "art_codart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "art_varlog": {
+   "ro": "!(art_codart != null)",
+   "mayus": 1,
+   "calc": "(art_cantid == null) ? null : art_varlog",
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "art_udmven": {
+   "ro": "!(art_codart != null) || !(art_varlog != null)",
+   "mayus": 1,
+   "calc": "(art_cantid == null) ? null : art_udmven",
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "art_cantid": {
+   "reglas": [
+    {
+     "si": "!((((art_cantid == null)) || ((art_cantid == null) || (art_cantid > 0))))",
+     "msg": "La cantidad de artículos a regalar debe ser mayor que cero.",
+     "tipo": "error",
+     "campo": "art_cantid",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "art_coduni": {
+   "mayus": 1,
+   "calc": "(art_cantid == null) ? null : art_coduni",
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "imp_codart": {
+   "ro": "!(imp_import != null)",
+   "mayus": 1,
+   "calc": "isNullOrEmpty(imp_import) ? null : imp_codart",
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo"
+   }
+  },
+  "imp_cantid": {
+   "ro": "!(imp_import != null)",
+   "calc": "isNullOrEmpty(imp_import) ? null : (isNullOrEmpty(imp_cantid) ? \"1\" : imp_cantid)",
+   "reglas": [
+    {
+     "si": "!((((imp_cantid == null)) || ((imp_cantid == null) || (imp_cantid > 0))))",
+     "msg": "El numero de aplicaciones del importe debe ser mayor que cero.",
+     "tipo": "error",
+     "campo": "imp_cantid",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "imp_import": {
+   "reglas": [
+    {
+     "si": "!((((imp_import == null)) || ((imp_import == null) || (imp_import > 0))))",
+     "msg": "El importe de regalo debe ser mayor que cero.",
+     "tipo": "error",
+     "campo": "imp_import",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dto_fabric": {
+   "ro": "!(dto_pordto != null)",
+   "mayus": 1,
+   "calc": "isNullOrEmpty(dto_pordto) ? null : dto_fabric",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dto_codfam": {
+   "ro": "!(dto_pordto != null)",
+   "mayus": 1,
+   "calc": "isNullOrEmpty(dto_pordto) ? null : dto_codfam",
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dto_codart": {
+   "ro": "!(dto_pordto != null)",
+   "mayus": 1,
+   "calc": "(dto_pordto == null) ? null : dto_codart",
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dto_varlog": {
+   "ro": "!(dto_pordto != null) || !(dto_codart != null)",
+   "mayus": 1,
+   "calc": "isNullOrEmpty(dto_pordto) ? null : dto_varlog",
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dto_udmven": {
+   "ro": "!(dto_pordto != null) || !(dto_codart != null) || !(dto_varlog != null)",
+   "mayus": 1,
+   "calc": "isNullOrEmpty(dto_pordto) ? null : dto_udmven",
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "dto_cantid": {
+   "ro": "!(dto_pordto != null)",
+   "reglas": [
+    {
+     "si": "!((((dto_cantid == null)) || ((dto_cantid == null) || (dto_cantid > 0))))",
+     "msg": "La cantidad de aplicación de descuento debe ser mayor que 0.",
+     "tipo": "error",
+     "campo": "dto_cantid",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dto_pordto": {
+   "reglas": [
+    {
+     "si": "!((((dto_pordto == null)) || ((dto_pordto == null) || (dto_pordto > 0))))",
+     "msg": "El porcentaje de descuento debe ser mayor que 0.",
+     "tipo": "error",
+     "campo": "dto_pordto",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "val_tipval": {
+   "lov": {
+    "obj": "gven_valesd",
+    "clave": "codigo"
+   }
+  },
+  "val_fecini": {
+   "reqSi": "!(val_tipval == null)",
+   "ro": "!(val_tipval != null)",
+   "calc": "isNullOrEmpty(val_tipval) ? null : val_fecini"
+  },
+  "val_fecfin": {
+   "reqSi": "!(val_tipval == null)",
+   "ro": "!(val_tipval != null)",
+   "calc": "isNullOrEmpty(val_tipval) ? null : val_fecfin"
+  },
+  "val_diaini": {
+   "reqSi": "!(val_tipval == null)",
+   "ro": "!(val_tipval != null)",
+   "calc": "isNullOrEmpty(val_tipval) ? null : (isNullOrEmpty(val_diaini) ? \"0\" : val_diaini)"
+  },
+  "val_diafin": {
+   "reqSi": "!(val_tipval == null)",
+   "ro": "!(val_tipval != null)",
+   "calc": "isNullOrEmpty(val_tipval) ? null : val_diafin"
+  },
+  "val_procon": {
+   "reqSi": "!(val_tipval == null)",
+   "mayus": 1,
+   "calc": "isNullOrEmpty(val_tipval) ? null : val_procon",
+   "lov": {
+    "obj": "gven_promoch",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "val_cantid": {
+   "reqSi": "!(val_tipval == null)",
+   "ro": "!(val_tipval != null)",
+   "calc": "isNullOrEmpty(val_tipval) ? null : (isNullOrEmpty(val_cantid) ? \"0\" : val_cantid)"
+  },
+  "val_import": {
+   "reqSi": "!(val_tipval == null)",
+   "calc": "isNullOrEmpty(val_tipval) ? null : val_import"
+  },
+  "fin_tipefe": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo"
+   }
+  },
+  "fin_frmpag": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((dto_udmven == null || dto_udmven.length === 0)) || (!(dto_codart == null || dto_codart.length === 0))))",
+   "msg": "Para informar la unidad de ventas es necesario informar el artículo de regalo.",
+   "tipo": "error",
+   "campo": "dto_udmven",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((val_tipval == null || val_tipval.length === 0)) || (((!(val_fecini == null)) || (!(val_diaini == null))) && ((!(val_fecfin == null)) || (!(val_diafin == null))))))",
+   "msg": "Si se regala un vale debe informarse la vigéncia, ya sea mediante fechas o días.",
+   "tipo": "error",
+   "campo": "val_tipval",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((val_diaini == null)) || ((val_diafin == null))) || ((val_diaini == null || val_diafin == null) || (val_diaini <= val_diafin))))",
+   "msg": "El número de días de inicio de vigencia del vale ha de ser inferior al número de días de fin de vigencia.",
+   "tipo": "error",
+   "campo": "val_diaini",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((sor_diaven == null)) || ((sor_fecven == null))))",
+   "msg": "El vencimiento del sorteo debe expresarse en días o en fecha, pero no es posible informar ambos valores al mismo tiempo.",
+   "tipo": "error",
+   "campo": "sor_diaven",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((fin_tipefe == null || fin_tipefe.length === 0)) && ((fin_frmpag == null || fin_frmpag.length === 0))) || ((!(fin_tipefe == null || fin_tipefe.length === 0)) && (!(fin_frmpag == null || fin_frmpag.length === 0)))))",
+   "msg": "Los valores de financiación (tipo de efecto y forma de pago) se han de informar conjuntamente, o se informa los dos o ninguno.",
+   "tipo": "error",
+   "campo": "fin_frmpag",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((art_varlog == null || art_varlog.length === 0)) || (!(art_codart == null || art_codart.length === 0))))",
+   "msg": "Para informar la variable logística es necesario informar el artículo de regalo.",
+   "tipo": "error",
+   "campo": "art_varlog",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((unimax == null) || (unimax == 0)) || ((!(art_cantid == null)) || (!(val_cantid == null)))))",
+   "msg": "Sólo se puede informar el número de unidades máximo si es regalo de artículo o de vales.",
+   "tipo": "error",
+   "campo": "unimax",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((impmax == null) || (impmax == 0)) || (((!(imp_import == null)) || (!(dto_pordto == null))) || (!(val_import == null)))))",
+   "msg": "Sólo se puede informar el importe máximo de regalo si el regalo es por algún importe o descuento.",
+   "tipo": "error",
+   "campo": "impmax",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((imaxdia == null) || (imaxdia == 0)) || (((!(imp_import == null)) || (!(dto_pordto == null))) || (!(val_import == null)))))",
+   "msg": "Sólo se puede informar el importe máximo de regalo por día si el regalo es por algún importe o descuento.",
+   "tipo": "error",
+   "campo": "dto_pordto",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((((imaxdia == null) || (imaxdia == 0)) && ((hmaxdia == null))) && ((fmaxdia == null))) || ((((imaxdia == null) || (imaxdia > 0)) && (!(hmaxdia == null))) && (!(fmaxdia == null)))))",
+   "msg": "La hora y fecha de reinicio de importe acumulado diario, solo se puede informar si hay un importe máximo diario.",
+   "tipo": "error",
+   "campo": "fmaxdia",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((art_udmven == null || art_udmven.length === 0)) || (!(art_codart == null || art_codart.length === 0))))",
+   "msg": "Para informar la unidad de ventas es necesario informar el artículo de regalo.",
+   "tipo": "error",
+   "campo": "art_codart",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((((imp_cantid == null)) && ((imp_import == null))) && ((imp_codart == null || imp_codart.length === 0))) || ((!(imp_cantid == null)) && (!(imp_import == null)))))",
+   "msg": "Si el regalo es por importe debe informarse tanto la cantidad, como el importe.",
+   "tipo": "error",
+   "campo": "imp_cantid",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((dto_varlog == null || dto_varlog.length === 0)) || (!(dto_codart == null || dto_codart.length === 0))))",
+   "msg": "Para informar la variable logística es necesario informar el artículo de regalo.",
+   "tipo": "error",
+   "campo": "dto_varlog",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

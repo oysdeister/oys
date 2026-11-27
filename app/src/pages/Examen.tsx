@@ -2,15 +2,11 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { enviarActa, enlaceCorreo } from '../lib/envio';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import confetti from 'canvas-confetti';
 import { Icon } from '../components/Icon';
-import { AnillosResultado, LeyendaAnillo, SECUENCIA } from '../components/examen/Deco';
-import { PortadaEspacio } from '../components/examen/Espacio3D';
 import { PreguntaVista, RevisionPregunta } from '../components/examen/Preguntas';
-import { Hiperespacio, OrbitaProgreso } from '../components/examen/Viaje';
 import { Constelacion, DesgloseTeoria } from '../components/examen/Desglose';
 import { RutaFichas } from '../components/examen/RutaFichas';
-import { copiar, descargar, reloj, useAhora, useArriba, useContador } from '../components/examen/util';
+import { copiar, descargar, reloj, useAhora, useArriba } from '../components/examen/util';
 import { useProgreso } from '../lib/progress';
 import { INSIGNIAS } from '../lib/badges';
 import { MODULOS } from '../content';
@@ -46,7 +42,6 @@ import './examen-espacio.css';
 
 const etiquetaOrigen = (o: string) => (o === 'criterio' ? 'Criterio' : o.startsWith('vídeo') ? o.replace('vídeo', 'Vídeo de compras ·') : `Manual de ${MODULOS.find((m) => m.id === o)?.titulo.toLowerCase() ?? o}`);
 
-const MARCA = ['#5ff0d2', '#6fe9ff', '#8b7bff', '#f6b65a', '#ffffff'];
 const DEMO_URL = 'https://nextdemo.geasa.eu';
 
 export default function Examen() {
@@ -79,9 +74,6 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
   const aMedias = actual && actual.fase !== 'resultado';
   const puedeEmpezar = !!p.alumno.ini && (listo || confirmo);
   const banco = bancoTeoria();
-  const reducir = useReducedMotion();
-  // El recorte del titular solo hace falta mientras entra: luego estorba al brillo del texto
-  const [titularListo, setTitularListo] = useState(!!reducir);
   useArriba();
 
   const empezar = () => {
@@ -92,41 +84,29 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
 
   return (
     <div className="wrap ex-pagina">
-      <section className="ex-hero ex-profundo">
-        <div className="ex-hero-grid">
-          <div className="ex-hero-txt">
-            <motion.p className="ex-kicker" initial={reducir ? false : { opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-              Practicando Axional Deister VNext · prueba final
-            </motion.p>
-            <h1 className="ex-titular ax-glow-text" aria-label="Examen final">
-              {['Examen', 'final'].map((w, k) => (
-                <span key={w} className={`ex-titular-clip ${titularListo ? 'libre' : ''}`} aria-hidden="true">
-                  <motion.span
-                    className="ex-titular-w"
-                    initial={reducir ? false : { y: '105%', rotate: 4 }}
-                    animate={{ y: '0%', rotate: 0 }}
-                    transition={{ duration: 0.8, delay: 0.12 + k * 0.14, ease: [0.2, 0.8, 0.2, 1] }}
-                    onAnimationComplete={() => k === 1 && setTitularListo(true)}
-                  >
-                    {w}
-                  </motion.span>
-                </span>
-              ))}
-            </h1>
-            <motion.p className="lead muted" initial={reducir ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }}>
-              Demuestra que sabes llevar un caso real de punta a punta en Axional: del alta del proveedor al cobro del cliente, de memoria y sin consultar nada. Si apruebas, consigues tu certificado.
-            </motion.p>
-            <div className="ex-stats">
-              <Stat k={0} valor={NUM_TEORIA} texto={`preguntas · ${MIN_TEORIA} min`} />
-              <Stat k={1} valor={NUM_TAREAS} texto="encargos en Axional" />
-              <Stat k={2} valor={30} valor2={70} texto="teoría / práctica" />
-            </div>
-          </div>
-          <div className="ex-hero-deco">
-            <PortadaEspacio codigo={aMedias ? actual.codigo : `EX-${ini}-····`} />
-          </div>
+      <header className="exg-cab">
+        <p className="exg-kicker">Practicando Axional Deister VNext · prueba final</p>
+        <h1>Examen final</h1>
+        <p className="exg-lead">Demuestra que sabes llevar un caso real de punta a punta en Axional: del alta del proveedor al cobro del cliente, de memoria y sin consultar nada. Si apruebas, consigues tu certificado.</p>
+      </header>
+      <dl className="exg-cifras">
+        <div>
+          <dt>{NUM_TEORIA}</dt>
+          <dd>preguntas de teoría en {MIN_TEORIA} min</dd>
         </div>
-      </section>
+        <div>
+          <dt>{NUM_TAREAS}</dt>
+          <dd>encargos en Axional</dd>
+        </div>
+        <div>
+          <dt>30 / 70</dt>
+          <dd>peso de teoría y práctica</dd>
+        </div>
+        <div>
+          <dt>80 %</dt>
+          <dd>para aprobar cada parte</dd>
+        </div>
+      </dl>
 
       <TiposPregunta />
 
@@ -135,10 +115,10 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
           <h2>Cómo funciona</h2>
           <ol className="ex-reglas">
             <li>
-              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de más de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales, tesorería y los módulos de finanzas. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
+              <b>Teoría.</b> {NUM_TEORIA} preguntas con {MIN_TEORIA} minutos, sorteadas de un banco de {banco.tests + banco.clic + banco.video + banco.criterio + banco.otras}. Hay test, «¿dónde harías clic?» sobre capturas reales de Axional, circuitos que ordenar, parejas que relacionar, datos que calcular y una pregunta de cada capítulo del vídeo de compras. Cubre los seis manuales, tesorería y los módulos de finanzas. Puedes ir adelante y atrás; no verás si aciertas hasta el final. Vale el 30 %.
             </li>
             <li>
-              <b>Práctica.</b> {NUM_TAREAS} encargos encadenados que haces de verdad en la demo de Axional (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
+              <b>Práctica.</b> {NUM_TAREAS} encargos encadenados que haces de verdad en la Demo real (base TUTORIAL). Al terminar cada uno anotas aquí lo que ves en pantalla: números de documento, importes, cuentas y estados. Vale el 70 %.
             </li>
             <li>
               <b>Tus datos son únicos.</b> Proveedor <code className="k">T{ini}EX</code>, cliente <code className="k">C{ini}EX</code> y un código de examen que pondrás en la «Referencia» del pedido, en «Factura proveedor» y en el «Documento» del asiento. Las cantidades y los precios solo los tienes tú.
@@ -160,7 +140,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
           {!p.alumno.ini ? (
             <div className="callout nota">
               <b>Primero, tu nombre</b>
-              Necesitamos tu nombre e iniciales para generar tus datos. Escríbelos en la ventana de bienvenida.
+              Necesitamos tu nombre e iniciales para generar tus datos. Puedes escribirlos en «Logros», en «Tus datos».
             </div>
           ) : (
             <>
@@ -216,7 +196,7 @@ function Portada({ actual, onEmpezar }: { actual: EstadoExamen | null; onEmpezar
                 )}
               </div>
               <p className="muted small">
-                Ten abierta la demo en otra pestaña: <a href={DEMO_URL} target="_blank" rel="noreferrer">nextdemo.geasa.eu</a>, base TUTORIAL.
+                Ten abierta la Demo real en otra pestaña: <a href={DEMO_URL} target="_blank" rel="noreferrer">nextdemo.geasa.eu</a>, base TUTORIAL.
               </p>
             </>
           )}
@@ -239,48 +219,19 @@ const TIPOS_PORTADA: { tipo: TipoPregunta | 'video'; n: number; titulo: string; 
 ];
 
 function TiposPregunta() {
-  const reducir = useReducedMotion();
   return (
     <section className="ext-tipos" aria-label="Tipos de pregunta de la teoría">
-      {TIPOS_PORTADA.map((t, k) => (
-        <motion.div
-          key={t.tipo}
-          className={`ext-tipo glass t-${t.tipo}`}
-          initial={reducir ? false : { opacity: 0, z: -400, rotateX: 35, y: 30 }}
-          animate={{ opacity: 1, z: 0, rotateX: 0, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.5 + k * 0.08, ease: [0.2, 0.8, 0.2, 1] }}
-        >
+      {TIPOS_PORTADA.map((t) => (
+        <div key={t.tipo} className={`ext-tipo t-${t.tipo}`}>
           <span className="ext-ico" aria-hidden="true">
             <Icon name={t.icono} size={18} />
           </span>
           <b className="ext-n">{t.n}</b>
           <span className="ext-tit">{t.titulo}</span>
           <span className="ext-txt">{t.texto}</span>
-        </motion.div>
+        </div>
       ))}
     </section>
-  );
-}
-
-function Stat({ k, valor, valor2, texto }: { k: number; valor: number; valor2?: number; texto: string }) {
-  const reducir = useReducedMotion();
-  const retraso = 0.6 + k * 0.12;
-  const a = useContador(valor, { duracion: 1.1, retraso });
-  const b = useContador(valor2 ?? 0, { duracion: 1.1, retraso });
-  return (
-    <motion.div
-      className="ex-stat glass"
-      initial={reducir ? false : { opacity: 0, y: 16, rotateX: -40 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-      transition={{ duration: 0.6, delay: retraso, ease: [0.2, 0.7, 0.2, 1] }}
-      aria-label={`${valor2 !== undefined ? `${valor} / ${valor2}` : valor} ${texto}`}
-    >
-      <b aria-hidden="true">
-        {Math.round(a)}
-        {valor2 !== undefined && <> / {Math.round(b)}</>}
-      </b>
-      <span aria-hidden="true">{texto}</span>
-    </motion.div>
   );
 }
 
@@ -370,8 +321,8 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
   const anuncio = queda <= 60_000 ? 'Queda 1 minuto' : queda <= 5 * 60_000 ? 'Quedan 5 minutos' : '';
 
   // Llegada desde el fondo del espacio (o vuelta hacia él al ir atrás)
-  const llegar = reducir ? undefined : { opacity: 0, scale: dir > 0 ? 0.55 : 1.25, z: dir > 0 ? -600 : 240, rotateX: dir > 0 ? 14 : -10, filter: 'blur(6px)' };
-  const irse = reducir ? undefined : { opacity: 0, scale: dir > 0 ? 1.18 : 0.6, z: dir > 0 ? 260 : -600, rotateX: dir > 0 ? -8 : 12, filter: 'blur(6px)' };
+  const llegar = reducir ? undefined : { opacity: 0, x: dir > 0 ? 12 : -12 };
+  const irse = reducir ? undefined : { opacity: 0 };
 
   const saltos = (
     <div className="ex-dots" role="tablist" aria-label="Preguntas">
@@ -392,7 +343,14 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
         {anuncio}
       </div>
 
-      <OrbitaProgreso total={ex.teoria.length} actual={i} hechas={hechas} latido={destello} />
+      <div className="exg-progreso" aria-hidden="true">
+        <span>
+          <b>{ex.teoria.length - sinResponder}</b> de {ex.teoria.length} respondidas
+        </span>
+        <span className="exg-progreso-barra">
+          <i style={{ width: `${((ex.teoria.length - sinResponder) / ex.teoria.length) * 100}%` }} />
+        </span>
+      </div>
 
       {ancho ? (
         saltos
@@ -406,15 +364,14 @@ function Teoria({ ex }: { ex: EstadoExamen }) {
       )}
 
       <div className="ex-q-wrap">
-        <Hiperespacio key={`h-${i}`} semilla={i + 1} />
         <AnimatePresence mode="wait" custom={dir}>
           <motion.section
             key={i}
             className={`sheet pad ex-q exq-t-${tipo} ${destello.startsWith(`${i}-`) ? 'exq-destello' : ''}`}
             initial={llegar}
-            animate={{ opacity: 1, scale: 1, z: 0, rotateX: 0, filter: 'blur(0px)' }}
+            animate={{ opacity: 1, x: 0 }}
             exit={irse}
-            transition={{ duration: 0.42, ease: [0.2, 0.75, 0.2, 1] }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
             aria-labelledby={`exq-titulo-${i}`}
           >
             <div className="exq-cabeza">
@@ -497,7 +454,7 @@ function NucleoTiempo({ fraccion, estado, texto }: { fraccion: number; estado: s
 
 function BarraExamen({ titulo, sub, codigo, estado, fraccion, children }: { titulo: string; sub: string; codigo: string; estado?: string; fraccion?: number; children?: ReactNode }) {
   return (
-    <div className={`ex-barra glass ${estado ? `ex-b-${estado}` : ''}`}>
+    <div className={`ex-barra ${estado ? `ex-b-${estado}` : ''}`}>
       <div>
         <b>{titulo}</b>
         <span className="muted small"> · {sub}</span>
@@ -562,7 +519,7 @@ function Practica({ ex }: { ex: EstadoExamen }) {
         </span>
       </BarraExamen>
 
-      <section className="ex-caso ex-profundo">
+      <section className="ex-caso exg-panel">
         <div className="ex-caso-cod">
           <span className="ex-caso-lbl">Tu código de examen</span>
           <div className="ex-codigo">{ex.codigo}</div>
@@ -610,7 +567,7 @@ function Practica({ ex }: { ex: EstadoExamen }) {
       <AnimatePresence mode="wait">
         <motion.article
           key={tarea.id}
-          className="ex-encargo glass"
+          className="ex-encargo exg-panel"
           initial={reducir ? false : { opacity: 0, y: 24, rotateX: -6 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
           exit={reducir ? undefined : { opacity: 0, y: -12 }}
@@ -760,7 +717,6 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
   const [nuevo, setNuevo] = useState(false);
   const acta = useMemo(() => crearActa(ex), [ex]);
   const texto = useMemo(() => actaTexto(acta), [acta]);
-  const lanzado = useRef(false);
   const d = (s: number) => (reducir ? 0 : s);
   useArriba();
 
@@ -782,42 +738,40 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!r.aprobado || reducir || lanzado.current) return;
-    lanzado.current = true;
-    const t = setTimeout(() => {
-      void confetti({ particleCount: 160, spread: 90, origin: { y: 0.4 }, colors: MARCA, disableForReducedMotion: true });
-    }, (SECUENCIA.veredicto + 0.3) * 1000);
-    return () => clearTimeout(t);
-  }, [r.aprobado, reducir]);
 
   return (
     <div className="wrap ex-pagina">
-      <motion.section className={`ex-hero ex-profundo ex-res ${r.aprobado ? 'aprobado' : 'suspenso'}`} initial={reducir ? false : { opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}>
-        <div className="ex-res-grid">
-          <div className="ex-res-txt">
-            <p className="ex-kicker">Examen {ex.codigo}</p>
-            <motion.h1 className="ax-glow-text ex-veredicto" initial={reducir ? false : { opacity: 0, y: 24, scale: 0.94 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: d(SECUENCIA.veredicto), duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}>
-              {r.aprobado ? '¡Aprobado!' : 'Esta vez no'}
-            </motion.h1>
-            <motion.p className="lead muted" initial={reducir ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: d(SECUENCIA.veredicto + 0.25), duration: 0.5 }}>
-              {r.aprobado
-                ? 'Has superado las dos partes. Manda el acta al examinador para que valide tu certificado.'
-                : `Necesitas un ${Math.round(APROBADO_EXAMEN * 100)} % en la teoría y en la práctica. Repasa lo que ha fallado y vuelve a intentarlo con un caso nuevo.`}
-            </motion.p>
-            <motion.div className={`ex-global ${r.aprobado ? 'ok' : 'mal'}`} initial={reducir ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: d(SECUENCIA.veredicto + 0.4) }}>
-              Nota global <b>{num2.format(r.global * 100)} %</b>
-            </motion.div>
-          </div>
-          <div className="ex-anillos">
-            <AnillosResultado teoria={r.teoria} practica={r.practica} global={r.global} aprobado={r.aprobado} umbral={APROBADO_EXAMEN} />
-            <div className="ex-leyendas">
-              <LeyendaAnillo valor={r.teoria} nombre="Teoría" detalle={`${r.aciertos}/${r.totalTeoria} aciertos`} color={r.teoria >= APROBADO_EXAMEN ? 'linear-gradient(135deg, #5ff0d2, #8b7bff)' : '#ff8a80'} retraso={SECUENCIA.teoria} />
-              <LeyendaAnillo valor={r.practica} nombre="Práctica" detalle={`${r.puntos}/${r.maxPuntos} puntos`} color={r.practica >= APROBADO_EXAMEN ? 'linear-gradient(135deg, #8b7bff, #5ff0d2)' : '#ff8a80'} retraso={SECUENCIA.practica} />
-            </div>
-          </div>
+      <header className={`exg-cab exg-res ${r.aprobado ? 'aprobado' : 'suspenso'}`}>
+        <p className="exg-kicker">Examen {ex.codigo}</p>
+        <h1 className="ex-veredicto">{r.aprobado ? 'Aprobado' : 'Esta vez no'}</h1>
+        <p className="exg-lead">
+          {r.aprobado
+            ? 'Has superado las dos partes. Manda el acta al examinador para que valide tu certificado.'
+            : `Necesitas un ${Math.round(APROBADO_EXAMEN * 100)} % en la teoría y en la práctica. Repasa lo que has fallado y vuelve a intentarlo con un caso nuevo.`}
+        </p>
+      </header>
+      <dl className="exg-cifras exg-notas">
+        <div className={r.aprobado ? 'ok' : 'mal'}>
+          <dt>{num2.format(r.global * 100)} %</dt>
+          <dd>nota global</dd>
         </div>
-      </motion.section>
+        <div className={r.teoria >= APROBADO_EXAMEN ? 'ok' : 'mal'}>
+          <dt>{Math.round(r.teoria * 100)} %</dt>
+          <dd>
+            teoría · {r.aciertos}/{r.totalTeoria} aciertos
+          </dd>
+        </div>
+        <div className={r.practica >= APROBADO_EXAMEN ? 'ok' : 'mal'}>
+          <dt>{Math.round(r.practica * 100)} %</dt>
+          <dd>
+            práctica · {r.puntos}/{r.maxPuntos} puntos
+          </dd>
+        </div>
+        <div>
+          <dt>{Math.round(APROBADO_EXAMEN * 100)} %</dt>
+          <dd>para aprobar cada parte</dd>
+        </div>
+      </dl>
 
       <section className="sheet pad exr-teoria" aria-labelledby="exr-teoria-t">
         <div className="exr-teoria-cab">
@@ -826,7 +780,7 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
             <b>{r.aciertos}</b> de {r.totalTeoria}
           </span>
         </div>
-        <Constelacion teoria={ex.teoria} resp={ex.respTeoria} />
+        <Constelacion teoria={ex.teoria} resp={ex.respTeoria} inicio={0} />
         <DesgloseTeoria bloques={r.desglose ?? desgloseTeoria(ex.teoria, ex.respTeoria)} />
       </section>
 

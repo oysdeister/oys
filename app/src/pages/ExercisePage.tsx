@@ -1,58 +1,61 @@
-import { useEffect, useRef, type KeyboardEvent } from 'react';
 import { Glosa } from '../components/Glosario';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
-import { META, getEjercicio, todosEjercicios } from '../content';
-import { APROBADO, avanceEjercicio, useProgreso } from '../lib/progress';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { META, getEjercicio } from '../content';
+import { useProgreso } from '../lib/progress';
 import { conIni } from '../lib/texto';
-import { CAPITULOS_VIDEO, VIDEO_POR_EJERCICIO } from '../lib/config';
-import { momentosDeEjercicio } from '../content/videoSeries';
-import { Momentos } from '../components/exercise/VideoMomento';
-import { Anillo } from '../components/exercise/Anillo';
 import { Icon } from '../components/Icon';
 import { Concepto } from '../components/exercise/Concepto';
 import { Guiado } from '../components/exercise/Guiado';
 import { DeMemoria } from '../components/exercise/DeMemoria';
 import { TestEj } from '../components/exercise/TestEj';
 import { DemoReal } from '../components/exercise/DemoReal';
-import { Problemas } from '../components/exercise/Problemas';
 import { Practicar } from '../erp/Practicar';
-import { PRACTICAS_POR_EJERCICIO, useNotas } from '../erp/practicas';
-import { estadoDe } from '../components/exercise/util';
+import { PRACTICAS_POR_EJERCICIO } from '../erp/practicas';
+import { bloqueAbierto, bloqueQueToca, bloquesDe, bloquesObligatorios, esOpcional, numeroBloque, pasoOpcional, pasosDe, type PasoId } from '../lib/ruta';
+import { MODULOS } from '../content';
+import { ejercicioCompletado } from '../lib/progress';
 import './aprender.css';
 import './pulido.css';
-
-const TABS = [
-  { id: 'concepto', label: 'Concepto' },
-  { id: 'guiado', label: 'Guiado' },
-  { id: 'memoria', label: 'De memoria' },
-  { id: 'test', label: 'Test' },
-  { id: 'erp', label: 'Practica en el ERP' },
-  { id: 'demo', label: 'En la demo real' },
-  { id: 'problemas', label: 'Problemas' },
-] as const;
+import './ruta.css';
 
 export default function ExercisePage() {
   const { id = '' } = useParams();
   const [sp, setSp] = useSearchParams();
   const reducir = useReducedMotion();
   const p = useProgreso();
-  const notasErp = useNotas();
-  const tabsRef = useRef<HTMLDivElement>(null);
   const hallado = getEjercicio(id);
-  const tabActual = sp.get('tab') ?? 'concepto';
-
-  // La pestaña activa siempre a la vista en la barra deslizable (móvil)
+  const tabParam = sp.get('tab');
+  // Pasos con ejercicio interno (Guiado, Test): el «Siguiente» del pie solo aparece al terminarlo.
+  // «De memoria» es opcional: su «Siguiente: Test» está siempre a mano
+  const [listo, setListo] = useState<{ clave: string; ok: boolean }>({ clave: '', ok: false });
+  const claveListo = `${id}:${tabParam ?? ''}`;
+  const onListo = useCallback((ok: boolean) => setListo({ clave: claveListo, ok }), [claveListo]);
+  useEffect(() => { window.scrollTo({ top: 0 }); }, [claveListo]);
+  // ?sec=<id>: baja hasta esa sección del Concepto (viene de la búsqueda)
+  const secParam = sp.get('sec');
   useEffect(() => {
-    const el = tabsRef.current;
-    const btn = el?.querySelector<HTMLElement>('[role=tab][aria-selected=true]');
-    if (el && btn && el.scrollWidth > el.clientWidth) el.scrollTo({ left: Math.max(0, btn.offsetLeft - 24), behavior: 'smooth' });
-  }, [tabActual, id]);
+    if (!secParam || tabParam) return;
+    const id = window.setTimeout(() => {
+      const el = document.getElementById(`sec-${secParam}`);
+      if (el) el.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
+    }, 350);
+    return () => window.clearTimeout(id);
+  }, [secParam, tabParam, id, reducir]);
+  // Al cambiar de pestaña se olvida el «terminado» anterior (en el mismo render, antes de que el paso nuevo avise):
+  // si vuelves a un paso ya hecho, el «Siguiente» no asoma mientras se anima el cambio
+  const [claveVista, setClaveVista] = useState(claveListo);
+  if (claveVista !== claveListo) {
+    setClaveVista(claveListo);
+    setListo({ clave: '', ok: false });
+  }
+
 
   if (!hallado) {
     return (
       <div className="wrap" style={{ padding: '60px 0' }}>
-        <h1>No encuentro ese ejercicio</h1>
+        <h1>No encuentro este bloque</h1>
         <p className="muted">Puede que el enlace esté mal escrito.</p>
         <Link className="btn" to="/">
           Volver al inicio
@@ -63,161 +66,208 @@ export default function ExercisePage() {
 
   const { modulo, ejercicio: ej } = hallado;
   const ini = p.alumno.ini;
+  const t = (x: string) => conIni(x, ini);
   const meta = META[modulo.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: modulo.titulo };
-  const e = p.ejercicios[ej.id];
-  const estado = estadoDe(e, ej.checklist.length);
-  const avance = avanceEjercicio(e, ej.checklist.length);
-  const todos = todosEjercicios();
-  const pos = todos.findIndex((x) => x.ejercicio.id === ej.id);
-  const sig = todos[pos + 1];
+  const obligatorios = bloquesObligatorios(modulo);
+  const opcional = esOpcional(modulo, ej.id);
+  const n = numeroBloque(modulo, ej.id);
+  const pasos = pasosDe(ej);
+  // «Problemas» ya no es una pestaña: vive al final de la Demo real
+  const tabPedida = tabParam === 'problemas' ? 'demo' : tabParam;
+  const tab = (pasos.some((x) => x.id === tabPedida) ? tabPedida : 'concepto') as PasoId;
+  const k = pasos.findIndex((x) => x.id === tab);
   const practicasEj = PRACTICAS_POR_EJERCICIO[ej.id] ?? [];
-  const tabs = TABS.filter((x) => x.id !== 'erp' || practicasEj.length > 0);
-  const tabParam = sp.get('tab');
-  const tab = tabs.some((x) => x.id === tabParam) ? (tabParam as string) : 'concepto';
 
-  const ir = (t: string) => {
-    setSp(t === 'concepto' ? {} : { tab: t }, { replace: true });
-    const el = tabsRef.current;
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 90;
-      if (window.scrollY > top) window.scrollTo({ top, behavior: reducir ? 'auto' : 'smooth' });
-    }
+  // Lo siguiente: el próximo bloque obligatorio del módulo; si no queda, el examen del módulo.
+  // En «Para saber más» se encadenan los bloques de ampliación entre sí (el último vuelve al módulo).
+  const cadena = opcional ? bloquesDe(modulo).filter((b) => esOpcional(modulo, b.id)) : obligatorios;
+  const k0 = cadena.findIndex((b) => b.id === ej.id);
+  const sigBloque = k0 >= 0 ? cadena[k0 + 1] : undefined;
+  const sigAbierto = sigBloque ? bloqueAbierto(p, modulo, sigBloque.id) : false;
+  const antBloque = k0 > 0 ? cadena[k0 - 1] : undefined;
+  const idxMod = MODULOS.findIndex((m) => m.id === modulo.id);
+  const sigMod = MODULOS[idxMod + 1];
+
+  const ir = (paso: string) => {
+    setSp(paso === 'concepto' ? {} : { tab: paso }, { replace: false });
   };
 
-  const hechoTab: Record<string, boolean> = {
-    guiado: !!e?.guiado,
-    test: (e?.test ?? 0) >= APROBADO,
-    erp: practicasEj.length > 0 && practicasEj.every((x) => (notasErp[x]?.nota ?? 0) >= 1),
-    demo: ej.checklist.length > 0 && (e?.demo.length ?? 0) >= ej.checklist.length,
-  };
+  // Bloque cerrado: hay que terminar el anterior
+  if (!bloqueAbierto(p, modulo, ej.id)) {
+    const toca = bloqueQueToca(p, modulo);
+    const nToca = toca ? numeroBloque(modulo, toca.id) : 0;
+    return (
+      <div className="wrap bq" style={{ ['--mod' as string]: meta.color }}>
+        <p className="bq-miga">
+          <Link to={`/modulo/${modulo.id}`}>
+            <Icon name="atras" size={16} /> {meta.corto}
+          </Link>
+        </p>
+        <div className="bq-cerrado">
+          <Icon name="candado" size={28} />
+          <h1>
+            Bloque {n}: {t(ej.titulo)}
+          </h1>
+          <p>
+            {opcional ? 'Este bloque de ampliación se abre cuando termines los bloques del módulo.' : 'Los bloques se abren de uno en uno.'} Ahora te toca el <b>bloque {nToca}</b>, «{t(toca?.titulo ?? '')}». Un bloque está terminado cuando completas su <b>Guiado</b> y apruebas su <b>Test</b>.
+          </p>
+          {toca && (
+            <Link className="btn arc lg" to={`/ejercicio/${toca.id}`}>
+              Ir al bloque {nToca}
+            </Link>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-  const onTeclaTabs = (ev: KeyboardEvent<HTMLDivElement>) => {
-    const k = tabs.findIndex((x) => x.id === tab);
-    let n = -1;
-    if (ev.key === 'ArrowRight') n = (k + 1) % tabs.length;
-    else if (ev.key === 'ArrowLeft') n = (k - 1 + tabs.length) % tabs.length;
-    else if (ev.key === 'Home') n = 0;
-    else if (ev.key === 'End') n = tabs.length - 1;
-    if (n < 0) return;
-    ev.preventDefault();
-    ev.stopPropagation();
-    ir(tabs[n].id);
-    const btn = tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role=tab]')[n];
-    btn?.focus();
-    btn?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  };
 
-  const momentos = momentosDeEjercicio(ej.id);
-  const nPasos = ej.secciones.reduce((n, x) => n + x.pasos.length, 0);
-  const capitulos = (VIDEO_POR_EJERCICIO[ej.id] ?? []).map((n) => CAPITULOS_VIDEO.find((c) => c.n === n)).filter((c): c is (typeof CAPITULOS_VIDEO)[number] => !!c);
+  const anterior = pasos[k - 1];
+  const siguiente = pasos[k + 1];
+  const interno = tab === 'guiado' || tab === 'test';
+  // Tras Guiado el «Siguiente» lleva a «De memoria», pero se puede saltar al Test
+  const saltoTest = siguiente && pasoOpcional(siguiente.id) && pasos.some((x) => x.id === 'test') ? pasos.find((x) => x.id === 'test') : undefined;
+  const esperar = interno && !(listo.clave === claveListo && listo.ok);
+  const queFalta = tab === 'test' ? 'Aprueba el test' : tab === 'guiado' ? 'Termina el recorrido' : 'Termina las pantallas';
 
   return (
-    <div className="wrap ex-page" style={{ ['--mod' as string]: meta.color }}>
-      <header className={`ax-banner ex-banner${tab !== 'concepto' ? ' ex-compact' : ''}`} style={{ ['--mod' as string]: meta.color }}>
-        <div className="ax-banner-in">
-          <div className="ax-banner-text">
-            <p className="ax-kicker ex-kicker">
-              <Link to={`/modulo/${modulo.id}`} className="ex-back">
-                <Icon name="atras" size={16} /> {modulo.titulo}
-              </Link>
-              <span aria-hidden="true" className="ex-sep">·</span> Ejercicio {ej.numero} de {modulo.ejercicios.length}
-            </p>
-            <h1>{conIni(ej.titulo, ini)}</h1>
-            <p className="lead"><Glosa>{conIni(ej.objetivo, ini)}</Glosa></p>
-            <div className="ex-chips">
-              <span className="chip">
-                <Icon name="reloj" size={14} /> {ej.duracionMin} min
-              </span>
-              <span className="chip">{nPasos} pasos guiados</span>
-              <span className={estado.clase}>{estado.texto}</span>
-            </div>
-            {momentos.length > 0 ? (
-              <div className="ex-vm">
-                <Momentos lista={momentos.slice(0, 3)} compacto />
-              </div>
-            ) : (
-              capitulos.length > 0 && (
-                <div className="ex-video">
-                  <Icon name="video" size={18} />
-                  <span>En el vídeo:</span>
-                  {capitulos.map((c) => (
-                    <Link key={c.n} className="chip" to={`/video/${c.n}`}>
-                      Cap. {c.n} · {c.titulo}
-                    </Link>
-                  ))}
-                </div>
-              )
-            )}
-          </div>
-          <div className="ax-banner-side ex-side">
-            <motion.div className="ex-num ax-num" initial={reducir ? false : { rotateY: -70, opacity: 0 }} animate={{ rotateY: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 90, damping: 14 }}>
-              {ej.numero}
-            </motion.div>
-            <Anillo valor={avance} size={104} etiqueta="hecho" />
-          </div>
-        </div>
+    <div className="wrap bq" style={{ ['--mod' as string]: meta.color }}>
+      <p className="bq-miga">
+        <Link to={`/modulo/${modulo.id}`}>
+          <Icon name="atras" size={16} /> {meta.corto}
+        </Link>
+      </p>
+      <header className="bq-cab">
+        <p className="bq-kicker">
+          Módulo {idxMod} · {opcional ? 'Para saber más (opcional)' : `Bloque ${n} de ${obligatorios.length}`}
+        </p>
+        <h1>{t(ej.titulo)}</h1>
+        <p className="bq-obj">
+          <Glosa>{t(ej.objetivo)}</Glosa>
+        </p>
+        <p id="bloque-pasos" className="bq-donde">
+          <span className="bq-donde-n">
+            Paso {k + 1} de {pasos.length}
+          </span>
+          <span>
+            <b>{pasos[k].label}.</b>
+            {pasoOpcional(pasos[k].id) && <span className="paso-opc">opcional</span>} {pasos[k].que}
+          </span>
+        </p>
       </header>
-
-      <div ref={tabsRef} className="tabs ex-tabs" role="tablist" aria-label="Partes del ejercicio" onKeyDown={onTeclaTabs}>
-        <LayoutGroup id={`tabs-${ej.id}`}>
-          {tabs.map((x) => {
-            const sel = x.id === tab;
-            return (
-              <button
-                key={x.id}
-                role="tab"
-                id={`tab-${x.id}`}
-                aria-selected={sel}
-                aria-controls="panel-ej"
-                tabIndex={sel ? 0 : -1}
-                className="tab"
-                onClick={() => ir(x.id)}
-              >
-                {sel && <motion.span layoutId="tab-pill" className="tab-pill" transition={reducir ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }} />}
-                {x.label}
-                {hechoTab[x.id] && (
-                  <span className="tick" aria-label="hecho">
-                    <Icon name="check" size={11} stroke={3.5} />
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </LayoutGroup>
-      </div>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.section
           key={tab}
           id="panel-ej"
-          role="tabpanel"
-          aria-labelledby={`tab-${tab}`}
-          className="panel"
-          initial={reducir ? { opacity: 0 } : { opacity: 0, y: 14, rotateX: -4 }}
-          animate={{ opacity: 1, y: 0, rotateX: 0 }}
-          exit={reducir ? { opacity: 0 } : { opacity: 0, y: -8 }}
-          transition={{ duration: 0.26, ease: [0.2, 0.7, 0.2, 1] }}
-          style={{ transformPerspective: 1400, transformOrigin: '50% 0' }}
+          className="panel bq-panel"
+          aria-label={pasos[k].label}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.22 }}
         >
-          {tab === 'concepto' && <Concepto ej={ej} ini={ini} modulo={modulo.id} onGuiado={() => ir('guiado')} />}
-          {tab === 'guiado' && <Guiado ej={ej} modulo={modulo.id} ini={ini} onIr={ir} />}
-          {tab === 'memoria' && <DeMemoria ej={ej} modulo={modulo.id} ini={ini} />}
-          {tab === 'test' && <TestEj ej={ej} ini={ini} onIr={ir} />}
+          {tab === 'concepto' && <Concepto ej={ej} ini={ini} modulo={modulo.id} />}
+          {tab === 'guiado' && <Guiado ej={ej} modulo={modulo.id} ini={ini} onListo={onListo} />}
+          {tab === 'memoria' && (
+            <p className="bq-opc">
+              Repasa de memoria dónde está cada cosa. Si ya lo tienes claro,{' '}
+              <button type="button" className="bq-opc-ir" onClick={() => ir('test')}>
+                pasa al Test
+              </button>
+              .
+            </p>
+          )}
+          {tab === 'memoria' && <DeMemoria ej={ej} modulo={modulo.id} ini={ini} onListo={onListo} />}
+          {tab === 'test' && <TestEj ej={ej} ini={ini} onListo={onListo} onIr={ir} />}
           {tab === 'erp' && <Practicar ids={practicasEj} ini={ini} />}
           {tab === 'demo' && <DemoReal ej={ej} ini={ini} />}
-          {tab === 'problemas' && <Problemas ej={ej} ini={ini} />}
         </motion.section>
       </AnimatePresence>
 
-      {sig && (
-        <Link className="ex-foot sheet" to={`/ejercicio/${sig.ejercicio.id}`}>
-          <span className="small muted">{sig.modulo.id === modulo.id ? 'Siguiente ejercicio' : `Siguiente módulo: ${sig.modulo.titulo}`}</span>
-          <strong>
-            {sig.ejercicio.numero}. {conIni(sig.ejercicio.titulo, ini)}
-          </strong>
-          <Icon name="flecha" />
-        </Link>
+      {/* Cierre del bloque: lo que el alumno ha hecho en él, al final del último paso */}
+      {!siguiente && ej.aprendido && ej.aprendido.length > 0 && (
+        <section className="aprendido" aria-labelledby="aprendido-h">
+          <div className="aprendido-cab">
+            <span className="aprendido-sello" aria-hidden="true">
+              <Icon name="check" size={22} stroke={3} />
+            </span>
+            <div>
+              <p className="aprendido-k">Cierre del bloque</p>
+              <h2 id="aprendido-h">Qué has aprendido</h2>
+            </div>
+          </div>
+          <ul className="aprendido-lista">
+            {ej.aprendido.map((x, i) => (
+              <li key={i}>
+                <Icon name="check" size={16} stroke={3} />
+                <span>
+                  <Glosa>{t(x)}</Glosa>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
+
+      <nav className="bq-sig" aria-label="Seguir">
+        {anterior ? (
+          <button type="button" className="btn ghost" onClick={() => ir(anterior.id)}>
+            <Icon name="atras" size={18} /> Anterior: {anterior.label}
+          </button>
+        ) : antBloque ? (
+          <Link className="btn ghost bq-ant" to={`/ejercicio/${antBloque.id}`}>
+            <Icon name="atras" size={18} /> Bloque anterior
+          </Link>
+        ) : (
+          <Link className="btn ghost bq-ant" to={`/modulo/${modulo.id}`}>
+            <Icon name="atras" size={18} /> Inicio del módulo
+          </Link>
+        )}
+        {esperar ? (
+          <p className="bq-falta">
+            <span>
+              {queFalta} y aparecerá aquí «Siguiente{siguiente ? `: ${siguiente.label}` : ''}».
+            </span>
+          </p>
+        ) : siguiente && saltoTest ? (
+          <div className="bq-sig-der">
+            <button type="button" className="btn arc lg" onClick={() => ir(siguiente.id)}>
+              Siguiente: {siguiente.label} <span className="paso-opc">opcional</span>
+            </button>
+            <button type="button" className="bq-opc-ir" onClick={() => ir(saltoTest.id)}>
+              O sáltate este paso y ve al Test
+            </button>
+          </div>
+        ) : siguiente ? (
+          <button type="button" className="btn arc lg" onClick={() => ir(siguiente.id)}>
+            Siguiente: {siguiente.label}
+          </button>
+        ) : sigBloque ? (
+          sigAbierto ? (
+            <Link className="btn arc lg" to={`/ejercicio/${sigBloque.id}`}>
+              Siguiente bloque: {t(sigBloque.titulo)}
+            </Link>
+          ) : (
+            <div className="bq-sig-der">
+              <button type="button" className="btn arc lg" disabled>
+                Siguiente: bloque {n + 1}
+              </button>
+              <p className="bq-falta">
+                <span>Para abrir el bloque {n + 1}, termina el Guiado y aprueba el Test de este bloque.</span>
+              </p>
+            </div>
+          )
+        ) : !opcional && obligatorios.every((b) => ejercicioCompletado(p.ejercicios[b.id])) ? (
+          <Link className="btn arc lg" to={`/modulo/${modulo.id}/examen`}>
+            Siguiente: examen del módulo
+          </Link>
+        ) : (
+          <Link className="btn arc lg" to={`/modulo/${modulo.id}`}>
+            {opcional ? 'Volver al módulo' : sigMod ? 'Volver al módulo y terminar los bloques pendientes' : 'Volver al módulo'}
+          </Link>
+        )}
+      </nav>
     </div>
   );
 }

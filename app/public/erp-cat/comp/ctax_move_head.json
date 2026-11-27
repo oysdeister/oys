@@ -1,0 +1,680 @@
+{
+ "c": "ctax_move_head",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "taxh_loteid": {
+   "ro": "1==1"
+  },
+  "taxh_docser": {
+   "lov": {
+    "obj": "cdocnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "taxh_tipdoc": {
+   "req": 1,
+   "mayus": 1,
+   "def": "F1",
+   "reglas": [
+    {
+     "si": "!vacio(taxh_tipdoc) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_tipdoc)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_tipdoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_docrec": {
+   "lov": {
+    "obj": "ctax_move_head",
+    "clave": "taxh_docser",
+    "cols": [
+     "taxh_docser"
+    ]
+   }
+  },
+  "taxh_empcode": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_cifemp": {
+   "req": 1,
+   "mayus": 1
+  },
+  "taxh_cifiss_emp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_cifiss_emp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_cifiss_emp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_cifiss_emp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_ciftyp_emp": {
+   "req": 1,
+   "mayus": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxh_ciftyp_emp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_ciftyp_emp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_ciftyp_emp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_natfac": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxh_natfac) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_natfac)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_natfac",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_zondel": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_zondel) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_zondel)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_zondel",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_tercer": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_tercer) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_tercer)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_tercer",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_nombre": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxh_nombre) && !/^([a-zA-Z0-9]+)([a-zA-Z0-9ÀÁÂÃÄÅàáâãäåÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÑñÇç_./-:,&()\\s\\ ])*$/.test(taxh_nombre)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_nombre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_cifter": {
+   "req": 1,
+   "mayus": 1
+  },
+  "taxh_ciftyp": {
+   "req": 1,
+   "mayus": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxh_ciftyp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_ciftyp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_ciftyp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_cifiss": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_cifiss) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_cifiss)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_cifiss",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_zonter": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_zonter) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_zonter)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_zonter",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_tipdir": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_tipdir) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_tipdir)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_tipdir",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_book": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_book",
+    "clave": "book_code",
+    "cols": [
+     "book_code",
+     "book_name",
+     "book_type"
+    ],
+    "desc": "book_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_book) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_book)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_book",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_fecha": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "taxh_fecdoc": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "taxh_fecope": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "taxh_ejefis": {
+   "req": 1,
+   "calc": "new Date(taxh_fecha).getFullYear()",
+   "lov": {
+    "obj": "cejercic",
+    "clave": "numero"
+   }
+  },
+  "taxh_perfis": {
+   "req": 1
+  },
+  "taxh_proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_jusser": {
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "taxh_sistem": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_coda2": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_coda2) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_coda2)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_coda2",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_codpos": {
+   "mayus": 1
+  },
+  "taxh_taiter": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxh_taiter) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_taiter)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_taiter",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_cambio": {
+   "req": 1,
+   "def": 1
+  },
+  "taxh_moneda": {
+   "req": 1,
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_moneda)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_import": {
+   "req": 1
+  },
+  "taxh_impdiv": {
+   "req": 1
+  },
+  "taxh_seqno": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_move_head",
+    "clave": "taxh_seqno",
+    "cols": [
+     "taxh_docser"
+    ],
+    "desc": "taxh_docser"
+   }
+  },
+  "taxh_apteid": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "capuntes",
+    "clave": "id_apunte",
+    "cols": [
+     "docser",
+     "refext_serie",
+     "moneda"
+    ],
+    "desc": "docser"
+   }
+  },
+  "taxh_seqori": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_move_head",
+    "clave": "taxh_seqno",
+    "cols": [
+     "taxh_docser"
+    ],
+    "desc": "taxh_docser"
+   }
+  },
+  "taxh_key": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(taxh_key) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_key)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_key",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_camope": {
+   "req": 1,
+   "def": 1
+  },
+  "taxh_tiprec": {
+   "req": 1,
+   "def": 0
+  },
+  "taxh_group": {
+   "req": 1,
+   "def": 0
+  },
+  "taxh_cnae": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoact",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomact"
+    ],
+    "desc": "nomact"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(taxh_cnae) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(taxh_cnae)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "taxh_cnae",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "taxh_numefe": {
+   "lov": {
+    "obj": "cefectos",
+    "clave": "numero",
+    "cols": [
+     "tercer",
+     "cuenta",
+     "clase"
+    ],
+    "desc": "tercer"
+   }
+  },
+  "taxh_expter": {
+   "def": 0
+  },
+  "taxh_transf": {
+   "ro": "1==1"
+  },
+  "taxh_ereport": {
+   "req": 1,
+   "def": 0
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((taxh_fecha == null || taxh_fecdoc == null) || (taxh_fecha.getTime() >= taxh_fecdoc.getTime())))",
+   "msg": "La fecha contable debe ser mayor o igual que la fecha documento.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_DELETE_ESSII_PAG": {
+   "l": "Retroceder desde SII-Pagos",
+   "nota": "Revierte la acción 'Traspasar a SII-Pagos'. · Habilitado si: taxh_ereport == 2 && taxh_transf > 0 · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_INSERT_ESSII_PAG": {
+   "l": "Traspasar a SII-Pagos",
+   "nota": "Genera el SII-Pagos a partir del documento. · Habilitado si: taxh_ereport == 2 && taxh_transf == null · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_DELETE_ESSII": {
+   "l": "Retroceder SII Fact.",
+   "nota": "Retrocede el registro SII Facturas y lo deja preparado para emitir una modificación (o una baja si también se elimina el registro de impuesto) · Habilitado si: taxh_ereport == 1 && taxh_transf > 0 · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_DELETE_ESSII_NEW": {
+   "l": "es.BUT_DELETE_ESSII_NEW",
+   "nota": "Habilitado si: taxh_ereport == 1 && taxh_transf > 0 · Habilitado según consulta del servidor: $DBMS != 'deister_next' · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_INSERT_ESSII_NEW": {
+   "l": "es.BUT_INSERT_ESSII_NEW",
+   "nota": "Habilitado si: taxh_ereport == 1 && taxh_transf == null · Habilitado según consulta del servidor: $DBMS != 'deister_next' · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_INSERT_ESSII": {
+   "l": "Traspasar a SII-Facturas",
+   "nota": "Genera el SII-Facturas a partir del documento. · Habilitado si: taxh_ereport == 1 && taxh_transf == null · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_DELETE_VALIDA": {
+   "l": "Desvalidar impuestos",
+   "nota": "Revierte todos los cambios realizados por la 'Validación de impuestos'. · Habilitado según consulta del servidor: SELECT COUNT(*) FROM cefectos WHERE cefectos.apteid = ${taxh_apteid} AND cefectos.genpos IN(2, 3) AND ${taxh_seqori} IS NULL · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_INSERT_VALIDA": {
+   "l": "Validar impuestos",
+   "nota": "Realiza la validación de registros de impuestos de tipo IVA o retención no validados.\nRecomendaciones:\nCaducidad igual a SI: ingresar fecha contable\nCaducidad diferente a SI: ingresar fecha actual · Habilitado si: taxh_ereport == 1 && taxh_transf > 0 · Habilitado según consulta del servidor: SELECT COUNT(*) FROM cefectos WHERE cefectos.apteid = ${taxh_apteid} AND cefectos.genpos = 0 AND ${taxh_seqori} IS NULL · Se oculta si no está habilitado · Abre un diálogo con campos",
+   "ok": "Éxito",
+   "dialogo": [
+    {
+     "n": "caduca",
+     "l": "Caducidad",
+     "t": "s",
+     "req": 1,
+     "def": "N",
+     "o": [
+      {
+       "k": "N",
+       "v": "No"
+      },
+      {
+       "k": "S",
+       "v": "Sí"
+      },
+      {
+       "k": "P",
+       "v": "Propuesto"
+      },
+      {
+       "k": "R",
+       "v": "Ordenado"
+      }
+     ]
+    },
+    {
+     "n": "feccon",
+     "l": "Fecha contable",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-18"
+    }
+   ],
+   "dialogoTit": "Validar impuestos"
+  },
+  "BUT_DELETE_ISP": {
+   "l": "Retroceder autofactura ISP",
+   "nota": "Revierte la acción 'Generar registros ISP'. · Habilitado según consulta del servidor: (SELECT COUNT(*) FROM ctax_move_line, ctax_operation WHERE ctax_move_line.taxh_seqno = ${taxh_seqno} AND ctax_move_line.taxl_desgen != 0 AND ctax_operation.oper_code = ctax_move_line.taxl_oper AND ctax_operation.oper_isp = 1) != 0 · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  },
+  "BUT_INSERT_ISP": {
+   "l": "Generar registros ISP",
+   "nota": "Generación de facturas intracomunitarias. · Habilitado según consulta del servidor: SELECT COUNT(*) FROM ctax_move_line, ctax_operation WHERE ctax_move_line.taxh_seqno = ${taxh_seqno} AND '${taxh_natfac}' = 'C' AND ctax_move_line.taxl_desgen = 0 AND ctax_move_line.taxl_oper = ctax_operation.oper_code AND ctax_move_line.taxl_type IN ('N','E') AND ctax_operation.oper_isp = 1 AND (('$ · Se oculta si no está habilitado",
+   "ok": "Éxito"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Registros fiscales",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo sobre el registro fiscal CAP 52 (factura PROV-CAPN-001 de CAPNC, asiento 54):",
+  "- Con taxh_ereport 0 (No) no se ve ningún botón (todos tienen hideIfDisabled).",
+  "- Con ereport 1 (SII-Fact) aparecen «Traspasar a SII-Facturas» y «es.BUT_INSERT_ESSII_NEW» (etiqueta sin traducir en la demo); con ereport 2 (SAFT-PT) aparece «Traspasar a SII-Pagos».",
+  "- Traspasar a SII-Facturas, Retroceder SII Fact., Traspasar a SII-Pagos y Retroceder desde SII-Pagos responden sin error (message null) pero NO cambian nada en esta base: taxh_transf sigue vacío (no hay SII configurado). Se devolvió ereport a 0.",
+  "- Validar impuestos: diálogo real Caducidad* (No/Sí/Propuesto/Ordenado, def. No) y Fecha contable* (hoy); requiere ereport 1, transferido y efectos genpos 0: no se pudo ejecutar.",
+  "- Desvalidar impuestos, Generar registros ISP y Retroceder autofactura ISP: ocultos para el registro CAP (sin efectos genpos 2/3 ni líneas ISP); Generar ISP forzado por API no hace nada.",
+  "- Menú ⌄: «Asiento origen» → casientos del apunte (1 fila), «Detalle fiscal» → ctax_move_line del registro, «Facturas compras» → gcomfach del apunte; «Documento rectificado», «Asiento destino» y «Cartera de efectos» ocultos para esta fila.",
+  "probado: BUT_INSERT_ESSII, BUT_DELETE_ESSII, BUT_INSERT_ESSII_PAG, BUT_DELETE_ESSII_PAG (sin efecto), BUT_INSERT_VALIDA (solo diálogo), resto ocultos (precondición), menú ⌄ (6 entradas). Crudos: raw/contabilidad/b1/R_ctax_move_head.json, tmh3*.json."
+ ]
+}

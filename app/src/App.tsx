@@ -5,22 +5,29 @@ import { Medal } from './components/Icon';
 import { Sidebar } from './components/shell/Sidebar';
 import { Topbar } from './components/shell/Topbar';
 import { BottomNav } from './components/shell/BottomNav';
-import { Espacio } from './components/shell/Espacio';
 import { Onboarding } from './components/Onboarding';
+import { Bienvenida } from './components/Bienvenida';
 import { useProgreso } from './lib/progress';
 import { CLERK_ACTIVO } from './auth/Acceso';
 import { INSIGNIAS, insigniasGanadas } from './lib/badges';
+import { fijarModoLibre } from './lib/ruta';
 import Home from './pages/Home';
 import ModulePage from './pages/ModulePage';
 import ExercisePage from './pages/ExercisePage';
 import Taller from './pages/Taller';
 import Logros from './pages/Logros';
 import Examen from './pages/Examen';
+import ExamenModulo from './pages/ExamenModulo';
 import Certificado from './pages/Certificado';
 import Examinador from './pages/Examinador';
 import Video from './pages/Video';
 import ErpPractica from './pages/ErpPractica';
 import Glosario from './pages/Glosario';
+import { avisoIniciales, cerrarAvisoIniciales } from './lib/iniciales';
+import Errores from './pages/Errores';
+import Formacion from './pages/previa/Formacion';
+import GuiaPrevia from './pages/previa/GuiaPrevia';
+import ExamenPrevio from './pages/previa/ExamenPrevio';
 
 function useTema() {
   const [oscuro, setOscuro] = useState(() => document.documentElement.dataset.theme === 'dark');
@@ -54,6 +61,33 @@ function usePlegada() {
 }
 
 /** Avisa con una medalla cuando se gana una insignia nueva */
+/** Aviso de una vez: las iniciales guardadas con 3 letras pasan a 2 (los códigos de la demo cambian). */
+function AvisoIniciales() {
+  const p = useProgreso();
+  const [cerrado, setCerrado] = useState(false);
+  // Se lee al pintar: la migración puede ocurrir al fusionar con la cuenta, y entonces cambian las iniciales y se repinta
+  const aviso = cerrado ? null : avisoIniciales();
+  if (!aviso || !p.alumno.ini) return null;
+  const xx = p.alumno.ini;
+  return (
+    <div className="toast toast-ini" role="status">
+      <span>
+        Tus iniciales ahora son <b>{xx}</b> (antes {aviso.antes}): en la demo usa códigos como <code>T{xx}</code> o <code>C{xx}</code>. Con 3 letras algunos códigos no caben.
+      </span>
+      <button
+        type="button"
+        className="btn sm"
+        onClick={() => {
+          cerrarAvisoIniciales();
+          setCerrado(true);
+        }}
+      >
+        Entendido
+      </button>
+    </div>
+  );
+}
+
 function AvisoInsignias() {
   const p = useProgreso();
   const ganadas = insigniasGanadas(p);
@@ -93,19 +127,29 @@ function Rutas() {
     if (loc.hash) return;
     window.scrollTo({ top: 0 });
   }, [loc.pathname, loc.hash]);
+  // ?libre=1 abre todos los bloques (para revisar el curso sin hacerlo entero); ?libre=0 lo quita
+  useEffect(() => {
+    const libre = new URLSearchParams(loc.search).get('libre');
+    if (libre !== null) fijarModoLibre(libre === '1');
+  }, [loc.search]);
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={loc.pathname}
         className="page-host"
-        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 34, rotateX: 7, scale: 0.975, filter: 'blur(6px)', transformPerspective: 1600 }}
-        animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, rotateX: 0, scale: 1, filter: 'blur(0px)', transitionEnd: { filter: 'none', transform: 'none' } }}
-        exit={reduce ? { opacity: 0 } : { opacity: 0, y: -18, rotateX: -4, scale: 0.985, filter: 'blur(4px)' }}
-        transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1], opacity: { duration: 0.3 } }}
+        /* Cambio de página: un fundido corto, sin movimiento */
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: reduce ? 0 : 0.12 }}
       >
         <Routes location={loc}>
           <Route path="/" element={<Home />} />
+          <Route path="/formacion" element={<Formacion />} />
+          <Route path="/formacion/:guia" element={<GuiaPrevia />} />
+          <Route path="/formacion/:guia/examen" element={<ExamenPrevio />} />
           <Route path="/modulo/:id" element={<ModulePage />} />
+          <Route path="/modulo/:id/examen" element={<ExamenModulo />} />
           <Route path="/ejercicio/:id" element={<ExercisePage />} />
           <Route path="/erp" element={<ErpPractica />} />
           <Route path="/taller" element={<Taller />} />
@@ -113,6 +157,7 @@ function Rutas() {
           <Route path="/video" element={<Video />} />
           <Route path="/video/:cap" element={<Video />} />
           <Route path="/glosario" element={<Glosario />} />
+          <Route path="/errores" element={<Errores />} />
           <Route path="/logros" element={<Logros />} />
           <Route path="/examen" element={<Examen />} />
           <Route path="/certificado" element={<Certificado />} />
@@ -139,11 +184,10 @@ function Marco() {
   }, [cajon]);
   return (
     <div className={`app-shell${plegada ? ' collapsed' : ''}${cajon ? ' drawer' : ''}`}>
-      <Espacio />
       <Sidebar oscuro={oscuro} onTema={toggleTema} plegada={plegada} onPlegar={togglePlegada} onNavegar={() => setCajon(false)} />
-      <div className="sb-scrim" onClick={() => setCajon(false)} aria-hidden="true" />
+      <div className="sb-scrim gsb-velo" onClick={() => setCajon(false)} aria-hidden="true" />
       <div className="app-main">
-        <Topbar onMenu={() => setCajon(true)} />
+        <Topbar onMenu={() => setCajon(true)} abierto={cajon} />
         <main>
           <Rutas />
         </main>
@@ -151,13 +195,15 @@ function Marco() {
           <div className="wrap">
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo.png`} alt="O&S Consultores" className="logo-claro" />
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="O&S Consultores" className="logo-oscuro" />
-            <span>Ejercicios sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
+            <span>Formación sobre Axional Deister VNext. Demo real: nextdemo.geasa.eu, base TUTORIAL. {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
           </div>
         </footer>
       </div>
       <BottomNav />
       <AvisoInsignias />
+      <AvisoIniciales />
       <AnimatePresence>{(!p.alumno.ini || !p.alumno.usuario) && <Onboarding key="onb" />}</AnimatePresence>
+      <Bienvenida />
     </div>
   );
 }

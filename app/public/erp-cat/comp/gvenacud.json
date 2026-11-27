@@ -1,0 +1,228 @@
+{
+ "c": "gvenacud",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "codser": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gsernumh",
+    "clave": "mask_code"
+   }
+  },
+  "natdoc": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((natdoc == 'P') || ((natdoc == null || natdoc.length === 0))))",
+     "msg": "La naturaleza del documento toma como valores: [P] acuerdo de presupuesto o no viene informada.",
+     "tipo": "error",
+     "campo": "natdoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "valdoc": {
+   "req": 1,
+   "def": "S",
+   "reglas": [
+    {
+     "si": "!(((valdoc == null || ['S','N'].includes(valdoc))))",
+     "msg": "Los valores posibles del indicativo de valoración son: [S] si, [N] no.",
+     "tipo": "error",
+     "campo": "valdoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indant": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "tipant": {
+   "lov": {
+    "obj": "ganticid",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "valcat": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((valcat == null || ['D','P','A','N'].includes(valcat))))",
+     "msg": "Los valores posibles para el indicador de valorar catalogo son: [D] delegación, [P] departamento, [A] almacén y [N] no.",
+     "tipo": "error",
+     "campo": "valcat",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impdoc": {
+   "req": 1,
+   "def": "S",
+   "reglas": [
+    {
+     "si": "!(((impdoc == null || ['S','N','P'].includes(impdoc))))",
+     "msg": "Los valores posibles del indicativo de impresión de documentos son: [S] si, [N] no, [P] preguntar.",
+     "tipo": "error",
+     "campo": "impdoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "datcon": {
+   "req": 1,
+   "def": "N"
+  },
+  "amplia": {
+   "req": 1,
+   "def": 0
+  },
+  "tipado": {
+   "mayus": 1
+  },
+  "cartype": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccaractd",
+    "clave": "codigo"
+   }
+  },
+  "indest": {
+   "req": 1,
+   "def": 0
+  },
+  "indhis": {
+   "req": 1,
+   "def": 0
+  },
+  "circui": {
+   "lov": {
+    "obj": "gcircuit",
+    "clave": "codigo"
+   }
+  },
+  "tipwkf": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cworkflow_val",
+    "clave": "val_code"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "hide_entini": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_codfam": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_codart": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_varlog": {
+   "req": 1,
+   "def": 0
+  },
+  "hide_orden": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_indmod": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_canmin": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_canmax": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_impmin": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_impmax": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_udmven": {
+   "req": 1,
+   "def": 0
+  },
+  "hide_udmalt": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regalo": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_agente": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_codbar": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_refcli": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoli1": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoli2": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoli3": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoimp": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_preiva": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_tab_ctergest": {
+   "req": 1,
+   "def": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((indant == 'G') && (!(tipant == null || tipant.length === 0))) || (((indant == null || ['M','A','N'].includes(indant))) && ((tipant == null || tipant.length === 0)))))",
+   "msg": "Los valores del indicativo de control de anticipos son: [G] generar (en cuyo caso se ha informar el tipo de anticipo), [A] automático, [M] manual y [N] no.",
+   "tipo": "error",
+   "campo": "indant",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Estados de estado: A=Activo, B=Bloqueado, P=Pruebas, S=Proceso",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

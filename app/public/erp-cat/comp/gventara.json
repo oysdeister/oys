@@ -1,0 +1,138 @@
+{
+ "c": "gventara",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "seqno": {
+   "def": 0
+  },
+  "tippre": {
+   "req": 1,
+   "def": "V",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((tippre == null || ['V','C'].includes(tippre))))",
+     "msg": "El tipo de actualización ha de ser [V] valoración o [C] tarifa de compras",
+     "tipo": "error",
+     "campo": "tippre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tarcom": {
+   "lov": {
+    "obj": "gcomtarh",
+    "clave": "codigo"
+   }
+  },
+  "tarven": {
+   "req": 1,
+   "lov": {
+    "obj": "gventarh",
+    "clave": "codigo"
+   }
+  },
+  "grpalm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "galmgrph",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codfam": {
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codart": {
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecini": {
+   "req": 1
+  },
+  "fecfin": {
+   "req": 1
+  },
+  "margen": {
+   "req": 1,
+   "def": 0
+  },
+  "tolact": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((tolact == null) || (tolact >= 0)))",
+     "msg": "La tolerancia no se puede definir negativa",
+     "tipo": "error",
+     "campo": "tolact",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "uniint": {
+   "reglas": [
+    {
+     "si": "!(((uniint == null) || (uniint > 0)))",
+     "msg": "El periodo de actualización ha de ser mayor que 0, ya sean meses o dias.",
+     "tipo": "error",
+     "campo": "uniint",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipint": {
+   "def": "M",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((tipint == null || ['M','D'].includes(tipint))))",
+     "msg": "El tipo de intervalo ha de ser [D]ias o [M]eses.",
+     "tipo": "error",
+     "campo": "tipint",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((codfam == null || codfam.length === 0)) && (!(codart == null || codart.length === 0))) || ((!(codfam == null || codfam.length === 0)) && ((codart == null || codart.length === 0)))))",
+   "msg": "El código del artículo o el código de familia han de estar informados, pero no ambos.",
+   "tipo": "error",
+   "campo": "codfam",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha inicio ha de ser anterior o igual a la final",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((tipint == null || tipint.length === 0)) && ((uniint == null))) || ((!(tipint == null || tipint.length === 0)) && (!(uniint == null)))))",
+   "msg": "El tipo de intervalo se ha de informar conjuntamente con las unidades del intervalo.",
+   "tipo": "error",
+   "campo": "uniint",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Estados de estado: P=Provisional, A=Activo, B=Bloqueado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

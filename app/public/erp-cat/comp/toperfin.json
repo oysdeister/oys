@@ -1,0 +1,124 @@
+{
+ "c": "toperfin",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "debhab": {
+   "req": 1,
+   "mayus": 1
+  },
+  "opefin": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nomope": {
+   "req": 1
+  },
+  "codflu": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "tflujfin",
+    "clave": "codflu",
+    "noExiste": "Error en la validación",
+    "desc": "nomflu"
+   }
+  },
+  "codint": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "tconplah",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "accion": {
+   "mayus": 1,
+   "ro": "!(clase == 'C' || clase == 'P')",
+   "lov": {
+    "obj": "cefeacti",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "refban": {
+   "req": 1,
+   "mayus": 1
+  },
+  "tompri": {
+   "req": 1,
+   "mayus": 1
+  },
+  "contab": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "agrope": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "tagrupac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcon": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cconcept",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "clase": {
+   "mayus": 1
+  },
+  "genefe": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "estado": {
+   "req": 1,
+   "def": "A"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(opefin)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "opefin"
+  },
+  {
+   "si": "vacio(nomope)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "nomope"
+  },
+  {
+   "si": "__ins && existe('toperfin','opefin',opefin) && busca('toperfin','opefin',opefin,'debhab') == debhab",
+   "msg": "Unique constraint (informix.p_toperfin) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "opefin"
+  },
+  {
+   "si": "!existe('tflujfin','codflu',codflu)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_toperfin1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codflu"
+  }
+ ],
+ "notas": [
+  "Menú Maestros › Operaciones › Registro abre el QBE (qbe/toperfin); 109 operaciones (ISO 20022: ACADOP, PMICDT…).",
+  "Clave (debhab, opefin). Duplicado D/ACADOP → «Unique constraint (informix.p_toperfin) violated.». Flujo ZZZZ → «Missing key… (informix.f_toperfin1)» (provocados por API).",
+  "Pestañas: Identificación, Parámetros conciliación (refban N/D/1/2, tompri, contab A/C/N, genefe A/C/N), Flujos financieros (tflujfin), Operaciones por cuenta (tctaopec), Conceptos propios (tconprop) y Conceptos comunes (tconcomu).",
+  "probado (por API dml/insert): duplicado D/ACADOP, flujo inexistente. Sin botones."
+ ]
+}

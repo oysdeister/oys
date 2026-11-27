@@ -2,7 +2,7 @@
 import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { type Pantalla, type PantallaFija, erp, useDb } from './modelo';
-import { type Aviso, type ErpCtx, Ctx } from './ui';
+import { type Aviso, type CampoError, type ErpCtx, Ctx, campoDeError } from './ui';
 import './erp.css';
 import Terceros from './pantallas/Terceros';
 import Proveedores from './pantallas/Proveedores';
@@ -150,6 +150,8 @@ function Escritorio({ ir, ini }: { ir: (p: Pantalla, c?: string | null) => void;
 export function ErpApp({ ini, inicial = 'inicio', extra }: { ini: string; inicial?: Pantalla; extra?: ReactNode }) {
   const [nav, setNav] = useState<{ pantalla: Pantalla; clave: string | null }>({ pantalla: inicial, clave: null });
   const [avisos, setAvisos] = useState<Aviso[]>([]);
+  const [campoError, setCampoError] = useState<CampoError | null>(null);
+  const limpiarError = useCallback(() => setCampoError(null), []);
   const [menu, setMenu] = useState(false);
   const idRef = useRef(0);
   const cuerpo = useRef<HTMLDivElement>(null);
@@ -157,6 +159,7 @@ export function ErpApp({ ini, inicial = 'inicio', extra }: { ini: string; inicia
 
   const ir = useCallback((pantalla: Pantalla, clave: string | null = null) => {
     setNav({ pantalla, clave });
+    setCampoError(null);
     setMenu(false);
     cuerpo.current?.scrollTo({ top: 0 });
   }, []);
@@ -199,12 +202,22 @@ export function ErpApp({ ini, inicial = 'inicio', extra }: { ini: string; inicia
         aviso('ok', 'Proceso ejecutado correctamente.');
       },
       hacer: (r, exito = 'Éxito', ver) => {
-        if (r.ok) aviso('ok', exito, ver);
-        else aviso('error', r.error);
+        if (r.ok) {
+          // Al salir bien, los errores anteriores («Tienes cambios sin guardar»…) ya no aplican
+          setAvisos((xs) => xs.filter((x) => x.tipo !== 'error'));
+          aviso('ok', exito, ver);
+          setCampoError(null);
+        } else {
+          aviso('error', r.error);
+          // El campo que nombra el error se marca en rojo y recibe el foco
+          setCampoError(campoDeError(r.error, ++idRef.current));
+        }
         return r.ok;
       },
+      campoError,
+      limpiarError,
     }),
-    [ini, nav, ir, aviso],
+    [ini, nav, ir, aviso, campoError, limpiarError],
   );
 
   const P: Partial<Record<PantallaFija, () => ReactNode>> = { terceros: Terceros, proveedores: Proveedores, articulos: Articulos, pedidos: Pedidos, albaranes: Albaranes, facturas: Facturas, stock: Stock, docflow: Docflow, asientos: Asientos, efectos: Efectos, remesas: Remesas, extractos: Extractos, conciliacion: Conciliacion };

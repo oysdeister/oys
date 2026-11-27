@@ -22,8 +22,8 @@ export function Constelacion({ teoria, resp, inicio = SECUENCIA.veredicto + 0.5 
             key={k}
             className={`exr-estrella ${ok ? 'ok' : 'ko'}`}
             style={{ animationDelay: `${retraso}s` }}
-            initial={reducir ? false : { opacity: 0, rotateY: 100, z: -200 }}
-            animate={{ opacity: 1, rotateY: 0, z: 0 }}
+            initial={reducir ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ delay: retraso, duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
             title={`Pregunta ${k + 1} · ${NOMBRE_TIPO[tipo]}`}
           >
@@ -102,8 +102,8 @@ export function DesgloseTeoria({ bloques }: { bloques: BloqueTeoria[] }) {
                 <motion.li
                   key={b.clave}
                   className={ok ? 'ok' : b.aciertos ? 'medio' : 'ko'}
-                  initial={reducir ? false : { opacity: 0, scale: 0.8, rotateX: 40 }}
-                  animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+                  initial={reducir ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={{ delay: d(0.3 + k * 0.06), duration: 0.5 }}
                   title={capituloDe(n)?.titulo}
                 >

@@ -1,0 +1,191 @@
+{
+ "c": "ctax_filebook",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "file_form": {
+   "req": 1,
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_form_head",
+    "clave": "formh_code",
+    "cols": [
+     "formh_code",
+     "formh_name"
+    ],
+    "desc": "formh_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(file_form) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(file_form)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "file_form",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "file_empcode": {
+   "req": 1,
+   "ro": "1==1",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(file_empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(file_empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "file_empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "file_ejerci": {
+   "req": 1,
+   "ro": "1==1",
+   "lov": {
+    "obj": "cejercic",
+    "clave": "numero"
+   }
+  },
+  "file_period": {
+   "req": 1,
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_period",
+    "clave": "peri_taxref"
+   }
+  },
+  "file_draft": {
+   "req": 1,
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()",
+   "def": 0
+  },
+  "file_book_type": {
+   "req": 1,
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(file_book_type) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(file_book_type)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "file_book_type",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "file_size": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  },
+  "file_data": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  },
+  "file_seqno": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()",
+   "lov": {
+    "obj": "ctax_filebook",
+    "clave": "file_seqno",
+    "cols": [
+     "file_form",
+     "file_empcode",
+     "file_period"
+    ],
+    "desc": "file_form"
+   }
+  },
+  "file_id_number": {
+   "req": 1,
+   "oculto": "context.isOnInsert()"
+  },
+  "file_book_number": {
+   "oculto": "context.isOnInsert()"
+  },
+  "file_book_previous": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()",
+   "lov": {
+    "obj": "ctax_filebook",
+    "clave": "file_book_number",
+    "cols": [
+     "file_form",
+     "file_empcode",
+     "file_period"
+    ],
+    "desc": "file_form"
+   }
+  },
+  "file_args": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  },
+  "file_type": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  },
+  "file_md5": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  },
+  "file_date_send": {
+   "oculto": "context.isOnInsert()"
+  },
+  "user_created": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  },
+  "date_created": {
+   "ro": "1==1",
+   "oculto": "context.isOnInsert()"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((file_book_type == 'N') && ((file_book_previous == null || file_book_previous.length === 0))) || (((file_book_type == null || ['C','S'].includes(file_book_type))) && (!(file_book_previous == null || file_book_previous.length === 0)))))",
+   "msg": "El tipo declaración debe ser Normal [N] y el número declaración anterior nula, o el tipo declaración debe ser Complementaria [C] o Sustitutiva [S] y el número declaración anterior no nula.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((file_date_send == null)) || ((!(file_date_send == null)) && ((file_draft == null) || (file_draft == 0)))))",
+   "msg": "O la fecha de envió es nula o, la fecha de envío es no nula y el borrador es False [0].",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((file_date_send == null)) || ((!(file_date_send == null)) && (!(file_book_number == null || file_book_number.length === 0)))))",
+   "msg": "Si se informa fecha de envío entonces el número de declaración no puede ser nulo.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_ADD_REG_TAX": {
+   "l": "Incorporar al reg. de impuestos",
+   "nota": "Incorporar al reg. de impuestos · Habilitado según consulta del servidor: file_book_type = 'R' AND (file_date_send = null OR file_date_send = '') · Pide confirmación antes de ejecutar"
+  },
+  "BUT_CHANGE_SEND_DT": {
+   "l": "Actualizar fecha",
+   "nota": "Actualiza la fecha de envio de la declaración. · Pide confirmación antes de ejecutar · Abre un diálogo con campos"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Declaraciones fiscales › Declaraciones realizadas",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

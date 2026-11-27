@@ -1,0 +1,251 @@
+{
+ "c": "ccajamov",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "codcaj": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajadef",
+    "clave": "codcaj",
+    "cols": [
+     "codcaj",
+     "nomcaj",
+     "empcode",
+     "proyec",
+     "seccio",
+     "jusser",
+     "moneda"
+    ],
+    "desc": "nomcaj",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "ro": "!__ins",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "req": 1,
+   "ro": "!__ins",
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(proyec))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ],
+   "defExpr": "busca('ccajadef','codcaj',codcaj,'proyec') || '0'"
+  },
+  "seccio": {
+   "req": 1,
+   "ro": "!__ins",
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "filtro": "(vacio(proyec) || l.proyec == proyec) && (vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(seccio))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ],
+   "defExpr": "busca('ccajadef','codcaj',codcaj,'seccio') || '0'"
+  },
+  "turno": {
+   "req": 1,
+   "def": 0
+  },
+  "fecmov": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "estado": {
+   "def": "A",
+   "ro": "true",
+   "mayus": 1
+  },
+  "cajaid": {
+   "ro": "true",
+   "lov": {
+    "obj": "ccajamov",
+    "clave": "cajaid",
+    "cols": [
+     "cajaid",
+     "codcaj",
+     "empcode",
+     "proyec"
+    ],
+    "desc": "codcaj",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "jusser": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "filtro": "(vacio(fecmov) || l.fecmov == fecmov)",
+    "noExiste": "Error en la validación"
+   },
+   "ro": "true",
+   "defExpr": "(busca('ccajadef','codcaj',codcaj,'jusser') || 'CJ') + String(fecmov || hoy()).slice(1,4) + '-' + String(cuenta('ccajamov','codcaj',codcaj) + 1).padStart(6,'0')"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && !existe('ccajadef','codcaj',codcaj)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_ccajamov1).",
+   "tipo": "error",
+   "campo": "codcaj",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && busca('ccajamov','codcaj',codcaj,'fecmov') == fecmov && busca('ccajamov','codcaj',codcaj,'turno') == turno",
+   "msg": "Could not insert new row - duplicate value in a UNIQUE INDEX column (Unique Index:i_ccajamov1).",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "BUT_CERRARCAJA": {
+   "l": "Cerrar caja",
+   "nota": "Finalizada el ingreso de un movimiento de caja, se puede realizar el cierre del mismo.. Visible/habilitado si: estado == 'A'. Demo: sin confirmación ni mensaje de éxito; estado Abierta → Liquidada, desaparecen los «Nuevo» de las subrejillas y solo queda el botón «Reabrir caja». Error si suma de líneas ≠ suma de liquidación (literal con id de caja, moneda y diferencia: «Error: Caja [1] con importes en [EUR] distintos en [100].»). Endpoint POST table/ccajamov/form/1/<b64>/cursor/<id>/action/BUT_CERRARCAJA {cursor_crc, selectedRows, form}",
+   "pre": [
+    {
+     "si": "suma('ccajalin','numero',cajaid,'impdiv') != suma('ccajaliq','numero',cajaid,'import')",
+     "msg": "Error: Caja [${cajaid}] con importes en [${busca('ccajadef','codcaj',codcaj,'moneda')}] distintos en [${suma('ccajalin','numero',cajaid,'impdiv') - suma('ccajaliq','numero',cajaid,'import')}].",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estado": "'L'"
+     }
+    }
+   ]
+  },
+  "BUT_DESCONTABILIZAR": {
+   "l": "Descontabilizar",
+   "nota": "Habilitado por SQL: SELECT COUNT(*) FROM wic_dual WHERE cuserauth_allow($USER, 'ccajamov', 'CONTAB') = 1 AND '${estado}' = 'C'. No visible para el usuario de la demo; no probado. Devuelve de C a L"
+  },
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "nota": "Habilitado por SQL: SELECT COUNT(*) FROM wic_dual WHERE cuserauth_allow($USER, 'ccajamov', 'CONTAB') = 1 AND ('${estado}' = 'L' OR ('${estado}' = 'A' AND (SELECT indliq FROM ccajadef WHERE codcaj = '${codcaj}') = 'N')). No visible para el usuario de la demo (cuserauth_allow CONTAB = 0): no se pudo probar. Lleva a estado Contabilizada (C)"
+  },
+  "BUT_REABRIRCAJA": {
+   "l": "Reabrir caja",
+   "nota": "Reabre un movimiento que ha sido cerrado o liquidado.. Visible/habilitado si: estado == 'L'. Demo: sin confirmación ni mensaje; estado Liquidada → Abierta y vuelve «Cerrar caja»",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'A'"
+     }
+    }
+   ]
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "L",
+    "por": "BUT_CERRARCAJA"
+   },
+   {
+    "de": [
+     "L"
+    ],
+    "a": "A",
+    "por": "BUT_REABRIRCAJA"
+   },
+   {
+    "de": [
+     "L"
+    ],
+    "a": "C",
+    "por": "BUT_CONTABILIZAR"
+   },
+   {
+    "de": [
+     "A"
+    ],
+    "a": "C",
+    "por": "BUT_CONTABILIZAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "L",
+    "por": "BUT_DESCONTABILIZAR"
+   }
+  ]
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'Diario de movimientos de caja', editMode CELL, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "dispatch/ccajamov abre directamente la ficha table/ccajamov/form/1 (layout Diario + pestañas Líneas de caja, Registro de vales de caja, Cheques caja, Liquidación). Botón de título «Nuevo».",
+  "Justificante (jusser) lo asigna el servidor al insertar: serie de la caja + 3 últimas cifras del año + '-' + secuencia de 6 dígitos (demo: CJ026-000001). La expresión de la réplica aproxima la secuencia por caja.",
+  "La caja «Cuadre rapido de caja» (ccajalin_ccajaliq_rep) muestra Moneda caja, Importe caja, Moneda liquidacion, Importe liquidacion, Diferencia de importes (demo: EUR 100,00 / -- 0,00 / 100,00 antes de liquidar; 100/100/0 después).",
+  "Las líneas (ccajalin) y la liquidación (ccajaliq) solo se pueden insertar desde las subrejillas de la ficha: el objeto ccajalin suelto responde «User oys.jma does not have ROW_INSERT privilege on table ccajalin».",
+  "Contabilizar/Descontabilizar: habilitación por SQL con cuserauth_allow($USER,'ccajamov','CONTAB'); Contabilizar también en estado A si la caja tiene indliq = 'N'.",
+  "Servidor de la demo saturado durante la captura (mensajes «Cannot exceed the maximum allowed concurrent object executions [5]» y «No objects available in pool …»): no son reglas del objeto.",
+  "El descuadre de Cerrar caja compara la suma de ccajalin.impdiv con el total liquidado (importe unitario × cantidad en ccajaliq); la regla usa suma(ccajaliq.import), que solo es exacta si la réplica guarda en import el total de la línea de liquidación.",
+  "probado: alta CAP, duplicado, caja inexistente, Cerrar caja (con descuadre → error; cuadrada → L), Reabrir caja (L → A). no probado: Contabilizar y Descontabilizar — ocultos para el usuario de la demo (sin autorización cuserauth_allow CONTAB)."
+ ]
+}

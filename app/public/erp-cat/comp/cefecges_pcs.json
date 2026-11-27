@@ -1,0 +1,349 @@
+{
+ "c": "cefecges_pcs",
+ "fecha": "2026-11-18 tesoreria/A-cartera",
+ "area": "tesoreria",
+ "campos": {
+  "pcs_seqno": {
+   "ro": "1==1"
+  },
+  "pcs_clase": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "vacio(pcs_clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_clase",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "pcs_accion": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cefeacti",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomact"
+    ],
+    "desc": "nomact",
+    "filtro": "l.clase == pcs_clase",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_accion)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_accion",
+     "fuente": "demo"
+    }
+   ],
+   "ro": "vacio(pcs_clase)"
+  },
+  "pcs_fecpro": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "reglas": [
+    {
+     "si": "vacio(pcs_fecpro)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_fecpro",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_estado": {
+   "ro": "1==1",
+   "mayus": 1,
+   "def": "A",
+   "reglas": [
+    {
+     "si": "!(((pcs_estado == null || ['A','C'].includes(pcs_estado))))",
+     "msg": "El estado debe ser Abierto [A] o Cerrado [C].",
+     "tipo": "error",
+     "campo": "pcs_estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_impdiv": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(pcs_impdiv)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_impdiv",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_moneda": {
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "pcs_camope": {
+   "reglas": [
+    {
+     "si": "!(((pcs_camope == null || [0,1].includes(pcs_camope))))",
+     "msg": "El calculo solo puede ser 'Multiplicar' o 'Dividir'.",
+     "tipo": "error",
+     "campo": "pcs_camope",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_import": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "vacio(pcs_import)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_import",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "pcs_numrem": {
+   "ro": "1==1"
+  },
+  "pcs_ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "filtro": "l.empcode == pcs_empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "pcs_tipefe": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo",
+    "filtro": "l.clase == pcs_clase",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "pcs_empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_empcode)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_empcode",
+     "fuente": "demo"
+    }
+   ],
+   "alCambiar": {
+    "cempresa.divemp": "busca('cempresa','empcode',pcs_empcode,'divemp')",
+    "pcs_moneda": "busca('cempresa','empcode',pcs_empcode,'divemp')"
+   }
+  },
+  "pcs_proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_proyec)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_proyec",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "pcs_seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "vacio(pcs_seccio)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_seccio",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "pcs_codper": {
+   "mayus": 1
+  },
+  "pcs_numban": {
+   "lov": {
+    "obj": "cterbanc",
+    "clave": "numban",
+    "filtro": "l.codigo == pcs_codper",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "pcs_tipdoc": {
+   "mayus": 1
+  },
+  "pcs_file_seqno": {
+   "ro": "1==1"
+  },
+  "pcs_tipgen": {
+   "req": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "vacio(pcs_tipgen)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "pcs_tipgen",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alBorrar": [],
+ "botones": {
+  "BUT_INCORPORAR_GESTION": {
+   "l": "Incorporar gestión",
+   "dialogoTit": "Incorporar gestión",
+   "dialogo": [
+    {
+     "n": "gesori",
+     "l": "Gestión origen",
+     "t": "i",
+     "req": 1,
+     "fk": "cefecges_pcs"
+    }
+   ],
+   "nota": "Incorpora a esta gestión los efectos de otra gestión (gesori). Diálogo capturado; no ejecutado (no hay otra gestión CAP)."
+  },
+  "BUT_INCORPORAR_GESCOB": {
+   "l": "Incorporar reclamados",
+   "nota": "Oculto en gestiones de pago (clase P) y cerradas. No probado."
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Cerrar' ?",
+   "pasos": [
+    {
+     "set": {
+      "pcs_estado": "'C'",
+      "pcs_impdiv": "suma('cefecges_det','pcs_seqno',pcs_seqno,'impdiv')",
+      "pcs_import": "suma('cefecges_det','pcs_seqno',pcs_seqno,'import')"
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "Por cada efecto de cefecges_det: estado = cefeacti.estfin de pcs_accion, numges = pcs_seqno, opeant = openum, openum + 1, usable = 1, feccam = pcs_fecpro, coment = pcs_desc, y fila nueva en cefechis."
+     }
+    }
+   ],
+   "nota": "Ejecuta la acción sobre cada efecto de cefecges_det. Demo (gestión CAP 15, PBLQ, efecto 57): efecto PE→BQ, numges=15, opeant 0→1, openum 1→2, usable 0→1, feccam=fecha proceso, coment=descripción de la gestión; nueva fila en cefechis; gestión estado A→C e importes = suma de efectos (151,25); sin asiento (casientos.counter 0). Botón solo visible si hay efectos (expresión de servidor) y pcs_tipgen == 1. El paso «actualiza» usa la relación cefecges_det (pcs_seqno, numero): el motor debe resolverla."
+  },
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Abrir' ?",
+   "pasos": [
+    {
+     "set": {
+      "pcs_estado": "'A'"
+     }
+    }
+   ],
+   "nota": "Deshace la acción. Demo (gestión 15): efecto 57 BQ→PE, numges null, opeant 0, openum 2→3, usable 0 (sigue preseleccionado en la gestión), feccam y coment a null; nueva fila cefechis; gestión C→A (importes se conservan). Oculto si hay movimiento de tesorería (taptcuen.gesdes) o la gestión es automática (pcs_tipgen 0)."
+  },
+  "BUT_AGREGAR_SEL_EFEC": {
+   "l": "Agregar efectos",
+   "pasos": [
+    {
+     "crea": {
+      "obj": "cefecges_det",
+      "valores": {
+       "pcs_seqno": "pcs_seqno",
+       "numero": "l.numero"
+      }
+     }
+    }
+   ],
+   "nota": "Pestaña «Selección de efectos» (cefectos_selector_vtab, selección múltiple con casillas): lista los efectos usables de la clase de la gestión. POST …/cursor/<tab>/action/BUT_AGREGAR_SEL_EFEC con selectedRows. Demo: efecto 57 pasa a «Efectos seleccionados» y queda usable=0. «Agregar todos los efectos» (BUT_AGREGAR_ALL_EFE2, con diálogo) añade todos los visibles; no probado (afectaría efectos ajenos). «Desagregar efectos» (BUT_DESAGREGAR_SEL_E, confirmación) en «Efectos seleccionados»."
+  }
+ },
+ "estados": {
+  "col": "pcs_estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "C",
+    "por": "BUT_CERRAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_ABRIR"
+   }
+  ]
+ },
+ "notas": [
+  "Nuevo abre un diálogo (bottom-sheet) con defectos observados: Empresa vacía (aunque el metadato dice 0), Moneda empresa se rellena al elegir empresa (evento after_column_server), Proyecto 0 GENERAL, Sección 0 General, Fecha proceso hoy, Estado Abierto, Manual Sí, Cambio 1,000000, Cálculo Dividir, importes 0,00.",
+  "Guardar vacío: «Este campo es obligatorio.» en Empresa, Clase y Acción. La lupa de Acción filtra por clase (fk/cefecges_pcs/pcs_accion/autocomplete/cefeacti?pkMethod=codigo_clase) y muestra Acción y Descripción acción.",
+  "Inserción: POST table/cefecges_pcs/list/<b64>/dml/insert (multipart) → 201.",
+  "Borrar (papelera): «Eliminar registro · ¿Estás seguro que quieres eliminar el registro '0-15' ?» → Eliminar → «Éxito». Se permite borrar una gestión abierta con efectos; el efecto vuelve a usable=1.",
+  "Ficha: cajas Unidad de negocio, Identificación, aviso «Contabilizado» (si casientos.counter > 0), Datos generales, Importes, Observaciones, pestañas Efectos seleccionados / Selección de efectos (oculta si cerrada) / Tesorería (taptcuen_taptfluj), Datos de control. Enlaces ⌄: Remesas (oculto si no aplica).",
+  "no probado: Incorporar gestión, Incorporar reclamados (con una 2.ª gestión CAP) y sus precondiciones — motivo: sesión de la demo caducada (redirige a /account/login) a mitad de la ola E; no se teclean credenciales."
+ ]
+}

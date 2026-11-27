@@ -1,0 +1,290 @@
+{
+ "id": "compras-abono-devolucion",
+ "numero": 9,
+ "titulo": "Devolución de mercancía y abono del proveedor",
+ "objetivo": "Entenderás cómo se corrige una compra ya facturada con una factura rectificativa (abono) y crearás la cabecera de la rectificativa de T{INI}.",
+ "concepto": "A veces devuelves mercancía o el proveedor se equivoca de precio. La factura ya está contabilizada y no se toca: se corrige con otra factura de signo contrario, que se llama abono o factura rectificativa.\n\nEn Axional el abono es una factura de la tipología RECT «FACTURA RECTIFICATIVA». Su serie es RECT y su tabla origen son las facturas, restando.\n\nEl abono copia las líneas de la factura que corrige con «Copiar líneas de factura». Después se valida y se contabiliza como cualquier factura.\n\nAtención: la base tutorial tiene límites. No hay tipología de albarán de devolución a proveedor y no pudimos completar el abono. Lo que sigue es lo que sí funciona hasta ahora.",
+ "duracionMin": 20,
+ "secciones": [
+  {
+   "id": "compras-abono-devolucion-tipos",
+   "titulo": "Qué tipologías hay para corregir una compra",
+   "paraQueSirve": "Aquí ves con qué tipo de documento se corrige una compra y por qué no hay un albarán de devolución en la demo.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Maestros",
+    "Documentos",
+    "Tipos de facturas"
+   ],
+   "explicacion": [
+    "En Tipos de facturas existe RECT «FACTURA RECTIFICATIVA», serie RECT. Su Tabla origen es «Facturas», la Actualización tabla origen es «Restando» y Copiar líneas es «Sí».",
+    "En Albaranes (tipología de albaranes y suministros de compras) hay AC, ACPC, AREP, TRAN y otras. Ninguna es de devolución a proveedor.",
+    "Para deshacer una recepción que todavía no has facturado, el albarán tiene el botón «Anular», que pide un motivo."
+   ],
+   "campos": [
+    {
+     "campo": "Tipo factura · Serie",
+     "significado": "Identifican la tipología.",
+     "ejemplo": "RECT · RECT"
+    },
+    {
+     "campo": "Tabla origen · Actualización tabla origen",
+     "significado": "De dónde copia las líneas y si suma o resta en el documento origen.",
+     "ejemplo": "Facturas · Restando"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "Abre Gestión › Compras › Maestros › Documentos › Tipos de facturas y localiza la fila RECT.",
+     "detalle": "Fíjate en las columnas Serie, Tabla origen y Actualización tabla origen."
+    },
+    {
+     "texto": "Comprueba que en Albaranes no hay una tipología de devolución a proveedor.",
+     "detalle": "Lo habitual es anular el albarán o corregir con el abono de la factura."
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "nota",
+     "texto": "En la base tutorial no hay albarán de devolución. Si lo necesitas en tu empresa real, se crea una tipología de albarán nueva en Gestión › Compras › Maestros › Documentos › Albaranes."
+    },
+    {
+     "tipo": "nota",
+     "texto": "No hemos pulsado «Anular» en ningún albarán de la demo. Pide un motivo y no se puede deshacer."
+    }
+   ]
+  },
+  {
+   "id": "compras-abono-devolucion-crear",
+   "titulo": "Crear la factura rectificativa",
+   "paraQueSirve": "Aquí abres la factura de abono de T{INI}. Queda en estado provisional hasta que tenga líneas y la valides.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Facturas",
+    "Facturas"
+   ],
+   "explicacion": [
+    "Empieza con «Nuevo». Si usas «Nuevo como» para copiar la factura original, la demo da el error 17049 («Routine (gcom_get_headdiscs) can not be resolved»).",
+    "Elige Tipo documento RECT y el proveedor T{INI}. La dirección, el tercero y los datos fiscales se rellenan solos.",
+    "Escribe la Factura proveedor del abono y el Importe factura. El número lo pone el numerador al guardar: 0RECT000001 en el ejemplo."
+   ],
+   "campos": [
+    {
+     "campo": "Tipo documento *",
+     "significado": "Tipología de la factura.",
+     "ejemplo": "RECT · FACTURA RECTIFICATIVA"
+    },
+    {
+     "campo": "Proveedor *",
+     "significado": "Proveedor al que corriges.",
+     "ejemplo": "T{INI}"
+    },
+    {
+     "campo": "Factura proveedor *",
+     "significado": "Número del abono en el papel del proveedor.",
+     "ejemplo": "ABO-{INI}-001"
+    },
+    {
+     "campo": "Tipo efecto *",
+     "significado": "Medio de pago. Puede venir cambiado del proveedor: ponlo como en la factura original.",
+     "ejemplo": "EF"
+    },
+    {
+     "campo": "Importe factura *",
+     "significado": "Total del abono.",
+     "ejemplo": "60,50"
+    }
+   ],
+   "pasos": [
+    {
+     "texto": "En la lista de facturas pulsa «Nuevo».",
+     "pregunta": "Estás en las facturas de compras. ¿Cómo empiezas el abono?"
+    },
+    {
+     "texto": "Elige Tipo documento RECT y Proveedor T{INI}.",
+     "detalle": "Comprueba que se rellenan las direcciones y el tercero."
+    },
+    {
+     "texto": "Escribe la Factura proveedor y deja Tipo efecto como en la factura original.",
+     "detalle": "Si el campo se queda con texto sobrante, selecciónalo y bórralo antes de elegir."
+    },
+    {
+     "texto": "Escribe el Importe factura y pulsa «Guardar».",
+     "detalle": "La rectificativa queda en estado Provisional, con el botón «Validar»."
+    },
+    {
+     "texto": "Fíjate en el tipo de documento y en el número que ha puesto el numerador.",
+     "pregunta": "¿Qué rótulo confirma que es una rectificativa?",
+     "imagen": "cob-abono-1.webp",
+     "hotspot": {
+      "x": 13.7,
+      "y": 23.6,
+      "w": 20.4,
+      "h": 5.0,
+      "etiqueta": "FACTURA RECTIFICATIVA"
+     }
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "Tras guardar, la lista de facturas no muestra el abono."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Aplica y quita un filtro en la lista, o abre la factura desde otro enlace. La lista está en caché."
+    },
+    {
+     "tipo": "problema",
+     "texto": "«Nuevo como» da el error 17049 en la demo."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Usa «Nuevo» y rellena a mano."
+    }
+   ]
+  },
+  {
+   "id": "compras-abono-devolucion-lineas",
+   "titulo": "Copiar las líneas y límites de la demo",
+   "paraQueSirve": "Aquí ves cómo se traen las líneas de la factura original al abono, y hasta dónde llegamos en la demo.",
+   "ruta": [
+    "Gestión",
+    "Compras",
+    "Facturas",
+    "Facturas"
+   ],
+   "explicacion": [
+    "Con el abono abierto, el desplegable ⌄ junto a la estrella tiene «Copiar líneas de factura» y «Copiar líneas de pedido».",
+    "«Copiar líneas de factura» abre una ventana con dos paneles: «Líneas» (las del abono) y «Líneas origen» (las de la factura que corriges).",
+    "En la demo, «Líneas origen» salió vacío porque no se pudo enlazar el abono con la factura original: no encontramos el campo «Documento rectificado» en la ficha. Por eso no hemos validado ni contabilizado el abono."
+   ],
+   "campos": [],
+   "pasos": [
+    {
+     "texto": "Abre el desplegable ⌄ del abono y elige «Copiar líneas de factura».",
+     "pregunta": "¿Qué opción del desplegable trae las líneas de la factura original?"
+    },
+    {
+     "texto": "Fíjate en los paneles «Líneas» y «Líneas origen».",
+     "pregunta": "¿Qué panel debería mostrar las líneas de la factura que corriges?",
+     "detalle": "En la demo está vacío. En un entorno completo, marcarías las líneas y las copiarías al abono.",
+     "imagen": "cob-abono-2.webp",
+     "hotspot": {
+      "x": 7.1,
+      "y": 38.0,
+      "w": 5.6,
+      "h": 3.6,
+      "etiqueta": "Líneas origen"
+     }
+    }
+   ],
+   "avisos": [
+    {
+     "tipo": "problema",
+     "texto": "«Líneas origen» sale vacío y el abono no se puede completar."
+    },
+    {
+     "tipo": "solucion",
+     "texto": "Hace falta enlazar el abono con la factura corregida (documento rectificado). En la base tutorial no lo hemos conseguido. Pide a Deister el alta de ese dato o prueba en una base completa."
+    },
+    {
+     "tipo": "nota",
+     "texto": "El asiento del abono sería el contrario del de la factura: 40000 al debe, IVA al haber y gasto 60000 al haber. No lo hemos comprobado en la demo."
+    }
+   ]
+  }
+ ],
+ "test": [
+  {
+   "pregunta": "¿Cómo se corrige una factura de compra ya contabilizada?",
+   "opciones": [
+    "Se borra",
+    "Con una factura rectificativa (abono)",
+    "Cambiando el asiento a mano",
+    "No se corrige"
+   ],
+   "correcta": 1,
+   "explicacion": "Una factura contabilizada no se toca. Se corrige con otra de signo contrario."
+  },
+  {
+   "pregunta": "¿Qué tipología de factura es el abono en la demo?",
+   "opciones": [
+    "FC",
+    "FCOA",
+    "RECT",
+    "ANT"
+   ],
+   "correcta": 2,
+   "explicacion": "RECT «FACTURA RECTIFICATIVA», serie RECT."
+  },
+  {
+   "pregunta": "¿Qué significa «Restando» en la actualización de la tabla origen de RECT?",
+   "opciones": [
+    "Suma a la factura original",
+    "Resta de la factura original",
+    "No afecta",
+    "Borra la factura original"
+   ],
+   "correcta": 1,
+   "explicacion": "El abono resta de lo facturado en la factura original."
+  },
+  {
+   "pregunta": "¿Hay un albarán de devolución a proveedor en la demo?",
+   "opciones": [
+    "Sí, DEV",
+    "Sí, TRAN",
+    "No",
+    "Sí, AREP"
+   ],
+   "correcta": 2,
+   "explicacion": "Ninguna tipología de albarán de la demo es de devolución."
+  },
+  {
+   "pregunta": "¿Qué botón del desplegable ⌄ trae las líneas de la factura original?",
+   "opciones": [
+    "Docflow",
+    "Registros fiscales",
+    "Copiar líneas de factura",
+    "Copiar líneas de pedido"
+   ],
+   "correcta": 2,
+   "explicacion": "«Copiar líneas de factura» abre los paneles Líneas y Líneas origen."
+  }
+ ],
+ "checklist": [
+  "Abre Tipos de facturas y localiza RECT.",
+  "Anota Serie, Tabla origen y Actualización tabla origen de RECT.",
+  "Comprueba que en Albaranes no hay tipología de devolución.",
+  "Pulsa «Nuevo» en facturas de compras.",
+  "Elige Tipo documento RECT y Proveedor T{INI}.",
+  "Escribe la Factura proveedor del abono.",
+  "Deja Tipo efecto como en la factura original.",
+  "Escribe el Importe factura y guarda.",
+  "Comprueba que queda Provisional con el botón «Validar».",
+  "Abre ⌄ › «Copiar líneas de factura» y mira «Líneas origen».",
+  "Anota si «Líneas origen» trae líneas o sale vacío."
+ ],
+ "problemas": [
+  {
+   "problema": "«Nuevo como» da el error 17049.",
+   "solucion": "Es una limitación de la demo. Usa «Nuevo» y rellena la rectificativa a mano."
+  },
+  {
+   "problema": "«Tipo efecto» muestra «TFEF» y «Demasiado largo».",
+   "solucion": "El campo conservó el valor anterior al escribir. Selecciona todo, bórralo y elige EF en el desplegable."
+  },
+  {
+   "problema": "El abono guardado no aparece en la lista.",
+   "solucion": "Aplica y quita un filtro en la lista para recargarla."
+  }
+ ],
+ "aprendido": [
+  "Sabes que un abono es una factura RECT que resta de la factura original.",
+  "Has visto que la demo no tiene albarán de devolución.",
+  "Has creado la cabecera de la rectificativa de T{INI} en estado provisional.",
+  "Has abierto «Copiar líneas de factura» y conoces el límite de la demo con «Líneas origen»."
+ ]
+}

@@ -1,0 +1,294 @@
+{
+ "c": "ccajadef",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "codcaj": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajadef",
+    "clave": "codcaj",
+    "cols": [
+     "codcaj",
+     "nomcaj",
+     "empcode",
+     "ctafin"
+    ],
+    "desc": "nomcaj",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codcaj) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codcaj))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcaj",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nomcaj": {
+   "req": 1
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ],
+   "alCambiar": {
+    "moneda": "busca('cempresa','empcode',empcode,'divemp') || moneda"
+   }
+  },
+  "proyec": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(proyec))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "seccio": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec",
+    "filtro": "(vacio(proyec) || l.proyec == proyec) && (vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(seccio))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ],
+   "def": "0"
+  },
+  "cuenta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "placon",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "moneda": {
+   "req": 1,
+   "def": null,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon",
+     "codint",
+     "symbol"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(moneda))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codper": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cper_empleado",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomemp",
+     "apeemp",
+     "cif"
+    ],
+    "desc": "nomemp",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codper) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codper))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codper",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "empcode",
+     "ctafin",
+     "entfin",
+     "tipdir",
+     "nomcta"
+    ],
+    "desc": "entfin",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctafin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctafin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "jusser": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name",
+    "noExiste": "Error en la validación"
+   },
+   "def": "CJ"
+  },
+  "opecob": {
+   "mayus": 1,
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "cols": [
+     "opefin",
+     "nomope",
+     "debhab",
+     "codflu"
+    ],
+    "desc": "nomope",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "opepag": {
+   "mayus": 1,
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "cols": [
+     "opefin",
+     "nomope",
+     "debhab",
+     "codflu"
+    ],
+    "desc": "nomope",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "indliq": {
+   "req": 1,
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(indliq) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(indliq))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "indliq",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ccajadef','codcaj',codcaj)",
+   "msg": "Unique constraint (informix.p_ccajadef) violated.",
+   "tipo": "error",
+   "campo": "codcaj",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('ccajamov','codcaj',codcaj)",
+   "msg": "Key value for constraint (informix.p_ccajadef) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'DEFINICIÓN DE CAJAS', editMode ROW, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "Nuevo (botón «Añadir cajas») abre un diálogo modal «DEFINICIÓN DE CAJAS» con cajas Identificación, Referencias y Datos de control; botones Cancelar / Guardar. Con una sola caja, dispatch abre directamente la ficha.",
+  "Guardar con obligatorios vacíos: el cliente marca cada campo con «Este campo es obligatorio.» (Caja, Descripción caja, Empresa, Cuenta, Moneda) y no envía nada (demo).",
+  "Código inexistente en una lupa (Empresa ZZZ, Moneda EU): el campo queda con «Error en la validación» (demo; el servidor responde 204 a fk/<obj>/<col>/verify/<tabla>).",
+  "Defectos reales de Nuevo (dml/insert/reset/form?reset_code=LBL_NEW): estado A, proyec 0, seccio 0, jusser CJ, indliq S, moneda vacía; al elegir Empresa, el evento after_column_server de empcode pone moneda = divisa de la empresa (EUR).",
+  "El servidor NO valida la cuenta contable: un alta por API con cuenta 99999 se grabó (solo la lupa del cliente lo impide).",
+  "Borrar pide confirmación «¿Estás seguro que quieres eliminar el registro 'CAP caja prueba' ?» (desde la ficha) o «¿Estás seguro que quieres eliminar el registro 2 ?» (desde la rejilla, nº de fila); botones Cancelar / Eliminar.",
+  "Menú ⌄ del título: enlace «Diario de caja» (ccajamov).",
+  "probado: Nuevo «Añadir cajas» (guardar vacío, alta CAP1), lupas inexistentes, duplicado, borrar con hijos, borrar. Sin botones."
+ ]
+}

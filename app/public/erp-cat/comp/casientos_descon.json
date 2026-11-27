@@ -1,0 +1,103 @@
+{
+ "c": "casientos_descon",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy().slice(0,8)+'01'"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "empcode": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   }
+  },
+  "diario": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdiarios",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdia"
+    ],
+    "desc": "nomdia"
+   }
+  },
+  "jusser": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "sistem": {
+   "mayus": 1,
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   }
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Diario contable › Asientos › Procesos › Descontabilización",
+  "Tipo: REPORT (proceso/informe)",
+  "Descripción: Descontabilización masiva de asientos contables para una empresa determinada, en un rango de fechas.",
+  "Pide confirmación antes de ejecutar",
+  "Probado en la demo filtrando Diario CV y asiento 46 (CAP), por la interfaz y por API: confirmación «DESCONTABILIZACIÓN DE ASIENTOS CONTABLES» / «¿Está seguro de ejecutar el proceso?»; resultado «Proceso completado correctamente.» (ID 93, Deister Software, 17-11-2026, CV26-000001); sin contabilizados que cumplan el filtro: «No se han encontrado registros para la descontabilización.». Efecto: estado C→P y csaldos baja (62902 Debe 3.000→2.000, 57200 Haber 3.850→2.850).",
+  "probado: Ejecutar (éxito y sin registros). Crudos: raw/contabilidad/b1/R_procesos.json, s/c13.*."
+ ],
+ "botones": {
+  "EJECUTAR": {
+   "l": "Ejecutar consulta",
+   "dialogoTit": "DESCONTABILIZACIÓN DE ASIENTOS CONTABLES",
+   "confirm": "¿Está seguro de ejecutar el proceso?",
+   "ok": "Proceso completado correctamente.",
+   "pre": [
+    {
+     "si": "cuenta('casientos','estado','C') == 0",
+     "msg": "No se han encontrado registros para la descontabilización.",
+     "tipo": "info",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "casientos",
+      "donde": [
+       "estado",
+       "'C'"
+      ],
+      "set": {
+       "estado": "'P'"
+      }
+     }
+    }
+   ]
+  }
+ }
+}

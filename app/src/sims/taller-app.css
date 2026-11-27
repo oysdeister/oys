@@ -1,0 +1,248 @@
+/* ==========================================================
+   Taller · lista tipo app y marco de los simuladores (v4)
+   Se carga después de taller.css y taller-portada.css: solo afina.
+   Movimiento solo con transform y opacity.
+   ========================================================== */
+
+.tla-lista, .tlx-sim {
+  --tla-oro: #f6b65a;
+  --tla-oro-2: #ffe1a1;
+  --tla-ok: #5ff0d2;
+  --tla-cian: #6fe9ff;
+}
+
+/* ---------- Cabecera de la lista ---------- */
+.tla-banner .tl-banner-in { align-items: center; }
+.tla-banner h1 { letter-spacing: -0.02em; }
+.tla-resumen { display: flex; flex-wrap: wrap; gap: 12px; margin-top: var(--sp-4); }
+.tla-stat {
+  display: grid; gap: 8px; min-width: 200px; flex: 0 1 240px; padding: 12px 16px 14px; border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.tla-stat-num { color: #d3def5; font-size: var(--fs-sm); font-weight: 600; display: flex; align-items: baseline; }
+.tla-stat-num b { font: 800 30px/1 var(--display); color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 18px rgba(95, 240, 210, 0.45); }
+.tla-stat.oro .tla-stat-num b { text-shadow: 0 0 18px rgba(246, 182, 90, 0.55); }
+.tla-stat-barra { position: relative; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.14); overflow: hidden; }
+.tla-stat-barra i {
+  position: absolute; inset: 0; border-radius: inherit; transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--tla-ok), var(--tla-cian)); box-shadow: 0 0 10px var(--tla-ok);
+}
+.tla-medallas { display: flex; gap: 6px; height: 14px; align-items: center; }
+.tla-medallas i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px dashed rgba(255, 255, 255, 0.35); }
+.tla-medallas i.on {
+  border: 0; background: radial-gradient(circle at 35% 30%, var(--tla-oro-2), var(--tla-oro) 55%, #b97a1e);
+  box-shadow: 0 0 10px rgba(246, 182, 90, 0.75);
+}
+
+.btn.tla-seguir {
+  margin-top: var(--sp-4); min-height: 52px; padding: 6px 20px 6px 8px; gap: 12px; border-radius: 999px;
+  max-width: 100%; text-align: left; line-height: 1.2;
+}
+.btn.tla-seguir > span:nth-child(2) { min-width: 0; }
+.tla-seguir-ico {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--sim) 85%, #fff), color-mix(in srgb, var(--sim) 70%, #0b1d55));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 14px -2px var(--sim);
+}
+.btn.tla-seguir svg:last-child { transition: transform var(--dur-2) var(--ease-out); }
+.btn.tla-seguir:hover svg:last-child { transform: translateX(3px); }
+.btn.tla-seguir:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* ---------- Rejilla de tarjetas ---------- */
+.tlp-banco.tla-banco { grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 20px; perspective: none; }
+.tla-item { min-width: 0; display: flex; }
+
+.tla-banco a.ax-card.tla-card {
+  --neon: linear-gradient(135deg, color-mix(in srgb, var(--sim) 85%, transparent), color-mix(in srgb, var(--sim) 30%, var(--tla-cian)) 55%, color-mix(in srgb, var(--sim) 50%, transparent));
+  isolation: isolate; width: 100%; min-height: 0; padding: 22px 22px 20px; gap: 12px; border-radius: 24px; align-items: stretch;
+  transform: none; transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), rotate 0.5s var(--ease-out);
+}
+.tla-banco a.ax-card.tla-card::after { opacity: 0.8; }
+/* halo del color del simulador arriba a la izquierda */
+.tla-card::before {
+  display: block; content: ''; position: absolute; inset: 0; height: auto; pointer-events: none; z-index: -1; border-radius: inherit;
+  background: radial-gradient(260px 180px at 0% 0%, color-mix(in srgb, var(--sim) 26%, transparent), transparent 70%);
+  opacity: 0.9; transition: opacity var(--dur-2);
+}
+.tla-banco a.ax-card.tla-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ux-card-sombra-hover), 0 0 32px -10px var(--sim);
+}
+.tla-banco a.ax-card.tla-card:hover::before { opacity: 1; }
+.tla-banco a.ax-card.tla-card:active { transform: translateY(-1px) scale(0.99); }
+.tla-banco a.ax-card.tla-card:focus-visible { outline: none; box-shadow: var(--focus-ring), 0 0 32px -10px var(--sim); }
+
+/* Superado: borde dorado */
+.tla-banco a.ax-card.tla-card.est-ok {
+  --neon: linear-gradient(135deg, var(--tla-oro), var(--tla-oro-2) 35%, #d9952e 65%, var(--tla-oro));
+  box-shadow: var(--glow), 0 0 26px -12px rgba(246, 182, 90, 0.7);
+}
+
+.tla-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.tla-ico {
+  position: relative; flex: none; width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; color: #fff;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.55), transparent 45%),
+    linear-gradient(150deg, color-mix(in srgb, var(--sim) 82%, #fff), var(--sim) 45%, color-mix(in srgb, var(--sim) 62%, #0b1d55));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -6px 12px rgba(0, 0, 0, 0.18),
+    0 10px 22px -10px var(--sim), 0 0 26px -6px color-mix(in srgb, var(--sim) 70%, transparent);
+  transition: transform var(--dur-3) var(--ease-spring);
+}
+.tla-ico svg { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+.tla-card:hover .tla-ico { transform: translateY(-2px) rotate(-4deg) scale(1.04); }
+.tla-ico-medalla { position: absolute; right: -10px; bottom: -10px; width: 30px; height: 30px; filter: drop-shadow(0 0 8px rgba(246, 182, 90, 0.8)); }
+.tla-ico-medalla .medal { width: 100%; height: 100%; display: block; }
+
+.tla-estado {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 9px; border-radius: 999px;
+  font-size: var(--fs-xs); font-weight: 700; line-height: 1.2; white-space: nowrap; color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent); border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+.tla-estado svg { color: var(--sim); }
+.est-curso .tla-estado { background: color-mix(in srgb, var(--signal) 16%, transparent); border-color: color-mix(in srgb, var(--signal) 55%, transparent); }
+.est-ok .tla-estado { background: color-mix(in srgb, var(--tla-oro) 20%, transparent); border-color: var(--tla-oro); }
+.est-ok .tla-estado svg { color: var(--ux-ok); }
+.tla-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 8px var(--signal); animation: tlp-latido 1.6s ease-in-out infinite; }
+
+.tla-card h2 { transform: none; margin: 6px 0 0; font-family: var(--display); font-size: clamp(21px, 0.5vw + 16px, 24px); line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
+.tla-res { color: var(--ink-2); font-size: var(--fs-sm); line-height: 1.5; }
+
+.tla-pie {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.tla-prog { display: grid; gap: 7px; flex: 1 1 auto; min-width: 0; }
+.tla-prog small { font-size: var(--fs-xs); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tla-prog small b { color: var(--ink); font-weight: 800; }
+.tla-seg { display: flex; gap: 4px; max-width: 180px; }
+.tla-seg i { position: relative; flex: 1; height: 7px; border-radius: 4px; background: color-mix(in srgb, var(--ink) 13%, transparent); overflow: hidden; }
+.tla-seg b {
+  position: absolute; inset: 0; border-radius: inherit; transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--sim), var(--tla-ok)); box-shadow: 0 0 8px color-mix(in srgb, var(--tla-ok) 70%, transparent);
+}
+.est-ok .tla-seg b { background: linear-gradient(90deg, var(--tla-oro), var(--tla-oro-2)); box-shadow: 0 0 8px rgba(246, 182, 90, 0.6); }
+
+.tla-cta {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 18px; border-radius: 999px;
+  font-weight: 700; font-size: var(--fs-sm); color: var(--ink); background: transparent;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--sim, var(--arc-deep)) 70%, transparent);
+  transition: background var(--dur-2) ease;
+}
+.tla-card:hover .tla-cta { background: color-mix(in srgb, var(--sim, var(--arc-deep)) 16%, transparent); }
+.tla-cta svg { transition: transform var(--dur-2) var(--ease-out); }
+.tla-card:hover .tla-cta svg { transform: translateX(3px); }
+.est-ok .tla-cta { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 28%, transparent); }
+:root[data-theme='dark'] .est-ok .tla-cta { color: var(--ink); background: transparent; }
+
+/* ---------- Marco del simulador: HUD ---------- */
+.tlx-hud { grid-template-columns: auto auto minmax(0, 1fr) auto; }
+.tlx-hud-ico {
+  flex: none; width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; color: #fff;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.5), transparent 45%),
+    linear-gradient(150deg, color-mix(in srgb, var(--sim) 82%, #fff), var(--sim) 45%, color-mix(in srgb, var(--sim) 62%, #0b1d55));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 26px -4px color-mix(in srgb, var(--sim) 80%, transparent);
+}
+.tlx-hud-ico svg { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3)); }
+.tlx-hud-marcas { gap: 14px; }
+.btn.tlx-volver:focus-visible, .tl-concepto-btn:focus-visible, .tlx-sim .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.tlx-rondas {
+  display: grid; gap: 8px; min-width: 170px; padding: 10px 14px 12px; border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.tlx-rondas-txt { position: relative; display: block; color: #d3def5; font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; line-height: 24px; }
+.tlx-rondas-txt b { display: inline-block; font: 800 24px/1 var(--display); color: #fff; font-variant-numeric: tabular-nums; min-width: 0.6em; text-align: center; }
+.tlx-rondas-seg { display: flex; gap: 4px; }
+.tlx-rondas-seg i { position: relative; flex: 1; min-width: 14px; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.16); overflow: hidden; }
+.tlx-rondas-seg i.actual { background: rgba(246, 182, 90, 0.35); }
+.tlx-rondas-seg i.actual::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--tla-oro);
+  animation: tlx-seg-latido 1.4s ease-in-out infinite;
+}
+@keyframes tlx-seg-latido { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.tlx-rondas-seg b {
+  position: absolute; inset: 0; border-radius: inherit; transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--tla-ok), var(--tla-cian)); box-shadow: 0 0 8px var(--tla-ok);
+}
+
+.tlx-racha { min-height: 52px; border-radius: 16px; padding: 6px 14px; }
+
+/* Número de ronda dentro de la tarjeta: el HUD ya lo enseña */
+.tlx-ronda > .tl-ronda-num {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; margin: 0;
+}
+.tlx-ronda { border-radius: 24px; }
+
+/* ---------- Veredicto ---------- */
+.tlx-sim .tl-veredicto {
+  align-items: center; padding: 12px 16px 12px 12px; border-radius: 16px; border-width: 1.5px; border-style: solid;
+  box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.5);
+}
+.tlx-sim .tl-veredicto.ok { background: color-mix(in srgb, var(--ux-ok) 14%, var(--sheet)); border-color: color-mix(in srgb, var(--ux-ok) 75%, transparent); box-shadow: 0 0 24px -10px var(--ux-ok); }
+.tlx-sim .tl-veredicto.mal { background: color-mix(in srgb, var(--ux-mal) 12%, var(--sheet)); border-color: color-mix(in srgb, var(--ux-mal) 70%, transparent); box-shadow: 0 0 24px -12px var(--ux-mal); }
+.tlx-sim .tl-veredicto-ico { width: 36px; height: 36px; }
+.tlx-sim .tl-veredicto.ok .tl-veredicto-ico { background: var(--ux-ok); color: #04241c; box-shadow: 0 0 14px -2px var(--ux-ok); }
+.tlx-sim .tl-veredicto.mal .tl-veredicto-ico { background: var(--ux-mal); color: #fff; box-shadow: 0 0 14px -2px var(--ux-mal); }
+:root:not([data-theme='dark']) .tlx-sim .tl-veredicto.ok .tl-veredicto-ico { color: #fff; }
+.tl-df-fijo .tl-veredicto.ok { background: color-mix(in srgb, var(--ux-ok) 18%, var(--sheet-solid, var(--sheet))); }
+.tl-df-fijo .tl-veredicto.mal { background: color-mix(in srgb, var(--ux-mal) 14%, var(--sheet-solid, var(--sheet))); }
+
+/* Barra «Ronda superada» */
+.tlx-siguiente { border-radius: 20px; }
+.tlx-siguiente > span { display: inline-flex; align-items: center; gap: 10px; }
+.tlx-siguiente-ico {
+  flex: none; width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center;
+  background: var(--tla-ok); color: #04241c; box-shadow: 0 0 16px -2px var(--tla-ok);
+}
+
+/* ---------- Victoria ---------- */
+.tlx-fin { border-radius: 28px; }
+.tlx-trofeo-aro {
+  position: absolute; inset: 14px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, var(--tla-oro), var(--tla-oro-2), #d9952e, var(--tla-oro), var(--tla-oro-2), var(--tla-oro));
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 66%, transparent 67%);
+  mask: radial-gradient(circle, transparent 60%, #000 61%, #000 66%, transparent 67%);
+  filter: drop-shadow(0 0 10px rgba(246, 182, 90, 0.7));
+  animation: ilu-gira 10s linear infinite reverse;
+}
+.tlx-fin h2 { font-family: var(--display); letter-spacing: -0.01em; }
+.tlx-stats li { border-radius: 16px; min-width: 96px; padding: 10px 16px; }
+.tlx-stats li:nth-child(2) { background: color-mix(in srgb, var(--tla-oro) 16%, transparent); border-color: color-mix(in srgb, var(--tla-oro) 55%, transparent); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .tlx-hud { grid-template-columns: auto auto minmax(0, 1fr); }
+  .tlx-hud-marcas { grid-column: 1 / -1; justify-content: flex-end; }
+}
+@media (max-width: 760px) {
+  .tla-resumen { gap: 10px; }
+  .tla-stat { min-width: 0; flex: 1 1 140px; padding: 10px 12px 12px; }
+  .tla-stat-num b { font-size: 26px; }
+  .tla-stat-num { flex-wrap: wrap; }
+  .btn.tla-seguir { width: 100%; }
+  .btn.tla-seguir > span:nth-child(2) { flex: 1; }
+  .tlp-banco.tla-banco { gap: 14px; }
+  .tla-banco a.ax-card.tla-card { padding: 18px 18px 16px; border-radius: 22px; }
+  .tla-ico { width: 56px; height: 56px; border-radius: 18px; }
+  /* fila 1: volver, icono y racha · fila 2: título · fila 3: rondas */
+  .tlx-hud { grid-template-columns: auto auto minmax(0, 1fr); row-gap: 12px; }
+  .tlx-hud .tlx-volver { grid-area: 1 / 1; }
+  .tlx-hud-ico { grid-area: 1 / 2; width: 44px; height: 44px; border-radius: 14px; }
+  .tlx-hud-ico svg { width: 22px; height: 22px; }
+  .tlx-hud-txt { grid-area: 2 / 1 / 3 / -1; }
+  .tlx-hud-marcas { display: contents; }
+  .tlx-hud .tlx-racha { grid-area: 1 / 3; justify-self: end; min-height: 44px; }
+  .tlx-rondas { grid-area: 3 / 1 / 4 / -1; min-width: 0; }
+  .tla-medallas { gap: 4px; }
+  .tla-medallas i { width: 11px; height: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tla-punto, .tlx-rondas-seg i.actual::after, .tlx-trofeo-aro { animation: none; }
+  .tlx-rondas-seg i.actual::after { opacity: 1; }
+  .tla-banco a.ax-card.tla-card, .tla-ico, .tla-cta svg, .btn.tla-seguir svg:last-child { transition: none; }
+  .tla-banco a.ax-card.tla-card:hover, .tla-card:hover .tla-ico, .tla-card:hover .tla-cta svg, .btn.tla-seguir:hover svg:last-child { transform: none; }
+}

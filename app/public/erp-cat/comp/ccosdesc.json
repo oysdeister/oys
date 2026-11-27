@@ -1,0 +1,111 @@
+{
+ "c": "ccosdesc",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen",
+     "estado",
+     "refcen"
+    ],
+    "desc": "nomcen"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nomcen": {
+   "req": 1
+  },
+  "tipdir": {
+   "ro": "tercer == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tipdir) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(tipdir)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tipdir",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tercer": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tercer) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(tercer)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A"
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Costes › Maestros › Centros",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ccosdesc.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ccosdesc.nomcen).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila).",
+  "Ojo: Dirección (tipdir) admite cualquier valor sin error en la demo (se guardó «ZZZZ» sin aviso); no es clave foránea dura."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ccosdesc','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_ccosdesc) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codigo"
+  }
+ ]
+}

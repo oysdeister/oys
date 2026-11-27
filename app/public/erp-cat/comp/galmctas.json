@@ -1,0 +1,159 @@
+{
+ "c": "galmctas",
+ "fecha": "2026-11-18 almacen/captura-galmacen-galmctas",
+ "area": "almacen",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nomcta": {},
+  "indsal": {
+   "req": 1,
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(indsal) && !['S','N','G'].includes(indsal)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los valores posibles del indicador de saldo de una cuenta son: [S]í, [N]o.",
+     "tipo": "error",
+     "campo": "indsal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indval": {
+   "req": 1,
+   "def": "S",
+   "mayus": 1
+  },
+  "indcon": {
+   "req": 1,
+   "def": 1
+  },
+  "cosuni": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(cosuni) && !['S','N'].includes(cosuni)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los posibles valores del indicativo de valoración por coste unificado \r\nde almacen son: [S]í, [N]o.",
+     "tipo": "error",
+     "campo": "cosuni",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indadj": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(indadj) && !['S','N'].includes(indadj)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los posibles valores del indicativo de adjudicación son: [S]í, [N]o.",
+     "tipo": "error",
+     "campo": "indadj",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indcal": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(indcal) && !['S','N'].includes(indcal)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los posibles valores del indicativo de calidad para una cuenta de almacen son: [S]í, [N]o.",
+     "tipo": "error",
+     "campo": "indcal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "indpla": {
+   "req": 1,
+   "def": 0
+  },
+  "inddwh": {
+   "req": 1,
+   "def": 0
+  },
+  "stkrup": {
+   "req": 1,
+   "def": "N",
+   "reglas": [
+    {
+     "si": "!vacio(stkrup) && !['N','G','Z'].includes(stkrup)",
+     "msg": "Las siguientes restricciones de verificación fallaron: Los posibles valores para el indicador de nivel de control de rupturas son : [N]Ninguno, [G]Stock negativo, y [Z]Stock a cero.",
+     "tipo": "error",
+     "campo": "stkrup",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "user_created": {
+   "req": 1,
+   "ro": "1==1"
+  },
+  "date_created": {
+   "req": 1,
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && !vacio(codigo) && existe('galmctas','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_galmctas) violated.",
+   "tipo": "error",
+   "campo": "codigo",
+   "fuente": "demo"
+  },
+  {
+   "si": "indsal == 'N' && indadj != 'N'",
+   "msg": "Las siguientes restricciones de verificación fallaron: Se puede parametrizar una cuenta como susceptible de adjudicación, siempre y cuando ésta sea de saldo.",
+   "tipo": "error",
+   "campo": "indadj",
+   "fuente": "demo"
+  },
+  {
+   "si": "indsal == 'N' && indpla != null && indpla != 0",
+   "msg": "Las siguientes restricciones de verificación fallaron: Sólo se permite planificar en cuentas de saldo.",
+   "tipo": "error",
+   "campo": "indpla",
+   "fuente": "meta"
+  },
+  {
+   "si": "indsal == 'N' && indval != 'N'",
+   "msg": "Las siguientes restricciones de verificación fallaron: Sólo se valoran las cuentas que son de stock.",
+   "tipo": "error",
+   "campo": "indval",
+   "fuente": "demo"
+  },
+  {
+   "si": "indcon != null && indcon != 0 && indval != 'S'",
+   "msg": "Las siguientes restricciones de verificación fallaron: Una cuenta logística se procesa en contabilización de existencias, si también se procesa en la valoración de stock.",
+   "tipo": "error",
+   "campo": "indcon",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {},
+ "notas": [
+  "Sin botones ni menú Acciones; sin columna de estado. Menú ⋮: Información, Metadata, Imprimir, Exportar, Mas opciones. «Nuevo» es menú (Nuevo / Nuevo como) y abre un diálogo con Cancelar / Guardar.",
+  "No hay lista «tipo de cuenta»: las listas son Saldo (S Sí «Para la cuenta se lleva el saldo de stock acumulado de los movimientos», N No «No se lleva el saldo de stock acumulado de los movimientos», G Negativos «Se lleva el saldo de stock acumulado de los movimientos y además permite saldo negativo»; defecto S) y Rupturas stock (N Ninguno «No se registran rupturas de stock», G Stock negativo «Se generan rupturas de stock, cuando el saldo es menor a 0», Z Stock Cero «Se generan rupturas de stock, cuando el saldo es igual a 0»; defecto N), en tarjetas (MAP_ITEM_GROUP). Casillas: Contabilizar (1), Adjudicación (N), Calidad (N), Planificar (0), Valoración (S); Coste unificado (N) y Datawarehouse (0) no salen en la ficha.",
+  "Guardar sin código: «Este campo es obligatorio.» bajo Cuenta + toast «Hay errores en los datos del formulario» (no llama al servidor). La descripción no es obligatoria.",
+  "Restricciones SOFT: aviso naranja «Las siguientes restricciones de verificación fallaron:» con una viñeta por restricción (Saldo No + Adjudicación + Valoración dio las dos frases de adjudicación y valoración juntas); bloquean el guardado.",
+  "Duplicado (CALI): 500 «Unique constraint (informix.p_galmctas) violated.» (toast rojo; el diálogo sigue abierto).",
+  "Borrar: «Eliminar registro» / «¿Estás seguro que quieres eliminar el registro 'CAP CUENTA' ?» (Cancelar / Eliminar); la cuenta CAPA sin movimientos se borró sin más.",
+  "Subrejilla «Tipos de movimientos» (galmctas_type_movements_vtab): tipologías de movimiento cuya cuenta origen o destino es esta cuenta (p. ej. CALI: RICL NSAL>CALI, RCAL CALI>DISP, TCAL DISP>CALI)."
+ ]
+}

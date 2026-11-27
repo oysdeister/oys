@@ -1,0 +1,220 @@
+{
+ "c": "cinmcval",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "sistem": {
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['A','C','N','F','B','V','J'].includes(estado))))",
+     "msg": "El estado debe ser Activo [A], Obra en curso [c], No amortiza [N], Fuera servicio [F], Baja [B] o Vendido [V].",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sisamo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "porcen": {
+   "ro": "sisamo != 'L'",
+   "calc": "sisamo == 'D'  && numeje !=0 ? Math.round(100 /numeje, 3): porcen"
+  },
+  "numeje": {
+   "ro": "sisamo != 'D'",
+   "calc": "sisamo == 'L' && porcen !=0 && porcen != null ? Math.round(100 /porcen + 0.499) : numeje"
+  },
+  "invcom": {
+   "def": 0
+  },
+  "inicom": {
+   "def": 0
+  },
+  "rescom": {
+   "def": 0
+  },
+  "acucom": {
+   "def": 0,
+   "ro": "true"
+  },
+  "netcom": {
+   "def": 0,
+   "ro": "true"
+  },
+  "inimin": {
+   "def": 0
+  },
+  "acumin": {
+   "def": 0
+  },
+  "inimax": {
+   "def": 0
+  },
+  "acumax": {
+   "def": 0
+  },
+  "resfis": {
+   "def": 0
+  },
+  "empcode": {
+   "def": "0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codinm": {
+   "mayus": 1
+  },
+  "codele": {
+   "ro": "false",
+   "mayus": 1
+  },
+  "codcom": {
+   "mayus": 1
+  },
+  "numhis": {
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "invcom != (rescom + acucom + netcom)",
+   "msg": "La amortización inicial debe ser igual a la suma del valor residual y la amortización acumulada, más el valor neto.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((invcom >= 0 && netcom >= 0) || (invcom <= 0 && netcom <= 0))",
+   "msg": "El valor de inventario y el valor neto, deben ser mayores o iguales que 0 o menores o iguales que 0.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_CALCULA_AMORTIZACION": {
+   "l": "Recalcular amortizaciones",
+   "nota": "Sin diálogo en esta pantalla; recalcula el cuadro del componente."
+  },
+  "BUT_INSERT_CINMAMOR": {
+   "l": "Ajuste de amortización",
+   "dialogoTit": "Ajuste de amortización",
+   "dialogo": [
+    {
+     "n": "import",
+     "l": "Importe amortización",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "req": 1,
+     "h": "Importe de la amortización a aplicar o aplicada"
+    },
+    {
+     "n": "fecha",
+     "l": "Fecha",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha"
+    },
+    {
+     "n": "motivo",
+     "l": "Tipo",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "o": [
+      {
+       "k": "A",
+       "v": "Amortización"
+      },
+      {
+       "k": "B",
+       "v": "Ajuste de amortización"
+      },
+      {
+       "k": "C",
+       "v": "Amort. previa"
+      }
+     ],
+     "h": "Tipo o clase de registro de amortización"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "cinmamor",
+      "valores": {
+       "codinm": "codinm",
+       "codele": "codele",
+       "codcom": "codcom",
+       "numhis": "numhis",
+       "fecini": "ent.fecha",
+       "fecfin": "ent.fecha",
+       "import": "ent.import",
+       "motivo": "ent.motivo",
+       "estado": "'N'",
+       "sistem": "sistem"
+      }
+     }
+    }
+   ],
+   "nota": "Realiza el ajuste de amortización (tooltip). Diálogo capturado; no ejecutado. Opciones de Tipo según el catálogo de cinmamor.motivo."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "F",
+    "por": "BUT_FUERASERVICIO"
+   },
+   {
+    "de": [
+     "A"
+    ],
+    "a": "N",
+    "por": "BUT_DESACTIVAR"
+   },
+   {
+    "de": [
+     "F",
+     "N",
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_ACTIVAR"
+   }
+  ]
+ },
+ "notas": [
+  "Sin alta manual (insert=false). Estados: A Activo, C Obra en curso, N No amortiza, F Fuera servicio, B Baja, V Vendido, J Anulado.",
+  "% y años se calculan uno del otro según el sistema (L: años = round(100/% + 0,499); D: % = round(100/años,3)).",
+  "probado: ninguno de sus 2 botones directamente en esta pantalla (Recalcular probado desde Componentes; Ajuste de amortización solo diálogo)"
+ ]
+}

@@ -1,0 +1,209 @@
+{
+ "c": "cinmctas",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "placon": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(placon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(placon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "placon",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "ccinmo": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ccinmo) && !/^[A-Za-z0-9.]*$/.test(ccinmo)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "ccinmo",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "ccamor": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ccamor) && !/^[A-Za-z0-9.]*$/.test(ccamor)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "ccamor",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "ccdota": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ccdota) && !/^[A-Za-z0-9.]*$/.test(ccdota)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "ccdota",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "ccbene": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ccbene) && !/^[A-Za-z0-9.]*$/.test(ccbene)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "ccbene",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "ccperd": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ccperd) && !/^[A-Za-z0-9.]*$/.test(ccperd)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "ccperd",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "cctras": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(cctras) && !/^[A-Za-z0-9.]*$/.test(cctras)",
+     "msg": "Sólo letras, números y puntos",
+     "tipo": "error",
+     "campo": "cctras",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('cinmctas','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_cinmctas) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "!existe('ccuentas','codigo',ccinmo)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmctas1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "ccinmo"
+  },
+  {
+   "si": "!existe('cplacont','codigo',placon)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmctas1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "placon"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cinmhead','codcta',codigo) || existe('cinmelem','codcta',codigo)",
+   "msg": "Key value for constraint (informix.p_cinmctas) is still being referenced.",
+   "tipo": "error",
+   "fuente": "deducido"
+  }
+ ],
+ "notas": [
+  "Grupo contable: 6 cuentas (inmovilizado, amortización acumulada, dotación, beneficios, pérdidas y puente de traspasos, esta última opcional). Las cuentas solo admiten letras, números y puntos («Sólo letras, números y puntos»).",
+  "Con una cuenta o plan contable inexistente el servidor responde con la restricción f_cinmctas1 (probado con cuenta 99999.99999 y con plan ZZ).",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.»."
+ ]
+}

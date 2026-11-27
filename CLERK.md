@@ -6,7 +6,10 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
 
 | Pieza | Fichero |
 |---|---|
-| `ClerkProvider`, pantalla de entrada y bloqueo de la app | `app/src/auth/Acceso.tsx` |
+| `ClerkProvider`, pantalla de entrada (siempre oscura, con intro) y bloqueo de la app | `app/src/auth/Acceso.tsx` |
+| Formularios propios: entrar con código, crear cuenta (Google o correo), vuelta de Google, invitaciones | `app/src/auth/FormularioAcceso.tsx` |
+| Escena 3D de la pantalla de acceso (carga diferida) | `app/src/auth/EscenaAcceso.tsx` |
+| Clave, direcciones de vuelta y filtro de correos | `app/src/auth/config.ts` |
 | Botón de usuario, indicador de guardado y botón **Salir** (barra superior) | `app/src/auth/Cuenta.tsx` |
 | Formato compacto y fusión del progreso | `app/src/auth/compacto.ts` |
 | Subida con debounce, modo sin conexión y cambio de usuario | `app/src/auth/sincronizar.ts` |
@@ -14,7 +17,14 @@ La plataforma pide entrar con una cuenta de Clerk. Sin sesión iniciada no se ca
 | Estilos (fondo espacial, cristal y neón) | `app/src/auth/auth.css` |
 
 - **Clave:** se lee de `VITE_CLERK_PUBLISHABLE_KEY`. Si no está definida, la app funciona como antes: sin login y con el progreso solo en el navegador.
-- **Router:** la app usa `HashRouter` y los componentes de Clerk usan `routing="hash"` (solo en la pantalla de entrada, cuando la app aún no está montada). Funciona igual en `/oys/` de GitHub Pages, en un dominio propio o en `localhost`.
+- **Sin pantallas de Clerk:** el alumno no ve nunca componentes, ventanas ni páginas alojadas de Clerk. Los formularios son de la plataforma y usan la API (`useSignIn`/`useSignUp` de `@clerk/react/legacy`):
+  - **Ya tengo cuenta:** correo → `signIn.create` + `prepareFirstFactor('email_code')` → código de 6 cifras → `attemptFirstFactor` → `setActive`.
+  - **Crear cuenta:** nombre, apellidos y correo → `signUp.create` + `prepareEmailAddressVerification('email_code')` → código → `attemptEmailAddressVerification` → `setActive`.
+  - **Sin Google** (decisión de Sergi, 24-11-2026): no hay botón de Google para entrar ni para registrarse. Si llega una vuelta antigua de Google (`…/oys/?acceso=google`), la pantalla la termina con `handleRedirectCallback`.
+  - Invitaciones de Clerk (`__clerk_ticket` en la URL): botón «Aceptar invitación y entrar».
+  - Antes de llamar a Clerk se comprueba que el correo sea `@oysconsultores.com` (o de `CORREOS_EXTRA`).
+  - El avatar de la barra superior es propio (foto o iniciales); ya no se usa `<UserButton>`.
+  - En desarrollo, `?demo=codigo|registro|error|hecho` fuerza un estado para revisar el diseño sin mandar correos.
 - **Dónde se guarda:** en `user.unsafeMetadata.oys` de Clerk, sin backend. Clerk admite como máximo 8 KB de metadata por usuario.
   - En JSON tal cual, el progreso completo de los 80 ejercicios ocupa unos 8,9 KB y no cabe.
   - Por eso se compacta: los pasos y la checklist se guardan como máscaras de bits y se quitan los textos. Así ocupa unos 3 KB con todo completado.
@@ -60,13 +70,26 @@ Aplicación **OYS** del workspace personal de Clerk (plan **Hobby**), instancia 
 3. Pulsar **Salir** y borrar todo el `localStorage`, como en un navegador nuevo.
 4. Volver a entrar: vuelven el alumno y los 2 puntos marcados.
 
+## Configuración de Clerk para el acceso nuevo (23-11-2026, pendiente de Sergi)
+
+En el panel de Clerk, aplicación **OYS**, instancia de desarrollo:
+
+1. **Configure → User & authentication → Email:** activa *Sign-up with email*, *Verify at sign-up* con **Email verification code**, y *Sign-in with email* con **Email verification code**.
+2. **Configure → User & authentication → Password:** desactiva *Sign-up with password* (el acceso nuevo no usa contraseñas; si se deja obligatoria, el registro por correo se queda a medias).
+3. **Configure → User & authentication → Personal information** (o *Name*): activa **First and last name** (la pantalla los pide siempre).
+4. **Configure → SSO connections → Google:** desactívalo, porque la plataforma ya no ofrece entrar con Google. Si lo dejas activo no pasa nada visible, pero sobra.
+5. **Configure → Restrictions / Access mode:** cambia **Invite-only** a **Public** para que «Crear cuenta» funcione. La app solo abre la plataforma a correos `@oysconsultores.com` (y `CORREOS_EXTRA`); quien se registre con otro correo verá «Solo cuentas de O&S». Para que Clerk ni siquiera cree esas cuentas hace falta **Allowlist** (de pago).
+6. **Bot protection:** si está activa, no hay nada que hacer: el formulario de registro ya incluye el hueco `clerk-captcha`.
+
+Sin Google, no hace falta configurar nada en Google Cloud para el acceso.
+
 ## Lo que tienes que hacer tú
 
 ### 1. Pasar la clave a GitHub Actions
 
 La publishable key (`pk_...`) es pública: acaba en el JavaScript de la web. La secret key (`sk_...`) no se usa ni se tiene que poner en ningún sitio.
 
-1. Ve a GitHub → repositorio `sergibauli/oys` → **Settings → Secrets and variables → Actions → Variables → New repository variable**.
+1. Ve a GitHub → repositorio `oysdeister/oys` → **Settings → Secrets and variables → Actions → Variables → New repository variable**.
 2. Nombre: `CLERK_PUBLISHABLE_KEY`. Valor: la `pk_test_...` de Clerk (**Configure → API keys**).
 3. El workflow `.github/workflows/pages.yml` ya la pasa al build como `VITE_CLERK_PUBLISHABLE_KEY`.
 
@@ -76,12 +99,12 @@ Si prefieres guardarla como secret, créala en **Secrets** con el mismo nombre y
 
 1. Ve a Clerk → **Users → Invitations → Invite user**.
 2. Escribe el correo del alumno.
-3. Si te deja elegir la URL de redirección, pon `https://sergibauli.github.io/oys/`.
+3. Si te deja elegir la URL de redirección, pon `https://oysdeister.github.io/oys/`.
 4. El alumno recibe un correo. Al abrir el enlace, llega a la web con la invitación y ve el formulario de alta, donde crea su contraseña o entra con Google.
 
 ### 3. Origen permitido
 
-Las instancias de desarrollo de Clerk aceptan cualquier origen, `sergibauli.github.io` incluido; no hay nada que añadir. El campo **allowed origins** solo existe en producción.
+Las instancias de desarrollo de Clerk aceptan cualquier origen, `oysdeister.github.io` incluido; no hay nada que añadir. El campo **allowed origins** solo existe en producción.
 
 ## Límites de Clerk en GitHub Pages
 
@@ -91,7 +114,7 @@ Las instancias de desarrollo de Clerk aceptan cualquier origen, `sergibauli.gith
   - el inicio de sesión con Google usa las credenciales compartidas de Clerk.
 
   Para una formación interna de juniors suele bastar.
-- **La instancia de producción exige un dominio propio** en el que puedas crear registros DNS. Clerk usa esos registros para la sesión y para el correo. `sergibauli.github.io` no sirve, porque el dominio no es tuyo.
+- **La instancia de producción exige un dominio propio** en el que puedas crear registros DNS. Clerk usa esos registros para la sesión y para el correo. `oysdeister.github.io` no sirve, porque el dominio no es tuyo.
   - Si se quiere producción, crea un subdominio de la empresa, por ejemplo `practica.oysconsultores.com`, apuntado a GitHub Pages (Settings → Pages → Custom domain), y en Clerk pulsa **Go to prod** con ese dominio.
   - Clerk te pedirá varios CNAME (`clerk.`, `accounts.` y los de correo) en el DNS de `oysconsultores.com`.
   - La `pk_live_...` resultante sustituye a la `pk_test_...` en la variable de GitHub.

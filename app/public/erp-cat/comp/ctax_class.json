@@ -1,0 +1,121 @@
+{
+ "c": "ctax_class",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "class_codnac": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac",
+    "noExiste": "Missing key in referenced table for referential constraint (informix.f_ctax_class1)."
+   },
+   "reglas": [
+    {
+     "si": "!vacio(class_codnac) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(class_codnac)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "class_codnac",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(class_codnac) && !existe('ctiponac','codigo',class_codnac)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_class1).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "class_codnac"
+    }
+   ]
+  },
+  "class_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_class",
+    "clave": "class_code",
+    "cols": [
+     "class_code",
+     "class_name",
+     "class_type",
+     "class_clase"
+    ],
+    "desc": "class_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(class_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(class_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "class_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "class_name": {
+   "req": 1
+  },
+  "class_type": {
+   "req": 1,
+   "mayus": 1,
+   "def": "N",
+   "reglas": [
+    {
+     "si": "!vacio(class_type) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(class_type)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "class_type",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "class_order": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(class_order) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(class_order)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "class_order",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "class_clase": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(class_clase) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(class_clase)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "class_clase",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Clases de impuestos",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ctax_class.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_class.class_name).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila)."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_class','class_code',class_code)",
+   "msg": "Unique constraint (informix.p_ctax_class) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "class_code"
+  }
+ ]
+}

@@ -16,6 +16,8 @@ export interface ReproductorModalProps {
   capitulo: number;
   /** Segundo dentro del clip del capítulo en que empieza */
   t?: number;
+  /** Segundo del clip en que acaba el momento: el vídeo se para ahí y ofrece seguir viendo */
+  fin?: number;
   /** Si es false, la ventana no se muestra (permite la animación de salida) */
   abierto: boolean;
   onCerrar: () => void;
@@ -25,7 +27,7 @@ export interface ReproductorModalProps {
  * Clip de un capítulo en una ventana modal sobre la página actual, con su índice de escenas.
  * Esc o un toque fuera la cierran. En móvil ocupa toda la pantalla.
  */
-export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: ReproductorModalProps) {
+export function ReproductorModal({ serie, capitulo, t = 0, fin, abierto, onCerrar }: ReproductorModalProps) {
   const sv = serieDe(serie);
   const CAPITULOS = sv.capitulos;
   const reducir = !!useReducedMotion();
@@ -33,6 +35,9 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
   const [inicio, setInicio] = useState(t);
   const [ahora, setAhora] = useState(t);
   const [fallo, setFallo] = useState(false);
+  // Fin del momento: mientras está activo, el vídeo se para al llegar; «parado» enseña el aviso para seguir
+  const [finActivo, setFinActivo] = useState<number | null>(fin ?? null);
+  const [parado, setParado] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
   const cerrar = useRef<HTMLButtonElement>(null);
   const caja = useRef<HTMLDivElement>(null);
@@ -47,7 +52,9 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
     setN(capitulo);
     setInicio(t);
     setAhora(t);
-  }, [abierto, capitulo, t]);
+    setFinActivo(fin ?? null);
+    setParado(false);
+  }, [abierto, capitulo, t, fin]);
 
   // Foco, Esc, trampa de foco y bloqueo del scroll de la página
   useEffect(() => {
@@ -123,17 +130,42 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
   const saltar = (s: number) => {
     const v = video.current;
     if (!v) return;
+    setFinActivo(null);
+    setParado(false);
     pendiente.current = s;
     v.currentTime = s;
     setAhora(s);
     void v.play().catch(() => undefined);
   };
   const irCapitulo = (k: number) => {
+    setFinActivo(null);
+    setParado(false);
     setN(k);
     setInicio(0);
     setAhora(0);
   };
   useEffect(() => setFallo(false), [n, sv.id, abierto]);
+  // Al llegar al final del momento: pausa y aviso. Desde ahí el vídeo sigue sin cortes.
+  const vigilarFin = (v: HTMLVideoElement) => {
+    if (finActivo === null || pendiente.current !== null || v.currentTime < finActivo) return;
+    v.pause();
+    setFinActivo(null);
+    setParado(true);
+  };
+  const seguirViendo = () => {
+    setParado(false);
+    void video.current?.play().catch(() => undefined);
+  };
+  const repetir = () => {
+    const v = video.current;
+    if (!v) return;
+    setParado(false);
+    setFinActivo(fin ?? null);
+    pendiente.current = inicio;
+    v.currentTime = inicio;
+    setAhora(inicio);
+    void v.play().catch(() => undefined);
+  };
   const prev = CAPITULOS.find((x) => x.n === n - 1), next = CAPITULOS.find((x) => x.n === n + 1);
 
   return createPortal(
@@ -155,30 +187,30 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
             role="dialog"
             aria-modal="true"
             aria-labelledby="vm-titulo"
-            initial={reducir ? false : { opacity: 0, rotateX: 12, y: 40, scale: 0.94 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
-            exit={reducir ? { opacity: 0 } : { opacity: 0, rotateX: -8, y: 24, scale: 0.96 }}
-            transition={{ duration: reducir ? 0 : 0.45, ease: [0.16, 0.8, 0.2, 1] }}
-            style={{ transformPerspective: 1400 }}
+            initial={reducir ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducir ? 0 : 0.2, ease: 'easeOut' }}
           >
             <header className="vm-cab">
-              <span className="vm-num" aria-hidden="true">
-                {String(c.n).padStart(2, '0')}
-              </span>
               <div className="vm-cab-txt">
                 <p className="vm-kicker">
                   {sv.titulo} · capítulo {c.n} de {CAPITULOS.length}
                 </p>
                 <h2 id="vm-titulo">{c.titulo}</h2>
               </div>
-              <button ref={cerrar} type="button" className="vm-cerrar" onClick={onCerrar} aria-label="Cerrar el vídeo">
+              <button ref={cerrar} type="button" className="vm-cerrar" onClick={onCerrar} aria-label="Cerrar">
                 <span aria-hidden="true">×</span>
               </button>
             </header>
 
             <div className="vm-cuerpo">
               <div className="vm-pantalla">
-                {c.url ? (
+                {c.url && c.audio ? (
+                  <audio key={`${sv.id}-${c.n}`} className="vm-audio" src={c.url} controls preload="metadata" onError={() => setFallo(true)}>
+                    Tu navegador no puede reproducir este audio. <a href={c.url}>Descárgalo aquí</a>.
+                  </audio>
+                ) : c.url ? (
                   <video
                     key={`${sv.id}-${c.n}`}
                     ref={video}
@@ -194,10 +226,15 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
                     onTimeUpdate={(e) => {
                       comprobarSalto(e.currentTarget);
                       if (pendiente.current === null) setAhora(e.currentTarget.currentTime);
+                      vigilarFin(e.currentTarget);
                     }}
+                    onPlay={() => setParado(false)}
                     onSeeked={(e) => {
                       comprobarSalto(e.currentTarget);
-                      setAhora(e.currentTarget.currentTime);
+                      const x = e.currentTarget.currentTime;
+                      setAhora(x);
+                      // Si el alumno se mueve fuera del momento con la barra del vídeo, deja de pararse
+                      if (finActivo !== null && pendiente.current === null && (x > finActivo + 0.5 || x < inicio - 1)) setFinActivo(null);
                     }}
                   >
                     Tu navegador no puede reproducir este vídeo. <a href={c.url}>Descárgalo aquí</a>.
@@ -206,6 +243,29 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
                   <p className="vm-nopub">
                     <Icon name="aviso" /> Este capítulo aún no está publicado.
                   </p>
+                )}
+                {finActivo !== null && !parado && c.url && (
+                  <p className="vm-tramo">
+                    Este momento va de {mmss(inicio)} a {mmss(finActivo)}. El vídeo se para al final.
+                  </p>
+                )}
+                {parado && (
+                  <div className="vm-fin" role="status">
+                    <p>
+                      <Icon name="check" size={18} stroke={3} /> Fin de este momento
+                    </p>
+                    <div className="vm-fin-acc">
+                      <button type="button" className="btn sm" onClick={seguirViendo}>
+                        Seguir viendo
+                      </button>
+                      <button type="button" className="btn ghost sm" onClick={repetir}>
+                        Volver a verlo
+                      </button>
+                      <button type="button" className="btn ghost sm" onClick={onCerrar}>
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
                 )}
                 {fallo && c.url && (
                   <p className="vm-nopub vm-fallo" role="status">
@@ -258,7 +318,22 @@ export function ReproductorModal({ serie, capitulo, t = 0, abierto, onCerrar }: 
   );
 }
 
-/** Botón «Míralo en el vídeo · cap. N, mm:ss — título» que abre el momento en la ventana modal. */
+/**
+ * Dónde está el momento: «Vídeo «Compras» · cap. 3, 04:12» o, si es un trozo de una grabación
+ * original, el minuto de la sesión para buscarlo a mano («Vídeo «Sesión 1» · 1:02:33»).
+ */
+export function dondeMomento(m: MomentoVideo) {
+  const sv = m.serie ? serieDe(m.serie) : null;
+  if (sv?.original) return `Vídeo «${sv.corto}» · ${mmss(m.t)}`;
+  if (sv?.porTabla) {
+    const c = sv.capitulos.find((x) => x.n === m.capitulo);
+    return `Vídeo corto de la tabla${c ? ` · ${mmss(c.duracion)}` : ''}`;
+  }
+  const tramo = m.fin !== undefined ? `${mmss(m.tCap)}–${mmss(m.fin)}` : mmss(m.tCap);
+  return `${sv ? `Vídeo «${sv.corto}»` : 'Vídeo de Compras'} · cap. ${m.capitulo}, ${tramo}`;
+}
+
+/** Botón «Ver el vídeo · cap. N, mm:ss — título» que abre el momento en la ventana modal. */
 export function BotonMomento({ m, className }: { m: MomentoVideo; className?: string }) {
   const [abierto, setAbierto] = useState(false);
   return (
@@ -268,15 +343,13 @@ export function BotonMomento({ m, className }: { m: MomentoVideo; className?: st
           <Icon name="play" />
         </span>
         <span className="vm-boton-txt">
-          <strong>Míralo en el vídeo</strong>
+          <strong>Ver el vídeo</strong>
           <span>
-            {m.serie && serieDe(m.serie).original
-              ? `${serieDe(m.serie).corto} · ${mmss(m.t)} — ${m.titulo}`
-              : `${m.serie ? `${serieDe(m.serie).corto} · ` : ''}cap. ${m.capitulo}, ${mmss(m.tCap)} — ${m.titulo}`}
+            {dondeMomento(m)} — {m.titulo}
           </span>
         </span>
       </button>
-      <ReproductorModal serie={m.serie} capitulo={m.capitulo} t={m.tCap} abierto={abierto} onCerrar={() => setAbierto(false)} />
+      <ReproductorModal serie={m.serie} capitulo={m.capitulo} t={m.tCap} fin={m.fin} abierto={abierto} onCerrar={() => setAbierto(false)} />
     </>
   );
 }

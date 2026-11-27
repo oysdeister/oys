@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useDb, erp, CAT, totales, lineasFactura, asientoPrevisto, r2, baseDe, type Albaran } from '../modelo';
-import { useErp, Lista, Ficha, Pestanas, Rejilla, CampoTexto, CampoFecha, CampoLectura, Lineas, Enlace, Estado, eur, fechaEs, Seccion, type Accion } from '../ui';
+import { useErp, Lista, Ficha, Pestanas, Rejilla, CampoTexto, CampoFecha, CampoLectura, Lineas, Enlace, Estado, eur, fechaEs, Seccion, avisoGuardarAntes, type Accion } from '../ui';
 import { useAccionesCatalogo, useEnlacesCatalogo } from '../catalogo/extra';
 
 export default function Facturas() {
   const extraAcc = useAccionesCatalogo('gcomfach');
   const extraMenu = useEnlacesCatalogo('gcomfach');
-  const { ini, clave, ir, hacer, noDisp } = useErp();
+  const { ini, clave, ir, hacer, noDisp, aviso } = useErp();
   const db = useDb();
 
   if (clave === null) {
@@ -77,9 +77,12 @@ export default function Facturas() {
       acciones.push({
         label: 'Validar',
         tipo: 'proceso',
-        disabled: !sinCambios,
         title: sinCambios ? undefined : 'Guarda los cambios antes de validar',
         onClick: () => {
+          if (!sinCambios) {
+            aviso('error', avisoGuardarAntes('Validar'));
+            return;
+          }
           hacer(erp.estadoFactura(registro.numero, 'Validado', ini), 'Factura validada');
         },
       });

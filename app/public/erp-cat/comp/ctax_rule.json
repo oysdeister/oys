@@ -1,0 +1,384 @@
+{
+ "c": "ctax_rule",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "rule_seqno": {
+   "ro": "1==1",
+   "lov": {
+    "obj": "ctax_rule",
+    "clave": "rule_seqno",
+    "cols": [
+     "rule_codnac",
+     "rule_taxclass",
+     "rule_zonemp"
+    ],
+    "desc": "rule_codnac"
+   }
+  },
+  "rule_taxclass": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_class",
+    "clave": "class_code",
+    "cols": [
+     "class_code",
+     "class_name",
+     "class_type",
+     "class_clase"
+    ],
+    "desc": "class_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_taxclass) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_taxclass)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_taxclass",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(rule_taxclass) && !existe('ctax_class','class_code',rule_taxclass)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_rule1).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "rule_taxclass"
+    }
+   ]
+  },
+  "rule_codnac": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_codnac) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_codnac)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_codnac",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_zonemp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_zonemp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_zonemp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_zonemp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_zonter": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_zonter) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_zonter)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_zonter",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_ciftype": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(rule_ciftype) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_ciftype)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_ciftype",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_keyter": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_terkey",
+    "clave": "terk_code",
+    "cols": [
+     "terk_code",
+     "terk_name"
+    ],
+    "desc": "terk_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_keyter) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_keyter)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_keyter",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_keyart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_artkey",
+    "clave": "artk_code",
+    "cols": [
+     "artk_code",
+     "artk_name",
+     "artk_estado",
+     "artk_nature"
+    ],
+    "desc": "artk_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_keyart) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_keyart)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_keyart",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(rule_keyart) && !existe('ctax_artkey','artk_code',rule_keyart)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_rule5).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "rule_keyart"
+    }
+   ]
+  },
+  "rule_keydoc": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_dockey",
+    "clave": "dock_code",
+    "cols": [
+     "dock_code",
+     "dock_name",
+     "dock_estado",
+     "dock_zonfis"
+    ],
+    "desc": "dock_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_keydoc) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_keydoc)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_keydoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_prorrata": {
+   "req": 1
+  },
+  "rule_priori": {
+   "req": 1,
+   "def": 0
+  },
+  "rule_fecini": {
+   "req": 1
+  },
+  "rule_in_oper": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_in_oper) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_in_oper)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_in_oper",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_in_taxcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_in_taxcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_in_taxcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_in_taxcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_in_mainkey": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(rule_in_mainkey) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_in_mainkey)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_in_mainkey",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_out_oper": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_out_oper) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_out_oper)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_out_oper",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_out_taxcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(rule_out_taxcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_out_taxcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_out_taxcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_out_mainkey": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(rule_out_mainkey) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_out_mainkey)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_out_mainkey",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "rule_status": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "reglas": [
+    {
+     "si": "!vacio(rule_status) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(rule_status)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "rule_status",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((((((!(rule_in_oper == null || rule_in_oper.length === 0)) && (!(rule_in_taxcode == null || rule_in_taxcode.length === 0))) && (!(rule_in_porded == null))) && (!(rule_in_mainkey == null || rule_in_mainkey.length === 0))) && (!(rule_in_telsend == null))) || ((((((rule_in_oper == null || rule_in_oper.length === 0)) && ((rule_in_taxcode == null || rule_in_taxcode.length === 0))) && ((rule_in_porded == null))) && ((rule_in_mainkey == null || rule_in_mainkey.length === 0))) && ((rule_in_telsend == null)))))",
+   "msg": "Operación, impuesto, deducibilidad,clave fiscal y envio telemático principal en adquisiciones , se informan todos los campos ninguno",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((((!(rule_out_oper == null || rule_out_oper.length === 0)) && (!(rule_out_taxcode == null || rule_out_taxcode.length === 0))) && (!(rule_out_porded == null))) && (!(rule_out_mainkey == null || rule_out_mainkey.length === 0))) && (!(rule_out_telsend == null))) || ((((((rule_out_oper == null || rule_out_oper.length === 0)) && ((rule_out_taxcode == null || rule_out_taxcode.length === 0))) && ((rule_out_porded == null))) && ((rule_out_mainkey == null || rule_out_mainkey.length === 0))) && ((rule_out_telsend == null)))))",
+   "msg": "Operación, impuesto, deducibilidad,clave fiscal y envio telemático principal en entregas, se informan todos los campos ninguno",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "__ins && cuenta('ctax_rule','rule_zonemp',rule_zonemp) > 0 && existe('ctax_rule','rule_zonter',rule_zonter)",
+   "msg": "Unique constraint (informix.u_ctax_rule) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Reglas de asignación",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo con una zona CAPZR creada y borrada: alta duplicada «Unique constraint (informix.u_ctax_rule) violated.» (clave única de la combinación clase, zonas, claves, prioridad y fecha; la regla alGuardar es una aproximación), clase inexistente «…f_ctax_rule1…», clave de artículo inexistente «…f_ctax_rule5…».",
+  "Por servidor, los bloques de adquisiciones/entregas incompletos dan «Check constraint (informix.c_ctax_rule1) failed.» (adquisiciones) y «Check constraint (informix.c_ctax_rule2) failed.» (entregas); en la interfaz sale antes el texto de cliente de alGuardar (meta).",
+  "Borrar una zona usada en reglas: «Key value for constraint (informix.p_ctax_zone) is still being referenced.».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones; sin menú ⌄. Crudos: raw/contabilidad/b1/R_ctax_rule.json."
+ ]
+}

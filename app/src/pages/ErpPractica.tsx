@@ -12,24 +12,22 @@ export default function ErpPractica() {
   const orden = pedida && ids.includes(pedida) ? [pedida, ...ids.filter((x) => x !== pedida)] : ids;
   const hechas = PRACTICAS.filter((x) => (notas[x.id]?.nota ?? 0) >= 1).length;
   return (
-    <div className="wrap erp-pagina">
-      <header className="ax-banner erp-hero">
-        <div className="ax-banner-in">
-          <div className="ax-banner-text">
-            <p className="ax-kicker">Practicar y demostrar</p>
-            <h1>Transacciona en el ERP</h1>
-            <p className="lead">
-              Una réplica de Axional VNext con su menú completo, donde grabas de verdad: tu proveedor y tu artículo, el circuito pedido › albarán › factura, el asiento, el pago por remesa y la conciliación bancaria. La plataforma revisa lo que has hecho y te pone nota al momento.
-            </p>
-            <div className="ex-chips">
-              <span className="chip">{PRACTICAS.length} prácticas</span>
-              <span className={`chip${hechas === PRACTICAS.length ? ' ok' : ''}`}>
-                {hechas} superadas
-              </span>
-              <span className="chip">Datos guardados en este navegador</span>
-            </div>
-          </div>
-        </div>
+    <div className="wrap erp-pagina cs-pag">
+      <header className="g-hero cs-hero erp-hero">
+        <p className="g-kicker">Practicar y demostrar</p>
+        <h1>ERP de práctica</h1>
+        <p className="cs-lead">
+          Un ERP simulado dentro de esta web, con el mismo menú de Finanzas y Gestión que tiene Axional Deister VNext en la demo real. Aquí grabas de verdad: tu proveedor y tu artículo, el circuito pedido › albarán › factura, el asiento, el pago por remesa y la conciliación bancaria. La plataforma lo corrige y te pone nota al momento.
+        </p>
+        <p className="cs-datos">
+          <span>
+            <b>{PRACTICAS.length}</b> prácticas
+          </span>
+          <span>
+            <b>{hechas}</b> superadas
+          </span>
+          <span>Datos guardados en este navegador</span>
+        </p>
       </header>
       <Practicar ids={orden} ini={p.alumno.ini} />
     </div>

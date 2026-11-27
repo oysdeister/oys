@@ -1,0 +1,116 @@
+{
+ "c": "gven_promoca",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "ambart": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "indexc": {
+   "req": 1,
+   "def": 0
+  },
+  "indinc": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1
+  },
+  "diadwh": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((diadwh == null) || (diadwh >= 0)))",
+     "msg": "El número de 'días de venta' debe ser un entero positivo.",
+     "tipo": "error",
+     "campo": "diadwh",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codfam": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartfami",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "marca": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartmarc",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpro": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gproveed",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "claart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "artmar": {
+   "mayus": 1
+  },
+  "vlpmar": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "unimin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unimed",
+    "clave": "coduni"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((vlpmar == null || vlpmar.length === 0)) || ((!(vlpmar == null || vlpmar.length === 0)) && (!(artmar == null || artmar.length === 0)))))",
+   "msg": "Se debe informar de la marca o de la marca y el artículo",
+   "tipo": "error",
+   "campo": "vlpmar",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((!(canmin == null)) && (!(unimin == null || unimin.length === 0))) || (((canmin == null)) && ((unimin == null || unimin.length === 0)))))",
+   "msg": "No se puede indicar cantidad mínima sin informar unidad ni se puede informar unidad sin informar cantidad mínima",
+   "tipo": "error",
+   "campo": "unimin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((tipcon == null || tipcon.length === 0)) && ((conart == null || conart.length === 0))) || ((!(tipcon == null || tipcon.length === 0)) && (!(conart == null || conart.length === 0)))))",
+   "msg": "El tipo y la condición de selección deben informarse de forma simultánea.",
+   "tipo": "error",
+   "campo": "tipcon",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((indinc == 'N') || ((indexc == null) || (indexc == 0))))",
+   "msg": "Un registro no puede ser de exclusión e inclusión al mismo tiempo.",
+   "tipo": "error",
+   "campo": "indinc",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

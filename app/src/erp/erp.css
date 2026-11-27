@@ -425,3 +425,126 @@ select.erp-input { appearance: none; padding-right: 18px; background: linear-gra
 /* conciliación: la descripción se recorta para que el importe se vea en móvil */
 .erp-concil td.desc { max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 @container erp (max-width: 860px) { .erp-concil td.desc { max-width: 110px; } }
+
+/* Lupa (lista de valores) junto a un campo, como en Axional */
+.erp-campo-lupa { display: flex; align-items: flex-end; gap: 4px; }
+.erp-campo-lupa > :first-child { flex: 1; min-width: 0; }
+.erp-lupa { border: 1px solid var(--ax-linea); background: #fff; border-radius: 4px; height: 32px; width: 32px; cursor: pointer; margin-bottom: 2px; }
+.erp-lupa:hover { background: #eef3fa; }
+.erp-input { width: 100%; box-sizing: border-box; padding: 6px 8px; margin-bottom: 8px; border: 1px solid var(--ax-linea); border-radius: 4px; font: inherit; }
+
+/* UX v5: ERP a todo el ancho; enunciado flotante que se abre y se cierra */
+.pr-ancho .pr-lienzo { position: relative; height: var(--pr-alto); }
+.pr-ancho .pr-erp { height: 100%; }
+.pr-tira { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 10px; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--sheet); }
+.pr-tira-txt { flex: 1 1 280px; display: grid; gap: 2px; min-width: 0; }
+.pr-tira-txt span { font-size: var(--fs-sm); color: var(--ink-2); }
+.pr-tira-pt { font-weight: 700; font-size: var(--fs-sm); color: var(--ink-2); white-space: nowrap; }
+.pr-flota { position: absolute; top: 12px; right: 12px; bottom: 12px; width: min(380px, calc(100% - 24px)); z-index: 6; display: flex; }
+.pr-flota .pr-panel { flex: 1; box-shadow: 0 18px 50px rgba(15, 31, 77, .28); }
+.pr-cerrar { margin-left: 4px; width: 36px; height: 36px; flex: none; border-radius: 50%; border: 1px solid var(--line); background: var(--sheet-2); color: var(--ink); font-size: 22px; line-height: 1; cursor: pointer; }
+@media (max-width: 760px) {
+  .pr-ancho .pr-lienzo { height: auto; }
+  .pr-ancho .pr-erp { height: min(760px, calc(100vh - 100px)); }
+  .pr-flota { position: static; width: auto; margin-top: 12px; }
+}
+.pr-flota .pr-panel { background: var(--sheet-solid, #fff); backdrop-filter: none; }
+:root[data-theme='dark'] .pr-flota .pr-panel { background: var(--sheet-solid, #141d31); }
+/* El enunciado va al lado del ERP, nunca encima: no tapa botones y «Ocultar» está siempre a la vista */
+.pr-ancho .pr-lienzo.con-panel { display: grid; grid-template-columns: minmax(0, 1fr) min(380px, 34%); gap: 12px; }
+.pr-ancho .pr-lienzo.con-panel .pr-erp { min-width: 0; }
+.pr-flota { position: static; width: auto; min-height: 0; height: 100%; }
+.pr-flota .pr-panel { box-shadow: none; padding-top: 0; }
+.pr-flota .pr-cab { position: sticky; top: 0; z-index: 2; margin: 0 -18px; padding: 14px 18px 10px; background: inherit; border-bottom: 1px solid var(--line); }
+.pr-cerrar { width: auto; height: 36px; padding: 0 14px; border-radius: 999px; font-size: var(--fs-sm, 14px); font-weight: 700; }
+@media (max-width: 760px) {
+  .pr-ancho .pr-lienzo.con-panel { display: block; }
+  .pr-flota { height: auto; margin-top: 12px; }
+}
+
+/* campo señalado por un error de guardado: borde rojo, rótulo rojo y foco */
+.erp-input[aria-invalid='true'] { border-color: var(--ax-rojo); border-bottom-width: 2px; box-shadow: 0 1px 0 var(--ax-rojo); background-color: rgba(211, 47, 47, 0.06); }
+.erp-tabla .erp-input[aria-invalid='true'] { outline: 2px solid var(--ax-rojo); outline-offset: 1px; }
+.erp-campo.con-error .erp-label { color: var(--ax-rojo); font-weight: 700; }
+.erp-error-campo { margin-top: 2px; font-size: 10px; font-weight: 600; color: var(--ax-rojo); }
+
+/* Corrección automática: por qué no se ha conseguido un punto, con el dato real */
+.pr-porque { display: block; margin-top: 3px; font-size: 13px; line-height: 1.4; color: #9a440b; font-weight: 600; }
+:root[data-theme='dark'] .pr-porque { color: #f5b75a; }
+.pr-checks li.ok .pr-porque { display: none; }
+
+/* Pantalla completa del ERP de práctica (Fullscreen API) y modo ampliado de respaldo (iOS) */
+.pr-completa { display: inline-flex; align-items: center; gap: 8px; }
+.pr-completa svg { flex: none; }
+.pr-espacio.pr-completa-on { display: flex; flex-direction: column; margin: 0; padding: 10px 12px 12px; background: var(--paper); color: var(--ink); }
+.pr-espacio.pr-completa-on .pr-orden { margin: 0 0 6px; }
+.pr-espacio.pr-completa-on .pr-tira { margin-bottom: 8px; }
+.pr-espacio.pr-completa-on .pr-lienzo { flex: 1 1 auto; min-height: 0; height: auto; }
+.pr-espacio.pr-completa-on .pr-erp { height: 100%; }
+.pr-espacio:fullscreen { width: 100vw; height: 100vh; overflow: hidden; }
+.pr-espacio.pr-ampliado { position: fixed; inset: 0; z-index: 1000; height: 100dvh; overflow: hidden; padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.pr-espacio.pr-completa-on .pr-flota { overflow: auto; }
+@media (max-width: 760px) {
+  .pr-espacio.pr-completa-on .pr-tira { gap: 8px; padding: 8px 10px; }
+  .pr-espacio.pr-completa-on .pr-tira-txt span { display: none; }
+  .pr-espacio.pr-completa-on .pr-lienzo.con-panel { display: flex; flex-direction: column; }
+  .pr-espacio.pr-completa-on .pr-lienzo.con-panel .pr-erp { flex: 1 1 50%; min-height: 0; height: auto; }
+  .pr-espacio.pr-completa-on .pr-flota { flex: 1 1 50%; min-height: 0; margin-top: 8px; }
+  .pr-espacio.pr-completa-on .pr-erp { height: 100%; }
+}
+/* el artículo de la línea se lee entero (código y nombre) */
+.erp-tabla select.erp-input.mini { min-width: 150px; }
+
+/* Pantalla completa en móvil: cabecera de una línea, botones solo con icono (con aria-label) y búsqueda del ERP entera */
+.pr-solo-ico { display: none; }
+@media (max-width: 760px) {
+  .pr-espacio.pr-completa-on { padding: 6px 8px 8px; }
+  .pr-espacio.pr-completa-on .pr-orden { display: none; }
+  .pr-espacio.pr-completa-on .pr-tira { flex-wrap: nowrap; gap: 6px; margin-bottom: 6px; padding: 4px 6px 4px 10px; }
+  .pr-espacio.pr-completa-on .pr-tira-txt { flex: 1 1 auto; }
+  .pr-espacio.pr-completa-on .pr-tira-txt strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-sm); }
+  .pr-espacio.pr-completa-on .pr-tira-pt { font-size: 13px; }
+  .pr-espacio.pr-completa-on .pr-tira-btn { flex: none; width: 40px; min-width: 40px; padding: 0; justify-content: center; }
+  .pr-espacio.pr-completa-on .pr-btn-txt { display: none; }
+  .pr-espacio.pr-completa-on .pr-solo-ico { display: block; }
+}
+@container erp (max-width: 460px) {
+  .erp-logo { font-size: 16px; padding: 0 4px; }
+  .erp-top-buscar { flex: 1 1 auto; min-width: 0; margin: 0 4px; padding: 0 6px; }
+  .erp-top-buscar kbd { display: none; }
+  .erp-top { gap: 2px; padding: 0 4px; }
+}
+
+/* ---------------------------------------------------------------- envoltorio de la plataforma (tema guía)
+   Solo lo que rodea al ERP: orden de prácticas, tira del enunciado y panel de corrección. La pantalla .erp no se toca. */
+.pr-orden { margin: 0 0 10px; color: var(--g-muted); font-size: 15px; }
+.pr-orden-sig { margin-left: 6px; padding: 0; border: 0; background: none; color: var(--g-info); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--g-info) 40%, transparent); cursor: pointer; min-height: 32px; }
+.pr-orden-sig:hover { text-decoration-color: currentColor; }
+.pr-sel-ok { color: var(--g-ok); font-weight: 700; }
+.pr-tira {
+  gap: 10px 16px; padding: 14px 18px; border: 1px solid var(--g-line); border-left: 4px solid var(--g-accent);
+  border-radius: var(--g-r-s); background: var(--g-paper); box-shadow: none;
+}
+.pr-tira-txt strong { font-size: 17px; color: var(--g-ink); }
+.pr-tira-txt span { font-size: 15px; line-height: 1.55; color: var(--g-muted); }
+.pr-tira-pt { font-size: 15px; color: var(--g-ink); font-variant-numeric: tabular-nums; }
+.pr-panel { border: 1px solid var(--g-line); border-radius: var(--g-r); background: var(--g-paper); box-shadow: none; backdrop-filter: none; }
+.pr-flota .pr-panel { background: var(--g-paper); }
+:root[data-theme='dark'] .pr-flota .pr-panel { background: var(--g-paper); }
+.pr-kicker { font-size: 12.5px; letter-spacing: 0.06em; color: var(--g-accent); }
+.pr-cab h2 { font-family: var(--g-font); font-weight: 700; letter-spacing: -0.005em; }
+.pr-alerta { border-radius: var(--g-r-s); background: var(--g-bad-soft); color: var(--g-bad); border-left: 4px solid var(--g-bad); }
+.pr-datos { border-color: var(--g-line); border-radius: var(--g-r-s); background: var(--g-line); }
+.pr-datos div { background: var(--g-paper); }
+.pr-datos div:nth-child(odd) { background: color-mix(in srgb, var(--g-accent-soft) 45%, var(--g-paper)); }
+.pr-pasos li::before { background: var(--g-accent); color: #fff; font-weight: 700; font-size: 13px; }
+:root[data-theme='dark'] .pr-pasos li::before { color: #0e1a17; }
+.pr-checks { border-radius: var(--g-r-s); background: var(--g-bg); border-color: var(--g-line); }
+.pr-checks h3 { font-family: var(--g-font); }
+.pr-barra { height: 6px; border-radius: 3px; background: var(--g-line); }
+.pr-barra i { background: var(--g-accent); }
+.pr-checks li.ok .pr-tick { background: var(--g-ok); border-color: var(--g-ok); }
+.pr-fin { border-radius: var(--g-r-s); background: var(--g-ok-soft); color: var(--g-ok); border-left: 4px solid var(--g-ok); }
+.pr-porque { color: var(--g-warn); }
+.pr-cerrar { border-radius: 8px; border-color: var(--g-line); background: var(--g-paper); color: var(--g-ink); }
+.pr-espacio.pr-completa-on { background: var(--g-bg); color: var(--g-ink); }

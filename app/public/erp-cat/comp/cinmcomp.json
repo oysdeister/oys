@@ -1,0 +1,661 @@
+{
+ "c": "cinmcomp",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codcom": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codcom) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codcom)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codcom",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "numhis": {
+   "def": 0,
+   "ro": "true"
+  },
+  "docser": {
+   "mayus": 1
+  },
+  "fecini": {
+   "defExpr": "hoy()"
+  },
+  "fecha": {
+   "defExpr": "hoy()"
+  },
+  "fecbaj": {
+   "ro": "true"
+  },
+  "tercer": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(tercer) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(tercer)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tercer",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "codcta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "codgru": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmfgrp",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgru"
+    ],
+    "desc": "nomgru"
+   }
+  },
+  "codfis": {
+   "req": 1,
+   "lov": {
+    "obj": "cinmftab",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomfis"
+    ],
+    "desc": "nomfis",
+    "filtro": "l.codgrp == codgru"
+   }
+  },
+  "seqno": {
+   "def": 0,
+   "ro": "true"
+  },
+  "empcode": {
+   "def": "0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codinm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmhead",
+    "clave": "codinm",
+    "cols": [
+     "codinm",
+     "nominm"
+    ],
+    "desc": "nominm"
+   }
+  },
+  "codele": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmelem",
+    "clave": "codele",
+    "cols": [
+     "codele",
+     "nomele"
+    ],
+    "desc": "nomele",
+    "filtro": "l.codinm == codinm"
+   }
+  },
+  "divisa": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(divisa) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(divisa)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "divisa",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "unidad": {
+   "def": 1
+  },
+  "tipcom": {
+   "def": "I",
+   "reglas": [
+    {
+     "si": "!(((tipcom == null || ['I','A','M','B','J','D','R','E','F','O','V'].includes(tipcom))))",
+     "msg": "El tipo deber ser Inversión [I], Adición o inv. auxiliar [A], Mejora [M], Baja [B], Detioro de Valor [R], Reevaluación [E],Reev, reorganiz. societaria [F] o Valor razonable [V].",
+     "tipo": "error",
+     "campo": "tipcom",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "comori": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "locpri": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(locpri) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(locpri)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "locpri",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cinmlopr",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomloc"
+    ],
+    "desc": "nomloc"
+   }
+  },
+  "locsub": {
+   "ro": "locpri == null",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(locsub) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(locsub)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "locsub",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cinmlosu",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomlug"
+    ],
+    "desc": "nomlug",
+    "filtro": "l.codpri == locpri"
+   }
+  },
+  "fecfac": {
+   "defExpr": "hoy()"
+  },
+  "valhis": {
+   "def": 0,
+   "ro": "true"
+  },
+  "motivo": {
+   "ro": "true"
+  },
+  "impven": {
+   "def": 0,
+   "ro": "true"
+  }
+ },
+ "botones": {
+  "BUT_CONTABILIZAR": {
+   "l": "Contabilizar",
+   "dialogoTit": "Confirmación",
+   "dialogo": [
+    {
+     "n": "placon",
+     "l": "Plan contable",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "h": "Código de plan contable"
+    },
+    {
+     "n": "feccon",
+     "l": "Fecha contab.",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha contabilización"
+    },
+    {
+     "n": "cctras",
+     "l": "Cuenta puente traspasos",
+     "t": "s",
+     "sz": 14,
+     "req": 1,
+     "h": "Cuenta de traspaso"
+    },
+    {
+     "n": "motivo",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 48,
+     "req": 1,
+     "h": "Motivo de la baja o venta del componente"
+    },
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "sz": 4,
+     "req": 1
+    },
+    {
+     "n": "codinm",
+     "l": "Bien",
+     "t": "s",
+     "sz": 10,
+     "req": 1
+    },
+    {
+     "n": "codele",
+     "l": "Elemento",
+     "t": "s",
+     "sz": 10,
+     "req": 1
+    },
+    {
+     "n": "sistem",
+     "l": "Sistema",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "A",
+     "h": "Sistema"
+    }
+   ],
+   "nota": "Solo visible si el componente no viene de un documento (cinmcomp_orig) ni tiene asiento: p. ej. el creado por «Dividir elemento». El diálogo se titula «Confirmación» y lleva los campos (todos obligatorios; Cuenta puente y Motivo salen vacíos si el grupo contable no tiene cuenta puente: «Este campo es obligatorio.»). Probado en CAPASC/AF/000002 (4.000 €): con cuenta ZZZ da el error literal; con 23000.00000 crea el asiento 69 (diario DG, 17-11-2026, 4.000, 2 apuntes, origen cinmcomp) y sin mensaje; después el botón se oculta.",
+   "pre": [
+    {
+     "si": "!existe('ccuentas','codigo',ent.cctras)",
+     "msg": "capuntes_ins: [${ent.placon}  /${ent.cctras}           ] Cuenta inexistente.",
+     "tipo": "error",
+     "campo": "cctras",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "casientos",
+      "valores": {
+       "empcode": "empcode",
+       "fecha": "ent.feccon",
+       "diario": "'DG'",
+       "origen": "'cinmcomp'",
+       "id_origen": "seqno"
+      }
+     }
+    }
+   ]
+  },
+  "BUT_CALCULA_AMORTIZACION": {
+   "l": "Recalcular amortizaciones",
+   "dialogoTit": "Recalcular amortizaciones",
+   "dialogo": [
+    {
+     "n": "sistem",
+     "l": "Sistema",
+     "t": "s",
+     "sz": 1,
+     "def": "A",
+     "h": "Sistema"
+    }
+   ],
+   "nota": "Recalcula el cuadro de amortizaciones (cinmamor) del sistema elegido. Ejecutado en la demo sobre 000002: respuesta sin mensaje, mismas 11 filas pendientes."
+  },
+  "BUT_RETROCEDER_VENTA": {
+   "l": "Retroceder venta",
+   "pasos": [
+    {
+     "set": {
+      "fecbaj": "null",
+      "motivo": "null",
+      "impven": "0"
+     }
+    }
+   ],
+   "nota": "Probado: tras «Venta» borra fecha baja, motivo y valor de venta del componente. Sin mensaje."
+  },
+  "BUT_RETROCEDER_BAJA": {
+   "l": "Retroceder baja",
+   "pasos": [
+    {
+     "set": {
+      "fecbaj": "null",
+      "motivo": "null"
+     }
+    }
+   ],
+   "nota": "Retrocede los procesos de baja total o parcialmente (tooltip). Probado: tras «Baja» borra fecha y motivo. Sin mensaje."
+  },
+  "BUT_FUERASERVICIO": {
+   "l": "Fuera de servicio",
+   "confirm": "Actualiza el estado a Fuera de servicio.",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cinmcval",
+      "donde": [
+       "codcom",
+       "codcom"
+      ],
+      "set": {
+       "estado": "'F'"
+      }
+     }
+    }
+   ],
+   "nota": "Probado: cinmcval.estado A→F; no toca cinmamor. Sin mensaje. Con estado F se ocultan Recalcular, Venta y Baja parcial; se habilita Activar."
+  },
+  "BUT_DESACTIVAR": {
+   "l": "Desactivar",
+   "confirm": "Desactiva el registro.",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cinmcval",
+      "donde": [
+       "codcom",
+       "codcom"
+      ],
+      "set": {
+       "estado": "'N'"
+      }
+     }
+    }
+   ],
+   "nota": "Probado: cinmcval.estado A→N (No amortiza). Sin mensaje."
+  },
+  "BUT_ACTIVAR": {
+   "l": "Activar",
+   "dialogoTit": "Activar",
+   "dialogo": [
+    {
+     "n": "fecini",
+     "l": "Fecha inicio",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha de inicio de la amortización en el sistema actual"
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "cinmcval",
+      "donde": [
+       "codcom",
+       "codcom"
+      ],
+      "set": {
+       "estado": "'A'"
+      }
+     }
+    }
+   ],
+   "nota": "Defecto de Fecha inicio = fecini del componente. Probado desde F y desde N: estado →A y regenera el cuadro cinmamor (filas nuevas, mismos importes). Sin mensaje."
+  },
+  "BUT_VENTA": {
+   "l": "Venta",
+   "dialogoTit": "Venta",
+   "dialogo": [
+    {
+     "n": "fecbaj",
+     "l": "Fecha baja",
+     "t": "d",
+     "req": 1,
+     "def": "hoy()",
+     "h": "Fecha de baja o venta del componente"
+    },
+    {
+     "n": "motivo",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 48,
+     "req": 1,
+     "h": "Motivo de la baja o venta del componente"
+    },
+    {
+     "n": "sistem",
+     "l": "Sistema",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "A",
+     "h": "Sistema"
+    },
+    {
+     "n": "impven",
+     "l": "Valor de venta",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "req": 1,
+     "def": "0",
+     "h": "Importe correspondiente a la venta del componente"
+    }
+   ],
+   "pre": [
+    {
+     "si": "ent.fecbaj < (busca('cinmamor','codcom',codcom,'fecini') || fecini)",
+     "msg": "Fecha de baja[${ent.fecbaj}] no puede ser inferior a la primera amortización no contabilizada[${fecini}]",
+     "tipo": "error",
+     "campo": "fecbaj",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "fecbaj": "ent.fecbaj",
+      "motivo": "ent.motivo",
+      "impven": "ent.impven"
+     }
+    }
+   ],
+   "nota": "Probado (31-12-2026, 3.000 €): guarda fecha baja, motivo y valor de venta en el componente; el estado sigue A y el cuadro no cambia hasta contabilizar. Con fecha anterior a la primera amortización pendiente da el error literal."
+  },
+  "BUT_INMOBAJAPARCIAL": {
+   "l": "Baja parcial",
+   "dialogoTit": "Baja parcial",
+   "dialogo": [
+    {
+     "n": "fecbaj",
+     "l": "Fecha baja",
+     "t": "d",
+     "req": 1,
+     "def": "hoy()",
+     "h": "Fecha de baja o venta del componente"
+    },
+    {
+     "n": "motivo",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 48,
+     "req": 1,
+     "h": "Motivo de la baja o venta del componente"
+    },
+    {
+     "n": "sistem",
+     "l": "Sistema",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "A",
+     "h": "Sistema"
+    },
+    {
+     "n": "impbaj",
+     "l": "Importe baja",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "req": 1,
+     "def": "0",
+     "h": "Importe baja"
+    }
+   ],
+   "pre": [
+    {
+     "si": "ent.fecbaj < (busca('cinmamor','codcom',codcom,'fecini') || fecini)",
+     "msg": "Fecha de baja[${ent.fecbaj}] no puede ser inferior a la primera amortización no contabilizada[${fecini}]",
+     "tipo": "error",
+     "campo": "fecbaj",
+     "fuente": "demo"
+    },
+    {
+     "si": "ent.impbaj >= busca('cinmcval','codcom',codcom,'invcom')",
+     "msg": "cinmcompSplit: Importe baja parcial [${ent.impbaj}] >= Importe inversión [${busca('cinmcval','codcom',codcom,'invcom')}]",
+     "tipo": "error",
+     "campo": "impbaj",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "cinmcomp",
+      "valores": {
+       "codinm": "codinm",
+       "codele": "codele",
+       "codcom": "codcom",
+       "numhis": "numhis + 1",
+       "fecbaj": "ent.fecbaj",
+       "motivo": "ent.motivo",
+       "fecini": "fecini",
+       "fecha": "fecha"
+      }
+     }
+    }
+   ],
+   "nota": "Divide el componente (cinmcompSplit): crea una nueva historia (numhis+1) del mismo código con el importe de baja, su cinmcval y su cuadro cinmamor (filas en estado F). Probado con 0 € (creó historia 1 con valor 0; se borró después). Literal con 9.000 sobre 5.000: «cinmcompSplit: Importe baja parcial [9000] >= Importe inversión [5000.00]». "
+  },
+  "BUT_INMOBAJA": {
+   "l": "Baja",
+   "dialogoTit": "Baja",
+   "dialogo": [
+    {
+     "n": "fecbaj",
+     "l": "Fecha baja",
+     "t": "d",
+     "req": 1,
+     "def": "hoy()",
+     "h": "Fecha de baja o venta del componente"
+    },
+    {
+     "n": "motivo",
+     "l": "Motivo",
+     "t": "s",
+     "sz": 48,
+     "req": 1,
+     "h": "Motivo de la baja o venta del componente"
+    },
+    {
+     "n": "sistem",
+     "l": "Sistema",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "A",
+     "h": "Sistema"
+    }
+   ],
+   "pre": [
+    {
+     "si": "ent.fecbaj < (busca('cinmamor','codcom',codcom,'fecini') || fecini)",
+     "msg": "Fecha de baja[MDY(${ent.fecbaj})] no puede ser inferior a la primera amortización no contabilizada[${fecini}]",
+     "tipo": "error",
+     "campo": "fecbaj",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "fecbaj": "ent.fecbaj",
+      "motivo": "ent.motivo"
+     }
+    }
+   ],
+   "nota": "Probado (31-12-2026): guarda fecha baja y motivo; estado sigue A hasta contabilizar. Ojo: el literal de la demo escribe la fecha como MDY(m, d, aaaa), p. ej. «Fecha de baja[MDY(1, 1, 2026)] …»."
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "fecha > fecini",
+   "msg": "La fecha alta es menor o igual que la Fecha inicio.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!vacio(fecfac) && fecfac > fecini",
+   "msg": "La fecha factura es menor o igual que la fecha inicio.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "estados": {
+  "col": "cinmcval.estado",
+  "trans": [
+   {
+    "de": [
+     "A"
+    ],
+    "a": "F",
+    "por": "BUT_FUERASERVICIO"
+   },
+   {
+    "de": [
+     "A"
+    ],
+    "a": "N",
+    "por": "BUT_DESACTIVAR"
+   },
+   {
+    "de": [
+     "F",
+     "N",
+     "C"
+    ],
+    "a": "A",
+    "por": "BUT_ACTIVAR"
+   }
+  ]
+ },
+ "notas": [
+  "Sin alta manual: «User oys.jma does not have ROW_INSERT privilege on table cinmcomp» (insert=false). Los componentes nacen al contabilizar una factura con tipología que genera inmovilizado (gcomfacd.geninm) y artículo cuya familia tiene bien y serie (probado: 0FC000013 tipología CAPA, familia CAPAF → bien CAPASC, serie AP).",
+  "Al contabilizar 0FC000013 (6.050 € con IVA) se creó: elemento AP026-0000, componente 000002 (valor 5.000 = base), cinmcval (A, L, 10 %, 10 años, neto 5.000) y 11 filas cinmamor estado N (2026 parcial 61,64; 2027-2035 500; 2036 438,36 hasta 15-11-2036).",
+  "Los botones no muestran mensaje de éxito (respuesta {message:null}); refrescan la ficha (refreshMode PARENT_HARD). Venta y Baja dejan el estado en A: el paso a V/B lo hace la contabilización.",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.».",
+  "La barra de botones no cabe en 1600 px: se desplaza con una flecha ›.",
+  "probado: BUT_CONTABILIZAR, BUT_CALCULA_AMORTIZACION, BUT_RETROCEDER_VENTA, BUT_RETROCEDER_BAJA, BUT_FUERASERVICIO, BUT_DESACTIVAR, BUT_ACTIVAR, BUT_VENTA, BUT_INMOBAJAPARCIAL, BUT_INMOBAJA (todos en la demo con datos CAP; precondiciones de estado: el servidor no las comprueba, solo la interfaz las oculta o deshabilita)"
+ ]
+}

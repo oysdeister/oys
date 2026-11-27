@@ -865,6 +865,7 @@ export default function EscenaPortada(props: EscenaProps) {
             >
               <Link
                 to={`/modulo/${d.id}`}
+                tabIndex={-1}
                 onMouseEnter={() => setHover(d.id)}
                 onMouseLeave={() => setHover(null)}
                 onFocus={() => setHover(d.id)}

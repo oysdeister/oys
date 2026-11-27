@@ -1,0 +1,618 @@
+{
+ "c": "gcomofeh",
+ "fecha": "2026-11-18",
+ "area": "compras",
+ "campos": {
+  "tipdoc": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "!__ins",
+   "lov": {
+    "obj": "gcomofed",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc"
+   }
+  },
+  "docser": {
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "tercer": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "vacio(tipdoc)",
+   "lov": {
+    "obj": "gproveed",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomcom",
+     "cif",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "filtro": "l.codigo == tercer"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "def": "0",
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "def": "C",
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "cols": [
+     "depart",
+     "nomdep"
+    ],
+    "desc": "nomdep",
+    "filtro": "l.delega == delega"
+   }
+  },
+  "fecofe": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "fecofe"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "fecini"
+  },
+  "estcab": {
+   "req": 1,
+   "def": "P",
+   "ro": "true"
+  },
+  "estado": {
+   "req": 1,
+   "def": "N",
+   "ro": "true"
+  },
+  "indmod": {
+   "def": "S",
+   "ro": "true"
+  },
+  "tipefe": {
+   "req": 1,
+   "ro": "vacio(tercer)",
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo"
+   }
+  },
+  "frmpag": {
+   "req": 1,
+   "ro": "vacio(tercer)",
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo"
+   }
+  },
+  "divisa": {
+   "req": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "cambio": {
+   "req": 1
+  },
+  "terenv": {
+   "req": 1,
+   "def": "0"
+  },
+  "direnv": {
+   "req": 1,
+   "def": "0"
+  },
+  "portes": {
+   "req": 1,
+   "def": "D"
+  },
+  "porgar": {
+   "def": 0
+  },
+  "camope": {
+   "def": 1
+  },
+  "imptot": {
+   "def": 0,
+   "ro": "true"
+  },
+  "docori": {
+   "ro": "!__ins || vacio(tipdoc)"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(tipdoc) || vacio(tercer) || vacio(tipdir) || vacio(tipefe) || vacio(frmpag) || vacio(divisa) || vacio(cambio)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tipdoc)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tipdoc",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tercer)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tercer",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tipdir)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tipdir",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(tipefe)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "tipefe",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(frmpag)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "frmpag",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(divisa)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "divisa",
+   "fuente": "demo"
+  },
+  {
+   "si": "vacio(cambio)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "campo": "cambio",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'V'"
+     }
+    }
+   ],
+   "nota": "Sin diálogo ni mensaje. En la demo valida aunque la oferta no tenga líneas (CAP-OFE-01). Habilitado si estado no es C/A y estcab != V."
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'P'"
+     }
+    }
+   ],
+   "nota": "Sin diálogo ni mensaje. No cambia la Situación (una oferta Adjudicada sigue Adjudicada en Provisional). Tras él solo queda el botón Validar."
+  },
+  "BUT_ADJUDICAR": {
+   "l": "Adjudicar",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "gcomofel",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "estado": "'J'"
+      }
+     }
+    },
+    {
+     "set": {
+      "estado": "'J'"
+     }
+    }
+   ],
+   "nota": "Sin confirmación (la de línea sí la tiene). Situación Pendiente → Adjudicada (J) observado en la demo con una oferta sin líneas. Solo si la tipología requiere adjudicación (gcomofed.reqadj != 0) y estcab != P."
+  },
+  "BUT_ADJUDICAR_BACK": {
+   "l": "Retroceder adjudicación",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "gcomofel",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "estado": "'N'"
+      }
+     }
+    },
+    {
+     "set": {
+      "estado": "'N'"
+     }
+    }
+   ],
+   "nota": "Metadatos: solo visible si hay alguna línea en estado J (expresión de servidor SELECT COUNT(*) FROM gcomofel WHERE cabid = ${cabid} AND estado = 'J'). No se pudo ejecutar: la oferta CAP no tiene líneas."
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Cerrar' ?",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "gcomofel",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "estado": "'C'"
+      }
+     }
+    },
+    {
+     "set": {
+      "estado": "cuenta('gcomofel','cabid',cabid) > 0 ? 'C' : estado"
+     }
+    }
+   ],
+   "nota": "Confirmación literal capturada. En la demo, sobre una oferta sin líneas, la acción responde OK pero la Situación no cambia (la de cabecera se recalcula desde las líneas)."
+  },
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Abrir' ?",
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "gcomofel",
+      "donde": [
+       "cabid",
+       "cabid"
+      ],
+      "set": {
+       "estado": "'N'"
+      }
+     }
+    },
+    {
+     "set": {
+      "estado": "'N'"
+     }
+    }
+   ],
+   "nota": "Visible si estado == 'C'. No se pudo provocar (Cerrar sin líneas no cierra). La confirmación sigue el patrón genérico de Axional observado en Cerrar."
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "dialogoTit": "Anular",
+   "dialogo": [
+    {
+     "n": "codmot",
+     "l": "Código",
+     "t": "s",
+     "req": 1,
+     "h": "Código del motivo de anulación"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1,
+     "h": "Notas"
+    }
+   ],
+   "pre": [
+    {
+     "si": "vacio(ent.codmot)",
+     "msg": "Este campo es obligatorio.",
+     "campo": "codmot",
+     "fuente": "demo"
+    },
+    {
+     "si": "vacio(ent.coment)",
+     "msg": "Este campo es obligatorio.",
+     "campo": "coment",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estado": "'A'"
+     }
+    }
+   ],
+   "nota": "Diálogo capturado. En TUTORIAL la lista de Código (motivos de anulación) sale vacía, así que no se puede completar. Habilitado si estado == 'N', indmod != 'N', reqadj != 0 y el usuario puede anular."
+  },
+  "BUT_ACTIVAR": {
+   "l": "Activar",
+   "confirm": "¿Estás seguro que quieres ejecutar la acción 'Activar' ?",
+   "nota": "Solo si hay líneas con cantidad anulada (cananu != 0). No observable en la demo."
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "dialogoTit": "Copiar",
+   "dialogo": [
+    {
+     "n": "tipdoc",
+     "l": "Tipo documento",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "up": 1,
+     "fk": "gcomofed",
+     "h": "Código de tipo de documento"
+    },
+    {
+     "n": "tercer",
+     "l": "Proveedor",
+     "t": "s",
+     "sz": 12,
+     "req": 1,
+     "up": 1,
+     "fk": "gproveed",
+     "h": "Código de proveedor"
+    },
+    {
+     "n": "tipdir",
+     "l": "Dirección",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "cterdire",
+     "h": "Código de tipo de dirección de envío"
+    },
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "fk": "cempresa",
+     "h": "Código de la empresa"
+    },
+    {
+     "n": "delega",
+     "l": "Delegación",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gdelegac",
+     "h": "Código de delegación"
+    },
+    {
+     "n": "depart",
+     "l": "Departamento",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "fk": "gdeparta",
+     "h": "Código de departamento"
+    },
+    {
+     "n": "fecofe",
+     "l": "Fecha oferta",
+     "t": "d",
+     "req": 1,
+     "def": "TODAY",
+     "h": "Fecha de la oferta"
+    },
+    {
+     "n": "docser",
+     "l": "Oferta",
+     "t": "s",
+     "sz": 20,
+     "h": "Documento de la oferta"
+    },
+    {
+     "n": "docori",
+     "l": "Origen",
+     "t": "s",
+     "sz": 20,
+     "h": "Documento origen"
+    },
+    {
+     "n": "fecini",
+     "l": "Inicio vigencia",
+     "t": "d",
+     "req": 1,
+     "def": "TODAY",
+     "h": "Fecha inicial del plazo de validez"
+    },
+    {
+     "n": "fecfin",
+     "l": "Fin vigencia",
+     "t": "d",
+     "req": 1,
+     "def": "TODAY",
+     "h": "Fecha fin del plazo de validez"
+    },
+    {
+     "n": "refter",
+     "l": "Referencia",
+     "t": "s",
+     "sz": 20,
+     "h": "Referencia del proveedor"
+    },
+    {
+     "n": "revalo",
+     "l": "Revalorar",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "N",
+     "o": [
+      {
+       "k": "N",
+       "v": "No"
+      },
+      {
+       "k": "S",
+       "v": "Sí"
+      }
+     ],
+     "h": "Revalorar documento"
+    }
+   ],
+   "nota": "Acciones › Copiar. Los campos llegan con los valores de la oferta actual (${tipdoc}, ${tercer}…), fechas = hoy, Revalorar = No. Diálogo capturado; no se ejecutó (crearía otra oferta)."
+  },
+  "BUT_GENERAR_ACUERDO": {
+   "l": "Generar acuerdo",
+   "dialogoTit": "Generar acuerdo",
+   "dialogo": [
+    {
+     "n": "tipdoc",
+     "l": "Tipo documento",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "fk": "gcomacud",
+     "h": "Código de tipo de documento"
+    },
+    {
+     "n": "fecini",
+     "l": "Inicio vigencia",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha inicio vigencia del acuerdo"
+    },
+    {
+     "n": "fecfin",
+     "l": "Fin vigencia",
+     "t": "d",
+     "req": 1,
+     "h": "Fecha fin vigencia del acuerdo"
+    }
+   ],
+   "pre": [
+    {
+     "si": "vacio(ent.tipdoc)",
+     "msg": "Este campo es obligatorio.",
+     "campo": "tipdoc",
+     "fuente": "demo"
+    },
+    {
+     "si": "cuenta('gcomofel','cabid',cabid) == 0",
+     "msg": "Oferta pendiente de adjudicar.",
+     "tipo": "error",
+     "fuente": "demo"
+    },
+    {
+     "si": "true",
+     "msg": "gsernumh_getserie: Sin máscara.Tab.[gcomacuh] Cod.[ACC]",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "nota": "Acciones › Generar acuerdo (solo con estado J y estcab V). Defectos: Tipo = gcomofed.docdes (vacío en TUTORIAL), fechas = vigencia de la oferta. La LOV de Tipo muestra ACC «ACUERDO COMPRA» y AAMP «ACUERDO COMPRA CON AMPLIACIONES». Ejecuta gcomofeh_GenGcomacuh(cabid, tipdoc, fecini, fecfin) y abre la ficha del acuerdo nuevo. En la demo NUNCA llega a crearlo: sin líneas adjudicadas da «Oferta pendiente de adjudicar.» (0OC000003, AAMP) y con línea adjudicada da el error de numerador (0OC000002, ACC). El diálogo de error se titula «Se ha producido un error» y muestra «ID: n», el mensaje y Source/Trace."
+  },
+  "BUT_GENERAR_PEDIDO": {
+   "l": "Generar pedido",
+   "nota": "Habilitado solo si estado == 'J', estcab == 'V' y gcomofed.tabdes == 'gcompedh'. Ninguna tipología de oferta de TUTORIAL tiene tabla destino, así que el botón nunca aparece en la demo."
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Requiere virtualerp.bloq_manu == 1; no aparece en TUTORIAL."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "N"
+    ],
+    "a": "J",
+    "por": "BUT_ADJUDICAR"
+   },
+   {
+    "de": [
+     "J"
+    ],
+    "a": "N",
+    "por": "BUT_ADJUDICAR_BACK"
+   },
+   {
+    "de": [
+     "N",
+     "J"
+    ],
+    "a": "C",
+    "por": "BUT_CERRAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "N",
+    "por": "BUT_ABRIR"
+   },
+   {
+    "de": [
+     "N"
+    ],
+    "a": "A",
+    "por": "BUT_ANULAR"
+   }
+  ]
+ },
+ "notas": [
+  "Estado de cabecera (estcab): P Provisional → V Validado con Validar; V → P con Pasar a provisional. Situación (estado): N Pendiente, J Adjudicada, C Cursada (la pone Cerrar), A Anulada, R Rechazada.",
+  "Nuevo abre la ficha en un diálogo. Al guardar sin datos: aviso «Hay errores en los datos del formulario» y «Este campo es obligatorio.» bajo Tipo documento, Proveedor, Dirección, Tipo efecto, Forma pago, Divisa y Cambio.",
+  "Defectos al Nuevo: Empresa 0 (Deister Software), Delegación 0 (CENTRAL), Departamento C (COMPRAS), fechas = hoy, Situación Pendiente, Estado Provisional, Recepcionar en tercero 0 DEISTER SOFTWARE dirección 0. El número (docser) lo pone el numerador OC al guardar (0OC000003…).",
+  "Al elegir Proveedor la demo rellena Dirección 0, Tipo efecto TF, Forma pago 30D, Divisa EUR y Cambio 1 (datos del proveedor).",
+  "Eliminar (papelera) pide «¿Estás seguro que quieres eliminar el registro '<docser> [<tercer>]' ?» con botones Cancelar / Eliminar; borra sin más mensaje (probado con 0OC000004 Provisional sin líneas).",
+  "Las líneas (gcomofel) no se pueden insertar a mano: la subrejilla no tiene fila nueva. Se añaden con el menú ⌄ del título › «Selector de artículos por proveedor» (artículos del catálogo proveedor gartprov; vacío para CAPNC y TCAPC) o «Copiar líneas de …» si la tipología tiene tabla origen.",
+  "Menú ⌄ del título en la ficha: Docflow (siempre) y Selector de artículos por proveedor (en Provisional). Acciones: Generar acuerdo, Copiar (Generar pedido no aparece en TUTORIAL). Menú ⋮: Información, Metadata, Imprimir, Exportar.",
+  "Mensaje de borrado de confirmación usa ${docser} y ${tercer}: ¿Estás seguro que quieres eliminar el registro '${docser} [${tercer}]' ?"
+ ]
+}

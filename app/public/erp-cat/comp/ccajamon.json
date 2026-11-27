@@ -1,0 +1,67 @@
+{
+ "c": "ccajamon",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "tipmon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajamon",
+    "clave": "tipmon",
+    "cols": [
+     "tipmon",
+     "nommon",
+     "moneda"
+    ],
+    "desc": "nommon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(tipmon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(tipmon))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "tipmon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "nommon": {
+   "req": 1
+  },
+  "moneda": {
+   "req": 1,
+   "def": "EUR",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon",
+     "codint",
+     "symbol"
+    ],
+    "desc": "desmon",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(moneda))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impmon": {
+   "req": 1
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'TIPOS DE MONEDAS DE CAJA', editMode CELL, 15 filas en la demo; permisos insert=True update=True delete=True.",
+  "no probado: altas/errores — solo metadatos (15 filas de la demo). Sin botones."
+ ]
+}

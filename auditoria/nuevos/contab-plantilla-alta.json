@@ -1,0 +1,181 @@
+{
+  "id": "contab-plantilla-alta",
+  "numero": 32,
+  "titulo": "Plantillas de contabilización y tipo de asiento: dónde se configuran",
+  "objetivo": "Sabrás dónde están las plantillas de contabilización en el ERP y qué es lo que hay que configurar para que un documento genere su asiento.",
+  "concepto": "Cuando contabilizas una factura, el ERP crea solo el asiento. Lo hace con una plantilla de contabilización: una receta que dice qué cuentas, qué importes y qué impuestos genera cada documento.\n\nLa plantilla se asocia a la tipología del documento. Sin plantilla, el documento no se puede contabilizar. Por eso al crear una tipología de factura hay que decir qué plantilla usa.\n\nEn Axional hay dos sistemas. El sistema Excel usa libros XLS como modelos. El sistema clásico usa un repositorio de integración con sus propias plantillas y mensajes de contabilización.\n\nEn este bloque no creas una plantilla desde cero: en la demo es un trabajo de implantación, no de usuario final. Aprendes a localizarlas y a saber qué hoja se usa para cada destino.\n\nAviso: en esta versión de la plataforma el alta de plantillas y de tipos de asiento no se ha comprobado paso a paso en la demo.",
+  "duracionMin": 20,
+  "secciones": [
+    {
+      "id": "contab-plantilla-alta-localizar",
+      "titulo": "Localizar las plantillas de contabilización",
+      "paraQueSirve": "Sirve para saber en qué carpetas del menú se guardan las plantillas y cuál de los dos sistemas usa tu empresa.",
+      "ruta": [
+        "Finanzas",
+        "Contabilidad General",
+        "Contabilizadores"
+      ],
+      "explicacion": [
+        "Dentro de «Contabilizadores» hay dos carpetas: «Sistema Excel» y «Sistema Clásico».",
+        "«Sistema Excel» tiene «Modelos XLS» y «Procesos». Los modelos son los libros maestros XLS.",
+        "«Sistema Clásico» tiene «Repositorio de integración», «Plantillas de contabilización», «Proceso de integración», «Mensajes de contabilización» y «Carga de fichero a repositorio».",
+        "Las plantillas XLS tienen hojas destino: capuntes (apuntes), cimpcont (impuestos) y cefectos (cartera). El origen puede ser una factura de compra o de venta."
+      ],
+      "campos": [
+        {
+          "campo": "Hoja capuntes",
+          "significado": "Genera los apuntes del asiento.",
+          "ejemplo": "Apuntes"
+        },
+        {
+          "campo": "Hoja cimpcont",
+          "significado": "Genera el registro de impuestos.",
+          "ejemplo": "Impuestos"
+        },
+        {
+          "campo": "Hoja cefectos",
+          "significado": "Genera los efectos de cartera.",
+          "ejemplo": "Cartera"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre Finanzas › Contabilidad General › Contabilizadores.",
+          "detalle": "Despliega la carpeta con la flecha ▸."
+        },
+        {
+          "texto": "Abre «Sistema Excel › Modelos XLS» y mira la lista de modelos.",
+          "detalle": "Solo mira. No edites ningún modelo: los comparten todos los usuarios."
+        },
+        {
+          "texto": "Abre «Sistema Clásico › Plantillas de contabilización».",
+          "detalle": "Es la lista de plantillas del sistema clásico. Tampoco las edites."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "No modifiques plantillas de la demo. Cambiarían la contabilización de todos los documentos."
+        }
+      ]
+    },
+    {
+      "id": "contab-plantilla-alta-tipologia",
+      "titulo": "Asociar una plantilla a una tipología",
+      "paraQueSirve": "Sirve para entender por qué un documento no contabiliza si su tipología no tiene plantilla.",
+      "ruta": [
+        "Gestión",
+        "Compras",
+        "Tipologías de factura"
+      ],
+      "explicacion": [
+        "La plantilla se elige en la tipología del documento, en la pestaña Contabilización.",
+        "Las facturas de venta contabilizadas generan asiento, cartera de efectos y registros fiscales.",
+        "Las facturas de compra hacen lo mismo según la configuración de la cuenta contable.",
+        "El diario por defecto de las facturas de venta es VE. En compras el asiento usa la fecha contable de la cabecera."
+      ],
+      "campos": [
+        {
+          "campo": "Plantilla de contabilización",
+          "significado": "Libro XLS que usa la tipología para crear el asiento.",
+          "ejemplo": "Plantilla de la tipología"
+        }
+      ],
+      "pasos": [
+        {
+          "texto": "Abre la tipología de factura que creaste en Compras (FC{INI}).",
+          "detalle": "Está en la pantalla de tipologías de factura de compra."
+        },
+        {
+          "texto": "Busca el campo de la plantilla de contabilización en la pestaña Contabilización.",
+          "detalle": "Si está vacío, la factura no se podrá contabilizar. Comprueba que tu tipología la tiene."
+        }
+      ],
+      "avisos": [
+        {
+          "tipo": "nota",
+          "texto": "Este paso no se ha comprobado en la demo con el alta de una plantilla propia. Úsalo como lectura guiada."
+        }
+      ]
+    }
+  ],
+  "test": [
+    {
+      "pregunta": "¿Qué es una plantilla de contabilización?",
+      "opciones": [
+        "Un informe",
+        "Una receta que dice qué asiento genera cada documento",
+        "Un diario",
+        "Un tipo de tercero"
+      ],
+      "correcta": 1,
+      "explicacion": "Define cuentas, importes e impuestos del asiento que se genera."
+    },
+    {
+      "pregunta": "¿Dónde se asocia la plantilla a un documento?",
+      "opciones": [
+        "En el tercero",
+        "En la tipología del documento",
+        "En el banco",
+        "En el ejercicio"
+      ],
+      "correcta": 1,
+      "explicacion": "Cada tipología indica su plantilla."
+    },
+    {
+      "pregunta": "¿Qué hojas destino tiene una plantilla XLS?",
+      "opciones": [
+        "Solo apuntes",
+        "Apuntes, impuestos y cartera",
+        "Solo cartera",
+        "Ninguna"
+      ],
+      "correcta": 1,
+      "explicacion": "capuntes, cimpcont y cefectos."
+    },
+    {
+      "pregunta": "¿Debes editar los modelos XLS de la demo?",
+      "opciones": [
+        "Sí, para practicar",
+        "No: los comparten todos los usuarios",
+        "Solo los lunes",
+        "Solo los de venta"
+      ],
+      "correcta": 1,
+      "explicacion": "Cambiarían la contabilización de todos."
+    },
+    {
+      "pregunta": "Una factura no contabiliza porque su tipología no tiene plantilla. ¿Qué haces?",
+      "opciones": [
+        "Borrar la factura",
+        "Asignar una plantilla a la tipología",
+        "Cambiar de empresa",
+        "Cerrar el ejercicio"
+      ],
+      "correcta": 1,
+      "explicacion": "La plantilla es imprescindible para contabilizar."
+    }
+  ],
+  "checklist": [
+    "Has abierto Finanzas › Contabilidad General › Contabilizadores.",
+    "Has localizado «Sistema Excel › Modelos XLS».",
+    "Has localizado «Sistema Clásico › Plantillas de contabilización».",
+    "Sabes qué tres hojas destino tiene una plantilla XLS.",
+    "Has comprobado que tu tipología FC{INI} tiene plantilla de contabilización."
+  ],
+  "problemas": [
+    {
+      "problema": "Una factura no contabiliza y no sé por qué.",
+      "solucion": "Mira la tipología del documento: tiene que tener plantilla de contabilización."
+    },
+    {
+      "problema": "La plantilla da un error del tipo #¡REF! o JavaNull.",
+      "solucion": "Es un fallo del libro XLS. No lo edites tú: avisa a quien lo mantiene."
+    }
+  ],
+  "aprendido": [
+    "La plantilla de contabilización se asocia a la tipología del documento.",
+    "Hay dos sistemas: Excel y Clásico.",
+    "Una plantilla tiene hojas para apuntes, impuestos y cartera."
+  ]
+}

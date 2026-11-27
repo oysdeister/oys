@@ -1,0 +1,162 @@
+{
+ "c": "ctax_tershift",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "terc_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(terc_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(terc_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "terc_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "oper_ori": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(oper_ori) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(oper_ori)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "oper_ori",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "terc_taxsrc": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(terc_taxsrc) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(terc_taxsrc)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "terc_taxsrc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "oper_des": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(oper_des) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(oper_des)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "oper_des",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "terc_taxdes": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(terc_taxdes) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(terc_taxdes)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "terc_taxdes",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "terc_fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "terc_fecfin": {
+   "req": 1
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((terc_fecini == null || terc_fecfin == null) || (terc_fecini.getTime() <= terc_fecfin.getTime())))",
+   "msg": "La fecha inicio debe ser menoro igual que la fecha fin.",
+   "tipo": "error",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((oper_ori == null || oper_ori.length === 0)) && ((oper_des == null || oper_des.length === 0))) || ((!(oper_ori == null || oper_ori.length === 0)) && (!(oper_des == null || oper_des.length === 0)))))",
+   "msg": "Las operaciones fiscales, ambas nulas o no nulas.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Impuestos por tercero",
+  "Permisos: alta no, modificar sí, borrar sí.",
+  "No probado en la demo: la tabla está vacía y no admite alta (permiso insert = no); solo se puede modificar o borrar lo existente y no hay filas. Sin botones ni menú ⌄."
+ ]
+}

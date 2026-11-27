@@ -1,0 +1,348 @@
+{
+ "c": "crepartc",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "numero": {
+   "req": 1
+  },
+  "nomdis": {
+   "req": 1
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "genera": {
+   "req": 1,
+   "def": 0
+  },
+  "codcla": {
+   "req": 1,
+   "mayus": 1
+  },
+  "placon": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cplacont",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(placon) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(placon)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "placon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "oriemp": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "oripro": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "orisec": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "origaux": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "oricaux": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "oridim1": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "oridim2": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "oriexp": {
+   "req": 1,
+   "ro": "genera != 0 && genera != 2",
+   "mayus": 1,
+   "def": "*"
+  },
+  "oricos": {
+   "req": 1,
+   "ro": "genera != 0 && genera != 2",
+   "mayus": 1,
+   "def": "*"
+  },
+  "orisis": {
+   "req": 1,
+   "mayus": 1,
+   "def": "*"
+  },
+  "proyec": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cuenta": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccuentas",
+    "clave": "codigo",
+    "cols": [
+     "placon",
+     "codigo",
+     "nombre"
+    ],
+    "desc": "nombre",
+    "filtro": "l.placon == placon"
+   }
+  },
+  "codaux": {
+   "mayus": 1
+  },
+  "ctaaux": {
+   "ro": "codaux == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cctaauxl",
+    "clave": "ctaaux"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaaux) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaaux)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaaux",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dimcode1": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdimcon1",
+    "clave": "coddim1",
+    "cols": [
+     "coddim1",
+     "nomdim1",
+     "estado"
+    ],
+    "desc": "nomdim1"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode1) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode1)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode1",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dimcode2": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cdimcon2",
+    "clave": "coddim2",
+    "cols": [
+     "coddim2",
+     "nomdim2",
+     "estado"
+    ],
+    "desc": "nomdim2"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(dimcode2) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(dimcode2)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "dimcode2",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaexp": {
+   "ro": "genera != 0 && genera != 2",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaexp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "centro": {
+   "ro": "genera != 0 && genera != 2",
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen",
+     "estado",
+     "refcen"
+    ],
+    "desc": "nomcen"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(centro) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(centro)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "centro",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "cabid": {
+   "ro": "1 == 1",
+   "lov": {
+    "obj": "crepartc",
+    "clave": "cabid",
+    "cols": [
+     "codigo",
+     "nomdis",
+     "codcla"
+    ],
+    "desc": "nomdis"
+   }
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((!(codaux == null || codaux.length === 0)) && (!(ctaaux == null || ctaaux.length === 0))) || (((codaux == null || codaux.length === 0)) && ((ctaaux == null || ctaaux.length === 0)))))",
+   "msg": "Grupo y auxiliar, ambos nulos o no nulos.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Abre un diálogo con campos"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Costes › Repartos › Definición de procesos",
+  "Permisos: alta sí, modificar sí, borrar sí."
+ ]
+}

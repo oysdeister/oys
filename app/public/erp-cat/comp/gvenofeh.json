@@ -1,0 +1,706 @@
+{
+ "c": "gvenofeh",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(context.isOnInsert())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "tercer": {
+   "req": 1,
+   "ro": "tipdoc == null || climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomcom",
+     "cif",
+     "fecbaj"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenofed",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdoc"
+    ],
+    "desc": "nomdoc",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomdlg"
+    ],
+    "desc": "nomdlg",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "cols": [
+     "depart",
+     "nomdep"
+    ],
+    "desc": "nomdep",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecofe": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "imptot": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['N','C','A','R'].includes(estado))))",
+     "msg": "Los valores posibles del estado de una oferta de ventas son[N] Pendiente, [C]Cursada, [A]Anulada",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estcab == null || ['P','E','V'].includes(estcab))))",
+     "msg": "El estado de la cabecera puede modificarse en los estados: [P] Provisional, [V] validado, [E] bloqueado",
+     "tipo": "error",
+     "campo": "estcab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "docori": {
+   "ro": "context.isOnUpdate() || gvenofed.tabori == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenofeh",
+    "clave": "docser",
+    "cols": [
+     "docser",
+     "tercer"
+    ],
+    "desc": "tercer"
+   }
+  },
+  "tipdir": {
+   "req": 1,
+   "ro": "climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "desc": "nomdir"
+   }
+  },
+  "divisa": {
+   "req": 1,
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   }
+  },
+  "cambio": {
+   "req": 1,
+   "ro": "virtual_auth.modpre == 0",
+   "reglas": [
+    {
+     "si": "!(((cambio == null) || (cambio != 0)))",
+     "msg": "El cambio debe ser diferente a cero.",
+     "tipo": "error",
+     "campo": "cambio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "calc": "fecofe"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "calc": "fecini"
+  },
+  "tipefe": {
+   "req": 1,
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomefe"
+    ],
+    "desc": "nomefe"
+   }
+  },
+  "frmpag": {
+   "req": 1,
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctipopag",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompag"
+    ],
+    "desc": "nompag"
+   }
+  },
+  "terenv": {
+   "req": 1,
+   "ro": "tipdoc == null || climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "cif",
+     "terhol",
+     "fecbaj"
+    ],
+    "desc": "nombre"
+   }
+  },
+  "direnv": {
+   "req": 1,
+   "ro": "climos != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir",
+    "cols": [
+     "tipdir",
+     "nomdir",
+     "direcc",
+     "poblac",
+     "codpos",
+     "empres"
+    ],
+    "desc": "nomdir",
+    "filtro": "climos == null",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codnac": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpos": {
+   "mayus": 1
+  },
+  "movest": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "codprv": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cprovinc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomprv"
+    ],
+    "desc": "nomprv",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcla"
+    ],
+    "desc": "nomcla"
+   }
+  },
+  "dtoge1": {
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "dtoge2": {
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "dtoge3": {
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "dtopp": {
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0"
+  },
+  "portes": {
+   "req": 1,
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0",
+   "def": "D",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((portes == null || ['P','D'].includes(portes))))",
+     "msg": "Los valores posibles del indicativo de portes son: [P]agados, [D]ebidos.",
+     "tipo": "error",
+     "campo": "portes",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpre": {
+   "ro": "virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parpreh",
+    "clave": "codpre",
+    "cols": [
+     "codpre",
+     "nompre"
+    ],
+    "desc": "nompre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codpar": {
+   "ro": "virtual_auth.modpre == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "gpar_parprel",
+    "clave": "codpar",
+    "cols": [
+     "codpar",
+     "nompar"
+    ],
+    "desc": "nompar"
+   }
+  },
+  "ofeh_gross": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "doclock": {
+   "def": "V"
+  },
+  "valpen": {
+   "ro": "1==1"
+  },
+  "porgar": {
+   "req": 1,
+   "ro": "tercer == null || gvenofed.valdoc == 'N' || virtual_auth.modpre == 0",
+   "def": 0
+  },
+  "movhis": {
+   "req": 1,
+   "ro": "1==1",
+   "def": 0
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores del indicativo de modificación: [S]i, [N]o, [M]modificar, [B]borrar",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "camope": {
+   "def": 1
+  },
+  "cabid": {
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha inicio de un plan de recepción debe ser anterior a la fecha final del plan de recepción.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((codpar == null || codpar.length === 0)) || ((!(codpar == null || codpar.length === 0)) && (!(codpre == null || codpre.length === 0)))))",
+   "msg": "No se puede informar la partida sin indicar antes el presupuesto.",
+   "tipo": "error",
+   "campo": "codpre",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'V'"
+     }
+    }
+   ]
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P'. Demo: también con la oferta cerrada (estado C) pasa a P sin error (acc_o_provC).",
+   "pasos": [
+    {
+     "set": {
+      "estcab": "'P'"
+     }
+    }
+   ]
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Demo acc_o_copiar: desde 0OV000001 crea 0OV000002 (cliente TCAPV) validada, estado N, y la abre en ventana nueva (OpenUrl NewWindow).",
+   "dialogo": [
+    {
+     "n": "tipdoc",
+     "l": "Tipo Documento",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "def": "OCL",
+     "defs": "${tipdoc}",
+     "h": "Código de tipo de documento",
+     "fk": "gvenofed"
+    },
+    {
+     "n": "empcode",
+     "l": "Empresa",
+     "t": "s",
+     "sz": 4,
+     "req": 1,
+     "def": "0",
+     "defs": "${empcode}",
+     "h": "Código de la empresa",
+     "fk": "cempresa"
+    },
+    {
+     "n": "delega",
+     "l": "Delegación",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "def": "0",
+     "defs": "${delega}",
+     "h": "Código de delegación",
+     "fk": "gdelegac"
+    },
+    {
+     "n": "depart",
+     "l": "Departamento",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "def": "V",
+     "defs": "${depart}",
+     "h": "Código de departamento",
+     "fk": "gdeparta"
+    },
+    {
+     "n": "fecofe",
+     "l": "Fecha oferta",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-18",
+     "defs": "TODAY",
+     "h": "Fecha de la oferta"
+    },
+    {
+     "n": "docser",
+     "l": "Oferta",
+     "t": "s",
+     "sz": 20,
+     "nx": "1==1",
+     "h": "Documento"
+    },
+    {
+     "n": "docori",
+     "l": "Origen",
+     "t": "s",
+     "sz": 20,
+     "defs": "${docori}",
+     "nx": "1==1",
+     "h": "Documento origen",
+     "fk": "gvenofeh"
+    },
+    {
+     "n": "climos",
+     "l": "Mostrador",
+     "t": "s",
+     "sz": 20,
+     "defs": "${climos}",
+     "nx": "1==1",
+     "h": "Código de cliente mostrador",
+     "fk": "gclimost"
+    },
+    {
+     "n": "tercer",
+     "l": "Cliente",
+     "t": "s",
+     "sz": 12,
+     "req": 1,
+     "def": "TCL",
+     "defs": "${tercer}",
+     "h": "Código de cliente",
+     "fk": "gcliente"
+    },
+    {
+     "n": "tipdir",
+     "l": "Dirección",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "def": "0",
+     "defs": "${tipdir}",
+     "h": "Código de tipo de dirección de envío",
+     "fk": "cterdire"
+    },
+    {
+     "n": "fecini",
+     "l": "Inicio vigencia",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-18",
+     "defs": "TODAY",
+     "h": "Fecha inicial de vigencia de la oferta"
+    },
+    {
+     "n": "fecfin",
+     "l": "Fin vigencia",
+     "t": "d",
+     "req": 1,
+     "def": "2026-11-18",
+     "defs": "TODAY",
+     "h": "Fecha fin del plazo de validez"
+    },
+    {
+     "n": "refter",
+     "l": "Referencia",
+     "t": "s",
+     "sz": 20,
+     "defs": "${refter}",
+     "nx": "1==1",
+     "h": "Referencia del proveedor"
+    },
+    {
+     "n": "revalo",
+     "l": "Revalorar",
+     "t": "s",
+     "sz": 1,
+     "req": 1,
+     "def": "N",
+     "o": [
+      {
+       "v": "N",
+       "l": "No"
+      },
+      {
+       "v": "S",
+       "l": "Sí"
+      }
+     ],
+     "h": "Revalorar documento"
+    }
+   ],
+   "dialogoTit": "Copiar",
+   "pasos": [
+    {
+     "crea": {
+      "obj": "gvenofeh",
+      "valores": {
+       "tipdoc": "ent.tipdoc",
+       "tercer": "ent.tercer",
+       "fecofe": "ent.fecofe",
+       "fecini": "ent.fecini",
+       "fecfin": "ent.fecfin",
+       "refter": "ent.refter",
+       "estcab": "'V'",
+       "estado": "'N'"
+      }
+     }
+    }
+   ]
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "dialogoTit": "Bloqueo manual"
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "nota": "Demo acc_o_cerrarP: estado N → C sin mensaje.",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'C'"
+     }
+    }
+   ]
+  },
+  "BUT_ABRIR": {
+   "l": "Abrir",
+   "nota": "Activo si estado == 'C' && indmod != 'N'. Demo acc_o_abrir: C → N.",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'N'"
+     }
+    }
+   ]
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "nota": "Activo si indmod != 'N' && estado != 'A' && virtual_auth.anular == 1; pide confirmación; abre diálogo con campos",
+   "dialogo": [
+    {
+     "n": "codmot",
+     "l": "Código",
+     "t": "s",
+     "sz": 6,
+     "req": 1,
+     "h": "Código del motivo de anulación",
+     "fk": "gmotanul"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "s",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "dialogoTit": "Anular"
+  },
+  "BUT_ACTIVAR": {
+   "l": "Activar",
+   "nota": "Activo si estado == 'N' && indmod != 'N' && virtual_auth.anular == 1; condición de servidor; pide confirmación"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Menú ⌄ del título: Docflow · Líneas · Comunicaciones · Pedidos ventas · Copiar líneas de ofertas",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null.",
+  "Al pulsar la papelera: diálogo «Eliminar registro» con el texto «¿Estás seguro que quieres eliminar el registro '<descripción de la fila>' ?» y botones Cancelar / Eliminar (demo, a/f5.del.txt).",
+  "Código inexistente en una lupa: el campo queda en rojo con «Error en la validación» debajo (demo gvenfach.tercer = CAPNOEX; verify devuelve 204).",
+  "Los botones que terminan bien no devuelven texto (message null): la interfaz recarga la fila."
+ ],
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "N"
+    ],
+    "a": "C",
+    "por": "BUT_CERRAR"
+   },
+   {
+    "de": [
+     "C"
+    ],
+    "a": "N",
+    "por": "BUT_ABRIR"
+   }
+  ]
+ }
+}

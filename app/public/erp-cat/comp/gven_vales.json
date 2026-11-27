@@ -1,0 +1,194 @@
+{
+ "c": "gven_vales",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "tipdoc": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gven_valesd",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "docser": {
+   "reqSi": "!(!context.isOnUpdate())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "depart": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecha": {
+   "req": 1,
+   "ro": "tipdoc == null",
+   "defExpr": "hoy()"
+  },
+  "docori": {
+   "ro": "tabori == null",
+   "mayus": 1,
+   "calc": "tabori == tabori ? null : docori",
+   "lov": {
+    "obj": "gvenmovh",
+    "clave": "docser",
+    "filtro": "tabori == 'gvenmovh'"
+   }
+  },
+  "fecini": {
+   "req": 1,
+   "ro": "tipdoc == null",
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "ro": "tipdoc == null",
+   "defExpr": "hoy()"
+  },
+  "import": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "!(((import == null) || (import > 0)))",
+     "msg": "El importe del vale no puede ser 0, o un valor negativo.",
+     "tipo": "error",
+     "campo": "import",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "impcon": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((impcon == null) || (impcon >= 0)))",
+     "msg": "El importe consumido del vale no puede ser un valor negativo.",
+     "tipo": "error",
+     "campo": "impcon",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "docdes": {
+   "ro": "1==1",
+   "mayus": 1,
+   "calc": "tabdes == tabdes ? null : docdes"
+  },
+  "tiperr": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gven_vales_tmsg",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "impres": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((impres == null || ['S','N'].includes(impres))))",
+     "msg": "Los posibles valores del indicador de impreso son [S] ya está impreso, o [N] Pendiente de imprimir.",
+     "tipo": "error",
+     "campo": "impres",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['A','B','C'].includes(estado))))",
+     "msg": "Los posibles valores del campo estado son [A] Activo, [B] Bloqueado y [C] Cancelado.",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((((docori == null || docori.length === 0)) || ((docdes == null || docdes.length === 0))) || (tabdes != tabori)) || (docdes != docori)))",
+   "msg": "El documento destino no puede ser el mismo que el documento origen del vale",
+   "tipo": "error",
+   "campo": "docori",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((((estado == 'A') && (!(docdes == null || docdes.length === 0))) || ((docdes == null || docdes.length === 0))))",
+   "msg": "No se puede consumir un vale bloqueado o cancelado.",
+   "tipo": "error",
+   "campo": "estado",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha de fin de vigencia no puede ser inferior a la fecha de inicio",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((impcon == null || import == null) || (impcon <= import)))",
+   "msg": "El import consumido no puede ser superior al importe del vale.",
+   "tipo": "error",
+   "campo": "import",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((impcon == null) || (impcon == 0)) && ((docdes == null || docdes.length === 0))) || (((impcon == null) || (impcon > 0)) && (!(docdes == null || docdes.length === 0)))))",
+   "msg": "No se permite informar importe consumido si no hay documento destino y, si se informa documento destino, se debe informar el importe consumido.",
+   "tipo": "error",
+   "campo": "docdes",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((tabori == null || tabori.length === 0)) && ((docori == null || docori.length === 0))) || ((!(tabori == null || tabori.length === 0)) && (!(docori == null || docori.length === 0)))))",
+   "msg": "Si se informa documento origen debe informarse la tabla origen, y viceversa",
+   "tipo": "error",
+   "campo": "docori",
+   "fuente": "meta"
+  },
+  {
+   "si": "!(((((tabdes == null || tabdes.length === 0)) && ((docdes == null || docdes.length === 0))) || ((!(tabdes == null || tabdes.length === 0)) && (!(docdes == null || docdes.length === 0)))))",
+   "msg": "Si se informa documento destino debe informarse la tabla destino, y viceversa",
+   "tipo": "error",
+   "campo": "docdes",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Estados de estado: A=Activo, B=Bloqueado, C=Cancelado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

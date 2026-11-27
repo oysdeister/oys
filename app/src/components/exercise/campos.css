@@ -1,0 +1,249 @@
+/* =====================================================================
+   Captura con campos (Concepto): todos los campos numerados sobre la
+   captura y un globo con el campo elegido encima de la captura, junto a
+   su punto (sin tapar ni ese punto ni el siguiente). Sin captura, ficha
+   encima de la tabla.
+   Prefijo .ccx; manda sobre .cc-* de aprender.css, pulido.css y ruta.css.
+   ===================================================================== */
+
+.ccx {
+  --ccx-c: var(--mod, var(--arc));
+  --ccx-tinta: #0b1220; /* número sobre el color del módulo: legible con todos */
+}
+
+/* ---------- Pista encima de la primera captura ---------- */
+.ccx-pista {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 14px 0 0; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-2);
+}
+.ccx-pista::before {
+  content: ''; flex: 0 0 auto; width: 10px; height: 10px; border-radius: 50%;
+  margin-top: 0.4em; margin-top: calc((1lh - 10px) / 2); /* a la altura de la primera línea, también si el texto ocupa dos */
+  background: var(--ccx-c); box-shadow: 0 0 0 0 color-mix(in srgb, var(--ccx-c) 60%, transparent);
+  animation: ccx-latido 1.8s var(--ease-out, ease-out) infinite;
+}
+.ccx-pista.hecho { font-weight: 500; color: var(--ink-3); }
+.ccx-pista.hecho::before { animation: none; opacity: 0.5; }
+
+/* ---------- Captura ---------- */
+.cc.cc-plano .ccx-shot { margin: 10px 0 18px; scroll-margin-top: calc(var(--topbar-h, 58px) + 16px); }
+.ccx-escena { position: relative; }
+.ccx-frame { position: relative; overflow: hidden; }
+.ccx-frame img { user-select: none; }
+
+/* Recuadro del campo activo: el resto de la pantalla se apaga un poco */
+.ccx-box {
+  position: absolute; z-index: 1; border-radius: 6px; pointer-events: none;
+  box-shadow: 0 0 0 2.5px var(--ccx-c), 0 0 0 9999px rgba(11, 18, 32, 0.3);
+  animation: ccx-entra var(--dur-2, 240ms) var(--ease-out, ease-out);
+}
+
+/* Punto numerado */
+.ccx-pin {
+  position: absolute; z-index: 2; --ccx-t: translate(calc(-100% - 3px), -50%); transform: var(--ccx-t);
+  width: 26px; height: 26px; padding: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 2px solid #fff; background: var(--ccx-c); color: var(--ccx-tinta);
+  font-family: inherit; font-size: 13px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  box-shadow: 0 2px 6px rgba(11, 18, 32, 0.35), 0 0 0 1px rgba(11, 18, 32, 0.12);
+  cursor: pointer;
+  transition: transform var(--dur-1, 140ms) var(--ease-out, ease-out), background var(--dur-1, 140ms) ease, color var(--dur-1, 140ms) ease;
+}
+.ccx-pin::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; }
+.ccx-pin:hover { transform: var(--ccx-t) scale(1.14); }
+.ccx-pin:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: 2px; }
+.ccx-pin.on {
+  z-index: 3; background: var(--ccx-tinta); color: #fff; border-color: #fff;
+  transform: var(--ccx-t) scale(1.22);
+  box-shadow: 0 0 0 3px var(--ccx-c), 0 6px 16px rgba(11, 18, 32, 0.45);
+}
+.ccx-pin.on::before {
+  content: ''; position: absolute; inset: -3px; border-radius: 50%;
+  border: 2px solid var(--ccx-c); pointer-events: none;
+  animation: ccx-aro 1.6s var(--ease-out, ease-out) infinite;
+}
+
+/* Captura estrecha (< 600 px, solo en la página): punto pequeño centrado en su sitio, con área táctil
+   invisible de 33 px, y línea guía fina hasta la etiqueta cuando el punto se ha apartado al borde. */
+.ccx-frame.compacto .ccx-pin {
+  --ccx-t: translate(-50%, -50%);
+  width: 17px; height: 17px; font-size: 10px; letter-spacing: -0.05em; border-width: 1.5px;
+  box-shadow: 0 1px 3px rgba(11, 18, 32, 0.4), 0 0 0 1px rgba(11, 18, 32, 0.14);
+}
+.ccx-frame.compacto .ccx-pin::after { inset: -8px; }
+.ccx-frame.compacto .ccx-pin.on { box-shadow: 0 0 0 2px var(--ccx-c), 0 3px 10px rgba(11, 18, 32, 0.45); }
+.ccx-guias { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.ccx-guia-h { stroke: rgba(255, 255, 255, 0.9); stroke-width: 3.25; stroke-linecap: round; }
+.ccx-guia-l { stroke: var(--ccx-c); stroke-width: 1.25; stroke-linecap: round; }
+.ccx-guia-p { fill: var(--ccx-c); stroke: #fff; stroke-width: 1.25; }
+.ccx-guia.on .ccx-guia-l { stroke: var(--ccx-tinta); stroke-width: 1.75; }
+.ccx-guia.on .ccx-guia-p { fill: var(--ccx-tinta); }
+/* Con un campo elegido, las guías de los demás se apagan (la captura también) */
+.ccx-frame.con-activo .ccx-guia:not(.on) { opacity: 0.55; }
+
+/* Ampliar: esquina inferior derecha (arriba están los botones del ERP), no compite con los puntos */
+.ccx-ampliar {
+  position: absolute; z-index: 4; bottom: 10px; right: 10px;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 36px; padding: 0 14px; border-radius: 999px; border: 0;
+  background: rgba(11, 18, 32, 0.74); color: #fff;
+  font-size: var(--fs-xs, 13px); font-weight: 650; cursor: zoom-in;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(11, 18, 32, 0.25);
+  transition: background var(--dur-1, 140ms) ease, transform var(--dur-1, 140ms) ease;
+}
+.ccx-ampliar:hover { background: rgba(11, 18, 32, 0.9); transform: translateY(-1px); }
+.ccx-ampliar:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: 2px; }
+
+/* ---------- Globo del campo (encima de la captura) y ficha (sin captura) ---------- */
+.ccx-globo {
+  position: absolute; z-index: 6; box-sizing: border-box; max-width: calc(100% - 16px);
+  background: var(--sheet-solid, var(--sheet)); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ccx-c) 60%, var(--line)); border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(11, 18, 32, 0.06), 0 22px 48px -14px rgba(11, 18, 32, 0.6), 0 4px 14px rgba(11, 18, 32, 0.22);
+  animation: ccx-globo var(--dur-2, 240ms) var(--ease-out, ease-out);
+}
+.ccx-globo.fuera { max-width: none; }
+.ccx-globo:focus { outline: none; }
+.ccx-globo:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: 3px; }
+.ccx-globo-in {
+  position: relative; z-index: 1; display: grid; gap: 10px;
+  padding: 12px 14px 12px; max-height: var(--gmax, none); overflow: auto; overscroll-behavior: contain;
+  border-radius: inherit; background: inherit;
+  box-shadow: inset 0 3px 0 var(--ccx-c);
+}
+/* Pico que apunta al punto: un cuadrado girado con el mismo fondo y borde que el globo */
+.ccx-pico {
+  position: absolute; width: 14px; height: 14px; box-sizing: border-box;
+  background: inherit; border: inherit; border-radius: 2px 0 0 0;
+}
+.ccx-globo.lado-abajo .ccx-pico { top: -7.5px; left: calc(var(--pico, 50%) - 7px); transform: rotate(45deg); border-right: 0; border-bottom: 0;
+  background: var(--ccx-c); border-color: var(--ccx-c); }
+.ccx-globo.lado-arriba .ccx-pico { bottom: -7.5px; left: calc(var(--pico, 50%) - 7px); transform: rotate(225deg); border-right: 0; border-bottom: 0; }
+.ccx-globo.lado-derecha .ccx-pico { left: -7.5px; top: calc(var(--pico, 50%) - 7px); transform: rotate(-45deg); border-right: 0; border-bottom: 0; }
+.ccx-globo.lado-izquierda .ccx-pico { right: -7.5px; top: calc(var(--pico, 50%) - 7px); transform: rotate(135deg); border-right: 0; border-bottom: 0; }
+.ccx-globo.lado-libre .ccx-pico { display: none; }
+
+.ccx-g-cab { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: 10px; }
+.ccx-g-num {
+  width: 34px; height: 34px; border-radius: 50%; margin-top: 2px;
+  display: grid; place-items: center;
+  background: var(--ccx-c); color: var(--ccx-tinta);
+  font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.03em;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ccx-c) 22%, transparent);
+}
+.ccx-g-tit { min-width: 0; }
+.ccx-g-x {
+  width: 32px; height: 32px; margin: -4px -6px 0 0; padding: 0; border: 0; border-radius: 50%;
+  display: grid; place-items: center; background: transparent; color: var(--ink-3); cursor: pointer;
+}
+.ccx-g-x:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
+.ccx-g-x:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: 1px; }
+.ccx-globo .ccx-nombre, .ccx-ficha .ccx-nombre { margin-bottom: 0; font-size: 17px; }
+.ccx-globo .ccx-que { font-size: 15px; line-height: 1.55; }
+.ccx-globo .ccx-ej, .ccx-globo .ccx-nota { margin-top: 0; }
+.ccx-globo .ccx-nav { padding-top: 10px; }
+.ccx-globo .ccx-btn { flex: 1 1 0; min-height: 40px; padding: 0 12px; }
+
+/* Parte sin capturas: ficha encima de la tabla */
+.ccx-ficha {
+  position: relative; display: grid; gap: 10px; margin: 12px 0 6px;
+  padding: 14px 18px 12px;
+  background: var(--sheet-solid, var(--sheet)); color: var(--ink);
+  border: 1px solid var(--line); border-top: 3px solid var(--ccx-c); border-radius: 10px;
+  box-shadow: 0 10px 28px -18px rgba(11, 18, 32, 0.45);
+  scroll-margin: calc(var(--topbar-h, 58px) + 16px) 0 16px;
+  animation: ccx-entra var(--dur-2, 240ms) var(--ease-out, ease-out);
+}
+.ccx-ficha:focus { outline: none; }
+.ccx-ficha:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: 3px; }
+.ccx-ficha .ccx-ej, .ccx-ficha .ccx-nota { margin-top: 0; }
+
+.ccx-cuenta { margin: 0 0 2px; font-size: var(--fs-xs, 13px); font-weight: 650; color: var(--ink-3); letter-spacing: 0.02em; }
+.cc .ccx-nombre, .ccx-lbx .ccx-nombre {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+  margin: 0 0 8px; font-size: var(--t-block, 18px); line-height: var(--lh-head, 1.2); font-weight: 750; color: var(--ink);
+}
+.ccx-oblig {
+  font-size: 12px; font-weight: 700; line-height: 1; padding: 4px 8px; border-radius: 999px;
+  background: var(--signal-soft); color: var(--ink-2);
+}
+.ccx-que { margin: 0; max-width: 72ch; font-size: var(--fs-md, 16px); line-height: var(--lh-body, 1.6); color: var(--ink-2); }
+.ccx-ej { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin: 10px 0 0; font-size: var(--fs-sm, 14.5px); }
+.ccx-ej > span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+.ccx-ej > b {
+  font-weight: 600; color: var(--ink); padding: 2px 9px; border-radius: 6px;
+  background: color-mix(in srgb, var(--ink) 6%, transparent); border: 1px solid var(--line);
+}
+.ccx-nota { margin: 10px 0 0; font-size: var(--fs-xs, 13px); color: var(--ink-3); }
+
+.ccx-nav {
+  grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 10px;
+  padding-top: 12px; border-top: 1px solid var(--line);
+}
+.ccx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 40px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--line); background: transparent; color: var(--ink);
+  font-size: var(--fs-sm, 14.5px); font-weight: 650; cursor: pointer;
+  transition: background var(--dur-1, 140ms) ease, transform var(--dur-1, 140ms) ease;
+}
+.ccx-btn:hover { background: color-mix(in srgb, var(--ccx-c) 12%, transparent); transform: translateY(-1px); }
+.ccx-btn:active { transform: translateY(1px) scale(0.97); }
+.ccx-btn:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: 2px; }
+.ccx-btn:last-child { border-color: transparent; background: var(--ccx-c); color: var(--ccx-tinta); }
+.ccx-btn:last-child:hover { background: color-mix(in srgb, var(--ccx-c) 86%, #fff); }
+
+/* ---------- Tabla: todos numerados, la fila elegida se marca ---------- */
+.cc.cc-plano .cc-n.ccx-n {
+  width: 22px; height: 22px; font-size: 11.5px; font-weight: 800; font-variant-numeric: tabular-nums;
+  background: transparent; color: var(--ink-2); box-shadow: inset 0 0 0 1.5px var(--ink-3);
+}
+.cc.cc-plano .cc-n.ccx-n.loc { background: var(--ccx-c); color: var(--ccx-tinta); box-shadow: none; }
+.cc.cc-plano .cc-on .cc-n.ccx-n { background: var(--ink); color: var(--paper); box-shadow: 0 0 0 2.5px var(--ccx-c); }
+.cc.cc-plano.ccx .cc-table tr.cc-has { cursor: pointer; }
+.cc.cc-plano.ccx .cc-table tr.cc-has:hover td { background: color-mix(in srgb, var(--ccx-c) 6%, transparent) !important; }
+.cc.cc-plano.ccx .cc-table tr.cc-on td { background: color-mix(in srgb, var(--ccx-c) 13%, transparent) !important; }
+.cc.cc-plano.ccx .cc-table tr.cc-on td:first-child { box-shadow: inset 3px 0 0 var(--ccx-c); }
+.cc.cc-plano.ccx .cc-table tr:focus-visible { outline: 3px solid var(--focus, #f2a93b); outline-offset: -3px; }
+
+/* ---------- Vista ampliada ---------- */
+.ccx-lbx { display: grid; gap: 0; }
+.ccx-lbx .ccx-escena { justify-self: center; width: 100%; display: grid; justify-items: center; }
+.ccx-lbx .ccx-frame { border-radius: 10px; margin: 0 auto; }
+.ccx-lbx .ccx-pin { width: 30px; height: 30px; font-size: 14px; }
+/* El globo puede salir de la captura (pantallas pequeñas): que no lo recorte el contenedor de la ampliada */
+.lbx-in:has(> .ccx-lbx) { overflow: visible; }
+.ccx-lbx .ccx-globo { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 24px 56px -12px rgba(0, 0, 0, 0.75), 0 4px 14px rgba(0, 0, 0, 0.35); }
+
+/* ---------- Oscuro ---------- */
+:root[data-theme='dark'] .ccx-ficha { box-shadow: 0 14px 34px -18px rgba(0, 0, 0, 0.85); }
+:root[data-theme='dark'] .ccx-globo {
+  border-color: color-mix(in srgb, var(--ccx-c) 70%, #fff 10%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 24px 56px -12px rgba(0, 0, 0, 0.85), 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+:root[data-theme='dark'] .ccx-btn:last-child:hover { background: color-mix(in srgb, var(--ccx-c) 86%, #000); }
+
+/* ---------- Móvil ---------- */
+@media (max-width: 640px) {
+  .ccx-pin { width: 22px; height: 22px; font-size: 11px; border-width: 1.5px; }
+  .ccx-pin::after { inset: -5px; }
+  .ccx-ampliar { bottom: 6px; right: 6px; min-height: 32px; padding: 0 10px; }
+  .ccx-ampliar span { display: none; }
+  .ccx-ficha { padding: 12px 14px 12px; }
+  .ccx-globo-in { padding: 10px 12px 10px; gap: 8px; }
+  .ccx-g-num { width: 30px; height: 30px; font-size: 14px; }
+  .ccx-globo .ccx-nombre, .ccx-ficha .ccx-nombre { font-size: 16px; }
+  .ccx-globo .ccx-que { font-size: 14.5px; }
+  .ccx-btn, .ccx-globo .ccx-btn { flex: 1 1 0; min-height: 44px; }
+}
+
+/* ---------- Movimiento ---------- */
+@keyframes ccx-aro { from { transform: scale(1); opacity: 0.9; } to { transform: scale(1.9); opacity: 0; } }
+@keyframes ccx-latido { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ccx-c) 55%, transparent); } 80%, 100% { box-shadow: 0 0 0 9px transparent; } }
+@keyframes ccx-globo { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes ccx-entra { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .ccx-pista::before, .ccx-pin.on::before, .ccx-box, .ccx-ficha, .ccx-globo { animation: none; }
+  .ccx-pin, .ccx-btn, .ccx-ampliar { transition: none; }
+}

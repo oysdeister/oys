@@ -1,0 +1,200 @@
+{
+ "c": "gven_dlvplan_type",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "dlvt_code": {
+   "req": 1,
+   "mayus": 1
+  },
+  "dlvt_name": {
+   "mayus": 1
+  },
+  "dlvt_codser": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gsernumh",
+    "clave": "mask_code"
+   }
+  },
+  "dlvt_status": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "dlvt_getacu": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "dlvt_acttes": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "dlvt_valcat": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvt_valcat == null || ['D','P','A','N'].includes(dlvt_valcat))))",
+     "msg": "Los artículos se validan sobre: [D] catálogo de la delegación, [P] catálogo del departamento, [A] catálogo del almacén, [N] maestro de artículos",
+     "tipo": "error",
+     "campo": "dlvt_valcat",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvt_impdoc": {
+   "req": 1,
+   "def": "S",
+   "reglas": [
+    {
+     "si": "!(((dlvt_impdoc == null || ['S','N','P'].includes(dlvt_impdoc))))",
+     "msg": "Los posibles valores del indicativo de impresión son: [S]i, [P]reguntar, [N]o",
+     "tipo": "error",
+     "campo": "dlvt_impdoc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvt_cominv": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((dlvt_cominv == null || ['S','N','E'].includes(dlvt_cominv))))",
+     "msg": "Los posibles valores del indicativo de control del compromiso de inversión son: [S] si, [N] no, [E] evolución",
+     "tipo": "error",
+     "campo": "dlvt_cominv",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvt_datcon": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "dlvt_stkpla": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((dlvt_stkpla == null || [0,1,2,3,4].includes(dlvt_stkpla))))",
+     "msg": "Actualizar el stock planificado puede tomar uno de los siguientes valores: [0] No, [1] Entrada 1, [2] Entrada 2, [3] Entrada 3, [4] Propuesto salida",
+     "tipo": "error",
+     "campo": "dlvt_stkpla",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "dlvt_ivainc": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "dlvt_order": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gvenpedd",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "hide_varlog": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_orden": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_indmod": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_udmven": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_udmalt": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_agente": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_tol_percen": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_descri": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_infaux": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_stock": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_stkfut": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "hide_dtoli1": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoli2": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoli3": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_dtoimp": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_preiva": {
+   "req": 1,
+   "def": 1
+  },
+  "dlvt_cartype": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccaractd",
+    "clave": "codigo"
+   }
+  },
+  "dlvt_tipwkf": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cworkflow_val",
+    "clave": "val_code"
+   }
+  }
+ },
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

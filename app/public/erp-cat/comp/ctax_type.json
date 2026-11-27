@@ -1,0 +1,271 @@
+{
+ "c": "ctax_type",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "type_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(type_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(type_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "type_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "type_name": {
+   "req": 1
+  },
+  "type_porcen": {
+   "req": 1,
+   "def": 0
+  },
+  "type_bascal": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!vacio(type_bascal) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(type_bascal)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "type_bascal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "type_status": {
+   "req": 1,
+   "def": "A"
+  },
+  "type_ispcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name",
+    "noExiste": "Missing key in referenced table for referential constraint (informix.f_ctax_type2)."
+   },
+   "reglas": [
+    {
+     "si": "!vacio(type_ispcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(type_ispcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "type_ispcode",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(type_ispcode) && !existe('ctax_type','type_code',type_ispcode)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_type2).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "type_ispcode"
+    }
+   ]
+  },
+  "type_valcode": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   }
+  },
+  "type_porpro": {
+   "req": 1,
+   "def": 0
+  },
+  "type_class": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_class",
+    "clave": "class_code",
+    "cols": [
+     "class_code",
+     "class_name",
+     "class_type",
+     "class_clase"
+    ],
+    "desc": "class_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(type_class) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(type_class)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "type_class",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "type_porded": {
+   "req": 1,
+   "def": 0
+  },
+  "type_in_ctaval": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_out_ctaval": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_in_ctanval": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_out_ctanval": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_in_ctacred": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_out_ctacred": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_in_ctancred": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_out_ctancred": {
+   "req": 1,
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "type_docori": {
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   }
+  },
+  "user_created": {
+   "ro": "1==1"
+  },
+  "date_created": {
+   "ro": "1==1"
+  },
+  "user_updated": {
+   "ro": "1==1"
+  },
+  "date_updated": {
+   "ro": "1==1"
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Tipos de impuestos",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado. Crudos: raw/contabilidad/b1/R_ctax_type.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_type.type_name).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila)."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_type','type_code',type_code)",
+   "msg": "Unique constraint (informix.p_ctax_type) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "type_code"
+  }
+ ]
+}

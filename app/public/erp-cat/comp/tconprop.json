@@ -1,0 +1,127 @@
+{
+ "c": "tconprop",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "apteid": {
+   "ro": "true"
+  },
+  "codban": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancdom",
+    "clave": "codban",
+    "noExiste": "Error en la validación",
+    "desc": "nomban"
+   }
+  },
+  "codpro": {
+   "req": 1,
+   "mayus": 1
+  },
+  "nompro": {
+   "req": 1
+  },
+  "ctafin": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación",
+    "desc": "nomcta"
+   }
+  },
+  "domban": {
+   "req": 1,
+   "def": 0,
+   "mayus": 1
+  },
+  "debe": {},
+  "opedeb": {
+   "mayus": 1,
+   "ro": "!debe",
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "noExiste": "Error en la validación",
+    "desc": "nomope",
+    "filtro": "l.debhab == 'D'"
+   }
+  },
+  "haber": {
+   "mayus": 1
+  },
+  "opehab": {
+   "mayus": 1,
+   "ro": "!haber",
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "noExiste": "Error en la validación",
+    "desc": "nomope",
+    "filtro": "l.debhab == 'H'"
+   }
+  },
+  "concil": {
+   "req": 1,
+   "def": 1
+  },
+  "filint": {
+   "req": 1,
+   "def": "%"
+  },
+  "filexc": {
+   "req": 1,
+   "def": "###@@@##"
+  },
+  "coddom": {
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(codban)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codban"
+  },
+  {
+   "si": "vacio(codpro)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codpro"
+  },
+  {
+   "si": "vacio(nompro)",
+   "msg": "Este campo es obligatorio.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "nompro"
+  },
+  {
+   "si": "__ins && existe('tconprop','codpro',codpro) && busca('tconprop','codpro',codpro,'codban') == codban",
+   "msg": "Unique constraint (informix.u_tconprop1) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codpro"
+  },
+  {
+   "si": "!existe('cbancdom','codban',codban)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_tconprop1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codban"
+  }
+ ],
+ "notas": [
+  "Menú: Maestros › Conceptos › Conceptos propios abre el QBE (qbe/tconprop) con Ejecutar consulta; hay 4962 filas.",
+  "Duplicado ES0019/CAPC1 → «Unique constraint (informix.u_tconprop1) violated.». Banco ZZZZ → «Missing key… (informix.f_tconprop1)».",
+  "Ojo: en la demo hay dos conceptos 901 en ES0019 (uno «CAP TRANSFERENCIA PROVEEDOR»), así que la unicidad incluye otra columna (probablemente ctafin o domban); el extracto con 901 da «A verification query returned more than on row for ([conpro] -> [901])».",
+  "Pestañas de la ficha: Identificación, Códigos, Integración, Descripción ampliada, Operaciones a conciliar (tconconc) y Criterios de barrido (tconprop_bar).",
+  "Domban (Àmbito) 0..3; concil 1 Individual / 2 Total por día.",
+  "probado (por API dml/insert): alta ES0019/CAPC1, duplicado, banco inexistente. Sin botones."
+ ]
+}

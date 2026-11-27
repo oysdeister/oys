@@ -1,0 +1,424 @@
+{
+ "c": "cinmelem",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "codele": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codele) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codele)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codele",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codgrp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmgrps",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgrp"
+    ],
+    "desc": "nomgrp"
+   }
+  },
+  "codgru": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmfgrp",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgru"
+    ],
+    "desc": "nomgru"
+   }
+  },
+  "codcta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro"
+    ],
+    "desc": "nompro"
+   }
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   }
+  },
+  "ctaexp": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaexp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp"
+   }
+  },
+  "centro": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(centro) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(centro)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "centro",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen"
+    ],
+    "desc": "nomcen"
+   }
+  },
+  "codpre": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codpre) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codpre)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codpar": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codpar) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codpar)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codpar",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode": {
+   "def": "0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname"
+    ],
+    "desc": "empname"
+   }
+  },
+  "codinm": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmhead",
+    "clave": "codinm",
+    "cols": [
+     "codinm",
+     "nominm"
+    ],
+    "desc": "nominm"
+   },
+   "alCambiar": {
+    "codgrp": "busca('cinmhead','codinm',codinm,'codgrp')",
+    "codcta": "busca('cinmhead','codinm',codinm,'codcta')",
+    "codgru": "busca('cinmhead','codinm',codinm,'codgru')",
+    "codfis": "busca('cinmhead','codinm',codinm,'codfis')"
+   }
+  },
+  "seqno": {
+   "ro": "true",
+   "mayus": 1
+  },
+  "locpri": {
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(locpri) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(locpri)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "locpri",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cinmlopr",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomloc"
+    ],
+    "desc": "nomloc"
+   }
+  },
+  "locsub": {
+   "ro": "locpri == null",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(locsub) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(locsub)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "locsub",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cinmlosu",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomlug"
+    ],
+    "desc": "nomlug",
+    "filtro": "l.codpri == locpri"
+   }
+  },
+  "codfis": {
+   "lov": {
+    "obj": "cinmftab",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomfis"
+    ],
+    "desc": "nomfis",
+    "filtro": "l.codgrp == codgru"
+   }
+  },
+  "dimcode1": {
+   "def": "0"
+  },
+  "dimcode2": {
+   "def": "0"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('cinmelem','codele',codele)",
+   "msg": "Unique constraint (informix.p_cinmelem) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "!existe('cinmhead','codinm',codinm)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmelem1).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codinm"
+  },
+  {
+   "si": "vacio(ctaexp) != vacio(centro)",
+   "msg": "La cuenta explotación y el centro, ambas deben ser nulas o no nulas.",
+   "tipo": "error",
+   "campo": "centro",
+   "fuente": "meta"
+  },
+  {
+   "si": "vacio(codpre) != vacio(codpar)",
+   "msg": "El presupuesto y la partida, ambas deben ser o nulas o no nulas.",
+   "tipo": "error",
+   "campo": "codpar",
+   "fuente": "meta"
+  },
+  {
+   "si": "vacio(ctaexp) != vacio(centro)",
+   "msg": "Check constraint (informix.c_cinmelem1) failed.",
+   "tipo": "error",
+   "campo": "centro",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cinmcomp','codele',codele)",
+   "msg": "Key value for constraint (informix.p_cinmelem) is still being referenced.",
+   "tipo": "error",
+   "fuente": "deducido"
+  }
+ ],
+ "botones": {
+  "BTN_GEN_DIV": {
+   "l": "Dividir elemento",
+   "dialogoTit": "Dividir elemento",
+   "dialogo": [
+    {
+     "n": "split_type",
+     "l": "Tipo de división",
+     "t": "s",
+     "sz": 60,
+     "req": 1,
+     "h": "Tipo de división: Porcentaje o importe",
+     "o": [
+      {
+       "k": "P",
+       "v": "Porcentaje"
+      },
+      {
+       "k": "I",
+       "v": "Importe"
+      }
+     ]
+    },
+    {
+     "n": "porimp",
+     "l": "Porcentaje o importe",
+     "t": "n",
+     "sz": 14,
+     "sc": 2,
+     "req": 1,
+     "h": "Porcentaje o importe"
+    },
+    {
+     "n": "num_splits",
+     "l": "Número de divisiones",
+     "t": "i",
+     "req": 1,
+     "def": "1",
+     "h": "Número de divisiones de elementos"
+    }
+   ],
+   "nota": "Probado en 0000001 (10.000 €), Porcentaje 40 %, 1 división: crea el elemento nuevo (código del numerador de la serie del bien; con serie AF sale «AF») con un componente 000002 de 4.000 €, sus valores y su cuadro, y el original queda en 6.000 €. Sin mensaje: abre la ficha del bien en un modal. Errores literales: 150 % («…no puede ser mayor o igual… [10000.00]»), importe 20.000, 0; una segunda división con la misma serie da «Unique constraint (informix.p_cinmelem) violated.». Con 0 divisiones no hace nada.",
+   "pre": [
+    {
+     "si": "ent.porimp <= 0",
+     "msg": "El porcentaje o importe indicado debe ser superior a 0.",
+     "tipo": "error",
+     "campo": "porimp",
+     "fuente": "demo"
+    },
+    {
+     "si": "ent.split_type == 'P' && ent.porimp * ent.num_splits >= 100",
+     "msg": "El importe total de las divisiones no puede ser mayor o igual al importe total del elemento a dividir [${busca('cinmeval','codele',codele,'invele')}].",
+     "tipo": "error",
+     "campo": "porimp",
+     "fuente": "demo"
+    },
+    {
+     "si": "ent.split_type == 'I' && ent.porimp > busca('cinmeval','codele',codele,'invele')",
+     "msg": "El importe indicado [${ent.porimp}] supera el valor de inventario del elemento para el sistema contable principal [A].",
+     "tipo": "error",
+     "campo": "porimp",
+     "fuente": "demo"
+    },
+    {
+     "si": "existe('cinmelem','codele',busca('cinmhead','codinm',codinm,'serele'))",
+     "msg": "Unique constraint (informix.p_cinmelem) violated.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "cinmelem",
+      "valores": {
+       "empcode": "empcode",
+       "codinm": "codinm",
+       "codele": "busca('cinmhead','codinm',codinm,'serele')",
+       "nomele": "nomele",
+       "codgrp": "codgrp",
+       "codcta": "codcta",
+       "codgru": "codgru",
+       "codfis": "codfis",
+       "proyec": "proyec",
+       "seccio": "seccio"
+      }
+     }
+    },
+    {
+     "ir": {
+      "obj": "cinmhead",
+      "clave": "codinm"
+     }
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Código del elemento: nullable; si se deja vacío lo pone el numerador de la serie del bien (prueba: bien CAPMB serie AF → elemento «AF»; la factura con serie AP creó AP026-0000).",
+  "Al crear un elemento a mano la demo NO crea cinmeval: el evento after-insert que lo haría está desactivado («return;» al inicio, comentario TO DO). Los valores llegan al contabilizar la factura de activos.",
+  "Pestañas: Formulario principal (Unidad de negocio, Bienes, Elementos, Información contable, Auxiliares, Observaciones, Componentes, Albarán/Factura/Movimiento interno, Datos de control), Valores de los elementos (cinmeval), Componentes (cinmcomp).",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.».",
+  "probado: BTN_GEN_DIV"
+ ]
+}

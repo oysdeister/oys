@@ -1,0 +1,117 @@
+{
+ "c": "ctax_zone",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "zone_code": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_zone",
+    "clave": "zone_code",
+    "cols": [
+     "zone_code",
+     "zone_name",
+     "zone_codnac"
+    ],
+    "desc": "zone_name"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(zone_code) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_code)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_code",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "zone_name": {
+   "req": 1
+  },
+  "zone_codnac": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomnac",
+     "zonimp"
+    ],
+    "desc": "nomnac",
+    "noExiste": "Missing key in referenced table for referential constraint (informix.f_ctax_zone1)."
+   },
+   "reglas": [
+    {
+     "si": "!vacio(zone_codnac) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_codnac)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_codnac",
+     "fuente": "meta"
+    },
+    {
+     "si": "!vacio(zone_codnac) && !existe('ctiponac','codigo',zone_codnac)",
+     "msg": "Missing key in referenced table for referential constraint (informix.f_ctax_zone1).",
+     "tipo": "error",
+     "fuente": "demo",
+     "campo": "zone_codnac"
+    }
+   ]
+  },
+  "zone_taiter": {
+   "req": 1,
+   "mayus": 1,
+   "def": 1,
+   "reglas": [
+    {
+     "si": "!vacio(zone_taiter) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_taiter)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_taiter",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "zone_intrast": {
+   "req": 1,
+   "mayus": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!vacio(zone_intrast) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(zone_intrast)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "zone_intrast",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Impuestos › Maestros › Zonas fiscales",
+  "Permisos: alta sí, modificar sí, borrar sí.",
+  "Probado en la demo (fase 1b, API con datos CAP): Nuevo (defectos), alta vacía, alta duplicada, alta CAP, clave foránea inexistente, obligatorio vacío, modificación, borrado y borrado con hijos. Crudos: raw/contabilidad/b1/R_ctax_zone.json.",
+  "Alta vacía: la interfaz marca «Este campo es obligatorio.» en cada obligatorio (cliente); por API el servidor responde HTTP 400 «HTTP 400 Bad Request».",
+  "Obligatorio vaciado al modificar (servidor): «Cannot insert a null into column (ctax_zone.zone_name).».",
+  "Guardar y borrar correctos: sin mensaje del servidor (message null); la interfaz muestra «Éxito».",
+  "probado: Nuevo, Guardar (alta/modificación), Borrar, borrar con hijos; sin botones ni Acciones; sin menú ⌄ propio (solo el enlace de la propia fila)."
+ ],
+ "alGuardar": [
+  {
+   "si": "__ins && existe('ctax_zone','zone_code',zone_code)",
+   "msg": "Unique constraint (informix.p_ctax_zone) violated.",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "zone_code"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "cuenta('ctax_rule','rule_zonemp',zone_code)+cuenta('ctax_rule','rule_zonter',zone_code)+cuenta('ctax_artkey_zone','zone_artk_taxzon',zone_code) > 0",
+   "msg": "Key value for constraint (informix.p_ctax_zone) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ]
+}

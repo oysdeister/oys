@@ -1,0 +1,148 @@
+{
+ "c": "gventarc",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "empcode": {
+   "req": 1,
+   "def": "0",
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode"
+   }
+  },
+  "tipdoc": {
+   "ro": "tabname == null",
+   "mayus": 1,
+   "calc": "tabname == tabname ? null : clasif",
+   "lov": {
+    "obj": "gvenacud",
+    "clave": "codigo",
+    "filtro": "tabname == 'gvenacuh'"
+   }
+  },
+  "clasif": {
+   "ro": "tabname == null",
+   "mayus": 1,
+   "calc": "tabname == tabname ? null : clasif",
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "horini": {
+   "req": 1,
+   "def": "00:00",
+   "reglas": [
+    {
+     "si": "!((((horini == null || horini.match(/^..:..$/g) != null)) && ((horini >= '00:00') && (horini <= '23:59'))))",
+     "msg": "Formato de hora incorrecto.",
+     "tipo": "error",
+     "campo": "horini",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "horfin": {
+   "req": 1,
+   "def": "23:59",
+   "reglas": [
+    {
+     "si": "!((((horfin == null || horfin.match(/^..:..$/g) != null)) && ((horfin >= '00:00') && (horfin <= '23:59'))))",
+     "msg": "Formato de hora incorrecto.",
+     "tipo": "error",
+     "campo": "horfin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "priori": {
+   "req": 1,
+   "def": 0
+  },
+  "tercer": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo"
+   }
+  },
+  "tipdir": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "clacli": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "delega": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo"
+   }
+  },
+  "depart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart"
+   }
+  },
+  "tarpre": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gventarh",
+    "clave": "codigo"
+   }
+  },
+  "tardtg": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gvendtgh",
+    "clave": "codigo"
+   }
+  },
+  "tardtf": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gvendtfh",
+    "clave": "codigo"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha inicio debe ser anterior a la fin.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((horini <= horfin))",
+   "msg": "La hora inicio debe ser anterior a la fin.",
+   "tipo": "error",
+   "campo": "horini",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

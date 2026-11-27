@@ -1,0 +1,157 @@
+{
+ "c": "gvenforh",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(1==1)",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "tercer": {
+   "lov": {
+    "obj": "gcliente",
+    "clave": "codigo"
+   }
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "lov": {
+    "obj": "gvenford",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "depart": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecfor": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estcab == null || ['P','E','V'].includes(estcab))))",
+     "msg": "El estado de la cabecera puede modificarse en los estados: [P] Provisional, [V] validado, [E] bloqueado",
+     "tipo": "error",
+     "campo": "estcab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipdir": {
+   "lov": {
+    "obj": "cterdire",
+    "clave": "tipdir"
+   }
+  },
+  "diaent": {
+   "mayus": 1
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()",
+   "calc": "fecini"
+  },
+  "clasif": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "codalm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "galmacen",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((indmod == null || ['S','N','M','B'].includes(indmod))))",
+     "msg": "Los valores posibles del indicador de modificación son: [S] si, [N] no, [M] solo modificar y [B] sólo borrar.",
+     "tipo": "error",
+     "campo": "indmod",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "doclock": {
+   "def": "V"
+  },
+  "valpen": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha de finalización del plazo de entrega no puede ser anterior a la fecha de inicio del plazo.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'"
+  },
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P'"
+  },
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Activo si estcab != 'P'; condición de servidor; abre diálogo con campos; en el menú Acciones"
+  },
+  "BUT_MANUAL_BLOCK": {
+   "l": "Bloqueo manual",
+   "nota": "Activo si estcab != 'P' && virtualerp.bloq_manu == 1; pide confirmación; abre diálogo con campos"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

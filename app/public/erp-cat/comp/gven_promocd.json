@@ -1,0 +1,157 @@
+{
+ "c": "gven_promocd",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "tipwkf": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cworkflow_val",
+    "clave": "val_code"
+   }
+  },
+  "artdto": {
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "pagcue": {
+   "req": 1,
+   "def": 1
+  },
+  "consum": {
+   "req": 1,
+   "def": 0
+  },
+  "pagval": {
+   "req": 1,
+   "def": 0
+  },
+  "tipmag": {
+   "req": 1,
+   "def": "T",
+   "reglas": [
+    {
+     "si": "!(((tipmag == null || ['M','A','R','P','T','F'].includes(tipmag))))",
+     "msg": "El tipo de magnitud del escalado solo puede ser misma [M]Marca, mismo [A]Fabricante, [R]eferencias de artículos, mismo [P]Pack, cantidades [T]otales o misma [F]amilia.",
+     "tipo": "error",
+     "campo": "tipmag",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipesc": {
+   "req": 1,
+   "def": "E",
+   "reglas": [
+    {
+     "si": "!(((tipesc == null || ['E','X','R'].includes(tipesc))))",
+     "msg": "Los posibles valores del indicador de tipo de escalado son: [E]Escalado, [X]MxN y [R]MxN (Resto).",
+     "tipo": "error",
+     "campo": "tipesc",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "bascal": {
+   "req": 1,
+   "def": "C",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((bascal == null || ['C','I'].includes(bascal))))",
+     "msg": "La base de calculo solo puede ser [C]antidad o [I]mporte.",
+     "tipo": "error",
+     "campo": "bascal",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "coddto": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gvendtoc",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "accion": {
+   "req": 1,
+   "def": "N",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((accion == null || ['D','G','A','N'].includes(accion))))",
+     "msg": "Los valores posibles de acción son: [D]  regalo ya incluido, [G] generar línea, [A] aviso al TPV y [N] nada.",
+     "tipo": "error",
+     "campo": "accion",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "tipnot": {
+   "ro": "virtualog.exists_iret != 1 || accion != 'A'",
+   "mayus": 1
+  },
+  "hide_fabric": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_codfam": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_varlog": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_coduni": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regart": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regimp": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regdto": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regval": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regpun": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regfin": {
+   "req": 1,
+   "def": 1
+  },
+  "hide_regsor": {
+   "req": 1,
+   "def": 1
+  }
+ },
+ "notas": [
+  "Estados de estado: A=Activo, B=Bloqueado, P=Pruebas, S=Proceso",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

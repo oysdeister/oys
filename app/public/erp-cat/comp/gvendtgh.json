@@ -1,0 +1,95 @@
+{
+ "c": "gvendtgh",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "moneda": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "priori": {
+   "req": 1,
+   "def": 0,
+   "reglas": [
+    {
+     "si": "!(((priori == null) || (priori >= 0)))",
+     "msg": "La prioridad de aplicación del descuento no puede ser inferior a 0.",
+     "tipo": "error",
+     "campo": "priori",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "clasif": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "gclasdoc",
+    "clave": "codigo"
+   }
+  },
+  "grpemp": {
+   "req": 1,
+   "def": "ALL",
+   "lov": {
+    "obj": "choldinh",
+    "clave": "holcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "E",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estado == null || ['E','A','B'].includes(estado))))",
+     "msg": "Los valores posibles del indicativo de estado de la tarifa de descuentos generales son: [E] entrada, [A] activo, [B] bloqueado.",
+     "tipo": "error",
+     "campo": "estado",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!(((fecini == null || fecfin == null) || (fecini.getTime() <= fecfin.getTime())))",
+   "msg": "La fecha de finalización de la vigencia no puede ser anterior a la de inicio.",
+   "tipo": "error",
+   "campo": "fecfin",
+   "fuente": "meta"
+  }
+ ],
+ "botones": {
+  "BUT_COPIAR": {
+   "l": "Copiar",
+   "nota": "Siempre activo; condición de servidor; abre diálogo con campos"
+  },
+  "BUT_AUTORIZAR": {
+   "l": "Autorizar",
+   "nota": "Siempre activo; condición de servidor; pide confirmación"
+  }
+ },
+ "notas": [
+  "Estados de estado: E=Entrado, A=Autorizado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

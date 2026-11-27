@@ -1,0 +1,181 @@
+{
+ "c": "gartfami",
+ "fecha": "2026-11-18 almacen/captura-garticul",
+ "area": "almacen",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "__ins && existe('gartfami','codigo',codigo)",
+     "msg": "Unique constraint (informix.p_gartfami) violated.",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "nomfam": {},
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "taxkey": {
+   "lov": {
+    "obj": "ctax_artkey",
+    "clave": "artk_code",
+    "cols": [
+     "artk_code",
+     "artk_name"
+    ],
+    "desc": "artk_name",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipcon": {
+   "lov": {
+    "obj": "gcontipo",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcon"
+    ],
+    "desc": "nomcon",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "secana": {
+   "lov": {
+    "obj": "gseccana",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "paranc": {
+   "lov": {
+    "obj": "cexpesta",
+    "clave": "codest",
+    "cols": [
+     "codest",
+     "coment"
+    ],
+    "desc": "coment",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codinm": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmhead",
+    "clave": "codinm",
+    "cols": [
+     "codinm"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "serele": {
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcta": {
+   "lov": {
+    "obj": "cinmctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codgru": {
+   "lov": {
+    "obj": "cinmfgrp",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codfis": {
+   "lov": {
+    "obj": "cinmftab",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "filtro": "l.codgru == codgru",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "sisamo": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmsish",
+    "clave": "codigo",
+    "cols": [
+     "codigo"
+    ],
+    "noExiste": "Error en la validación"
+   }
+  },
+  "agrele": {
+   "req": 1,
+   "def": 0
+  },
+  "intpub": {
+   "req": 1,
+   "def": 0
+  },
+  "webpub": {
+   "req": 1,
+   "def": 0
+  },
+  "tipavi": {
+   "mayus": 1
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((!vacio(codinm) && !vacio(serele)) || (vacio(codinm) && vacio(serele)))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((!(codinm == null || codinm.length === 0)) && (!(serele == null || serele.length === 0))) || (((codinm == null || codinm.length === 0)) && ((serele == null || serele.length === 0))))",
+   "tipo": "error",
+   "campo": "serele",
+   "fuente": "meta"
+  },
+  {
+   "si": "!((!vacio(codgru) && !vacio(codfis)) || (vacio(codgru) && vacio(codfis)))",
+   "msg": "Las siguientes restricciones de verificación fallaron: Verificación de restricción fallida: (((!(codgru == null || codgru.length === 0)) && (!(codfis == null || codfis.length === 0))) || (((codgru == null || codgru.length === 0)) && ((codfis == null || codfis.length === 0))))",
+   "tipo": "error",
+   "campo": "codfis",
+   "fuente": "meta"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('garticul','codfam',codigo)",
+   "msg": "Key value for constraint (informix.p_gartfami) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Sin botones ni menú Acciones. Ficha real: table/gartfami/form/2 (cajas Identificación, Estado, Datos contables, Indicativos, Parámetros inmovilizado/Auxiliares, subrejilla Imágenes (gfamimag), Datos de control).",
+  "Nuevo desde la lista: diálogo 'MAESTRO DE FAMILIAS DE ARTÍCULOS'. Guardar vacío: 'Este campo es obligatorio.' solo bajo Familia (validación en cliente). Estado por defecto Activo.",
+  "Los errores de servidor salen en el aviso 'Se ha producido un error ID: n <mensaje> Source Trace'.",
+  "Uso en el artículo: al elegir la familia en garticul se copia su Clave fiscal (taxkey) al artículo (y de ahí la Naturaleza); el Tipo contable de la familia NO se copia.",
+  "Borrar: '¿Estás seguro que quieres eliminar el registro '${nomfam}' ?' (Cancelar / Eliminar)."
+ ]
+}

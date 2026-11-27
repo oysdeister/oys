@@ -1,0 +1,392 @@
+{
+ "c": "gcomfacl",
+ "fecha": "2026-11-18",
+ "area": "compras",
+ "campos": {
+  "codart": {
+   "req": 1,
+   "ro": "(gcomfacd.tabori == 'TC' && document_parent.docori != null) || (linori != null &&  context.isOnUpdate())",
+   "mayus": 1,
+   "lov": {
+    "obj": "garticul",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomart"
+    ],
+    "desc": "nomart",
+    "noExiste": "Error en la validación"
+   },
+   "alCambiar": {
+    "varlog": "'0'",
+    "numlot": "'0'",
+    "udmcom": "busca('garticul','codigo',codart,'udmcom') || busca('garticul','codigo',codart,'udmbas')",
+    "udmpre": "busca('garticul','codigo',codart,'udmpre') || busca('garticul','codigo',codart,'udmbas')",
+    "canfac": "0",
+    "canpre": "0"
+   }
+  },
+  "varlog": {
+   "req": 1,
+   "ro": "(gcomfacd.tabori == 'TC' && document_parent.docori != null) || (linori != null &&  context.isOnUpdate())",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartvarl",
+    "clave": "varlog",
+    "cols": [
+     "varlog",
+     "nomvar",
+     "reffab"
+    ],
+    "desc": "nomvar"
+   }
+  },
+  "numlot": {
+   "req": 1,
+   "ro": "garticul.lotes == 'N'",
+   "mayus": 1,
+   "lov": {
+    "obj": "gartlote",
+    "clave": "numlot",
+    "cols": [
+     "numlot",
+     "lot_estado"
+    ],
+    "desc": "lot_estado"
+   }
+  },
+  "canfac": {
+   "req": 1,
+   "ro": "gcomfacd.tabori == 'TC' && document_parent.docori != null",
+   "alCambiar": {
+    "canpre": "udmcom == udmpre ? canfac : canpre"
+   },
+   "reglas": [
+    {
+     "si": "canfac == 0 || canpre == 0",
+     "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad facturada, así como la cantidad precio, debe ser diferente a 0.",
+     "tipo": "error",
+     "campo": "canfac",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "udmcom": {
+   "req": 1,
+   "ro": "gcomfacd.tabori == 'TC' && document_parent.docori != null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "udmalt": {
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "udmpre": {
+   "req": 1,
+   "ro": "(linori != null && gcomfacd.tabori == 'FC' && context.isOnUpdate()) || (gcomfacd.tabori == 'TC' && document_parent.docori != null)",
+   "mayus": 1,
+   "lov": {
+    "obj": "gart_unidefs",
+    "clave": "coduni",
+    "cols": [
+     "coduni",
+     "nomuni"
+    ],
+    "desc": "nomuni"
+   }
+  },
+  "canpre": {
+   "req": 1,
+   "ro": "linori != null && gcomfacd.tabori == 'TC' && context.isOnUpdate()",
+   "reglas": [
+    {
+     "si": "udmcom == udmpre && canfac != null && canpre != null && canfac != canpre",
+     "msg": "Las siguientes restricciones de verificación fallaron:\nLa cantidad de precios debe coincidir con la cantidad de compra si la unidad de precios coincide con la de compras.",
+     "tipo": "error",
+     "campo": "canpre",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "precio": {
+   "ro": "virtual_auth.precio_mod == 0  || (gcomfacd.tabori == 'TC' && document_parent.docori != null) || preiva != null"
+  },
+  "preiva": {
+   "ro": "virtual_auth.precio_mod == 0  || (gcomfacd.tabori == 'TC' && document_parent.docori != null) || precio != null"
+  },
+  "dtoli1": {
+   "ro": "virtual_auth.precio_mod == 0 || (gcomfacd.tabori == 'TC' && document_parent.docori != null) || docfoot != 0"
+  },
+  "dtoli2": {
+   "ro": "virtual_auth.precio_mod == 0 || (gcomfacd.tabori == 'TC' && document_parent.docori != null) || docfoot != 0"
+  },
+  "dtoli3": {
+   "ro": "virtual_auth.precio_mod == 0 || (gcomfacd.tabori == 'TC' && document_parent.docori != null) || docfoot != 0"
+  },
+  "dtoimp": {
+   "ro": "virtual_auth.precio_mod == 0 || (gcomfacd.tabori == 'TC' && document_parent.docori != null) || docfoot != 0"
+  },
+  "impnet": {
+   "ro": "1==1",
+   "calc": "Math.round((canpre||0)*(precio||0)*(1-(dtoli1||0)/100)*(1-(dtoli2||0)/100)*(1-(dtoli3||0)/100)*100)/100 - (dtoimp||0)"
+  },
+  "canabo": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "canbon": {
+   "ro": "1==1",
+   "def": 0
+  },
+  "valqty": {
+   "ro": "1==1"
+  },
+  "regalo": {
+   "req": 1,
+   "ro": "(gcomfacd.tabori == 'TC'  && document_parent.docori != null) || (linori != null && context.isOnUpdate())",
+   "oculto": "regalo == 'S' || regalo == 'G'",
+   "def": "N",
+   "mayus": 1
+  },
+  "indmod": {
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1
+  },
+  "desvar": {
+   "ro": "garticul.desvar != 'V'"
+  },
+  "impdto": {
+   "req": 1,
+   "def": 0
+  },
+  "impdte": {
+   "req": 1,
+   "def": 0
+  },
+  "impdtc": {
+   "req": 1,
+   "def": 0
+  },
+  "pretar": {
+   "ro": "1==1"
+  },
+  "dtotar": {
+   "ro": "1==1"
+  },
+  "tax_refere": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "lov": {
+    "obj": "ctax_refcat",
+    "clave": "ref_code",
+    "cols": [
+     "ref_code",
+     "ref_empcode",
+     "ref_dec",
+     "ref_name"
+    ],
+    "desc": "ref_name"
+   }
+  },
+  "tax_porded": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "def": 100
+  },
+  "tax_porpro": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "def": 100
+  },
+  "tax_cost": {
+   "def": 0
+  },
+  "tax_basimp1": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "tax_oper1": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code1": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   }
+  },
+  "tax_rule1": {
+   "ro": "1==1"
+  },
+  "tax_basimp2": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "tax_oper2": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code2": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   }
+  },
+  "tax_rule2": {
+   "ro": "1==1"
+  },
+  "tax_basimp3": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "tax_oper3": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code3": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   }
+  },
+  "tax_rule3": {
+   "ro": "1==1"
+  },
+  "tax_basimp4": {
+   "ro": "virtual_auth.precio_mod == 0"
+  },
+  "tax_oper4": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_operation",
+    "clave": "oper_code",
+    "cols": [
+     "oper_code",
+     "oper_name",
+     "oper_class"
+    ],
+    "desc": "oper_name"
+   }
+  },
+  "tax_code4": {
+   "ro": "virtual_auth.precio_mod == 0",
+   "mayus": 1,
+   "lov": {
+    "obj": "ctax_type",
+    "clave": "type_code",
+    "cols": [
+     "type_code",
+     "type_class",
+     "type_name",
+     "type_porcen"
+    ],
+    "desc": "type_name"
+   }
+  },
+  "tax_rule4": {
+   "ro": "1==1"
+  },
+  "impcos": {
+   "ro": "1==1"
+  },
+  "desamp": {
+   "ro": "1==1"
+  },
+  "diff_type": {
+   "ro": "1==1"
+  },
+  "diff_concep": {
+   "lov": {
+    "obj": "gsrm_comfac_diff",
+    "clave": "diff_concep"
+   }
+  }
+ },
+ "botones": {
+  "BUT_ACT_DESC": {
+   "l": "Activar descripción",
+   "nota": "Visible si garticul.desamp != null && desamp == null (artículo con descripción ampliada). Abre diálogo con campos. No capturado (13500620 no tiene descripción ampliada)."
+  },
+  "BUT_CINMCOMP": {
+   "l": "Generar componente de activo",
+   "nota": "Visible si la tipología genera inmovilizado (gcomfacd.geninm 1 o 2), la factura no está Provisional y la línea no tiene activo. CAPF tiene geninm 0: no capturado."
+  }
+ },
+ "notas": [
+  "Subrejilla «Líneas» de la factura (pestaña Líneas y caja Líneas de la ficha). En Provisional muestra Nuevo; en Validada/Contabilizada la rejilla es de solo lectura (sin Nuevo).",
+  "Nuevo abre el diálogo «LÍNEAS DE FACTURAS DE COMPRAS» con el título de la factura (0FC000015 [CAPNC]). Defectos: Cantidad abonada 0, Bonificación 0, Importe neto 0, % deducción 100, % prorrata 100, Modificar Sí.",
+  "Guardar vacío: «Hay errores en los datos del formulario» y «Este campo es obligatorio.» bajo Artículo, VLP, Lote, Cantidad facturada, Unidad, Cantidad precio y Unidad precio.",
+  "Al elegir el artículo (13500620) se rellenan VLP 0, Lote 0, Unidad UNI/UNIDAD, Unidad precio UNIDAD y cantidades 0; con cantidad 0 al guardar sale el toast «Las siguientes restricciones de verificación fallaron:» + «La cantidad facturada, así como la cantidad precio, debe ser diferente a 0.».",
+  "Al escribir Cantidad facturada 3 la Cantidad precio pasa a 3. Precio y Precio con IVA se excluyen (si uno tiene valor el otro es de solo lectura). Al guardar: toast «Éxito» con enlace «Ver registro»; el importe neto lo calcula el servidor.",
+  "Las líneas que vienen de Conformar llevan tabori 'gcommovh', cabori = albarán y linori = línea del albarán; con origen TC y docori informado artículo, cantidades y precios son de solo lectura.",
+  "Desconformar borra las líneas del albarán; borrar la factura (Provisional) borra sus líneas en cascada."
+ ]
+}

@@ -1,0 +1,536 @@
+{
+ "c": "ctercero",
+ "fecha": "2026-11-18 maestros-a",
+ "area": "maestros",
+ "campos": {
+  "codigo": {
+   "mayus": 1,
+   "ro": "!__ins",
+   "reglas": [
+    {
+     "si": "!vacio(codigo) && !/^([a-zA-Z0-9]+)([a-zA-Z0-9ÀÁÂÃÄÅàáâãäåÈÉÊËèéêëÌÍÎÏìíîïÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÑñÇç_./-:,&()\\s\\ ])*$/.test(codigo)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "nombre": {
+   "req": 1,
+   "ro": "estado != 'P'"
+  },
+  "cif": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "reglas": [
+    {
+     "si": "!vacio(cif) && cifiss == 'ES' && (ciftyp == 0 || ciftyp == 1) && !(function(v){v=String(v).toUpperCase().replace(/^ES/,'');var L='TRWAGMYFPDXBNJZSQVHLCKE';if(/^\\d{8}[A-Z]$/.test(v)) return L[parseInt(v.slice(0,8),10)%23]==v[8];if(/^[XYZ]\\d{7}[A-Z]$/.test(v)) return L[parseInt('XYZ'.indexOf(v[0])+v.slice(1,8),10)%23]==v[8];if(/^[ABCDEFGHJNPQRSUVW]\\d{7}[0-9A-J]$/.test(v)){var s=0;for(var i=1;i<8;i++){var d=+v[i];if(i%2==1){d*=2;d=Math.floor(d/10)+d%10;}s+=d;}var c=(10-s%10)%10;return v[8]==String(c)||v[8]=='JABCDEFGHI'[c];}return false;})(cif)",
+     "msg": "El valor de entrada no es válido",
+     "tipo": "error",
+     "campo": "cif",
+     "fuente": "demo"
+    },
+    {
+     "si": "!vacio(cif) && cuenta('ctercero','cif',cif) > (__ins ? 0 : 1)",
+     "msg": "Cif already exists!",
+     "tipo": "aviso",
+     "campo": "cif",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "cifiss": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctiponac",
+    "clave": "codtax",
+    "cols": [
+     "codtax",
+     "nomnac",
+     "codigo"
+    ],
+    "desc": "nomnac",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ciftyp": {
+   "req": 1,
+   "ro": "vacio(cifiss) || estado != 'P'"
+  },
+  "codare": {
+   "req": 1,
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctipoter",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomter",
+     "serter",
+     "cusrel",
+     "cuscta"
+    ],
+    "desc": "nomter",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codare) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codare)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codare",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codact": {
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctipoact",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomact"
+    ],
+    "desc": "nomact",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codact) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codact)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codact",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "idioma": {
+   "req": 1,
+   "def": "es",
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctipoidi",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomidi"
+    ],
+    "desc": "nomidi",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "taxkey": {
+   "req": 1,
+   "def": "RGEN",
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctax_terkey",
+    "clave": "terk_code",
+    "cols": [
+     "terk_code",
+     "terk_name"
+    ],
+    "desc": "terk_name",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "grpemp": {
+   "req": 1,
+   "def": "ALL",
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "choldinh",
+    "clave": "holcode",
+    "cols": [
+     "holcode",
+     "holname",
+     "holgroup"
+    ],
+    "desc": "holname",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tergrp": {
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomaux",
+     "nomcom"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "terhol": {
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomaux",
+     "nomcom"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "terres": {
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctercero",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nombre",
+     "nomaux",
+     "nomcom"
+    ],
+    "desc": "nombre",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcla": {
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctipocla",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "codcat": {
+   "mayus": 1,
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctipocat",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tratam": {
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "ctipotra",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "gestor": {
+   "ro": "estado != 'P'",
+   "lov": {
+    "obj": "cper_empleado",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "estado": {
+   "req": 1,
+   "def": "P",
+   "ro": "true"
+  },
+  "estcob": {
+   "req": 1,
+   "def": "A",
+   "ro": "estado != 'P'"
+  },
+  "estpag": {
+   "req": 1,
+   "def": "A",
+   "ro": "estado != 'P'"
+  },
+  "pripag": {
+   "req": 1,
+   "def": 0,
+   "ro": "estado != 'P'"
+  },
+  "comaut": {
+   "req": 1,
+   "def": 0,
+   "ro": "estado != 'P'"
+  },
+  "nomcom": {
+   "ro": "estado != 'P'"
+  },
+  "nomaux": {
+   "ro": "estado != 'P'"
+  },
+  "refter": {
+   "ro": "estado != 'P'"
+  },
+  "profes": {
+   "ro": "estado != 'P'"
+  },
+  "tipologia": {
+   "ro": "estado != 'P'"
+  },
+  "coment": {
+   "ro": "estado != 'P'"
+  },
+  "fecbaj": {
+   "ro": "true"
+  },
+  "ctipoter.tipwkf": {
+   "calc": "busca('ctipoter','codigo',codare,'tipwkf')"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && !vacio(codigo) && existe('ctercero','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_ctercero) violated.",
+   "tipo": "error",
+   "campo": "codigo",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && vacio(codigo)",
+   "msg": "Unique constraint (informix.p_ctercero) violated.",
+   "tipo": "error",
+   "campo": "codigo",
+   "fuente": "demo"
+  }
+ ],
+ "botones": {
+  "BUT_CHANGE_CODE": {
+   "l": "Cambiar código",
+   "dialogoTit": "Cambiar código",
+   "dialogo": [
+    {
+     "n": "codigo",
+     "l": "Tercero",
+     "t": "s",
+     "sz": 12,
+     "req": 1,
+     "ro": 1,
+     "up": 1
+    },
+    {
+     "n": "terdes",
+     "l": "Tercero destino",
+     "t": "s",
+     "sz": 20,
+     "up": 1
+    }
+   ],
+   "pre": [
+    {
+     "si": "vacio(ent.terdes)",
+     "msg": "TypeError: Cannot read property 'toString' of null",
+     "tipo": "error",
+     "fuente": "demo"
+    },
+    {
+     "si": "existe('ctercero','codigo',ent.terdes)",
+     "msg": "Ya existe un tercero con código: [${ent.terdes}].",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "actualiza": {
+      "obj": "ctertipo",
+      "donde": [
+       "codigo",
+       "codigo"
+      ],
+      "set": {
+       "codigo": "ent.terdes"
+      }
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "cterdire",
+      "donde": [
+       "codigo",
+       "codigo"
+      ],
+      "set": {
+       "codigo": "ent.terdes"
+      }
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "cterbanc",
+      "donde": [
+       "codigo",
+       "codigo"
+      ],
+      "set": {
+       "codigo": "ent.terdes"
+      }
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "ctercobro",
+      "donde": [
+       "codigo",
+       "codigo"
+      ],
+      "set": {
+       "codigo": "ent.terdes"
+      }
+     }
+    },
+    {
+     "actualiza": {
+      "obj": "cterpago",
+      "donde": [
+       "codigo",
+       "codigo"
+      ],
+      "set": {
+       "codigo": "ent.terdes"
+      }
+     }
+    },
+    {
+     "set": {
+      "codigo": "ent.terdes",
+      "seqno": "siguiente('ctercero','seqno')"
+     }
+    },
+    {
+     "ir": {
+      "obj": "ctercero",
+      "clave": "ent.terdes"
+     }
+    }
+   ],
+   "nota": "Llama a cterceroCamcod(codigo, terdes): da de alta el tercero con el código nuevo (seqno nuevo), pasa sus hijos (relaciones contables observadas) y borra el antiguo; las cuentas contables (ccuentas 40000.<código antiguo>) NO se renombran. Abre la ficha del tercero nuevo. Con destino vacío falla (el tooltip promete un correlativo, pero la demo da TypeError)."
+  },
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "pasos": [
+    {
+     "set": {
+      "estado": "'A'"
+     }
+    }
+   ],
+   "nota": "Sin diálogo ni mensaje. Pasa a Validado (A) y crea las relaciones contables que falten según la categoría (ctipoter.codigo = codare): si ctipoter.cusrel no es nulo, ctertipo (codtip 'C', tiprel cusrel, placon 'ES', cuenta cuscta + '.' + codigo, aplret cusret?'S':'N'); si suprel no es nulo, ctertipo (codtip 'P', tiprel suprel, cuenta supcta + '.' + codigo). Cada cuenta nueva se crea también en ccuentas (placon ES, nombre = nombre del tercero, tipcta 'T', tipact 'A', activa 'IEV', poscta 'D', estado 'A'). Visto con CAPM1 (categoría 002): ctertipo P/PRO/ES/40000.CAPM1 y ccuentas 40000.CAPM1 a la misma hora que la validación. No exige relaciones previas: validó sin ninguna."
+  },
+  "BUT_CERRAR": {
+   "l": "Cerrar",
+   "dialogoTit": "Cerrar",
+   "dialogo": [
+    {
+     "n": "fecbaj",
+     "l": "Fecha baja",
+     "t": "d",
+     "req": 1,
+     "def": "TODAY"
+    },
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "x",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estado": "'C'",
+      "fecbaj": "ent.fecbaj",
+      "coment": "(vacio(coment) ? '' : coment + '\\n') + hoy().split('-').reverse().join('-') + ': ' + (typeof usuario!=='undefined' && usuario ? usuario : 'oys.jma') + ' - ' + ent.coment"
+     }
+    }
+   ],
+   "nota": "Solo con estado Validado (botón deshabilitado si no). Selección múltiple en la lista. Notas obligatoria: sin ella sale «Este campo es obligatorio.». Deja estado C, fecbaj = fecha del diálogo y añade a Notas la línea «dd-mm-aaaa: usuario - texto»."
+  },
+  "BUT_ACTIVAR": {
+   "l": "Activar",
+   "dialogoTit": "Activar",
+   "dialogo": [
+    {
+     "n": "coment",
+     "l": "Notas",
+     "t": "x",
+     "sz": 255,
+     "req": 1
+    }
+   ],
+   "pasos": [
+    {
+     "set": {
+      "estado": "'P'",
+      "fecbaj": "null",
+      "coment": "(vacio(coment) ? '' : coment + '\\n') + hoy().split('-').reverse().join('-') + ': ' + (typeof usuario!=='undefined' && usuario ? usuario : 'oys.jma') + ' - ' + ent.coment"
+     }
+    }
+   ],
+   "nota": "Habilitado si estado != 'P' (Validado o Cerrado). Vuelve a Provisional, borra la fecha de baja y añade la línea a Notas. Visto: C → P con «18-11-2026: oys.jma - CAP reactivar»."
+  }
+ },
+ "estados": {
+  "col": "estado",
+  "trans": [
+   {
+    "de": [
+     "P"
+    ],
+    "a": "A",
+    "por": "BUT_VALIDAR"
+   },
+   {
+    "de": [
+     "A"
+    ],
+    "a": "C",
+    "por": "BUT_CERRAR"
+   },
+   {
+    "de": [
+     "A",
+     "C"
+    ],
+    "a": "P",
+    "por": "BUT_ACTIVAR"
+   },
+   {
+    "de": [
+     "A",
+     "C"
+    ],
+    "a": "P",
+    "por": "alta de una fila en Relaciones (ctertipo), Direcciones (cterdire) o Datos bancarios (cterbanc): su TRANSACTION_INSERT_AFTER hace UPDATE ctercero SET estado='P'"
+   }
+  ]
+ },
+ "notas": [
+  "Solo se puede modificar un tercero Provisional (P): con estado A o C la fila llega con security [false,true] (no editable, sí borrable) y la ficha sale en gris.",
+  "Alta («Añadir tercero») en diálogo de ficha completa TERCEROS con Cancelar/Guardar. Sin obligatorios sale «Hay errores en los datos del formulario» y «Este campo es obligatorio.» bajo País emisor, Nombre, Tipo ID fiscal, Id. fiscal y Categoría (crudo t5).",
+  "Tipo ID fiscal es solo lectura hasta rellenar País emisor (readonly_expr !cifiss).",
+  "Id. fiscal: validateVAT (input_functionBody) solo comprueba ciftyp 0 con país ES y ciftyp 1-3; ciftyp >= 4 no se valida. La regla de la réplica solo cubre NIF/NIE/CIF españoles.",
+  "Cif already exists! es un toast de AVISO (no bloquea) del evento after_column_server de cif (crudo t27.14).",
+  "Dejar Tercero vacío no genera código: el INSERT falla con Unique constraint (informix.p_ctercero) violated. (crudo t39.15).",
+  "Al guardar el alta no se crean relaciones: las crea Validar. La pestaña Workflow toma ctipoter.tipwkf (TER para 002).",
+  "Borrar un tercero sin movimientos con relaciones, direcciones y bancos NO da error: confirma «¿Estás seguro que quieres eliminar el registro 'CAP maestros 1' ?» y borra en cascada ctertipo, cterdire y cterbanc; las ccuentas creadas quedan.",
+  "Los pasos de Validar no se pueden expresar sin condición (CompPaso no tiene 'si'): la creación de ctertipo/ccuentas por categoría va en la nota del botón.",
+  "Validar se habilita con estado != 'A', Cerrar con estado == 'A' y Activar con estado != 'P' (clientExpression, ya en obj/ctercero.json): la demo deshabilita el botón, no da mensaje.",
+  "En el mensaje de Ya existe un tercero con código el motor debe sustituir ${ent.terdes} por el Tercero destino escrito en el diálogo.",
+  "probado: Validar (t14, P→A y crea ctertipo/ccuentas 40000.CAPM1), Cerrar (t19/t20, A→C), Activar (t21/t22, C→P), Cambiar código (t23–t25: destino vacío → TypeError, destino existente → «Ya existe un tercero…», destino nuevo → ficha nueva). Sin botones sin probar."
+ ]
+}

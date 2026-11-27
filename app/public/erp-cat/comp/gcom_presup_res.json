@@ -1,0 +1,123 @@
+{
+ "c": "gcom_presup_res",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "docser": {
+   "reqSi": "!(context.isOnInsert())",
+   "ro": "context.isOnUpdate()",
+   "mayus": 1
+  },
+  "fecha": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "tipdoc": {
+   "req": 1,
+   "ro": "context.isOnUpdate()",
+   "mayus": 1,
+   "lov": {
+    "obj": "gcom_presup_res_doc",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "delega": {
+   "mayus": 1,
+   "lov": {
+    "obj": "gdelegac",
+    "clave": "codigo"
+   }
+  },
+  "depart": {
+   "ro": "delega == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "gdeparta",
+    "clave": "depart",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tercer": {
+   "lov": {
+    "obj": "gproveed",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "fecini": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "divisa": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo"
+   }
+  },
+  "cambio": {
+   "req": 1
+  },
+  "indmod": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "S",
+   "mayus": 1
+  },
+  "estcab": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "P",
+   "mayus": 1
+  },
+  "estado": {
+   "req": 1,
+   "ro": "1==1",
+   "def": "N",
+   "mayus": 1
+  },
+  "valpen": {
+   "ro": "1==1"
+  },
+  "impmax": {
+   "ro": "context.isOnUpdate()",
+   "def": 0
+  }
+ },
+ "botones": {
+  "BUT_TO_PROVISIONAL": {
+   "l": "Pasar a provisional",
+   "nota": "Activo si estcab != 'P'  && (estado == 'N' || estado == 'P'); condición de servidor"
+  },
+  "BTN_DONE": {
+   "l": "Realizar",
+   "nota": "Activo si estado == 'P' && estcab == 'V'"
+  },
+  "BUT_ANULAR": {
+   "l": "Anular",
+   "nota": "Activo si estado == 'N' && impacu == 0 && estcab != 'P'"
+  },
+  "BUT_VALIDAR": {
+   "l": "Validar",
+   "nota": "Activo si estcab != 'V'"
+  }
+ },
+ "notas": [
+  "Estados de estcab: P=Provisional, E=Bloqueado, V=Validado",
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

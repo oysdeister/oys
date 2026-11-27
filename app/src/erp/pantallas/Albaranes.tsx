@@ -18,6 +18,7 @@ import {
   Seccion,
   Totales,
   type Accion,
+  avisoGuardarAntes,
 } from '../ui';
 import { useAccionesCatalogo, useEnlacesCatalogo } from '../catalogo/extra';
 
@@ -25,7 +26,7 @@ export default function Albaranes() {
   const extraAcc = useAccionesCatalogo('gcomalbh');
   const extraMenu = useEnlacesCatalogo('gcomalbh');
   const db = useDb();
-  const { ini, clave, ir, hacer, noDisp } = useErp();
+  const { ini, clave, ir, hacer, noDisp, aviso } = useErp();
 
   const albaranes = [...db.albaranes].sort((a, b) => b.numero.localeCompare(a.numero));
 
@@ -97,10 +98,14 @@ export default function Albaranes() {
 
   const guardar = () => {
     const r = erp.guardarAlbaran(borrador, ini);
-    hacer(r, 'Albarán guardado');
+    if (!hacer(r, 'Albarán guardado') && !r.ok && /^Línea \d+/.test(r.error)) setTab('lineas');
   };
 
   const validar = () => {
+    if (dirty) {
+      aviso('error', avisoGuardarAntes('Validar'));
+      return;
+    }
     const r = erp.estadoAlbaran(registro.numero, 'Validado', ini);
     hacer(r, 'Albarán validado. Stock actualizado.');
   };
@@ -144,7 +149,7 @@ export default function Albaranes() {
   if (!isTutorial) {
     if (registro.estado === 'Provisional') {
       acciones.push({ label: 'Guardar', tipo: 'primario', onClick: guardar });
-      acciones.push({ label: 'Validar', tipo: 'proceso', onClick: validar, disabled: dirty });
+      acciones.push({ label: 'Validar', tipo: 'proceso', onClick: validar, title: dirty ? 'Guarda los cambios antes de validar' : undefined });
       acciones.push({ label: 'Borrar', tipo: 'peligro', onClick: borrar });
     } else if (registro.estado === 'Validado') {
       if (!factura) {

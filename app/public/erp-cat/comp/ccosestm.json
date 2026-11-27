@@ -1,0 +1,166 @@
+{
+ "c": "ccosestm",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST)",
+ "area": "contabilidad",
+ "campos": {
+  "codest": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosestc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomest",
+     "tipest",
+     "uniclas"
+    ],
+    "desc": "nomest"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(codest) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codest)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codest",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctaexp": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosexpl",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomexp"
+    ],
+    "desc": "nomexp"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctaexp) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(ctaexp)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctaexp",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "centro": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccosdesc",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomcen",
+     "estado",
+     "refcen"
+    ],
+    "desc": "nomcen"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(centro) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(centro)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "centro",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fecha": {
+   "req": 1,
+   "mayus": 1
+  },
+  "numero": {
+   "req": 1,
+   "def": 0
+  },
+  "rowid": {
+   "ro": "1==1"
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((((!(ctaexp == null || ctaexp.length === 0)) && (!(centro == null || centro.length === 0))) || (((ctaexp == null || ctaexp.length === 0)) && ((centro == null || centro.length === 0)))))",
+   "msg": "Emisor, tipo e identificación fiscal , todos nulos o todos no nulos.",
+   "tipo": "error",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Ruta: Finanzas › Costes › Maestros › Movimientos estadísticos",
+  "Permisos: alta no, modificar sí, borrar sí."
+ ]
+}

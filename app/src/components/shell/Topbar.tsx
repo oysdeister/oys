@@ -3,8 +3,10 @@ import { Cuenta } from '../../auth/Cuenta';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icon } from '../Icon';
-import { Anillo } from './Anillo';
-import { META, getEjercicio, getModulo, todosEjercicios } from '../../content';
+import { META, getEjercicio, getModulo } from '../../content';
+import { buscar, TIPOS } from '../../lib/buscar';
+import { conIni } from '../../lib/texto';
+import './buscador.css';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal } from '../../lib/avance';
 
@@ -19,11 +21,16 @@ const SECCIONES: Record<string, string> = {
   taller: 'Taller',
   video: 'Vídeos',
   glosario: 'Glosario',
+  errores: 'Errores',
   logros: 'Logros',
-  examen: 'Examen',
+  examen: 'Examen final',
   certificado: 'Certificado',
   examinador: 'Panel del examinador',
+  formacion: 'Formación previa',
 };
+
+/** Apartados de la formación previa (pages/previa) */
+const PREVIA: Record<string, string> = { contabilidad: 'Conceptos de contabilidad general', erp: 'Qué es un ERP' };
 
 export function migasDe(pathname: string): Miga[] {
   const [, a, b] = pathname.split('/');
@@ -35,20 +42,20 @@ export function migasDe(pathname: string): Miga[] {
   }
   if (a === 'ejercicio' && b) {
     const r = getEjercicio(b);
-    if (!r) return [inicio, { label: 'Ejercicio' }];
+    if (!r) return [inicio, { label: 'Bloque' }];
     const meta = META[r.modulo.id];
     return [inicio, { label: meta?.corto ?? r.modulo.titulo, to: `/modulo/${r.modulo.id}`, color: meta?.color }, { label: r.ejercicio.titulo }];
+  }
+  if (a === 'formacion') {
+    const previa: Miga = { label: 'Formación previa', to: '/formacion' };
+    if (!b) return [inicio, { label: 'Formación previa' }];
+    const guia: Miga = { label: PREVIA[b] ?? 'Guía', to: `/formacion/${b}` };
+    return pathname.endsWith('/examen') ? [inicio, previa, guia, { label: 'Examen' }] : [inicio, previa, { label: guia.label }];
   }
   const nombre = SECCIONES[a] ?? 'Inicio';
   if (b && (a === 'taller' || a === 'video')) return [inicio, { label: nombre, to: `/${a}` }, { label: a === 'video' ? `Capítulo ${b}` : 'Simulador' }];
   return [inicio, { label: nombre }];
 }
-
-const normal = (s: string) =>
-  s
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
 
 function Buscador() {
   const [q, setQ] = useState('');
@@ -56,12 +63,14 @@ function Buscador() {
   const [sel, setSel] = useState(0);
   const ref = useRef<HTMLInputElement>(null);
   const nav = useNavigate();
-  const todos = useMemo(() => todosEjercicios(), []);
-  const res = useMemo(() => {
-    const t = normal(q.trim());
-    if (!t) return [];
-    return todos.filter(({ ejercicio, modulo }) => normal(`${ejercicio.titulo} ${ejercicio.objetivo} ${modulo.titulo}`).includes(t)).slice(0, 8);
-  }, [q, todos]);
+  const ini = useProgreso().alumno.ini;
+  // el índice se construye la primera vez que se busca; la búsqueda se retrasa un instante al teclear
+  const [qBusca, setQBusca] = useState('');
+  useEffect(() => {
+    const id = window.setTimeout(() => setQBusca(q), q ? 80 : 0);
+    return () => window.clearTimeout(id);
+  }, [q]);
+  const res = useMemo(() => buscar(qBusca, 30), [qBusca]);
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
@@ -74,8 +83,8 @@ function Buscador() {
     return () => window.removeEventListener('keydown', k);
   }, []);
 
-  const ir = (id: string) => {
-    nav(`/ejercicio/${id}`);
+  const ir = (to: string) => {
+    nav(to);
     setQ('');
     setAbierto(false);
     ref.current?.blur();
@@ -87,8 +96,13 @@ function Buscador() {
       <input
         ref={ref}
         type="search"
-        placeholder="Buscar un ejercicio"
-        aria-label="Buscar un ejercicio"
+        placeholder="Buscar en el curso"
+        aria-label="Buscar en bloques, secciones, errores y glosario"
+        role="combobox"
+        aria-expanded={abierto && !!q.trim()}
+        aria-controls="tb-resultados"
+        aria-activedescendant={res[sel] ? `tb-res-${sel}` : undefined}
+        aria-autocomplete="list"
         value={q}
         onChange={(e) => {
           setQ(e.target.value);
@@ -105,7 +119,7 @@ function Buscador() {
             e.preventDefault();
             setSel((s) => Math.max(s - 1, 0));
           } else if (e.key === 'Enter' && res[sel]) {
-            ir(res[sel].ejercicio.id);
+            ir(res[sel].to);
           } else if (e.key === 'Escape') {
             setQ('');
             ref.current?.blur();
@@ -114,25 +128,30 @@ function Buscador() {
       />
       <kbd>⌘K</kbd>
       {abierto && q.trim() && (
-        <motion.div className="tb-results" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
-          {res.length === 0 && <p className="muted">No hay ejercicios con «{q.trim()}». Prueba con «pedido», «factura» o «asiento».</p>}
-          {res.map(({ ejercicio, modulo }, i) => (
+        <motion.div className="tb-results" id="tb-resultados" role="listbox" aria-label="Resultados" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
+          {res.length === 0 && qBusca === q && <p className="muted">No hay nada con «{q.trim()}». Prueba con «pedido», «factura» o «asiento».</p>}
+          {res.map((r, i) => (
             <a
-              key={ejercicio.id}
-              href={`#/ejercicio/${ejercicio.id}`}
+              key={`${r.to}-${i}`}
+              id={`tb-res-${i}`}
+              role="option"
+              aria-selected={i === sel}
+              href={`#${r.to}`}
               className={i === sel ? 'sel' : undefined}
-              style={{ ['--mod' as string]: META[modulo.id]?.color } as CSSProperties}
+              style={{ ['--mod' as string]: META[r.modulo]?.color } as CSSProperties}
               onMouseDown={(e) => {
                 e.preventDefault();
-                ir(ejercicio.id);
+                ir(r.to);
               }}
             >
               <span className="dot" />
-              <span>
-                <b>{ejercicio.titulo}</b>
-                <small>
-                  {META[modulo.id]?.corto ?? modulo.titulo} · ejercicio {ejercicio.numero}
-                </small>
+              <span className="tb-res-txt">
+                <b>
+                  <em className={`tb-tipo ${r.tipo}`}>{TIPOS[r.tipo]}</em>
+                  {conIni(r.titulo, ini)}
+                </b>
+                {r.fragmento && <span className="tb-frag">{conIni(r.fragmento, ini)}</span>}
+                <small>{r.donde}</small>
               </span>
             </a>
           ))}
@@ -142,14 +161,14 @@ function Buscador() {
   );
 }
 
-export function Topbar({ onMenu }: { onMenu: () => void }) {
+export function Topbar({ onMenu, abierto = false }: { onMenu: () => void; abierto?: boolean }) {
   const loc = useLocation();
   const p = useProgreso();
   const pct = avanceGlobal(p);
   const migas = migasDe(loc.pathname);
   return (
-    <header className="tb">
-      <button type="button" className="tb-menu" onClick={onMenu} aria-label="Abrir menú" aria-controls="barra-lateral">
+    <header className="tb gtb">
+      <button type="button" className="tb-menu" onClick={onMenu} aria-label="Abrir menú" aria-controls="barra-lateral" aria-expanded={abierto}>
         <Icon name="menu" size={24} />
       </button>
       <Link to="/" className="tb-logo" aria-label="Inicio">
@@ -175,13 +194,12 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
       <div className="tb-right">
         <Buscador />
         <Link to="/logros" className="tb-progress" aria-label={`Progreso del curso: ${Math.round(pct * 100)} %`}>
-          <Anillo valor={pct} size={34} grosor={4} />
+          <span className="gtb-barra" aria-hidden="true">
+            <i style={{ width: `${pct * 100}%` }} />
+          </span>
           {Math.round(pct * 100)} %
         </Link>
         <Cuenta />
-      </div>
-      <div className="meter top-meter" aria-hidden="true">
-        <motion.i initial={false} animate={{ width: `${pct * 100}%` }} transition={{ type: 'spring', stiffness: 60, damping: 18 }} />
       </div>
     </header>
   );

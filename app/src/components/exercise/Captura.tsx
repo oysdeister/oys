@@ -1,4 +1,5 @@
-import { useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import type { Hotspot } from '../../types';
 
@@ -8,36 +9,79 @@ export interface Marca {
   y: number;
 }
 
-/** Captura real del ERP sobre la que se hace clic. Devuelve el punto en % de la imagen. */
+/** Captura real del ERP sobre la que se hace clic. Devuelve el punto en % de la imagen.
+ * Con «ampliable», una lupa la abre casi a pantalla completa; ahí también se puede hacer clic. */
 export function Captura({
   src,
   alt,
   onPunto,
   children,
   clicable = true,
+  ampliable = false,
+  instruccion,
 }: {
   src: string;
   alt: string;
   onPunto?: (x: number, y: number) => void;
   children?: ReactNode;
   clicable?: boolean;
+  ampliable?: boolean;
+  /** Se repite arriba de la captura ampliada */
+  instruccion?: string;
 }) {
+  const [grande, setGrande] = useState(false);
+  useEffect(() => {
+    if (!grande) return;
+    const f = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setGrande(false); } };
+    window.addEventListener('keydown', f, true);
+    const o = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', f, true); document.body.style.overflow = o; };
+  }, [grande]);
+  const marco = (zoom: boolean) => (
+    <Marco src={src} alt={alt} clicable={clicable} onPunto={onPunto ? (x, y) => { onPunto(x, y); } : undefined} zoom={zoom}>
+      {children}
+    </Marco>
+  );
+  return (
+    <div className={`shot${ampliable ? ' shot-amp' : ''}`}>
+      {marco(false)}
+      {ampliable && (
+        <button type="button" className="shot-lupa" onClick={() => setGrande(true)} aria-label="Ampliar la captura" title="Ampliar la captura">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" /><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" /></svg>
+          <span>Ampliar</span>
+        </button>
+      )}
+      {grande &&
+        createPortal(
+          <div className="shot-zoom" role="dialog" aria-modal="true" aria-label="Captura ampliada" onClick={() => setGrande(false)}>
+            <div className="shot-zoom-cab" onClick={(e) => e.stopPropagation()}>
+              <span>{instruccion && <b className="shot-zoom-instr">{instruccion}</b>}{clicable ? 'Puedes hacer clic aquí mismo. Esc o «Cerrar» para volver.' : 'Esc o «Cerrar» para volver.'}</span>
+              <button type="button" className="btn sm" onClick={() => setGrande(false)} autoFocus>Cerrar</button>
+            </div>
+            <div className="shot-zoom-in" onClick={(e) => e.stopPropagation()}>{marco(true)}</div>
+          </div>,
+          document.body,
+        )}
+    </div>
+  );
+}
+
+function Marco({ src, alt, clicable, onPunto, zoom, children }: { src: string; alt: string; clicable: boolean; onPunto?: (x: number, y: number) => void; zoom: boolean; children?: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   return (
-    <div className="shot">
-      <div
-        ref={ref}
-        className={`shot-frame${clicable ? '' : ' no-click'}`}
-        onPointerUp={(e) => {
-          if (!clicable || !onPunto || !ref.current) return;
-          if (e.pointerType === 'mouse' && e.button !== 0) return;
-          const r = ref.current.getBoundingClientRect();
-          onPunto(((e.clientX - r.left) / r.width) * 100, ((e.clientY - r.top) / r.height) * 100);
-        }}
-      >
-        <img src={src} alt={alt} draggable={false} />
-        {children}
-      </div>
+    <div
+      ref={ref}
+      className={`shot-frame${clicable ? '' : ' no-click'}${zoom ? ' shot-frame-zoom' : ''}`}
+      onPointerUp={(e) => {
+        if (!clicable || !onPunto || !ref.current) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        const r = ref.current.getBoundingClientRect();
+        onPunto(((e.clientX - r.left) / r.width) * 100, ((e.clientY - r.top) / r.height) * 100);
+      }}
+    >
+      <img src={src} alt={alt} draggable={false} />
+      {children}
     </div>
   );
 }

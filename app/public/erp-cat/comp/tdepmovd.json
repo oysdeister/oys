@@ -1,0 +1,233 @@
+{
+ "c": "tdepmovd",
+ "fecha": "2026-11-18 tesoreria/D-caja-financiacion",
+ "area": "tesoreria",
+ "campos": {
+  "regid": {
+   "ro": "true"
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(empcode))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctafin": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "cols": [
+     "ctafin",
+     "nomcta"
+    ],
+    "desc": "nomcta",
+    "filtro": "(vacio(empcode) || l.empcode == empcode)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctafin) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctafin))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctafin",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ctadep": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "filtro": "(vacio(empcode) || l.empcode == empcode) && (vacio(codtip) || l.codtip == codtip)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(ctadep) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(ctadep))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "ctadep",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opedeb": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "cols": [
+     "opefin",
+     "nomope",
+     "debhab",
+     "codflu"
+    ],
+    "desc": "nomope",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(opedeb) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(opedeb))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opedeb",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fludeb": {
+   "mayus": 1,
+   "lov": {
+    "obj": "tflujfin",
+    "clave": "codflu",
+    "cols": [
+     "codflu",
+     "nomflu",
+     "debhab"
+    ],
+    "desc": "nomflu",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(fludeb) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(fludeb))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "fludeb",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opehab": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "cols": [
+     "opefin",
+     "nomope",
+     "debhab",
+     "codflu"
+    ],
+    "desc": "nomope",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(opehab) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(opehab))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opehab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fluhab": {
+   "mayus": 1,
+   "lov": {
+    "obj": "tflujfin",
+    "clave": "codflu",
+    "cols": [
+     "codflu",
+     "nomflu",
+     "debhab"
+    ],
+    "desc": "nomflu",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(fluhab) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(fluhab))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "fluhab",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "opeint": {
+   "req": 1,
+   "ro": "codtip == null",
+   "mayus": 1,
+   "lov": {
+    "obj": "toperfin",
+    "clave": "opefin",
+    "filtro": "(vacio(codtip) || l.codtip == codtip)",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(opeint) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(opeint))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "opeint",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "fluint": {
+   "mayus": 1,
+   "lov": {
+    "obj": "tflujfin",
+    "clave": "codflu",
+    "cols": [
+     "codflu",
+     "nomflu",
+     "debhab"
+    ],
+    "desc": "nomflu",
+    "noExiste": "Error en la validación"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(fluint) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(fluint))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "fluint",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codtip": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codtip) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(String(codtip))",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codtip",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "notas": [
+  "Captura sobre TUTORIAL: lista 'TIPOLOGIA CUENTAS DE PRESTAMOS Y DEPÓSITOS', editMode CELL, 0 filas en la demo; permisos insert=True update=True delete=True.",
+  "no probado: altas/errores — solo metadatos (tabla vacía). Sin botones."
+ ]
+}

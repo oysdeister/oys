@@ -1,0 +1,159 @@
+{
+ "c": "cctasal_agrs",
+ "fecha": "2026-11-18 contabilidad/jefe (metadatos REST + demo fase 1b, manual)",
+ "area": "contabilidad",
+ "campos": {
+  "codgrp": {
+   "req": 1,
+   "lov": {
+    "obj": "ccuentas_agruph",
+    "clave": "codgrp",
+    "cols": [
+     "codgrp",
+     "nomgrp"
+    ],
+    "desc": "nomgrp"
+   }
+  },
+  "empcode": {
+   "req": 1,
+   "mayus": 1,
+   "def": "0",
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname",
+     "cif"
+    ],
+    "desc": "empname"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "moneda": {
+   "req": 1,
+   "mayus": 1,
+   "def": "EUR",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "desmon"
+    ],
+    "desc": "desmon"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(moneda) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(moneda)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "moneda",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "sistem": {
+   "req": 1,
+   "mayus": 1,
+   "def": "A",
+   "lov": {
+    "obj": "csistema",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsis"
+    ],
+    "desc": "nomsis"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(sistem) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(sistem)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "sistem",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "proyec": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cproyect",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nompro",
+     "seccio"
+    ],
+    "desc": "nompro"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(proyec) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(proyec)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "proyec",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "seccio": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cseccion",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomsec"
+    ],
+    "desc": "nomsec"
+   },
+   "reglas": [
+    {
+     "si": "!vacio(seccio) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(seccio)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "seccio",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "ejerci": {
+   "req": 1,
+   "lov": {
+    "obj": "cejercic",
+    "clave": "numero"
+   }
+  },
+  "period": {
+   "req": 1,
+   "lov": {
+    "obj": "cperiodo",
+    "clave": "codigo"
+   }
+  },
+  "ejeper": {
+   "req": 1
+  },
+  "import": {
+   "req": 1
+  }
+ },
+ "notas": [
+  "Ruta: Finanzas › Contabilidad General › Saldos › Saldos agrupados",
+  "Permisos: alta no, modificar sí, borrar sí.",
+  "Probado en la demo: tabla vacía en TUTORIAL (se llena con «Generar saldos agrupados», no ejecutado), sin botones, sin alta, sin menú ⌄. probado: lista vacía."
+ ]
+}

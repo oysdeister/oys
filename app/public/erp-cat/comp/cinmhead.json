@@ -1,0 +1,165 @@
+{
+ "c": "cinmhead",
+ "fecha": "2026-11-18",
+ "area": "activos",
+ "campos": {
+  "empcode": {
+   "def": "0",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(empcode) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(empcode)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "empcode",
+     "fuente": "meta"
+    }
+   ],
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "cols": [
+     "empcode",
+     "empname"
+    ],
+    "desc": "empname"
+   }
+  },
+  "codinm": {
+   "req": 1,
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!vacio(codinm) && !/^([A-Z0-9]+)([A-Z0-9._&\\-\\s\\/])*$/.test(codinm)",
+     "msg": "El texto contiene caracteres no admitidos",
+     "tipo": "error",
+     "campo": "codinm",
+     "fuente": "meta"
+    }
+   ]
+  },
+  "codgrp": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmgrps",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgrp"
+    ],
+    "desc": "nomgrp"
+   }
+  },
+  "codcta": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmctas",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "descri"
+    ],
+    "desc": "descri"
+   }
+  },
+  "codgru": {
+   "req": 1,
+   "mayus": 1,
+   "lov": {
+    "obj": "cinmfgrp",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomgru"
+    ],
+    "desc": "nomgru"
+   }
+  },
+  "codfis": {
+   "req": 1,
+   "lov": {
+    "obj": "cinmftab",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomfis",
+     "porcen",
+     "numeje"
+    ],
+    "desc": "nomfis",
+    "filtro": "l.codgrp == codgru"
+   }
+  },
+  "serele": {
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "desc": "mask_name"
+   }
+  },
+  "estcom": {
+   "def": "A",
+   "mayus": 1,
+   "reglas": [
+    {
+     "si": "!(((estcom == null || ['A','C','N','F'].includes(estcom))))",
+     "msg": "Estado de componentes [A] activo, [C] en curso, [N] no amortiza, o [F] fuera de servicio",
+     "tipo": "error",
+     "campo": "estcom",
+     "fuente": "meta"
+    }
+   ]
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "__ins && existe('cinmhead','codinm',codinm)",
+   "msg": "Unique constraint (informix.p_cinmhead) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "!existe('cinmgrps','codigo',codgrp)",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmhead2).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codgrp"
+  },
+  {
+   "si": "!existe('cinmftab','codigo',codfis) || busca('cinmftab','codigo',codfis,'codgrp') != codgru",
+   "msg": "Missing key in referenced table for referential constraint (informix.f_cinmhead4).",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "codfis"
+  },
+  {
+   "si": "!['A','C','N','F'].includes(estcom)",
+   "msg": "Check constraint (informix.c_cinmhead1) failed.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cinmelem','codinm',codinm)",
+   "msg": "Key value for constraint (informix.p_cinmhead) is still being referenced.",
+   "tipo": "error",
+   "fuente": "deducido"
+  }
+ ],
+ "notas": [
+  "Ficha (dispatch/cinmhead abre directamente la ficha si hay 1 bien): cajas Datos, Información auxiliar, Observaciones, Cuentas (6 cuentas del grupo contable, solo lectura) y subrejillas Elementos (cinmelem), Valores de los elementos, Activos por bién (árbol) y Cuadro amortización.",
+  "La serie de elemento (serele) es un numerador cjusnumh: el código del elemento que crea la factura sale de él (serie AP → elemento AP026-0000). La demo NO valida la serie: se guardó el bien CAPMX con serie ZZ inexistente.",
+  "Sin botones propios. Estado componentes: A Activo, C Obra en curso, N No amortiza, F Fuera servicio (estado propuesto a los componentes nuevos).",
+  "Errores de servidor de Axional: salen en un aviso rojo (alta/modificación) o en el diálogo «Se ha producido un error» con «ID: n» (borrado). Obligatorios y longitud los valida el cliente: «Este campo es obligatorio.» y «Demasiado largo.».",
+  "Numerador de la serie: la serie AP (#d#e#yy-#n, 6 dígitos) genera 12 caracteres y el código de elemento (10) se trunca a «AP026-0000»: la 2.ª factura de activos con esa serie falla con «Unique constraint (informix.p_cinmelem) violated.» (probado con 0FC000012; se cambió la familia CAPAF a la serie ELE → elemento 0000001).",
+  "probado: sin botones propios (alta, duplicado, FK y borrado probados por API)"
+ ]
+}

@@ -1,0 +1,261 @@
+{
+ "c": "textract_concil_taptcuen_vtab",
+ "fecha": "2026-11-18 tesoreria/C-tesoreria",
+ "area": "tesoreria",
+ "campos": {
+  "fecini": {
+   "req": 1,
+   "def": "2026-01-01"
+  },
+  "fecfin": {
+   "req": 1,
+   "defExpr": "hoy()"
+  },
+  "empcode": {
+   "req": 1,
+   "lov": {
+    "obj": "cempresa",
+    "clave": "empcode",
+    "noExiste": "Error en la validación",
+    "desc": "empname"
+   }
+  },
+  "ctafin": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "cbancpro",
+    "clave": "ctafin",
+    "noExiste": "Error en la validación",
+    "cols": [
+     "ctafin",
+     "nomcta",
+     "iban"
+    ],
+    "desc": "nomcta"
+   }
+  },
+  "moneda": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "cmonedas",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "concom": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "tconcomu",
+    "clave": "codigo",
+    "noExiste": "Error en la validación",
+    "desc": "nomcom"
+   }
+  },
+  "conpro": {
+   "req": 1,
+   "def": "*",
+   "lov": {
+    "obj": "tconprop",
+    "clave": "codpro",
+    "noExiste": "Error en la validación",
+    "desc": "nompro"
+   }
+  },
+  "impini": {
+   "req": 1,
+   "def": -999999999
+  },
+  "impfin": {
+   "req": 1,
+   "def": 999999999
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(empcode)",
+   "msg": "Campo requerido",
+   "tipo": "error",
+   "fuente": "demo",
+   "campo": "empcode"
+  }
+ ],
+ "botones": {
+  "BUT_CANCEL_EXT": {
+   "l": "Cancelar extractos",
+   "pre": [
+    {
+     "si": "(ent.sumaSel || 0) != 0",
+     "msg": "Imposible cancelar registros con saldo distinto de cero.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "nota": "Selección múltiple de extractos pendientes; sin confirmación. Con un extracto de 33,33 seleccionado: «Imposible cancelar registros con saldo distinto de cero.» (pensado para cancelar entre sí apuntes que suman cero)."
+  },
+  "BUT_GENERAR": {
+   "l": "Generar tesorería",
+   "dialogoTit": "Generar tesorería",
+   "dialogo": [
+    {
+     "n": "debhab",
+     "l": "Posición",
+     "t": "s",
+     "req": 1,
+     "o": [
+      {
+       "k": "D",
+       "v": "Entrada"
+      },
+      {
+       "k": "H",
+       "v": "Salida"
+      }
+     ]
+    },
+    {
+     "n": "opefin",
+     "l": "Operación financiera",
+     "t": "s",
+     "req": 1,
+     "fk": "toperfin"
+    },
+    {
+     "n": "codflu",
+     "l": "Flujo",
+     "t": "s",
+     "fk": "tflujfin"
+    },
+    {
+     "n": "proyec",
+     "l": "Proyecto",
+     "t": "s",
+     "fk": "cproyect"
+    },
+    {
+     "n": "seccio",
+     "l": "Sección",
+     "t": "s",
+     "fk": "cseccion"
+    }
+   ],
+   "pre": [
+    {
+     "si": "(ent.selExtracto || []).length == 0",
+     "msg": "Error: Deben de seleccionarse movimientos de extractos",
+     "tipo": "error",
+     "fuente": "deducido"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "taptcuen",
+      "valores": {
+       "empcode": "empcode",
+       "ctafin": "ctafin",
+       "impcta": "ent.debhab == 'H' ? -Math.abs(ext.import) : Math.abs(ext.import)",
+       "debhab": "ent.debhab",
+       "opefin": "ent.opefin",
+       "fecope": "ext.fecope",
+       "fecval": "ext.fecval",
+       "refban": "ext.docume",
+       "notobs": "((ext.refer1||'') + ' ' + (ext.concep||'')).toUpperCase()",
+       "origen": "'X'",
+       "tipmov": "'R'",
+       "estcab": "1",
+       "audtes": "'S'",
+       "audcon": "'N'",
+       "proyec": "ent.proyec || '0'",
+       "seccio": "ent.seccio || '0'",
+       "sistem": "'A'"
+      }
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "Abre en ventana modal el movimiento creado (table/taptcuen ?apteid=<nuevo>)"
+     }
+    }
+   ],
+   "nota": "Sobre el extracto seleccionado. Aceptar vacío: «Este campo es obligatorio.» en Posición y Operación financiera; operación inexistente: «Error en la validación». Probado con extracto 5 (33,33), Salida, ACADOP: crea taptcuen 3 (origen X, impcta -33,33, H, refban = documento CAPC0001, notobs «CAPC REF1 CAP C EXTRACTO PRUEBA», estcab 1, audtes S, clase P, accion CONB) Y lo concilia en el acto (nuevo tconcili 3, extracto y movimiento con concid 3). Respuesta: OpenUrl modal al movimiento."
+  },
+  "BUT_CONCILIAR_IMPAG": {
+   "l": "Conciliar impagados",
+   "pre": [
+    {
+     "si": "(ent.selImpagados || []).length == 0",
+     "msg": "Error: No se han seleccionado Efectos impagados.",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "nota": "Abre diálogo de campos solo si hay efectos impagados seleccionados (pestaña Efectos impagados). Sin selección: el propio diálogo devuelve el error. No probado con efectos (serían datos ajenos)."
+  },
+  "BUT_CONCILIAR_CEFECT": {
+   "l": "Conciliar cartera",
+   "pre": [
+    {
+     "si": "(ent.selEfectos || []).length == 0",
+     "msg": "Error: Deben de seleccionarse efectos",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "nota": "Requiere efectos marcados en «Selección de efectos». No probado con efectos (ajenos)."
+  },
+  "BUT_CONCILIAR": {
+   "l": "Conciliar banco",
+   "pre": [
+    {
+     "si": "(ent.selExtracto || []).length == 0",
+     "msg": "Error: Deben de seleccionarse movimientos de extractos",
+     "tipo": "error",
+     "fuente": "demo"
+    },
+    {
+     "si": "(ent.selTesoreria || []).length == 0",
+     "msg": "Error: Deben de seleccionarse movimientos de tesorería",
+     "tipo": "error",
+     "fuente": "demo"
+    },
+    {
+     "si": "Math.abs((sumaExt + sumaTes) / sumaTes * 100) > busca('titescfg','rowid',257,'pordif')",
+     "msg": "Porcentaje de diferencia entre importes [${dif}] mayor que el porcentaje permitido [0.00].",
+     "tipo": "error",
+     "fuente": "demo"
+    }
+   ],
+   "pasos": [
+    {
+     "crea": {
+      "obj": "tconcili",
+      "valores": {
+       "concid": "siguiente('tconcili','concid')"
+      }
+     }
+    },
+    {
+     "msg": {
+      "tipo": "info",
+      "texto": "textract.concid y taptcuen.concid de las filas seleccionadas = nuevo concid"
+     }
+    }
+   ],
+   "nota": "Sin confirmación ni mensaje de éxito (respuesta vacía, refresca el cursor). Probado: extracto 5 (33,33) + movimiento manual 6 (-33,33) → tconcili 4 y concid 4 en ambos. Con extracto 6 (10,00) + movimiento 6 (-33,33): «Porcentaje de diferencia entre importes [-69.9969996999700000] mayor que el porcentaje permitido [0.00].» (tolerancia titescfg.pordif = 0)."
+  }
+ },
+ "notas": [
+  "Es un QBE (type 3) que abre vtable/textract_concil_taptcuen_vtab/form/1. Variables: Fecha inicio (01-01-2026), Fecha fin (hoy), Empresa (select, obligatoria: «Campo requerido»), Cuenta financiera, Moneda, Concepto común y Concepto propio (por defecto *), Importe inicial -999999999, Importe final 999999999.",
+  "Cabecera (script HTML) por cuenta: Empresa, Cuenta financiera, IBAN, Moneda, Proyecto, Sección, Fecha extracto, Saldo extracto.",
+  "Pestañas: Gestión tesorera | Previsiones no validadas | Previsiones no auditadas tesorero (estas dos con la rejilla taptcuen_valida_vtab).",
+  "Gestión tesorera: izquierda Extracto pendiente (textract_noconcil_vtab, multiselección) / Extracto conciliado (textract_concil_vtab); derecha Tesorería pendiente (taptcuen_noconcil_vtab) / Tesorería conciliada (taptcuen_concil_vtab) / Selección de efectos (textract_selector_cefectos_vtab) / Efectos impagados (textract_selector_cefectos_devs). Cada rejilla con total.",
+  "Columnas Extracto pendiente: Importe extracto, Descripción, Fecha operación, Documento, Concepto propio, Referencia 1, Referencia 2, Conciliado. Tesorería pendiente: Importe, Posición, Notas, Fecha operación, Referencia bancaria, Operación financiera, Gestión origen, Fecha contabilización, ID tesorería.",
+  "Los errores del servidor salen en el cuadro rojo «Se ha producido un error / ID: n / Error: <texto>». Los textos en `msg` llevan el prefijo «Error: » tal cual lo devuelve la demo.",
+  "Convención de la réplica: ext = extracto seleccionado (Generar tesorería); sumaSel = suma de importes marcados; ent.selExtracto, ent.selTesoreria, ent.selEfectos y ent.selImpagados = filas marcadas en cada subrejilla; sumaExt / sumaTes = suma de importes seleccionados; dif = porcentaje calculado.",
+  "no probado (ola E): Conciliar cartera e impagados con el efecto 57 y Cancelar extractos CAP — motivo: sesión de la demo caducada (redirige a /account/login) a mitad de la ola E; no se teclean credenciales."
+ ]
+}

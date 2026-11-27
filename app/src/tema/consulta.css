@@ -1,0 +1,231 @@
+/* Tema guía · consulta (ver tema/guia.css).
+   Glosario, Índice de errores, Vídeos, Logros, ERP de práctica (solo el envoltorio) y Taller.
+   Cabecera común de estas páginas: <header class="g-hero cs-hero"> con .g-kicker, h1, .cs-lead y .cs-datos. */
+
+/* ---------- Cabecera tipo guía ---------- */
+.cs-hero { margin: 24px 0; }
+.cs-hero h1 { margin: 8px 0 10px; color: #fff; font-weight: 700; }
+.page-host .cs-hero h1 { font-size: 36px !important; line-height: 1.15 !important; letter-spacing: -0.01em !important; max-width: 30ch; }
+.cs-lead { margin: 0; max-width: 66ch; font-size: 17.5px; line-height: 1.6; color: rgba(255, 255, 255, 0.92); }
+.cs-datos { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 16px 0 0; font-size: 15px; color: rgba(255, 255, 255, 0.8); }
+.cs-datos b { color: #fff; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; margin-right: 2px; }
+.cs-hero .btn { margin-top: 18px; }
+@media (max-width: 760px) {
+  .cs-hero { margin-top: 14px; }
+  .page-host .cs-hero h1 { font-size: 28px !important; }
+  .cs-lead { font-size: 16.5px; }
+}
+
+/* Botón principal sobre la cabecera azul: relleno blanco, texto azul marino */
+.cs-hero .cs-btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 8px;
+  background: #fff; color: var(--g-navy-hero); border: 1px solid #fff; font-weight: 700; text-decoration: none;
+}
+.cs-hero .cs-btn:hover { background: rgba(255, 255, 255, 0.9); }
+.cs-hero .cs-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* ---------- Títulos de sección dentro de estas páginas ---------- */
+.cs-sec { margin-top: 36px; }
+.cs-sec > h2 { margin: 0 0 14px; }
+.cs-sec > .cs-sec-intro { margin: -6px 0 16px; color: var(--g-muted); max-width: 70ch; }
+
+/* ---------- Barra de avance sobria ---------- */
+.cs-barra { display: block; height: 6px; border-radius: 3px; background: var(--g-line); overflow: hidden; }
+.cs-barra > i { display: block; height: 100%; background: var(--g-accent); border-radius: 3px; }
+
+/* Letra del sistema sin la anchura estrecha que heredan h1-h3 de styles.css / sistema.css */
+:is(.gls, .vd, .cs-pag, .vc, .vm-caja) :is(h1, h2, h3, h4) { font-family: var(--g-font); font-variation-settings: normal !important; letter-spacing: -0.005em !important; }
+:is(.gls, .vd, .cs-pag, .vc, .vm-caja) :is(h1, h2) { font-weight: 700; }
+.vm-boton:hover { transform: none; }
+
+/* ===================== Logros ===================== */
+.lgx { padding-bottom: 48px; }
+.lgx-proxima { max-width: none; margin: 0; }
+.lgx-proxima p { margin: 0 0 10px; }
+.lgx-proxima .cs-barra { max-width: 420px; }
+.lgx-proxima .cs-barra > i { background: var(--g-info); }
+.lgx-proxima .lgx-proxima-cuenta { margin: 6px 0 0; font-size: 14px; color: var(--g-muted); }
+
+/* Insignias: rejilla limpia de tarjetas blancas, medalla plana */
+.lgx-insignias { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.lgx-insignia {
+  display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; border-radius: var(--g-r-s);
+  background: var(--g-paper); border: 1px solid var(--g-line);
+}
+.lgx-insignia.on { border-color: color-mix(in srgb, var(--c) 45%, var(--g-line)); }
+.lgx-medalla { position: relative; flex: none; width: 52px; height: 52px; display: grid; place-items: center; }
+.lgx-medalla > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lgx-medalla-ico { position: relative; display: grid; place-items: center; color: var(--g-muted); }
+.lgx-insignia.on .lgx-medalla-ico { color: #fff; }
+.lgx-insignia-txt { display: grid; gap: 2px; min-width: 0; }
+.lgx-insignia-txt b { font-size: 16px; line-height: 1.35; color: var(--g-ink); }
+.lgx-insignia-txt > span { font-size: 14.5px; line-height: 1.5; color: var(--g-muted); }
+.lgx-insignia-txt > .lgx-cuenta { margin-top: 4px; font-size: 13.5px; font-weight: 600; color: var(--g-muted); display: inline-flex; align-items: center; gap: 4px; }
+.lgx-insignia-txt > .lgx-cuenta.ok { color: var(--g-ok); }
+.lgx-nueva { display: inline-block; margin-left: 8px; padding: 0 7px; border-radius: var(--g-r-xs); background: var(--g-ok-soft); color: var(--g-ok); font-size: 12.5px; font-weight: 700; vertical-align: 2px; }
+
+/* Avance por módulo: lista con número en acento, barra y porcentaje */
+.lgx-mods { list-style: none; margin: 0; padding: 6px 24px; }
+.lgx-mods > li + li { border-top: 1px solid var(--g-line); }
+.lgx-mod {
+  display: grid; grid-template-columns: 28px minmax(0, 1.4fr) minmax(80px, 1fr) 130px 52px; gap: 14px; align-items: center;
+  min-height: 52px; padding: 8px 0; color: var(--g-ink); text-decoration: none;
+}
+.lgx-mod:hover .lgx-mod-nom { color: var(--g-accent); text-decoration: underline; text-underline-offset: 3px; }
+.lgx-mod:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--g-r-xs); }
+.lgx-mod-n { font-weight: 700; color: var(--g-accent); font-variant-numeric: tabular-nums; }
+.lgx-mod-nom { font-weight: 600; }
+.lgx-mod-barra > i { background: var(--c, var(--g-accent)); }
+.lgx-mod-cuenta { font-size: 14px; color: var(--g-muted); }
+.lgx-mod-pct { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Tus datos y tu copia: tarjetas blancas sin animación de entrada */
+.lgx-ajustes { margin: 0; gap: 16px; }
+.page-host .lgx-ajustes > * { animation: none !important; }
+.lgx-ajustes > .g-card { padding: 24px 26px; }
+.lgx-ajustes h2 { margin: 0 0 6px; }
+.page-host .lgx-ajustes h2:not(.kick):not(.sr-only) { font-size: 20px !important; }
+.lgx .lg-ini { font-family: var(--g-mono); font-weight: 700; font-size: 1.2rem; }
+.lgx .mem-ok { font-family: var(--g-font); font-size: 15px; color: var(--g-ok); }
+.lgx .lg-msg.ok { color: var(--g-ok); }
+
+@media (max-width: 760px) {
+  .lgx-mods { padding: 4px 16px; }
+  .lgx-mod { grid-template-columns: 24px minmax(0, 1fr) 48px; gap: 4px 10px; padding: 10px 0; }
+  .lgx-mod-barra { grid-column: 2 / 3; grid-row: 2; }
+  .lgx-mod-cuenta { grid-column: 2 / 4; grid-row: 3; font-size: 13.5px; }
+  .lgx-mod-pct { grid-column: 3; grid-row: 1; }
+  .lgx-insignias { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lgx-insignia { flex-direction: column; gap: 8px; padding: 12px; }
+  .lgx-medalla { width: 40px; height: 40px; }
+  .lgx-medalla-ico svg { width: 20px; height: 20px; }
+  .lgx-insignia-txt b { font-size: 15px; }
+  .lgx-insignia-txt > span { font-size: 13.5px; }
+  .lgx-ajustes > .g-card { padding: 20px 16px; }
+}
+
+/* ===================== Taller: portada ===================== */
+.tlg { padding-bottom: 48px; }
+.tlg-banco { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.tlg-banco > li { min-width: 0; }
+.tlg-card {
+  display: flex; flex-direction: column; gap: 8px; height: 100%; padding: 20px 22px 18px; border-radius: var(--g-r);
+  background: var(--g-paper); border: 1px solid var(--g-line); color: var(--g-ink); text-decoration: none;
+}
+.tlg-card:hover { border-color: var(--g-accent); }
+.tlg-card:hover .tlg-cta { text-decoration: underline; text-underline-offset: 3px; }
+.tlg-card:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.tlg-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tlg-ico {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--g-r-s);
+  color: var(--g-ink); background: color-mix(in srgb, var(--sim) 18%, var(--g-paper)); border: 1px solid color-mix(in srgb, var(--sim) 35%, var(--g-line));
+}
+.tlg-estado { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: var(--g-r-xs); font-size: 13px; font-weight: 700; color: var(--g-muted); border: 1px solid var(--g-line); }
+.tlg-estado.est-curso { color: var(--g-info); border-color: color-mix(in srgb, var(--g-info) 40%, transparent); background: var(--g-info-soft); }
+.tlg-estado.est-ok { color: var(--g-ok); border-color: color-mix(in srgb, var(--g-ok) 40%, transparent); background: var(--g-ok-soft); }
+.tlg-card h2 { margin: 6px 0 0; }
+.page-host .tlg-card h2:not(.kick):not(.sr-only) { font-size: 20px !important; line-height: 1.3 !important; }
+.tlg-res { flex: 1; font-size: 15.5px; line-height: 1.6; color: var(--g-muted); }
+.tlg-pie { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--g-line); }
+.tlg-prog { display: grid; gap: 6px; min-width: 0; }
+.tlg-prog small { font-size: 14px; color: var(--g-muted); }
+.tlg-seg { display: flex; gap: 3px; }
+.tlg-seg i { width: 22px; height: 6px; border-radius: 3px; background: var(--g-line); }
+.tlg-seg i.on { background: var(--g-accent); }
+.tlg-cta { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 700; color: var(--g-accent); white-space: nowrap; }
+@media (max-width: 760px) {
+  .tlg-banco { grid-template-columns: 1fr; gap: 12px; }
+  .tlg-card { padding: 16px; }
+}
+
+/* ===================== Taller: envoltorio de cada simulador ===================== */
+/* Cabecera azul marino de la guía: volver, icono, título, instrucción, racha y rondas */
+.tl-sim.tlx-sim { padding-top: 24px; perspective: none; }
+.tlx-hud.g-hero { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; align-items: center; gap: 12px 18px; padding: 22px 26px; margin-bottom: 16px; background: var(--g-navy-hero); border: 0; box-shadow: none; }
+.tlx-hud.g-hero::before, .tlx-hud.g-hero::after { display: none; }
+.page-host .tlx-hud h1 { font-size: 28px !important; line-height: 1.2 !important; letter-spacing: -0.005em !important; font-variation-settings: normal !important; font-family: var(--g-font); font-weight: 700; color: #fff; }
+.tlx-hud .tlx-instruccion { margin: 4px 0 0; display: flex; gap: 8px; align-items: baseline; color: rgba(255, 255, 255, 0.88); font-size: 16px; line-height: 1.5; }
+.tlx-hud .tlx-instruccion svg { flex: none; color: rgba(255, 255, 255, 0.7); }
+.tlx-hud .btn.tlx-volver { min-height: 44px; border-radius: 8px; background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.45); box-shadow: none; }
+.tlx-hud .btn.tlx-volver:hover { background: rgba(255, 255, 255, 0.1); }
+.tlx-hud .tlx-hud-ico { width: 48px; height: 48px; border-radius: var(--g-r-s); background: rgba(255, 255, 255, 0.12); color: #fff; box-shadow: none; border: 1px solid rgba(255, 255, 255, 0.25); }
+.tlx-hud .tlx-hud-ico svg { filter: none; }
+.tlx-hud .tlx-racha { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: var(--g-r-s); box-shadow: none; color: #f2c46d; }
+.tlx-hud .tlx-racha.cero { color: rgba(255, 255, 255, 0.55); }
+.tlx-hud .tlx-racha small { color: rgba(255, 255, 255, 0.75); font-size: 12px; }
+.tlx-hud .tlx-racha.caliente svg { animation: none; }
+.tlx-hud .tlx-rondas { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: var(--g-r-s); box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.tlx-hud .tlx-rondas-txt { color: rgba(255, 255, 255, 0.85); }
+.tlx-hud .tlx-rondas-txt b { font-family: var(--g-font); font-size: 20px; }
+.tlx-hud .tlx-rondas-seg i { background: rgba(255, 255, 255, 0.2); }
+.tlx-hud .tlx-rondas-seg i.actual { background: rgba(255, 255, 255, 0.45); }
+.tlx-hud .tlx-rondas-seg i.actual::after { display: none; }
+.tlx-hud .tlx-rondas-seg b { background: #fff; box-shadow: none; }
+
+/* «En llano»: recuadro de la guía con barra a la izquierda */
+.tlx-sim .callout.tl-concepto {
+  margin: 0 0 16px; padding: 12px 18px; border: 0; border-left: 4px solid var(--g-accent); border-radius: var(--g-r-s);
+  background: var(--g-accent-soft); box-shadow: none; color: var(--g-ink);
+}
+.tlx-sim .callout.tl-concepto::before { display: none; }
+.tlx-sim .tl-concepto-btn { font-family: var(--g-font); color: var(--g-accent-ink); min-height: 44px; }
+.tlx-sim .tl-concepto-txt { max-width: 76ch; line-height: 1.65; }
+
+/* Ronda y final: tarjeta blanca de la guía, sin cristal ni filo de color */
+.tlx-sim .tl-ronda, .tlx-sim .tl-fin {
+  border-radius: var(--g-r); border: 1px solid var(--g-line); background: var(--g-paper); box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none; transform-style: flat; padding: 26px 30px;
+}
+.tlx-sim .tl-ronda::before { display: none; }
+.tlx-sim .tl-ronda-num, .tlx-ronda > .tl-ronda-num {
+  display: block; margin: 0 0 8px; padding: 0; border: 0; background: none; box-shadow: none;
+  font-family: var(--g-font); text-transform: uppercase; letter-spacing: 0.06em; font-size: 12.5px; font-weight: 700; color: var(--g-accent);
+}
+.tlx-sim .tl-enunciado h3 { font-family: var(--g-font); font-variation-settings: normal !important; }
+.tlx-sim .tlx-pistas { border: 0; border-left: 4px solid var(--g-warn); border-radius: var(--g-r-s); background: var(--g-warn-soft); box-shadow: none; transform: none; }
+.tlx-sim .tlx-pistas-tit { font-family: var(--g-font); font-weight: 700; color: var(--g-warn); }
+.tlx-sim .tlx-pistas-tit svg { color: var(--g-warn); }
+.tlx-sim .tl-veredicto { border: 0; border-left: 4px solid; border-radius: var(--g-r-s); box-shadow: none; }
+.tlx-sim .tl-veredicto.ok { background: var(--g-ok-soft); border-color: var(--g-ok); box-shadow: none; }
+.tlx-sim .tl-veredicto.mal { background: var(--g-bad-soft); border-color: var(--g-bad); box-shadow: none; }
+.tlx-sim .tl-veredicto.ok .tl-veredicto-ico { background: var(--g-ok); color: #fff; box-shadow: none; }
+.tlx-sim .tl-veredicto.mal .tl-veredicto-ico { background: var(--g-bad); color: #fff; box-shadow: none; }
+:root[data-theme='dark'] .tlx-sim .tl-veredicto .tl-veredicto-ico { color: #14171c; }
+.tlx-destello { display: none; }
+
+/* Barra de «Ronda superada»: tarjeta blanca con barra verde */
+.tlx-sim .tl-siguiente.tlx-siguiente {
+  background: var(--g-paper); border: 1px solid var(--g-line); border-left: 4px solid var(--g-ok); border-radius: var(--g-r-s);
+  box-shadow: 0 6px 20px -10px rgba(29, 36, 48, 0.3); color: var(--g-ink);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+.tlx-sim .tl-siguiente span { color: var(--g-ok); }
+.tlx-sim .tlx-siguiente-ico { background: var(--g-ok); color: #fff; box-shadow: none; }
+:root[data-theme='dark'] .tlx-sim .tlx-siguiente-ico { color: #14171c; }
+
+/* Final del simulador */
+.tlx-fin .tlx-rayos, .tlx-fin .tlx-trofeo-aro { display: none; }
+.tlx-fin .tlx-trofeo .medal { filter: none; }
+.tlx-fin h2 { font-family: var(--g-font); }
+.tlx-sim .tlx-stats li { background: var(--g-bg); border: 1px solid var(--g-line); box-shadow: none; border-radius: var(--g-r-s); }
+
+/* Botón principal de los simuladores: relleno acento, sin degradado ni brillo */
+.tlx-sim .btn.arc { background: var(--g-accent); border-color: var(--g-accent); color: #fff; box-shadow: none; border-radius: 8px; }
+.tlx-sim .btn.arc:hover { background: var(--g-accent-ink); border-color: var(--g-accent-ink); }
+:root[data-theme='dark'] .tlx-sim .btn.arc { color: #0e1a17; }
+:root[data-theme='dark'] .tlx-sim .btn.arc:hover { background: var(--g-accent-ink); }
+
+@media (max-width: 760px) {
+  .tl-sim.tlx-sim { padding-top: 14px; }
+  .tlx-hud.g-hero { grid-template-columns: auto auto minmax(0, 1fr); padding: 14px 16px; row-gap: 12px; }
+  .page-host .tlx-hud h1 { font-size: 22px !important; }
+  .tlx-sim .tl-ronda, .tlx-sim .tl-fin { padding: 18px 14px; }
+}
+
+/* Vídeos: títulos de módulo y de serie más contenidos (h2 27 / h3 20 de la guía) */
+.page-host .vd .vd-index > h2.vd-h2:not(.kick):not(.sr-only) { font-size: 27px !important; line-height: 1.25 !important; }
+.page-host .vc .vc-cab :is(h2, h3):not(.kick):not(.sr-only) { font-size: 20px !important; line-height: 1.3 !important; }
+@media (max-width: 760px) {
+  .page-host .vd .vd-index > h2.vd-h2:not(.kick):not(.sr-only) { font-size: 22px !important; }
+  .page-host .vc .vc-cab :is(h2, h3):not(.kick):not(.sr-only) { font-size: 18px !important; }
+}

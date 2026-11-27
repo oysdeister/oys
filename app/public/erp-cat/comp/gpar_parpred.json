@@ -1,0 +1,122 @@
+{
+ "c": "gpar_parpred",
+ "fecha": "2026-11-18 ventas/jefe",
+ "area": "ventas",
+ "campos": {
+  "codigo": {
+   "req": 1
+  },
+  "codser": {
+   "req": 1,
+   "lov": {
+    "obj": "gsernumh",
+    "clave": "mask_code"
+   }
+  },
+  "indcon": {
+   "req": 1,
+   "def": 0
+  },
+  "tipast": {
+   "lov": {
+    "obj": "gpar_cierred",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "imp_execost": {
+   "req": 1,
+   "def": 0
+  },
+  "imp_exeprod": {
+   "req": 1,
+   "def": 0
+  },
+  "tipwkf": {
+   "lov": {
+    "obj": "cworkflow_val",
+    "clave": "val_code"
+   }
+  },
+  "albcer": {
+   "lov": {
+    "obj": "gvenmovd",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "tipexp": {
+   "req": 1,
+   "lov": {
+    "obj": "gpar_parexped",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "exe_price": {
+   "req": 1,
+   "def": 0
+  },
+  "estexp": {
+   "req": 1,
+   "lov": {
+    "obj": "gpar_estados",
+    "clave": "codigo"
+   }
+  },
+  "ctppdb": {
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctprdb": {
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctcedb": {
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctpphb": {
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctprhb": {
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  },
+  "ctcehb": {
+   "lov": {
+    "obj": "cctanemh",
+    "clave": "codigo",
+    "noExiste": "Error en la validación"
+   }
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "!((indcon === 0 && exe_price === 0) || (indcon === 1 && (exe_price === 0 || exe_price === 1)))",
+   "msg": "Los presupuestos que no son del sector construcción solo pueden valorarse con precio de ejecución a precio medio",
+   "tipo": "error",
+   "campo": "exe_price",
+   "fuente": "meta"
+  }
+ ],
+ "notas": [
+  "Generado de metadatos REST de la demo (fuente meta). Las expresiones (ro, reqSi, oculto, nota de botones) son las de Axional: pueden citar otras tablas (p. ej. gvenfacd.tabori, virtualerp.*) que el motor debe resolver o tratar como null."
+ ]
+}

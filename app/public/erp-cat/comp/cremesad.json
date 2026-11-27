@@ -1,0 +1,148 @@
+{
+ "c": "cremesad",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "codigo": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(codigo)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "nombre": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(nombre)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "nombre",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "estado": {
+   "req": 1,
+   "def": "A",
+   "mayus": 1
+  },
+  "clase": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "alCambiar": {
+    "accion": "null"
+   }
+  },
+  "tiprem": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(tiprem)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "tiprem",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1
+  },
+  "jusser": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(jusser)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "jusser",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "lov": {
+    "obj": "cjusnumh",
+    "clave": "mask_code",
+    "cols": [
+     "mask_code",
+     "mask_name"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "mask_name"
+   }
+  },
+  "accion": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(accion)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "accion",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "vacio(clase)",
+   "lov": {
+    "obj": "cefeacti",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomact"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomact",
+    "filtro": "l.clase == clase && l.accrem == 1"
+   }
+  },
+  "valida": {
+   "req": 1,
+   "def": 0
+  },
+  "domicil": {
+   "def": 0
+  },
+  "linfin": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(codigo) || vacio(nombre) || vacio(clase) || vacio(tiprem) || vacio(jusser) || vacio(accion)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && existe('cremesad','codigo',codigo)",
+   "msg": "Unique constraint (informix.p_cremesad) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Nuevo = «Añadir tipo remesa» (diálogo «TIPOS DE REMESAS DE EFECTOS»). Éxito: «Éxito» + «Ver registro». Ficha form/1: pestañas Datos, Acciones, Cuentas; vistas al pie Estados origen (cefeacti_est), Circuito acciones (cremesad_det) y Remesas por cuenta (cbancsop). Menú ⌄: Circuito acciones, Remesas por cuenta.",
+  "Guardar vacío: «Este campo es obligatorio.» en Remesa, Descripción remesa, Clase, Tipo remesa, Serie de documento y Acción + «Hay errores en los datos del formulario». Defectos: Estado Abierto, Línea financiera No, Validaciones No, Asignación gastos Acreedor (CRED) preseleccionada en pantalla, Método SEPA No aplica.",
+  "Acción bloqueada hasta elegir Clase; su lupa (pkMethod codigo_clase) lista las acciones de esa clase habilitadas para remesa (33 de clase C en la TUTORIAL = accrem 1). Acción inexistente (ZZZ): «Error en la validación» (POST fk/cremesad/accion/verify/cefeacti → 204). Al elegir la acción se muestran su Estado final y Descripción estado (cefecest, solo lectura).",
+  "Duplicado (PSCTS): 500 «Unique constraint (informix.p_cremesad) violated.».",
+  "La acción inicial (cremesad.accion) es la que toma la remesa al crearse; los pasos siguientes están en Circuito acciones (cremesad_det: orden, acción). Ver comp/cremesas.json.",
+  "probado: Nuevo «Añadir tipo remesa» (guardar vacío, alta con éxito), lupa Acción inexistente, duplicado. no probado: borrar con hijos — no se provocó en esta pantalla. Sin botones ni Acciones."
+ ]
+}

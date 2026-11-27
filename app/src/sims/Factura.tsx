@@ -53,7 +53,7 @@ function construirRondas(ini: string): Ronda[] {
   const fcL = lineasDe(fc);
   const fvL = lineasDe(fv);
   const fvAlt = lineasDe(esObj(fv) ? fv.alternativa : null);
-  const cliente = conIni(esObj(fv) ? txt(fv.cliente, 'T{INI}') : 'T{INI}', ini);
+  const cliente = conIni(esObj(fv) ? txt(fv.cliente, 'C{INI}') : 'C{INI}', ini);
 
   // variación 1: dos líneas con descuento, 21 %
   const v1: Linea[] = baraja(ARTICULOS.slice(0, 3))

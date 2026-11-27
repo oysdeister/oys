@@ -1,0 +1,209 @@
+{
+ "c": "cefeacti",
+ "fecha": "2026-11-18 tesoreria/B-remesas-maestros",
+ "area": "tesoreria",
+ "campos": {
+  "clase": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(clase)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "clase",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "alCambiar": {
+    "estfin": "null",
+    "efefin": "null",
+    "codast": "null"
+   }
+  },
+  "codigo": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(codigo)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "codigo",
+     "fuente": "demo"
+    }
+   ],
+   "mayus": 1,
+   "ro": "!__ins"
+  },
+  "nomact": {
+   "req": 1,
+   "reglas": [
+    {
+     "si": "vacio(nomact)",
+     "msg": "Este campo es obligatorio.",
+     "tipo": "error",
+     "campo": "nomact",
+     "fuente": "demo"
+    }
+   ]
+  },
+  "estfin": {
+   "mayus": 1,
+   "ro": "vacio(clase)",
+   "lov": {
+    "obj": "cefecest",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomest",
+     "caduca"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomest",
+    "filtro": "l.clase == clase"
+   }
+  },
+  "efefin": {
+   "mayus": 1,
+   "ro": "vacio(clase)",
+   "lov": {
+    "obj": "ctipoefe",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomefe"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomefe",
+    "filtro": "l.clase == clase"
+   }
+  },
+  "codast": {
+   "mayus": 1,
+   "ro": "vacio(clase)",
+   "lov": {
+    "obj": "cefeplah",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomast"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomast",
+    "filtro": "l.clase == clase"
+   },
+   "alCambiar": {
+    "cefeplah.codpla": "busca('cefeplah','codigo',codast,'codpla')",
+    "cefeplah.nomast": "busca('cefeplah','codigo',codast,'nomast')"
+   }
+  },
+  "codcaj": {
+   "mayus": 1,
+   "lov": {
+    "obj": "ccajaope",
+    "clave": "codigo",
+    "cols": [
+     "codigo",
+     "nomope"
+    ],
+    "noExiste": "Error en la validación",
+    "desc": "nomope"
+   }
+  },
+  "accind": {
+   "req": 1,
+   "def": 1
+  },
+  "accrem": {
+   "req": 1,
+   "def": 1
+  },
+  "accges": {
+   "req": 1,
+   "def": 1
+  },
+  "genref": {
+   "req": 1,
+   "def": 0
+  },
+  "tipgas": {
+   "req": 1,
+   "def": 0
+  },
+  "rettes": {
+   "req": 1,
+   "def": 0
+  },
+  "difcam": {
+   "req": 1,
+   "def": 0
+  },
+  "fecven": {
+   "req": 1,
+   "def": 0
+  },
+  "fecaux": {
+   "req": 1,
+   "def": 0
+  },
+  "tipefe": {
+   "req": 1,
+   "def": 0
+  },
+  "ctafin": {
+   "req": 1,
+   "def": 0
+  },
+  "domban": {
+   "req": 1,
+   "def": 0
+  },
+  "tipdoc": {
+   "req": 1,
+   "def": 0
+  },
+  "gastos": {
+   "req": 1,
+   "def": 0
+  },
+  "import": {
+   "req": 1,
+   "def": 0
+  },
+  "coment": {
+   "req": 1,
+   "def": 0
+  }
+ },
+ "alGuardar": [
+  {
+   "si": "vacio(clase) || vacio(codigo) || vacio(nomact)",
+   "msg": "Hay errores en los datos del formulario",
+   "tipo": "error",
+   "fuente": "demo"
+  },
+  {
+   "si": "__ins && cuenta('cefeacti','codigo',codigo) > 0 && busca('cefeacti','codigo',codigo,'clase') == clase",
+   "msg": "Unique constraint (informix.p_cefeacti) violated.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "alBorrar": [
+  {
+   "si": "existe('cremesad','accion',codigo) || existe('cremesad_det','accion',codigo)",
+   "msg": "Key value for constraint (informix.p_cefeacti) is still being referenced.",
+   "tipo": "error",
+   "fuente": "demo"
+  }
+ ],
+ "notas": [
+  "Nuevo = «Añadir acciones» (diálogo «ACCIONES SOBRE EFECTOS»). Guardar vacío: «Este campo es obligatorio.» en Clase, Acción y Descripción acción + «Hay errores en los datos del formulario». Estado final, Efecto final, Asiento y Agrupaciones bloqueados hasta elegir Clase. Defectos: Acción individual, Acción remesa y Acción gestión marcadas; el resto de casillas desmarcadas.",
+  "En el diálogo aparece siempre el aviso informativo «Para ajustar la evolución de las deudas, seleccione los campos que serán editables, mientras que los demás conservarán sus valores sin posibilidad de modificación.» (caja Modificaciones sobre efectos).",
+  "Lupas inexistentes (Estado final ZZ, Asiento ZZZ): «Error en la validación» (POST fk/cefeacti/estfin/verify/cefecest y fk/cefeacti/codast/verify/cefeplah → 204). Al elegir Asiento se muestran Plantilla y Descripción asiento del enlace (solo lectura).",
+  "Duplicado (C/RCONB): 500 «Unique constraint (informix.p_cefeacti) violated.».",
+  "Borrar con hijos (CAPACC usada como acción del tipo de remesa CAPREM): «Se ha producido un error» «Key value for constraint (informix.p_cefeacti) is still being referenced.». Confirmación: «Eliminar registro» «¿Estás seguro que quieres eliminar el registro 'CAP accion captura' ?».",
+  "Ficha form/1: vista Estados origen (cefeacti_est). Menú ⌄: Estados origen.",
+  "probado: Nuevo «Añadir acciones» (guardar vacío), lupas inexistentes (Estado final, Asiento), duplicado, borrar con hijos (CAPACC). Sin botones ni Acciones."
+ ]
+}
