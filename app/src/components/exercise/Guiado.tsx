@@ -205,14 +205,21 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
         <i style={{ width: `${((i + 1) / total) * 100}%` }} />
       </div>
 
-      <p className="pl-instr">
-        <Glosa>{t(actual.paso.texto)}</Glosa>
-      </p>
-      {actual.paso.detalle && (
-        <p className="pl-det">
-          <Glosa>{t(actual.paso.detalle)}</Glosa>
-        </p>
-      )}
+      <div className="pl-paso">
+        <span className="pl-paso-n" aria-hidden="true">
+          {i + 1}
+        </span>
+        <div>
+          <p className="pl-instr">
+            <Glosa>{t(actual.paso.texto)}</Glosa>
+          </p>
+          {actual.paso.detalle && (
+            <p className="pl-det">
+              <Glosa>{t(actual.paso.detalle)}</Glosa>
+            </p>
+          )}
+        </div>
+      </div>
 
       {img ? (
         <div className="pl-shot" key={i}>

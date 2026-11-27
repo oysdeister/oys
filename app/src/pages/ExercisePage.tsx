@@ -132,23 +132,29 @@ export default function ExercisePage() {
 
   return (
     <div className="wrap bq" style={{ ['--mod' as string]: meta.color }}>
+      <p className="bq-miga">
+        <Link to={`/modulo/${modulo.id}`}>
+          <Icon name="atras" size={16} /> {meta.corto}
+        </Link>
+      </p>
       <header className="bq-cab">
-        <p className="bq-miga">
-          <Link to={`/modulo/${modulo.id}`}>
-            <Icon name="atras" size={16} /> {meta.corto}
-          </Link>
-          <span>{opcional ? 'Para saber más (opcional)' : `Bloque ${n} de ${obligatorios.length}`}</span>
+        <p className="bq-kicker">
+          Módulo {idxMod} · {opcional ? 'Para saber más (opcional)' : `Bloque ${n} de ${obligatorios.length}`}
         </p>
         <h1>{t(ej.titulo)}</h1>
         <p className="bq-obj">
           <Glosa>{t(ej.objetivo)}</Glosa>
         </p>
+        <p id="bloque-pasos" className="bq-donde">
+          <span className="bq-donde-n">
+            Paso {k + 1} de {pasos.length}
+          </span>
+          <span>
+            <b>{pasos[k].label}.</b>
+            {pasoOpcional(pasos[k].id) && <span className="paso-opc">opcional</span>} {pasos[k].que}
+          </span>
+        </p>
       </header>
-
-      <p id="bloque-pasos" className="bq-donde">
-        <b>{pasos[k].label}.</b>
-        {pasoOpcional(pasos[k].id) && <span className="paso-opc">opcional</span>} {pasos[k].que}
-      </p>
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.section
@@ -156,8 +162,8 @@ export default function ExercisePage() {
           id="panel-ej"
           className="panel bq-panel"
           aria-label={pasos[k].label}
-          initial={reducir ? { opacity: 0 } : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.22 }}
         >
@@ -165,7 +171,7 @@ export default function ExercisePage() {
           {tab === 'guiado' && <Guiado ej={ej} modulo={modulo.id} ini={ini} onListo={onListo} />}
           {tab === 'memoria' && (
             <p className="bq-opc">
-              <b>Opcional:</b> repasa de memoria dónde está cada cosa. Si ya lo tienes claro,{' '}
+              Repasa de memoria dónde está cada cosa. Si ya lo tienes claro,{' '}
               <button type="button" className="bq-opc-ir" onClick={() => ir('test')}>
                 pasa al Test
               </button>
@@ -258,7 +264,7 @@ export default function ExercisePage() {
           </Link>
         ) : (
           <Link className="btn arc lg" to={`/modulo/${modulo.id}`}>
-            {opcional ? 'Volver al módulo' : sigMod ? 'Volver al módulo: te queda terminar sus bloques' : 'Volver al módulo'}
+            {opcional ? 'Volver al módulo' : sigMod ? 'Volver al módulo y terminar los bloques pendientes' : 'Volver al módulo'}
           </Link>
         )}
       </nav>

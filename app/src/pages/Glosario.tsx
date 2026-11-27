@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { animate, motion, useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { Icon } from '../components/Icon';
 import { META } from '../content';
 import { GLOSARIO, MODULOS_GLOSARIO, normaliza, type Termino } from '../content/glosario';
@@ -10,7 +10,6 @@ import './glosario.css';
 
 const nombreMod = (id: string) => META[id]?.corto ?? 'Curso';
 const colorMod = (id: string) => META[id]?.color ?? 'var(--arc)';
-const iconoMod = (id: string) => META[id]?.icono ?? 'libro';
 const varMod = (id: string) => ({ ['--mod' as string]: colorMod(id) }) as CSSProperties;
 const inicial = (s: string) => {
   const c = normaliza(s).charAt(0).toUpperCase();
@@ -43,21 +42,6 @@ function resaltar(texto: string, t: string): ReactNode {
   }
   if (desde < texto.length) out.push(texto.slice(desde));
   return out.length ? out : texto;
-}
-
-/** Cifra que sube de 0 al total al entrar (sin animación si se pide menos movimiento) */
-function Cifra({ valor }: { valor: number }) {
-  const reducir = useReducedMotion();
-  const [n, setN] = useState(reducir ? valor : 0);
-  useEffect(() => {
-    if (reducir) {
-      setN(valor);
-      return;
-    }
-    const c = animate(0, valor, { duration: 1.4, ease: [0.2, 0.7, 0.2, 1], onUpdate: (v) => setN(Math.round(v)) });
-    return () => c.stop();
-  }, [valor, reducir]);
-  return <>{n}</>;
 }
 
 /** Página «Glosario»: todos los términos de los módulos, con buscador, índice A-Z y filtro por familia (módulo) */
@@ -188,39 +172,24 @@ export default function Glosario() {
 
   return (
     <div className="wrap gls">
-      <header className="ax-banner gls-banner">
-        <div className="gls-banner-in">
-          <div className="gls-astro" aria-hidden="true">
-            <span className="gls-orbita">
-              {MODULOS_GLOSARIO.map((id, i) => (
-                <i key={id} style={{ ...varMod(id), ['--a' as string]: `${(360 / Math.max(MODULOS_GLOSARIO.length, 1)) * i}deg` } as CSSProperties} />
-              ))}
+      <header className="g-hero cs-hero">
+        <p className="g-kicker">Diccionario del curso</p>
+        <h1>Glosario</h1>
+        <p className="cs-lead">
+          Las palabras de finanzas y del ERP explicadas en lenguaje llano, sin dar nada por sabido. En los bloques aparecen <span className="gls-demo">subrayadas así</span>: pasa el ratón por encima o tócalas para leer qué significan.
+        </p>
+        {!vacio && (
+          <p className="cs-datos">
+            <span>
+              <b>{GLOSARIO.length}</b> términos
             </span>
-            <span className="gls-orb">
-              <Icon name="libro" size={40} />
-            </span>
-          </div>
-          <div className="gls-banner-txt">
-            <p className="kick">Diccionario del curso</p>
-            <h1 className="gls-h1">Glosario</h1>
-            <p className="lead">
-              Las palabras de finanzas y del ERP explicadas en lenguaje llano, sin dar nada por sabido. En los bloques aparecen <span className="gls-demo">subrayadas así</span>: pasa el ratón por encima o tócalas para leer qué significan.
-            </p>
-          </div>
-          {!vacio && (
-            <div className="gls-cifra" aria-label={`${GLOSARIO.length} términos en ${MODULOS_GLOSARIO.length} módulos`}>
-              <b aria-hidden="true">
-                <Cifra valor={GLOSARIO.length} />
-              </b>
-              <span aria-hidden="true">términos</span>
-              {MODULOS_GLOSARIO.length > 1 && (
-                <small aria-hidden="true">
-                  en {MODULOS_GLOSARIO.length} módulos
-                </small>
-              )}
-            </div>
-          )}
-        </div>
+            {MODULOS_GLOSARIO.length > 1 && (
+              <span>
+                <b>{MODULOS_GLOSARIO.length}</b> módulos
+              </span>
+            )}
+          </p>
+        )}
       </header>
 
       {vacio ? (
@@ -280,9 +249,6 @@ export default function Glosario() {
           {MODULOS_GLOSARIO.length > 1 && (
             <div className="gls-chips" role="group" aria-label="Filtrar por módulo">
               <button type="button" className={`gls-chip todos${!mod ? ' on' : ''}`} aria-pressed={!mod} onClick={() => setMod('')}>
-                <span className="gls-chip-ico">
-                  <Icon name="destello" size={16} />
-                </span>
                 Todos
                 <span className="gls-chip-n">{porFamilia.total}</span>
               </button>
@@ -297,9 +263,6 @@ export default function Glosario() {
                     onClick={() => setMod(mod === id ? '' : id)}
                     style={varMod(id)}
                   >
-                    <span className="gls-chip-ico">
-                      <Icon name={iconoMod(id)} size={16} />
-                    </span>
                     {nombreMod(id)}
                     <span className="gls-chip-n">{n}</span>
                   </button>
@@ -387,23 +350,11 @@ export default function Glosario() {
                       </div>
                     )}
                     <dl className="gls-lista">
-                      {gr.items.map((g, i) => {
+                      {gr.items.map((g) => {
                         const fam = g.modulos[0];
                         return (
-                          <motion.div
-                            key={g.clave}
-                            id={`gl-${g.clave}`}
-                            className="gls-item"
-                            style={varMod(fam)}
-                            initial={reducir ? false : { opacity: 0, y: 14 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: '0px 0px -40px 0px' }}
-                            transition={{ duration: 0.38, ease: [0.2, 0.7, 0.2, 1], delay: (i % 3) * 0.06 }}
-                          >
+                          <div key={g.clave} id={`gl-${g.clave}`} className="gls-item" style={varMod(fam)}>
                             <dt>
-                              <span className="gls-fam" title={nombreMod(fam)}>
-                                <Icon name={iconoMod(fam)} size={20} />
-                              </span>
                               <span className="gls-term">{resaltar(g.termino, t)}</span>
                             </dt>
                             <dd>
@@ -422,7 +373,7 @@ export default function Glosario() {
                                 ))}
                               </p>
                             </dd>
-                          </motion.div>
+                          </div>
                         );
                       })}
                     </dl>

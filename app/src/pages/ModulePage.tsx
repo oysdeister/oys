@@ -92,6 +92,19 @@ export default function ModulePage() {
   const empezado = obligatorios.some((e) => p.ejercicios[e.id]);
   const ctaTexto = !toca ? '' : !empezado ? `Empezar por el bloque 1` : `Seguir: bloque ${numBloque.get(toca.id)}, ${PASOS.find((x) => x.id === pasoToca)?.label}`;
 
+  // Índice «En esta página» (botones: con HashRouter un #ancla cambiaría de ruta)
+  const hayExtra = series.length > 0 || sims.length > 0;
+  const indice = [
+    { id: 'antes-h', t: 'Para situarte' },
+    { id: 'bloques-h', t: 'Los bloques' },
+    { id: 'cierre-h', t: 'Para cerrar el módulo' },
+    ...(hayExtra ? [{ id: 'extra-h', t: 'Material de consulta' }] : []),
+  ];
+  const irA = (idSec: string) => {
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById(idSec)?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
+  };
+
   const renderEtapa = (et: (typeof etapas)[number], ei: number) => (
               <div key={ei} className={`md-etapa${et.opcional ? ' opc' : ''}`}>
                 {(et.fase || et.opcional) && et.titulo && !et.nota && (
@@ -166,22 +179,20 @@ export default function ModulePage() {
   );
 
   return (
-    <div className="wrap md" style={{ ['--mod' as string]: meta.color } as CSSProperties}>
-      <Link to="/" className="md-volver">
+    <div className="wrap gm" style={{ ['--mod' as string]: meta.color } as CSSProperties}>
+      <Link to="/" className="md-volver gm-volver">
         <Icon name="atras" size={16} /> Todos los módulos
       </Link>
 
-      <header className="md-cab">
-        <p className="md-num">
-          <span className="md-ico" aria-hidden="true">
-            <Icon name={meta.icono} size={22} />
-          </span>
-          Módulo {idx}
+      <header className="g-hero gm-hero">
+        <p className="g-kicker">
+          Módulo {idx} · {obligatorios.length} {obligatorios.length === 1 ? 'bloque' : 'bloques'}
         </p>
         <h1>{meta.corto}</h1>
-        <p className="md-frase">{ficha ? t(ficha.frase) : t(modulo.resumen)}</p>
-        <div className="md-avance">
-          <div className="md-barra" role="progressbar" aria-valuemin={0} aria-valuemax={obligatorios.length} aria-valuenow={hechos} aria-label="Bloques terminados">
+        <p className="gm-frase">{ficha ? t(ficha.frase) : t(modulo.resumen)}</p>
+        <div className="gm-hero-acc">
+        <div className="gm-avance">
+          <div className="gm-barra" role="progressbar" aria-valuemin={0} aria-valuemax={obligatorios.length} aria-valuenow={hechos} aria-label="Bloques terminados">
             <i style={{ width: `${(hechos / Math.max(1, obligatorios.length)) * 100}%` }} />
           </div>
           <span>
@@ -189,6 +200,100 @@ export default function ModulePage() {
             {nOpc > 0 && ` · además, ${nOpc} ${nOpc === 1 ? 'bloque' : 'bloques'} de ampliación (opcional)`}
           </span>
         </div>
+        {sinBloques ? (
+          <p className="md-hecho md-prox">
+            <Icon name="reloj" size={18} /> Próximamente: los bloques de este módulo se están preparando.
+          </p>
+        ) : toca ? (
+          <Link className="btn arc lg md-cta" to={enlaceToca}>
+            {ctaTexto}
+          </Link>
+        ) : (
+          <p className="md-hecho">
+            <Icon name="check" size={18} stroke={3} /> Has terminado todos los bloques. Te queda el examen del módulo.
+          </p>
+        )}
+        </div>
+      </header>
+
+      <nav className="gm-indice" aria-label="En esta página">
+        <p className="g-kicker">En esta página</p>
+        <ol>
+          {indice.map((x, i) => (
+            <li key={x.id}>
+              <button type="button" onClick={() => irA(x.id)}>
+                <b>{i + 1}</b>
+                {x.t}
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      {/* 1. Antes de empezar: el mapa del módulo y lo básico, una sola vez */}
+      <section className="g-card gm-sec" aria-labelledby="antes-h">
+        <p className="g-kicker">Parte 1</p>
+        <h2 id="antes-h">Para situarte</h2>
+        <VideoPrimero
+          lista={momentosDeModulo(modulo.id)}
+          indice
+          ante="Antes de empezar el módulo"
+          luego="Luego empieza por el bloque 1."
+        />
+        
+        {ficha && (
+          <ul className="md-aprendes">
+            {ficha.aprendes.map((a, i) => (
+              <li key={i}>
+                <Icon name="check" size={16} stroke={3} /> {t(a)}
+              </li>
+            ))}
+          </ul>
+        )}
+        {piezas.length > 0 && (
+          <p className="md-recorrido">
+            <b>El recorrido:</b> {piezas.map((x) => x.t).join(' → ')}.
+          </p>
+        )}
+        {modulo.navegacion && modulo.navegacion.length > 0 && (
+          <div className="md-basico">
+            <h3>Lo básico del ERP para este módulo</h3>
+            {modulo.navegacion.map((s) => {
+              // Cada tema en un solo sitio: si un módulo anterior ya lo explica, aquí solo se enlaza
+              const dueno = MODULOS.slice(0, idx).find((m) => m.navegacion?.some((x) => x.titulo === s.titulo));
+              if (dueno && /mover/i.test(s.titulo)) {
+                return (
+                  <p key={s.id} className="md-ya">
+                    {t(s.titulo)}: está en Fundamentos › <Link to="/ejercicio/fundamentos-navegar">Moverse por el ERP</Link>.
+                  </p>
+                );
+              }
+              return dueno ? (
+                <p key={s.id} className="md-ya">
+                  {t(s.titulo)}: ya lo viste en <Link to={`/modulo/${dueno.id}`}>{META[dueno.id]?.corto ?? dueno.titulo}</Link>, en «Para situarte».
+                </p>
+              ) : (
+                <div key={s.id} className="md-basico-tema">
+                  <h4>{t(s.titulo)}</h4>
+                  <SeccionVista s={s} ini={ini} conPasos />
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* 2. Los bloques, por etapas */}
+      <section className="g-card gm-sec" aria-labelledby="bloques-h">
+        <p className="g-kicker">Parte 2</p>
+        <h2 id="bloques-h">Los bloques</h2>
+        {sinBloques ? (
+          <p className="md-sec-txt">Aquí aparecerán los bloques cuando estén listos.</p>
+        ) : (
+          <p className="md-sec-txt">
+            Te recomendamos hacerlos en orden: cada uno usa lo que montaste en el anterior. «Te toca» marca el siguiente que tienes pendiente.
+          </p>
+        )}
         {conSelector && (
           <p className="md-aviso-operar">
             <Icon name="aviso" size={18} />
@@ -237,85 +342,6 @@ export default function ModulePage() {
             })}
           </div>
         )}
-        {sinBloques ? (
-          <p className="md-hecho md-prox">
-            <Icon name="reloj" size={18} /> Próximamente: los bloques de este módulo se están preparando.
-          </p>
-        ) : toca ? (
-          <Link className="btn arc lg md-cta" to={enlaceToca}>
-            {ctaTexto}
-          </Link>
-        ) : (
-          <p className="md-hecho">
-            <Icon name="check" size={18} stroke={3} /> Has terminado todos los bloques. Te queda el examen del módulo.
-          </p>
-        )}
-      </header>
-
-      {/* 1. Antes de empezar: el mapa del módulo y lo básico, una sola vez */}
-      <section className="md-sec" aria-labelledby="antes-h">
-        <h2 id="antes-h"> Antes de empezar
-        </h2>
-        <VideoPrimero
-          lista={momentosDeModulo(modulo.id)}
-          indice
-          ante="Antes de empezar el módulo"
-          luego="Luego empieza por el bloque 1."
-        />
-        
-        {ficha && (
-          <ul className="md-aprendes">
-            {ficha.aprendes.map((a, i) => (
-              <li key={i}>
-                <Icon name="check" size={16} stroke={3} /> {t(a)}
-              </li>
-            ))}
-          </ul>
-        )}
-        {piezas.length > 0 && (
-          <p className="md-recorrido">
-            <b>El recorrido:</b> {piezas.map((x) => x.t).join(' → ')}.
-          </p>
-        )}
-        {modulo.navegacion && modulo.navegacion.length > 0 && (
-          <div className="md-basico">
-            <h3>Lo básico del ERP para este módulo</h3>
-            {modulo.navegacion.map((s) => {
-              // Cada tema en un solo sitio: si un módulo anterior ya lo explica, aquí solo se enlaza
-              const dueno = MODULOS.slice(0, idx).find((m) => m.navegacion?.some((x) => x.titulo === s.titulo));
-              if (dueno && /mover/i.test(s.titulo)) {
-                return (
-                  <p key={s.id} className="md-ya">
-                    {t(s.titulo)}: está en Fundamentos › <Link to="/ejercicio/fundamentos-navegar">Moverse por el ERP</Link>.
-                  </p>
-                );
-              }
-              return dueno ? (
-                <p key={s.id} className="md-ya">
-                  {t(s.titulo)}: ya lo viste en <Link to={`/modulo/${dueno.id}`}>{META[dueno.id]?.corto ?? dueno.titulo}</Link>, en «Antes de empezar».
-                </p>
-              ) : (
-                <div key={s.id} className="md-basico-tema">
-                  <h4>{t(s.titulo)}</h4>
-                  <SeccionVista s={s} ini={ini} conPasos />
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      {/* 2. Los bloques, por etapas */}
-      <section className="md-sec" aria-labelledby="bloques-h">
-        <h2 id="bloques-h"> Los bloques
-        </h2>
-        {sinBloques ? (
-          <p className="md-sec-txt">Próximamente. Este módulo todavía no tiene bloques.</p>
-        ) : (
-          <p className="md-sec-txt">
-            Te recomendamos hacerlos en orden: cada uno usa lo que montaste en el anterior. «Te toca» marca el siguiente que tienes pendiente.
-          </p>
-        )}
         {conSelector ? (
           <div role="tabpanel" id="fase-panel" aria-labelledby={`fase-tab-${fase}`} tabIndex={0} className="md-panel">
             {grupoActivo.etapas.map(renderEtapa)}
@@ -326,9 +352,9 @@ export default function ModulePage() {
       </section>
 
       {/* 3. Cierre */}
-      <section className="md-sec" aria-labelledby="cierre-h">
-        <h2 id="cierre-h"> Para cerrar el módulo
-        </h2>
+      <section className="g-card gm-sec" aria-labelledby="cierre-h">
+        <p className="g-kicker">Parte 3</p>
+        <h2 id="cierre-h">Para cerrar el módulo</h2>
         <ol className="md-cierre">
           {nExamen > 0 && (
             <li>
@@ -359,7 +385,7 @@ export default function ModulePage() {
                 <Icon name="examen" size={22} />
                 <span>
                   <strong>Examen final del curso</strong>
-                  <span>Teoría y un caso práctico completo en la demo.</span>
+                  <span>Teoría y un caso práctico completo en la Demo real.</span>
                 </span>
               </Link>
             )}
@@ -367,8 +393,9 @@ export default function ModulePage() {
         </ol>
       </section>
 
-      {(series.length > 0 || sims.length > 0) && (
-        <section className="md-sec md-extra" aria-labelledby="extra-h">
+      {hayExtra && (
+        <section className="g-card gm-sec gm-extra" aria-labelledby="extra-h">
+          <p className="g-kicker">Parte 4</p>
           <h2 id="extra-h">Material de consulta</h2>
           {sims.length > 0 && (
             <p>
@@ -377,7 +404,7 @@ export default function ModulePage() {
           )}
           {series.length > 0 && (
             <p>
-              <Link to="/video">Vídeos completos del módulo ({series.reduce((n, s) => n + s.capitulos.length, 0)} capítulos)</Link>
+              <Link to="/video">Vídeos completos del módulo ({series.reduce((n, s) => n + s.capitulos.length, 0)} {series.reduce((n, s) => n + s.capitulos.length, 0) === 1 ? 'capítulo' : 'capítulos'})</Link>
             </p>
           )}
         </section>

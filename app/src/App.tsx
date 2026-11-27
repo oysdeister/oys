@@ -5,11 +5,9 @@ import { Medal } from './components/Icon';
 import { Sidebar } from './components/shell/Sidebar';
 import { Topbar } from './components/shell/Topbar';
 import { BottomNav } from './components/shell/BottomNav';
-import { Espacio } from './components/shell/Espacio';
 import { Onboarding } from './components/Onboarding';
 import { Bienvenida } from './components/Bienvenida';
 import { useProgreso } from './lib/progress';
-import { useInclinacion } from './lib/inclinar';
 import { CLERK_ACTIVO } from './auth/Acceso';
 import { INSIGNIAS, insigniasGanadas } from './lib/badges';
 import { fijarModoLibre } from './lib/ruta';
@@ -27,6 +25,9 @@ import ErpPractica from './pages/ErpPractica';
 import Glosario from './pages/Glosario';
 import { avisoIniciales, cerrarAvisoIniciales } from './lib/iniciales';
 import Errores from './pages/Errores';
+import Formacion from './pages/previa/Formacion';
+import GuiaPrevia from './pages/previa/GuiaPrevia';
+import ExamenPrevio from './pages/previa/ExamenPrevio';
 
 function useTema() {
   const [oscuro, setOscuro] = useState(() => document.documentElement.dataset.theme === 'dark');
@@ -136,15 +137,17 @@ function Rutas() {
       <motion.div
         key={loc.pathname}
         className="page-host"
-        /* Transición 3D entre páginas: la nueva sube desde el fondo inclinada y la anterior se aleja.
-           Solo transform y opacity (sin blur) para ir a 60 fps. */
+        /* Cambio de página: un fundido corto, sin movimiento */
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: reduce ? 0 : 0.18 }}
+        transition={{ duration: reduce ? 0 : 0.12 }}
       >
         <Routes location={loc}>
           <Route path="/" element={<Home />} />
+          <Route path="/formacion" element={<Formacion />} />
+          <Route path="/formacion/:guia" element={<GuiaPrevia />} />
+          <Route path="/formacion/:guia/examen" element={<ExamenPrevio />} />
           <Route path="/modulo/:id" element={<ModulePage />} />
           <Route path="/modulo/:id/examen" element={<ExamenModulo />} />
           <Route path="/ejercicio/:id" element={<ExercisePage />} />
@@ -171,7 +174,6 @@ function Marco() {
   const [oscuro, toggleTema] = useTema();
   const [plegada, togglePlegada] = usePlegada();
   const [cajon, setCajon] = useState(false);
-  useInclinacion();
   const loc = useLocation();
   useEffect(() => setCajon(false), [loc.pathname]);
   useEffect(() => {
@@ -182,12 +184,8 @@ function Marco() {
   }, [cajon]);
   return (
     <div className={`app-shell${plegada ? ' collapsed' : ''}${cajon ? ' drawer' : ''}`}>
-      <Espacio />
-      <div className="sis-suelo" aria-hidden="true">
-        <i />
-      </div>
       <Sidebar oscuro={oscuro} onTema={toggleTema} plegada={plegada} onPlegar={togglePlegada} onNavegar={() => setCajon(false)} />
-      <div className="sb-scrim" onClick={() => setCajon(false)} aria-hidden="true" />
+      <div className="sb-scrim gsb-velo" onClick={() => setCajon(false)} aria-hidden="true" />
       <div className="app-main">
         <Topbar onMenu={() => setCajon(true)} abierto={cajon} />
         <main>
@@ -197,7 +195,7 @@ function Marco() {
           <div className="wrap">
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo.png`} alt="O&S Consultores" className="logo-claro" />
             <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="O&S Consultores" className="logo-oscuro" />
-            <span>Bloques sobre Deister Axional (demo nextdemo.geasa.eu, base TUTORIAL). {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
+            <span>Formación sobre Axional Deister VNext. Demo real: nextdemo.geasa.eu, base TUTORIAL. {CLERK_ACTIVO ? 'Tu progreso se guarda en tu cuenta.' : 'Tu progreso se guarda en este navegador.'}</span>
           </div>
         </footer>
       </div>

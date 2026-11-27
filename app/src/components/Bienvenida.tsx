@@ -41,7 +41,7 @@ export function Bienvenida() {
     <AnimatePresence>
       {ver && (
         <motion.div
-          className="bnv"
+          className="bnv g-bnv"
           role="status"
           aria-live="polite"
           onClick={() => setVer(false)}

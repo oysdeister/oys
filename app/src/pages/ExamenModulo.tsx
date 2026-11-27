@@ -1,15 +1,13 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import confetti from 'canvas-confetti';
-import { META, getModulo } from '../content';
+import { AnimatePresence, motion } from 'framer-motion';
+import { META, MODULOS, getModulo } from '../content';
 import { APROBADO, acciones, useProgreso } from '../lib/progress';
 import { claveExamen, preguntasDe, MAX_PREG } from '../lib/examenModulo';
 import { conIni } from '../lib/texto';
 import { Glosa } from '../components/Glosario';
 import { Icon } from '../components/Icon';
-import { NucleoOrbita } from '../components/shell/NucleoOrbita';
-import { COLORES_MARCA, barajar, barajarDistinto } from '../components/exercise/util';
+import { barajar, barajarDistinto } from '../components/exercise/util';
 import type { Pregunta } from '../types';
 import './examen-modulo.css';
 
@@ -33,7 +31,6 @@ function nuevoIntento(banco: Pregunta[], previo?: Intento): Intento {
 export default function ExamenModulo() {
   const { id = '' } = useParams();
   const p = useProgreso();
-  const reducir = useReducedMotion();
   const modulo = getModulo(id);
   const banco = useMemo(() => preguntasDe(id), [id]);
   const clave = claveExamen(id);
@@ -82,12 +79,10 @@ export default function ExamenModulo() {
     acciones.notaExamenModulo(clave, nota);
     setFase('fin');
     window.scrollTo({ top: 0 });
-    if (nota >= APROBADO && !reducir) {
-      void confetti({ particleCount: 160, spread: 95, origin: { y: 0.5 }, colors: COLORES_MARCA, disableForReducedMotion: true });
-    }
   };
 
   const estilo = { ['--mod' as string]: meta.color } as CSSProperties;
+  const nMod = MODULOS.findIndex((m) => m.id === modulo.id);
 
   if (fase === 'inicio') {
     return (
@@ -95,24 +90,44 @@ export default function ExamenModulo() {
         <Link to={`/modulo/${modulo.id}`} className="btn ghost sm pm-volver">
           <Icon name="atras" size={18} /> {modulo.titulo}
         </Link>
-        <header className="ax-banner exm-banner">
-          <p className="ax-kicker">Examen del módulo</p>
+        <header className="exg-cab">
+          <p className="exg-kicker">Módulo {nMod} · Examen del módulo</p>
           <h1>{meta.corto}</h1>
-          <p className="lead">
+          <p className="exg-lead">
             {total} preguntas de test sobre lo que has visto en el módulo. Cada vez que lo haces, {banco.length > total ? 'salen otras preguntas, ' : 'las preguntas y las opciones salen '}en otro orden.
           </p>
+        </header>
+        <dl className="exg-cifras">
+          <div>
+            <dt>{total}</dt>
+            <dd>preguntas de test</dd>
+          </div>
+          <div>
+            <dt>1</dt>
+            <dd>respuesta correcta por pregunta</dd>
+          </div>
+          <div>
+            <dt>{Math.round(APROBADO * 100)} %</dt>
+            <dd>para aprobar</dd>
+          </div>
+          <div className={mejor !== null && mejor >= APROBADO ? 'ok' : undefined}>
+            <dt>{mejor === null ? '—' : `${Math.round(mejor * 100)} %`}</dt>
+            <dd>tu mejor nota</dd>
+          </div>
+        </dl>
+        <section className="exg-panel">
+          <h2>Antes de empezar</h2>
           <ul className="exm-reglas">
             <li>Una sola respuesta correcta por pregunta.</li>
             <li>Puedes volver atrás y cambiar respuestas hasta que termines.</li>
             <li>Apruebas con un {Math.round(APROBADO * 100)} %. Al final verás las que has fallado con su explicación.</li>
           </ul>
-          {mejor !== null && <p className={`chip${mejor >= APROBADO ? ' ok' : ''}`}>Tu mejor nota: {Math.round(mejor * 100)} %</p>}
           <div className="row-btns">
             <button className="btn arc lg" onClick={() => empezar(nIntento > 0 || mejor !== null)}>
               {mejor === null ? 'Empezar el examen' : 'Repetir el examen'}
             </button>
           </div>
-        </header>
+        </section>
       </div>
     );
   }
@@ -126,11 +141,15 @@ export default function ExamenModulo() {
         <Link to={`/modulo/${modulo.id}`} className="btn ghost sm pm-volver">
           <Icon name="atras" size={18} /> {modulo.titulo}
         </Link>
-        <motion.div className={`sheet pad test-fin ${ok ? 'flash-ok' : 'flash-ko'}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className={`test-nucleo${ok ? ' ok' : ' ko'}`}>
-            <NucleoOrbita valor={nota} size={210} etiqueta={`${aciertos} de ${total} aciertos`} />
+        <motion.div className={`exg-panel exm-fin ${ok ? 'ok' : 'ko'}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <div className="exm-nota" aria-label={`${aciertos} de ${total} aciertos`}>
+            <b>{Math.round(nota * 100)} %</b>
+            <span>
+              {aciertos} de {total} aciertos
+            </span>
           </div>
           <div>
+            <p className="exg-kicker">Módulo {nMod} · {meta.corto}</p>
             <h2>{ok ? 'Examen aprobado' : 'Todavía no'}</h2>
             <p className="muted">
               {ok
@@ -154,7 +173,7 @@ export default function ExamenModulo() {
             <h2 id="rep-h">Repaso de las que has fallado ({falladas.length})</h2>
             <ol>
               {falladas.map(({ q, r }, n) => (
-                <li key={n} className="glass exm-fallo">
+                <li key={n} className="exm-fallo">
                   <p className="exm-fallo-q">
                     <Glosa>{t(q.pregunta)}</Glosa>
                   </p>
@@ -191,7 +210,7 @@ export default function ExamenModulo() {
       <Link to={`/modulo/${modulo.id}`} className="btn ghost sm pm-volver">
         <Icon name="atras" size={18} /> Salir del examen
       </Link>
-      <div className="test glass exm-test">
+      <div className="exg-panel exm-test">
         <div className="test-top">
           <span className="small muted">
             Examen de {meta.corto} · pregunta {i + 1} de {total}
@@ -205,9 +224,9 @@ export default function ExamenModulo() {
           <motion.div
             key={`${nIntento}-${i}`}
             className="test-q"
-            initial={reducir ? { opacity: 0 } : { opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={reducir ? { opacity: 0 } : { opacity: 0, x: -30 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
           >
             <h3 className="test-preg">

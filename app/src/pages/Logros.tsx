@@ -1,15 +1,13 @@
 import { bloquesObligatorios } from '../lib/ruta';
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
-import confetti from 'canvas-confetti';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { META, MODULOS } from '../content';
 import { acciones, APROBADO, ejercicioCompletado, useProgreso, type Progreso, limpiaUsuario } from '../lib/progress';
 import { avanceGlobal, avanceModulo } from '../lib/avance';
 import { INSIGNIAS, type Insignia } from '../lib/badges';
 import { clavesActivas } from '../lib/examenModulo';
 import { Icon } from '../components/Icon';
-import { NucleoOrbita } from '../components/shell/NucleoOrbita';
-import { Planeta } from '../components/shell/Planeta';
 import './aprender.css';
 import './portada.css';
 
@@ -28,7 +26,7 @@ function DatosAlumno() {
   const ok = nombre.trim().length > 1 && ini.length >= 2 && usuario.length >= 3;
   return (
     <form
-      className="sheet pad lg-form"
+      className="g-card lg-form"
       onSubmit={(e) => {
         e.preventDefault();
         if (!ok) return;
@@ -38,7 +36,7 @@ function DatosAlumno() {
       }}
     >
       <h2>Tus datos</h2>
-      <p className="small muted">Tus iniciales aparecen en todos los códigos de los bloques. Si las cambias, usa las nuevas también en la demo.</p>
+      <p className="small muted">Tus iniciales aparecen en todos los códigos de los bloques. Si las cambias, usa las nuevas también en la Demo real.</p>
       <label className="lg-label">
         Nombre y apellidos
         <input className="field-input" value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" />
@@ -101,7 +99,7 @@ function Copia() {
   };
 
   return (
-    <div className="sheet pad lg-copia">
+    <div className="g-card lg-copia">
       <h2>Llévate tu progreso</h2>
       <p className="small muted">Se guarda solo en este navegador. Para seguir en otro ordenador o en el móvil, descárgalo aquí y cárgalo allí.</p>
       <div className="row-btns">
@@ -149,7 +147,7 @@ function Reiniciar() {
   const [confirmar, setConfirmar] = useState(false);
   const [hecho, setHecho] = useState(false);
   return (
-    <div className="sheet pad lg-reset">
+    <div className="g-card lg-reset">
       <h2>Empezar de cero</h2>
       <p className="small muted">Borra todo tu avance en este navegador. Tus datos (nombre e iniciales) se quedan.</p>
       <AnimatePresence mode="wait" initial={false}>
@@ -163,7 +161,7 @@ function Reiniciar() {
         ) : (
           <motion.div key="b" className="callout problema" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} role="alertdialog" aria-label="Confirmar reinicio">
             <b>¿Seguro?</b>
-            Se borran pasos, notas, checklists y simuladores. No se puede deshacer: si quieres guardar una copia, descárgala antes.
+            Se borran tus pasos, notas, listas de la Demo real y simuladores. No se puede deshacer: si quieres guardar una copia, descárgala antes.
             <div className="row-btns" style={{ marginTop: 12 }}>
               <button
                 className="btn lg-danger"
@@ -219,7 +217,7 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
   switch (b.id) {
     case 'primer-paso': {
       const v = ejs.some((e) => e.guiado) ? 1 : ejs.some((e) => e.pasos.length > 0) ? 0.5 : 0;
-      return { color: b.color, icono: 'play', valor: v, cuenta: v >= 1 ? 'Hecho' : v > 0 ? 'Recorrido empezado' : 'Sin empezar' };
+      return { color: b.color, icono: 'play', valor: v, cuenta: v >= 1 ? 'Hecho' : v > 0 ? 'Guiado empezado' : 'Sin empezar' };
     }
     case 'sin-fallos': {
       const mejor = ejs.reduce((s, e) => Math.max(s, e.test ?? 0), 0);
@@ -230,7 +228,7 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
       MODULOS.forEach((m) => m.ejercicios.forEach((e) => {
         if (e.checklist.length) mejor = Math.max(mejor, Math.min(1, (p.ejercicios[e.id]?.demo.length ?? 0) / e.checklist.length));
       }));
-      return { color: b.color, icono: 'check', valor: mejor, cuenta: `Mejor checklist: ${Math.round(mejor * 100)} %` };
+      return { color: b.color, icono: 'check', valor: mejor, cuenta: `Mejor Demo real: ${Math.round(mejor * 100)} %` };
     }
     case 'cuadrado':
       return { color: b.color, icono: 'asiento', valor: p.sims.asiento ? 1 : 0, cuenta: p.sims.asiento ? 'Hecho' : 'Simulador «Cuadra el asiento»' };
@@ -248,73 +246,52 @@ function aspecto(b: Insignia, p: Progreso): Aspecto {
   }
 }
 
-/** Medalla propia: disco del color, arco O&S y el icono de la insignia; apagada muestra cuánto falta */
+/** Medalla plana: círculo del color con el icono; apagada, aro gris con lo que llevas */
 function Medalla({ a, on }: { a: Aspecto; on: boolean }) {
   return (
-    <span className="pl-medal">
-      <svg className="pl-m" viewBox="0 0 100 100" aria-hidden="true">
+    <span className="lgx-medalla">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
         {on ? (
-          <>
-            <circle cx="50" cy="50" r="46" fill={a.color} />
-            <circle cx="50" cy="50" r="46" fill="url(#pl-luz)" />
-            <circle cx="50" cy="50" r="37" fill="none" stroke="#fff" strokeOpacity="0.5" strokeWidth="2" strokeDasharray="3 4" />
-            <path d="M20 70 C 14 38, 50 14, 86 30" fill="none" stroke="#fff" strokeOpacity="0.55" strokeWidth="5" strokeLinecap="round" />
-          </>
+          <circle cx="50" cy="50" r="46" fill={a.color} />
         ) : (
           <>
-            <circle cx="50" cy="50" r="44" fill="var(--paper)" stroke="var(--line)" strokeWidth="3" strokeDasharray="5 5" />
-            <circle cx="50" cy="50" r="44" fill="none" stroke={a.color} strokeWidth="5" strokeLinecap="round" pathLength={1} strokeDasharray={`${Math.max(a.valor, 0)} 1`} transform="rotate(-90 50 50)" />
+            <circle cx="50" cy="50" r="44" fill="var(--g-paper)" stroke="var(--g-line)" strokeWidth="5" />
+            {a.valor > 0 && <circle cx="50" cy="50" r="44" fill="none" stroke={a.color} strokeWidth="5" strokeLinecap="round" pathLength={1} strokeDasharray={`${a.valor} 1`} transform="rotate(-90 50 50)" />}
           </>
         )}
       </svg>
-      {on && <span className="pl-shine" aria-hidden="true" />}
-      <span className="pl-ico">
-        <Icon name={a.icono} size={34} stroke={2.4} />
+      <span className="lgx-medalla-ico">
+        <Icon name={a.icono} size={26} stroke={2.2} />
       </span>
     </span>
   );
 }
 
-function TarjetaInsignia({ b, a, on, nueva, i }: { b: Insignia; a: Aspecto; on: boolean; nueva: boolean; i: number }) {
-  const reducir = useReducedMotion();
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 160, damping: 14 });
-  const sry = useSpring(ry, { stiffness: 160, damping: 14 });
-  const mover = (e: PointerEvent<HTMLDivElement>) => {
-    if (reducir || !on || e.pointerType !== 'mouse') return;
-    const r = e.currentTarget.getBoundingClientRect();
-    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 18);
-    ry.set(((e.clientX - r.left) / r.width - 0.5) * 22);
-  };
+function TarjetaInsignia({ b, a, on, nueva }: { b: Insignia; a: Aspecto; on: boolean; nueva: boolean }) {
   return (
-    <motion.div
-      className={`glass pl-badge${on ? ' on neon-mod' : ''}`}
-      style={{ ['--c' as string]: a.color, ['--mod' as string]: a.color, rotateX: srx, rotateY: sry, transformPerspective: 700 } as CSSProperties}
-      initial={reducir ? false : nueva ? { opacity: 0, rotateY: 180, scale: 0.6 } : { opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0, rotateY: 0, scale: 1 }}
-      transition={nueva ? { delay: 0.5 + i * 0.12, type: 'spring', stiffness: 90, damping: 11 } : { delay: Math.min(i, 10) * 0.04, duration: 0.45 }}
-      onPointerMove={mover}
-      onPointerLeave={() => {
-        rx.set(0);
-        ry.set(0);
-      }}
-      role="listitem"
+    <li
+      className={`lgx-insignia${on ? ' on' : ''}`}
+      style={{ ['--c' as string]: a.color } as CSSProperties}
       aria-label={`${on ? 'Insignia ganada' : 'Insignia pendiente'}: ${b.titulo}. ${b.texto}${on ? '' : ` Llevas: ${a.cuenta}.`}`}
     >
-      {nueva ? <span className="pl-new">¡Nueva!</span> : on ? <span className="pl-ok" aria-hidden="true"><Icon name="check" size={14} stroke={3.2} /></span> : null}
       <Medalla a={a} on={on} />
-      <b>{b.titulo}</b>
-      <span className="small muted">{b.texto}</span>
-      {!on && (
-        <span className="pl-prog" aria-hidden="true">
-          <span className="ax-bar">
-            <i style={{ width: `${a.valor * 100}%` }} />
-          </span>
-          <span>{a.cuenta}</span>
+      <span className="lgx-insignia-txt">
+        <b>
+          {b.titulo}
+          {nueva && <span className="lgx-nueva">Nueva</span>}
+        </b>
+        <span>{b.texto}</span>
+        <span className={`lgx-cuenta${on ? ' ok' : ''}`}>
+          {on ? (
+            <>
+              <Icon name="check" size={14} stroke={3} /> Ganada
+            </>
+          ) : (
+            a.cuenta
+          )}
         </span>
-      )}
-    </motion.div>
+      </span>
+    </li>
   );
 }
 
@@ -338,28 +315,18 @@ function guardarVistas(ids: string[]) {
 
 export default function Logros() {
   const p = useProgreso();
-  const reducir = useReducedMotion();
   const global = avanceGlobal(p);
   const lista = INSIGNIAS.map((b) => ({ b, on: b.ganada(p), a: aspecto(b, p) }));
   const ganadas = lista.filter((x) => x.on);
   const ids = ganadas.map((x) => x.b.id);
-  // Insignias ganadas desde la última visita: se celebran una vez
+  // Insignias ganadas desde la última visita: se marcan como «Nueva» una vez
   const [nuevas] = useState<string[]>(() => {
     const vistas = leerVistas();
     return vistas === null ? [] : ids.filter((id) => !vistas.includes(id));
   });
-  const celebrado = useRef(false);
   useEffect(() => {
     guardarVistas(ids);
   }, [ids.join(',')]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (celebrado.current || !nuevas.length || reducir) return;
-    celebrado.current = true;
-    const t = setTimeout(() => {
-      void confetti({ particleCount: 140, spread: 100, origin: { y: 0.4 }, colors: ['#4fbfa5', '#2a9c83', '#f2a93b', '#1f2738'], disableForReducedMotion: true });
-    }, 700);
-    return () => clearTimeout(t);
-  }, [nuevas, reducir]);
 
   // La próxima insignia: la pendiente con más avance
   const proxima = lista.filter((x) => !x.on).sort((x, y) => y.a.valor - x.a.valor)[0];
@@ -368,113 +335,87 @@ export default function Logros() {
   const tests = Object.values(p.ejercicios).filter((e) => (e.test ?? 0) >= APROBADO).length;
 
   return (
-    <div className="wrap lg pl">
-      <header className="ax-banner pl-banner">
-        <div className="pl-banner-in">
-          <NucleoOrbita valor={global} etiqueta="de tu formación" size={190} className="pl-nucleo" />
-          <div className="pl-banner-txt">
-            <h1 className="lg-h1">Tus logros</h1>
-            <p className="lead">
-              {global >= 1 ? 'Lo tienes todo: a por el examen.' : ganadas.length === 0 ? 'Termina tu primer recorrido guiado y estrenas la primera insignia.' : 'Cada bloque que completas suma.'}
-            </p>
-            <div className="ax-stats pl-stats">
-              <div className="ax-stat">
-                <span className="ax-num">
-                  {ganadas.length}
-                  <small>/{INSIGNIAS.length}</small>
-                </span>
-                <span>insignias</span>
-              </div>
-              <div className="ax-stat">
-                <span className="ax-num">
-                  {ejHechos}
-                  <small>/{ejTotal}</small>
-                </span>
-                <span>bloques</span>
-              </div>
-              <div className="ax-stat">
-                <span className="ax-num">{tests}</span>
-                <span>tests aprobados</span>
-              </div>
-            </div>
-          </div>
-          {proxima && (
-            <motion.aside
-              className="glass pl-next"
-              style={{ ['--c' as string]: proxima.a.color } as CSSProperties}
-              initial={reducir ? false : { opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              aria-labelledby="prox-h"
-            >
-              <Medalla a={proxima.a} on={false} />
-              <div>
-                <h2 id="prox-h">Tu próxima insignia</h2>
-                <strong>{proxima.b.titulo}</strong>
-                <p>{proxima.b.texto}</p>
-                <div className="ax-bar" aria-hidden="true">
-                  <i style={{ width: `${Math.max(proxima.a.valor * 100, 2)}%` }} />
-                </div>
-                <p className="pl-next-cuenta">{proxima.a.cuenta}</p>
-              </div>
-            </motion.aside>
-          )}
-        </div>
+    <div className="wrap lg cs-pag lgx">
+      <header className="g-hero cs-hero">
+        <p className="g-kicker">Tu avance</p>
+        <h1>Tus logros</h1>
+        <p className="cs-lead">
+          {global >= 1 ? 'Lo tienes todo: a por el examen.' : ganadas.length === 0 ? 'Termina tu primer Guiado y estrenas la primera insignia.' : 'Cada bloque que completas suma.'}
+        </p>
+        <p className="cs-datos">
+          <span>
+            <b>{Math.round(global * 100)} %</b> de tu formación
+          </span>
+          <span>
+            <b>
+              {ganadas.length} de {INSIGNIAS.length}
+            </b>{' '}
+            insignias
+          </span>
+          <span>
+            <b>
+              {ejHechos} de {ejTotal}
+            </b>{' '}
+            bloques
+          </span>
+          <span>
+            <b>{tests}</b> {tests === 1 ? 'test aprobado' : 'tests aprobados'}
+          </span>
+        </p>
       </header>
 
-      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
-        <defs>
-          <radialGradient id="pl-luz" cx="35%" cy="28%" r="75%">
-            <stop offset="0" stopColor="#fff" stopOpacity="0.45" />
-            <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
-            <stop offset="1" stopColor="#000" stopOpacity="0.18" />
-          </radialGradient>
-        </defs>
-      </svg>
+      {proxima && (
+        <aside className="g-box info lgx-proxima" aria-labelledby="prox-h" style={{ ['--c' as string]: proxima.a.color } as CSSProperties}>
+          <span className="t" id="prox-h">
+            Tu próxima insignia: {proxima.b.titulo}
+          </span>
+          <p>{proxima.b.texto}</p>
+          <span className="cs-barra" aria-hidden="true">
+            <i style={{ width: `${Math.max(proxima.a.valor * 100, 2)}%` }} />
+          </span>
+          <p className="lgx-proxima-cuenta">{proxima.a.cuenta}</p>
+        </aside>
+      )}
 
-      <section className="lg-sec" aria-labelledby="ins-h">
+      <section className="cs-sec" aria-labelledby="ins-h">
         <h2 id="ins-h">Insignias</h2>
-        <div className="pl-badges" role="list">
-          {lista.map(({ b, on, a }, i) => (
-            <TarjetaInsignia key={b.id} b={b} a={a} on={on} nueva={nuevas.includes(b.id)} i={i} />
+        <ul className="lgx-insignias">
+          {lista.map(({ b, on, a }) => (
+            <TarjetaInsignia key={b.id} b={b} a={a} on={on} nueva={nuevas.includes(b.id)} />
           ))}
-        </div>
+        </ul>
       </section>
 
-      <section className="lg-sec" aria-labelledby="av-h">
+      <section className="cs-sec" aria-labelledby="av-h">
         <h2 id="av-h">Avance por módulo</h2>
-        <div className="glass pl-planetas">
-          <svg className="pl-planetas-traza" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="arcoNeon" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor="#5ff0d2" />
-                <stop offset="0.55" stopColor="#6fe9ff" />
-                <stop offset="1" stopColor="#8b7bff" />
-              </linearGradient>
-            </defs>
-            <path className="orbita-trazo" d="M10 50 C 160 0, 440 0, 590 50" strokeWidth="3" vectorEffect="non-scaling-stroke" />
-          </svg>
-          <ul>
-            {MODULOS.map((m) => {
-              const meta = META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
-              const av = avanceModulo(p, m.id);
-              const hechos = bloquesObligatorios(m).filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
-              return (
-                <li key={m.id}>
-                  <Planeta color={meta.color} valor={av} size={64} icono={meta.icono} etiqueta={meta.corto} pct to={`/modulo/${m.id}`} />
-                  <span className="pl-planeta-ej">
-                    {hechos} de {bloquesObligatorios(m).length} bloques
+        <ul className="g-card lgx-mods">
+          {MODULOS.map((m, i) => {
+            const meta = META[m.id] ?? { color: 'var(--arc)', icono: 'maestros', corto: m.titulo };
+            const av = avanceModulo(p, m.id);
+            const total = bloquesObligatorios(m).length;
+            const hechos = bloquesObligatorios(m).filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
+            return (
+              <li key={m.id} style={{ ['--c' as string]: meta.color } as CSSProperties}>
+                <Link to={`/modulo/${m.id}`} className="lgx-mod">
+                  <span className="lgx-mod-n">{i}</span>
+                  <span className="lgx-mod-nom">{meta.corto}</span>
+                  <span className="cs-barra lgx-mod-barra" aria-hidden="true">
+                    <i style={{ width: `${Math.round(av * 100)}%` }} />
                   </span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                  <span className="lgx-mod-cuenta">
+                    {hechos} de {total} bloques
+                  </span>
+                  <span className="lgx-mod-pct">{Math.round(av * 100)} %</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </section>
 
-      <section className="pl-ajustes" aria-labelledby="aj-h">
+      <section className="cs-sec" aria-labelledby="aj-h">
         <h2 id="aj-h">Tus datos y tu copia</h2>
-        <div className="lg-grid" style={{ marginTop: 16 }}>
+        <div className="lg-grid lgx-ajustes">
           <DatosAlumno />
           <Copia />
           <Reiniciar />

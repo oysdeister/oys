@@ -73,14 +73,10 @@ export default function Examinador() {
 
   return (
     <div className="wrap ex-pagina">
-      <header className="ax-banner" style={{ ['--mod' as string]: 'var(--arc)' }}>
-        <div className="ax-banner-in">
-          <div className="ax-banner-text">
-            <p className="ax-kicker">Examen final</p>
-            <h1 className="ax-glow-text">Panel del examinador</h1>
-            <p className="lead">Pega el acta que te ha mandado el alumno, o solo su código de examen, para ver lo esperado frente a lo declarado y comprobarlo en Axional.</p>
-          </div>
-        </div>
+      <header className="exg-cab">
+        <p className="exg-kicker">Examen final · examinador</p>
+        <h1>Panel del examinador</h1>
+        <p className="exg-lead">Pega el acta que te ha mandado el alumno, o solo su código de examen, para ver lo esperado frente a lo declarado y comprobarlo en Axional.</p>
       </header>
 
       {CLAVE_POR_DEFECTO && (
@@ -103,8 +99,8 @@ export default function Examinador() {
 
       <AnimatePresence mode="wait">
         {caso && cargado && (
-          <motion.div key={cargado.codigo} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="exm-cuerpo">
-            <section className="ex-profundo exm-resumen">
+          <motion.div key={cargado.codigo} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="exm-cuerpo">
+            <section className="exg-panel exm-resumen">
               <div>
                 <span className="ex-kicker">{acta ? acta.alumno.nombre : 'Solo código: no hay datos declarados'}</span>
                 <div className="ex-codigo">{caso.codigo}</div>

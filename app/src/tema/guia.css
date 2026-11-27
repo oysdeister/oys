@@ -1,0 +1,151 @@
+/*
+  Formación Axional Deister VNext · Tema «guía» (v5)
+  ---------------------------------------------------------------
+  Sustituye la estética «cielo, cristal y neón» (v3/v4) por la de las guías de
+  formación previa (guia-contabilidad.html y guia-erp.html): fondo papel cálido,
+  tarjetas blancas con borde fino, cabecera azul marino, recuadros con barra a la
+  izquierda, tablas sobrias y letra del sistema. Marca O&S: navy del logo + turquesa.
+
+  Se carga la ÚLTIMA (main.tsx), después de sistema.css y app-ux.css, y redefine los
+  tokens que usan todas las hojas. Los ajustes por área van en tema/<área>.css.
+
+  Tokens nuevos (úsalos en lo que escribas):
+    --g-bg  --g-paper  --g-ink  --g-muted  --g-line          superficie y texto
+    --g-navy  --g-navy-soft                                  cabeceras y totales
+    --g-accent  --g-accent-soft  --g-accent-ink              acento O&S (turquesa oscuro)
+    --g-ok/-soft  --g-warn/-soft  --g-bad/-soft  --g-info/-soft   recuadros
+    --g-debe  --g-haber                                      asientos
+    --g-r (14px tarjeta)  --g-r-s (10px recuadro, figura, tabla)  --g-r-xs (6px)
+    --g-font  --g-mono                                       letra
+  Componentes: .g-card .g-hero .g-box(.key/.info/.ok/.warn) .g-table .g-kicker .g-lead .g-steps
+*/
+:root {
+  --g-bg: #f6f5f2;
+  --g-paper: #ffffff;
+  --g-ink: #1d2430;
+  --g-muted: #5b6472;
+  --g-line: #e3e1dc;
+  --g-navy: #1f2738;          /* navy del logo O&S */
+  --g-navy-hero: #0f2a4a;     /* cabecera de las guías */
+  --g-navy-soft: #e6edf6;
+  --g-accent: #1a7d68;        /* turquesa O&S oscurecido: AA sobre blanco */
+  --g-accent-soft: #e2f1ec;
+  --g-accent-ink: #0f5a4a;
+  --g-brand: #4fbfa5;         /* turquesa del arco del logo, solo decorativo */
+  --g-ok: #2f7d4f;  --g-ok-soft: #e3f2e8;
+  --g-warn: #8a6100; --g-warn-soft: #fbf1d9;
+  --g-bad: #b3261e; --g-bad-soft: #fbe7e5;
+  --g-info: #1f5fa8; --g-info-soft: #e6edf6;
+  --g-debe: #1f5fa8; --g-haber: #b8441f;
+  --g-r: 14px; --g-r-s: 10px; --g-r-xs: 6px;
+  --g-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --g-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --g-shadow: 0 1px 2px rgba(29, 36, 48, 0.05);
+
+  color-scheme: light;
+}
+/* --- tokens heredados, remapeados: así todas las hojas antiguas cambian a la vez.
+   Con el selector oscuro también, para ganar al :root[data-theme='dark'] de styles.css (v3). --- */
+:root, :root[data-theme='dark'] {
+  --ink: var(--g-ink); --ink-2: #3f4856; --ink-3: var(--g-muted);
+  --paper: var(--g-bg); --sheet: var(--g-paper); --sheet-solid: var(--g-paper); --sheet-2: #faf9f7;
+  --line: var(--g-line);
+  --arc: var(--g-accent); --arc-deep: var(--g-accent-ink); --arc-soft: var(--g-accent-soft); --arc-brand: var(--g-brand);
+  --arc-glow: transparent;
+  --signal: #c27a12; --signal-soft: var(--g-warn-soft);
+  --error: var(--g-bad); --error-soft: var(--g-bad-soft); --ok: var(--g-ok);
+  --cyan: var(--g-info); --violet: #5b4fc4;
+  --space-1: var(--g-bg); --space-2: var(--g-bg); --space-3: var(--g-bg);
+  --glass: var(--g-paper); --neon: var(--g-line);
+  --glow: var(--g-shadow); --glow-strong: 0 4px 14px -6px rgba(29, 36, 48, 0.18);
+  --shadow: var(--g-shadow); --shadow-lg: 0 4px 14px -6px rgba(29, 36, 48, 0.18);
+  --grad-navy: var(--g-navy-hero); --grad-arc: var(--g-accent);
+  --display: var(--g-font); --text: var(--g-font);
+  --r-s: var(--g-r-xs); --r-m: var(--g-r-s); --r-l: var(--g-r); --r-xl: var(--g-r);
+  --ctl-r: 8px;
+  --focus: #c27a12;
+  --focus-ring: 0 0 0 2px var(--g-bg), 0 0 0 4.5px var(--focus);
+  /* escala de títulos de las guías (sistema.css la aplica a .page-host h1…h4) */
+  --t-display: 40px; --t-page: 36px; --t-section: 27px; --t-block: 20px; --t-sub: 17px;
+  --lh-tight: 1.18; --lh-head: 1.25; --lh-body: 1.65;
+}
+@media (max-width: 760px) {
+  :root { --t-display: 30px; --t-page: 28px; --t-section: 22px; --t-block: 18px; --t-sub: 16px; }
+}
+:root[data-theme='dark'] {
+  --g-bg: #14171c; --g-paper: #1c2027; --g-ink: #e7e9ee; --g-muted: #a2a9b5; --g-line: #2e333c;
+  --g-navy: #9cc0ea; --g-navy-hero: #12263f; --g-navy-soft: #1d2a3a;
+  --g-accent: #5fcfb5; --g-accent-soft: #17332d; --g-accent-ink: #8fe3cf;
+  --g-ok: #6cc792; --g-ok-soft: #1d3226; --g-warn: #e9c46a; --g-warn-soft: #3a3120;
+  --g-bad: #f08a80; --g-bad-soft: #3a1c1a; --g-info: #9cc0ea; --g-info-soft: #1d2a3a;
+  --g-debe: #79aef0; --g-haber: #e2774f;
+  --g-shadow: none;
+  --ink-2: #c4cad4; --sheet-2: #20252d; --signal: #e9b45a; --focus: #f5b75a;
+  color-scheme: dark;
+}
+
+html, body { background: var(--g-bg); }
+body { color: var(--g-ink); font-family: var(--g-font); font-size: 17px; line-height: 1.65; }
+h1, h2, h3, h4, .display { font-family: var(--g-font); }
+a { color: var(--g-info); }
+
+/* letra del sistema a su anchura normal: las hojas antiguas ponían 'wdth' 75–92 para Bricolage,
+   y la letra del sistema (San Francisco, variable) también se estrechaba */
+body, body * { font-variation-settings: normal !important; }
+/* títulos: letra del sistema sin apretar (sistema.css los fija con !important) */
+.page-host h1, .page-host h2:not(.kick):not(.sr-only) { letter-spacing: -0.01em !important; }
+.page-host h3, .page-host h4 { letter-spacing: 0 !important; font-variation-settings: normal !important; }
+
+/* --- botones sobrios: .btn contorno (secundario), .btn.arc relleno acento (principal), .btn.ghost texto ---
+   Los !important ganan a las capas v3 (degradados y brillos) y v4 (píldoras); radio 8 px y sin saltos. */
+.btn {
+  border-radius: 8px !important; border: 1px solid var(--g-line) !important; background: var(--g-paper) !important;
+  color: var(--g-ink) !important; box-shadow: none !important; font-weight: 650; transform: none !important;
+}
+.btn.lg { border-radius: 8px !important; min-height: 48px; padding: 0 22px; font-size: 16.5px; }
+.btn:hover { border-color: color-mix(in srgb, var(--g-accent) 55%, var(--g-line)) !important; background: var(--g-paper) !important; }
+.btn::before, .btn::after { display: none !important; }
+.btn.arc { background: var(--g-accent) !important; border-color: var(--g-accent) !important; color: #fff !important; }
+.btn.arc:hover { background: var(--g-accent-ink) !important; border-color: var(--g-accent-ink) !important; }
+:root[data-theme='dark'] .btn.arc { color: #0b1f1a !important; }
+:root[data-theme='dark'] .btn.arc:hover { background: var(--g-accent-ink) !important; }
+.btn.ghost { background: transparent !important; }
+.btn.ghost:hover { background: color-mix(in srgb, var(--g-ink) 5%, transparent) !important; }
+.btn.light { background: #fff !important; border-color: #fff !important; color: var(--g-navy-hero) !important; }
+.btn.signal { background: var(--g-warn-soft) !important; border-color: var(--g-warn) !important; color: var(--g-ink) !important; }
+.btn[disabled], .btn[aria-disabled='true'] { opacity: 0.5; }
+/* sobre la cabecera azul marino: el turquesa del logo con texto marino */
+.g-hero .btn.arc { background: var(--g-brand) !important; border-color: var(--g-brand) !important; color: #0b2036 !important; }
+.g-hero .btn.arc:hover { background: #7dd3bf !important; border-color: #7dd3bf !important; }
+.g-hero .btn:not(.arc) { background: transparent !important; border-color: rgba(255, 255, 255, 0.45) !important; color: #fff !important; }
+.g-hero .btn:not(.arc):hover { background: rgba(255, 255, 255, 0.1) !important; }
+.g-hero a:not(.btn) { color: #fff; }
+.g-hero :is(h1, h2, h3) { color: #fff; }
+
+/* fuera el cielo, el suelo en perspectiva y el grano: fondo papel liso */
+.espacio, .espacio-cielo, .sis-suelo { display: none !important; }
+
+/* --- componentes base del tema (los de las guías) --- */
+.g-card { background: var(--g-paper); border: 1px solid var(--g-line); border-radius: var(--g-r); padding: 34px 40px; }
+.g-hero { background: var(--g-navy-hero); color: #fff; border-radius: var(--g-r); padding: 40px 40px 34px; }
+.g-hero .g-kicker { color: rgba(255, 255, 255, 0.8); }
+.g-hero p { opacity: 0.92; max-width: 64ch; }
+.g-kicker { text-transform: uppercase; letter-spacing: 0.06em; font-size: 12.5px; font-weight: 700; color: var(--g-accent); }
+.g-lead { font-size: 19px; color: var(--g-muted); }
+.g-box { border-radius: var(--g-r-s); padding: 16px 20px; margin: 20px 0; max-width: 80ch; border-left: 4px solid var(--g-accent); background: var(--g-accent-soft); }
+.g-box > :last-child { margin-bottom: 0; }
+.g-box .t { font-weight: 700; display: block; margin-bottom: 6px; color: var(--g-accent-ink); }
+.g-box.info { background: var(--g-info-soft); border-color: var(--g-info); } .g-box.info .t { color: var(--g-info); }
+.g-box.ok { background: var(--g-ok-soft); border-color: var(--g-ok); } .g-box.ok .t { color: var(--g-ok); }
+.g-box.warn { background: var(--g-warn-soft); border-color: var(--g-warn); } .g-box.warn .t { color: var(--g-warn); }
+.g-box.bad { background: var(--g-bad-soft); border-color: var(--g-bad); } .g-box.bad .t { color: var(--g-bad); }
+.g-table { border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; width: 100%; }
+.g-table th, .g-table td { border: 1px solid var(--g-line); padding: 7px 12px; text-align: left; vertical-align: top; }
+.g-table th { background: var(--g-accent-soft); }
+.g-steps { counter-reset: s; list-style: none; padding: 0; }
+.g-steps > li { counter-increment: s; position: relative; padding-left: 40px; margin-bottom: 12px; }
+.g-steps > li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%; background: var(--g-accent); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+@media (max-width: 900px) {
+  .g-card { padding: 22px 18px; }
+  .g-hero { padding: 28px 22px; }
+}

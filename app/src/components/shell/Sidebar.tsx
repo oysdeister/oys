@@ -1,13 +1,17 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '../Icon';
-import { Anillo } from './Anillo';
 import { MODULOS, META, getEjercicio } from '../../content';
 import { FASE_UI, bloqueAbierto, bloquesDe, conSelectorDeFases, faseActiva, faseDeBloque, fasesDe, guardarFase, numeroBloque, pasosDe, pasoOpcional, esOpcional, type FaseId } from '../../lib/ruta';
 import { ejercicioCompletado } from '../../lib/progress';
-import '../../pages/ruta.css';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal, avanceModulo } from '../../lib/avance';
+
+/** Formación previa (antes de los módulos de Axional): páginas en pages/previa */
+const PREVIA = [
+  { to: '/formacion/contabilidad', label: 'Conceptos de contabilidad general', letra: '1' },
+  { to: '/formacion/erp', label: 'Qué es un ERP', letra: '2' },
+];
 
 const PRACTICA = [
   { to: '/erp', label: 'ERP de práctica', icon: 'compras' },
@@ -15,7 +19,7 @@ const PRACTICA = [
   { to: '/video', label: 'Vídeos', icon: 'video' },
   { to: '/glosario', label: 'Glosario', icon: 'libro' },
   { to: '/errores', label: 'Errores', icon: 'aviso' },
-  { to: '/examen', label: 'Examen', icon: 'examen' },
+  { to: '/examen', label: 'Examen final', icon: 'examen' },
   { to: '/logros', label: 'Logros', icon: 'logros' },
 ];
 
@@ -64,7 +68,7 @@ export function Sidebar({
     const cont = scrollRef.current;
     if (!cont || plegada) return;
     const id = window.setTimeout(() => {
-      const el = cont.querySelector<HTMLElement>('.sb-bloques li.actual') ?? cont.querySelector<HTMLElement>('.sb-mod-abierto');
+      const el = cont.querySelector<HTMLElement>('.gsb-bloques li.actual') ?? cont.querySelector<HTMLElement>('.gsb-mod-abierto');
       if (!el) return;
       const c = cont.getBoundingClientRect();
       const r = el.getBoundingClientRect();
@@ -72,60 +76,73 @@ export function Sidebar({
     }, 60);
     return () => window.clearTimeout(id);
   }, [loc.pathname, abierto, plegada]);
+  const enPrevia = loc.pathname.startsWith('/formacion');
   return (
-    <aside className="sb" aria-label="Navegación de la plataforma" id="barra-lateral">
-      <Link to="/" className="sb-brand" onClick={onNavegar} aria-label="Formación Axional Deister VNext, inicio">
-        <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="" />
-        <span>
-          <b>Formación Axional Deister VNext</b>
-          <small>O&amp;S Consultores</small>
-        </span>
-      </Link>
-
-      <Link to="/logros" className="sb-profile" onClick={onNavegar} title={t(`${nombre} · ${pct(global)}`)}>
-        <span className="sb-avatar">
-          <Anillo valor={global} size={58} grosor={4} />
-          <span className="sb-ini">{ini}</span>
-        </span>
-        <span className="sb-who">
-          <b>{nombre}</b>
-          <small>
-            <em>{pct(global)}</em> del curso completado
-          </small>
-        </span>
-      </Link>
-
-      <nav className="sb-scroll" aria-label="Principal" ref={scrollRef}>
-        <NavLink to="/" end className="sb-link" onClick={onNavegar} title={t('Inicio')}>
-          <span className="sb-ico">
-            <Icon name="inicio" />
+    <aside className="gsb" aria-label="Navegación de la plataforma" id="barra-lateral">
+      <div className="gsb-cab">
+        <Link to="/" className="gsb-marca" onClick={onNavegar} aria-label="Formación Axional Deister VNext, inicio">
+          <img src={`${import.meta.env.BASE_URL}brand/oys_logo.png`} alt="" className="logo-claro" />
+          <img src={`${import.meta.env.BASE_URL}brand/oys_logo_light.png`} alt="" className="logo-oscuro" />
+          <span className="gsb-marca-txt">
+            <small>O&amp;S Consultores</small>
+            <b>Axional Deister VNext</b>
           </span>
-          <span className="sb-label">Inicio</span>
+        </Link>
+        <Link to="/logros" className="gsb-perfil" onClick={onNavegar} title={t(`${nombre} · ${pct(global)}`)}>
+          <span className="gsb-ini" aria-hidden="true">{ini}</span>
+          <span className="gsb-quien">
+            <b>{nombre}</b>
+            <small>{pct(global)} del curso</small>
+          </span>
+          <span className="gsb-barra" aria-hidden="true">
+            <i style={{ width: `${global * 100}%` }} />
+          </span>
+        </Link>
+      </div>
+
+      <nav className="gsb-nav" aria-label="Principal" ref={scrollRef}>
+        <NavLink to="/" end className="gsb-item" onClick={onNavegar} title={t('Inicio')}>
+          <span className="gsb-n">
+            <Icon name="inicio" size={18} />
+          </span>
+          <span className="gsb-t">Inicio</span>
         </NavLink>
 
-        <div className="sb-group">Módulos</div>
+        <p className="gsb-grupo">Formación previa</p>
+        <NavLink to="/formacion" end className={`gsb-item${enPrevia ? ' abierto' : ''}`} onClick={onNavegar} title={t('Antes de empezar con Axional')}>
+          <span className="gsb-n">
+            <Icon name="libro" size={18} />
+          </span>
+          <span className="gsb-t">Antes de empezar con Axional</span>
+        </NavLink>
+        {!plegada && (
+          <ol className="gsb-bloques gsb-previa" aria-label="Apartados de la formación previa">
+            {PREVIA.map((x) => (
+              <li key={x.to} className={loc.pathname.startsWith(x.to) ? 'actual' : undefined}>
+                <NavLink to={x.to} onClick={onNavegar}>
+                  <b>{x.letra}</b>
+                  <span>{x.label}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ol>
+        )}
+
+        <p className="gsb-grupo">Módulos de Axional</p>
         {MODULOS.map((m, im) => {
           const meta = META[m.id] ?? { color: '#4fbfa5', icono: 'check', corto: m.titulo };
           const v = avanceModulo(p, m.id);
           return (
-            <div key={m.id} className={abierto === m.id ? 'sb-mod-abierto' : undefined}>
+            <div key={m.id} className={abierto === m.id ? 'gsb-mod-abierto' : undefined}>
               <NavLink
                 to={`/modulo/${m.id}`}
-                className={`sb-link sb-mod${abierto === m.id ? ' abierto' : ''}`}
+                className={`gsb-item gsb-mod${abierto === m.id ? ' abierto' : ''}${v >= 1 ? ' completo' : ''}`}
                 onClick={onNavegar}
-                style={{ ['--mod' as string]: meta.color } as CSSProperties}
-                title={t(`${meta.corto} · ${pct(v)}`)}
+                title={t(`${im}. ${meta.corto} · ${pct(v)}`)}
               >
-                <span className="sb-ico">
-                  <Icon name={meta.icono} size={20} />
-                </span>
-                <span className="sb-label">
-                  {im}. {meta.corto}
-                </span>
-                <span className={`sb-pct${v >= 1 ? ' full' : ''}`}>{pct(v)}</span>
-                <span className="sb-minibar" aria-hidden="true">
-                  <i style={{ width: `${v * 100}%` }} />
-                </span>
+                <span className="gsb-n">{im}</span>
+                <span className="gsb-t">{meta.corto}</span>
+                {v > 0 && <span className="gsb-pct">{v >= 1 ? '✓' : pct(v)}</span>}
               </NavLink>
               {abierto === m.id && !plegada && (() => {
                 const grupos = fasesDe(m);
@@ -144,20 +161,20 @@ export function Sidebar({
                           <span>{b.titulo}</span>
                         </NavLink>
                       ) : (
-                        <span className="sb-bl" title="Se abre al terminar el bloque anterior">
+                        <span className="gsb-cerrado" title="Se abre al terminar el bloque anterior">
                           <b>{n}</b>
                           <span>{b.titulo}</span>
                         </span>
                       )}
                       {actual && (
-                        <ol className="sb-pasos">
+                        <ol className="gsb-pasos">
                           {pasosDe(b).map((x) => {
                             const on = (pasoActual === 'problemas' ? 'demo' : pasoActual) === x.id;
                             return (
                               <li key={x.id}>
                                 <Link to={`/ejercicio/${b.id}${x.id === 'concepto' ? '' : `?tab=${x.id}`}`} onClick={onNavegar} className={on ? 'on' : undefined} aria-current={on ? 'step' : undefined}>
                                   {x.label}
-                                  {pasoOpcional(x.id) && <span className="sb-opc">opcional</span>}
+                                  {pasoOpcional(x.id) && <span className="gsb-opc">opcional</span>}
                                 </Link>
                               </li>
                             );
@@ -169,54 +186,52 @@ export function Sidebar({
                 };
                 if (!conFases) {
                   return (
-                    <ol className="sb-bloques" aria-label={`Bloques de ${meta.corto}`}>
+                    <ol className="gsb-bloques" aria-label={`Bloques de ${meta.corto}`}>
                       {bloquesDe(m).map(fila)}
                     </ol>
                   );
                 }
                 return (
-                  <div className="sb-fases" aria-label={`Fases de ${meta.corto}`}>
+                  <div className="gsb-fases" aria-label={`Fases de ${meta.corto}`}>
                     {grupos.map((g) => {
                       const clave = `${m.id}:${g.id}`;
                       const vm = manual.en === enLoc ? manual.v : {};
-                      const abierta = vm[clave] ?? g.id === faseAct;
+                      const abiertaF = vm[clave] ?? g.id === faseAct;
                       const hechosF = g.bloques.filter((e) => ejercicioCompletado(p.ejercicios[e.id])).length;
                       const ui = FASE_UI[g.id];
                       // Fase sin bloques nuevos (p. ej. Ventas › Configurar): es un aviso, no una fase vacía que se abre
                       if (g.bloques.length === 0) {
                         return (
-                          <Link key={g.id} to={`/modulo/${m.id}?fase=${g.id}`} className="sb-fase-info" onClick={onNavegar}>
-                            <Icon name={ui.icono} size={16} />
-                            <span className="sb-fase-t">{ui.titulo}</span>
-                            <small>ya lo tienes, ver qué reutilizas</small>
+                          <Link key={g.id} to={`/modulo/${m.id}?fase=${g.id}`} className="gsb-fase-info" onClick={onNavegar}>
+                            <span className="gsb-fase-t">{ui.titulo}</span>
+                            <small>ya lo tienes</small>
                           </Link>
                         );
                       }
                       return (
-                        <div key={g.id} className={`sb-fase${abierta ? ' abierta' : ''}${g.id === faseAct ? ' actual' : ''}`}>
+                        <div key={g.id} className={`gsb-fase${abiertaF ? ' abierta' : ''}${g.id === faseAct ? ' actual' : ''}`}>
                           <button
                             type="button"
-                            className="sb-fase-cab"
-                            aria-expanded={abierta}
+                            className="gsb-fase-cab"
+                            aria-expanded={abiertaF}
                             aria-controls={`sb-fase-${clave}`}
                             onClick={() => {
-                              setManual({ en: enLoc, v: { ...vm, [clave]: !abierta } });
+                              setManual({ en: enLoc, v: { ...vm, [clave]: !abiertaF } });
                               // En la página del módulo, abrir una fase también cambia su pestaña
-                              if (!abierta && !mBloque && mModulo === m.id) {
+                              if (!abiertaF && !mBloque && mModulo === m.id) {
                                 guardarFase(m.id, g.id);
                                 navigate(`/modulo/${m.id}?fase=${g.id}`, { replace: true });
                               }
                             }}
                           >
-                            <Icon name={ui.icono} size={16} />
-                            <span className="sb-fase-t">{ui.titulo}</span>
-                            <span className="sb-fase-n">
+                            <Icon name="chevron" size={14} />
+                            <span className="gsb-fase-t">{ui.titulo}</span>
+                            <span className="gsb-fase-n">
                               {hechosF}/{g.bloques.length}
                             </span>
-                            <Icon name="chevron" size={14} />
                           </button>
-                          {abierta && g.bloques.length > 0 && (
-                            <ol className="sb-bloques" id={`sb-fase-${clave}`} aria-label={`${ui.titulo}: bloques de ${meta.corto}`}>
+                          {abiertaF && g.bloques.length > 0 && (
+                            <ol className="gsb-bloques" id={`sb-fase-${clave}`} aria-label={`${ui.titulo}: bloques de ${meta.corto}`}>
                               {g.bloques.map(fila)}
                             </ol>
                           )}
@@ -230,24 +245,24 @@ export function Sidebar({
           );
         })}
 
-        <div className="sb-group">Practicar y demostrar</div>
+        <p className="gsb-grupo">Practicar y demostrar</p>
         {PRACTICA.map((n) => (
-          <NavLink key={n.to} to={n.to} className="sb-link" onClick={onNavegar} title={t(n.label)}>
-            <span className="sb-ico">
-              <Icon name={n.icon} />
+          <NavLink key={n.to} to={n.to} className="gsb-item" onClick={onNavegar} title={t(n.label)}>
+            <span className="gsb-n">
+              <Icon name={n.icon} size={18} />
             </span>
-            <span className="sb-label">{n.label}</span>
+            <span className="gsb-t">{n.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <div className="sb-foot">
-        <button type="button" className="sb-btn" onClick={onTema} aria-label={oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}>
-          <Icon name={oscuro ? 'sol' : 'luna'} size={20} />
+      <div className="gsb-pie">
+        <button type="button" className="gsb-btn" onClick={onTema} aria-label={oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}>
+          <Icon name={oscuro ? 'sol' : 'luna'} size={18} />
           <span>{oscuro ? 'Tema claro' : 'Tema oscuro'}</span>
         </button>
-        <button type="button" className="sb-btn sq sb-collapse" onClick={onPlegar} aria-label={plegada ? 'Desplegar barra lateral' : 'Plegar barra lateral'} aria-expanded={!plegada}>
-          <Icon name={plegada ? 'desplegar' : 'plegar'} size={20} />
+        <button type="button" className="gsb-btn sq gsb-plegar" onClick={onPlegar} aria-label={plegada ? 'Desplegar barra lateral' : 'Plegar barra lateral'} aria-expanded={!plegada}>
+          <Icon name={plegada ? 'desplegar' : 'plegar'} size={18} />
         </button>
       </div>
     </aside>

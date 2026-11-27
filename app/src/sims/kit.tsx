@@ -286,7 +286,7 @@ export function Marco({
   return (
     <PulsoCtx.Provider value={pulso}>
       <div className="tl-sim tlx-sim" style={{ ['--sim' as string]: color }}>
-        <header className="ax-banner tl-banner tlx-hud">
+        <header className="g-hero tlx-hud">
           <Link to="/taller" className="btn ghost sm tlx-volver" aria-label="Volver al Taller">
             <Icon name="atras" size={20} /> <span className="tlx-volver-txt">Taller</span>
           </Link>
@@ -344,10 +344,10 @@ export function Marco({
           {sim.fin ? (
             <motion.section
               key="fin"
-              className="glass tl-fin tlx-fin"
-              initial={r ? { opacity: 0 } : { opacity: 0, rotateX: -30, y: 30 }}
-              animate={{ opacity: 1, rotateX: 0, y: 0 }}
-              transition={{ type: 'spring', stiffness: 120, damping: 16 }}
+              className="tl-fin tlx-fin"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: r ? 0 : 0.2 }}
             >
               <motion.div className="tlx-trofeo" initial={r ? false : { scale: 0.2, rotate: -40, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 12 }}>
                 <span className="tlx-rayos" aria-hidden="true" />
@@ -384,11 +384,11 @@ export function Marco({
           ) : (
             <motion.section
               key={`${sim.partida}-${sim.ronda}`}
-              className="glass tl-ronda tlx-ronda"
-              initial={r ? { opacity: 0 } : { opacity: 0, x: 48, scale: 0.985 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={r ? { opacity: 0 } : { opacity: 0, x: -48, scale: 0.985 }}
-              transition={r ? { duration: 0.15 } : { duration: 0.34, ease: [0.2, 0.7, 0.2, 1] }}
+              className="tl-ronda tlx-ronda"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: r ? 0 : 0.18 }}
             >
               {destello && <span key={destello.n} className={`tlx-destello ${destello.ok ? 'ok flash-ok' : 'ko flash-ko'}`} aria-hidden="true" />}
               <div className="tl-ronda-num">
@@ -400,8 +400,8 @@ export function Marco({
                 {nPistas > 0 && !sim.resuelta && (
                   <motion.aside
                     className="tlx-pistas"
-                    initial={r ? { opacity: 0 } : { opacity: 0, y: 12, rotateX: -20 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     aria-live="polite"
                   >

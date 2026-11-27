@@ -74,7 +74,7 @@ export const FICHAS: Record<string, FichaModulo> = {
     ],
   },
   carteras: {
-    frase: 'Cada factura deja vencimientos (efectos). Aquí los sigues hasta que se cobran o se pagan: sueltos, en una gestión o en una remesa.',
+    frase: 'Sigues los vencimientos (efectos) que deja cada factura hasta que se cobran o se pagan: sueltos, en una gestión o en una remesa.',
     recorrido: 'Del plazo de pago a la remesa',
     aprendes: [
       'Preparar plazos de pago, tipos de efecto y bancos propios.',

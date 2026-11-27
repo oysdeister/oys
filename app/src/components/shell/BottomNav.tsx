@@ -16,11 +16,11 @@ export function BottomNav() {
   const loc = useLocation();
   if (loc.pathname.startsWith('/ejercicio/')) return null;
   return (
-    <nav className="bottom-nav bn-plana" aria-label="Accesos rápidos">
-      <div className="bn-bar">
+    <nav className="gbn" aria-label="Accesos rápidos">
+      <div className="gbn-bar">
         {ITEMS.map((n) => (
           <NavLink key={n.to} to={n.to} end={n.to === '/'}>
-            <Icon name={n.icon} />
+            <Icon name={n.icon} size={20} />
             {n.label}
           </NavLink>
         ))}

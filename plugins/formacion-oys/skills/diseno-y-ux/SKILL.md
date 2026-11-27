@@ -12,6 +12,7 @@ description: "Mantiene el sistema de diseño v4 y la guía de usabilidad UX v5 d
 - Preparas publicación y necesitas la prueba de humo.
 
 ## Dónde está
+- **Desde noviembre de 2026 manda el tema v5 «guía»**: `app/src/tema/guia.css` (tokens `--g-*` y componentes) más `app/src/tema/*.css` por área y `tema/ancho.css`. Guía en `_fuente/DISENO_V5.md`. Lo nuevo se escribe en `tema/`; lo de v4 que sigue abajo vale para controles y UX, no para colores ni efectos (ya no hay cielo, cristal, neón ni 3D).
 - `app/src/sistema.css`: tokens, tipografías Bricolage Grotesque e Instrument Sans, colores por módulo (cielo profundo, cristal y neón), tema claro/oscuro, controles. Se carga la última y manda sobre todo.
 - `app/src/styles.css`: estilos base.
 - `app/src/main.tsx`: importa `sistema.css` después de App.

@@ -64,6 +64,10 @@ function indice(): Entrada[] {
       }
     });
   });
+  // Formación previa (antes de los módulos de Axional)
+  add({ tipo: 'seccion', to: '/formacion', titulo: 'Antes de empezar con Axional', texto: 'Formación previa: contabilidad general y qué es un ERP, con sus exámenes.', donde: 'Formación previa', modulo: '' });
+  add({ tipo: 'seccion', to: '/formacion/contabilidad', titulo: 'Conceptos de contabilidad general', texto: 'Formación previa: contabilidad desde cero, debe y haber, balance, cuenta de pérdidas y ganancias, partida doble.', donde: 'Formación previa', modulo: '' });
+  add({ tipo: 'seccion', to: '/formacion/erp', titulo: 'Qué es un ERP', texto: 'Formación previa: qué es un ERP, para qué sirve y cómo se organiza Axional.', donde: 'Formación previa', modulo: '' });
   for (const g of GLOSARIO) {
     add({
       tipo: 'glosario',

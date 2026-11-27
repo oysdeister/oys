@@ -60,7 +60,7 @@ Glosarios: `glosario/maestros.json` y `glosario/compras.json` ya usan estos cód
 | `TF{INI}` | Lista de precios de compra (tarifa) | compras-precios | compras-precios (grupo G{INI}) |
 | `G{INI}` | Grupo de precios de compra | compras-precios | compras-precios (proveedor T{INI}) |
 | `13500620` | Artículo **de la demo** que se compra (6000-2RS ISB, tipo contable PRODUCTO). No se modifica | ya existe | compras-1 (tarifa), compras-2 y compras-3 (oferta, albaranes, factura), Ventas, ERP simulado (pedido › albarán › factura) |
-| `AC{INI}` | Tipología de albarán de compra sin origen (antes `A{INI}`, chocaba con la de Ventas). **Ningún bloque la crea ya**: solo aparece en `datosSimulador` y en el glosario de compras | — | simulador, glosario |
+| `AC{INI}` | Tipología de albarán de compra sin origen (antes `A{INI}`, chocaba con la de Ventas). **Ningún bloque la crea ya**: solo aparece en `datosSimulador` (el glosario usa AO{INI}) | — | simulador |
 | `FC{INI}` | Tipología de factura de compra | compras-tipos | compras-factura |
 | `OC{INI}` | Tipología de oferta de compra | compras-tipos | compras-3 |
 | `PC{INI}` | Tipología de pedido de compra | compras-tipos | compras-3, compras-2 |

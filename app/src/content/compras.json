@@ -2,7 +2,7 @@
  "id": "compras",
  "titulo": "Gestión de compras",
  "sesion": "Sesión 7",
- "resumen": "Darás de alta los datos básicos de gestión, tu proveedor con su tarifa, y prepararás la numeración y los tipos de documento. Después recorrerás un ciclo de compra completo: oferta, pedido, albarán, factura y asiento, y comprobarás el stock. Verás qué datos maestros pide cada documento y cómo resolver los errores típicos al contabilizar.",
+ "resumen": "Prepararás los datos básicos de gestión, tu proveedor con su tarifa, la numeración y los tipos de documento, y la aprobación de pedidos. Después recorrerás un ciclo de compra completo: oferta, pedido, albarán, factura y asiento. Terminarás con la devolución y el stock. Verás qué datos maestros pide cada documento y cómo resolver los errores típicos al contabilizar.",
  "circuito": [
   "Oferta",
   "Pedido",
@@ -24,7 +24,7 @@
     "En el buscador escribes el nombre o el código del objeto (ctercero, gcomalbh, «tarifa»…). Intro abre la pantalla en la pestaña actual; Cmd/Ctrl + Intro, en una pestaña nueva.",
     "Cada lista tiene arriba a la derecha un botón azul oscuro «Añadir …» o «Nuevo». Abre el formulario en una ventana, que se guarda con «Guardar» (abajo a la derecha).",
     "En la ficha de un registro, los botones de acción (Validar, Cerrar, Contabilizar…) y las pestañas están arriba. Los cambios de la ficha se guardan con el icono del disquete de la barra superior.",
-    "Los ejemplos usan tus iniciales ({INI}) en los códigos: proveedor T{INI}, tarifa TF{INI}, grupo G{INI}, tipología de albarán AO{INI}… La tabla completa está en la página del módulo «Datos maestros», en «Antes de empezar», dentro de «Qué son los datos básicos».",
+    "Los ejemplos usan tus iniciales ({INI}) en los códigos: proveedor T{INI}, tarifa TF{INI}, grupo G{INI}, tipología de albarán AO{INI} (la tipología es el tipo de documento)… La tabla completa está en la página del módulo «Datos maestros», en «Antes de empezar», dentro de «Qué son los datos básicos».",
     "Los campos obligatorios llevan asterisco rojo. Si falta alguno, al guardar sale «Hay errores en los datos del formulario».",
     "Ojo: el código de las tipologías de albarán y de factura admite 4 caracteres como máximo; si no, sale «Demasiado largo». Tus iniciales son siempre 2 letras, así que FC{INI} cabe justo (con «JM», FCJM).",
     "Los números de documento de los ejemplos (0AC000002, 0FC000001…) son orientativos: la demo es compartida y el ERP te dará otros. Usa siempre los tuyos.",
@@ -48,7 +48,7 @@
    "avisos": [
     {
      "tipo": "nota",
-     "texto": "El circuito de compras completo es: oferta del proveedor › pedido › albarán (la mercancía entra en el almacén) › factura (se conforma con el albarán) › contabilización (asiento de compras y deuda con el proveedor)."
+     "texto": "El circuito de compras completo es: oferta del proveedor › pedido › albarán (la mercancía entra en el almacén) › factura (se conforma: la cruzas con el albarán) › contabilización (asiento de compras y deuda con el proveedor)."
     }
    ]
   }
@@ -59,7 +59,7 @@
    "numero": 1,
    "titulo": "Dar de alta los datos básicos de gestión",
    "objetivo": "Darás de alta lo que hace falta para comprar y vender con stock: tu cliente C{INI}, un artículo, su proveedor, un almacén y una cuenta logística.",
-   "concepto": "Los maestros logísticos son las fichas que describen las cosas físicas: producto, proveedor y almacén. Un maestro se crea una vez y se reutiliza en muchos documentos. Es como montar una tienda: además de la cuenta del banco, necesitas el producto, el proveedor que te lo trae y la estantería donde guardarlo. Si faltan o están mal, el ERP no puede mover el stock y los documentos dan error.\n\nPrimero das de alta el tercero C{INI}, que es cualquier persona o empresa con la que trabajas, también como cliente en Gestión. En tu caso, C{INI} es tu cliente: a él le vendes en Ventas. Después creas el artículo con control de stock, es decir, con recuento de las existencias del almacén. Le asignas su proveedor habitual, creas el almacén donde se guarda y una cuenta logística.\n\nEjemplo: C{INI} te paga con el tipo de efecto R{INI}, un recibo domiciliado, y el plazo P{INI}: 50 % a 30 días y 50 % a 60 días. Una venta de 242,00 le deja dos efectos de 121,00. Un efecto es cada cobro pendiente que deja una factura.\n\nUna cuenta logística es un apartado dentro del almacén: stock disponible, en control de calidad, reservado… Cada movimiento pasa stock de una cuenta a otra.\n\nOjo: pedidos, albaranes y movimientos de stock heredan estos datos. Si el almacén no tiene delegación y departamento, o el artículo no tiene familia, los movimientos darán error.\n\nDónde: «Gestión › Maestros › Terceros › Clientes › Registro».",
+   "concepto": "Los maestros logísticos son las fichas que describen las cosas físicas: producto, proveedor y almacén. Un maestro se crea una vez y se reutiliza en muchos documentos. Es como montar una tienda: además de la cuenta del banco, necesitas el producto, el proveedor que te lo trae y la estantería donde guardarlo. Si faltan o están mal, el ERP no puede mover el stock y los documentos dan error.\n\nPrimero das de alta como cliente, en Gestión, al tercero C{INI}: así se llama en el ERP a cualquier persona o empresa con la que trabajas. C{INI} es tu cliente: a él le vendes en Ventas. Después creas el artículo con control de stock, es decir, con recuento de las existencias del almacén. Le asignas su proveedor habitual, creas el almacén donde se guarda y una cuenta logística.\n\nEjemplo: C{INI} te paga con el tipo de efecto R{INI}, un recibo domiciliado, y el plazo P{INI}: 50 % a 30 días y 50 % a 60 días. Una venta de 242,00 le deja dos efectos, es decir, dos cobros pendientes de 121,00.\n\nUna cuenta logística es un apartado dentro del almacén: stock disponible, en control de calidad, reservado… Cada movimiento pasa stock de una cuenta a otra.\n\nOjo: pedidos, albaranes y movimientos de stock heredan estos datos. Si el almacén no tiene delegación y departamento, o el artículo no tiene familia, los movimientos darán error.\n\nDónde: «Gestión › Maestros › Terceros › Clientes › Registro».",
    "duracionMin": 60,
    "secciones": [
     {
@@ -175,7 +175,7 @@
     {
      "id": "maestros-2-articulos-log",
      "titulo": "Artículos logísticos",
-     "paraQueSirve": "Aquí creas ROD{INI}, solo para aprender la ficha del artículo y su stock: el caso usa el 13500620. Es el producto que se compra, se guarda en el almacén y se vende con control de stock.",
+     "paraQueSirve": "Aquí creas ROD{INI}, solo para aprender la ficha del artículo y su stock: el caso usa el 13500620. Un artículo es el producto que se compra, se guarda en el almacén y se vende con control de stock.",
      "ruta": [
       "Gestión",
       "Maestros",
@@ -186,7 +186,7 @@
       "La familia del artículo decide su clave fiscal (cómo tributa en el IVA), su naturaleza (bien o servicio) y cómo se repone.",
       "La unidad base es la unidad en la que se cuenta el stock, por ejemplo UNIDAD.",
       "La pantalla es «Maestro de artículos»; en el buscador también la encuentras como garticul.",
-      "Fíjate: ROD{INI} es tu artículo para aprender la ficha y el stock. En Compras no lo compras: allí usas el artículo 13500620 de la demo, que ya tiene tipo contable PRODUCTO (el dato que decide a qué cuenta va su compra) y precio en la tarifa (los precios pactados con el proveedor). El 13500620 es el artículo de tu caso."
+      "Fíjate: ROD{INI} es tu artículo para aprender la ficha y el stock. En Compras no lo compras: allí usas el artículo 13500620 de la demo, que ya tiene tipo contable PRODUCTO (el dato que decide a qué cuenta va su compra) y precio en la tarifa (los precios pactados con el proveedor)."
      ],
      "campos": [
       {
@@ -601,7 +601,7 @@
       "Creas una familia nueva en el artículo"
      ],
      "correcta": 1,
-     "explicacion": "Se teclea el código exacto y se sale con Tab. Los códigos se consultan en Familias."
+     "explicacion": "Teclea el código exacto y sal con Tab. Consulta los códigos en Familias."
     },
     {
      "pregunta": "¿Desde dónde se da de alta un artículo por proveedor?",
@@ -685,7 +685,7 @@
    "numero": 2,
    "titulo": "Dar de alta el proveedor y el artículo",
    "objetivo": "Darás de alta a T{INI} como tu proveedor y revisarás el artículo 13500620 que le vas a comprar.",
-   "concepto": "Antes de comprar, el ERP necesita saber a quién compras y qué compras. Esas fichas se llaman maestros: se crean una vez y se reutilizan en todos los documentos, como un contacto del móvil. Si el proveedor o el artículo están mal montados, el fallo sale más tarde, al contabilizar la factura, y la compra no se registra.\n\nEn Axional el proveedor se monta en capas. Primero creas el tercero, es decir, la ficha de la empresa, común a finanzas y gestión. Le añades relaciones contables, dirección y condiciones de pago, y al final la ficha de proveedor.\n\nEn «Dar de alta los datos básicos de contabilidad» (Contabilidad básica) ya diste de alta un tercero cliente (C{INI}). Ahora repites el proceso para un proveedor (T{INI}) y te fijas en lo que cambia. El precio de compra (la tarifa) lo preparas en el bloque siguiente.\n\nPara comprar usas siempre el artículo 13500620 de la demo, el rodamiento 6000-2RS ISB. Tiene tipo contable PRODUCTO, que es el que lleva cuenta de compras. Además, es el que venderás después en Ventas.\n\nEjemplo: en tu caso, T{INI} te vende 10 unidades del 13500620 a 12,50: 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25 en total. Aquí solo das de alta al proveedor y revisas el artículo. La compra la haces en los bloques siguientes, dentro de la empresa 0 «Deister Software» de la demo.\n\nFíjate: ROD{INI}, el artículo que creaste en «Dar de alta los datos básicos de gestión», sirve para aprender la ficha, no para comprar. Con el 13500620, la tarifa, la oferta, el pedido, el albarán y la factura usan el mismo artículo.\n\nOjo: si una capa falta o está mal, el fallo sale más tarde, por ejemplo al contabilizar la factura. Monta todas las capas y revisa cada pestaña antes de hacer documentos.\n\nDónde: «Finanzas › Maestros › Terceros › Registro de terceros» para el tercero y «Gestión › Maestros › Terceros › Proveedores › Registro» para el proveedor.",
+   "concepto": "Antes de comprar, el ERP necesita saber a quién compras y qué compras. Esas fichas se llaman maestros: se crean una vez y se reutilizan en todos los documentos, como un contacto del móvil. Si el proveedor o el artículo están mal montados, la compra no se registra.\n\nEn Axional el proveedor se monta en capas. Primero creas el tercero, es decir, la ficha de la empresa, común a finanzas y gestión. Le añades relaciones contables, dirección y condiciones de pago, y al final la ficha de proveedor.\n\nEn «Dar de alta los datos básicos de contabilidad» (Contabilidad básica) ya diste de alta un tercero cliente (C{INI}). Ahora repites el proceso para un proveedor (T{INI}) y te fijas en lo que cambia. El precio de compra (la tarifa) lo preparas en el bloque siguiente.\n\nPara comprar usas siempre el artículo 13500620 de la demo, el rodamiento 6000-2RS ISB. Tiene tipo contable PRODUCTO, que es el que lleva cuenta de compras. Además, es el que venderás después en Ventas.\n\nEjemplo: en tu caso, T{INI} te vende 10 unidades del 13500620 a 12,50: 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25 en total. Aquí solo das de alta al proveedor y revisas el artículo. La compra la haces en los bloques siguientes, dentro de la empresa 0 «Deister Software» de la demo.\n\nFíjate: ROD{INI}, el artículo que creaste en «Dar de alta los datos básicos de gestión», sirve para aprender la ficha, no para comprar. Con el 13500620, la tarifa, la oferta, el pedido, el albarán y la factura usan el mismo artículo.\n\nOjo: si una capa falta o está mal, el fallo sale más tarde, por ejemplo al contabilizar la factura. Monta todas las capas y revisa cada pestaña antes de hacer documentos.\n\nDónde: «Finanzas › Maestros › Terceros › Registro de terceros» para el tercero y «Gestión › Maestros › Terceros › Proveedores › Registro» para el proveedor.",
    "duracionMin": 45,
    "secciones": [
     {
@@ -701,7 +701,7 @@
      "explicacion": [
       "Es la base de todo: sin tercero no hay proveedor, y sin relaciones contables la factura no contabiliza. Finanzas guarda la ficha; Gestión le añade el papel de proveedor o cliente, y por eso hay dos menús. Los datos fiscales del tercero deciden su IVA.",
       "La ventana tiene dos bloques: «Identificación» y «Más datos».",
-      "Fíjate: elige primero el «País emisor». Hasta que no lo eliges, no puedes elegir el «Tipo ID fiscal».",
+      "Fíjate: primero eliges el «País emisor». Hasta que no lo eliges, no puedes elegir el «Tipo ID fiscal».",
       "La «Categoría» 002 Proveedores trae por defecto la serie y la cuenta contable."
      ],
      "campos": [
@@ -1331,14 +1331,6 @@
      "avisos": [
       {
        "tipo": "problema",
-       "texto": "El desplegable de «Familia» no muestra ninguna opción al escribir ni al pulsar flecha abajo."
-      },
-      {
-       "tipo": "solucion",
-       "texto": "Teclea el código exacto de la familia (01.01.001352) y sal con Tab. Los códigos están en Gestión › Maestros › Artículos › Auxiliares › Familias."
-      },
-      {
-       "tipo": "problema",
        "texto": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida». El artículo tiene «Tipo contable» Ventas o vacío, que no tiene cuenta de compras."
       },
       {
@@ -1464,10 +1456,6 @@
     {
      "problema": "Al contabilizar la factura sale «… tipcon [VEN] cuenta no definida».",
      "solucion": "Comprueba que compras el 13500620 y que su «Tipo contable» es PRODUCTO (PROD), en el bloque «Contabilidad». No lo cambies. Si es así y el error sigue, avisa al formador."
-    },
-    {
-     "problema": "El desplegable de «Familia» del artículo no muestra opciones.",
-     "solucion": "Teclea el código exacto de la familia y sal con Tab. Los códigos están en Gestión › Maestros › Artículos › Auxiliares › Familias."
     },
     {
      "problema": "Al guardar los datos bancarios sale «Las siguientes restricciones de verificación fallaron: Entidad y cuenta bancaria, ambos nulos o no nulos».",
@@ -2368,7 +2356,7 @@
       "Validaciones"
      ],
      "explicacion": [
-      "Una aprobación se monta con cinco piezas: rol, circuito, validación, grupo de validaciones y tipología del pedido. En este bloque las creas en ese orden.",
+      "Las cinco piezas del concepto (rol, circuito, validación, grupo de validaciones y tipología del pedido) se crean en este orden. Aquí ves dónde está cada una.",
       "El rol es la lista de personas que pueden autorizar. Está en «Acciones y workflow › Definiciones › Roles de workflow».",
       "El circuito es el dibujo del recorrido: Inicio, una tarea para un rol y Fin. Está en «Acciones y workflow › Definiciones › Circuitos de workflow».",
       "La validación es una comprobación ya programada. Dice «sí, bloquea este documento» o «no». Está en «Maestro de validaciones».",
@@ -3032,12 +3020,12 @@
      "explicacion": [
       "Creas un pedido con tu tipología PW{INI} y lo dejas sin «Referencia». Esa es la condición que bloquea la validación 36.",
       "Usas el proveedor 00010 y el artículo 13500620 a 4,00: son los datos con los que se comprobó el workflow en la demo. No es tu T{INI} a 12,50 de «Preparar los precios de compra». Aquí el proveedor y el precio dan igual: la validación 36 solo mira si la «Referencia» está vacía.",
-      "En esta demo el número del pedido no lo pone el ERP: la ficha de pedidos de compra es genérica y no aplica el numerador, así que lo tecleas tú (0PW{INI}0001). Por eso no sigue la numeración de la serie PC que viste en «Preparar la numeración y los tipos de documento». Es un fallo de la demo y solo vale para esta práctica: en un cliente real el pedido se crea desde su pantalla y lo numera el ERP.",
+      "En esta demo el número del pedido no lo pone el ERP: la ficha de pedidos de compra es genérica y no aplica el numerador, así que lo tecleas tú (0PW{INI}0001). Por eso no sigue la numeración de la serie PC que viste en «Preparar la numeración y los tipos de documento». Es un fallo de la demo: mira el primer aviso.",
       "Guardar la ficha no lanza el workflow. Lo lanza el proceso «Revalidación», que vuelve a comprobar los pedidos con las reglas de autorización.",
       "La revalidación actúa sobre pedidos en Provisional y también sobre pedidos ya Bloqueados (así arranca el circuito si lo enlazaste tarde). Con el pedido ya Validado, no devuelve nada.",
       "El resultado es el estado Bloqueado: en la ficha aparecen Bloqueos «V» y Validaciones 1.",
       "La traza de validaciones es el registro de las comprobaciones que han saltado en cada documento y de su estado. La de tu pedido guarda la validación 36 en estado «Pendiente».",
-      "Las líneas del pedido se cargan con un fichero CSV porque la ficha genérica no tiene pestaña de líneas (otro fallo de la demo). Es solo un apaño para esta demo: en un cliente real las líneas se añaden desde la ficha del pedido, nunca importándolas a la tabla. Un CSV es un archivo de texto con los datos separados por «;».",
+      "Las líneas del pedido se cargan con un fichero CSV porque la ficha genérica no tiene pestaña de líneas (otro fallo de la demo). Un CSV es un archivo de texto con los datos separados por «;».",
       "Columnas del CSV: cabid = Identificador del pedido; linrel = número de línea (1); orden (1); codart = artículo; varlog = VL (0); numlot = lote (0); canped = cantidad pedida; udmcom = unidad (UNI); canpre = cantidad precio; udmpre = unidad del precio (UNI); precio; impnet = importe neto (10 × 4 = 40); canser = cantidad servida (0); dtoimp = importe de descuento (0: con otro valor sale el error 26865 y la línea no entra)."
      ],
      "campos": [
@@ -3120,7 +3108,7 @@
       },
       {
        "texto": "Comprueba que «Estado» es «Provisional» y deja «Bloqueos» vacío",
-       "detalle": "La captura muestra Estado «Validado» y Bloqueos «V»: no los copies, no son el estado de partida. Con el pedido Validado, Revalidación no devuelve nada. Si tu pedido sale «Validado», cambia el campo «Estado» a «Provisional» a mano y guarda. Ojo: esto se hace solo porque la demo no trae el formulario completo; en un cliente real el pedido se crea desde su pantalla y el Estado nunca se cambia a mano. Si no te deja, crea otro pedido con otro número (0PW{INI}0002) y déjalo en Provisional desde el principio.",
+       "detalle": "La captura muestra Estado «Validado» y Bloqueos «V»: no los copies, no son el estado de partida. Con el pedido Validado, Revalidación no devuelve nada. Si tu pedido sale «Validado», cambia el campo «Estado» a «Provisional» a mano y guarda. Es un apaño de la demo: en un cliente real el Estado nunca se cambia a mano. Si no te deja, crea otro pedido con otro número (0PW{INI}0002) y déjalo en Provisional desde el principio.",
        "imagen": "cob-workflow-17.webp",
        "hotspot": {
         "x": 32.0,
@@ -3606,7 +3594,7 @@
    "numero": 7,
    "titulo": "Pedir: de la oferta al pedido",
    "objetivo": "Registrarás la oferta de tu proveedor y la convertirás en pedido, el primer paso del ciclo de compra.",
-   "concepto": "El ciclo de compra empieza antes de que llegue nada: pides precio al proveedor (la oferta) y, si te convence, le haces el pedido. Es como pedir presupuesto al fontanero y después encargarle el trabajo. Si saltas este paso, no hay un pedido que respalde la compra y no queda escrito qué pactaste con el proveedor.\n\nLa oferta recoge cantidades, precio y vigencia, es decir, hasta cuándo vale. Al validarla, su línea queda Adjudicada: aceptada. El pedido es el compromiso de compra. En una base bien configurada, copia las líneas de la oferta.\n\nEl camino estándar para que el pedido nazca de la oferta es: Oferta › Generar acuerdo › Generación de pedidos desde acuerdos. Usas las tipologías OC{INI} y PC{INI} del bloque anterior, tu proveedor T{INI} y el artículo 13500620.\n\nOjo: en la base TUTORIAL el pedido no tiene formulario propio ni numerador de acuerdos. Lo que funciona es crear el pedido a mano, con tu oferta como origen. El camino estándar lo ves al final, solo para ver que falla.\n\nEjemplo: la oferta es de 10 unidades a 12,50, el precio de tu tarifa. La línea suma 10 × 12,50 = 125,00 sin IVA. Cada unidad con IVA cuesta 12,50 + 21 % = 15,125.\n\nFíjate: los números de documento de los ejemplos (0OC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Ofertas › Ofertas» y «Gestión › Compras › Pedidos › Pedidos».",
+   "concepto": "El ciclo de compra empieza antes de que llegue nada: pides precio al proveedor (la oferta) y, si te convence, le haces el pedido. Es como pedir presupuesto al fontanero y después encargarle el trabajo. Si saltas este paso, no hay un pedido que respalde la compra y no queda escrito qué pactaste con el proveedor.\n\nLa oferta recoge cantidades, precio y vigencia, es decir, hasta cuándo vale. Al validarla, su línea queda Adjudicada: aceptada. El pedido es el compromiso de compra. En una base bien configurada, copia las líneas de la oferta.\n\nEl camino estándar para que el pedido nazca de la oferta es: Oferta › Generar acuerdo (lo pactado con el proveedor, de donde salen los pedidos) › Generación de pedidos desde acuerdos. Usas las tipologías OC{INI} y PC{INI} del bloque anterior, tu proveedor T{INI} y el artículo 13500620.\n\nOjo: en la base TUTORIAL el pedido no tiene formulario propio ni numerador de acuerdos. Lo que funciona es crear el pedido a mano, con tu oferta como origen. El camino estándar lo ves al final, solo para ver que falla.\n\nEjemplo: la oferta es de 10 unidades a 12,50, el precio de tu tarifa. La línea suma 10 × 12,50 = 125,00 sin IVA. Cada unidad con IVA cuesta 12,50 + 21 % = 15,125.\n\nDónde: «Gestión › Compras › Ofertas › Ofertas» y «Gestión › Compras › Pedidos › Pedidos».",
    "duracionMin": 25,
    "secciones": [
     {
@@ -3909,7 +3897,7 @@
    "numero": 8,
    "titulo": "Recibir la mercancía con el albarán",
    "objetivo": "Registrarás la llegada de la mercancía con un albarán y comprobarás que el stock sube.",
-   "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán: el papel que viene con la caja y dice qué te han traído. Al validarlo, el stock (las existencias del almacén) sube y la compra queda pendiente de facturar. Si no lo registras, el almacén no sabe que tiene la mercancía y no puedes comprobar la factura del proveedor.\n\nEn una base bien configurada, el albarán nace del pedido. Lo generas con el proceso «Generación de albaranes desde pedidos». Más adelante, en la Práctica del bloque «Registrar y contabilizar la factura», lo harás con el botón «Generar albaranes». También puedes elegir el pedido en el campo «Origen».\n\nEl albarán copia las líneas del pedido y le descuenta lo recibido. «Sumando» es el modo de «Actualizar origen» que marca en el pedido lo que ya ha llegado. Con eso sabes qué falta por llegar.\n\nOjo: en la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío. Creas el albarán a mano con tu tipología AO{INI} y escribes la línea, como en un albarán sin origen.\n\nEjemplo: escribes 10 unidades a 12,50, como en la oferta. El albarán vale 125,00 sin IVA. Al validarlo, el stock del artículo 13500620 sube 10 unidades.\n\nEsas unidades pasan de NSAL a DISP (disponible: stock que se puede usar). NSAL (no saldo) es el «fuera del inventario»: lo que no cuenta como existencias.\n\nCon tu tipología AO{INI} este albarán no hace asiento: lo hará la factura. En el bloque siguiente ves el asiento de un albarán cuya tipología sí contabiliza.\n\nFíjate: los números de documento de los ejemplos (0AC000002…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes».",
+   "concepto": "Cuando llega la mercancía, el almacén la recibe con un albarán: el papel que viene con la caja y dice qué te han traído. Al validarlo, el stock (las existencias del almacén) sube y la compra queda pendiente de facturar. Si no lo registras, el almacén no sabe que tiene la mercancía y no puedes comprobar la factura del proveedor.\n\nEn una base bien configurada, el albarán nace del pedido. Lo generas con el proceso «Generación de albaranes desde pedidos». Más adelante, en la Práctica del bloque «Registrar y contabilizar la factura», lo harás con el botón «Generar albaranes». También puedes elegir el pedido en el campo «Origen».\n\nEl albarán copia las líneas del pedido y le descuenta lo recibido. «Sumando» es el modo de «Actualizar origen» que marca en el pedido lo que ya ha llegado. Con eso sabes qué falta por llegar.\n\nOjo: en la demo (base TUTORIAL) tu pedido no tiene líneas, así que el «Origen» sale vacío. Creas el albarán a mano con tu tipología AO{INI} y escribes la línea, como en un albarán sin origen.\n\nEjemplo: escribes 10 unidades a 12,50, como en la oferta. El albarán vale 125,00 sin IVA. Al validarlo, el stock del artículo 13500620 sube 10 unidades.\n\nEsas unidades pasan de NSAL a DISP (disponible: stock que se puede usar). NSAL (no saldo) es el «fuera del inventario»: lo que no cuenta como existencias.\n\nCon tu tipología AO{INI} este albarán no hace asiento: lo hará la factura. En el bloque siguiente ves el asiento de un albarán cuya tipología sí contabiliza.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes».",
    "duracionMin": 25,
    "secciones": [
     {
@@ -4170,7 +4158,7 @@
    "numero": 9,
    "titulo": "Contabilizar el albarán de compra",
    "objetivo": "Contabilizarás un albarán de la demo que tiene plantilla de asiento y leerás el asiento que anota la mercancía recibida antes de la factura. Tu albarán AO{INI} no contabiliza, así que aquí no lo uses.",
-   "concepto": "Contabilizar es pasar un documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. Cuando la mercancía llega todavía no tienes la factura, pero la compra ya existe: debes dinero y aún no tienes el papel que lo justifica. Si no contabilizas el albarán, el gasto no cuenta en su mes y la contabilidad enseña menos deuda de la real.\n\nPor eso un albarán se puede contabilizar, si su tipología lo permite («Asiento albaranes» informado). Tu AO{INI} no lo tiene: aquí practicas con un albarán de la demo cuya tipología sí. Genera un asiento: una anotación cuyas líneas suman lo mismo en el debe, el lado izquierdo de una cuenta, que en el haber, el lado derecho. Cada línea es un apunte. El ERP anota el gasto en 60000 al debe. En contrapartida anota al haber la 40090, «facturas pendientes de recibir».\n\nLa 40090 es una cuenta puente: guarda la compra mientras falta la factura y vuelve a cero cuando llega. Es una deuda provisional con el proveedor. Así el gasto queda en su mes aunque la factura llegue tarde.\n\nEjemplo: un albarán de 10 × 12,50 = 125,00 deja 125,00 en 60000 al debe y 125,00 en 40090 al haber. Las capturas son del albarán de la demo, de 4 uds.: 4 × 12,50 = 50,00. El mecanismo es el mismo.\n\nLos números de documento de los ejemplos (0AC000017, asiento 78…) son orientativos. La demo es compartida: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes».",
+   "concepto": "Contabilizar es pasar un documento a la contabilidad, el registro en euros de todo lo que entra y sale de la empresa. Cuando la mercancía llega todavía no tienes la factura, pero la compra ya existe: debes dinero y aún no tienes el papel que lo justifica. Si no contabilizas el albarán, el gasto no cuenta en su mes y la contabilidad enseña menos deuda de la real.\n\nPor eso un albarán se puede contabilizar, si su tipología lo permite («Asiento albaranes» informado). Tu AO{INI} no lo tiene: aquí practicas con un albarán de la demo cuya tipología sí. Genera un asiento: una anotación cuyas líneas suman lo mismo en el debe, el lado izquierdo de una cuenta, que en el haber, el lado derecho. Cada línea es un apunte. El ERP anota el gasto en 60000 al debe. En contrapartida anota al haber la 40090, «facturas pendientes de recibir».\n\nLa 40090 es una cuenta puente: guarda la compra mientras falta la factura y vuelve a cero cuando llega. Es una deuda provisional con el proveedor. Así el gasto queda en su mes aunque la factura llegue tarde.\n\nEjemplo: un albarán de 10 × 12,50 = 125,00 deja 125,00 en 60000 al debe y 125,00 en 40090 al haber. Las capturas son del albarán de la demo, de 4 uds.: 4 × 12,50 = 50,00. El mecanismo es el mismo.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes».",
    "duracionMin": 15,
    "secciones": [
     {
@@ -4185,8 +4173,7 @@
      ],
      "explicacion": [
       "Parte de un albarán validado cuya tipología tiene «Asiento albaranes»: el de la demo de las capturas (4 unidades de 13500620 a 12,50). Tu AO{INI} no contabiliza.",
-      "El albarán tiene que estar validado. Entonces la barra superior muestra «Pasar a provisional» y «Contabilizar».",
-      "Ejemplo comprobado: 4 unidades a 12,50 = 50,00 de importe neto."
+      "El albarán tiene que estar validado. Entonces la barra superior muestra «Pasar a provisional» y «Contabilizar»."
      ],
      "campos": [
       {
@@ -4410,7 +4397,7 @@
    "numero": 10,
    "titulo": "Registrar y contabilizar la factura",
    "objetivo": "Registrarás la factura del proveedor, la cruzarás con el albarán y generarás el asiento: así cierras el ciclo de compra.",
-   "concepto": "Después de la mercancía llega la factura: el documento con el que el proveedor te cobra lo que te ha servido. Antes de aceptarla, compruebas que coincide con lo que recibiste, como cuando repasas el tique del súper con la compra. Si pagas sin comprobar, puedes pagar mercancía que no ha llegado.\n\nEn Axional la registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nContabilizar es pasar la factura a la contabilidad. El ERP genera el asiento de compras. Un asiento es la anotación contable de una operación: cada importe va al debe o al haber, y las dos columnas suman lo mismo. Con tu AO{INI}, que no contabilizó el albarán, el asiento es: gasto 60000 e IVA 47200 al debe, y proveedor 40000 al haber. También crea los vencimientos de pago.\n\nEjemplo: tu albarán es de 10 × 12,50 = 125,00 de base. El IVA del 21 % son 26,25, y la factura suma 151,25. En el asiento, 125,00 + 26,25 van al debe y 151,25 al haber del proveedor.\n\nFíjate: si falta un dato maestro del proveedor o del artículo, salen errores que aprenderás a leer. Si lo montaste todo en «Dar de alta el proveedor y el artículo», la factura contabiliza a la primera.\n\nOjo: hay dos caminos a la factura y los dos dejan lo mismo; los comparas en la primera parte. Tu caso sigue el camino A.\n\nLos números de documento de los ejemplos (0FC000001…) son orientativos. La demo es compartida y el ERP te dará otros: usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Facturas › Facturas».",
+   "concepto": "Después de la mercancía llega la factura: el documento con el que el proveedor te cobra lo que te ha servido. Antes de aceptarla, compruebas que coincide con lo que recibiste, como cuando repasas el tique del súper con la compra. Si pagas sin comprobar, puedes pagar mercancía que no ha llegado.\n\nEn Axional la registras con su número (Factura proveedor), la conformas contra el albarán y la contabilizas.\n\nConformar es cruzar la factura con los albaranes pendientes del proveedor. Las líneas del albarán pasan a la factura y el albarán queda facturado. Así solo pagas lo que ha entrado en el almacén.\n\nContabilizar es pasar la factura a la contabilidad. El ERP genera el asiento de compras, como el del albarán. Con tu AO{INI}, que no contabilizó el albarán, el asiento es: gasto 60000 e IVA 47200 al debe, y proveedor 40000 al haber. También crea los vencimientos de pago.\n\nEjemplo: tu albarán es de 10 × 12,50 = 125,00 de base. El IVA del 21 % son 26,25, y la factura suma 151,25. En el asiento, 125,00 + 26,25 van al debe y 151,25 al haber del proveedor.\n\nFíjate: si falta un dato maestro del proveedor o del artículo, salen errores que aprenderás a leer. Si lo montaste todo en «Dar de alta el proveedor y el artículo», la factura contabiliza a la primera.\n\nOjo: hay dos caminos a la factura y los dos dejan lo mismo; los comparas en la primera parte. Tu caso sigue el camino A.\n\nDónde: «Gestión › Compras › Facturas › Facturas».",
    "duracionMin": 40,
    "secciones": [
     {
@@ -4862,7 +4849,7 @@
    "numero": 11,
    "titulo": "Generar la factura desde el albarán",
    "objetivo": "Generarás una factura desde un albarán de la demo, la contabilizarás y comprobarás que se salda la cuenta de facturas pendientes de recibir. Tu albarán de T{INI} ya lo facturaste en «Registrar y contabilizar la factura».",
-   "concepto": "La factura del proveedor es el documento fiscal con el que te cobra, y lleva IVA. Cuando llega no hace falta teclearla entera: se genera desde el albarán, como un impreso que ya trae tus datos. Si no la registras y contabilizas, no sabes cuánto debes de verdad, no puedes restar el IVA a Hacienda y el proveedor te reclama un pago que no tienes anotado.\n\nLas líneas pasan solas y tú solo indicas el número de la factura del proveedor y su importe. Ese importe es el que pone el papel. El ERP lo compara con el que calcula él: base más IVA. Si coinciden, la factura sale validada.\n\nEs el camino B del bloque «Registrar y contabilizar la factura»: allí tecleas y conformas (A, el de tu caso); aquí generas desde un albarán ya contabilizado. Para cada albarán usa uno solo. Si ya facturaste ese albarán, usa otro.\n\nAl contabilizar la factura, el asiento salda la 40090 del albarán y anota la deuda real con el proveedor en su cuenta 40000. El IVA soportado, el que pagas en tus compras y puedes restar, va a la 47200.\n\nEjemplo: en tu caso, la factura de T{INI} es de 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25 en total. La captura es de un albarán de 4 uds.: 50,00 más 10,50 de IVA, 60,50. Con tu albarán de 10 unidades escribes 151,25 en «Importe factura». El mecanismo es el mismo.\n\nEjemplo comprobado en la demo: la factura trae 60,00 y el ERP calcula 60,50. Sale validada y contabiliza por 60,50. No sabemos si hay tolerancia o si no hay control de importe: la demo lo acepta; en una empresa real revisa la diferencia.\n\nLos números de documento de los ejemplos (0FC000021, asiento 79…) son orientativos. Usa siempre los tuyos.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes» y «Gestión › Compras › Facturas › Facturas».",
+   "concepto": "La factura del proveedor es el documento fiscal con el que te cobra, y lleva IVA. Cuando llega no hace falta teclearla entera: se genera desde el albarán, como un impreso que ya trae tus datos. Si no la registras y contabilizas, no sabes cuánto debes de verdad, no puedes restar el IVA a Hacienda y el proveedor te reclama un pago que no tienes anotado.\n\nLas líneas pasan solas y tú solo indicas el número de la factura del proveedor y su importe. Ese importe es el que pone el papel. El ERP lo compara con el que calcula él: base más IVA. Si coinciden, la factura sale validada.\n\nEs el camino B del bloque «Registrar y contabilizar la factura»: allí tecleas y conformas (A, el de tu caso); aquí generas desde un albarán ya contabilizado. Para cada albarán usa uno solo. Si ya facturaste ese albarán, usa otro.\n\nAl contabilizar la factura, el asiento salda la 40090 del albarán y anota la deuda real con el proveedor en su cuenta 40000. El IVA soportado, el que pagas en tus compras y puedes restar, va a la 47200.\n\nEjemplo: en tu caso, la factura de T{INI} es de 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25 en total. La captura es de un albarán de 4 uds.: 50,00 más 10,50 de IVA, 60,50. Con tu albarán de 10 unidades escribes 151,25 en «Importe factura». El mecanismo es el mismo.\n\nEjemplo comprobado en la demo: la factura trae 60,00 y el ERP calcula 60,50. Sale validada y contabiliza por 60,50. No sabemos si hay tolerancia o si no hay control de importe: la demo lo acepta; en una empresa real revisa la diferencia.\n\nDónde: «Gestión › Compras › Albaranes › Albaranes» y «Gestión › Compras › Facturas › Facturas».",
    "duracionMin": 20,
    "secciones": [
     {
@@ -4877,7 +4864,7 @@
      ],
      "explicacion": [
       "Parte del albarán contabilizado del bloque «Contabilizar el albarán de compra», el de T{INI}.",
-      "«Generar factura» está en el desplegable «Acciones» de la barra superior. Es la tipología de factura que tiene asignada el albarán (FCOA en el ejemplo).",
+      "«Generar factura» está en el desplegable «Acciones» de la barra superior. La factura sale con la tipología de factura que tiene asignada el albarán (FCOA en el ejemplo).",
       "Tras generar, el albarán pasa a «Facturado» y ya no se puede facturar otra vez."
      ],
      "campos": [
@@ -5527,7 +5514,7 @@
    "numero": 13,
    "titulo": "Registrar y consultar el stock",
    "objetivo": "Registrarás una entrada inicial de stock y comprobarás cuánto hay y de dónde viene.",
-   "concepto": "El stock son las existencias: lo que tienes en el almacén. No aparece solo al crear el artículo; entra y sale con movimientos. Es como una hucha: solo sabes cuánto hay si apuntas cada moneda que metes y que sacas. Si no registras los movimientos, el ERP no sabe qué tienes y pedidos y albaranes trabajan con cifras falsas.\n\nAquí registras una entrada inicial con un movimiento interno. Es un movimiento de stock que no viene de una compra ni de una venta. Después lo compruebas con dos consultas.\n\nLa primera es el Stock global: responde a «¿cuánto tengo y dónde?». La segunda es el kardex: el historial de movimientos de un artículo, como el extracto de una cuenta del banco.\n\nEjemplo: metes 10 unidades de ROD{INI} en el almacén ALM{INI}. El Stock global debe mostrar 10 disponibles. El kardex debe mostrar una entrada de 10 y un saldo de 10.\n\nEjemplo: en tu caso, el stock del 13500620 sube 10 con la compra y baja 10 con la venta, y acaba en 0. Aquí practicas con otro artículo, ROD{INI}, y una entrada de 10 unidades con un movimiento interno, porque es un artículo de aprendizaje. El mecanismo es el mismo.\n\nSi las dos consultas coinciden en las 10 unidades, el artículo, el almacén y las cuentas logísticas están bien configurados.\n\nDónde: «Gestión › Logística › Movimientos internos › Movimientos».",
+   "concepto": "El stock son las existencias: lo que tienes en el almacén. No aparece solo al crear el artículo; entra y sale con movimientos. Es como una hucha: solo sabes cuánto hay si apuntas cada moneda que metes y que sacas. Si no registras los movimientos, el ERP no sabe qué tienes y pedidos y albaranes trabajan con cifras falsas.\n\nAquí registras una entrada inicial con un movimiento interno. Es un movimiento de stock que no viene de una compra ni de una venta. Después lo compruebas con dos consultas.\n\nLa primera es el Stock global: responde a «¿cuánto tengo y dónde?». La segunda es el kardex: el historial de movimientos de un artículo, como el extracto de una cuenta del banco.\n\nEjemplo: metes 10 unidades de ROD{INI} en el almacén ALM{INI}. El Stock global debe mostrar 10 disponibles. El kardex debe mostrar una entrada de 10 y un saldo de 10.\n\nOjo: en tu caso, el stock del 13500620 sube 10 con la compra y baja 10 con la venta, hasta acabar en 0. Aquí practicas con ROD{INI}, tu artículo de aprendizaje, al que das una entrada manual. El mecanismo es el mismo.\n\nSi las dos consultas coinciden en las 10 unidades, el artículo, el almacén y las cuentas logísticas están bien configurados.\n\nDónde: «Gestión › Logística › Movimientos internos › Movimientos».",
    "duracionMin": 45,
    "secciones": [
     {

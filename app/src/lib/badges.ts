@@ -18,9 +18,9 @@ const modCompleto = (p: Progreso, id: string) => {
 };
 
 export const INSIGNIAS: Insignia[] = [
-  { id: 'primer-paso', titulo: 'Primer clic', texto: 'Completa un recorrido guiado.', color: '#4fbfa5', ganada: (p) => Object.values(p.ejercicios).some((e) => e.guiado) },
+  { id: 'primer-paso', titulo: 'Primer clic', texto: 'Completa el Guiado de un bloque.', color: '#4fbfa5', ganada: (p) => Object.values(p.ejercicios).some((e) => e.guiado) },
   { id: 'sin-fallos', titulo: 'Diez de diez', texto: 'Saca un test perfecto.', color: '#f2a93b', ganada: (p) => Object.values(p.ejercicios).some((e) => e.test === 1) },
-  { id: 'manos', titulo: 'Manos en la demo', texto: 'Completa una checklist en la demo real.', color: '#6c8fd6', ganada: (p) => {
+  { id: 'manos', titulo: 'Manos en la demo', texto: 'Marca todos los puntos de la Demo real de un bloque.', color: '#6c8fd6', ganada: (p) => {
       return MODULOS.some((m) => m.ejercicios.some((e) => e.checklist.length > 0 && (p.ejercicios[e.id]?.demo.length ?? 0) >= e.checklist.length));
     } },
   { id: 'cuadrado', titulo: 'Asiento cuadrado', texto: 'Cuadra un asiento en el simulador.', color: '#8a7be0', ganada: (p) => !!p.sims['asiento'] },
@@ -39,7 +39,7 @@ export const INSIGNIAS: Insignia[] = [
     color: META[moduloId]?.color ?? '#2a9c83',
     ganada: (p: Progreso) => (p.examenes?.[clave] ?? 0) >= APROBADO,
   })),
-  { id: 'listo', titulo: 'Listo para el examen', texto: 'Completa todos los módulos.', color: '#1f2738', ganada: (p) => MODULOS.some((m) => m.ejercicios.length > 0) && MODULOS.filter((m) => m.ejercicios.length > 0).every((m) => modCompleto(p, m.id)) },
+  { id: 'listo', titulo: 'Listo para el examen', texto: 'Termina todos los módulos.', color: '#1f2738', ganada: (p) => MODULOS.some((m) => m.ejercicios.length > 0) && MODULOS.filter((m) => m.ejercicios.length > 0).every((m) => modCompleto(p, m.id)) },
 ];
 
 export function insigniasGanadas(p: Progreso) {

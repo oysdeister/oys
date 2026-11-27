@@ -15,8 +15,8 @@ export const PASOS = [
   { id: 'guiado', label: 'Guiado', que: 'Haces clic donde toca, paso a paso.' },
   { id: 'memoria', label: 'De memoria', que: 'Repites sin ayuda.' },
   { id: 'test', label: 'Test', que: 'Compruebas que lo has entendido.' },
-  { id: 'erp', label: 'Práctica', que: 'Lo haces en el ERP de práctica de esta web.' },
-  { id: 'demo', label: 'Demo real', que: 'Lo haces en el ERP de verdad.' },
+  { id: 'erp', label: 'Práctica', que: 'Lo haces en el ERP de práctica: un ERP simulado dentro de esta web, que se corrige solo.' },
+  { id: 'demo', label: 'Demo real', que: 'Lo haces en el ERP de demostración de Deister, en otra pestaña.' },
 ] as const;
 export type PasoId = (typeof PASOS)[number]['id'];
 

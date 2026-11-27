@@ -28,13 +28,13 @@ export interface DefEtapa {
 export const ETAPAS: Record<string, DefEtapa[]> = {
   fundamentos: [
     { titulo: 'Moverse por el ERP', que: 'Entras, abres pantallas, buscas, lees una rejilla y una ficha y guardas: los gestos que usarás en todo el curso.', bloques: ['fundamentos-navegar'] },
-    { titulo: 'Antes de abrir el ERP', que: 'Los conceptos que usarás en todo el curso: contabilidad, debe y haber, asiento y apunte, IVA, efecto, contabilizar y cierre.', bloques: ['fundamentos-1', 'fundamentos-2'] },
+    { titulo: 'Repaso con el caso del curso', que: 'Un repaso corto de asiento, IVA, efecto, contabilizar y cierre con las cifras del caso del curso. La teoría completa está en la formación previa.', bloques: ['fundamentos-1', 'fundamentos-2'] },
   ],
   maestros: [
     {
       fase: 'configurar',
       titulo: 'La empresa',
-      que: 'Lees la ficha de una empresa y creas la tuya, con su ejercicio y su banco: la base de una empresa.',
+      que: 'Lees la ficha de una empresa y creas la tuya, con su ejercicio y su banco.',
       bloques: ['maestros-v-3', 'maestros-v-4'],
     },
   ],
@@ -43,14 +43,14 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { fase: 'configurar', titulo: 'Datos básicos que usarás después', que: 'Creas tu cliente, tu plazo de pago y tu tipo de efecto: los usarán Ventas y Cartera.', bloques: ['maestros-1'] },
     { fase: 'configurar', titulo: 'Diario, periodos y plantillas', que: 'Creas tu diario y conoces cómo se organizan el diario, los periodos y las plantillas de contabilización.', bloques: ['asientos-1', 'icon-contabilidad-1'] },
     { fase: 'operar', titulo: 'Escribir un asiento', que: 'Abres los asientos, escribes uno y compruebas que cuadra.', bloques: ['asientos-2', 'asientos-3', 'asientos-4', 'asientos-5'] },
-    { fase: 'operar', titulo: 'Contabilizar, copiar y corregir', que: 'Lo pasas a definitivo, lo duplicas, programas copias y corriges importes.', bloques: ['asientos-6', 'asientos-11', 'asientos-12', 'asientos-13'] },
+    { fase: 'operar', titulo: 'Contabilizar, copiar y corregir', que: 'Pasas un asiento a definitivo, lo duplicas, programas copias y corriges sus importes.', bloques: ['asientos-6', 'asientos-11', 'asientos-12', 'asientos-13'] },
     { fase: 'operar', titulo: 'Consultar', que: 'Revisas los descuadres y ves tus asientos y sus copias en los listados, el extracto y las sumas y saldos.', bloques: ['asientos-7', 'asientos-8', 'asientos-9', 'asientos-10'] },
     { titulo: 'Para saber más: parametrización completa', que: 'El orden de carga de Finanzas, los auxiliares y la analítica, Finanzas sola o integrada, los saldos iniciales, los mnemotécnicos y las plantillas de contabilización.', bloques: ['parametrizacion-icon-1', 'parametrizacion-3', 'parametrizacion-4', 'parametrizacion-5', 'parametrizacion-6', 'parametrizacion-icon-2', 'contab-saldos-iniciales', 'contab-mnemotecnicos-alta', 'contab-plantilla-alta'], opcional: true },
   ],
   compras: [
     { fase: 'configurar', titulo: 'Maestros de compra', que: 'Gestión: cliente, artículo, proveedor y almacén; después tu proveedor y su precio de compra.', bloques: ['maestros-2', 'compras-1', 'compras-precios'] },
     { fase: 'configurar', titulo: 'Documentos', que: 'Cómo se numera y cómo se comporta cada documento del ciclo.', bloques: ['compras-tipos'] },
-    { fase: 'configurar', titulo: 'Aprobación de pedidos', que: 'Montas la aprobación de pedidos de compra: rol, circuito, validación, grupo de validaciones y tipología. La pruebas al final de Operar.', bloques: ['compras-workflow-config'] },
+    { fase: 'configurar', titulo: 'Aprobación de pedidos', que: 'La pruebas al final de Operar, en «Probar y autorizar un pedido con workflow».', bloques: ['compras-workflow-config'] },
     { fase: 'operar', titulo: 'Comprar', que: 'Llevas una compra de principio a fin: pides, recibes la mercancía, contabilizas el albarán y registras o generas la factura.', bloques: ['compras-3', 'compras-2', 'compras-albaran-contabilizar', 'compras-factura', 'compras-generar-factura'] },
     { fase: 'operar', titulo: 'Facturas que generan asientos', que: 'Contabilizas facturas, haces facturas directas y corriges errores.', bloques: ['icon-contabilidad-v-1', 'icon-contabilidad-v-2', 'icon-contabilidad-v-3', 'icon-contabilidad-v-4'] },
     { fase: 'operar', titulo: 'Devolver y controlar el stock', que: 'Corriges una compra ya facturada con un abono y registras y consultas el stock: cuánto hay y de dónde viene.', bloques: ['compras-abono-devolucion', 'maestros-3'] },

@@ -3,12 +3,10 @@ import { Cuenta } from '../../auth/Cuenta';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icon } from '../Icon';
-import { Anillo } from './Anillo';
-import { META, MODULOS, getEjercicio, getModulo } from '../../content';
+import { META, getEjercicio, getModulo } from '../../content';
 import { buscar, TIPOS } from '../../lib/buscar';
 import { conIni } from '../../lib/texto';
 import './buscador.css';
-import { bloqueQueToca, numeroBloque } from '../../lib/ruta';
 import { useProgreso } from '../../lib/progress';
 import { avanceGlobal } from '../../lib/avance';
 
@@ -23,12 +21,16 @@ const SECCIONES: Record<string, string> = {
   taller: 'Taller',
   video: 'Vídeos',
   glosario: 'Glosario',
-  errores: 'Índice de errores',
+  errores: 'Errores',
   logros: 'Logros',
-  examen: 'Examen',
+  examen: 'Examen final',
   certificado: 'Certificado',
   examinador: 'Panel del examinador',
+  formacion: 'Formación previa',
 };
+
+/** Apartados de la formación previa (pages/previa) */
+const PREVIA: Record<string, string> = { contabilidad: 'Conceptos de contabilidad general', erp: 'Qué es un ERP' };
 
 export function migasDe(pathname: string): Miga[] {
   const [, a, b] = pathname.split('/');
@@ -43,6 +45,12 @@ export function migasDe(pathname: string): Miga[] {
     if (!r) return [inicio, { label: 'Bloque' }];
     const meta = META[r.modulo.id];
     return [inicio, { label: meta?.corto ?? r.modulo.titulo, to: `/modulo/${r.modulo.id}`, color: meta?.color }, { label: r.ejercicio.titulo }];
+  }
+  if (a === 'formacion') {
+    const previa: Miga = { label: 'Formación previa', to: '/formacion' };
+    if (!b) return [inicio, { label: 'Formación previa' }];
+    const guia: Miga = { label: PREVIA[b] ?? 'Guía', to: `/formacion/${b}` };
+    return pathname.endsWith('/examen') ? [inicio, previa, guia, { label: 'Examen' }] : [inicio, previa, { label: guia.label }];
   }
   const nombre = SECCIONES[a] ?? 'Inicio';
   if (b && (a === 'taller' || a === 'video')) return [inicio, { label: nombre, to: `/${a}` }, { label: a === 'video' ? `Capítulo ${b}` : 'Simulador' }];
@@ -158,17 +166,8 @@ export function Topbar({ onMenu, abierto = false }: { onMenu: () => void; abiert
   const p = useProgreso();
   const pct = avanceGlobal(p);
   const migas = migasDe(loc.pathname);
-  // En la portada, junto a «Inicio»: por dónde vas (solo texto; la acción está en la portada)
-  const vasPor = useMemo(() => {
-    if (loc.pathname !== '/') return null;
-    for (const m of MODULOS) {
-      const b = bloqueQueToca(p, m);
-      if (b) return { color: META[m.id]?.color, t: `${META[m.id]?.corto ?? m.titulo}, bloque ${numeroBloque(m, b.id)}` };
-    }
-    return null;
-  }, [loc.pathname, p]);
   return (
-    <header className="tb">
+    <header className="tb gtb">
       <button type="button" className="tb-menu" onClick={onMenu} aria-label="Abrir menú" aria-controls="barra-lateral" aria-expanded={abierto}>
         <Icon name="menu" size={24} />
       </button>
@@ -191,23 +190,16 @@ export function Topbar({ onMenu, abierto = false }: { onMenu: () => void; abiert
             </span>
           );
         })}
-        {vasPor && (
-          <span className="tb-vaspor">
-            <span className="dot" style={{ ['--mod' as string]: vasPor.color } as CSSProperties} aria-hidden="true" />
-            Vas por {vasPor.t}
-          </span>
-        )}
       </nav>
       <div className="tb-right">
         <Buscador />
         <Link to="/logros" className="tb-progress" aria-label={`Progreso del curso: ${Math.round(pct * 100)} %`}>
-          <Anillo valor={pct} size={34} grosor={4} />
+          <span className="gtb-barra" aria-hidden="true">
+            <i style={{ width: `${pct * 100}%` }} />
+          </span>
           {Math.round(pct * 100)} %
         </Link>
         <Cuenta />
-      </div>
-      <div className="meter top-meter" aria-hidden="true">
-        <motion.i initial={false} animate={{ width: `${pct * 100}%` }} transition={{ type: 'spring', stiffness: 60, damping: 18 }} />
       </div>
     </header>
   );

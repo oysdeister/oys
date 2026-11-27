@@ -41,9 +41,9 @@ export function DemoReal({ ej, ini }: { ej: Ejercicio; ini: string }) {
     <div className="pl demo-pl">
       <ol className="pl-pasos">
         <li>
-          Abre el ERP de demostración al lado de esta página:{' '}
+          Abre la demo del ERP junto a esta página:{' '}
           <button type="button" className="pl-link en-linea" onClick={() => abrirErpDividido()}>
-            abrir el ERP al lado
+            abrir la demo al lado
           </button>{' '}
           (o en otra pestaña:{' '}
           <a href={URL_DEMO} target="_blank" rel="noopener noreferrer">
@@ -66,7 +66,7 @@ export function DemoReal({ ej, ini }: { ej: Ejercicio; ini: string }) {
         <b>
           {hechos} de {total}
         </b>{' '}
-        comprobados{todo ? '. Bloque hecho en el ERP real.' : ''}
+        comprobados{todo ? '. Bloque hecho en la Demo real.' : ''}
       </p>
       <div className="pl-checks" role="group" aria-label="Lista de comprobación">
         {ej.checklist.map((c, i) => {

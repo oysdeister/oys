@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { acciones, getProgreso, limpiaUsuario } from '../lib/progress';
 import { olvidaBienvenida } from '../lib/saludo';
 import { iniciales2, inicialesDe } from '../lib/iniciales';
-import { Espacio } from './shell/Espacio';
 
 const EASE = [0.2, 0.7, 0.2, 1] as const;
 
@@ -27,12 +26,11 @@ export function Onboarding() {
   const d = (t: number) => (reduce ? { duration: 0 } : { delay: t, duration: 0.7, ease: EASE });
 
   return (
-    <motion.div className="onb onb2" role="dialog" aria-modal="true" aria-labelledby="onb-titulo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.5 } }}>
-      <Espacio />
-      <div className="onb-grain" aria-hidden="true" />
+    <motion.div className="onb onb2 g-onb" role="dialog" aria-modal="true" aria-labelledby="onb-titulo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.5 } }}>
       <div className="onb2-in">
         <header className="onb2-top">
-          <motion.img className="onb2-logo" src={`${base}brand/oys_logo_light.png`} alt="O&S Consultores" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={d(0.1)} />
+          <motion.img className="onb2-logo logo-claro" src={`${base}brand/oys_logo.png`} alt="O&S Consultores" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={d(0.1)} />
+          <motion.img className="onb2-logo logo-oscuro" src={`${base}brand/oys_logo_light.png`} alt="O&S Consultores" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={d(0.1)} />
         </header>
         <div className="onb2-escena">
           <form
@@ -72,7 +70,7 @@ export function Onboarding() {
                 Tu nombre y apellidos
               </label>
               <input id="onb-nombre" className="onb2-input" autoFocus value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" placeholder="Nombre Apellido" />
-              <p className="onb2-nota">Con él te saludamos y sacamos tus iniciales para los códigos de la demo.</p>
+              <p className="onb2-nota">Lo usamos para saludarte y sacar tus iniciales, que llevarán todos tus códigos de la Demo real.</p>
               <button className="btn arc lg onb-go" type="submit" disabled={!ok}>
                 Empezar
               </button>

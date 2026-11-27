@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { CAPITULOS, MOMENTOS_SECCION, type CapituloVideo } from '../content/videoMapa';
 import { META, MODULOS, todosEjercicios } from '../content';
 import { seriesDeModulo, type SerieVideo } from '../content/videoSeries';
@@ -11,146 +11,43 @@ import { Icon } from '../components/Icon';
 import { CapitulosSerie } from '../components/video';
 import './video.css';
 
-const TOTAL = CAPITULOS.reduce((a, c) => a + c.duracion, 0);
 const publicado = (c: CapituloVideo) => !!c.url;
-const dos = (n: number) => String(n).padStart(2, '0');
 const durTexto = (s: number) => {
   const m = Math.round(s / 60);
   return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`;
 };
 
-/* ---------- Geometría del arco (el del logo O&S) ---------- */
-const AW = 1000, AH = 210, X0 = 40, X1 = 960, Y0 = 186, SAG = 140;
-const R = ((X1 - X0) / 2) ** 2 / (2 * SAG) + SAG / 2;
-const CX = (X0 + X1) / 2, CY = Y0 - SAG + R;
-const MAXA = Math.asin((X1 - X0) / 2 / R);
-const punto = (f: number) => {
-  const a = -MAXA + 2 * MAXA * f;
-  return [CX + R * Math.sin(a), CY - R * Math.cos(a)] as const;
-};
-const tramo = (f0: number, f1: number) => {
-  const [ax, ay] = punto(f0), [bx, by] = punto(f1);
-  return `M ${ax.toFixed(1)} ${ay.toFixed(1)} A ${R.toFixed(1)} ${R.toFixed(1)} 0 0 1 ${bx.toFixed(1)} ${by.toFixed(1)}`;
-};
-const LIMITES = CAPITULOS.reduce<number[]>((acc, c) => [...acc, acc[acc.length - 1] + c.duracion / TOTAL], [0]);
-
-/** Barra de capítulos con forma de arco. Cada tramo mide lo que dura su capítulo. */
-function ArcoCapitulos({ actual, progreso, onIr }: { actual?: number; progreso: number; onIr: (n: number) => void }) {
-  const reducir = !!useReducedMotion();
-  const hueco = 0.004;
-  const tecla = (n: number) => (e: KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onIr(n);
-    }
-  };
-  return (
-    <svg className="vd-arc" viewBox={`0 0 ${AW} ${AH}`} role="group" aria-label="Capítulos del vídeo en el arco">
-      <defs>
-        <linearGradient id="vd-neon" gradientUnits="userSpaceOnUse" x1="0" x2="1000" y1="0" y2="0">
-          <stop offset="0" stopColor="#5fe3c8" />
-          <stop offset="0.55" stopColor="#63e6ff" />
-          <stop offset="1" stopColor="#a68bff" />
-        </linearGradient>
-      </defs>
-      <path d={tramo(0, 1)} className="vd-arc-base" />
-      {CAPITULOS.map((c, i) => {
-        const f0 = LIMITES[i] + hueco, f1 = LIMITES[i + 1] - hueco;
-        const visto = actual !== undefined && c.n < actual;
-        const es = c.n === actual;
-        const fin = es ? f0 + (f1 - f0) * Math.min(1, Math.max(0, progreso)) : f1;
-        const [mx, my] = punto((f0 + f1) / 2);
-        return (
-          <g
-            key={c.n}
-            className={`vd-arc-seg${es ? ' es' : ''}${visto ? ' visto' : ''}`}
-            role="button"
-            tabIndex={0}
-            aria-label={`Capítulo ${c.n}: ${c.titulo}, ${durTexto(c.duracion)}`}
-            aria-current={es ? 'step' : undefined}
-            onClick={() => onIr(c.n)}
-            onKeyDown={tecla(c.n)}
-          >
-            <path d={tramo(f0, f1)} className="vd-arc-hit" />
-            <path d={tramo(f0, f1)} className="vd-arc-track" />
-            {(visto || es) && (
-              <motion.path
-                d={tramo(f0, fin)}
-                className="vd-arc-fill"
-                initial={reducir ? false : { pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.9, delay: 0.05 * i, ease: [0.2, 0.7, 0.2, 1] }}
-              />
-            )}
-            <circle cx={mx} cy={my - 30} r={es ? 23 : 18} className="vd-arc-dot" />
-            <text x={mx} y={my - 30} className="vd-arc-num" dominantBaseline="central" textAnchor="middle">
-              {c.n}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-/** Tarjeta de capítulo con inclinación 3D ligera al pasar el ratón. */
-function TarjetaCapitulo({ c, actual, i }: { c: CapituloVideo; actual?: number; i: number }) {
-  const reducir = !!useReducedMotion();
-  const rx = useMotionValue(0), ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 220, damping: 18 }), sry = useSpring(ry, { stiffness: 220, damping: 18 });
-  const mover = (e: PointerEvent<HTMLAnchorElement>) => {
-    if (reducir || e.pointerType !== 'mouse') return;
-    const r = e.currentTarget.getBoundingClientRect();
-    ry.set(((e.clientX - r.left) / r.width - 0.5) * 12);
-    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 10);
-  };
+/** Tarjeta de capítulo: miniatura con borde fino, número y título. */
+function TarjetaCapitulo({ c, actual }: { c: CapituloVideo; actual?: number }) {
   const es = c.n === actual;
   return (
-    <motion.li
-      initial={reducir ? false : { opacity: 0, y: 26, rotateX: -18 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-      transition={{ duration: 0.55, delay: 0.04 * i, ease: [0.2, 0.7, 0.2, 1] }}
-      style={{ transformPerspective: 900 }}
-    >
-      <motion.div style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}>
-        <Link
-          to={`/video/${c.n}`}
-          className={`vd-card${es ? ' es' : ''}`}
-          aria-current={es ? 'page' : undefined}
-          onPointerMove={mover}
-          onPointerLeave={() => {
-            rx.set(0);
-            ry.set(0);
-          }}
-        >
-          <span className="vd-card-img">
-            {c.poster && <img src={baseUrl(c.poster)} alt="" loading="lazy" width={640} height={360} />}
-            <span className="vd-card-dur">
-              <Icon name="reloj" /> {mmss(c.duracion)}
-            </span>
-            {es && <span className="vd-card-now">Estás aquí</span>}
+    <li>
+      <Link to={`/video/${c.n}`} className={`vd-card${es ? ' es' : ''}`} aria-current={es ? 'page' : undefined}>
+        <span className="vd-card-img">
+          {c.poster && <img src={baseUrl(c.poster)} alt="" loading="lazy" width={640} height={360} />}
+          <span className="vd-card-dur">{mmss(c.duracion)}</span>
+          {es && <span className="vd-card-now">Estás aquí</span>}
+        </span>
+        <span className="vd-card-body">
+          <span className="vd-card-n" aria-hidden="true">
+            {c.n}
           </span>
-          <span className="vd-card-body">
-            <span className="vd-card-n" aria-hidden="true">
-              {dos(c.n)}
-            </span>
-            <span className="vd-card-t">
-              <span className="sr-only">Capítulo {c.n}: </span>
-              {c.titulo}
-            </span>
-            <span className="vd-card-meta">{c.escenas.length} escenas</span>
+          <span className="vd-card-t">
+            <span className="sr-only">Capítulo {c.n}: </span>
+            {c.titulo}
           </span>
-        </Link>
-      </motion.div>
-    </motion.li>
+          <span className="vd-card-meta">{c.escenas.length} escenas</span>
+        </span>
+      </Link>
+    </li>
   );
 }
 
 function IndiceCapitulos({ actual }: { actual?: number }) {
   return (
     <ol className="vd-grid" aria-label="Índice de capítulos">
-      {CAPITULOS.map((c, i) => (
-        <TarjetaCapitulo key={c.n} c={c} actual={actual} i={i} />
+      {CAPITULOS.map((c) => (
+        <TarjetaCapitulo key={c.n} c={c} actual={actual} />
       ))}
     </ol>
   );
@@ -178,7 +75,7 @@ function practicasDe(n: number, ini: string): Practica[] {
   return res;
 }
 
-function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: number; onTiempo: (s: number) => void }) {
+function Reproductor({ c, tInicial }: { c: CapituloVideo; tInicial: number }) {
   const reducir = !!useReducedMotion();
   const navigate = useNavigate();
   const p = useProgreso();
@@ -187,7 +84,6 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
   const [t, setT] = useState(tInicial);
   const idx = c.n - 1;
   const prev = CAPITULOS[idx - 1], next = CAPITULOS[idx + 1];
-  useEffect(() => onTiempo(t), [t, onTiempo]);
   const escena = useMemo(() => {
     let k = 0;
     c.escenas.forEach((e, i) => {
@@ -239,33 +135,15 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
   return (
     <>
       <section className="vd-stage" aria-labelledby="vd-cap-titulo">
-        <motion.div
-          className="vd-head"
-          initial={reducir ? false : { opacity: 0, x: -24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
-        >
-          <span className="vd-big" aria-hidden="true">
-            {dos(c.n)}
-          </span>
-          <div>
-            <p className="vd-kicker">
-              Capítulo {c.n} de {CAPITULOS.length} · {durTexto(c.duracion)}
-            </p>
-            <h1 id="vd-cap-titulo" className="vd-h1">
-              {c.titulo}
-            </h1>
-          </div>
-        </motion.div>
+        <header className="g-hero cs-hero vd-head">
+          <p className="g-kicker">
+            Vídeo de compras · capítulo {c.n} de {CAPITULOS.length} · {durTexto(c.duracion)}
+          </p>
+          <h1 id="vd-cap-titulo">{c.titulo}</h1>
+        </header>
 
         <div className="vd-player-grid">
-          <motion.div
-            className="vd-screen"
-            initial={reducir ? false : { opacity: 0, rotateX: 14, rotateY: -10, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, rotateX: 0, rotateY: 0, y: 0, scale: 1 }}
-            transition={{ duration: 0.75, ease: [0.16, 0.8, 0.2, 1] }}
-            style={{ transformPerspective: 1400 }}
-          >
+          <div className="vd-screen">
             {publicado(c) ? (
               <video
                 key={c.n}
@@ -299,7 +177,7 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
                 </p>
               </div>
             )}
-          </motion.div>
+          </div>
 
           <aside className="vd-scenes" aria-label="Escenas del capítulo">
             <h2 className="vd-h2">Escenas</h2>
@@ -317,7 +195,6 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
                     >
                       <span className="vd-scene-t">{mmss(e.t)}</span>
                       <span className="vd-scene-name">{e.titulo}</span>
-                      {es && <motion.span layoutId="vd-scene-mark" className="vd-scene-mark" aria-hidden="true" />}
                     </button>
                   </li>
                 );
@@ -364,15 +241,8 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
           <>
             <p className="muted">Estos bloques piden registrar lo que se explica en el capítulo. Pulsa el minuto para verlo otra vez.</p>
             <ul className="vd-prac-grid">
-              {practicas.map((pr, i) => (
-                <motion.li
-                  key={pr.id}
-                  className="vd-prac"
-                  style={{ ['--mod' as string]: META[pr.modulo]?.color ?? 'var(--arc)' }}
-                  initial={reducir ? false : { opacity: 0, y: 16, rotateX: -12 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{ duration: 0.45, delay: 0.35 + 0.06 * i }}
-                >
+              {practicas.map((pr) => (
+                <li key={pr.id} className="vd-prac" style={{ ['--mod' as string]: META[pr.modulo]?.color ?? 'var(--arc)' }}>
                   <div className="vd-prac-head">
                     <span className="vd-prac-mod">{META[pr.modulo]?.corto ?? pr.modulo}</span>
                     <h3>{pr.titulo}</h3>
@@ -387,10 +257,10 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
                       </li>
                     ))}
                   </ul>
-                  <Link className="btn sm arc" to={`/ejercicio/${pr.id}?tab=guiado`}>
+                  <Link className="btn sm" to={`/ejercicio/${pr.id}?tab=guiado`}>
                     Abrir el bloque
                   </Link>
-                </motion.li>
+                </li>
               ))}
             </ul>
           </>
@@ -405,21 +275,19 @@ function Reproductor({ c, tInicial, onTiempo }: { c: CapituloVideo; tInicial: nu
 export default function Video() {
   const { cap } = useParams();
   const [q] = useSearchParams();
-  const navigate = useNavigate();
-  const reducir = !!useReducedMotion();
   const n = cap ? Number(cap) : undefined;
   const c = n ? CAPITULOS.find((x) => x.n === n) : undefined;
   const tInicial = Math.max(0, Number(q.get('t')) || 0);
   const algunoPublicado = CAPITULOS.some(publicado);
-  const [tiempo, setTiempo] = useState(tInicial);
-  const fraccion = c ? Math.min(1, tiempo / c.duracion) : 0;
 
   return (
     <div className="vd">
       <div className="wrap">
-        {c && (
-          <header className="vd-hero compact">
-            <ArcoCapitulos actual={c.n} progreso={fraccion} onIr={(k) => navigate(`/video/${k}`)} />
+        {!c && (
+          <header className="g-hero cs-hero">
+            <p className="g-kicker">Vídeos del curso</p>
+            <h1>Vídeos</h1>
+            <p className="cs-lead">Tutoriales propios, vídeos cortos por tabla y sesiones de formación grabadas, ordenados por módulo. Toca un capítulo para verlo aquí mismo.</p>
           </header>
         )}
 
@@ -429,11 +297,8 @@ export default function Video() {
           </p>
         )}
 
-        <AnimatePresence mode="wait">
-          {c ? (
-            <motion.div key={c.n} exit={reducir ? undefined : { opacity: 0, rotateY: 8, x: -30 }} style={{ transformPerspective: 1200 }}>
-              <Reproductor c={c} tInicial={tInicial} onTiempo={setTiempo} />
-            </motion.div>
+        {c ? (
+            <Reproductor key={c.n} c={c} tInicial={tInicial} />
           ) : (
             cap && (
               <p className="callout nota vd-aviso" role="status">
@@ -441,7 +306,6 @@ export default function Video() {
               </p>
             )
           )}
-        </AnimatePresence>
 
         {c && (
           <section className="vd-index" aria-labelledby="vd-index-t">
@@ -460,16 +324,17 @@ export default function Video() {
                   {i}. {META[m.id]?.corto ?? m.titulo}
                 </h2>
                 {m.id === 'compras' && (
-                  <>
-                    <h3 className="vd-h2">Vídeo de compras · tutorial propio</h3>
+                  <section className="vc">
+                    <div className="vc-cab">
+                      <h3>Vídeo de compras · tutorial propio</h3>
+                      <p className="muted small">Toca un capítulo para abrir su página, con el índice de escenas y los bloques que lo practican.</p>
+                    </div>
                     <IndiceCapitulos />
-                  </>
+                  </section>
                 )}
-                {series.length > 0 && <div className="ax-banner vd-otras-in">
-                  {series.map((x) => (
-                    <CapitulosSerie key={x.id} serie={x.id} titulo={`${x.titulo} · ${origen(x)}`} intro={x.intro} />
-                  ))}
-                </div>}
+                {series.map((x) => (
+                  <CapitulosSerie key={x.id} serie={x.id} titulo={x.porTabla ? x.titulo : `${x.titulo} · ${origen(x)}`} intro={x.intro} />
+                ))}
               </section>
             );
           })}

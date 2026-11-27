@@ -19,6 +19,10 @@ export function Concepto({ ej, ini, modulo }: { ej: Ejercicio; ini: string; modu
   const intro = parrafos(ej.concepto);
   const primerAviso = ej.secciones.findIndex((s) => s.avisos.some((a) => a.tipo === 'problema'));
   const n = ej.secciones.length;
+  const irA = (id: string) => {
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById(id)?.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
+  };
   return (
     <article className="doc doc-lectura">
       <GlosaAmbito>
@@ -53,6 +57,21 @@ export function Concepto({ ej, ini, modulo }: { ej: Ejercicio; ini: string; modu
           </GlosaAmbito>
         </section>
       ))}
+      {n > 1 && (
+        <nav className="doc-indice" aria-label="En esta página">
+          <p className="doc-indice-k">En esta página</p>
+          <ol>
+            {ej.secciones.map((s, i) => (
+              <li key={s.id}>
+                <button type="button" onClick={() => irA(`sec-${s.id}`)}>
+                  <b>{i + 1}</b>
+                  <span>{t(s.titulo)}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
     </article>
   );
 }

@@ -122,7 +122,7 @@ function Tarjeta({ g, ini, palabras }: { g: Grupo; ini: string; palabras: string
   );
 }
 
-/** Página «Índice de errores»: qué hacer cuando algo no sale, con todos los avisos de los bloques */
+/** Página «Errores»: qué hacer cuando algo no sale, con todos los avisos de los bloques */
 export default function Errores() {
   const ini = useProgreso().alumno.ini;
   const [q, setQ] = useState('');
@@ -179,26 +179,20 @@ export default function Errores() {
 
   return (
     <div className="wrap gls">
-      <header className="ax-banner gls-banner">
-        <div className="gls-banner-in">
-          <div className="gls-astro" aria-hidden="true">
-            <span className="gls-orb">
-              <Icon name="aviso" size={40} />
-            </span>
-          </div>
-          <div className="gls-banner-txt">
-            <p className="kick">Cuando algo no sale</p>
-            <h1 className="gls-h1">Índice de errores</h1>
-            <p className="lead">
-              Todos los avisos de los bloques en un sitio: qué te puede pasar y cómo se arregla. Busca el mensaje o el síntoma y ve al bloque donde se explica.
-            </p>
-          </div>
-          <div className="gls-cifra" aria-label={`${TOTAL_AVISOS} errores en ${modulosConErrores.length} módulos`}>
-            <b aria-hidden="true">{TOTAL_AVISOS}</b>
-            <span aria-hidden="true">errores</span>
-            <small aria-hidden="true">en {modulosConErrores.length} módulos</small>
-          </div>
-        </div>
+      <header className="g-hero cs-hero">
+        <p className="g-kicker">Cuando algo no sale</p>
+        <h1>Errores y soluciones</h1>
+        <p className="cs-lead">
+          Todos los avisos de los bloques en un sitio: qué te puede pasar y cómo se arregla. Busca el mensaje o el síntoma y ve al bloque donde se explica.
+        </p>
+        <p className="cs-datos">
+          <span>
+            <b>{TOTAL_AVISOS}</b> errores
+          </span>
+          <span>
+            <b>{modulosConErrores.length}</b> módulos
+          </span>
+        </p>
       </header>
 
       <div className="gls-barra" role="search">
@@ -243,9 +237,6 @@ export default function Errores() {
 
       <div className="gls-chips" role="group" aria-label="Filtrar por módulo">
         <button type="button" className={`gls-chip todos${!mod ? ' on' : ''}`} aria-pressed={!mod} onClick={() => setMod('')}>
-          <span className="gls-chip-ico">
-            <Icon name="destello" size={16} />
-          </span>
           Todos
           <span className="gls-chip-n">{porModulo.total}</span>
         </button>
@@ -253,9 +244,6 @@ export default function Errores() {
           const n = porModulo.m[id] ?? 0;
           return (
             <button key={id} type="button" className={`gls-chip${mod === id ? ' on' : ''}${n === 0 ? ' cero' : ''}`} aria-pressed={mod === id} onClick={() => setMod(mod === id ? '' : id)} style={varMod(id)}>
-              <span className="gls-chip-ico">
-                <Icon name={META[id]?.icono ?? 'libro'} size={16} />
-              </span>
               {nombreMod(id)}
               <span className="gls-chip-n">{n}</span>
             </button>
@@ -294,9 +282,6 @@ export default function Errores() {
           {frecuentes.length > 0 && (
             <section className="err-grupo err-frecuentes" aria-label="Lo que más pasa">
               <div className="err-grupo-cab">
-                <span className="gls-chip-ico">
-                  <Icon name="destello" size={20} />
-                </span>
                 <h2>Lo que más pasa</h2>
                 <span className="err-grupo-n">salen en varios bloques</span>
               </div>
@@ -310,9 +295,6 @@ export default function Errores() {
           {grupos.map((g) => (
             <section key={g.id} className="err-grupo" style={varMod(g.id)} aria-label={nombreMod(g.id)}>
               <div className="err-grupo-cab">
-                <span className="gls-chip-ico">
-                  <Icon name={META[g.id]?.icono ?? 'libro'} size={20} />
-                </span>
                 <h2>{nombreMod(g.id)}</h2>
                 <span className="err-grupo-n">{g.items.length === 1 ? '1 error' : `${g.items.length} errores`}</span>
               </div>

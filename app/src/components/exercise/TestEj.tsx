@@ -37,28 +37,6 @@ function AnilloNota({ n, ok, reduce }: { n: number; ok: boolean; reduce: boolean
   );
 }
 
-/** Chispas al aprobar (solo decorativas; nada con movimiento reducido). */
-function Chispas() {
-  const piezas = Array.from({ length: 14 }, (_, i) => i);
-  return (
-    <span className="qz-chispas" aria-hidden="true">
-      {piezas.map((i) => {
-        const ang = (i / piezas.length) * Math.PI * 2;
-        const d = 90 + (i % 3) * 26;
-        return (
-          <motion.i
-            key={i}
-            style={{ ['--h' as string]: `${(i * 47) % 360}` }}
-            initial={{ x: 0, y: 0, scale: 0.4, opacity: 1 }}
-            animate={{ x: Math.cos(ang) * d, y: Math.sin(ang) * d, scale: 1, opacity: 0 }}
-            transition={{ duration: 1.1, ease: EASE, delay: 0.35 + (i % 4) * 0.03 }}
-          />
-        );
-      })}
-    </span>
-  );
-}
-
 /**
  * Paso «Test»: una pregunta cada vez, tarjetas de respuesta grandes y respuesta inmediata.
  * Solo cuenta como hecho al aprobar; hasta entonces la página no muestra su «Siguiente».
@@ -147,7 +125,6 @@ export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string;
       <motion.div className={`qz qz-fin${ok ? ' ok' : ' ko'}`} initial={{ opacity: 0, y: reduce ? 0 : 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
         <div className="qz-fin-medalla">
           <AnilloNota n={n} ok={ok} reduce={reduce} />
-          {ok && nota !== null && !reduce && <Chispas />}
           <motion.span
             className="qz-fin-sello"
             aria-hidden="true"
@@ -161,7 +138,7 @@ export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string;
         <div className="qz-fin-txt">
           <p className="qz-fin-titulo">{ok ? (nota === null ? 'Test aprobado' : 'Aprobado') : 'Todavía no'}</p>
           <p className="pl-res">
-            {nota !== null ? `${aciertos} de ${total} respuestas correctas (${Math.round(n * 100)} %).` : `Ya aprobaste este test con un ${Math.round(n * 100)} %.`}{' '}
+            {nota !== null ? `${aciertos} de ${total} respuestas correctas (${Math.round(n * 100)} %).` : `Ya has aprobado este test con un ${Math.round(n * 100)} %.`}{' '}
             {nota === null ? '' : ok ? '' : `Para aprobar necesitas un ${Math.round(APROBADO * 100)} % (${Math.ceil(APROBADO * total)} de ${total}).`}
           </p>
           {nota !== null && res.length === total && (
@@ -207,9 +184,6 @@ export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string;
   return (
     <div className="qz">
       <div className="qz-cab">
-        <span className="qz-icono" aria-hidden="true">
-          <Icon name="cerebro" size={22} />
-        </span>
         <p className="qz-cont" aria-live="polite">
           <b>
             Pregunta {i + 1} de {total}
@@ -231,9 +205,9 @@ export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string;
         <motion.div
           key={`${intento}-${i}`}
           className="qz-pregunta"
-          initial={reduce ? { opacity: 0 } : { opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={reduce ? { opacity: 0 } : { opacity: 0, x: -40 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0.12 : 0.35, ease: EASE }}
         >
           <p className="pl-instr qz-instr">
@@ -250,18 +224,8 @@ export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string;
                   className={`qz-opc${estado}`}
                   onClick={() => elegir(k)}
                   disabled={elegida !== null}
-                  initial={reduce ? false : { opacity: 0, y: 12 }}
-                  animate={
-                    estado === ' apagada'
-                      ? { opacity: 0.5, y: 0 }
-                      : reduce
-                      ? { opacity: 1 }
-                      : estado === ' mal'
-                        ? { opacity: 1, y: 0, x: [0, -9, 9, -6, 6, -2, 0] }
-                        : estado === ' bien'
-                          ? { opacity: 1, y: 0, scale: [1, 1.035, 1] }
-                          : { opacity: 1, y: 0 }
-                  }
+                  initial={reduce ? false : { opacity: 0, y: 4 }}
+                  animate={estado === ' apagada' ? { opacity: 0.55, y: 0 } : { opacity: 1, y: 0 }}
                   transition={estado ? { duration: 0.45, ease: 'easeOut' } : { duration: 0.3, ease: EASE, delay: 0.05 + n * 0.05 }}
                 >
                   <span className="qz-letra" aria-hidden="true">
@@ -285,9 +249,7 @@ export function TestEj({ ej, ini, onListo, onIr }: { ej: Ejercicio; ini: string;
                 <motion.span
                   className="qz-feedback-icono"
                   aria-hidden="true"
-                  initial={reduce ? false : { scale: 0, rotate: -40 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 15, delay: 0.08 }}
+                  initial={false}
                 >
                   <Icon name={acerto ? 'check' : 'aviso'} size={22} stroke={2.6} />
                 </motion.span>

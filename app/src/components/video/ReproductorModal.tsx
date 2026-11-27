@@ -187,16 +187,12 @@ export function ReproductorModal({ serie, capitulo, t = 0, fin, abierto, onCerra
             role="dialog"
             aria-modal="true"
             aria-labelledby="vm-titulo"
-            initial={reducir ? false : { opacity: 0, rotateX: 12, y: 40, scale: 0.94 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
-            exit={reducir ? { opacity: 0 } : { opacity: 0, rotateX: -8, y: 24, scale: 0.96 }}
-            transition={{ duration: reducir ? 0 : 0.45, ease: [0.16, 0.8, 0.2, 1] }}
-            style={{ transformPerspective: 1400 }}
+            initial={reducir ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducir ? 0 : 0.2, ease: 'easeOut' }}
           >
             <header className="vm-cab">
-              <span className="vm-num" aria-hidden="true">
-                {String(c.n).padStart(2, '0')}
-              </span>
               <div className="vm-cab-txt">
                 <p className="vm-kicker">
                   {sv.titulo} · capítulo {c.n} de {CAPITULOS.length}

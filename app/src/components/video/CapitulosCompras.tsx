@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
 import { serieDe } from '../../content/videoSeries';
 import { mmss } from '../../lib/config';
 import { baseUrl } from '../../lib/texto';
@@ -13,7 +12,6 @@ export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titul
   const sv = serieDe(serie);
   const CAPITULOS = sv.capitulos;
   const hid = `vc-titulo-${sv.id}`;
-  const reducir = !!useReducedMotion();
   const [cap, setCap] = useState<number | null>(null);
   const [ultimo, setUltimo] = useState(1);
   const total = Math.round(CAPITULOS.reduce((a, c) => a + c.duracion, 0) / 60);
@@ -28,14 +26,8 @@ export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titul
         </p>
       </div>
       <ol className="vc-lista">
-        {CAPITULOS.map((c, i) => (
-          <motion.li
-            key={c.n}
-            initial={reducir ? false : { opacity: 0, y: 18, rotateX: -14 }}
-            animate={{ opacity: 1, y: 0, rotateX: 0 }}
-            transition={{ duration: 0.45, delay: 0.04 * i }}
-            style={{ transformPerspective: 900 }}
-          >
+        {CAPITULOS.map((c) => (
+          <li key={c.n}>
             <button
               type="button"
               className="vc-cap"
@@ -54,7 +46,7 @@ export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titul
               </span>
               <span className="vc-txt">
                 <span className="vc-n" aria-hidden="true">
-                  {String(c.n).padStart(2, '0')}
+                  {c.n}
                 </span>
                 <span>
                   <span className="vm-sr">Capítulo {c.n}: </span>
@@ -62,7 +54,7 @@ export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titul
                 </span>
               </span>
             </button>
-          </motion.li>
+          </li>
         ))}
       </ol>
       <ReproductorModal serie={sv.id} capitulo={cap ?? ultimo} t={0} abierto={cap !== null} onCerrar={() => setCap(null)} />

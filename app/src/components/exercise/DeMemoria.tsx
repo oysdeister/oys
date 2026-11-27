@@ -104,7 +104,12 @@ function DondeClic({ pasos, modulo, ini, onListo }: { pasos: PasoPlano[]; modulo
       <div className="pl-barra" aria-hidden="true">
         <i style={{ width: `${((i + 1) / lista.length) * 100}%` }} />
       </div>
-      <p className="pl-instr">{consigna}</p>
+      <div className="pl-paso">
+        <span className="pl-paso-n" aria-hidden="true">
+          {i + 1}
+        </span>
+        <p className="pl-instr">{consigna}</p>
+      </div>
       <div className="pl-shot" key={i}>
         <Captura src={imgSrc(modulo, actual.paso.imagen!)} alt="Captura del ERP: busca dónde harías clic" onPunto={onPunto} clicable={res === 'nada'} ampliable instruccion={consigna}>
           {h && res === 'bien' && <CajaHotspot h={h} modo="acierto" />}
