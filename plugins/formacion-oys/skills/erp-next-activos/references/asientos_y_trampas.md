@@ -28,7 +28,7 @@ Crear bien, elemento y componente **no genera asiento**.
 - El menú «Compras» cuelga de «Gestión » en la demo de prácticas.
 - Rutas de Gestión de v-1, v-2, v-3 y v-4 tomadas de los avisos del propio bloque (pendiente de reconfirmar en la demo, según la auditoría).
 - El ejercicio debe estar dividido en periodos para contabilizar amortizaciones.
-- La fecha de inicio de amortización la propone el ERP (primer día del mes siguiente): revisarla.
+- La fecha de inicio de amortización es un dato de cada componente (puede ser la de compra o la de puesta en marcha). Al crearlo desde una factura el ERP propone una: en el vídeo, el primer día del mes siguiente (07-06-2023 → 01-07-2023); en la 0FC000012 de TUTORIAL, el mismo día de la factura (17-11-2026). Revisarla siempre.
 - Tipos contables: el artículo 13500620 es PROD, no INMOVILIZADO; no crearía activo.
 
 ## Errores típicos

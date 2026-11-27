@@ -197,7 +197,7 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
     <div className="pl" ref={stageRef}>
       <p className="pl-cont" aria-live="polite">
         <b>
-          Clic {i + 1} de {total}
+          Instrucción {i + 1} de {total}
         </b>{' '}
         · {t(actual.seccion.titulo)}
       </p>

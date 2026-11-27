@@ -36,7 +36,7 @@ Trampas: «Hay errores en los datos del formulario» (falta analítica); precio 
 - Caja CAJA_{INI}: tipo de cuenta «Caja de efectivo», cuenta 57000.00000. Código máximo 10 caracteres (BBVA_CAJA_{INI} da «Demasiado largo 12 / 10»).
 
 ## 3. icon-cartera-v-1 · Ver los efectos de una factura
-Factura contabilizada → efecto con el tipo de efecto, estado inicial y plazos del tercero. Ejemplo del vídeo: TF/PE, 118,50 USD = 440,70 en moneda local, vence 31-07-2023 (no mezclar con las cifras del caso). En la demo actual la pestaña «Cartera de efectos» no sale: usa ⌄ junto al número › «Cartera». Descontabilizar la factura borra sus efectos; para trabajar la cartera hay que volver a contabilizar. Pestañas del efecto: «Asiento origen», «Histórico». Subpestaña «Vencimientos» de la factura: un efecto por vencimiento; la forma de pago viene del tercero.
+Factura contabilizada → efecto con el tipo de efecto, estado inicial y plazos del tercero. Ejemplo del vídeo: TF/PE, 118,50 USD = 440,70 en moneda local, vence 31-07-2023 (no mezclar con las cifras del caso). En la demo actual la pestaña «Cartera de efectos» no sale: usa ⌄ junto al número › «Cartera de efectos». Descontabilizar la factura borra sus efectos; para trabajar la cartera hay que volver a contabilizar. Pestañas del efecto: «Asiento origen», «Histórico». Subpestaña «Vencimientos» de la factura: un efecto por vencimiento; la forma de pago viene del tercero.
 
 ## 4. icon-cartera-1 · Estados y tipos de efecto
 - Estados: PE Pendiente, PR Propuesto, OC Ordenado, PA Pagado, CO Cobrado, DV Devuelto (cuenta como impagado), BQ Bloqueado, DC Doc. descontado. El estado decide si el efecto se puede modificar.

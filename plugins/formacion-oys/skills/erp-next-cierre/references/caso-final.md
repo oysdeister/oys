@@ -1,4 +1,4 @@
-# Caso final: tu empresa de principio a fin
+# Caso final («Recorrer tu empresa de principio a fin»)
 
 Fuente: `contabilidad-avanzada.json` › `caso-final` (32 KB); `auditoria/revision_senior_fase2.md`, `reauditoria.md`, `correccion_1.md`; `_fuente/CODIGOS_ALUMNO.md`.
 
@@ -25,7 +25,7 @@ Caso de repaso («examen de conducir en la calle»): 13 operaciones del 4T de 20
 | 7 | 06-11 | Pago a T{INI} por remesa Pagar, tipo PSCTT, BBVA_{INI}; efecto 151,25 a OP | Cobros y Pagos › Remesas › Registro de remesas | 151,25 + 3,50 comisión | Crear una remesa de pago |
 | 8 | 12-11 | Comisión de mantenimiento: movimiento manual, Salida 10,00, operación {INI}COM; 62600 D / 57200 H | Finanzas › Tesorería › Ops. corto plazo | 10,00 | Registrar un movimiento manual |
 | 9 | 14-11 | Cobro del efecto 1: gestión COBD; 57200 D 121,00 / 43000.00901 H 121,00; PE → CO; no crea movimiento de tesorería | Cobros y Pagos › Gestiones | 121,00 | Cobrar efectos |
-| 10 | 01-12 | Remesa de cobro SEPA del efecto 2: Cobrar, tipo CSDDS, línea LRC{INI}; cobro confirmado 14-12 | Remesas | 121,00 | Domiciliar un cliente: mandato SEPA |
+| 10 | 01-12 | Remesa de cobro SEPA del efecto 2: Cobrar, tipo CSDDS, línea LRC{INI}; cobro confirmado 14-12 | Remesas | 121,00 | Cobrar un recibo domiciliado con mandato SEPA |
 | 11 | 31-12 | Concilia el extracto N43 de BBVA_{INI}: 6 líneas, termina en 3.077,25 | Tesorería › Extractos bancarios / Conciliación bancaria | 3.077,25 | Dar de alta el extracto; Conciliar |
 | 12 | 31-12 | Liquida el IVA del 4T (modelo 303): 47000 D 42,00 / 47200 H 26,25 + 47500 H 15,75 | Finanzas › Impuestos › IVA › Borrador autoliquidación IVA (Modelo 303) | 15,75 (plazo hasta el lunes 1-02-2027) | Liquidar y presentar |
 | 13 | 31-12 | Cerrar el año sobre el papel: regularización, cierre y apertura | Maestros › Cierres › Ejercicios contables | 61,50 | `contab-cierre-practica` |

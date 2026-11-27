@@ -21,7 +21,7 @@ const clip = (f: string) => `${RELEASE}/${f}.mp4`;
 export const SERIES_TUT_FIN: SerieTutorialFin[] = [
   {
     id: 'tut-intro',
-    titulo: 'Introducción a Deister Axional VNext',
+    titulo: 'Introducción a Axional Deister VNext',
     corto: 'Vídeo de introducción',
     intro: 'Qué es un ERP y cómo moverte por él: la pantalla de inicio, el buscador, el menú lateral y qué es un maestro.',
     modulos: ['fundamentos'],

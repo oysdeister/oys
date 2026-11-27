@@ -2,7 +2,7 @@
  {
   "termino": "ERP",
   "definicion": "El programa donde la empresa guarda y trabaja todos sus datos (compras, ventas, cobros, contabilidad) en un solo sitio. Cada operación se anota una vez y el resto se actualiza solo.",
-  "ejemplo": "Al contabilizar una factura en Deister Axional VNext, el ERP crea solo su asiento y sus cobros pendientes.",
+  "ejemplo": "Al contabilizar una factura en Axional Deister VNext, el ERP crea solo su asiento y sus cobros pendientes.",
   "alias": [
    "Sistema ERP"
   ]
@@ -15,7 +15,10 @@
  {
   "termino": "Debe",
   "definicion": "La columna izquierda de un asiento. Aquí se anota lo que la empresa tiene o le deben (bancos, clientes) y los gastos.",
-  "ejemplo": "En una venta de 242 € a un cliente, los 242 € van al debe de la cuenta del cliente, porque te los debe."
+  "ejemplo": "En una venta de 242 € a un cliente, los 242 € van al debe de la cuenta del cliente, porque te los debe.",
+  "alias": [
+   "Debe y haber"
+  ]
  },
  {
   "termino": "Haber",
@@ -25,7 +28,10 @@
  {
   "termino": "Asiento",
   "definicion": "La anotación completa de una operación en la contabilidad. Tiene varias líneas y el total del debe siempre es igual al total del haber.",
-  "ejemplo": "Una factura de venta genera un asiento con 3 líneas: cliente al debe, ventas e IVA al haber."
+  "ejemplo": "Tu factura de venta de 242,00 a C{INI} genera un asiento con 3 líneas: el cliente al debe por 242,00; las ventas (200,00) y el IVA (42,00) al haber.",
+  "alias": [
+   "Asiento contable"
+  ]
  },
  {
   "termino": "Apunte",
@@ -34,23 +40,26 @@
  },
  {
   "termino": "IVA soportado",
-  "definicion": "El IVA que pagas a tus proveedores en las compras. Se resta del IVA que cobras a tus clientes, y solo pagas la diferencia.",
-  "ejemplo": "Compras por 100 € + 21 € de IVA: esos 21 € son IVA soportado."
+  "definicion": "El IVA que pagas a tus proveedores en las compras. Se resta del IVA que cobras a tus clientes, y solo pagas la diferencia. Normalmente va a la cuenta 472.",
+  "ejemplo": "Tu compra a T{INI}: 125,00 + 26,25 de IVA; esos 26,25 son IVA soportado (cuenta 47200)."
  },
  {
   "termino": "IVA repercutido",
-  "definicion": "El IVA que cobras a tus clientes en las ventas. No es tuyo: lo ingresas a Hacienda, descontando el IVA soportado.",
-  "ejemplo": "Vendes por 200 € + 42 € de IVA: esos 42 € son IVA repercutido."
+  "definicion": "El IVA que cobras a tus clientes en las ventas. No es tuyo: lo ingresas a Hacienda, descontando el IVA soportado. En el PGC va a la cuenta 477; en la demo, a la 47000.00000.",
+  "ejemplo": "Tu venta a C{INI}: 200,00 + 42,00 de IVA; esos 42,00 son IVA repercutido."
  },
  {
   "termino": "Efecto",
   "definicion": "Cada cobro o pago pendiente que deja una factura, con su importe y su fecha de vencimiento. Se crea al contabilizar la factura.",
-  "ejemplo": "Una factura de venta de 242 € a 30 días deja un efecto de cobro de 242 € que vence dentro de 30 días."
+  "ejemplo": "Tu venta de 242,00 € a C{INI}, con el plazo P{INI} (50 % a 30 días y 50 % a 60 días), deja dos efectos de cobro de 121,00 €."
  },
  {
   "termino": "Conciliar",
-  "definicion": "Comprobar que cada movimiento del extracto del banco coincide con lo anotado en la empresa, y marcarlos como casados.",
-  "ejemplo": "El banco muestra un cobro de 242 €; lo concilias con el cobro de esa factura y quedan casados."
+  "definicion": "Comprobar que cada movimiento del extracto del banco coincide con lo anotado en la empresa, y marcarlos como casados. En el ERP se hace en Tesorería: cada línea del extracto se casa con su movimiento de tesorería, por el mismo importe y con signo contrario.",
+  "ejemplo": "El extracto del banco muestra un cobro de 121,00 €; lo concilias con el cobro del primer efecto de tu venta y quedan casados.",
+  "alias": [
+   "Conciliación bancaria"
+  ]
  },
  {
   "termino": "Cierre del ejercicio",
@@ -58,6 +67,73 @@
   "ejemplo": "Con ventas de 200 €, compras de 125 € y gastos de 13,50 €, el cierre deja un beneficio de 61,50 €.",
   "alias": [
    "Cierre"
+  ]
+ },
+ {
+  "termino": "IVA",
+  "definicion": "Impuesto que se suma al precio de lo que se compra o se vende. La empresa cobra IVA a sus clientes, paga IVA a sus proveedores y liquida la diferencia con Hacienda.",
+  "ejemplo": "200,00 € de tu venta a C{INI} + 21 % de IVA = 242,00 € de factura."
+ },
+ {
+  "termino": "Base imponible",
+  "definicion": "Importe sobre el que se calcula el IVA: cantidad por precio menos descuentos, sin impuestos.",
+  "ejemplo": "Tu compra a T{INI}: 10 × 12,50 = 125,00 de base imponible; con el 21 %, 26,25 de IVA.",
+  "alias": [
+   "Base"
+  ]
+ },
+ {
+  "termino": "Contabilizar",
+  "definicion": "Pasar un documento a la contabilidad: el ERP genera su asiento y, en las facturas, sus efectos de cartera. «Descontabilizar» lo deshace.",
+  "ejemplo": "Al contabilizar tu factura de venta de 242,00 a C{INI} nacen su asiento y sus dos efectos de 121,00."
+ },
+ {
+  "termino": "Maestro",
+  "definicion": "Ficha de datos básicos que se da de alta una vez y que después usan todos los documentos: empresas, terceros, artículos, almacenes, cuentas…",
+  "ejemplo": "En «Maestro de empresas», la empresa 0 Deister Software se crea una vez y todos los documentos la llevan."
+ },
+ {
+  "termino": "Plan contable",
+  "definicion": "Lista ordenada de cuentas que usa la contabilidad de un país. Cada operación se anota en las cuentas que le corresponden. El primer dígito indica la familia: 2 inmovilizado, 4 terceros, 5 cuentas financieras (bancos, caja), 6 gastos y 7 ingresos.",
+  "ejemplo": "España usa el Plan General de Contabilidad, que en el ERP aparece como PGE 2008 (código ES); en la demo también están el de Andorra, Perú y Portugal.",
+  "alias": [
+   "Plan de cuentas",
+   "PGE 2008",
+   "Plan General de Contabilidad",
+   "PGC"
+  ]
+ },
+ {
+  "termino": "Cuenta contable",
+  "definicion": "Código numérico con un nombre donde se anotan los importes de un tipo de operación, como un cajón con número. Su saldo dice cuánto hay acumulado.",
+  "ejemplo": "57200 Bancos guarda el dinero del banco: los 3.000,00 € que aportan los socios en tu caso entran en su debe."
+ },
+ {
+  "termino": "Saldo",
+  "definicion": "Diferencia entre lo anotado en el Debe y en el Haber de una cuenta: es deudor si pesa más el Debe y acreedor si pesa más el Haber. En los extractos del banco, el saldo inicial de uno tiene que coincidir con el final del anterior.",
+  "ejemplo": "Si la 57200 Bancos suma 3.000 al Debe y 1.250 al Haber, su saldo es deudor de 1.750 €: lo que queda en el banco."
+ },
+ {
+  "termino": "Vencimiento",
+  "definicion": "Fecha en la que hay que cobrar o pagar una parte de la factura, con su importe. Cada vencimiento da lugar a un efecto de la cartera. Se calcula a partir de la fecha valor de la factura y del plazo de pago.",
+  "ejemplo": "Tu factura de 242,00 € a C{INI}, con el plazo P{INI}, tiene dos vencimientos de 121,00 €: el 14-11-2026 y el 14-12-2026."
+ },
+ {
+  "termino": "Cuota",
+  "definicion": "Importe del impuesto: base imponible × tipo.",
+  "ejemplo": "Tu compra a T{INI}: base 125,00 € × 21 % = cuota de 26,25 €."
+ },
+ {
+  "termino": "Tipo impositivo",
+  "definicion": "Porcentaje que se aplica a la base. En España el IVA tiene un tipo general del 21 %, uno reducido del 10 % y uno superreducido del 4 %.",
+  "ejemplo": "Base de 200 € al tipo reducido del 10 %: 20 € de IVA."
+ },
+ {
+  "termino": "4T (cuarto trimestre)",
+  "definicion": "Los meses de octubre a diciembre. Los impuestos como el IVA se declaran por trimestres: 1T, 2T, 3T y 4T.",
+  "ejemplo": "La liquidación del IVA de tu caso es la del 4T de 2026: 42,00 − 26,25 = 15,75 € a ingresar.",
+  "alias": [
+   "Cuarto trimestre"
   ]
  }
 ]

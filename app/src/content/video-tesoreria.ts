@@ -1,5 +1,5 @@
 /**
- * Las dos sesiones de formación de Tesorería (Deister), reducidas a los tramos en que se ve la pantalla de Axional Next.
+ * Las dos sesiones de formación de Tesorería (Deister), reducidas a los tramos en que se ve la pantalla de Axional Deister VNext.
  * Cada clip es UN tramo continuo de la grabación, recortado a la pantalla compartida (sin barra de Meet, sin participantes,
  * sin caras ni nombres, y con tapados los datos del cliente real). Quedan fuera las diapositivas, la versión antigua y las cuadrículas de Meet.
  * Sesión I: operaciones financieras, flujos financieros y el movimiento de tesorería.
@@ -62,14 +62,14 @@ function capitulo(d: Def): CapituloTesoreria {
   };
 }
 
-// Escenas de la sesión I que caen en tramos de Next (segundo de la sesión)
+// Escenas de la sesión I que caen en tramos de VNext (segundo de la sesión)
 const ESCENAS_I: [number, string][] = [
-  [1103, 'En Next: operaciones financieras, con estado abierto o cerrado'],
-  [1127, 'Posición, interface y parámetros de conciliación en Next'],
-  [1218, 'En Next: los flujos financieros'],
+  [1103, 'En VNext: operaciones financieras, con estado abierto o cerrado'],
+  [1127, 'Posición, interface y parámetros de conciliación en VNext'],
+  [1218, 'En VNext: los flujos financieros'],
   [1237, 'Banco + operación + flujo con cuenta contable'],
-  [1474, 'En Next: el movimiento de tesorería'],
-  [1491, 'Fechas, posición, operación e importe en Next'],
+  [1474, 'En VNext: el movimiento de tesorería'],
+  [1491, 'Fechas, posición, operación e importe en VNext'],
 ];
 
 // Escenas de la sesión II (segundo de la sesión); en cada clip solo cuentan las que caen dentro del tramo
@@ -124,7 +124,7 @@ const ESCENAS_II: [number, string][] = [
   [2479, 'Cancelar extractos: los extornos'],
   [2505, 'Generar: integrar una comisión'],
   [2558, 'Conciliar efectos: el selector de efectos'],
-  [2587, 'Vuelta a Next: los botones de la conciliación'],
+  [2587, 'Vuelta a VNext: los botones de la conciliación'],
   [2643, 'Acción, fecha y nota'],
   [2696, 'Conciliar'],
   [2722, 'Duda: comisiones de TPV por descripción'],
@@ -142,9 +142,9 @@ const ESCENAS_II: [number, string][] = [
 ];
 
 const SESION_I: Def[] = [
-  { n: 1, global: 1, titulo: 'Operaciones financieras en Next', inicio: 1103, fin: 1141, escenas: ESCENAS_I },
-  { n: 2, global: 2, titulo: 'Flujos financieros en Next', inicio: 1218, fin: 1272, escenas: ESCENAS_I },
-  { n: 3, global: 3, titulo: 'El movimiento de tesorería en Next', inicio: 1474, fin: 1508, escenas: ESCENAS_I },
+  { n: 1, global: 1, titulo: 'Operaciones financieras en VNext', inicio: 1103, fin: 1141, escenas: ESCENAS_I },
+  { n: 2, global: 2, titulo: 'Flujos financieros en VNext', inicio: 1218, fin: 1272, escenas: ESCENAS_I },
+  { n: 3, global: 3, titulo: 'El movimiento de tesorería en VNext', inicio: 1474, fin: 1508, escenas: ESCENAS_I },
 ];
 
 const SESION_II: Def[] = [
@@ -163,7 +163,7 @@ export const SERIES_TESORERIA: SerieTesoreria[] = [
     id: 'tesoreria-1',
     titulo: 'Tesorería · sesión I',
     corto: 'Sesión I',
-    intro: 'Las operaciones financieras, los flujos financieros y el movimiento de tesorería, tal como se ven en Axional Next. Solo están los tramos de la sesión en que se ve la pantalla de Next.',
+    intro: 'Las operaciones financieras, los flujos financieros y el movimiento de tesorería, tal como se ven en Axional Deister VNext. Solo están los tramos de la sesión en que se ve la pantalla de VNext.',
     modulos: ['tesoreria'],
     original: true,
     capitulos: SESION_I.map(capitulo),
@@ -172,7 +172,7 @@ export const SERIES_TESORERIA: SerieTesoreria[] = [
     id: 'tesoreria-2',
     titulo: 'Tesorería · sesión II',
     corto: 'Sesión II',
-    intro: 'Del efecto y la remesa a la tesorería, el extracto N43, los conceptos propios y comunes y la conciliación individual y automática, todo en Next. Solo están los tramos de la sesión en que se ve la pantalla de Next.',
+    intro: 'Del efecto y la remesa a la tesorería, el extracto N43, los conceptos propios y comunes y la conciliación individual y automática, todo en VNext. Solo están los tramos de la sesión en que se ve la pantalla de VNext.',
     modulos: ['tesoreria'],
     original: true,
     capitulos: SESION_II.map(capitulo),
@@ -214,23 +214,23 @@ const registro = (r: Record<string, (MomentoVideo | undefined)[]>): Record<strin
   Object.fromEntries(Object.entries(r).map(([k, v]) => [k, ms(...v)]).filter(([, v]) => (v as MomentoVideo[]).length > 0));
 
 const M = {
-  // Sesión I: solo quedan los tramos en Next (operaciones, flujos y movimiento); lo demás cae en diapositivas o en la versión antigua
+  // Sesión I: solo quedan los tramos en VNext (operaciones, flujos y movimiento); lo demás cae en diapositivas o en la versión antigua
   rutaBanco: m(1, 142, 'La ruta y la cabecera de la cuenta'),
   datosBanco: m(1, 221, 'Entidad, número de cuenta y tipo de cuenta'),
-  bancoNext: m(1, 484, 'La cuenta financiera en Next'),
+  bancoNext: m(1, 484, 'La cuenta financiera en VNext'),
   extractoBanco: m(1, 400, 'Control del extracto en la cuenta'),
   // En el minuto 21 se habla de las comisiones, pero la pantalla sigue en los flujos: no hay clip que las enseñe
   comisiones: undefined as MomentoVideo | undefined,
   posicion: m(1, 638, 'Posición: entrada o salida'),
   interface: m(1, 663, 'Interface: el asiento al contabilizar'),
-  operaciones: m(1, 1130, 'Operaciones financieras en Next: estado abierto o cerrado'),
+  operaciones: m(1, 1130, 'Operaciones financieras en VNext: estado abierto o cerrado'),
   paramConc: m(1, 853, 'Parámetros de conciliación de la operación'),
   float: m(1, 910, 'Float de fecha de operación y fecha valor'),
   primerRegistro: m(1, 979, 'Primer registro con importes repetidos'),
-  flujos: m(1, 1212, 'Los flujos financieros en Next'),
+  flujos: m(1, 1212, 'Los flujos financieros en VNext'),
   tipoFlujo: m(1, 1152, 'Comisión, interés o no gasto'),
   parametros: m(1, 1316, 'Parámetros de tesorería'),
-  movimiento: m(1, 1491, 'El movimiento de tesorería en Next'),
+  movimiento: m(1, 1491, 'El movimiento de tesorería en VNext'),
   asiento: m(1, 1709, 'El asiento: banco contra flujos y comisión'),
   // Sesión II
   efecto: m(2, 376, 'Evolucionar el efecto a «Pago a tesorería»'),
@@ -264,7 +264,7 @@ export const MOMENTOS_SECCION_TESORERIA: Record<string, MomentoVideo[]> = regist
   'tesoreria-nav-vision': [m(2, 103, 'El esquema: cartera, banco y conciliación')],
   'tesoreria-nav-moverse': [M.rutaBanco, m(2, 1867, 'Ruta: Tesorería › Maestros › Conceptos propios')],
   'tesoreria-1-banco': [M.rutaBanco, M.datosBanco, M.bancoNext],
-  'tesoreria-1-extracto': [M.extractoBanco, m(1, 552, 'Las vistas inferiores de la cuenta en Next')],
+  'tesoreria-1-extracto': [M.extractoBanco, m(1, 552, 'Las vistas inferiores de la cuenta en VNext')],
   'tesoreria-1-comisiones': [M.comisiones, m(1, 1288, 'Por beneficiario, por efecto o comisión separada')],
   'tesoreria-2-flujo': [M.flujos, M.tipoFlujo],
   'tesoreria-2-operacion': [M.posicion, M.interface, M.operaciones],

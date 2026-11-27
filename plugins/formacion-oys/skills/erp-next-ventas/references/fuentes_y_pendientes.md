@@ -13,10 +13,10 @@
 | `ventas-1` | Vender del albarán a la factura | Operar › Practicar otros circuitos | 60 | A{INI}, asiento del albarán, descontabilizar, FVOA |
 | `ventas-2` | Vender de la oferta a la factura | Operar › Practicar otros circuitos | 75 | oferta 5 × 22,00 → factura 133,10 |
 Navegación del módulo: `ventas-nav-circuito` y `ventas-nav-moverse` (cómo abrir pantallas, Nuevo vs Nuevo como, estados). Existe además un glosario (`glosario/ventas.json`) y un examen (`examenes/ventas.json`) y un examen práctico en `app/src/lib/examen.ts` que usa O{INI}, PV{INI}, AP{INI}, FP{INI}.
-Dependencias de otros módulos: tercero C{INI} y relación CLI (Contabilidad › «Dar de alta los datos básicos de contabilidad»), cliente C{INI}, R{INI}, P{INI} (Compras/Maestros › «Dar de alta los datos básicos de gestión», `maestros-1`/`maestros-2`), stock inicial (`compras-2`, 10 unidades).
+Dependencias de otros módulos: tercero C{INI} y relación CLI (Contabilidad › «Dar de alta los datos básicos de contabilidad»), R{INI} y P{INI} (Contabilidad básica › «Dar de alta los datos básicos de contabilidad», `maestros-1`), cliente C{INI} en Gestión y su condición de cobro (Compras › «Dar de alta los datos básicos de gestión», `maestros-2`), stock inicial (`compras-2`, 10 unidades).
 Convención de códigos: `_fuente/CODIGOS_ALUMNO.md` (sección Ventas). `A{INI}2` y `F{INI}` ya no existen; el pedido desde oferta pasó de `P{INI}` a `PV{INI}` (chocaba con el plazo de Maestros).
 
-## 2. Vídeo «Ventas en Deister Axional VNext» (`app/src/content/video-ventas.ts`, release `video-ventas-v1`, 6 capítulos)
+## 2. Vídeo «Ventas en Axional Deister VNext» (`app/src/content/video-ventas.ts`, release `video-ventas-v1`, 6 capítulos)
 1 Bienvenida: el módulo de ventas (4:52) · 2 El cliente (6:18) · 3 La numeración y los tipos de documento (6:46) · 4 El pedido de venta (7:17) · 5 Del albarán a la factura (11:18) · 6 Resumen y ejercicios (2:47). Se registra en `videoSeries.ts`.
 
 ## 3. Fuentes consultadas

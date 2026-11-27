@@ -1,5 +1,5 @@
 /**
- * Vídeo tutorial de la aprobación de pedidos de compra con workflow (Deister Axional VNext):
+ * Vídeo tutorial de la aprobación de pedidos de compra con workflow (Axional Deister VNext):
  * qué es, cómo se configura y cómo se prueba, en tres capítulos (Release «video-workflow-v1»).
  * Se registra en videoSeries.ts. Los tiempos de «escenas» y de los momentos son segundos dentro del clip.
  */

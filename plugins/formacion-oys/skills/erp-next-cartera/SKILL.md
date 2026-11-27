@@ -19,7 +19,7 @@ Módulo `carteras` de la plataforma (`app/src/content/carteras.json`, 18 bloques
 | Tipos de efecto, estados | Cobros y Pagos › Maestros › Efectos › Tipos / Estados |
 | Acciones y enlaces contables | Cobros y Pagos › Maestros › Acciones › Relación de acciones |
 | Bancos propios y cajas | Cobros y Pagos › Maestros › Auxiliares › Bancos propios |
-| Cartera de efectos | Cobros y Pagos › Cobros y Pagos (y «Movimientos»); desde la factura, desplegable ⌄ › «Cartera» |
+| Cartera de efectos | Cobros y Pagos › Cobros y Pagos (y «Movimientos»); desde la factura, desplegable ⌄ › «Cartera de efectos» |
 | Gestiones sobre efectos | Cobros y Pagos › Gestiones › Gestiones sobre efectos (la OCR del vídeo la llama «Gestiones sobre la cartera de efectos»; conviven los dos rótulos) |
 | Remesas | Cobros y Pagos › Remesas › Registro de remesas |
 | Procesos avanzados | Cobros y Pagos › Procesos (Anticipos, Reclasificaciones, Cambios de titularidad, Alinear vencimientos) y Detalle a fecha histórica |

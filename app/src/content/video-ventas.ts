@@ -1,5 +1,5 @@
 /**
- * Vídeo tutorial «Ventas en Deister Axional VNext» (6 capítulos). Release «video-ventas-v1».
+ * Vídeo tutorial «Ventas en Axional Deister VNext» (6 capítulos). Release «video-ventas-v1».
  * Se registra en videoSeries.ts. Los tiempos de «escenas» y de los momentos son segundos dentro del clip.
  */
 import type { MomentoVideo } from './videoMapa';
@@ -11,7 +11,7 @@ const clip = (f: string) => `${RELEASE}/${f}.mp4`;
 export const SERIES_VENTAS: SerieTutorialFin[] = [
   {
     id: 'tut-ventas',
-    titulo: 'Ventas en Deister Axional VNext',
+    titulo: 'Ventas en Axional Deister VNext',
     corto: 'Vídeo de ventas',
     intro: 'Qué es el módulo de ventas, cómo se da de alta un cliente y cómo se numeran y se crean los tipos de los documentos de venta, y el circuito completo: pedido, albarán, factura, contabilización y vencimiento.',
     modulos: ['ventas'],

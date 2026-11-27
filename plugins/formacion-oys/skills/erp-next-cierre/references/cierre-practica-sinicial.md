@@ -18,6 +18,6 @@ La empresa 0 «Deister Software» la comparten todos los alumnos (es la que tien
 | Reapertura y Cierre definitivo en gris | El ejercicio sigue Abierto | Regulariza primero |
 | «EJERCICIO DE APERTURA INEXISTENTE O NO ACTIVO» | Falta el ejercicio siguiente en estado A | Créalo en Ejercicios contables y repite |
 | Cierre definitivo con el ejercicio cerrado temporalmente | — | Lanza antes la reapertura |
-| Quiero deshacer la regularización | — | «Reapertura de ejercicio», solo en tu empresa (no se ha comprobado qué hace con los periodos que ya estaban cerrados) |
+| Quiero deshacer la regularización | — | «Reapertura de ejercicio», solo en tu empresa (no se ha comprobado qué hace con los periodos que ya estaban cerrados; en el curso se dice en genérico: el estado de cada periodo es un dato aparte que se revisa en la lista de periodos) |
 | Mi ejercicio 2027 no sale | Filtro de empresa | Filtra por S{INI}; comprueba que pulsaste «Guardar» |
 Si el cierre se planea con cifras del caso (sobre el papel): regularización 70000 200,00 D / 60000 125,00 + 626 13,50 + 129 61,50 H.

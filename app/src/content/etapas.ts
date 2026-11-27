@@ -8,8 +8,8 @@ export type Fase = 'configurar' | 'operar';
 
 /** Qué se hace en cada fase (se pinta como encabezado en la página del módulo) */
 export const FASES: Record<Fase, { titulo: string; que: string }> = {
-  configurar: { titulo: 'Configurar', que: 'Dejas preparado lo que el ERP necesita antes de trabajar: maestros, códigos, tipologías y parámetros.' },
-  operar: { titulo: 'Operar', que: 'Trabajas el día a día con lo que ya has preparado: documentos, asientos, cobros, pagos y procesos.' },
+  configurar: { titulo: 'Configurar', que: 'Dejas el ERP preparado: maestros, códigos y parámetros.' },
+  operar: { titulo: 'Operar', que: 'Trabajas el día a día: documentos, asientos, cobros y pagos.' },
 };
 
 export interface DefEtapa {
@@ -67,7 +67,7 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { fase: 'configurar', titulo: 'Preparar', que: 'Creas el plazo de pago, el tipo de efecto y un tercero de práctica, y das de alta tu banco y tu caja.', bloques: ['carteras-1', 'carteras-3'] },
     { fase: 'operar', titulo: 'Ver la cartera', que: 'Ves qué efectos deja una factura, qué estados y tipos tienen y qué acciones los mueven.', bloques: ['icon-cartera-v-1', 'icon-cartera-1'] },
     { fase: 'operar', titulo: 'Cobrar y pagar efectos', que: 'Cobras efectos sueltos y en remesa, pagas en efectivo y con una gestión, ves qué hace el cierre de una gestión y cobras solo una parte de un efecto.', bloques: ['carteras-5', 'icon-cartera-v-2', 'icon-cartera-v-3', 'icon-cartera-2', 'cartera-cobro-parcial'] },
-    { fase: 'operar', titulo: 'Remesas', que: 'Preparas el banco, creas y ordenas una remesa de pago, ves cómo pasa a tesorería y cobras un recibo domiciliado con mandato SEPA.', bloques: ['icon-cartera-v-4', 'icon-cartera-v-5', 'icon-cartera-v-6', 'icon-cartera-v-7', 'carteras-7', 'cartera-mandato-sepa'] },
+    { fase: 'operar', titulo: 'Remesas', que: 'Preparas el banco, creas una remesa de pago, ves por qué un efecto puede no entrar, la ordenas, ves cómo pasa a tesorería y cobras un recibo domiciliado con mandato SEPA.', bloques: ['icon-cartera-v-4', 'icon-cartera-v-5', 'icon-cartera-v-7', 'icon-cartera-v-6', 'carteras-7', 'cartera-mandato-sepa'] },
     { fase: 'operar', titulo: 'Impagados', que: 'Registras un recibo que el banco devuelve y conoces el descuento de efectos.', bloques: ['cartera-impagado-devolucion', 'cartera-descuento'] },
     { fase: 'operar', titulo: 'Para saber más', que: 'Conoces anticipos, reclasificaciones, cambios de titularidad y recobros, y sacas la cartera a una fecha pasada.', bloques: ['icon-cartera-3'], opcional: true },
   ],
@@ -82,8 +82,8 @@ export const ETAPAS: Record<string, DefEtapa[]> = {
     { fase: 'operar', titulo: 'Declarar', que: 'Revisas el registro fiscal de cada factura, lo controlas antes de presentar y liquidas el IVA del trimestre.', bloques: ['icon-impuestos-2', 'icon-impuestos-4', 'icon-impuestos-3'] },
   ],
   'icon-activos': [
-    { fase: 'configurar', titulo: 'El activo y sus maestros', que: 'Entiendes qué es un activo fijo y cómo se amortiza, ves cómo lo guarda el ERP y qué datos necesita la familia del artículo.', bloques: ['icon-activos-conceptos', 'icon-activos-1', 'icon-activos-v-4'] },
-    { fase: 'operar', titulo: 'Del albarán al activo', que: 'Revisas el albarán y la factura que crean el activo y contabilizas una factura de activos.', bloques: ['icon-activos-v-1', 'icon-activos-v-2', 'icon-activos-v-3'] },
+    { fase: 'configurar', titulo: 'El activo y sus maestros', que: 'Entiendes qué es un activo fijo y cómo se amortiza, ves cómo lo guarda el ERP y creas tu propio ordenador.', bloques: ['icon-activos-conceptos', 'icon-activos-1'] },
+    { fase: 'operar', titulo: 'Del albarán al activo', que: 'Revisas el albarán, la factura y la familia del artículo que deciden si una compra crea el activo, y contabilizas una factura de activos.', bloques: ['icon-activos-v-1', 'icon-activos-v-2', 'icon-activos-v-4', 'icon-activos-v-3'] },
     { fase: 'operar', titulo: 'Amortizar y dar de baja', que: 'Sigues la vida del activo: lo amortizas cada año y, al final, lo das de baja o lo vendes.', bloques: ['icon-activos-2', 'icon-activos-3'] },
   ],
   'contabilidad-avanzada': [

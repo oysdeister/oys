@@ -53,7 +53,28 @@ Lo que arregló la relectura: preguntas De memoria que decían «bloque» cuando
 - Antes: «La empresa: la ficha que usan todos los documentos. Si está mal, el error se arrastra a cada pedido, factura y asiento. Lees una y creas la tuya.»
 - Después: «Los datos maestros son las fichas básicas que usan todos los documentos: la empresa, los terceros, los artículos, los bancos… Si una está mal, el error se arrastra a cada pedido, factura y asiento. Este módulo empieza por la primera de todas, la empresa: lees la ficha de una y creas la tuya.»
 
-## Lo que no se tocó (dudas funcionales y decisiones para Sergi)
+## Segunda pasada: dudas resueltas con criterio de experto (27-11-2026)
+
+Encargo de Sergi: resolver lo pendiente actuando a la vez como experto en el ERP, experto en comprensión y junior; pasar de cada caso concreto a la regla general; que todo sea coherente, esté ordenado por módulos y nada se repita. Brief: [BRIEF_EXPERTO.md](usabilidad/BRIEF_EXPERTO.md).
+
+| Pasada | Informe | Resultado |
+|---|---|---|
+| Previa, Fundamentos y páginas generales | [experto_previa-fundamentos-generales.md](usabilidad/experto_previa-fundamentos-generales.md) | 10 resueltas, 1 en genérico (estado AU) |
+| Datos maestros y Contabilidad básica | [experto_maestros-contabilidad.md](usabilidad/experto_maestros-contabilidad.md) | 12 resueltas; glosarios reordenados por módulo |
+| Compras | [experto_compras.md](usabilidad/experto_compras.md) | 9 resueltas, 3 en genérico |
+| Ventas | [experto_ventas.md](usabilidad/experto_ventas.md) | 8 resueltas (2 en genérico) |
+| Cartera | [experto_cartera.md](usabilidad/experto_cartera.md) | todas resueltas; 2 títulos renombrados y etapa Remesas reordenada |
+| Tesorería | [experto_tesoreria.md](usabilidad/experto_tesoreria.md) | 7 resueltas |
+| Impuestos, Activos y Cierre | [experto_impuestos-activos-cierre.md](usabilidad/experto_impuestos-activos-cierre.md) | 13 resueltas (2 en genérico); bloque de Activos reordenado; 17 títulos sin dos puntos |
+| Repeticiones entre módulos | [transversal_repeticiones.md](usabilidad/transversal_repeticiones.md) | unas 75 reexplicaciones convertidas en remisiones al sitio donde nace cada concepto |
+| Citas, nombre del producto y glosarios | [transversal_citas-glosarios.md](usabilidad/transversal_citas-glosarios.md) | citas a títulos viejos corregidas; «Axional Deister VNext» en todo; glosario sin duplicados (de 35 claves repetidas a 0) y glosario nuevo de Cierre |
+| Junior final | [junior_final.md](usabilidad/junior_final.md) | 4 remisiones, 7 frases meta y 6 primeras frases arregladas; 19 entradas de glosario movidas o fusionadas |
+
+Decisiones principales: factura del proveedor PROV-{INI}-001; fecha del caso 09-10-2026; facturas del curso contabilizadas por el tipo de asiento de su tipología (las plantillas, para integraciones); pago por remesa en dos asientos (proveedor contra cuenta puente al ordenar, cuenta puente contra banco al contabilizar el movimiento); OC y OP son el estado «Ordenado» de cobros y pagos; mnemotécnicos de la demo ES-IVA-SOP/REP; fecha de inicio de amortización explicada como regla general antes del ejemplo; preguntas de examen que evaluaban lo no enseñado, reescritas con la respuesta correcta en el mismo índice.
+
+Sigue abierto (necesita probarlo en la demo o es decisión tuya): qué hacen en concreto el cierre temporal y la reapertura; la etiqueta «Bloque Cuentas» de un punto clicable de Activos; campos sin ejemplo del bloque opcional de procesos avanzados de cartera; mover «Cobrar solo una parte de un efecto» junto al bloque 5 de Cartera; los títulos «Vender: pedido, albarán y factura» y «Pedir: de la oferta al pedido».
+
+## Lo que no se tocó en la primera pasada (resuelto en la segunda salvo lo indicado arriba)
 
 Las listas completas están al final de cada informe. Las más importantes:
 - **Contabilidad**: unos bloques dicen que la factura contabiliza con las plantillas XLS y otro que lo hace con el tipo de asiento (las plantillas serían de integraciones). El examen pregunta por series y máscaras «#d» que el módulo no enseña. Las notas «{INI} Ejercicio 2…» usan «ejercicio» en el sentido antiguo de bloque (salen en capturas).

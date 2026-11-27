@@ -101,7 +101,7 @@ function Copia() {
   return (
     <div className="g-card lg-copia">
       <h2>Llévate tu progreso</h2>
-      <p className="small muted">Se guarda solo en este navegador. Para seguir en otro ordenador o en el móvil, descárgalo aquí y cárgalo allí.</p>
+      <p className="small muted">Descarga o copia tu progreso para tener una copia aparte o para seguir en otro navegador, en otro ordenador o en el móvil: allí lo cargas con «Cargar un fichero» o lo pegas abajo.</p>
       <div className="row-btns">
         <button className="btn" onClick={descargar}>
           Descargar

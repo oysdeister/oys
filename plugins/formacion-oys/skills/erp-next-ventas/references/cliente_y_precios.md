@@ -26,7 +26,7 @@ Ficha de cajas con pestañas internas: Identificación · Información general /
 | Método facturación* | Facturación | «1 Albarán-1 Factura» (otros: 1 Pedido-1 Factura, 1 P.completo-1 Factura, 1 Ter.envío/facturación/comercial-1 Factura) |
 | Tercero cobro*, Dirección cobro* | Cobros | C{INI}, 0 |
 | Portes*, Divisa* | Datos financieros | Debidos, EUR (sin divisa no guarda: «Hay errores en los datos del formulario») |
-| Grupo precio | Tarifas | vacío al principio; GV{INI} tras «Preparar los precios» |
+| Grupo precio | Tarifas | vacío al principio; GV{INI} tras «Preparar los precios de venta» |
 - **No hay «Tipo efecto» ni «Forma pago» en el cliente.** Salen de la condición de cobro del tercero.
 - Al guardar el cliente queda «Activo»; «Validar» no hace falta (Validaciones 0, sin mensaje). La ficha guardada trae «Pedir datos», «Validar», «Nuevo» y además pestañas Destinos, Artículos por cliente, Notas, Workflow.
 - C{INI} ya existe: se abre desde la lista (código azul o n.º de fila) y se comprueba. «Nuevo» crearía otro cliente.

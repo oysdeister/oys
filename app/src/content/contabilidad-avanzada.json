@@ -16,7 +16,7 @@
       "numero": 6,
       "titulo": "Cerrar y abrir el ejercicio",
       "objetivo": "Sabrás en qué orden se lanzan los procesos que cierran y abren el ejercicio y los localizarás en el menú.",
-      "concepto": "Cerrar el año contable es como hacer inventario y cerrar la caja el 31 de diciembre. Calculas cuánto has ganado, dejas las cuentas a cero y al día siguiente arrancas con lo que tenías. Si el cierre se hace mal o fuera de orden, el beneficio sale equivocado y el año siguiente empieza con saldos que no son los tuyos.\n\nPara entender el cierre recuerda dos ideas. El saldo de una cuenta es lo que queda en ella: la suma del debe menos la suma del haber (o al revés). Y los grupos 6 y 7 del plan contable son los gastos y los ingresos.\n\nAl terminar el año se hacen tres cosas, en este orden. Primero, regularizar: llevar todos los gastos e ingresos del año a la cuenta de resultados (129). Después, cerrar: dejar a cero el resto de cuentas (bancos, clientes, proveedores…) con el asiento de cierre, la anotación que deja a cero los saldos del balance. Por último, abrir: copiar esos mismos saldos al 1 de enero del año siguiente con el asiento de apertura.\n\nEjemplo: con 10.000 € de ventas y 7.000 € de gastos, la 129 queda con 3.000 € de beneficio. Las cuentas de los grupos 6 y 7 quedan a cero. El banco que acabó con 5.000 € empieza el nuevo año con 5.000 €.\n\nEjemplo: en tu caso, a 31-12 las ventas son 200,00 y los gastos, 125,00 + 3,50 + 10,00 = 138,50. La 129 queda con 61,50 de beneficio y el banco empieza 2027 con 3.077,25. El primer ejemplo (10.000 y 7.000) usa cifras redondas; el mecanismo es el mismo.\n\nEn el ERP estos pasos son procesos periódicos. Son la regularización de divisas, la actualización de deuda, la regularización, el cierre temporal, el cierre definitivo, la reapertura, el paso a histórico y la reclasificación de deuda a largo plazo.\n\nEn las partes siguientes ves su orden recomendado, qué hace cada uno y cómo ver la contabilidad a una fecha pasada.\n\nDónde: «Finanzas › Contabilidad General › Procesos › Cerrar ejercicio contable».",
+      "concepto": "Qué es cerrar el año contable lo repasaste en Fundamentos, en «Cerrar el ejercicio»: calculas cuánto has ganado, dejas las cuentas a cero y al día siguiente arrancas con lo que tenías. Aquí lo haces en el ERP. Si el cierre se hace mal o fuera de orden, el beneficio sale equivocado y el año siguiente empieza con saldos que no son los tuyos.\n\nDe Fundamentos te sirven dos ideas: el saldo de una cuenta (debe menos haber, o al revés) y que los grupos 6 y 7 son los gastos y los ingresos.\n\nLos tres pasos que viste allí, ahora con sus cuentas y en este orden. Primero, regularizar: llevar todos los gastos e ingresos del año a la cuenta de resultados (129). Después, cerrar: dejar a cero el resto de cuentas (bancos, clientes, proveedores…) con el asiento de cierre, la anotación que deja a cero los saldos del balance. Por último, abrir: copiar esos mismos saldos al 1 de enero del año siguiente con el asiento de apertura.\n\nEjemplo: con 10.000 € de ventas y 7.000 € de gastos, la 129 queda con 3.000 € de beneficio. Las cuentas de los grupos 6 y 7 quedan a cero. El banco que acabó con 5.000 € empieza el nuevo año con 5.000 €.\n\nEjemplo: en tu caso, a 31-12 las ventas son 200,00 y los gastos, 125,00 + 3,50 + 10,00 = 138,50. La 129 queda con 61,50 de beneficio y el banco empieza 2027 con 3.077,25. El primer ejemplo (10.000 y 7.000) usa cifras redondas; el mecanismo es el mismo.\n\nEn el ERP estos pasos son procesos periódicos. Son la regularización de divisas, la actualización de deuda, la regularización, el cierre temporal, el cierre definitivo, la reapertura, el paso a histórico y la reclasificación de deuda a largo plazo.\n\nEn las partes siguientes ves su orden recomendado, qué hace cada uno y cómo ver la contabilidad a una fecha pasada.\n\nDónde: «Finanzas › Contabilidad General › Procesos › Cerrar ejercicio contable».",
       "duracionMin": 35,
       "secciones": [
         {
@@ -64,7 +64,7 @@
             },
             {
               "campo": "reapertura",
-              "significado": "Borra los asientos de regularización y cierre. El ejercicio vuelve a quedar abierto.",
+              "significado": "Borra los asientos de regularización, de cierre y de apertura, y deshace el cierre temporal. El ejercicio vuelve a quedar abierto.",
               "ejemplo": "proceso"
             },
             {
@@ -125,7 +125,7 @@
           "explicacion": [
             "La regularización crea apuntes que pasan los saldos de ingresos y gastos a la cuenta de resultados (Pérdidas y Ganancias).",
             "El asiento que genera lleva siempre el número 99999998, un número que el ERP reserva para la regularización, y sus saldos van al periodo 98, un periodo especial para esa operación. El ejercicio pasa a estado regularizado.",
-            "El cierre temporal prepara los saldos de apertura del ejercicio siguiente. No lanza antes la regularización ni crea asientos reales. Copia el asiento de resultados a origen y guarda los saldos en «Saldos Contables» del ejercicio siguiente.",
+            "El cierre temporal prepara los saldos de apertura del ejercicio siguiente. No lanza antes la regularización ni crea asientos reales. Calcula con qué saldo empezaría cada cuenta el año siguiente, incluido el resultado del año, y lo guarda en «Saldos Contables» del ejercicio siguiente.",
             "Exige que exista el ejercicio siguiente en estado A (Abierto). Si no existe, el ERP para el proceso con el error «EJERCICIO DE APERTURA INEXISTENTE O NO ACTIVO». Los saldos de apertura quedan en los periodos especiales -1 y 0.",
             "La regularización usa las definiciones de regularización de la empresa. El cierre temporal lee los ejercicios y sus saldos y guarda el resultado en el ejercicio siguiente."
           ],
@@ -191,7 +191,7 @@
           "avisos": [
             {
               "tipo": "nota",
-              "texto": "El cierre temporal se puede repetir. Al repetirlo, se recalculan los saldos de apertura y los resultados a origen, y se pierden los ajustes manuales previos."
+              "texto": "El cierre temporal se puede repetir. Al repetirlo, se recalculan los saldos de apertura, incluido el resultado del año, y se pierden los ajustes manuales previos."
             },
             {
               "tipo": "problema",
@@ -216,7 +216,7 @@
           "explicacion": [
             "El cierre definitivo genera el asiento de cierre: el 99999999, en el periodo 99 y con la última fecha del último periodo.",
             "También genera el asiento de apertura del ejercicio siguiente: el 0, en el periodo 0 y con la primera fecha del primer periodo. El ejercicio queda cerrado definitivamente.",
-            "Si el ejercicio estaba cerrado temporalmente, reábrelo antes del cierre definitivo. La reapertura borra los asientos de regularización y de cierre temporal o definitivo, y deja el ejercicio abierto.",
+            "Si el ejercicio estaba cerrado temporalmente, reábrelo antes del cierre definitivo. La reapertura borra los asientos de regularización, de cierre y de apertura, deshace el cierre temporal (que no tenía asientos) y deja el ejercicio abierto.",
             "El paso a histórico lleva los apuntes de un ejercicio cerrado a un área histórica. Allí solo se consultan, y quedan fuera de la mayoría de los informes.",
             "La reclasificación de deuda a largo plazo salda las cuentas de largo plazo. Pasa a corto plazo la parte que corresponde según el maestro de deuda a largo plazo."
           ],
@@ -453,7 +453,7 @@
         },
         {
           "problema": "Quieres lanzar el cierre definitivo, pero el ejercicio está cerrado temporalmente.",
-          "solucion": "Lanza antes la reapertura. Borra los asientos del cierre temporal y deja el ejercicio abierto."
+          "solucion": "Lanza antes la reapertura. Deshace el cierre temporal, que no tiene asientos, y deja el ejercicio abierto."
         },
         {
           "problema": "Quieres ver la contabilidad a 31-12 y no encuentras un informe específico.",
@@ -475,9 +475,9 @@
     {
       "id": "contab-cierre-practica",
       "numero": 8,
-      "titulo": "Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre",
+      "titulo": "Cerrar el ejercicio de tu empresa",
       "objetivo": "Regularizarás el ejercicio 2026 de tu empresa S{INI} y comprobarás que su estado pasa a «Regularizado».",
-      "concepto": "Ya sabes en qué orden se cierra un año («Cerrar y abrir el ejercicio»). Aquí lo practicas con tu empresa. Si no cierras, los gastos y los ingresos de un año se mezclan con los del siguiente y no sabes cuánto ha ganado la empresa.\n\nEn tu empresa S{INI} el cierre son dos pasos. Primero, regularizar: pasar el saldo de los gastos y los ingresos a la cuenta de resultados (129, «Resultado del ejercicio»), que es ingresos menos gastos del año. Después, el cierre definitivo: el ERP crea el asiento de cierre (99999999) y el de apertura del año siguiente (periodo 0). Si te equivocas, la reapertura deshace el cierre.\n\nPara cerrar necesitas dos ejercicios, es decir, dos años contables de la empresa: el que cierras (2026) y el siguiente (2027), abierto. Si falta el 2027, el ERP no puede crear la apertura.\n\nEsta práctica usa la empresa que creaste en «Crear una empresa» (módulo Maestros). No la hagas en la empresa 0: su ejercicio 2026 lo comparten todos.\n\nEjemplo: en tu caso, la regularización lleva a la 129 las ventas de 200,00, las compras de 125,00 y los gastos bancarios de 13,50. Resultado: 200,00 − 125,00 − 13,50 = 61,50 de beneficio. En esta práctica cierras la empresa S{INI}, que solo tiene el asiento de saldos iniciales de 5.000,00 € de «Registrar los saldos iniciales de una empresa», porque las operaciones del caso se graban en la empresa 0 de la demo. Las cifras son otras; el mecanismo es el mismo.\n\nQué resultado es el bueno: al acabar, el Estado del ejercicio 2026 de S{INI} es Regularizado y los periodos de enero a noviembre están en Cerrado. Eso es hacerlo bien. Si además ves el asiento 99999998, mejor; si no lo ves, es un límite de la demo (la empresa no tiene «Programa regularización») y no es un error tuyo.\n\nOjo: en este bloque llegas hasta la regularización. El cierre definitivo solo lo localizas y lo lees, sin pulsarlo: en esta demo no está probado.\n\nDónde: «Finanzas › Maestros › Cierres › Ejercicios contables».",
+      "concepto": "Aquí cierras el ejercicio de tu empresa, en el orden que viste en «Cerrar y abrir el ejercicio». Si no cierras, los gastos y los ingresos de un año se mezclan con los del siguiente y no sabes cuánto ha ganado la empresa.\n\nEn tu empresa S{INI} el cierre son dos pasos. Primero, regularizar: pasar el saldo de los gastos y los ingresos a la cuenta de resultados (129, «Resultado del ejercicio»), que es ingresos menos gastos del año. Después, el cierre definitivo: el ERP crea el asiento de cierre (99999999) y el de apertura del año siguiente (periodo 0). Si te equivocas, la reapertura deshace el cierre.\n\nPara cerrar necesitas dos ejercicios, es decir, dos años contables de la empresa: el que cierras (2026) y el siguiente (2027), abierto. Si falta el 2027, el ERP no puede crear la apertura.\n\nEsta práctica usa la empresa que creaste en «Crear una empresa» (módulo Maestros). No la hagas en la empresa 0: su ejercicio 2026 lo comparten todos.\n\nEjemplo: en tu caso, la regularización lleva a la 129 las ventas de 200,00, las compras de 125,00 y los gastos bancarios de 13,50. Resultado: 200,00 − 125,00 − 13,50 = 61,50 de beneficio. En esta práctica cierras la empresa S{INI}, que solo tiene el asiento de saldos iniciales de 5.000,00 € de «Registrar los saldos iniciales de una empresa», porque las operaciones del caso se graban en la empresa 0 de la demo. Las cifras son otras; el mecanismo es el mismo.\n\nQué resultado es el bueno: al acabar, el Estado del ejercicio 2026 de S{INI} es Regularizado y los periodos de enero a noviembre están en Cerrado. Eso es hacerlo bien. Si además ves el asiento 99999998, mejor; si no lo ves, es un límite de la demo (la empresa no tiene «Programa regularización») y no es un error tuyo.\n\nOjo: en este bloque llegas hasta la regularización. El cierre definitivo solo lo localizas y lo lees, sin pulsarlo: en esta demo no está probado.\n\nDónde: «Finanzas › Maestros › Cierres › Ejercicios contables».",
       "duracionMin": 30,
       "secciones": [
         {
@@ -633,13 +633,13 @@
             },
             {
               "tipo": "nota",
-              "texto": "Si regularizas por error, el botón «Reapertura de ejercicio» deja el ejercicio otra vez abierto. Después, revisa en qué estado quedan los periodos de enero a noviembre."
+              "texto": "Si regularizas por error, el botón «Reapertura de ejercicio» deja el ejercicio otra vez abierto. El estado de cada periodo es un dato aparte: compruébalo en la lista de periodos del ejercicio, porque en un periodo Cerrado no se puede contabilizar."
             }
           ]
         },
         {
           "id": "contab-cierre-practica-definitivo",
-          "titulo": "Cierre definitivo y reapertura (explicado)",
+          "titulo": "Conocer el cierre definitivo y la reapertura",
           "paraQueSirve": "Sirve para entender qué hace el cierre definitivo y cómo se deshace. En este bloque no lo ejecutas: solo localizas sus botones.",
           "ruta": [
             "Finanzas",
@@ -649,7 +649,7 @@
           ],
           "explicacion": [
             "El Cierre definitivo genera el asiento de cierre (número 99999999, periodo 99) y el asiento de apertura del ejercicio siguiente (periodo 0). El ejercicio queda cerrado.",
-            "La Reapertura de ejercicio borra los asientos de regularización y de cierre y devuelve el ejercicio a Abierto.",
+            "La Reapertura de ejercicio borra los asientos de regularización, de cierre y de apertura, y devuelve el ejercicio a Abierto.",
             "No confundas el cierre definitivo con el Cierre temporal, que viste en «Cerrar y abrir el ejercicio»: el temporal solo prepara los saldos de apertura, sin crear asientos reales, y se puede repetir. Al repetirlo, recalcula esos saldos y borra los ajustes manuales hechos sobre ellos.",
             "Para el cierre temporal el ejercicio siguiente tiene que existir y estar Abierto. Si no, sale el error «EJERCICIO DE APERTURA [empresa / ejercicio] INEXISTENTE O NO ACTIVO»."
           ],
@@ -746,7 +746,7 @@
             "Guardar"
           ],
           "correcta": 1,
-          "explicacion": "La reapertura borra los asientos de regularización y cierre."
+          "explicacion": "La reapertura borra los asientos de regularización, de cierre y de apertura, y devuelve el ejercicio a Abierto."
         },
         {
           "pregunta": "¿Dónde haces la práctica de cierre?",
@@ -1184,7 +1184,7 @@
         "En Balances, abres un informe y compruebas que muestra Saldo anterior, Importe deudor, Importe acreedor, Saldo del período y Saldo acumulado.",
         "Abres Por agrupación y localizas Situación financiera y Resultados integrales.",
         "Sabes que, por dentro, el ESF usa clasif = 'BALANCE08' y el ER 'CTEPIG08'.",
-        "Abres Por agrupación, lanzas el Estado de Situación Financiera y anotas los parámetros que pide.",
+        "Abres Por agrupación › «Situación financiera» y anotas los parámetros que pide, sin ejecutarla.",
         "En Cuentas anuales XLS, examinas las tres hojas: estructura, Input y Datos.",
         "Localizas la pantalla Cuentas Anuales e Informes y compruebas que tiene el botón Ejecutar y el histórico.",
         "En Motor de consultas Excel, localizas las funciones GetDecimalSeparator, AXIONAL y AX_Saldo.",
@@ -1220,14 +1220,14 @@
     {
       "id": "caso-final",
       "numero": 9,
-      "titulo": "Caso final: tu empresa de principio a fin",
+      "titulo": "Recorrer tu empresa de principio a fin",
       "objetivo": "Repasarás las 13 operaciones de tu empresa, de la aportación al cierre, y comprobarás que el banco, el IVA, el beneficio y el balance cuadran.",
       "concepto": "Este caso junta todo lo que has aprendido, como un examen de conducir en la calle y no en el circuito. Recorres tu empresa de principio a fin: configurar, comprar, vender, cobrar y pagar, declarar el IVA y cerrar el año. Si una operación sale mal, el error se arrastra y el banco, el IVA o el balance no cuadran.\n\nSon 13 operaciones del cuarto trimestre de 2026, con IVA general del 21 %. Mira primero el resumen de la primera parte: son 13 filas y las repartes en 4 unidades (preparar y comprar, vender, pagar y cobrar, y conciliar, liquidar y cerrar). Haz una unidad cada vez. Cada una dice su ruta de menú y el bloque del curso donde la aprendiste. Al final comparas tus cifras con una tabla: banco 3.077,25, IVA a pagar 15,75, beneficio 61,50 y balance cuadrado.\n\nEs un caso de repaso: se hace en la Demo real y no lleva capturas. Las operaciones se graban en la empresa 0 «Deister Software» de la demo, la que comparten todos los alumnos. Tu empresa S{INI} es la que creaste en Maestros y donde practicas el cierre real. En la empresa 0 nunca lances «Regularización», ni el cierre ni la apertura: el cierre del caso lo repasas sobre el papel, con 200,00 − 125,00 − 13,50 = 61,50.\n\nEjemplo: tu compra a T{INI} es de 10 × 12,50 = 125,00 más 26,25 de IVA, 151,25. Tu venta a C{INI} es de 10 × 20,00 = 200,00 más 42,00 de IVA, 242,00. El resultado del año es 200,00 − 125,00 − 3,50 − 10,00 = 61,50.\n\nDónde: cada operación indica su ruta, por ejemplo «Gestión › Compras › Pedidos › Pedidos» o «Finanzas › Tesorería › Conciliación bancaria».",
       "duracionMin": 90,
       "secciones": [
         {
           "id": "caso-final-resumen",
-          "titulo": "Resumen: las 13 operaciones de un vistazo",
+          "titulo": "Ver las 13 operaciones de un vistazo",
           "paraQueSirve": "Sirve para ver todo el caso en una tabla antes de empezar y saber en qué bloque aprendiste cada operación.",
           "ruta": null,
           "explicacion": [
@@ -1282,7 +1282,7 @@
             },
             {
               "campo": "10 · Remesa de cobro SEPA del efecto 2",
-              "significado": "Bloque: Domiciliar un cliente: mandato SEPA y remesa de cobro",
+              "significado": "Bloque: Cobrar un recibo domiciliado con mandato SEPA",
               "ejemplo": "121,00"
             },
             {
@@ -1297,7 +1297,7 @@
             },
             {
               "campo": "13 · Cerrar el año (sobre el papel)",
-              "significado": "Bloque: Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre",
+              "significado": "Bloque: Cerrar el ejercicio de tu empresa",
               "ejemplo": "200,00 − 125,00 − 13,50 = 61,50"
             }
           ],
@@ -1316,7 +1316,7 @@
         },
         {
           "id": "caso-final-preparar",
-          "titulo": "Antes de empezar: prepara tu empresa y tus códigos",
+          "titulo": "Preparar tu empresa y tus códigos",
           "paraQueSirve": "Sirve para comprobar que tienes a mano todo lo que el caso necesita antes de la primera operación.",
           "ruta": null,
           "explicacion": [
@@ -1502,7 +1502,7 @@
           ],
           "explicacion": [
             "Pagar y cobrar mueve dinero de verdad: cada operación deja un movimiento en BBVA_{INI} y su asiento.",
-            "Una remesa es un paquete de efectos que mandas junto al banco para que los cobre o los pague."
+            "Pagas y cobras con remesas, como en Cartera («Crear una remesa de pago» y «Cobrar efectos sueltos y en remesa»)."
           ],
           "campos": [
             {
@@ -1540,7 +1540,7 @@
               "detalle": "El efecto pasa de PE a CO (cobrado). El asiento lleva 57200.00000 121,00 al debe y 43000.00901 121,00 al haber. No crea movimiento de tesorería: en la conciliación su línea del extracto (-121,00) se queda pendiente y la justificas con este asiento. Lo aprendiste en «Cobrar efectos sueltos y en remesa»."
             },
             {
-              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. En «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» crea una remesa de clase Cobrar, tipo CSDDS, cuenta BBVA_{INI}, línea financiera LRC{INI} y fecha 01-12-2026, con el efecto de 121,00 que vence el 14-12. Ordénala y confirma el cobro con fecha 14-12-2026. Si ya la hiciste en «Domiciliar un cliente: mandato SEPA y remesa de cobro», no la repitas.",
+              "texto": "Operación 10 · 01-12 · Remesa de cobro SEPA del efecto 2. En «Finanzas › Cobros y Pagos › Remesas › Registro de remesas» crea una remesa de clase Cobrar, tipo CSDDS, cuenta BBVA_{INI}, línea financiera LRC{INI} y fecha 01-12-2026, con el efecto de 121,00 que vence el 14-12. Ordénala y confirma el cobro con fecha 14-12-2026. Si ya la hiciste en «Cobrar un recibo domiciliado con mandato SEPA», no la repitas.",
               "detalle": "Antes: CSDDS en «Remesas por cuenta» de BBVA_{INI}, el IBAN de prueba en C{INI} y la domiciliación 0 en el efecto 2 (lo hiciste en ese bloque). Tu remesa tendrá su propio número. Al confirmar, el efecto pasa a CO y el asiento lleva 57200.00000 121,00 al debe y, lo habitual, 43000.00901 121,00 al haber. Si el efecto no admite la domiciliación, cóbralo el 14-12-2026 con una gestión COBD como el 1: el banco queda igual."
             }
           ],
@@ -1614,7 +1614,7 @@
           ],
           "explicacion": [
             "Regularizar es llevar todos los gastos y los ingresos del año a la cuenta de resultados (129). Cerrar es dejar a cero las demás cuentas con el asiento de cierre. Abrir es copiar los saldos al 01-01 del año siguiente.",
-            "El cierre real lo practicas en tu empresa S{INI}, en «Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre». Aquí lo repasas sobre el papel con las cifras de tu caso: 200,00 − 125,00 − 13,50 = 61,50. En la empresa 0 no se lanza."
+            "El cierre real lo practicas en tu empresa S{INI}, en «Cerrar el ejercicio de tu empresa». Aquí lo repasas sobre el papel con las cifras de tu caso: 200,00 − 125,00 − 13,50 = 61,50. En la empresa 0 no se lanza."
           ],
           "campos": [
             {
@@ -1641,7 +1641,7 @@
           "pasos": [
             {
               "texto": "Operación 13 · 31-12 · Repasa la regularización de tu caso sin lanzarla. Abre «Finanzas › Maestros › Cierres › Ejercicios contables» y localiza «Regularización por ejercicio». No la pulses en la empresa 0: su ejercicio es de todos los alumnos.",
-              "detalle": "La regularizaste en tu empresa S{INI} en «Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre», con otras cifras. Con las cifras del caso, la regularización llevaría 70000.00000 Ventas 200,00 al debe y, al haber, 60000.00000 125,00, la 626 Servicios bancarios 13,50 y la 129 61,50. Lo aprendiste en «Cerrar el ejercicio de tu empresa: regularizar y preparar el cierre» y en «Cerrar y abrir el ejercicio»."
+              "detalle": "La regularizaste en tu empresa S{INI} en «Cerrar el ejercicio de tu empresa», con otras cifras. Con las cifras del caso, la regularización llevaría 70000.00000 Ventas 200,00 al debe y, al haber, 60000.00000 125,00, la 626 Servicios bancarios 13,50 y la 129 61,50. La teoría está en «Cerrar y abrir el ejercicio»."
             },
             {
               "texto": "Repasa el cierre definitivo y la apertura sin lanzarlos: localiza «Cierre definitivo» y «Reapertura de ejercicio» en la misma ficha.",
