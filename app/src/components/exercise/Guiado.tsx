@@ -253,7 +253,7 @@ export function Guiado({ ej, modulo, ini, onListo }: { ej: Ejercicio; modulo: st
         </div>
       ) : (
         <div className="pl-sin" key={i}>
-          <p className="pl-ref">Este paso se hace sin pantalla de ejemplo: hazlo en el ERP siguiendo la instrucción y pulsa «Continuar».</p>
+          <p className="pl-ref">Este paso no tiene captura: lee la instrucción y pulsa «Continuar».</p>
           {rutaPaso && rutaPaso.length > 0 && (
             <>
               <p className="pl-sin-t">Ruta de menú</p>

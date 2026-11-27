@@ -83,7 +83,7 @@ function DondeClic({ pasos, modulo, ini, onListo }: { pasos: PasoPlano[]; modulo
         </p>
         <p className="muted">
           {nota >= 0.8
-            ? 'Recuerdas dónde está cada cosa. Sigue con el test.'
+            ? 'Recuerdas dónde está cada cosa. Sigue con el Test.'
             : 'Te conviene repasar el Guiado y repetir este paso: la segunda vez se fija mejor.'}
         </p>
         <button type="button" className="pl-link" onClick={reiniciar}>

@@ -94,7 +94,7 @@ export default function ExamenModulo() {
           <p className="exg-kicker">Módulo {nMod} · Examen del módulo</p>
           <h1>{meta.corto}</h1>
           <p className="exg-lead">
-            {total} preguntas de test sobre lo que has visto en el módulo. Cada vez que lo haces, {banco.length > total ? 'salen otras preguntas, ' : 'las preguntas y las opciones salen '}en otro orden.
+            {total} preguntas de test sobre lo que has visto en el módulo. Cada vez que lo haces, {banco.length > total ? 'cambian las preguntas y su orden' : 'las preguntas y las opciones salen en otro orden'}.
           </p>
         </header>
         <dl className="exg-cifras">

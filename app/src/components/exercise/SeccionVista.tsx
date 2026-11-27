@@ -62,6 +62,8 @@ export function SeccionVista({ s, ini, conPasos = false, modulo, destacar = fals
   const t = (x: string) => conIni(x, ini);
   const iDestacado = destacar ? s.avisos.findIndex((a) => a.tipo === 'problema') : -1;
   const lead = s.paraQueSirve ? cajaDe(s.paraQueSirve) : null;
+  // Tabla de referencia (no de campos): si todos los «ejemplos» son rutas de menú, las cabeceras lo dicen
+  const esMapa = s.campos.length > 1 && s.campos.every((c) => !!c.ejemplo && c.ejemplo.includes('›'));
   return (
     <div className="sec-body lect">
       {s.paraQueSirve &&
@@ -102,9 +104,9 @@ export function SeccionVista({ s, ini, conPasos = false, modulo, destacar = fals
           <table className="fields lect-campos">
             <thead>
               <tr>
-                <th scope="col">Campo</th>
-                <th scope="col">Qué significa</th>
-                <th scope="col">Ejemplo</th>
+                <th scope="col">{esMapa ? 'Código en el buscador' : 'Campo'}</th>
+                <th scope="col">{esMapa ? 'Qué guarda' : 'Qué es'}</th>
+                <th scope="col">{esMapa ? 'Ruta del menú' : 'Ejemplo'}</th>
               </tr>
             </thead>
             <tbody>

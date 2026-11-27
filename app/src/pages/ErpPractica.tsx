@@ -17,7 +17,7 @@ export default function ErpPractica() {
         <p className="g-kicker">Practicar y demostrar</p>
         <h1>ERP de práctica</h1>
         <p className="cs-lead">
-          Un ERP simulado dentro de esta web, con el menú completo de Axional VNext. Aquí grabas de verdad: tu proveedor y tu artículo, el circuito pedido › albarán › factura, el asiento, el pago por remesa y la conciliación bancaria. La plataforma lo corrige y te pone nota al momento.
+          Un ERP simulado dentro de esta web, con el menú completo de Axional Deister VNext. Aquí grabas de verdad: tu proveedor y tu artículo, el circuito pedido › albarán › factura, el asiento, el pago por remesa y la conciliación bancaria. La plataforma lo corrige y te pone nota al momento.
         </p>
         <p className="cs-datos">
           <span>

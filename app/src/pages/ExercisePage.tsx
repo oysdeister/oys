@@ -236,7 +236,7 @@ export default function ExercisePage() {
               Siguiente: {siguiente.label} <span className="paso-opc">opcional</span>
             </button>
             <button type="button" className="bq-opc-ir" onClick={() => ir(saltoTest.id)}>
-              O sáltatela y pasa al Test
+              O sáltate este paso y ve al Test
             </button>
           </div>
         ) : siguiente ? (

@@ -215,7 +215,7 @@ function Contenido({ datos }: { datos: GuiaPreviaDatos }) {
         <section className="pv-cierre" aria-labelledby={`pv-cierre-${slug}`}>
           <h2 id={`pv-cierre-${slug}`}>Has llegado al final de la guía</h2>
           <p>
-            Ahora haz el examen, sin consultar la guía: {info.examen}. Se aprueba con el 70 %. Corrige solo y explica cada respuesta.
+            Ahora haz el examen, sin consultar la guía: {info.examen}. Se aprueba con el 70 %. El examen se corrige solo y explica cada respuesta.
           </p>
           <div className="acciones">
             <Link className="pv-btn pri" to={`/formacion/${slug}/examen`}>

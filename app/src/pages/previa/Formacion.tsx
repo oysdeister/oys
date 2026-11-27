@@ -11,10 +11,13 @@ export default function Formacion() {
         <div className="kicker">Formación previa · Cultura general</div>
         <h1>Antes de empezar con Axional</h1>
         <p>
-          Dos guías de base, de las que se estudian en la universidad: los conceptos de contabilidad general y qué es un ERP. No hace falta
-          saber nada antes.
+          Esta formación previa reúne dos guías de base, del nivel de un primer curso universitario: los conceptos de contabilidad general y
+          qué es un ERP. No hace falta saber nada antes.
         </p>
-        <p>Te recomendamos leerlas y aprobar sus exámenes antes del módulo 0. Cada guía tiene su propio examen.</p>
+        <p>
+          Léelas en orden y aprueba el examen de cada una antes de empezar el curso por el módulo 0, Fundamentos. Fundamentos no repite esta
+          teoría: la repasa con las cifras del caso del curso.
+        </p>
       </header>
 
       <div className="pv-tarjetas">

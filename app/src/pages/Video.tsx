@@ -293,7 +293,7 @@ export default function Video() {
 
         {!algunoPublicado && (
           <p className="callout nota vd-aviso" role="status">
-            El vídeo aún no está publicado. Aquí tienes el índice para saber qué cuenta cada capítulo.
+            Los vídeos aún no están publicados. Aquí tienes el índice para saber qué cuenta cada capítulo.
           </p>
         )}
 

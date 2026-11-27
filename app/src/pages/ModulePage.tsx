@@ -238,9 +238,10 @@ export default function ModulePage() {
           lista={momentosDeModulo(modulo.id)}
           indice
           ante="Antes de empezar el módulo"
-          luego="Luego empieza por el bloque 1."
+          luego="Luego lee el resto de esta parte y empieza por el bloque 1."
         />
         
+        {ficha && <h3>Qué aprenderás</h3>}
         {ficha && (
           <ul className="md-aprendes">
             {ficha.aprendes.map((a, i) => (
@@ -291,14 +292,14 @@ export default function ModulePage() {
           <p className="md-sec-txt">Aquí aparecerán los bloques cuando estén listos.</p>
         ) : (
           <p className="md-sec-txt">
-            Te recomendamos hacerlos en orden: cada uno usa lo que montaste en el anterior. «Te toca» marca el siguiente que tienes pendiente.
+            Te recomendamos hacerlos en orden: cada uno usa lo que preparas en el anterior. «Te toca» marca el siguiente que tienes pendiente.
           </p>
         )}
         {conSelector && (
           <p className="md-aviso-operar">
             <Icon name="aviso" size={18} />
             <span>
-              ¿La empresa ya está configurada? <Link to={`/modulo/${modulo.id}?fase=operar`} onClick={irAlPanel}>Ve directo a Operar</Link>. Si es tu primera vez, empieza por el bloque 1, en Configurar.
+              ¿Ya tienes hecha la fase Configurar de este módulo? <Link to={`/modulo/${modulo.id}?fase=operar`} onClick={irAlPanel}>Ve directo a Operar</Link>. Si es tu primera vez, empieza por el bloque 1, en Configurar.
             </span>
           </p>
         )}

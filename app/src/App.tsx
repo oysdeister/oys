@@ -72,7 +72,7 @@ function AvisoIniciales() {
   return (
     <div className="toast toast-ini" role="status">
       <span>
-        Tus iniciales ahora son <b>{xx}</b> (antes {aviso.antes}): en la demo usa códigos como <code>T{xx}</code> o <code>PROV-{xx}-001</code>. Con 3 letras algunos códigos no caben.
+        Tus iniciales ahora son <b>{xx}</b> (antes {aviso.antes}): en la demo usa códigos como <code>T{xx}</code> o <code>C{xx}</code>. Con 3 letras algunos códigos no caben.
       </span>
       <button
         type="button"

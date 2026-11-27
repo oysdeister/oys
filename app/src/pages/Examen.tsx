@@ -747,7 +747,7 @@ function ResultadoVista({ ex, onNuevo }: { ex: EstadoExamen; onNuevo: () => void
         <p className="exg-lead">
           {r.aprobado
             ? 'Has superado las dos partes. Manda el acta al examinador para que valide tu certificado.'
-            : `Necesitas un ${Math.round(APROBADO_EXAMEN * 100)} % en la teoría y en la práctica. Repasa lo que ha fallado y vuelve a intentarlo con un caso nuevo.`}
+            : `Necesitas un ${Math.round(APROBADO_EXAMEN * 100)} % en la teoría y en la práctica. Repasa lo que has fallado y vuelve a intentarlo con un caso nuevo.`}
         </p>
       </header>
       <dl className="exg-cifras exg-notas">

@@ -105,12 +105,12 @@ export default function Home() {
     ? "Ir al examen final"
     : !empezado
       ? "Empezar el primer bloque"
-      : `Seguir con el ${etiquetaPaso}`;
+      : `Seguir: ${etiquetaPaso}`;
 
   const lead = !continuar
     ? "Has terminado todos los bloques. Te queda el examen final."
     : !empezado
-      ? `Aprendes a trabajar con el ERP Axional Deister VNext en ${MODULOS.length} módulos, en orden. Si no tienes base de contabilidad ni de ERP, empieza por la formación previa, justo debajo.`
+      ? `Aprendes a trabajar con el ERP Axional Deister VNext en ${MODULOS.length} módulos, en orden. Si no tienes base de contabilidad ni de ERP, empieza por las dos guías de «Antes de empezar con Axional», aquí debajo.`
       : `Sigue donde lo dejaste. Son ${MODULOS.length} módulos, en orden.`;
 
   const examenEstado = ex.aprobado
@@ -160,7 +160,7 @@ export default function Home() {
       <p className="g-kicker">Módulos de Axional</p>
       <h2 id="mods-h">Tu ruta</h2>
       <p className="gi-sec-txt">
-        {MODULOS.length} módulos, en orden: cada uno usa lo que montaste en el
+        {MODULOS.length} módulos, en orden: cada uno usa lo que preparas en el
         anterior. Puedes entrar en cualquiera.
       </p>
       <ol className="gi-mods">
