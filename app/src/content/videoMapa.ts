@@ -20,6 +20,7 @@ export interface CapituloVideo {
   duracion: number;      // segundos
   url: string;           // URL del clip del capítulo (vacía si aún no está subido)
   poster?: string;       // miniatura (ruta pública)
+  audio?: boolean;       // solo audio (podcast): se reproduce con <audio>
   escenas: { t: number; titulo: string }[]; // t relativo al capítulo
 }
 

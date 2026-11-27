@@ -16,6 +16,7 @@ import { SERIES_TUT_FIN, MOMENTOS_SECCION_TUT_FIN, MOMENTOS_EJERCICIO_TUT_FIN } 
 import { SERIES_WORKFLOW, MOMENTOS_SECCION_WORKFLOW, MOMENTOS_EJERCICIO_WORKFLOW } from './video-workflow';
 import { SERIES_VENTAS, MOMENTOS_SECCION_VENTAS, MOMENTOS_EJERCICIO_VENTAS } from './video-ventas';
 import { SERIES_TABLAS_FIN, MOMENTOS_SECCION_TABLAS_FIN } from './video-tablas-fin';
+import { SERIES_PREVIA } from './video-previa';
 import { SERIES_TESORERIA, MOMENTOS_SECCION_TESORERIA, MOMENTOS_EJERCICIO_TESORERIA } from './video-tesoreria';
 
 export interface SerieVideo {
@@ -38,6 +39,7 @@ export interface SerieVideo {
 export const SERIES: Record<string, SerieVideo> = {
   compras: { id: 'compras', titulo: 'Vídeo de compras', corto: 'Compras', pagina: '/video', capitulos: CAPITULOS },
   ...Object.fromEntries(SERIES_TABLAS_FIN.map((s) => [s.id, s])),
+  ...Object.fromEntries(SERIES_PREVIA.map((s) => [s.id, { ...s, porTabla: true }])),
   ...Object.fromEntries(SERIES_TUT_FIN.map((s) => [s.id, s])),
   ...Object.fromEntries(SERIES_WORKFLOW.map((s) => [s.id, s])),
   ...Object.fromEntries(SERIES_VENTAS.map((s) => [s.id, s])),
@@ -146,5 +148,5 @@ export function momentosDeModulo(id: string): MomentoVideo[] {
 /** Series que pertenecen a un módulo (para mostrar sus capítulos en la página del módulo) */
 export function seriesDeModulo(modulo: string): SerieVideo[] {
   if (modulo === 'compras') return [SERIES.compras, ...SERIES_WORKFLOW.filter((s) => s.modulos.includes('compras'))];
-  return [...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_WORKFLOW, ...SERIES_VENTAS, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
+  return [...SERIES_PREVIA.map((s) => ({ ...s, porTabla: true })), ...SERIES_TABLAS_FIN, ...SERIES_TUT_FIN, ...SERIES_WORKFLOW, ...SERIES_VENTAS, ...SERIES_TESORERIA, ...SERIES_FIN].filter((s) => s.modulos.includes(modulo));
 }

@@ -39,6 +39,7 @@ export function CapitulosSerie({ serie, titulo, intro }: { serie?: string; titul
             >
               <span className="vc-img">
                 {c.poster && <img src={baseUrl(c.poster)} alt="" loading="lazy" width={640} height={360} />}
+                {c.audio && <span className="vc-audio">Podcast · solo audio</span>}
                 <span className="vc-play" aria-hidden="true">
                   <Icon name="play" />
                 </span>

@@ -199,14 +199,18 @@ export function ReproductorModal({ serie, capitulo, t = 0, fin, abierto, onCerra
                 </p>
                 <h2 id="vm-titulo">{c.titulo}</h2>
               </div>
-              <button ref={cerrar} type="button" className="vm-cerrar" onClick={onCerrar} aria-label="Cerrar el vídeo">
+              <button ref={cerrar} type="button" className="vm-cerrar" onClick={onCerrar} aria-label="Cerrar">
                 <span aria-hidden="true">×</span>
               </button>
             </header>
 
             <div className="vm-cuerpo">
               <div className="vm-pantalla">
-                {c.url ? (
+                {c.url && c.audio ? (
+                  <audio key={`${sv.id}-${c.n}`} className="vm-audio" src={c.url} controls preload="metadata" onError={() => setFallo(true)}>
+                    Tu navegador no puede reproducir este audio. <a href={c.url}>Descárgalo aquí</a>.
+                  </audio>
+                ) : c.url ? (
                   <video
                     key={`${sv.id}-${c.n}`}
                     ref={video}
